@@ -1,0 +1,66 @@
+format: jb-book
+root: intro
+chapters:
+  - file: chapters/00_guide
+  - file: chapters/01_fundamentals
+    sections:
+      - file: chapters/notebooks/01_fundamentals_python_basics
+  - file: chapters/02_data_wrangling
+    sections:
+      - file: chapters/notebooks/02_data_wrangling_for_beginners
+      - file: chapters/notebooks/02_visualization_epi_charts
+  - file: chapters/03_stats
+    sections:
+      - file: chapters/notebooks/03_stats_basics
+  - file: chapters/04_outbreak_workflow
+    sections:
+      - file: chapters/notebooks/04_outbreak_workflow
+  - file: chapters/05_time_series
+    sections:
+      - file: chapters/notebooks/05_time_series_baseline
+  - file: chapters/06_spatial
+    sections:
+      - file: chapters/notebooks/06_spatial_rates
+      - file: chapters/notebooks/06_spatial_choropleth
+  - file: chapters/07_machine_learning
+    sections:
+      - file: chapters/notebooks/07_ml_baseline
+  - file: chapters/08_deep_learning
+    sections:
+      - file: chapters/notebooks/08_dl_baseline
+  - file: chapters/09_causal
+    sections:
+      - file: chapters/notebooks/09_causal_did
+  - file: chapters/10_reproducibility
+    sections:
+      - file: chapters/notebooks/10_reproducibility_workflow
+  - file: chapters/11_case_studies
+    sections:
+      - file: chapters/notebooks/11_case_study_dengue
+  - file: chapters/12_appendix
+  - file: chapters/13_exercises
+    sections:
+      - file: chapters/exercises/01_fundamentals_exercise
+      - file: chapters/exercises/02_data_wrangling_exercise
+      - file: chapters/exercises/03_stats_exercise
+      - file: chapters/exercises/04_outbreak_workflow_exercise
+      - file: chapters/exercises/05_time_series_exercise
+      - file: chapters/exercises/06_spatial_exercise
+      - file: chapters/exercises/07_ml_exercise
+      - file: chapters/exercises/08_dl_exercise
+      - file: chapters/exercises/09_causal_exercise
+      - file: chapters/exercises/10_reproducibility_exercise
+      - file: chapters/exercises/11_case_study_exercise
+  - file: chapters/14_solutions
+    sections:
+      - file: chapters/solutions/01_fundamentals_solution
+      - file: chapters/solutions/02_data_wrangling_solution
+      - file: chapters/solutions/03_stats_solution
+      - file: chapters/solutions/04_outbreak_workflow_solution
+      - file: chapters/solutions/05_time_series_solution
+      - file: chapters/solutions/06_spatial_solution
+      - file: chapters/solutions/07_ml_solution
+      - file: chapters/solutions/08_dl_solution
+      - file: chapters/solutions/09_causal_solution
+      - file: chapters/solutions/10_reproducibility_solution
+      - file: chapters/solutions/11_case_study_solution

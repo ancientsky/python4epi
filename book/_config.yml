@@ -1,0 +1,16 @@
+title: Epi With Python
+author: Epi With Python Contributors
+language: zh
+only_build_toc_files: true
+execute:
+  execute_notebooks: force
+  timeout: 300
+repository:
+  url: https://github.com/your-org/epi-with-python
+  branch: main
+html:
+  use_repository_button: true
+  use_issues_button: true
+  home_page_in_navbar: true
+launch_buttons:
+  notebook_interface: jupyterlab

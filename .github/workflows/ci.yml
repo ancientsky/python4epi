@@ -1,0 +1,34 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        version: "0.6.12"
+
+      - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+
+      - name: Set up Python
+      run: uv python install 3.11
+
+      - name: Sync deps
+      run: uv sync --all-groups
+
+      - name: Run tests
+      run: uv run pytest
+
+      - name: Build Jupyter Book
+      run: uv run jupyter-book build book/
