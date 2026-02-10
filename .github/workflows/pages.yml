@@ -37,7 +37,7 @@ jobs:
         run: uv sync --all-groups
 
       - name: Build book
-        run: uv run jupyter-book build book/ --builder html
+        run: uv run jupyter-book build book/
 
       - name: Resolve build output path
         run: |
@@ -50,7 +50,7 @@ jobs:
           done
 
           if [ -z "${SRC_DIR}" ]; then
-            INDEX_FILE="$(find . -type f -path '*/_build/*/index.html' | head -n 1)"
+            INDEX_FILE="$(find . -type f \( -path '*/_build/index.html' -o -path '*/_build/*/index.html' \) | head -n 1)"
             if [ -n "${INDEX_FILE}" ]; then
               SRC_DIR="$(dirname "${INDEX_FILE}")"
             fi
@@ -63,7 +63,7 @@ jobs:
             echo "Directories named html:"
             find . -type d -name "html" || true
             echo "Any index.html under _build:"
-            find . -type f -path '*/_build/*/index.html' || true
+            find . -type f \( -path '*/_build/index.html' -o -path '*/_build/*/index.html' \) || true
             exit 1
           fi
           echo "Resolved Jupyter Book output: ${SRC_DIR}"
