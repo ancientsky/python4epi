@@ -41,15 +41,16 @@ jobs:
 
       - name: Resolve build output path
         run: |
-          if [ -d book/_build/html ]; then
-            SRC_DIR="book/_build/html"
-          elif [ -d _build/html ]; then
-            SRC_DIR="_build/html"
-          else
+          SRC_DIR="$(find . -type d -path '*/_build/html' | head -n 1)"
+          if [ -z "${SRC_DIR}" ]; then
             echo "Could not find Jupyter Book HTML output directory."
-            find . -maxdepth 4 -type d -name html || true
+            echo "Directories named _build:"
+            find . -type d -name "_build" || true
+            echo "Directories named html:"
+            find . -type d -name "html" || true
             exit 1
           fi
+          echo "Resolved Jupyter Book output: ${SRC_DIR}"
           rm -rf page_artifact
           mkdir -p page_artifact
           cp -a "${SRC_DIR}/." page_artifact/
