@@ -37,12 +37,12 @@ jobs:
         run: uv sync --all-groups
 
       - name: Build book
-        run: uv run jupyter-book build book/
+        run: uv run jupyter-book build book/ --path-output .
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: book/_build/html
+          path: _build/html
 
   deploy:
     environment:
