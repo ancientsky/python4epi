@@ -37,12 +37,27 @@ jobs:
         run: uv sync --all-groups
 
       - name: Build book
-        run: uv run jupyter-book build book/ --path-output .
+        run: uv run jupyter-book build book/
+
+      - name: Resolve build output path
+        run: |
+          if [ -d book/_build/html ]; then
+            SRC_DIR="book/_build/html"
+          elif [ -d _build/html ]; then
+            SRC_DIR="_build/html"
+          else
+            echo "Could not find Jupyter Book HTML output directory."
+            find . -maxdepth 4 -type d -name html || true
+            exit 1
+          fi
+          rm -rf page_artifact
+          mkdir -p page_artifact
+          cp -a "${SRC_DIR}/." page_artifact/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _build/html
+          path: page_artifact
 
   deploy:
     environment:
