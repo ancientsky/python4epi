@@ -38,9 +38,6 @@ jobs:
 
       - name: Build book
         run: |
-          # Skip notebook execution for Pages deploy — CI already validates it.
-          # This avoids heavy-dependency failures (torch, geopandas) during deploy.
-          sed -i 's/execute_notebooks: force/execute_notebooks: "off"/' book/_config.yml
           cp book/_toc_student.yml book/_toc.yml
           uv run jupyter-book build book/
 
