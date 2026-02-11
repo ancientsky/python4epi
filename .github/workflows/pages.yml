@@ -43,14 +43,14 @@ jobs:
         run: |
           SRC_DIR=""
           for candidate in book/_build/html _build/html book/_build/site _build/site book/_build _build; do
-            if [ -f "${candidate}/index.html" ] || [ -f "${candidate}/intro.html" ]; then
+            if [ -d "${candidate}" ] && [ -n "$(find "${candidate}" -type f -name '*.html' | head -n 1)" ]; then
               SRC_DIR="${candidate}"
               break
             fi
           done
 
           if [ -z "${SRC_DIR}" ]; then
-            ENTRY_FILE="$(find . -regextype posix-extended -type f -regex '.*/_build(/[^/]+)*/(index|intro)\.html' | head -n 1)"
+            ENTRY_FILE="$(find . -type f -path '*/_build/*' -name '*.html' | head -n 1)"
             if [ -n "${ENTRY_FILE}" ]; then
               SRC_DIR="$(dirname "${ENTRY_FILE}")"
             fi
@@ -62,8 +62,8 @@ jobs:
             find . -type d -name "_build" || true
             echo "Directories named html:"
             find . -type d -name "html" || true
-            echo "Any entry html under _build (index/intro):"
-            find . -regextype posix-extended -type f -regex '.*/_build(/[^/]+)*/(index|intro)\.html' || true
+            echo "Any html under _build:"
+            find . -type f -path '*/_build/*' -name '*.html' || true
             exit 1
           fi
           echo "Resolved Jupyter Book output: ${SRC_DIR}"
