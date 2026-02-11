@@ -16,7 +16,7 @@ dependencies = [
   "plotly>=6.0.0",
   "geopandas>=1.0.0",
   "jupyterlab>=4.3.0",
-  "jupyter-book>=1.0.0",
+  "jupyter-book>=1.0.0,<2",
   "nbclient>=0.10.0",
   "torch>=2.6.0",
 ]
