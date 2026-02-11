@@ -43,16 +43,16 @@ jobs:
         run: |
           SRC_DIR=""
           for candidate in book/_build/html _build/html book/_build/site _build/site book/_build _build; do
-            if [ -f "${candidate}/index.html" ]; then
+            if [ -f "${candidate}/index.html" ] || [ -f "${candidate}/intro.html" ]; then
               SRC_DIR="${candidate}"
               break
             fi
           done
 
           if [ -z "${SRC_DIR}" ]; then
-            INDEX_FILE="$(find . -type f \( -path '*/_build/index.html' -o -path '*/_build/*/index.html' \) | head -n 1)"
-            if [ -n "${INDEX_FILE}" ]; then
-              SRC_DIR="$(dirname "${INDEX_FILE}")"
+            ENTRY_FILE="$(find . -regextype posix-extended -type f -regex '.*/_build(/[^/]+)*/(index|intro)\.html' | head -n 1)"
+            if [ -n "${ENTRY_FILE}" ]; then
+              SRC_DIR="$(dirname "${ENTRY_FILE}")"
             fi
           fi
 
@@ -62,14 +62,17 @@ jobs:
             find . -type d -name "_build" || true
             echo "Directories named html:"
             find . -type d -name "html" || true
-            echo "Any index.html under _build:"
-            find . -type f \( -path '*/_build/index.html' -o -path '*/_build/*/index.html' \) || true
+            echo "Any entry html under _build (index/intro):"
+            find . -regextype posix-extended -type f -regex '.*/_build(/[^/]+)*/(index|intro)\.html' || true
             exit 1
           fi
           echo "Resolved Jupyter Book output: ${SRC_DIR}"
           rm -rf page_artifact
           mkdir -p page_artifact
           cp -a "${SRC_DIR}/." page_artifact/
+          if [ ! -f page_artifact/index.html ] && [ -f page_artifact/intro.html ]; then
+            cp page_artifact/intro.html page_artifact/index.html
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
