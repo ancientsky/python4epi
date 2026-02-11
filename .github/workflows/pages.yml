@@ -37,39 +37,23 @@ jobs:
         run: uv sync --all-groups
 
       - name: Build book
-        run: uv run jupyter-book build book/
-
-      - name: Resolve build output path
         run: |
-          SRC_DIR=""
-          for candidate in book/_build/html _build/html book/_build/site _build/site book/_build _build; do
-            if [ -d "${candidate}" ] && [ -n "$(find "${candidate}" -type f -name '*.html' | head -n 1)" ]; then
-              SRC_DIR="${candidate}"
-              break
-            fi
-          done
+          # Skip notebook execution for Pages deploy — CI already validates it.
+          # This avoids heavy-dependency failures (torch, geopandas) during deploy.
+          sed -i 's/execute_notebooks: force/execute_notebooks: "off"/' book/_config.yml
+          cp book/_toc_student.yml book/_toc.yml
+          uv run jupyter-book build book/
 
-          if [ -z "${SRC_DIR}" ]; then
-            ENTRY_FILE="$(find . -type f -path '*/_build/*' -name '*.html' | head -n 1)"
-            if [ -n "${ENTRY_FILE}" ]; then
-              SRC_DIR="$(dirname "${ENTRY_FILE}")"
-            fi
-          fi
-
-          if [ -z "${SRC_DIR}" ]; then
-            echo "Could not find Jupyter Book HTML output directory."
-            echo "Directories named _build:"
-            find . -type d -name "_build" || true
-            echo "Directories named html:"
-            find . -type d -name "html" || true
-            echo "Any html under _build:"
-            find . -type f -path '*/_build/*' -name '*.html' || true
+      - name: Prepare pages artifact
+        run: |
+          if [ ! -d book/_build/html ] || [ -z "$(find book/_build/html -maxdepth 1 -name '*.html' | head -n 1)" ]; then
+            echo "ERROR: book/_build/html not found or contains no HTML files."
+            echo "Build output tree:"
+            find book/_build -type f 2>/dev/null | head -40 || echo "(no _build directory)"
             exit 1
           fi
-          echo "Resolved Jupyter Book output: ${SRC_DIR}"
           rm -rf page_artifact
-          mkdir -p page_artifact
-          cp -a "${SRC_DIR}/." page_artifact/
+          cp -a book/_build/html page_artifact
           if [ ! -f page_artifact/index.html ] && [ -f page_artifact/intro.html ]; then
             cp page_artifact/intro.html page_artifact/index.html
           fi
