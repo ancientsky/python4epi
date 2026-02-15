@@ -235,18 +235,59 @@ uv --version
 
 兩個都看到版本號，就可以往下走。
 
-### Step 2：下載教材並安裝環境
+### Step 2：下載教材原始碼到你的電腦
+
+這份教材的所有程式碼、資料檔、notebook 都放在一個 **GitHub 儲存庫（repository）** 裡。你可以把它想像成「一個雲端資料夾，裡面裝著整套教材的所有檔案」。
+
+我們需要把這個資料夾**下載到你的電腦上**，才能在本機執行程式碼。下載的方式有兩種，選一種你覺得順的就好：
+
+#### 方式 A：用 `git clone`（推薦）
+
+`git clone` 是程式開發者最常用的「下載專案」指令。它會把整個資料夾複製到你的電腦，而且保留完整的版本歷史，未來教材有更新時可以輕鬆同步。
+
+打開終端機，輸入：
 
 ```bash
-git clone https://github.com/your-org/epi-with-python.git
-cd epi-with-python
+git clone https://github.com/ancientsky/python4epi.git
+cd python4epi
+```
+
+> **看到 `fatal: ...` 錯誤？** 可能是你的電腦還沒安裝 Git：
+> - **macOS**：輸入 `xcode-select --install`，按提示安裝
+> - **Windows**：到 [https://git-scm.com](https://git-scm.com) 下載安裝，裝完後重開終端機
+> - **Linux**：輸入 `sudo apt install -y git`
+
+#### 方式 B：直接下載 ZIP（不需要 Git）
+
+如果你不想安裝 Git，也可以直接下載壓縮檔：
+
+1. 用瀏覽器打開 [https://github.com/ancientsky/python4epi](https://github.com/ancientsky/python4epi)
+2. 點綠色的 **「Code」** 按鈕 → 選 **「Download ZIP」**
+3. 解壓縮到你喜歡的位置（例如桌面或文件夾）
+4. 打開終端機，用 `cd` 切換到解壓縮後的資料夾：
+
+```bash
+# 範例：如果你解壓在桌面
+cd ~/Desktop/python4epi-main
+```
+
+> **方式 A 和 B 的差異**：`git clone` 之後，未來教材更新時只要在資料夾裡執行 `git pull` 就能拿到最新版。ZIP 下載則需要重新下載。兩種方式都不影響後續的學習。
+
+### Step 3：安裝所有套件
+
+不管用哪種方式下載，進入教材資料夾後，執行：
+
+```bash
 uv python pin 3.11
 uv sync
 ```
 
-`uv sync` 會自動建立虛擬環境、安裝所有需要的 Python 套件。第一次執行通常要 1～2 分鐘，之後會快很多。
+- `uv python pin 3.11`：告訴 `uv` 這個專案要用 Python 3.11。
+- `uv sync`：讀取教材的套件清單，自動建立虛擬環境並安裝所有需要的 Python 套件（pandas、matplotlib 等）。
 
-### Step 3：開啟 Jupyter Lab
+第一次執行 `uv sync` 通常需要 1～2 分鐘（要下載不少套件），之後再執行就會很快。
+
+### Step 4：開啟 Jupyter Lab
 
 ```bash
 uv run jupyter lab
@@ -254,20 +295,20 @@ uv run jupyter lab
 
 你的瀏覽器會自動打開一個類似檔案總管的畫面，這就是 **Jupyter Lab**——我們寫程式、看結果的工作環境。
 
-### Step 4：開啟第一份 notebook
+### Step 5：開啟第一份 notebook
 
 在左邊的檔案列表中，點進 `notebooks/` → 打開 `02_visualization_epi_charts.ipynb`。
 
 你會看到一格一格的「cell」，有些是文字說明，有些是程式碼。
 
-### Step 5：執行所有程式碼
+### Step 6：執行所有程式碼
 
 兩種方式：
 
 - **一次全部執行**：上方選單 → `Run` → `Run All Cells`
 - **一格一格執行**：點選一個 cell，按 `Shift + Enter`
 
-### Step 6：看到你的第一張流行曲線
+### Step 7：看到你的第一張流行曲線
 
 往下捲，你會看到一張長條圖：
 
@@ -285,6 +326,7 @@ uv run jupyter lab
 
 | 問題 | 解法 |
 |------|------|
+| `git clone` 顯示 `fatal` 錯誤 | 你的電腦可能還沒安裝 Git，請參考 Step 2 的安裝說明，或改用 ZIP 下載 |
 | `command not found: uv` | 關掉終端機再重新打開，或確認安裝路徑已加入 `PATH` |
 | `python --version` 不是 3.11 | 沒關係，先執行 `uv python pin 3.11`，`uv` 會自動幫你管理版本 |
 | `uv sync` 失敗 | 檢查網路連線，然後再執行一次。第一次需要下載較多套件 |
