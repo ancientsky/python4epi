@@ -6,7 +6,7 @@ execute:
   execute_notebooks: force
   timeout: 300
 repository:
-  url: https://github.com/your-org/epi-with-python
+  url: https://github.com/ancientsky/python4epi
   branch: main
 html:
   use_repository_button: true
