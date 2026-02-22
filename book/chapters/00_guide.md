@@ -250,6 +250,24 @@ analysis_v2_final_真的最終版_主管修改.py
 
 **用了 Git 之後，你只需要一個 `analysis.py`，所有歷史版本都安全地保存在背後。**
 
+```{figure} images/git_version_chaos.svg
+:name: fig-git-version-chaos
+:alt: 沒有 Git 時檔案版本混亂 vs 有 Git 時只需要一個檔案
+:width: 100%
+
+沒有 Git 時，你的資料夾會充滿各種版本的檔案，根本分不清哪個是最新的。有了 Git，只需要一個檔案，所有歷史版本都安全地保存在 commit 紀錄中。
+```
+
+下圖是 Git 運作的核心概念——四大區域與三個關鍵指令。先有個印象就好，後面會一步一步帶你操作：
+
+```{figure} images/git_three_areas.svg
+:name: fig-git-three-areas
+:alt: Git 四大區域：工作目錄、暫存區、本地儲存庫、遠端 GitHub
+:width: 100%
+
+Git 的四大區域：你在**工作目錄**修改檔案，用 `git add` 放進**暫存區**，用 `git commit` 拍成**快照**存入本地儲存庫，最後用 `git push` 上傳到 GitHub。
+```
+
 ### 流行病學家最常用的 Git 情境
 
 你不需要學會 Git 的全部功能。以下是流病工作中最常遇到的情境，以及對應的指令：
@@ -276,6 +294,14 @@ git add notebooks/02_visualization_epi_charts.ipynb
 
 # 3) 拍一張快照，附上一句說明
 git commit -m "feat: 流行曲線加入 7 日移動平均線"
+```
+
+```{figure} images/git_daily_workflow.svg
+:name: fig-git-daily-workflow
+:alt: 每天的 Git 工作流程：修改 → git status → git add → git commit
+:width: 100%
+
+每天的工作流程就是這四步：修改程式碼、檢查狀態、加入暫存、拍快照存檔。每完成一個小步驟就重複一次。
 ```
 
 **`git commit -m "..."` 裡面的訊息很重要**——它是未來的你（或你的同事）回頭查的時候唯一的線索。好的訊息長這樣：
@@ -344,6 +370,14 @@ git merge try-r0-method
 
 # 如果試失敗了，直接切回去，什麼都沒影響
 git checkout main
+```
+
+```{figure} images/git_branching.svg
+:name: fig-git-branching
+:alt: Git 分支概念：從 main 岔出分支實驗，成功則合併，失敗則捨棄
+:width: 100%
+
+分支就像平行宇宙——從 main 岔出一條線去實驗，成功了合併（merge）回來，失敗了直接切回 main，完全不影響原本的程式碼。
 ```
 
 分支就像平行宇宙——在另一條線上實驗，成功了再合併回來，失敗了就丟掉，不會影響原本的程式碼。
@@ -513,6 +547,14 @@ uv run jupyter lab
 ```
 
 **前 4 章是基礎**，建議按順序學。第 5 章之後可以跳著看，挑你工作或研究需要的主題。
+
+```{figure} images/learning_roadmap.svg
+:name: fig-learning-roadmap
+:alt: 學習路線圖：Ch 00-04 基礎必修，Ch 05-11 進階選修
+:width: 100%
+
+藍色區塊是基礎必修（Ch 00–04），建議按順序完成。紫色區塊是進階選修（Ch 05–11），完成基礎後可依需求任選。
+```
 
 ---
 

@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="arrowRight" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4A90D9"/>
+    </marker>
+    <marker id="arrowLeft" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="10 0, 0 3.5, 10 7" fill="#E67E22"/>
+    </marker>
+    <filter id="shadow2" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="320" fill="#FAFBFC" rx="12"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#2C3E50">Git 的四大區域與核心指令</text>
+
+  <!-- Box 1: Working Directory -->
+  <g filter="url(#shadow2)">
+    <rect x="20" y="55" width="160" height="180" rx="10" fill="#EBF5FB" stroke="#4A90D9" stroke-width="2"/>
+    <rect x="20" y="55" width="160" height="36" rx="10" fill="#4A90D9"/>
+    <rect x="20" y="75" width="160" height="16" fill="#4A90D9"/>
+    <text x="100" y="78" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">工作目錄</text>
+    <text x="100" y="100" text-anchor="middle" font-size="11" fill="#4A90D9">Working Directory</text>
+  </g>
+  <!-- File icons -->
+  <text x="45" y="130" font-size="12" fill="#5B7FA5">📄 analysis.py</text>
+  <text x="45" y="152" font-size="12" fill="#5B7FA5">📄 clean.py</text>
+  <text x="45" y="174" font-size="12" fill="#E74C3C">📝 修改中…</text>
+  <text x="45" y="210" font-size="11" fill="#7F8C8D">你平常編輯</text>
+  <text x="45" y="226" font-size="11" fill="#7F8C8D">檔案的地方</text>
+
+  <!-- Arrow 1: git add -->
+  <line x1="185" y1="140" x2="240" y2="140" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowRight)"/>
+  <rect x="188" y="114" width="60" height="22" rx="4" fill="#4A90D9"/>
+  <text x="218" y="129" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF" font-family="monospace">git add</text>
+
+  <!-- Box 2: Staging Area -->
+  <g filter="url(#shadow2)">
+    <rect x="250" y="55" width="160" height="180" rx="10" fill="#FEF9E7" stroke="#F39C12" stroke-width="2"/>
+    <rect x="250" y="55" width="160" height="36" rx="10" fill="#F39C12"/>
+    <rect x="250" y="75" width="160" height="16" fill="#F39C12"/>
+    <text x="330" y="78" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">暫存區</text>
+    <text x="330" y="100" text-anchor="middle" font-size="11" fill="#D4880F">Staging Area</text>
+  </g>
+  <text x="275" y="130" font-size="12" fill="#9A7D0A">📋 準備存檔的</text>
+  <text x="275" y="150" font-size="12" fill="#9A7D0A">　 修改清單</text>
+  <text x="275" y="185" font-size="11" fill="#7F8C8D">「這些改動</text>
+  <text x="275" y="201" font-size="11" fill="#7F8C8D">　我要存」</text>
+
+  <!-- Arrow 2: git commit -->
+  <line x1="415" y1="140" x2="470" y2="140" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowRight)"/>
+  <rect x="410" y="114" width="82" height="22" rx="4" fill="#4A90D9"/>
+  <text x="451" y="129" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF" font-family="monospace">git commit</text>
+
+  <!-- Box 3: Local Repository -->
+  <g filter="url(#shadow2)">
+    <rect x="480" y="55" width="160" height="180" rx="10" fill="#EAFAF1" stroke="#27AE60" stroke-width="2"/>
+    <rect x="480" y="55" width="160" height="36" rx="10" fill="#27AE60"/>
+    <rect x="480" y="75" width="160" height="16" fill="#27AE60"/>
+    <text x="560" y="78" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">本地儲存庫</text>
+    <text x="560" y="100" text-anchor="middle" font-size="11" fill="#1E8449">Local Repository</text>
+  </g>
+  <!-- Commit nodes -->
+  <circle cx="510" cy="130" r="6" fill="#27AE60"/>
+  <line x1="510" y1="136" x2="510" y2="148" stroke="#27AE60" stroke-width="2"/>
+  <circle cx="510" cy="154" r="6" fill="#27AE60"/>
+  <line x1="510" y1="160" x2="510" y2="172" stroke="#27AE60" stroke-width="2"/>
+  <circle cx="510" cy="178" r="6" fill="#2ECC71"/>
+  <text x="528" y="135" font-size="11" fill="#1E8449">快照 1</text>
+  <text x="528" y="159" font-size="11" fill="#1E8449">快照 2</text>
+  <text x="528" y="183" font-size="11" fill="#1E8449">快照 3</text>
+  <text x="500" y="218" font-size="11" fill="#7F8C8D">完整的版本</text>
+  <text x="500" y="234" font-size="11" fill="#7F8C8D">歷史紀錄</text>
+
+  <!-- Arrow 3: git push (up) -->
+  <line x1="660" y1="130" x2="690" y2="130" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowRight)"/>
+  <rect x="655" y="104" width="75" height="22" rx="4" fill="#4A90D9"/>
+  <text x="692" y="119" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF" font-family="monospace">git push</text>
+
+  <!-- Arrow 4: git pull (down) -->
+  <line x1="690" y1="170" x2="660" y2="170" stroke="#E67E22" stroke-width="2.5" marker-end="url(#arrowLeft)"/>
+  <rect x="658" y="178" width="68" height="22" rx="4" fill="#E67E22"/>
+  <text x="692" y="193" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF" font-family="monospace">git pull</text>
+
+  <!-- Box 4: Remote (GitHub) -->
+  <g filter="url(#shadow2)">
+    <rect x="700" y="75" width="85" height="140" rx="10" fill="#F4ECF7" stroke="#8E44AD" stroke-width="2"/>
+    <text x="742" y="118" text-anchor="middle" font-size="13" font-weight="bold" fill="#8E44AD">遠端</text>
+    <text x="742" y="138" text-anchor="middle" font-size="11" fill="#8E44AD">GitHub</text>
+    <text x="742" y="165" text-anchor="middle" font-size="26">☁️</text>
+    <text x="742" y="195" text-anchor="middle" font-size="11" fill="#7F8C8D">雲端備份</text>
+  </g>
+
+  <!-- Bottom summary -->
+  <rect x="20" y="260" width="760" height="48" rx="8" fill="#F8F9FA" stroke="#DEE2E6" stroke-width="1"/>
+  <text x="400" y="282" text-anchor="middle" font-size="13" fill="#2C3E50">
+    <tspan font-weight="bold" fill="#4A90D9">git add</tspan>
+    <tspan> 選擇要存的修改 →</tspan>
+    <tspan font-weight="bold" fill="#4A90D9"> git commit</tspan>
+    <tspan> 拍一張快照 →</tspan>
+    <tspan font-weight="bold" fill="#4A90D9"> git push</tspan>
+    <tspan> 上傳到雲端</tspan>
+  </text>
+  <text x="400" y="300" text-anchor="middle" font-size="12" fill="#7F8C8D">每天的工作只需要這三個指令！</text>
+</svg>

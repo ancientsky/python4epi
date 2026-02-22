@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="380" fill="#FAFBFC" rx="12"/>
+
+  <!-- Left side: Without Git -->
+  <rect x="20" y="15" width="370" height="350" rx="10" fill="#FDF2F2" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="205" y="48" text-anchor="middle" font-size="18" font-weight="bold" fill="#C0392B">😵 沒有 Git</text>
+
+  <!-- Scattered files -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="68" width="220" height="32" rx="6" fill="#FADBD8"/>
+    <text x="52" y="89" font-size="13" fill="#922B21" font-family="monospace">analysis.py</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="60" y="110" width="220" height="32" rx="6" fill="#FADBD8"/>
+    <text x="72" y="131" font-size="13" fill="#922B21" font-family="monospace">analysis_v2.py</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="45" y="152" width="250" height="32" rx="6" fill="#FADBD8"/>
+    <text x="57" y="173" font-size="13" fill="#922B21" font-family="monospace">analysis_v2_final.py</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="55" y="194" width="310" height="32" rx="6" fill="#F1948A"/>
+    <text x="67" y="215" font-size="13" fill="#78281F" font-family="monospace">analysis_v2_final_真的最終版.py</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="35" y="236" width="345" height="32" rx="6" fill="#E74C3C"/>
+    <text x="47" y="257" font-size="12" fill="#FFFFFF" font-family="monospace">analysis_v2_final_真的最終版_主管修改.py</text>
+  </g>
+
+  <!-- Question marks -->
+  <text x="310" y="100" font-size="28" fill="#E74C3C" opacity="0.5">?</text>
+  <text x="340" y="170" font-size="22" fill="#E74C3C" opacity="0.4">?</text>
+  <text x="55" y="310" font-size="14" fill="#922B21">哪個才是最新的？</text>
+  <text x="55" y="332" font-size="14" fill="#922B21">改了什麼完全不知道 😰</text>
+
+  <!-- Divider -->
+  <line x1="400" y1="30" x2="400" y2="350" stroke="#BDC3C7" stroke-width="2" stroke-dasharray="8,4"/>
+  <text x="400" y="370" text-anchor="middle" font-size="13" fill="#7F8C8D">VS</text>
+
+  <!-- Right side: With Git -->
+  <rect x="410" y="15" width="370" height="350" rx="10" fill="#EAFAF1" stroke="#27AE60" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="595" y="48" text-anchor="middle" font-size="18" font-weight="bold" fill="#1E8449">✅ 有 Git</text>
+
+  <!-- Single file -->
+  <g filter="url(#shadow)">
+    <rect x="540" y="68" width="180" height="36" rx="8" fill="#27AE60"/>
+    <text x="556" y="92" font-size="15" fill="#FFFFFF" font-weight="bold" font-family="monospace">analysis.py</text>
+  </g>
+  <text x="540" y="122" font-size="13" fill="#1E8449">只需要一個檔案 ✨</text>
+
+  <!-- Commit timeline -->
+  <line x1="460" y1="150" x2="460" y2="330" stroke="#27AE60" stroke-width="3"/>
+
+  <!-- Commit nodes -->
+  <circle cx="460" cy="165" r="8" fill="#27AE60"/>
+  <text x="478" y="163" font-size="11" fill="#555" font-family="monospace">a1b2c3d</text>
+  <text x="478" y="178" font-size="12" fill="#1E8449">初版分析腳本</text>
+
+  <circle cx="460" cy="215" r="8" fill="#27AE60"/>
+  <text x="478" y="213" font-size="11" fill="#555" font-family="monospace">e4f5g6h</text>
+  <text x="478" y="228" font-size="12" fill="#1E8449">分母改為通報數</text>
+
+  <circle cx="460" cy="265" r="8" fill="#27AE60"/>
+  <text x="478" y="263" font-size="11" fill="#555" font-family="monospace">i7j8k9l</text>
+  <text x="478" y="278" font-size="12" fill="#1E8449">改回確診數</text>
+
+  <circle cx="460" cy="315" r="8" fill="#2ECC71"/>
+  <text x="478" y="313" font-size="11" fill="#555" font-family="monospace">m0n1o2p</text>
+  <text x="478" y="328" font-size="12" fill="#1E8449">加入移動平均線</text>
+
+  <!-- Arrow pointing to latest -->
+  <text x="430" y="319" font-size="16" fill="#27AE60">▸</text>
+  <text x="620" y="340" font-size="13" fill="#1E8449" font-weight="bold">← 最新版</text>
+</svg>
