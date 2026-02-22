@@ -11,13 +11,10 @@
     </filter>
   </defs>
 
-  <!-- Background -->
   <rect width="800" height="320" fill="#FAFBFC" rx="12"/>
 
-  <!-- Title -->
   <text x="400" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#2C3E50">Git 的四大區域與核心指令</text>
 
-  <!-- Box 1: Working Directory -->
   <g filter="url(#shadow2)">
     <rect x="20" y="55" width="160" height="180" rx="10" fill="#EBF5FB" stroke="#4A90D9" stroke-width="2"/>
     <rect x="20" y="55" width="160" height="36" rx="10" fill="#4A90D9"/>
@@ -25,19 +22,12 @@
     <text x="100" y="78" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">工作目錄</text>
     <text x="100" y="100" text-anchor="middle" font-size="11" fill="#4A90D9">Working Directory</text>
   </g>
-  <!-- File icons -->
   <text x="45" y="130" font-size="12" fill="#5B7FA5">📄 analysis.py</text>
   <text x="45" y="152" font-size="12" fill="#5B7FA5">📄 clean.py</text>
   <text x="45" y="174" font-size="12" fill="#E74C3C">📝 修改中…</text>
   <text x="45" y="210" font-size="11" fill="#7F8C8D">你平常編輯</text>
   <text x="45" y="226" font-size="11" fill="#7F8C8D">檔案的地方</text>
 
-  <!-- Arrow 1: git add -->
-  <line x1="185" y1="140" x2="240" y2="140" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowRight)"/>
-  <rect x="188" y="114" width="60" height="22" rx="4" fill="#4A90D9"/>
-  <text x="218" y="129" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF" font-family="monospace">git add</text>
-
-  <!-- Box 2: Staging Area -->
   <g filter="url(#shadow2)">
     <rect x="250" y="55" width="160" height="180" rx="10" fill="#FEF9E7" stroke="#F39C12" stroke-width="2"/>
     <rect x="250" y="55" width="160" height="36" rx="10" fill="#F39C12"/>
@@ -50,12 +40,6 @@
   <text x="275" y="185" font-size="11" fill="#7F8C8D">「這些改動</text>
   <text x="275" y="201" font-size="11" fill="#7F8C8D">　我要存」</text>
 
-  <!-- Arrow 2: git commit -->
-  <line x1="415" y1="140" x2="470" y2="140" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowRight)"/>
-  <rect x="410" y="114" width="82" height="22" rx="4" fill="#4A90D9"/>
-  <text x="451" y="129" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF" font-family="monospace">git commit</text>
-
-  <!-- Box 3: Local Repository -->
   <g filter="url(#shadow2)">
     <rect x="480" y="55" width="160" height="180" rx="10" fill="#EAFAF1" stroke="#27AE60" stroke-width="2"/>
     <rect x="480" y="55" width="160" height="36" rx="10" fill="#27AE60"/>
@@ -63,7 +47,6 @@
     <text x="560" y="78" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">本地儲存庫</text>
     <text x="560" y="100" text-anchor="middle" font-size="11" fill="#1E8449">Local Repository</text>
   </g>
-  <!-- Commit nodes -->
   <circle cx="510" cy="130" r="6" fill="#27AE60"/>
   <line x1="510" y1="136" x2="510" y2="148" stroke="#27AE60" stroke-width="2"/>
   <circle cx="510" cy="154" r="6" fill="#27AE60"/>
@@ -75,17 +58,6 @@
   <text x="500" y="218" font-size="11" fill="#7F8C8D">完整的版本</text>
   <text x="500" y="234" font-size="11" fill="#7F8C8D">歷史紀錄</text>
 
-  <!-- Arrow 3: git push (up) -->
-  <line x1="660" y1="130" x2="690" y2="130" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowRight)"/>
-  <rect x="655" y="104" width="75" height="22" rx="4" fill="#4A90D9"/>
-  <text x="692" y="119" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF" font-family="monospace">git push</text>
-
-  <!-- Arrow 4: git pull (down) -->
-  <line x1="690" y1="170" x2="660" y2="170" stroke="#E67E22" stroke-width="2.5" marker-end="url(#arrowLeft)"/>
-  <rect x="658" y="178" width="68" height="22" rx="4" fill="#E67E22"/>
-  <text x="692" y="193" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF" font-family="monospace">git pull</text>
-
-  <!-- Box 4: Remote (GitHub) -->
   <g filter="url(#shadow2)">
     <rect x="700" y="75" width="85" height="140" rx="10" fill="#F4ECF7" stroke="#8E44AD" stroke-width="2"/>
     <text x="742" y="118" text-anchor="middle" font-size="13" font-weight="bold" fill="#8E44AD">遠端</text>
@@ -94,7 +66,22 @@
     <text x="742" y="195" text-anchor="middle" font-size="11" fill="#7F8C8D">雲端備份</text>
   </g>
 
-  <!-- Bottom summary -->
+  <line x1="185" y1="140" x2="240" y2="140" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowRight)"/>
+  <rect x="185" y="114" width="60" height="22" rx="4" fill="#4A90D9"/>
+  <text x="215" y="129" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF" font-family="monospace">git add</text>
+
+  <line x1="415" y1="140" x2="470" y2="140" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowRight)"/>
+  <rect x="412" y="114" width="66" height="22" rx="4" fill="#4A90D9"/>
+  <text x="445" y="129" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#FFFFFF" font-family="monospace">git commit</text>
+
+  <line x1="645" y1="130" x2="690" y2="130" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowRight)"/>
+  <rect x="641" y="104" width="58" height="22" rx="4" fill="#4A90D9"/>
+  <text x="670" y="119" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#FFFFFF" font-family="monospace">git push</text>
+
+  <line x1="645" y1="170" x2="690" y2="170" stroke="#E67E22" stroke-width="2.5" marker-start="url(#arrowLeft)"/>
+  <rect x="641" y="178" width="58" height="22" rx="4" fill="#E67E22"/>
+  <text x="670" y="193" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#FFFFFF" font-family="monospace">git pull</text>
+
   <rect x="20" y="260" width="760" height="48" rx="8" fill="#F8F9FA" stroke="#DEE2E6" stroke-width="1"/>
   <text x="400" y="282" text-anchor="middle" font-size="13" fill="#2C3E50">
     <tspan font-weight="bold" fill="#4A90D9">git add</tspan>
