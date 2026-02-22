@@ -44,8 +44,8 @@ tests/                         # pytest test suite
 
 ## Tech Stack
 
-- **Python 3.11** (pinned in `.python-version` and `pyproject.toml`)
-- **uv** as the sole package manager (no pip, conda, or poetry)
+- **Python 3.12** (pinned in `.python-version` and `pyproject.toml`)
+- **uv** as the sole package manager (no pip, conda, or poetry); notebooks also run on **Google Colab**
 - **Node.js 20+** required by Jupyter Book for building the site
 - **Jupyter Book** for static site generation from markdown and notebooks
 - **pytest** for testing, **ruff** for linting, **mypy** for type checking
@@ -85,7 +85,7 @@ uv run python notebooks/run_sitrep.py
 ## CI Pipeline
 
 The CI workflow (`.github/workflows/ci.yml`) runs on every PR and push to `main`:
-1. Installs uv, Node.js 20, Python 3.11
+1. Installs uv, Node.js 20, Python 3.12
 2. Runs `uv sync --all-groups`
 3. Runs `uv run pytest`
 4. Builds the Jupyter Book
@@ -96,7 +96,7 @@ A separate Pages workflow deploys the built book to GitHub Pages on push to `mai
 
 ### Python style
 - 4-space indentation, line length 100 characters (ruff)
-- Target version: Python 3.11
+- Target version: Python 3.12
 - Use `from __future__ import annotations` at the top of all source files
 - Full type annotations on function signatures
 - Small, focused functions with clear variable names
@@ -151,3 +151,5 @@ PR descriptions should include scope summary, validation output, and screenshots
 - The book uses `execute_notebooks: force` — all embedded notebooks are re-executed during every build, so they must remain runnable and fast (300s timeout per notebook)
 - Two TOC variants exist for student vs. instructor editions; `_toc.yml` is the active file that gets overwritten before builds
 - The `uv.lock` file is committed to ensure reproducible dependency resolution
+- Every notebook has a Colab setup cell at the top that detects `google.colab` and auto-clones the repo + installs deps; this cell is a no-op when running locally
+- When creating new notebooks, always include the standard Colab setup cell after the title markdown cell

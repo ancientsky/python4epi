@@ -15,17 +15,17 @@ A Traditional Chinese-first learning website for infectious disease epidemiology
 
 - Beginner-friendly science communication
 - Copy-paste runnable code and notebooks
-- End-to-end `uv` workflow only
+- End-to-end `uv` workflow, with Google Colab support
 
 ## Prerequisites
 
-- Python `3.11`
+- Python `3.12`
 - Node.js `20+` (required by Jupyter Book)
 
 ## Quick Start
 
 ```bash
-uv python pin 3.11
+uv python pin 3.12
 uv sync
 uv run jupyter lab
 ```
@@ -33,11 +33,25 @@ uv run jupyter lab
 ## Windows Quick Start (PowerShell)
 
 ```powershell
-winget install Python.Python.3.11
+winget install Python.Python.3.12
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-uv python pin 3.11
+uv python pin 3.12
 uv sync
 uv run jupyter lab
+```
+
+## Google Colab
+
+不需要安裝任何東西，直接在 Colab 上開啟 notebook 即可。每個 notebook 頂部都有一個 setup cell，會自動偵測 Colab 環境並安裝所需套件：
+
+```python
+# Google Colab setup -- 若在本機執行可跳過此 cell
+import sys
+import os
+if 'google.colab' in sys.modules:
+    !git clone https://github.com/ancientsky/python4epi.git /content/python4epi 2>/dev/null || true
+    os.chdir('/content/python4epi')
+    !pip install -q -e .
 ```
 
 ## Windows Troubleshooting
