@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="arrowBranch" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4A90D9"/>
+    </marker>
+    <marker id="arrowMerge" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#27AE60"/>
+    </marker>
+    <filter id="shadow4" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="400" fill="#FAFBFC" rx="12"/>
+
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#2C3E50">Git 分支：平行宇宙的概念</text>
+
+  <!-- ========== Main branch line ========== -->
+  <line x1="60" y1="100" x2="740" y2="100" stroke="#4A90D9" stroke-width="4"/>
+
+  <!-- Main branch label -->
+  <rect x="20" y="84" width="50" height="22" rx="4" fill="#4A90D9"/>
+  <text x="45" y="99" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF">main</text>
+
+  <!-- Main commits -->
+  <circle cx="120" cy="100" r="10" fill="#4A90D9" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="120" y="78" text-anchor="middle" font-size="10" fill="#7F8C8D">初版分析</text>
+
+  <circle cx="240" cy="100" r="10" fill="#4A90D9" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="240" y="78" text-anchor="middle" font-size="10" fill="#7F8C8D">加流行曲線</text>
+
+  <circle cx="360" cy="100" r="10" fill="#4A90D9" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="360" y="78" text-anchor="middle" font-size="10" fill="#7F8C8D">修正 CFR</text>
+
+  <!-- Branch point -->
+  <circle cx="360" cy="100" r="14" fill="none" stroke="#E67E22" stroke-width="2" stroke-dasharray="4,2"/>
+
+  <!-- ========== Scenario A: Merge ========== -->
+  <text x="400" y="156" text-anchor="middle" font-size="14" font-weight="bold" fill="#2C3E50">情境 A：實驗成功 → 合併回 main</text>
+
+  <!-- Branch line going down then right -->
+  <path d="M 360 100 Q 360 190 420 190" fill="none" stroke="#E67E22" stroke-width="3"/>
+  <line x1="420" y1="190" x2="580" y2="190" stroke="#E67E22" stroke-width="3"/>
+
+  <!-- Branch label -->
+  <rect x="380" y="200" width="120" height="20" rx="4" fill="#E67E22"/>
+  <text x="440" y="214" text-anchor="middle" font-size="10" font-weight="bold" fill="#FFFFFF">try-r0-method</text>
+
+  <!-- Branch commits -->
+  <circle cx="460" cy="190" r="8" fill="#E67E22" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="460" y="232" text-anchor="middle" font-size="10" fill="#7F8C8D">嘗試新方法</text>
+
+  <circle cx="560" cy="190" r="8" fill="#E67E22" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="560" y="232" text-anchor="middle" font-size="10" fill="#7F8C8D">結果看起來對</text>
+
+  <!-- Merge back to main -->
+  <path d="M 560 190 Q 620 190 620 100" fill="none" stroke="#27AE60" stroke-width="3" stroke-dasharray="6,3"/>
+  <circle cx="620" cy="100" r="12" fill="#27AE60" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="620" y="68" text-anchor="middle" font-size="11" font-weight="bold" fill="#27AE60">✅ merge</text>
+
+  <!-- Continue main after merge -->
+  <circle cx="720" cy="100" r="10" fill="#4A90D9" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="720" y="78" text-anchor="middle" font-size="10" fill="#7F8C8D">繼續開發</text>
+
+  <!-- Success annotation -->
+  <rect x="580" y="248" width="200" height="42" rx="8" fill="#EAFAF1" stroke="#27AE60" stroke-width="1.5"/>
+  <text x="680" y="266" text-anchor="middle" font-size="12" fill="#1E8449">git checkout main</text>
+  <text x="680" y="282" text-anchor="middle" font-size="12" fill="#1E8449">git merge try-r0-method</text>
+
+  <!-- ========== Divider ========== -->
+  <line x1="40" y1="305" x2="760" y2="305" stroke="#DEE2E6" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- ========== Scenario B: Discard ========== -->
+  <text x="400" y="330" text-anchor="middle" font-size="14" font-weight="bold" fill="#2C3E50">情境 B：實驗失敗 → 直接切回 main，什麼都不影響</text>
+
+  <!-- Main line continues -->
+  <line x1="60" y1="365" x2="740" y2="365" stroke="#4A90D9" stroke-width="4"/>
+  <rect x="20" y="349" width="50" height="22" rx="4" fill="#4A90D9"/>
+  <text x="45" y="364" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF">main</text>
+
+  <circle cx="120" cy="365" r="8" fill="#4A90D9" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="240" cy="365" r="8" fill="#4A90D9" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="360" cy="365" r="8" fill="#4A90D9" stroke="#FFFFFF" stroke-width="2"/>
+
+  <!-- Failed branch (faded) -->
+  <path d="M 360 365 Q 360 340 400 340" fill="none" stroke="#E74C3C" stroke-width="2" opacity="0.4"/>
+  <line x1="400" y1="340" x2="500" y2="340" stroke="#E74C3C" stroke-width="2" opacity="0.4"/>
+  <circle cx="440" cy="340" r="6" fill="#E74C3C" opacity="0.4"/>
+  <circle cx="490" cy="340" r="6" fill="#E74C3C" opacity="0.4"/>
+  <text x="520" y="344" font-size="11" fill="#E74C3C" opacity="0.6">✕ 捨棄</text>
+
+  <!-- Main continues unaffected -->
+  <circle cx="500" cy="365" r="8" fill="#4A90D9" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="620" cy="365" r="8" fill="#4A90D9" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="560" y="390" text-anchor="middle" font-size="12" fill="#4A90D9" font-weight="bold">main 完全不受影響 👍</text>
+
+  <!-- Command annotation -->
+  <rect x="580" y="332" width="180" height="24" rx="6" fill="#FDF2F2" stroke="#E74C3C" stroke-width="1"/>
+  <text x="670" y="348" text-anchor="middle" font-size="11" fill="#C0392B">git checkout main（切回去就好）</text>
+</svg>
