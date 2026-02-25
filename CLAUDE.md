@@ -120,6 +120,31 @@ A separate Pages workflow deploys the built book to GitHub Pages on push to `mai
 - Prose and explanations: Traditional Chinese (繁體中文)
 - Technical terms, variable names, code: English
 
+### Epidemiological terminology (台灣繁體中文譯名)
+
+All Chinese epidemiological terms must follow **Taiwan (ROC) standard usage**. Key terms:
+
+| English | 台灣譯名（使用這個） | ❌ 避免使用 |
+|---------|----------------------|-------------|
+| Attack rate | 侵襲率 | 攻擊率 |
+| Case fatality rate (CFR) | 致死率 | 病死率 |
+| Risk ratio (RR) | 風險比 | 危險比 |
+| Confidence interval (CI) | 信賴區間 | 置信區間 |
+| Incidence rate | 發生率 | 發病率（可用於非正式語境） |
+| Prevalence | 盛行率 | 流行率、患病率 |
+| Epidemic curve | 流行曲線 | — |
+| Outbreak / cluster | 群聚 | 聚集性疫情 |
+| Surveillance | 監測 | 監控 |
+| Case notification | 通報 | 報告（用於疫情通報語境時） |
+| Epidemiological investigation | 疫調（口語）/ 流行病學調查 | 流調 |
+| Basic reproduction number | 基本再生數 | 基本傳染數 |
+| Sensitivity (test) | 敏感度 | 靈敏度 |
+| Specificity | 特異度 | 特異性 |
+| Chi-square test | 卡方檢定 | 卡方检验 |
+| Exposure | 暴露 | — |
+
+**Note:** Python variable names and function names remain in English (e.g., `attack_rate`, `case_fatality_rate`)—only Chinese prose uses the translated terms above.
+
 ## Testing Guidelines
 
 - Test files: `tests/test_*.py`

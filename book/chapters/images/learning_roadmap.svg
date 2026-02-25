@@ -32,7 +32,7 @@
   <g filter="url(#shadow5)">
     <rect x="120" y="140" width="200" height="44" rx="10" fill="#4A90D9"/>
     <text x="220" y="159" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 01 流病核心概念</text>
-    <text x="220" y="176" text-anchor="middle" font-size="11" fill="#D6EAF8">攻擊率、CFR、Python 基礎</text>
+    <text x="220" y="176" text-anchor="middle" font-size="11" fill="#D6EAF8">侵襲率、CFR、Python 基礎</text>
   </g>
 
   <!-- Arrow -->
