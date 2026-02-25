@@ -411,6 +411,187 @@ git checkout main
 
 不要等到「整個分析做完」才 commit。太大的 commit 很難回頭找問題；頻繁的小 commit 讓你隨時能回到任何一步。
 
+### 實戰範例：用 Git 管理 Excel 疫調檔案
+
+你可能會問：「我們疫調都用 Excel，Git 也能管 Excel 嗎？」
+
+**答案是可以的。** Git 可以追蹤任何檔案，包括 `.xlsx`。只是 Excel 是**二進位檔案（binary file）**，Git 沒辦法像純文字檔一樣「逐行比對差異」，但它仍然會幫你保存每一個版本的完整快照，讓你隨時能回到之前的狀態。
+
+以下是一個完整的團隊協作範例。假設你在衛生局負責一份登革熱疫調的 Excel 檔案，團隊有你和另一位同事小李。
+
+#### 第一步：建立 GitHub 儲存庫，把 Excel 放進去
+
+先在 GitHub 上建立一個新的儲存庫（repository），然後在你的電腦上：
+
+```bash
+# 建立專案資料夾
+mkdir dengue-investigation-2025
+cd dengue-investigation-2025
+git init
+
+# 把你的 Excel 檔案放進來
+# （假設你把 line_list.xlsx 複製到這個資料夾了）
+
+# 第一次 commit
+git add line_list.xlsx
+git commit -m "feat: 新增登革熱疫調 line list 初始版本"
+
+# 連結到 GitHub 上的儲存庫，然後推上去
+git remote add origin https://github.com/your-team/dengue-investigation-2025.git
+git push -u origin main
+```
+
+現在你的 Excel 檔案已經在 GitHub 上了，有雲端備份，團隊成員都能存取。
+
+#### 第二步：你修改了一筆資料、新增了一張圖表
+
+隔天你收到新的通報，需要更新資料。你打開 `line_list.xlsx`：
+- 修正了第 23 筆病例的發病日期（原本打錯了）
+- 新增了一個「各區病例統計圖」的工作表（sheet）
+
+改完存檔後，回到終端機：
+
+```bash
+# 看看 Git 偵測到什麼變動
+git status
+# 你會看到：modified: line_list.xlsx
+
+# 加入暫存區
+git add line_list.xlsx
+
+# 存檔，寫清楚你改了什麼
+git commit -m "fix: 修正第 23 筆病例發病日期；新增各區病例統計圖表"
+```
+
+#### 第三步：推到 GitHub（`git push`）
+
+```bash
+git push
+```
+
+就這樣一行指令，你本機的最新版就同步到 GitHub 了。
+
+**推到哪裡？** 推到你在第一步設定的那個 GitHub 儲存庫。你可以用 `git remote -v` 查看目前連結的遠端位置。
+
+#### 第四步：為什麼要用 Pull Request？不能直接 push 嗎？
+
+如果是你一個人的小專案，直接 push 到 `main` 完全沒問題。
+
+但在團隊協作時，更好的做法是用 **Pull Request（簡稱 PR）**。流程是這樣的：
+
+```bash
+# 先開一條分支，在分支上修改
+git checkout -b update-case-23
+
+# 修改 Excel、commit
+git add line_list.xlsx
+git commit -m "fix: 修正第 23 筆病例發病日期"
+
+# 把分支推到 GitHub
+git push -u origin update-case-23
+```
+
+然後到 GitHub 網頁上點「**Create Pull Request**」。
+
+**PR 的價值在於：**
+
+- **留下審查紀錄**：同事可以在 PR 上留言「確認過原始通報單，日期的確是 6/15 不是 6/5」
+- **防止錯誤進入主檔案**：在 merge（合併）之前，有人先看過一遍
+- **方便追溯**：三個月後如果有人問「這筆資料為什麼改了」，PR 裡有完整的討論記錄
+
+**誰可以 merge？** 這取決於儲存庫的權限設定。通常的做法是：
+
+| 角色 | 權限 |
+|------|------|
+| 專案負責人 / 組長 | 可以 merge PR、管理儲存庫設定 |
+| 團隊成員 | 可以開 PR、審查（review）、留言，但需要負責人批准才能 merge |
+| 外部協作者 | 可以 fork 後開 PR，但不能直接 merge |
+
+在衛生局的場景中，可能是**疫調組長**負責 merge，確保每次資料修改都經過審核。
+
+```{figure} images/git_pull_request_flow.svg
+:name: fig-git-pr-flow
+:alt: Pull Request 流程：開分支 → 修改 → 推上 GitHub → 開 PR → 審查 → Merge
+:width: 100%
+
+Pull Request 流程：從 main 開一條分支修改，推到 GitHub 後開 PR，團隊成員審查確認後，由負責人合併回 main。這樣每一筆修改都有審查紀錄。
+```
+
+#### 第五步：同事小李也要編輯同一個 Excel 檔
+
+小李也需要新增幾筆病例資料。正確的做法是：
+
+```bash
+# 小李先把最新版抓下來
+git clone https://github.com/your-team/dengue-investigation-2025.git
+cd dengue-investigation-2025
+
+# 開一條自己的分支
+git checkout -b add-new-cases-lili
+
+# 打開 Excel 修改、存檔
+# ...修改完畢...
+
+git add line_list.xlsx
+git commit -m "feat: 新增 6/16 通報的 8 筆新病例"
+git push -u origin add-new-cases-lili
+```
+
+然後小李到 GitHub 上開一個 PR，等負責人審查後 merge。
+
+#### 第六步：小李改完了，你要怎麼同步？
+
+小李的 PR 被 merge 之後，你本機的檔案還是舊的。你需要把最新版拉下來：
+
+```bash
+# 先切回主分支
+git checkout main
+
+# 從 GitHub 拉最新版
+git pull
+```
+
+現在你的 `line_list.xlsx` 就包含小李新增的那 8 筆病例了。
+
+#### 重要提醒：Excel 的合併限制
+
+有一點必須注意：**如果你和小李同時修改同一個 Excel 檔案的不同部分，Git 無法自動合併。** 因為 Excel 是二進位檔案，Git 看到的是「整個檔案變了」，不知道誰改了哪一格。
+
+這時候 Git 會提示「**merge conflict（合併衝突）**」，你需要手動決定要保留誰的版本。
+
+**避免衝突的實務做法：**
+
+| 方法 | 說明 |
+|------|------|
+| **約定時段** | 「上午我編輯，下午你編輯」，避免同時修改 |
+| **分工作表** | 你負責 Sheet1（病例清單），小李負責 Sheet2（統計彙整） |
+| **改用 CSV** | 把資料存成 `.csv`（純文字），Git 就能逐行比對、自動合併 |
+| **先 pull 再改** | 每次開始修改前，先 `git pull` 確保手上是最新版 |
+
+```{tip}
+如果你的團隊經常需要多人同時編輯同一份資料，考慮把 Excel 拆成 CSV（資料）加上 notebook（分析和圖表）。CSV 是純文字檔案，Git 可以逐行比對差異，多人同時修改不同列時能自動合併，比 Excel 友善很多。這也是本教材推薦的工作流程。
+```
+
+#### 完整流程圖
+
+把上面的步驟串起來，就是一個流行病學團隊用 Git 協作的完整流程：
+
+```
+你修改 Excel
+    ↓
+git add → git commit（存檔到本機）
+    ↓
+git checkout -b 分支名 → git push（推到 GitHub）
+    ↓
+在 GitHub 上開 Pull Request
+    ↓
+同事審查（review）、留言確認
+    ↓
+組長 merge 到 main
+    ↓
+其他人 git pull（同步最新版到本機）
+```
+
 > **給完全不想學 Git 的人**：如果你現在只想專心學流病和 Python，可以先跳過這一段。Git 不是本教材的必要條件——所有章節都可以在沒有 Git 的情況下完成。等你有一天遇到「我想找回上週的程式碼」或「我想跟同事共用分析腳本」的時候，再回來看這段就好。
 
 ---

@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow5" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrowDown" markerWidth="8" markerHeight="6" refX="4" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4A90D9"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="4" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#27AE60"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="8" markerHeight="6" refX="4" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#E67E22"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="520" fill="#FAFBFC" rx="12"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#2C3E50">Pull Request 團隊協作流程（Excel 疫調檔案）</text>
+
+  <!-- ===== Left column: You ===== -->
+  <text x="200" y="62" text-anchor="middle" font-size="14" font-weight="bold" fill="#4A90D9">你（疫調員）</text>
+
+  <!-- Step 1: Branch -->
+  <rect x="80" y="78" width="240" height="44" rx="8" fill="#EBF5FB" stroke="#4A90D9" stroke-width="1.5" filter="url(#shadow5)"/>
+  <text x="200" y="97" text-anchor="middle" font-size="12" font-weight="bold" fill="#2471A3">① 開分支</text>
+  <text x="200" y="114" text-anchor="middle" font-size="11" fill="#5B6770">git checkout -b update-case-23</text>
+
+  <!-- Arrow down -->
+  <line x1="200" y1="122" x2="200" y2="142" stroke="#4A90D9" stroke-width="2" marker-end="url(#arrowDown)"/>
+
+  <!-- Step 2: Edit Excel -->
+  <rect x="80" y="146" width="240" height="44" rx="8" fill="#EBF5FB" stroke="#4A90D9" stroke-width="1.5" filter="url(#shadow5)"/>
+  <text x="200" y="165" text-anchor="middle" font-size="12" font-weight="bold" fill="#2471A3">② 修改 Excel</text>
+  <text x="200" y="182" text-anchor="middle" font-size="11" fill="#5B6770">修正病例資料、新增圖表</text>
+
+  <!-- Arrow down -->
+  <line x1="200" y1="190" x2="200" y2="210" stroke="#4A90D9" stroke-width="2" marker-end="url(#arrowDown)"/>
+
+  <!-- Step 3: Commit -->
+  <rect x="80" y="214" width="240" height="44" rx="8" fill="#EBF5FB" stroke="#4A90D9" stroke-width="1.5" filter="url(#shadow5)"/>
+  <text x="200" y="233" text-anchor="middle" font-size="12" font-weight="bold" fill="#2471A3">③ 存檔到本機</text>
+  <text x="200" y="250" text-anchor="middle" font-size="11" fill="#5B6770">git add → git commit</text>
+
+  <!-- Arrow down -->
+  <line x1="200" y1="258" x2="200" y2="278" stroke="#4A90D9" stroke-width="2" marker-end="url(#arrowDown)"/>
+
+  <!-- Step 4: Push -->
+  <rect x="80" y="282" width="240" height="44" rx="8" fill="#EBF5FB" stroke="#4A90D9" stroke-width="1.5" filter="url(#shadow5)"/>
+  <text x="200" y="301" text-anchor="middle" font-size="12" font-weight="bold" fill="#2471A3">④ 推到 GitHub</text>
+  <text x="200" y="318" text-anchor="middle" font-size="11" fill="#5B6770">git push -u origin update-case-23</text>
+
+  <!-- Arrow from push to PR (center) -->
+  <path d="M 320 304 L 370 304" fill="none" stroke="#E67E22" stroke-width="2" marker-end="url(#arrowOrange)"/>
+
+  <!-- ===== Center: GitHub ===== -->
+  <!-- Step 5: PR -->
+  <rect x="375" y="282" width="200" height="44" rx="8" fill="#FEF5E7" stroke="#E67E22" stroke-width="2" filter="url(#shadow5)"/>
+  <text x="475" y="301" text-anchor="middle" font-size="12" font-weight="bold" fill="#D35400">⑤ 開 Pull Request</text>
+  <text x="475" y="318" text-anchor="middle" font-size="11" fill="#5B6770">在 GitHub 網頁操作</text>
+
+  <!-- Arrow down from PR to Review -->
+  <line x1="475" y1="326" x2="475" y2="346" stroke="#E67E22" stroke-width="2" marker-end="url(#arrowOrange)"/>
+
+  <!-- ===== Right column: Reviewer ===== -->
+  <text x="620" y="62" text-anchor="middle" font-size="14" font-weight="bold" fill="#27AE60">同事 / 組長</text>
+
+  <!-- Review box -->
+  <rect x="375" y="350" width="200" height="56" rx="8" fill="#EAFAF1" stroke="#27AE60" stroke-width="2" filter="url(#shadow5)"/>
+  <text x="475" y="372" text-anchor="middle" font-size="12" font-weight="bold" fill="#1E8449">⑥ 審查（Review）</text>
+  <text x="475" y="388" text-anchor="middle" font-size="11" fill="#5B6770">確認修改正確</text>
+  <text x="475" y="401" text-anchor="middle" font-size="10" fill="#7F8C8D">留言：「確認過原始通報單 ✓」</text>
+
+  <!-- Reviewer arrow to review -->
+  <path d="M 620 75 L 620 370 L 575 370" fill="none" stroke="#27AE60" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <circle cx="620" cy="75" r="3" fill="#27AE60"/>
+
+  <!-- Arrow down from Review to Merge -->
+  <line x1="475" y1="406" x2="475" y2="426" stroke="#27AE60" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+  <!-- Merge box -->
+  <rect x="375" y="430" width="200" height="44" rx="8" fill="#D5F5E3" stroke="#27AE60" stroke-width="2" filter="url(#shadow5)"/>
+  <text x="475" y="449" text-anchor="middle" font-size="12" font-weight="bold" fill="#1E8449">⑦ Merge 到 main</text>
+  <text x="475" y="466" text-anchor="middle" font-size="11" fill="#5B6770">組長點「Merge」按鈕</text>
+
+  <!-- Arrow from Merge back to left (git pull) -->
+  <path d="M 375 452 L 320 490" fill="none" stroke="#4A90D9" stroke-width="2" marker-end="url(#arrowDown)"/>
+
+  <!-- Step 8: git pull -->
+  <rect x="80" y="478" width="240" height="36" rx="8" fill="#EBF5FB" stroke="#4A90D9" stroke-width="1.5" filter="url(#shadow5)"/>
+  <text x="200" y="500" text-anchor="middle" font-size="12" font-weight="bold" fill="#2471A3">⑧ 其他人 git pull 同步最新版</text>
+
+  <!-- Decorative: Local vs Cloud labels -->
+  <rect x="30" y="72" width="6" height="260" rx="3" fill="#4A90D9" opacity="0.3"/>
+  <text x="40" y="200" font-size="10" fill="#4A90D9" transform="rotate(-90, 40, 200)">本機操作</text>
+
+  <rect x="590" y="275" width="6" height="206" rx="3" fill="#E67E22" opacity="0.3"/>
+  <text x="605" y="390" font-size="10" fill="#E67E22" transform="rotate(-90, 605, 390)">GitHub</text>
+</svg>
