@@ -4,10 +4,12 @@
 
 - 為什麼流行病學需要程式工具（而不只是試算表）
 - 為什麼這份教材選 Python，而不是 R 或 Excel
-- 為什麼用 `uv` 而不是傳統的 `pip`
-- Git 版本控制基礎：流行病學家最常用的情境與指令
+- 為什麼用 `uv` 而不是傳統的 `pip`——以及如何用 `uv` 一站式安裝 Python、套件與 Jupyter Lab
+- 虛擬環境是什麼？為什麼流行病學家的多專案工作需要它？
+- 手把手完成你的第一個流行病學 Hello World（uv + pandas + 流行曲線）
+- 除了 pandas，還有哪些資料清理工具可以選？
+- Git 版本控制基礎：流行病學家最常用的情境與指令（包含 Excel 檔案協作）
 - 如何一步一步在你的電腦上安裝好所有工具
-- 安裝完後怎麼驗證、怎麼開始學
 
 ---
 
@@ -109,16 +111,18 @@ Python 在這些**自動化、排程、系統串接**的工作上比 R 強很多
 [`uv`](https://docs.astral.sh/uv/) 是一個用 Rust 語言寫的新一代 Python 套件管理工具，特色是：
 
 - **快非常多**：安裝速度比 `pip` 快 10～100 倍（不誇張）。
+- **連 Python 都幫你裝**：不用事先去官網下載 Python，`uv` 一行指令就幫你搞定。
 - **自動管理虛擬環境**：你不需要手動建立、啟動虛擬環境，`uv sync` 一個指令就搞定。
 - **鎖定版本**：`uv.lock` 檔案確保你跟同學、同事用的套件版本一模一樣，不會出現「我的可以跑，你的不行」。
-- **一個指令做所有事**：安裝、執行、管理，全部用 `uv` 開頭。
+- **一個指令做所有事**：安裝 Python、安裝套件、執行程式、管理環境，全部用 `uv` 開頭。
 
 ### 實際差異：`pip` vs `uv`
 
 | 任務 | 傳統做法（`pip`） | 本教材做法（`uv`） |
 |------|-------------------|-------------------|
+| 安裝 Python | 去官網下載、手動安裝 | `uv python install 3.13` |
 | 建立環境 | `python -m venv .venv && source .venv/bin/activate` | `uv sync`（自動建立並啟用） |
-| 安裝套件 | `pip install pandas matplotlib` | `uv sync`（讀 `pyproject.toml` 自動安裝） |
+| 安裝套件 | `pip install pandas matplotlib` | `uv add pandas matplotlib` 或 `uv sync` |
 | 開 notebook | `jupyter lab`（要先確定裝過） | `uv run jupyter lab` |
 | 跑測試 | `pytest`（要先確定環境對） | `uv run pytest` |
 | 確保版本一致 | 自己管 `requirements.txt`（容易忘記更新） | `uv.lock` 自動鎖定 |
@@ -147,57 +151,52 @@ Python 在這些**自動化、排程、系統串接**的工作上比 R 強很多
 
 ---
 
-## 安裝 Python（建議 3.11）
+## 安裝工具：只要裝 `uv`，其他它幫你搞定
 
-接下來是實際的安裝步驟。請根據你的作業系統，選擇對應的區塊操作。
+接下來是實際的安裝步驟。好消息是：**你只需要安裝一個工具——`uv`。** Python 本身不用事先安裝，`uv` 會自動幫你下載並管理正確版本的 Python。
 
-### macOS
+### 等等，我不用先安裝 Python 嗎？
 
-打開「終端機」應用程式（可以用 Spotlight 搜尋 "Terminal"），然後輸入：
+**不用！** 這是 `uv` 最方便的地方之一。傳統的方式是：先去 Python 官網下載安裝程式 → 安裝 Python → 再來裝套件管理工具。但 `uv` 把這些步驟合在一起了：
 
-```bash
-brew install python@3.11
-python3 --version
-```
+| 傳統方式 | 用 `uv` 的方式 |
+|----------|----------------|
+| ① 去官網下載 Python 安裝程式 | ① 安裝 `uv`（一行指令） |
+| ② 安裝 Python | ② `uv python install 3.13`（`uv` 自動下載 Python） |
+| ③ 設定環境變數 PATH | ③ 不需要，`uv` 幫你管理 |
+| ④ 安裝 pip / 建立虛擬環境 | ④ 不需要，`uv sync` 全部搞定 |
 
-> 如果你沒有 `brew`，請先到 [https://brew.sh](https://brew.sh) 安裝 Homebrew。
+**簡單說：裝好 `uv`，你就什麼都有了。**
 
-### Windows（PowerShell）
+如果你的電腦上已經有 Python 也沒關係，`uv` 會自動偵測並使用它，不會衝突。
 
-按 `Win + X`，選擇「Windows PowerShell」或「終端機」，然後輸入：
+### 安裝 `uv`
 
-```powershell
-winget install Python.Python.3.11
-python --version
-```
+#### macOS / Linux
 
-### Linux（Ubuntu/Debian）
-
-打開終端機，輸入：
-
-```bash
-sudo apt update
-sudo apt install -y python3.11 python3.11-venv
-python3.11 --version
-```
-
-> **驗證成功**：不管哪個系統，你看到類似 `Python 3.11.x` 的版本號就表示安裝成功了。
-
----
-
-## 安裝 `uv`
-
-### macOS / Linux
+打開終端機（macOS 可以用 Spotlight 搜尋 "Terminal"），輸入：
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+安裝完關掉終端機再重新打開，然後驗證：
+
+```bash
 uv --version
 ```
 
-### Windows（PowerShell）
+#### Windows（PowerShell）
+
+按 `Win + X`，選擇「Windows PowerShell」或「終端機」，輸入：
 
 ```powershell
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+關掉 PowerShell 再重新打開，然後驗證：
+
+```powershell
 uv --version
 ```
 
@@ -205,21 +204,324 @@ uv --version
 >
 > **常見問題**：如果顯示 `command not found: uv`，請關掉終端機再重新打開一次。安裝程式會把 `uv` 加入你的 PATH，但需要重新啟動終端機才會生效。
 
----
+### 用 `uv` 安裝 Python
 
-## `uv` 基本操作（最常用 5 個）
-
-安裝完之後，整個教材只會用到這 5 個指令：
+安裝好 `uv` 之後，一行指令就能安裝 Python：
 
 ```bash
-uv python pin 3.11               # ① 指定專案要用 Python 3.11
-uv sync                          # ② 安裝所有需要的套件（第一次會比較久）
-uv run jupyter lab                # ③ 開啟 notebook 環境
-uv run pytest                    # ④ 跑測試（檢查程式碼是否正確）
-uv run jupyter-book build book/   # ⑤ 建置教學網站（進階，可先略過）
+uv python install 3.13
 ```
 
-你不需要背這些指令，用到的時候回來查就好。
+`uv` 會自動下載 Python 3.13 並安裝到它自己管理的目錄中，不會跟你電腦上現有的 Python 衝突。
+
+驗證：
+
+```bash
+uv run python --version
+# 你會看到：Python 3.13.x
+```
+
+> **為什麼建議 3.13？** Python 3.13 是目前最新的穩定版（2024 年 10 月發布），效能更好、錯誤訊息更清楚，而且所有主要的資料科學套件都已支援。如果你的電腦上已經有 Python 3.12 或 3.11，仍然可以正常使用本教材，但我們建議用最新版以獲得最佳體驗。
+
+---
+
+## 為什麼需要「虛擬環境」？跟流行病學有什麼關係？
+
+你可能會聽到有人說「記得要用虛擬環境」，覺得又是一個程式術語。讓我用流病的情境來解釋：
+
+### 問題：套件版本打架
+
+想像你同時在做兩個專案：
+
+- **專案 A：登革熱週報**——用 `pandas 1.5`，一年前寫的，跑得很穩
+- **專案 B：COVID 儀表板**——用 `pandas 2.2`，需要新功能
+
+如果兩個專案共用同一個 Python 環境，裝了 `pandas 2.2` 之後，專案 A 可能就壞了（因為某些語法在新版改了）。裝回 `pandas 1.5`，專案 B 又壞了。
+
+**虛擬環境（virtual environment）就是幫每個專案建立一個「獨立的套件空間」。** 專案 A 有自己的 pandas 1.5，專案 B 有自己的 pandas 2.2，互不干擾。
+
+```
+你的電腦
+├── 專案 A（登革熱週報）/.venv/
+│   └── pandas 1.5、matplotlib 3.7 ...
+├── 專案 B（COVID 儀表板）/.venv/
+│   └── pandas 2.2、plotly 6.0 ...
+└── 專案 C（本教材）/.venv/
+    └── pandas 2.2、matplotlib 3.10 ...
+```
+
+### `uv` 怎麼管理虛擬環境？
+
+好消息：**你不需要手動建立虛擬環境，`uv` 會自動幫你做。** 當你在專案資料夾裡執行 `uv sync`，它會：
+
+1. 在資料夾內建立一個 `.venv/` 目錄（這就是虛擬環境）
+2. 安裝 `pyproject.toml` 裡列出的所有套件到 `.venv/` 中
+3. 之後每次用 `uv run ...` 執行任何指令，都自動使用這個虛擬環境
+
+你完全不需要執行什麼 `source .venv/bin/activate`——`uv run` 會自動處理。
+
+```bash
+# 這一行就同時建好虛擬環境 + 安裝所有套件
+uv sync
+
+# 之後所有指令都用 uv run 開頭，自動在虛擬環境中執行
+uv run python my_script.py
+uv run jupyter lab
+uv run pytest
+```
+
+---
+
+## `uv` 完整操作指南：從安裝套件到開 Jupyter Lab
+
+### 情境 1：跟著本教材學習（最簡單）
+
+如果你是下載本教材的程式碼來學習，只需要：
+
+```bash
+cd python4epi        # 進入教材資料夾
+uv sync              # 安裝所有套件（第一次約 1-2 分鐘）
+uv run jupyter lab   # 開啟 Jupyter Lab
+```
+
+就這樣三行，所有東西都裝好了——pandas、matplotlib、scikit-learn、Jupyter Lab 全部包含在內。
+
+### 情境 2：我想自己建一個新的流病分析專案
+
+假設你想從頭建立一個登革熱分析專案：
+
+```bash
+# 建立專案資料夾
+mkdir dengue-analysis
+cd dengue-analysis
+
+# 初始化專案（uv 會建立 pyproject.toml）
+uv init
+
+# 指定 Python 版本
+uv python pin 3.13
+
+# 安裝你需要的套件
+uv add pandas matplotlib jupyterlab openpyxl
+
+# 開啟 Jupyter Lab
+uv run jupyter lab
+```
+
+**`uv add` 做了什麼？** 它會：
+1. 自動下載並安裝指定的套件
+2. 把套件名稱寫入 `pyproject.toml`（套件清單）
+3. 更新 `uv.lock`（精確版本鎖定檔案）
+4. 如果虛擬環境還不存在，順便建立
+
+以後你或同事在另一台電腦上只要執行 `uv sync`，就能裝到一模一樣的環境。
+
+### 情境 3：在 Jupyter Lab 裡面安裝新套件
+
+你已經在 Jupyter Lab 裡面寫程式了，突然發現需要一個新套件（例如 `seaborn` 用來畫更漂亮的圖）。
+
+**方法 A：回到終端機安裝（推薦）**
+
+```bash
+# 在終端機執行（Jupyter Lab 不用關）
+uv add seaborn
+```
+
+然後回到 Jupyter Lab，重新啟動 kernel（選單 → Kernel → Restart Kernel），就能 `import seaborn` 了。
+
+**方法 B：在 notebook cell 裡安裝**
+
+如果你不想切到終端機，也可以在 notebook 的 code cell 裡直接執行：
+
+```python
+# 在 notebook cell 中執行（注意前面的驚嘆號）
+!uv add seaborn
+```
+
+執行完之後同樣需要重新啟動 kernel。
+
+```{tip}
+建議用方法 A（終端機安裝）。方法 B 雖然方便，但有時候會因為路徑問題找不到 `uv`。如果你用方法 B 遇到 `uv: command not found`，就改用方法 A。
+```
+
+### `uv` 指令速查表
+
+| 我想要… | 指令 | 說明 |
+|---------|------|------|
+| 安裝 Python | `uv python install 3.13` | 下載指定版本的 Python |
+| 初始化新專案 | `uv init` | 建立 `pyproject.toml` |
+| 指定專案的 Python 版本 | `uv python pin 3.13` | 建立 `.python-version` 檔案 |
+| 安裝所有套件 | `uv sync` | 依照 `pyproject.toml` 安裝 |
+| 新增一個套件 | `uv add pandas` | 安裝並記錄到 `pyproject.toml` |
+| 新增多個套件 | `uv add pandas matplotlib seaborn` | 一次裝多個 |
+| 移除一個套件 | `uv remove seaborn` | 移除並從 `pyproject.toml` 刪除 |
+| 在虛擬環境中執行指令 | `uv run python script.py` | 自動使用虛擬環境 |
+| 開 Jupyter Lab | `uv run jupyter lab` | 在虛擬環境中啟動 |
+| 跑測試 | `uv run pytest` | 在虛擬環境中執行測試 |
+| 看目前裝了哪些套件 | `uv pip list` | 列出所有已安裝套件 |
+
+---
+
+## 手把手教學：從零開始的流行病學 Hello World
+
+光看指令可能還是抽象。讓我們從一台什麼都沒裝的電腦開始，一步一步做出流行病學家的第一個「Hello World」——不是印出一行字，而是**讀取一份 line list、計算攻擊率、畫一張流行曲線**。
+
+### Step 1：安裝 uv
+
+```bash
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Windows（PowerShell）
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+安裝完**關掉終端機再重新打開**。
+
+### Step 2：建立專案
+
+```bash
+mkdir epi-hello-world
+cd epi-hello-world
+uv init
+uv python pin 3.13
+```
+
+### Step 3：安裝流病分析套件
+
+```bash
+uv add pandas matplotlib jupyterlab openpyxl
+```
+
+這一行會安裝：
+- `pandas`：讀取和處理表格資料（line list）
+- `matplotlib`：畫圖（流行曲線）
+- `jupyterlab`：互動式程式編輯環境
+- `openpyxl`：讓 pandas 能讀寫 Excel（`.xlsx`）檔案
+
+### Step 4：開啟 Jupyter Lab
+
+```bash
+uv run jupyter lab
+```
+
+瀏覽器會自動打開。點右邊的 **「Python 3 (ipykernel)」** 建立一個新的 notebook。
+
+### Step 5：在 notebook 裡輸入以下程式碼
+
+每一個 cell 按 `Shift + Enter` 執行：
+
+**Cell 1：建立一份模擬 line list**
+
+```python
+import pandas as pd
+
+# 模擬一份食物中毒疫調的 line list
+data = {
+    "case_id": [f"C{str(i).zfill(3)}" for i in range(1, 21)],
+    "onset_date": pd.to_datetime([
+        "2025-03-01", "2025-03-01", "2025-03-01", "2025-03-02", "2025-03-02",
+        "2025-03-02", "2025-03-02", "2025-03-03", "2025-03-03", "2025-03-03",
+        "2025-03-03", "2025-03-03", "2025-03-04", "2025-03-04", "2025-03-04",
+        "2025-03-05", "2025-03-05", "2025-03-06", "2025-03-06", "2025-03-07",
+    ]),
+    "class": ["A班"]*5 + ["B班"]*8 + ["A班"]*3 + ["B班"]*4,
+    "symptoms": ["嘔吐,腹瀉"]*12 + ["腹瀉"]*5 + ["嘔吐"]*3,
+}
+df = pd.DataFrame(data)
+
+# 看前幾筆
+df.head(10)
+```
+
+**Cell 2：計算攻擊率**
+
+```python
+total_exposed = 120  # 假設全校暴露人數
+cases = len(df)
+attack_rate = cases / total_exposed * 100
+
+print(f"通報病例數：{cases} 人")
+print(f"暴露人數：{total_exposed} 人")
+print(f"攻擊率：{attack_rate:.1f}%")
+```
+
+**Cell 3：畫流行曲線（epidemic curve）**
+
+```python
+import matplotlib.pyplot as plt
+
+# 依發病日期計算每日病例數
+epi_curve = df.groupby("onset_date").size()
+
+# 畫長條圖
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.bar(epi_curve.index, epi_curve.values, color="#2980B9", edgecolor="white")
+ax.set_xlabel("Onset Date（發病日期）")
+ax.set_ylabel("Cases（病例數）")
+ax.set_title("Epidemic Curve — 食物中毒群聚事件")
+fig.autofmt_xdate()
+plt.tight_layout()
+plt.show()
+```
+
+**Cell 4：按班級統計**
+
+```python
+class_summary = df.groupby("class").size().reset_index(name="cases")
+class_summary["exposed"] = [60, 60]  # 假設每班各 60 人
+class_summary["attack_rate_%"] = (class_summary["cases"] / class_summary["exposed"] * 100).round(1)
+
+class_summary
+```
+
+### Step 6：看到結果
+
+你現在應該看到：
+- 一張表格顯示 line list 的前 10 筆資料
+- 攻擊率計算結果（16.7%）
+- 一張**流行曲線長條圖**，顯示 3/3 是發病高峰
+- 按班級分的攻擊率比較（B 班比 A 班嚴重）
+
+**恭喜！這就是流行病學家用 Python 做的第一個分析。** 整個過程只需要 `uv` 一個工具就能搞定——不用事先裝 Python、不用設定虛擬環境、不用管 pip。
+
+```{tip}
+試著修改上面的程式碼：把病例數改多一點、把暴露人數改成不同的數字、加一個 C 班。每次改完按 `Shift + Enter` 就能立刻看到結果。這就是程式的威力——改一個數字，整個分析自動重算。
+```
+
+---
+
+## 除了 pandas，還有哪些資料清理工具？
+
+`pandas` 是 Python 生態系中最主流的表格資料處理套件，本教材也以它為主。但隨著你處理的資料量越來越大，你可能會聽到其他選擇。以下是一個簡要的比較：
+
+| 套件 | 特色 | 適合場景 | 安裝方式 |
+|------|------|----------|----------|
+| **pandas** | 最多人用、教材最多、功能最完整 | 大多數流病分析（數千～數十萬筆） | `uv add pandas` |
+| **polars** | 速度極快（比 pandas 快 5～50 倍）、記憶體更省 | 大量資料（百萬筆以上的監測資料） | `uv add polars` |
+| **DuckDB** | 用 SQL 語法查表格資料，不需要資料庫伺服器 | 習慣 SQL 的人、超大 CSV 檔案 | `uv add duckdb` |
+| **pyjanitor** | 在 pandas 基礎上加入更直覺的資料清理語法 | 讓清理步驟更易讀 | `uv add pyjanitor` |
+
+### 哪個最適合初學者？
+
+**先學 pandas 就對了。** 原因是：
+
+1. **95% 的教材、範例、StackOverflow 回答都用 pandas**——你遇到問題時最容易找到解法
+2. **pandas 的功能對流病分析絕對夠用**——除非你要處理數百萬筆以上的資料，否則不需要換
+3. **其他工具的語法跟 pandas 很像**——學會 pandas 之後，轉去 polars 或 DuckDB 的學習成本很低
+
+### 什麼時候考慮其他工具？
+
+| 你遇到的問題 | 可以考慮的工具 |
+|-------------|---------------|
+| pandas 讀 CSV 很慢（超過 100 萬筆） | `polars`（讀取速度快很多倍） |
+| 記憶體不夠（筆電只有 8GB） | `polars`（記憶體使用更省） |
+| 你本來就會 SQL | `duckdb`（直接對 CSV/Parquet 下 SQL） |
+| 清理步驟太多，程式碼變得很長 | `pyjanitor`（方法鏈更好讀） |
+
+```{tip}
+本教材所有章節都使用 pandas。如果你未來工作中遇到效能瓶頸，再回來看這張表選擇合適的工具即可。不需要現在就學多個套件。
+```
 
 ---
 
@@ -600,14 +902,13 @@ git checkout -b 分支名 → git push（推到 GitHub）
 
 以下是一個完整的動手練習。跟著做，10 分鐘內你就能畫出第一張流行曲線——一個你在教科書上看過、在真實疫調中一定會用到的經典圖表。
 
-### Step 1：確認工具已安裝
+### Step 1：確認 `uv` 已安裝
 
 ```bash
-python3 --version
 uv --version
 ```
 
-兩個都看到版本號，就可以往下走。
+看到版本號就可以往下走。（不需要事先安裝 Python，`uv sync` 會自動幫你處理。）
 
 ### Step 2：下載教材原始碼到你的電腦
 
@@ -652,12 +953,10 @@ cd ~/Desktop/python4epi-main
 不管用哪種方式下載，進入教材資料夾後，執行：
 
 ```bash
-uv python pin 3.11
 uv sync
 ```
 
-- `uv python pin 3.11`：告訴 `uv` 這個專案要用 Python 3.11。
-- `uv sync`：讀取教材的套件清單，自動建立虛擬環境並安裝所有需要的 Python 套件（pandas、matplotlib 等）。
+- `uv sync`：讀取教材的套件清單，自動下載正確版本的 Python、建立虛擬環境、安裝所有需要的 Python 套件（pandas、matplotlib 等）。一行搞定。
 
 第一次執行 `uv sync` 通常需要 1～2 分鐘（要下載不少套件），之後再執行就會很快。
 
@@ -702,7 +1001,7 @@ uv run jupyter lab
 |------|------|
 | `git clone` 顯示 `fatal` 錯誤 | 你的電腦可能還沒安裝 Git，請參考 Step 2 的安裝說明，或改用 ZIP 下載 |
 | `command not found: uv` | 關掉終端機再重新打開，或確認安裝路徑已加入 `PATH` |
-| `python --version` 不是 3.11 | 沒關係，先執行 `uv python pin 3.11`，`uv` 會自動幫你管理版本 |
+| `python --version` 不是 3.13 | 沒關係，`uv sync` 會自動下載正確版本的 Python |
 | `uv sync` 失敗 | 檢查網路連線，然後再執行一次。第一次需要下載較多套件 |
 | Jupyter Lab 打開是空白 | 試試在瀏覽器手動輸入終端機顯示的 `http://localhost:8888/...` 網址 |
 | notebook 跑出錯誤 | 確認已執行 `uv sync`，然後從第一個 cell 重新開始執行 |
