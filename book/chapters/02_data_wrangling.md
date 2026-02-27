@@ -1,149 +1,280 @@
 # 02 資料處理與視覺化（Python 零基礎版）
 
+## 情境
+
+松柏護理之家退伍軍人症群聚事件爆發後第三天，疫調團隊已彙整出一份 **280 筆 × 32 欄**的個案名冊（line list）。你的任務是：把這份 CSV 讀進 Python，確認資料品質，建立分析用的衍生變項，然後用圖表呈現疫情的時間趨勢、空間分布與族群特徵。
+
 ## 你將學到
 
-- 用 `pandas` 完成 line list 的基本清理
-- 使用 `matplotlib`、`seaborn`、`plotly` 畫流病常用圖表
-- 繪製經典 **流行曲線（epidemic curve）**
-- 為不同任務選對圖（監測、比較、溝通）
+- 用 `pandas` 讀取並檢視 line list 結構
+- 轉換日期欄位、處理遺漏值
+- 建立衍生變項（年齡組、共病數、發病到住院天數、流行病學週）
+- 用 `groupby` 做分組統計
+- 用 `matplotlib` 畫流行曲線
+- 用 `seaborn` 畫統計比較圖
+- 用 `plotly` 畫互動式圖表
 
 ## 先備說明（給零基礎學員）
 
-這章只要掌握這些就能開始畫圖：
+這章只要掌握這些就能開始：
 
 1. `pd.read_csv(...)`：讀取資料
-2. `groupby(...).size()`：做病例統計
-3. `plt.figure(...)` + `plt.show()`：`matplotlib` 基本繪圖
-4. `sns.<chart>(...)`：`seaborn` 快速美化統計圖
-5. `px.<chart>(...)`：`plotly` 互動圖（滑鼠可看數值）
+2. `df.info()` / `df.describe()`：檢視資料結構
+3. `pd.to_datetime(...)`：日期轉換
+4. `groupby(...).size()` / `.mean()`：分組統計
+5. `plt.bar(...)` / `sns.barplot(...)` / `px.bar(...)`：各種圖表
 
-## 視覺化套件選擇地圖
+## 視覺化套件選擇
 
-- `matplotlib`：最基礎、可完全控制細節，適合正式報告圖。
-- `seaborn`：在統計圖（分布、比較、關係）更快更漂亮。
-- `plotly`：互動式圖表，適合簡報與探索式分析。
+| 套件 | 適合場景 | 特色 |
+|------|---------|------|
+| `matplotlib` | 正式報告圖、完全控制細節 | 最基礎、最靈活 |
+| `seaborn` | 統計圖（分布、比較、關係） | 預設美觀、語法精簡 |
+| `plotly` | 互動式探索、簡報 | 滑鼠懸停看數值 |
 
 ## 流病常用圖表對照
 
-- 疫情隨時間變化：`流行曲線 (epidemic curve)`、折線圖
-- 地區比較：長條圖、排序條圖
-- 年齡或指標分布：直方圖、箱型圖
-- 時間 x 地區強度：熱圖（heatmap）
-- 對外溝通與探索：互動折線圖/長條圖
+| 分析需求 | 推薦圖表 |
+|---------|---------|
+| 疫情隨時間變化 | 流行曲線（epidemic curve）、折線圖 |
+| 地區/翼區比較 | 長條圖、排序條圖 |
+| 年齡或指標分布 | 直方圖、箱型圖 |
+| 時間 × 地區強度 | 熱圖（heatmap） |
+| 互動探索與簡報 | Plotly 互動圖 |
 
-## Step 1: 讀資料與基本清理
+---
+
+## Part 1：資料處理
+
+### Step 1: 讀入 line list
 
 ```python
 import pandas as pd
 
-raw = pd.read_csv("data/synthetic/line_list.csv")
-raw["date_onset"] = pd.to_datetime(raw["date_onset"], errors="coerce")
-raw["epi_week"] = raw["date_onset"].dt.isocalendar().week
-print(raw.head())
+df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
+print(f"資料維度：{df.shape[0]} 筆 × {df.shape[1]} 欄")
+df.head()
 ```
 
-## Step 2: 經典流行曲線（matplotlib）
+### Step 2: 檢視資料結構
 
-流行曲線的標準做法：
+```python
+df.info()
+```
 
-1. 以 onset date 聚合每日病例
-2. 用 bar chart 顯示病例數
-3. X 軸是日期，Y 軸是病例數
+```python
+df.describe()
+```
+
+重點觀察：哪些欄位有遺漏值？數值欄位的範圍合理嗎？
+
+### Step 3: 日期轉換
+
+line list 中有 5 個日期欄位，讀入時是文字，必須轉成 datetime 才能做時間分析。
+
+```python
+date_cols = [
+    "facility_admission_date",
+    "symptom_onset_date",
+    "hospitalization_date",
+    "death_date",
+    "notification_date",
+]
+for col in date_cols:
+    df[col] = pd.to_datetime(df[col], errors="coerce")
+```
+
+### Step 4: 建立衍生變項
+
+疫調分析常需要從原始資料衍生新變項：
+
+```python
+# 1) 年齡組
+df["age_group"] = pd.cut(
+    df["age"],
+    bins=[59, 69, 79, 89, 100],
+    labels=["60-69", "70-79", "80-89", "90+"],
+)
+
+# 2) 共病數
+comorbidity_cols = [
+    "comorbidity_chf", "comorbidity_dm",
+    "comorbidity_cancer", "comorbidity_copd",
+    "immunosuppressed",
+]
+df["n_comorbidities"] = df[comorbidity_cols].sum(axis=1)
+
+# 3) 是否感染（二元變項）
+df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
+
+# 4) 發病到住院天數
+df["onset_to_hosp_days"] = (
+    df["hospitalization_date"] - df["symptom_onset_date"]
+).dt.days
+
+# 5) 流行病學週
+df["epi_week"] = df["symptom_onset_date"].dt.isocalendar().week
+```
+
+### Step 5: 處理遺漏值
+
+未感染者不會有 `symptom_onset_date`、`hospitalization_date` 等，這些 NaT 不是資料錯誤而是合理的結構性遺漏。
+
+```python
+# 確認：未感染者的 onset 日期應全為空
+print("未感染者有 onset 日期的數量：",
+      df.loc[df["infected"] == 0, "symptom_onset_date"].notna().sum())
+```
+
+### Step 6: groupby 分組統計
+
+```python
+# 按 floor × wing 計算侵襲率
+wing_stats = (
+    df.groupby(["floor", "wing"])
+    .agg(residents=("case_id", "size"), infected=("infected", "sum"))
+    .reset_index()
+)
+wing_stats["attack_rate"] = wing_stats["infected"] / wing_stats["residents"]
+wing_stats["attack_rate_pct"] = (wing_stats["attack_rate"] * 100).round(1)
+print(wing_stats.to_string(index=False))
+```
+
+---
+
+## Part 2：視覺化
+
+### Step 7: 流行曲線（matplotlib）
+
+流行曲線是流行病學最經典的圖表——X 軸是發病日期，Y 軸是新增病例數。從曲線形狀可推斷傳播模式。
 
 ```python
 import matplotlib.pyplot as plt
 
-daily = raw.groupby("date_onset").size().rename("cases")
+cases = df[df["infected"] == 1]
+daily = cases.groupby("symptom_onset_date").size().rename("cases")
 
-plt.figure(figsize=(9, 3.5))
-plt.bar(daily.index.astype(str), daily.values)
-plt.title("Epidemic Curve (By Onset Date)")
-plt.xlabel("Onset Date")
-plt.ylabel("Cases")
-plt.xticks(rotation=45)
+fig, ax = plt.subplots(figsize=(10, 4))
+ax.bar(daily.index, daily.values, color="#2c7fb8", edgecolor="white")
+ax.set_title("退伍軍人症流行曲線（依發病日）", fontsize=14)
+ax.set_xlabel("發病日期")
+ax.set_ylabel("新增病例數")
+fig.autofmt_xdate()
 plt.tight_layout()
 plt.show()
 ```
 
-## Step 3: `seaborn` 做統計比較圖
+**解讀**：峰值集中在幾天內 → 共同暴露源（point source）型態。
 
-### 3.1 地區病例排序長條圖
+### Step 8: 年齡分布（seaborn）
 
 ```python
 import seaborn as sns
 
-by_location = raw.groupby("location").size().rename("cases").reset_index()
-by_location = by_location.sort_values("cases", ascending=False)
-
-plt.figure(figsize=(6, 3.5))
-sns.barplot(data=by_location, x="location", y="cases", hue="location", legend=False)
-plt.title("Cases by Location")
+fig, ax = plt.subplots(figsize=(8, 4))
+sns.histplot(
+    data=df, x="age", hue="infected", bins=15,
+    multiple="stack", palette={0: "#cccccc", 1: "#e34a33"}, ax=ax,
+)
+ax.set_title("年齡分布：感染 vs 未感染")
+ax.set_xlabel("年齡")
+ax.set_ylabel("人數")
+ax.legend(title="感染", labels=["未感染", "感染"])
 plt.tight_layout()
 plt.show()
 ```
 
-### 3.2 年齡分布直方圖
+### Step 9: 翼區侵襲率長條圖（seaborn）
 
 ```python
-plt.figure(figsize=(6, 3.5))
-sns.histplot(data=raw, x="age", bins=8, kde=True)
-plt.title("Age Distribution")
+wing_stats["label"] = wing_stats["floor"].astype(str) + wing_stats["wing"]
+wing_stats = wing_stats.sort_values("attack_rate", ascending=False)
+
+fig, ax = plt.subplots(figsize=(8, 4))
+sns.barplot(
+    data=wing_stats, x="label", y="attack_rate_pct",
+    hue="label", palette="YlOrRd", legend=False, ax=ax,
+)
+ax.set_title("各翼區侵襲率比較")
+ax.set_xlabel("翼區")
+ax.set_ylabel("侵襲率 (%)")
+for i, row in wing_stats.iterrows():
+    ax.text(
+        list(wing_stats["label"]).index(row["label"]),
+        row["attack_rate_pct"] + 1,
+        f'{row["attack_rate_pct"]}%',
+        ha="center", fontsize=10,
+    )
 plt.tight_layout()
 plt.show()
 ```
 
-### 3.3 地區 x 週別熱圖（監測常用）
+### Step 10: 嚴重度 × 共病熱力圖（seaborn）
 
 ```python
-heat = raw.groupby(["location", "epi_week"]).size().unstack(fill_value=0)
+severity_order = ["mild", "moderate", "severe"]
+heat_data = (
+    cases[cases["clinical_severity"].isin(severity_order)]
+    .groupby(["clinical_severity", "n_comorbidities"])
+    .size()
+    .unstack(fill_value=0)
+    .reindex(severity_order)
+)
 
-plt.figure(figsize=(7, 3.5))
-sns.heatmap(heat, annot=True, fmt="d", cmap="Reds")
-plt.title("Cases Heatmap (Location x Epi Week)")
+fig, ax = plt.subplots(figsize=(8, 3.5))
+sns.heatmap(heat_data, annot=True, fmt="d", cmap="YlOrRd", ax=ax)
+ax.set_title("臨床嚴重度 × 共病數")
+ax.set_xlabel("共病數")
+ax.set_ylabel("嚴重度")
 plt.tight_layout()
 plt.show()
 ```
 
-## Step 4: `plotly` 互動圖（簡報友善）
+### Step 11: 互動式分層流行曲線（Plotly）
 
 ```python
 import plotly.express as px
 
-daily_df = daily.reset_index()
-daily_df.columns = ["date_onset", "cases"]
-fig = px.line(daily_df, x="date_onset", y="cases", markers=True, title="Interactive Epidemic Trend")
+daily_floor = (
+    cases.groupby(["symptom_onset_date", "floor"])
+    .size()
+    .rename("cases")
+    .reset_index()
+)
+daily_floor["floor"] = daily_floor["floor"].astype(str) + "F"
+
+fig = px.bar(
+    daily_floor,
+    x="symptom_onset_date", y="cases", color="floor",
+    barmode="stack",
+    title="互動式流行曲線（依樓層分層）",
+    labels={"symptom_onset_date": "發病日期", "cases": "病例數", "floor": "樓層"},
+)
 fig.show()
 ```
 
+---
+
 ## 圖表解讀重點
 
-- 流行曲線看「峰值時間」與「上升/下降速度」。
-- 排序長條圖看「高負擔地區」。
-- 熱圖看「哪個地區在何時異常升高」。
-- 直方圖看「年齡分布是否偏態」。
+| 圖表 | 觀察重點 |
+|------|---------|
+| 流行曲線 | 峰值時間、上升/下降速度 → 傳播模式 |
+| 年齡分布 | 感染者是否集中在特定年齡層 |
+| 翼區長條圖 | 哪些翼區侵襲率異常偏高 → 空間線索 |
+| 嚴重度×共病 | 共病多的人是否更容易重症 |
+| 互動曲線 | 各樓層的流行高峰是否同步 |
 
-## 常見錯誤（新手最容易踩）
+## 常見錯誤
 
-- 日期欄位沒轉成 datetime，導致時間順序亂掉。
-- 忽略分母（人口）就直接比較地區病例數。
-- 圖表標題與軸標籤不完整，讀者難解讀。
-- 顏色過多且無意義，反而降低可讀性。
-
-## 練習題
-
-1. 用 `matplotlib` 畫一張你自己的 epidemic curve。
-2. 用 `seaborn` 畫地區病例排序圖，並標出最大值。
-3. 用 `plotly` 畫互動折線圖，加入 marker。
-
-## 最小可執行環境命令
-
-```bash
-uv sync
-uv run jupyter lab
-```
+1. **日期沒轉換**：`symptom_onset_date` 仍是字串，時間排序會亂掉
+2. **忽略分母**：直接比病例數而不算侵襲率，大翼區天生病例多
+3. **圖表缺標題/軸標籤**：讀者無法獨立解讀
+4. **混淆感染者與全體**：畫年齡分布時忘了區分
 
 ## 練習本
 
-- 作業版：[`notebooks/exercises/02_data_wrangling_exercise.ipynb`](../../notebooks/exercises/02_data_wrangling_exercise.ipynb)
-- 解答版：[`notebooks/exercises/02_data_wrangling_solution.ipynb`](../../notebooks/exercises/02_data_wrangling_solution.ipynb)
-- 圖表大全：[`notebooks/02_visualization_epi_charts.ipynb`](../../notebooks/02_visualization_epi_charts.ipynb)
+- 資料處理課堂筆記：{ref}`02_data_wrangling_for_beginners.ipynb`
+- 視覺化課堂筆記：{ref}`02_visualization_epi_charts.ipynb`
+- 作業版：[`02_data_wrangling_exercise.ipynb`](../exercises/02_data_wrangling_exercise.ipynb)
+- 解答版（教師版）：[`02_data_wrangling_solution.ipynb`](../solutions/02_data_wrangling_solution.ipynb)
