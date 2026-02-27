@@ -15,39 +15,51 @@ chapters:
   - file: chapters/04_outbreak_workflow
     sections:
       - file: chapters/notebooks/04_outbreak_workflow
-  - file: chapters/05_time_series
+  - file: chapters/05_stratified
     sections:
-      - file: chapters/notebooks/05_time_series_baseline
-  - file: chapters/06_spatial
+      - file: chapters/notebooks/05_stratified_analysis
+  - file: chapters/06_logistic_regression
     sections:
-      - file: chapters/notebooks/06_spatial_rates
-      - file: chapters/notebooks/06_spatial_choropleth
-  - file: chapters/07_machine_learning
+      - file: chapters/notebooks/06_logistic_regression
+  - file: chapters/07_time_series
     sections:
-      - file: chapters/notebooks/07_ml_baseline
-  - file: chapters/08_deep_learning
+      - file: chapters/notebooks/07_time_series_baseline
+  - file: chapters/08_spatial
     sections:
-      - file: chapters/notebooks/08_dl_baseline
-  - file: chapters/09_causal
+      - file: chapters/notebooks/08_spatial_rates
+      - file: chapters/notebooks/08_spatial_choropleth
+  - file: chapters/09_survival
     sections:
-      - file: chapters/notebooks/09_causal_did
-  - file: chapters/10_reproducibility
+      - file: chapters/notebooks/09_survival_analysis
+  - file: chapters/10_machine_learning
     sections:
-      - file: chapters/notebooks/10_reproducibility_workflow
-  - file: chapters/11_case_studies
+      - file: chapters/notebooks/10_ml_baseline
+  - file: chapters/11_deep_learning
     sections:
-      - file: chapters/notebooks/11_case_study_dengue
-  - file: chapters/12_appendix
-  - file: chapters/13_exercises
+      - file: chapters/notebooks/11_dl_baseline
+  - file: chapters/12_causal
+    sections:
+      - file: chapters/notebooks/12_causal_did
+  - file: chapters/13_reproducibility
+    sections:
+      - file: chapters/notebooks/13_reproducibility_workflow
+  - file: chapters/14_case_studies
+    sections:
+      - file: chapters/notebooks/14_case_study_dengue
+  - file: chapters/15_appendix
+  - file: chapters/16_exercises
     sections:
       - file: chapters/exercises/01_fundamentals_exercise
       - file: chapters/exercises/02_data_wrangling_exercise
       - file: chapters/exercises/03_stats_exercise
       - file: chapters/exercises/04_outbreak_workflow_exercise
-      - file: chapters/exercises/05_time_series_exercise
-      - file: chapters/exercises/06_spatial_exercise
-      - file: chapters/exercises/07_ml_exercise
-      - file: chapters/exercises/08_dl_exercise
-      - file: chapters/exercises/09_causal_exercise
-      - file: chapters/exercises/10_reproducibility_exercise
-      - file: chapters/exercises/11_case_study_exercise
+      - file: chapters/exercises/05_stratified_exercise
+      - file: chapters/exercises/06_logistic_regression_exercise
+      - file: chapters/exercises/07_time_series_exercise
+      - file: chapters/exercises/08_spatial_exercise
+      - file: chapters/exercises/09_survival_exercise
+      - file: chapters/exercises/10_ml_exercise
+      - file: chapters/exercises/11_dl_exercise
+      - file: chapters/exercises/12_causal_exercise
+      - file: chapters/exercises/13_reproducibility_exercise
+      - file: chapters/exercises/14_case_study_exercise
