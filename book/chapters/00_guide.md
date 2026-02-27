@@ -18,9 +18,9 @@
 
 想像你是一位剛進入衛生局的新人。禮拜五下午 4 點，主管打電話來：
 
-> 「某國小疑似食物中毒群聚，目前通報 45 人嘔吐腹瀉。我需要你在 **今天下班前** 給我：侵襲率多少？致死率多少？哪個班級最嚴重？能不能畫一張發病時間的流行曲線？」
+> 「某護理之家疑似退伍軍人症群聚，目前通報 280 位住民中有上百人出現肺炎症狀、已有住民死亡。我需要你在 **今天下班前** 給我：侵襲率多少？致死率多少？哪個樓層最嚴重？淋浴設備是不是感染源？能不能畫一張發病時間的流行曲線？」
 
-你打開手邊的 Excel，45 筆資料勉強處理得完。但下一週，你遇到一場跨縣市的登革熱疫情，line list 有 3,000 筆。再下一個月，你需要回溯三年的監測資料趨勢。這時你會發現——
+你打開手邊的 Excel，280 筆資料、32 個欄位——年齡、共病、樓層、暴露史、發病日、住院日、死亡日⋯⋯光是篩選和交叉分析就讓你頭昏眼花。更別說主管接著又問：「幫我做個 2×2 表看淋浴使用的風險比」「按樓層分層再算一次」「下禮拜還會有多少新個案？」。這時你會發現——
 
 - Excel 的列數限制開始卡你
 - 手動篩選、複製貼上很容易出錯
@@ -365,7 +365,7 @@ uv add seaborn
 
 ## 手把手教學：從零開始的流行病學 Hello World
 
-光看指令可能還是抽象。讓我們從一台什麼都沒裝的電腦開始，一步一步做出流行病學家的第一個「Hello World」——不是印出一行字，而是**讀取一份 line list、計算侵襲率、畫一張流行曲線**。
+光看指令可能還是抽象。讓我們從一台什麼都沒裝的電腦開始，一步一步做出流行病學家的第一個「Hello World」——不是印出一行字，而是**讀取一份護理之家群聚事件的 line list、計算侵襲率與致死率、畫一張流行曲線**。
 
 ### Step 1：安裝 uv
 
@@ -412,39 +412,33 @@ uv run jupyter lab
 
 每一個 cell 按 `Shift + Enter` 執行：
 
-**Cell 1：建立一份模擬 line list**
+**Cell 1：讀入護理之家退伍軍人症群聚的 line list**
 
 ```python
 import pandas as pd
 
-# 模擬一份食物中毒疫調的 line list
-data = {
-    "case_id": [f"C{str(i).zfill(3)}" for i in range(1, 21)],
-    "onset_date": pd.to_datetime([
-        "2025-03-01", "2025-03-01", "2025-03-01", "2025-03-02", "2025-03-02",
-        "2025-03-02", "2025-03-02", "2025-03-03", "2025-03-03", "2025-03-03",
-        "2025-03-03", "2025-03-03", "2025-03-04", "2025-03-04", "2025-03-04",
-        "2025-03-05", "2025-03-05", "2025-03-06", "2025-03-06", "2025-03-07",
-    ]),
-    "class": ["A班"]*5 + ["B班"]*8 + ["A班"]*3 + ["B班"]*4,
-    "symptoms": ["嘔吐,腹瀉"]*12 + ["腹瀉"]*5 + ["嘔吐"]*3,
-}
-df = pd.DataFrame(data)
+# 讀入松柏護理之家退伍軍人症群聚事件的 line list（280 位住民）
+df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
 
-# 看前幾筆
+# 看前幾筆——每一列是一位住民的完整紀錄
 df.head(10)
 ```
 
-**Cell 2：計算侵襲率**
+**Cell 2：計算侵襲率與致死率**
 
 ```python
-total_exposed = 120  # 假設全校暴露人數
-cases = len(df)
-attack_rate = cases / total_exposed * 100
+total_residents = len(df)
+infected = (df["clinical_severity"] != "not_ill").sum()
+deaths = (df["outcome"] == "dead").sum()
 
-print(f"通報病例數：{cases} 人")
-print(f"暴露人數：{total_exposed} 人")
+attack_rate = infected / total_residents * 100
+cfr = deaths / infected * 100
+
+print(f"住民總數：{total_residents} 人")
+print(f"感染人數：{infected} 人")
 print(f"侵襲率：{attack_rate:.1f}%")
+print(f"死亡人數：{deaths} 人")
+print(f"致死率 (CFR)：{cfr:.1f}%")
 ```
 
 **Cell 3：畫流行曲線（epidemic curve）**
@@ -452,42 +446,46 @@ print(f"侵襲率：{attack_rate:.1f}%")
 ```python
 import matplotlib.pyplot as plt
 
-# 依發病日期計算每日病例數
-epi_curve = df.groupby("onset_date").size()
+# 將發病日期轉為日期格式，並計算每日病例數
+onset = pd.to_datetime(df["symptom_onset_date"])
+epi_curve = onset.dropna().dt.date.value_counts().sort_index()
 
 # 畫長條圖
-fig, ax = plt.subplots(figsize=(8, 4))
+fig, ax = plt.subplots(figsize=(10, 4))
 ax.bar(epi_curve.index, epi_curve.values, color="#2980B9", edgecolor="white")
 ax.set_xlabel("Onset Date（發病日期）")
 ax.set_ylabel("Cases（病例數）")
-ax.set_title("Epidemic Curve — 食物中毒群聚事件")
+ax.set_title("Epidemic Curve — 松柏護理之家退伍軍人症群聚")
 fig.autofmt_xdate()
 plt.tight_layout()
 plt.show()
 ```
 
-**Cell 4：按班級統計**
+**Cell 4：按樓層翼區統計侵襲率**
 
 ```python
-class_summary = df.groupby("class").size().reset_index(name="cases")
-class_summary["exposed"] = [60, 60]  # 假設每班各 60 人
-class_summary["attack_rate_%"] = (class_summary["cases"] / class_summary["exposed"] * 100).round(1)
+df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
+wing_summary = df.groupby(["floor", "wing"]).agg(
+    total=("case_id", "count"),
+    cases=("infected", "sum"),
+).reset_index()
+wing_summary["attack_rate_%"] = (wing_summary["cases"] / wing_summary["total"] * 100).round(1)
 
-class_summary
+wing_summary
 ```
 
 ### Step 6：看到結果
 
 你現在應該看到：
-- 一張表格顯示 line list 的前 10 筆資料
-- 侵襲率計算結果（16.7%）
-- 一張**流行曲線長條圖**，顯示 3/3 是發病高峰
-- 按班級分的侵襲率比較（B 班比 A 班嚴重）
+- 一張表格顯示 line list 的前 10 筆資料（包含年齡、共病、暴露史等 32 個欄位）
+- 侵襲率 43.2%、致死率 15.7%
+- 一張**流行曲線長條圖**，顯示 1 月 20 日前後為發病高峰——典型的共同暴露源型態
+- 按樓層翼區分的侵襲率比較（2–3 樓 B 翼明顯較高）
 
 **恭喜！這就是流行病學家用 Python 做的第一個分析。** 整個過程只需要 `uv` 一個工具就能搞定——不用事先裝 Python、不用設定虛擬環境、不用管 pip。
 
 ```{tip}
-試著修改上面的程式碼：把病例數改多一點、把暴露人數改成不同的數字、加一個 C 班。每次改完按 `Shift + Enter` 就能立刻看到結果。這就是程式的威力——改一個數字，整個分析自動重算。
+試著修改上面的程式碼：改用 `"shower_use"` 欄位分組看侵襲率、或只篩選 `"confirmed"` 個案畫流行曲線。每次改完按 `Shift + Enter` 就能立刻看到結果。這就是程式的威力——改一個條件，整個分析自動重算。
 ```
 
 ---
@@ -1185,30 +1183,43 @@ uv run jupyter lab
 
 ## 這份教材的學習路線圖
 
-你不需要一口氣學完所有章節。以下是建議的路線：
+你不需要一口氣學完所有章節。本教材以**松柏護理之家退伍軍人症群聚事件**為貫穿全書的主軸，每一章帶你更深入一層分析，就像真實疫調一樣逐步揭開真相。
 
 ```
-00 導讀（你現在在這裡）
- ↓
-01 流病核心概念 ── 侵襲率、CFR、Python 最小語法
- ↓
-02 資料處理與視覺化 ── pandas、流行曲線、三種畫圖套件
- ↓
-03 統計基礎 ── 風險比、信賴區間、卡方檢定
- ↓
-04 疫調工作流程 ── 把單一步驟串成完整分析
- ↓
-05–11 進階主題 ── 時間序列、空間分析、ML、DL…
+【第一幕：接獲通報】
+  00 導讀（你現在在這裡）── 工具安裝、Hello World
+  01 Python 基礎 ── 侵襲率、CFR、最小語法
+  02 資料處理與視覺化 ── 讀入 280 筆 line list、畫流行曲線
+
+【第二幕：描述性分析】
+  03 描述性統計與 2×2 表 ── 淋浴使用是危險因子嗎？
+  04 群聚調查工作流 ── 產出第一份 SitRep 給長官
+
+【第三幕：深入分析】
+  05 分層分析與交絡因子 ── 臥床老人不淋浴也不生病，是保護還是交絡？
+  06 邏輯斯迴歸 ── 同時調整年齡、共病、暴露，算 adjusted OR
+  07 時間序列與預測 ── 下週還會有多少新個案？
+  08 空間流病 ── 哪個樓層翼區最危險？畫 spot map
+
+【第四幕：進階建模】
+  09 存活分析 ── 發病到死亡的時間，哪些因子影響存活？
+  10 機器學習 ── 用 32 欄特徵預測感染與重症
+  11 深度學習 ── PyTorch 版本的預測模型
+  12 因果推論 ── 淋浴暴露的因果效應，DAG 怎麼畫？
+
+【第五幕：收尾與實戰】
+  13 可重現研究 ── 讓同事能一鍵重現你的分析
+  14 實戰案例 ── 從接到通報到結案報告，完整走一遍
 ```
 
 **前 4 章是基礎**，建議按順序學。第 5 章之後可以跳著看，挑你工作或研究需要的主題。
 
 ```{figure} images/learning_roadmap.svg
 :name: fig-learning-roadmap
-:alt: 學習路線圖：Ch 00-04 基礎必修，Ch 05-11 進階選修
+:alt: 學習路線圖：Ch 00-04 基礎必修，Ch 05-14 進階選修
 :width: 100%
 
-藍色區塊是基礎必修（Ch 00–04），建議按順序完成。紫色區塊是進階選修（Ch 05–11），完成基礎後可依需求任選。
+藍色區塊是基礎必修（Ch 00–04），建議按順序完成。紫色區塊是進階選修（Ch 05–14），完成基礎後可依需求任選。
 ```
 
 ---
