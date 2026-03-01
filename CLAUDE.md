@@ -4,7 +4,7 @@ This file provides guidance for AI assistants working with the **Epi With Python
 
 ## Project Overview
 
-An educational Jupyter Book site teaching infectious disease epidemiology with Python, from fundamentals through ML/DL. Content is written primarily in Traditional Chinese (繁體中文) with English technical terms. The project emphasizes beginner-friendly, copy-paste runnable code.
+An educational Jupyter Book site teaching infectious disease epidemiology with Python, from fundamentals through ML/DL. All 18 chapters share a single unifying story: **a Legionella outbreak investigation at a nursing home** (280 residents, 121 infected, 19 deaths). Content is written primarily in Traditional Chinese (繁體中文) with English technical terms. The project emphasizes beginner-friendly, copy-paste runnable code.
 
 ## Repository Layout
 
@@ -15,11 +15,12 @@ book/                          # Jupyter Book source
   _toc_student.yml             # Student TOC (no solutions)
   _toc_instructor.yml          # Instructor TOC (includes solutions)
   intro.md                     # Landing page
-  chapters/                    # 15 markdown chapter files (00–14)
+  chapters/                    # 18 markdown chapter files (00–17)
   chapters/notebooks/          # Embedded lesson notebooks (executed during build)
-  chapters/exercises/          # Exercise/solution notebook pairs
+  chapters/exercises/          # Exercise notebooks (14 chapters)
+  chapters/solutions/          # Solution notebooks (14 chapters, instructor only)
 notebooks/                     # Standalone runnable lesson notebooks
-  exercises/                   # Exercise notebooks (mirrors book/chapters/exercises/)
+  exercises/                   # Exercise + solution notebooks (mirrors book/chapters/)
   run_sitrep.py                # Example SitRep script
 src/epi_learning/              # Reusable Python helper package
   __init__.py                  # Exports: attack_rate, case_fatality_rate, risk_ratio,
@@ -29,9 +30,10 @@ src/epi_learning/              # Reusable Python helper package
   tabulate.py                  # Group summary tabulation (summarize_by_group)
   viz.py                       # Visualization helpers (plot_epi_curve)
 data/synthetic/                # Teaching datasets
-  line_list.csv                # Sample case line-list
-  admin_areas.geojson          # Administrative boundaries for spatial lessons
-  location_population.csv      # Population data by location
+  legionella_outbreak.csv      # Primary dataset: 280 residents × 32 columns
+  line_list.csv                # Legacy sample line-list (used by choropleth demo)
+  admin_areas.geojson          # Administrative boundaries for choropleth lessons
+  location_population.csv      # Population data by location (choropleth demo)
 tests/                         # pytest test suite
   test_metrics.py              # Unit tests for epi metrics
   test_cleaning.py             # Unit tests for data cleaning
@@ -41,6 +43,54 @@ tests/                         # pytest test suite
   ci.yml                       # PR/push: pytest + jupyter-book build
   pages.yml                    # Deploy to GitHub Pages on push to main
 ```
+
+## Chapter Structure (18 chapters)
+
+```
+【第一幕：接獲通報】
+  Ch00  導讀與工具
+  Ch01  Python 基礎
+  Ch02  資料處理與視覺化
+
+【第二幕：描述性分析】
+  Ch03  描述性統計與 2×2 表
+  Ch04  群聚調查工作流
+
+【第三幕：深入分析】
+  Ch05  分層分析與交絡因子 [新增]
+  Ch06  邏輯斯迴歸 [新增]
+  Ch07  時間序列與預測
+  Ch08  空間流病
+
+【第四幕：進階建模】
+  Ch09  存活分析 [新增]
+  Ch10  機器學習
+  Ch11  深度學習
+  Ch12  因果推論
+
+【第五幕：收尾與實戰】
+  Ch13  可重現研究
+  Ch14  實戰案例
+  Ch15  附錄
+  Ch16  作業區（14 組練習）
+  Ch17  解答區（14 組解答，講師版）
+```
+
+## Primary Dataset
+
+**`data/synthetic/legionella_outbreak.csv`** — 280 rows × 32 columns
+
+A synthetic dataset simulating a Legionella outbreak at a nursing home (松柏護理之家).
+
+Key columns:
+- Demographics: `case_id`, `age`, `sex`, `floor`, `wing`, `room`
+- Comorbidities: `comorbidity_chf`, `comorbidity_dm`, `comorbidity_cancer`, `comorbidity_copd`, `immunosuppressed`
+- Exposures: `shower_use`, `hydrotherapy_use`, `smoking_history`, `functional_status`
+- Clinical: `clinical_severity` (not_ill/asymptomatic/mild/moderate/severe), `outcome` (survived/dead)
+- Dates: `symptom_onset_date`, `hospitalization_date`, `death_date`, `notification_date`
+- Classification: `lab_confirmed`, `case_classification`, `hospitalized`, `icu_admission`
+
+Key facts: 121 infected (43.2%), 19 deaths (CFR 15.7%), onset range 2026-01-12 to 2026-01-28.
 
 ## Tech Stack
 
@@ -112,7 +162,7 @@ A separate Pages workflow deploys the built book to GitHub Pages on push to `mai
 - No star imports
 
 ### File naming
-- Lesson notebooks: `NN_topic_name.ipynb` (e.g., `06_spatial_choropleth.ipynb`)
+- Lesson notebooks: `NN_topic_name.ipynb` (e.g., `08_spatial_rates.ipynb`)
 - Exercise pairs: `NN_topic_exercise.ipynb` / `NN_topic_solution.ipynb`
 - Python modules: lowercase with underscores
 
@@ -129,6 +179,7 @@ All Chinese epidemiological terms must follow **Taiwan (ROC) standard usage**. K
 | Attack rate | 侵襲率 | 攻擊率 |
 | Case fatality rate (CFR) | 致死率 | 病死率 |
 | Risk ratio (RR) | 風險比 | 危險比 |
+| Odds ratio (OR) | 勝算比 | 比值比 |
 | Confidence interval (CI) | 信賴區間 | 置信區間 |
 | Incidence rate | 發生率 | 發病率（可用於非正式語境） |
 | Prevalence | 盛行率 | 流行率、患病率 |
@@ -142,6 +193,10 @@ All Chinese epidemiological terms must follow **Taiwan (ROC) standard usage**. K
 | Specificity | 特異度 | 特異性 |
 | Chi-square test | 卡方檢定 | 卡方检验 |
 | Exposure | 暴露 | — |
+| Confounding | 交絡 | 混淆 |
+| Stratified analysis | 分層分析 | — |
+| Hazard ratio (HR) | 風險比 | 危險比 |
+| Kaplan-Meier | Kaplan-Meier 估計式 | — |
 
 **Note:** Python variable names and function names remain in English (e.g., `attack_rate`, `case_fatality_rate`)—only Chinese prose uses the translated terms above.
 
@@ -178,3 +233,4 @@ PR descriptions should include scope summary, validation output, and screenshots
 - The `uv.lock` file is committed to ensure reproducible dependency resolution
 - Every notebook has a Colab setup cell at the top that detects `google.colab` and auto-clones the repo + installs deps; this cell is a no-op when running locally
 - When creating new notebooks, always include the standard Colab setup cell after the title markdown cell
+- All chapters share a single dataset (`legionella_outbreak.csv`) for narrative continuity; standalone copies of all notebooks are kept in sync under `notebooks/`
