@@ -2,24 +2,36 @@
 
 A Traditional Chinese-first learning website for infectious disease epidemiology with Python, from fundamentals to ML/DL.
 
+## The Story
+
+全書 18 章共享一個真實感的故事線：**松柏護理之家退伍軍人症群聚調查**。
+
+> 週五下午四點，你接到衛生局的電話：某護理之家有多名住民出現肺炎症狀。
+> 你帶著筆電趕到現場，開始進行流行病學調查⋯⋯
+
+280 位住民、121 人感染、19 人死亡——你將用 Python 一步步揭開真相。
+
 ## What This Project Covers
 
-- Epidemiology fundamentals and core metrics
-- Data cleaning, visualization, and epidemic curves
-- Outbreak workflow and situation reporting
-- Time-series, spatial analysis, and choropleth maps
-- Machine learning and deep learning (PyTorch)
-- Causal inference and reproducible research
+| 幕 | 章節 | 主題 |
+|----|------|------|
+| 第一幕：接獲通報 | Ch00–02 | 導讀、Python 基礎、資料處理與視覺化 |
+| 第二幕：描述性分析 | Ch03–04 | 2×2 表、卡方檢定、SitRep 工作流 |
+| 第三幕：深入分析 | Ch05–08 | 分層分析、邏輯斯迴歸、時間序列、空間流病 |
+| 第四幕：進階建模 | Ch09–12 | 存活分析、機器學習、深度學習、因果推論 |
+| 第五幕：收尾與實戰 | Ch13–14 | 可重現研究、完整疫調報告 |
+| 附錄 | Ch15–17 | 術語表、作業區（14 組）、解答區 |
 
 ## Core Principles
 
-- Beginner-friendly science communication
+- Beginner-friendly science communication (繁體中文科普)
 - Copy-paste runnable code and notebooks
 - End-to-end `uv` workflow, with Google Colab support
+- One unified dataset across all chapters for narrative continuity
 
 ## Terminology / 術語慣例
 
-本教材的流行病學中文術語依照**台灣（ROC）常用譯名**。例如：attack rate 譯為「侵襲率」（非「攻擊率」）、confidence interval 譯為「信賴區間」（非「置信區間」）。完整對照表請見 `CLAUDE.md`。
+本教材的流行病學中文術語依照**台灣（ROC）常用譯名**。例如：attack rate 譯為「侵襲率」（非「攻擊率」）、confidence interval 譯為「信賴區間」（非「置信區間」）。完整對照表請見 `CLAUDE.md` 及 Ch15 附錄。
 
 ## Prerequisites
 
@@ -73,11 +85,6 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 - VS Code cannot find notebook kernel
 - In project root, run `uv sync`, then choose `.venv` Python interpreter in VS Code.
 
-Recommended first lessons:
-1. `book/chapters/00_guide.md`
-2. `book/chapters/01_fundamentals.md`
-3. `book/chapters/02_data_wrangling.md`
-
 ## Build the Site
 
 Student edition (default TOC):
@@ -102,16 +109,32 @@ uv run pytest
 
 ## Repository Layout
 
-- `book/`: Jupyter Book source (`_config.yml`, TOCs, chapter markdown, embedded notebooks)
-- `notebooks/`: runnable lesson notebooks
-- `notebooks/exercises/`: exercise/solution notebook pairs
+- `book/`: Jupyter Book source (`_config.yml`, TOCs, 18 chapter markdown files, embedded notebooks)
+- `notebooks/`: standalone runnable lesson notebooks
+- `notebooks/exercises/`: exercise/solution notebook pairs (14 chapters)
 - `src/epi_learning/`: reusable helper package (`cleaning`, `metrics`, `tabulate`, `viz`)
-- `data/synthetic/`: teaching datasets (CSV + GeoJSON)
+- `data/synthetic/`: teaching datasets — primary: `legionella_outbreak.csv` (280 × 32)
 - `tests/`: unit tests and notebook JSON smoke tests
 - `.github/workflows/`: CI and GitHub Pages workflows
 
+## Dataset
+
+**`data/synthetic/legionella_outbreak.csv`** — 280 位住民 × 32 欄
+
+模擬松柏護理之家退伍軍人症群聚事件的合成資料集。涵蓋人口學、共病、暴露史、臨床嚴重度、結果等完整疫調欄位。詳細欄位說明見 Ch15 附錄。
+
 ## Key Learning Assets
 
-- Visualization toolkit notebook: `notebooks/02_visualization_epi_charts.ipynb`
-- Spatial choropleth notebook: `notebooks/06_spatial_choropleth.ipynb`
+- Lesson notebooks: `notebooks/01_*.ipynb` through `notebooks/14_*.ipynb`
+- Exercise notebooks: `notebooks/exercises/NN_*_exercise.ipynb` (14 chapters)
+- Visualization toolkit: `notebooks/02_visualization_epi_charts.ipynb`
+- Spatial analysis: `notebooks/08_spatial_rates.ipynb`
+- Complete outbreak report: `notebooks/14_case_study_legionella.ipynb`
 - SitRep script example: `notebooks/run_sitrep.py`
+
+## Recommended Reading Order
+
+1. `book/chapters/00_guide.md` — 導讀與環境設定
+2. `book/chapters/01_fundamentals.md` — Python 基礎
+3. `book/chapters/02_data_wrangling.md` — 資料處理與視覺化
+4. Follow the story from Ch03 onwards!
