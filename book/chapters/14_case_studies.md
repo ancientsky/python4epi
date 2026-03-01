@@ -1,90 +1,62 @@
-# 11 任務支線（Case Studies）
+# 14 實戰案例：退伍軍人症疫調報告
 
 ## 你將學到
 
-- 如何把前面章節方法串成端到端任務
-- 如何在有限資料下做實務決策分析
-- 如何整理「可行動」的監測結論
+- 如何從接到通報到完成結案報告，走完一次完整疫調流程
+- 如何整合前 13 章學到的所有技能
+- 如何產出「可行動」的分析結論
 
 ## 情境故事
 
-你負責某市登革熱週報，需要在 30 分鐘內回答三個問題：
+一切從那通電話開始。
 
-1. 哪些地區病例率最高？
-2. 本週是否有異常上升訊號？
-3. 下週資源該優先投放到哪裡？
+> 2026 年 1 月中旬，你接到松柏護理之家的通報：近日多名住民出現肺炎症狀。
+> 你帶著筆電趕到現場，開始進行流行病學調查。
+> 現在，調查結束了——是時候把所有分析整合成一份正式的 **疫情調查報告**。
 
-## 任務框架
+這一章就是最終考驗：用 Python 產出一份從頭到尾的疫調報告。
 
-1. 讀取並清理 line list。
-2. 產生地區病例率表。
-3. 產生近期趨勢與簡單預測。
-4. 輸出行動建議（高、中、低風險區）。
+## 報告架構
 
-## 最小可執行程式碼
+一份標準的群聚調查報告包含以下段落：
 
-```python
-import pandas as pd
+| 段落 | 對應章節 | 核心技能 |
+|------|---------|---------|
+| 1. 背景與通報 | Ch00, Ch04 | 個案定義、通報流程 |
+| 2. 方法 | Ch02 | 資料收集、line list 清理 |
+| 3. 描述性流行病學 | Ch02, Ch03, Ch04 | 人時地分布、流行曲線、侵襲率 |
+| 4. 分析性流行病學 | Ch03, Ch05, Ch06 | 2×2 表、分層分析、邏輯斯迴歸 |
+| 5. 時間空間分析 | Ch07, Ch08 | 時間序列、空間分布 |
+| 6. 進階分析 | Ch09, Ch10 | 存活分析、預測模型 |
+| 7. 討論與建議 | — | 感染源研判、介入措施 |
+| 8. 結論 | — | 行動建議 |
 
-line = pd.read_csv("data/synthetic/line_list.csv", parse_dates=["date_onset"])
-by_loc = line.groupby("location").size().rename("cases").reset_index()
+## 主要發現摘要
 
-pop = pd.DataFrame({
-    "location": ["North", "South", "East", "West"],
-    "population": [12000, 10000, 8000, 9000],
-})
+在 notebook 中，你將產出以下關鍵數字：
 
-risk = by_loc.merge(pop, on="location", how="left")
-risk["incidence_per_100k"] = risk["cases"] / risk["population"] * 100000
-risk = risk.sort_values("incidence_per_100k", ascending=False)
-print(risk)
-```
-
-## 建議輸出格式（給決策者）
-
-- `Top 3` 高風險地區（依病例率）
-- 最近 7 天病例變化方向（上升/持平/下降）
-- 下週建議資源配置（檢驗、人力、衛教）
-
-## 建議圖表組合（決策簡報版）
-
-- 圖 1：經典流行曲線（每日病例 bar）
-- 圖 2：地區病例率排序圖（bar）
-- 圖 3：地區 x 週別熱圖（heatmap）
-- 圖 4：互動趨勢圖（plotly line）
-- 圖 5：地區 choropleth（GeoJSON）
-
-```python
-import json
-import plotly.express as px
-
-with open("data/synthetic/admin_areas.geojson", "r", encoding="utf-8") as f:
-    geojson = json.load(f)
-
-fig = px.choropleth(
-    risk,
-    geojson=geojson,
-    locations="location",
-    featureidkey="properties.location",
-    color="incidence_per_100k",
-    color_continuous_scale="Reds",
-    title="Case Study Risk Map",
-)
-fig.update_geos(fitbounds="locations", visible=False)
-fig.show()
-```
+- **280** 位住民，**121** 人感染（侵襲率 **43.2%**）
+- **19** 人死亡（致死率 **15.7%**）
+- 發病高峰：**2026-01-19 至 01-22**
+- 高風險區域：**2F-A**（54.5%）、**3F-B**（57.4%）
+- 主要危險因子：**淋浴使用**（adjusted OR > 1）
+- 結論：淋浴系統為最可能的感染源
 
 ## 練習題
 
-1. 加入年齡分層，找出高風險年齡帶。
-2. 新增一個簡單異常偵測規則（如：高於過去 3 日均值 1.5 倍）。
+- 作業版：[`14_case_study_exercise.ipynb`](../exercises/14_case_study_exercise.ipynb)
+- 解答版（講師）：[`14_case_study_solution.ipynb`](../solutions/14_case_study_solution.ipynb)
 
 ## 常見誤用
 
-- 直接用病例數排序當成風險排序。
-- 沒有先確認資料更新延遲（report lag）就下結論。
+| 錯誤 | 正確做法 |
+|------|----------|
+| 只列數字，不給脈絡 | 每個數字都附上比較基準（如全國 CFR） |
+| 圖表太多，缺乏重點 | 挑 3–5 張關鍵圖表，每張都有明確結論 |
+| 分析做完就結束 | 一定要有「行動建議」段落 |
+| 報告格式不一致 | 使用標準疫調報告格式 |
 
-## 練習本
+## 下一步
 
-- 作業版：[`notebooks/exercises/11_case_study_exercise.ipynb`](../../notebooks/exercises/11_case_study_exercise.ipynb)
-- 解答版：[`notebooks/exercises/11_case_study_solution.ipynb`](../../notebooks/exercises/11_case_study_solution.ipynb)
+恭喜！完成這章代表你已經具備用 Python 進行疫情調查的完整能力。
+附錄（Ch15）收錄進階術語與參考資源。

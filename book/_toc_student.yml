@@ -45,7 +45,7 @@ chapters:
       - file: chapters/notebooks/13_reproducibility_workflow
   - file: chapters/14_case_studies
     sections:
-      - file: chapters/notebooks/14_case_study_dengue
+      - file: chapters/notebooks/14_case_study_legionella
   - file: chapters/15_appendix
   - file: chapters/16_exercises
     sections:
