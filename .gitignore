@@ -8,3 +8,6 @@ __pycache__/
 .ruff_cache/
 _build/
 book/_build/
+
+# Generated notebook outputs
+data/processed/
