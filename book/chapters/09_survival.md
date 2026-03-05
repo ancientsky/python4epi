@@ -71,7 +71,16 @@ cases["time_to_event"] = (cases["end_date"] - cases["symptom_onset_date"]).dt.da
 ## Step 2 — Kaplan-Meier 全體存活曲線
 
 ```python
+import matplotlib.pyplot as plt
 from lifelines import KaplanMeierFitter
+
+# -- CJK font setup (避免中文標籤顯示為方框) --
+plt.rcParams["font.sans-serif"] = [
+    "Noto Sans CJK TC", "Noto Sans TC", "Microsoft JhengHei",
+    "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS",
+    "Heiti TC", "DejaVu Sans",
+]
+plt.rcParams["axes.unicode_minus"] = False
 
 kmf = KaplanMeierFitter()
 kmf.fit(cases["time_to_event"], event_observed=cases["event"],

@@ -140,6 +140,14 @@ print(f"\n  粗 RR = {crude_rr:.3f}")
 ```python
 import matplotlib.pyplot as plt
 
+# -- CJK font setup (避免中文標籤顯示為方框) --
+plt.rcParams["font.sans-serif"] = [
+    "Noto Sans CJK TC", "Noto Sans TC", "Microsoft JhengHei",
+    "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS",
+    "Heiti TC", "DejaVu Sans",
+]
+plt.rcParams["axes.unicode_minus"] = False
+
 fig, ax = plt.subplots(figsize=(8, 4))
 y_pos = range(len(results_df))
 

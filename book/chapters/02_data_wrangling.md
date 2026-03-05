@@ -151,6 +151,14 @@ print(wing_stats.to_string(index=False))
 ```python
 import matplotlib.pyplot as plt
 
+# -- CJK font setup (避免中文標籤顯示為方框) --
+plt.rcParams["font.sans-serif"] = [
+    "Noto Sans CJK TC", "Noto Sans TC", "Microsoft JhengHei",
+    "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS",
+    "Heiti TC", "DejaVu Sans",
+]
+plt.rcParams["axes.unicode_minus"] = False
+
 cases = df[df["infected"] == 1]
 daily = cases.groupby("symptom_onset_date").size().rename("cases")
 
