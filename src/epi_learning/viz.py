@@ -17,6 +17,11 @@ def configure_chinese_font() -> None:
     It can also be called explicitly to re-apply settings after an
     ``rcParams`` reset.
     """
+    import matplotlib.font_manager as fm
+
+    # Rebuild font list to pick up newly installed fonts (e.g. in CI)
+    fm._load_fontmanager(try_read_cache=False)
+
     candidates = [
         "Noto Sans CJK TC",
         "Noto Sans TC",
