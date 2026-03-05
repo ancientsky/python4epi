@@ -446,6 +446,14 @@ print(f"致死率 (CFR)：{cfr:.1f}%")
 ```python
 import matplotlib.pyplot as plt
 
+# -- CJK font setup (避免中文標籤顯示為方框) --
+plt.rcParams["font.sans-serif"] = [
+    "Noto Sans CJK TC", "Noto Sans TC", "Microsoft JhengHei",
+    "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS",
+    "Heiti TC", "DejaVu Sans",
+]
+plt.rcParams["axes.unicode_minus"] = False
+
 # 將發病日期轉為日期格式，並計算每日病例數
 onset = pd.to_datetime(df["symptom_onset_date"])
 epi_curve = onset.dropna().dt.date.value_counts().sort_index()

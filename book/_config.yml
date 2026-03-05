@@ -5,6 +5,16 @@ only_build_toc_files: true
 execute:
   execute_notebooks: force
   timeout: 300
+sphinx:
+  config:
+    nb_execution_pre_code: |
+      import matplotlib.pyplot as plt
+      _cjk_fonts = ["Noto Sans CJK TC", "Noto Sans TC", "Microsoft JhengHei",
+                     "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS", "Heiti TC"]
+      plt.rcParams["font.sans-serif"] = _cjk_fonts + [
+          f for f in plt.rcParams.get("font.sans-serif", []) if f not in _cjk_fonts]
+      plt.rcParams["axes.unicode_minus"] = False
+      del _cjk_fonts
 repository:
   url: https://github.com/ancientsky/python4epi
   branch: main

@@ -161,4 +161,4 @@ git commit -m "message"         # 提交
 | Notebook kernel 重啟後變數消失 | Kernel 狀態重置 | 從頭重新執行所有 cell |
 | `SettingWithCopyWarning` | 在 slice 上賦值 | 使用 `.copy()` 或 `.loc` |
 | 日期欄位無法計算 | 未轉換為 datetime | `pd.to_datetime(df["col"])` |
-| 中文字型顯示為方框 | matplotlib 缺中文字型 | 安裝 `matplotlib` 中文字型或使用英文標籤 |
+| 中文字型顯示為方框 | matplotlib 缺中文字型 | 在 import 後加 `plt.rcParams["font.sans-serif"] = ["Noto Sans CJK TC", "WenQuanYi Zen Hei", "SimHei"]` |

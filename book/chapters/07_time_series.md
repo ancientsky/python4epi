@@ -36,6 +36,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_absolute_error
 
+# -- CJK font setup (避免中文標籤顯示為方框) --
+plt.rcParams["font.sans-serif"] = [
+    "Noto Sans CJK TC", "Noto Sans TC", "Microsoft JhengHei",
+    "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS",
+    "Heiti TC", "DejaVu Sans",
+]
+plt.rcParams["axes.unicode_minus"] = False
+
 df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
 df["symptom_onset_date"] = pd.to_datetime(df["symptom_onset_date"], errors="coerce")
 df["hospitalization_date"] = pd.to_datetime(df["hospitalization_date"], errors="coerce")
