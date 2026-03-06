@@ -10,13 +10,31 @@ sphinx:
     nb_execution_pre_code: |
       import matplotlib.pyplot as plt
       import matplotlib.font_manager as _fm
-      _fm._load_fontmanager(try_read_cache=False)
+      import pathlib as _pathlib
+      # Explicitly discover and register CJK font files (more reliable than cache rebuild)
+      for _font_dir in map(_pathlib.Path, ["/usr/share/fonts", "/usr/local/share/fonts"]):
+          if _font_dir.exists():
+              for _fp in sorted(_font_dir.rglob("*")):
+                  if _fp.suffix.lower() in {".ttf", ".ttc", ".otf"} and (
+                      "CJK" in _fp.name or "WenQuanYi" in _fp.name or "wqy" in _fp.name
+                  ):
+                      try:
+                          _fm.fontManager.addfont(str(_fp))
+                      except Exception:
+                          pass
       _cjk_fonts = ["Noto Sans CJK TC", "Noto Sans TC", "Microsoft JhengHei",
                      "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS", "Heiti TC"]
       plt.rcParams["font.sans-serif"] = _cjk_fonts + [
           f for f in plt.rcParams.get("font.sans-serif", []) if f not in _cjk_fonts]
       plt.rcParams["axes.unicode_minus"] = False
-      del _cjk_fonts, _fm
+      # Set Plotly renderer for static Jupyter Book builds
+      try:
+          import plotly.io as _pio
+          _pio.renderers.default = "notebook"
+          del _pio
+      except ImportError:
+          pass
+      del _cjk_fonts, _fm, _pathlib
 repository:
   url: https://github.com/ancientsky/python4epi
   branch: main
