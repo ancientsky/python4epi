@@ -234,3 +234,24 @@ PR descriptions should include scope summary, validation output, and screenshots
 - Every notebook has a Colab setup cell at the top that detects `google.colab` and auto-clones the repo + installs deps; this cell is a no-op when running locally
 - When creating new notebooks, always include the standard Colab setup cell after the title markdown cell
 - All chapters share a single dataset (`legionella_outbreak.csv`) for narrative continuity; standalone copies of all notebooks are kept in sync under `notebooks/`
+
+## CJK Font & Visualization Known Issues
+
+### matplotlib `.ttc` face 0 trap
+- `fontManager.addfont()` only registers **face 0** of `.ttc` (TrueType Collection) files
+- For `NotoSansCJK-Regular.ttc`, face 0 = "Noto Sans CJK JP" (not TC)
+- **Fix:** include ALL Noto Sans CJK variants (JP, SC, TC, KR, HK) in `font.sans-serif` candidate list
+- The centralized font config lives in `src/epi_learning/viz.py` (`configure_chinese_font()`) and `book/_config.yml` (`nb_execution_pre_code`); both dynamically discover registered CJK font names
+- Inline font config in notebooks/chapters uses a static candidate list with all variants
+- When modifying the font candidate list across notebooks, beware of two source formats:
+  - **Array-style**: `"source": ["line1\n", "line2\n"]` — each line is a separate JSON array element
+  - **Single-string**: `"source": "line1\nline2\n"` — entire cell is one JSON string with `\n` newlines
+  - A `json.dump` rewrite changes formatting; prefer targeted `str.replace` within the parsed JSON to minimize diff noise
+
+### Plotly blank charts in Jupyter Book
+- Plotly's default renderer (`plotly_mimetype`) doesn't produce output in headless Jupyter Book builds
+- **Fix:** set `pio.renderers.default = "notebook"` — this is configured globally in `book/_config.yml` `nb_execution_pre_code`
+
+### CI font setup
+- `.github/workflows/ci.yml` installs `fonts-noto-cjk` and clears `~/.cache/matplotlib`
+- Font installation MUST happen before `uv sync` and before any matplotlib import to ensure the font cache is built correctly
