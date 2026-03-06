@@ -16,6 +16,15 @@ def configure_chinese_font() -> None:
     This function is called automatically when this module is imported.
     It can also be called explicitly to re-apply settings after an
     ``rcParams`` reset.
+
+    Notes
+    -----
+    Matplotlib's ``addfont()`` only registers face 0 of ``.ttc`` (TrueType
+    Collection) files.  For Noto Sans CJK collections, face 0 is typically
+    the JP variant, so "Noto Sans CJK TC" is never registered.  This
+    function works around the limitation by discovering which CJK font
+    family names were *actually* registered and placing them first in the
+    ``font.sans-serif`` priority list.
     """
     import pathlib
 
@@ -34,8 +43,25 @@ def configure_chinese_font() -> None:
                     except Exception:  # noqa: BLE001
                         pass
 
-    candidates = [
+    # Discover which CJK font names were actually registered.
+    # addfont() only registers face 0 of .ttc collections, so the actual
+    # family name may differ from our preferred list (e.g. "Noto Sans CJK JP"
+    # instead of "Noto Sans CJK TC").  Any Noto Sans CJK variant covers the
+    # full CJK Unified Ideographs range, so any variant works for display.
+    _cjk_keywords = {"cjk", "wenquanyi", "wqy"}
+    discovered: list[str] = []
+    for entry in fm.fontManager.ttflist:
+        if any(kw in entry.name.lower() for kw in _cjk_keywords):
+            if entry.name not in discovered:
+                discovered.append(entry.name)
+
+    # Preferred candidates — may or may not be installed.
+    preferred = [
         "Noto Sans CJK TC",
+        "Noto Sans CJK SC",
+        "Noto Sans CJK JP",
+        "Noto Sans CJK KR",
+        "Noto Sans CJK HK",
         "Noto Sans TC",
         "Microsoft JhengHei",
         "WenQuanYi Zen Hei",
@@ -43,8 +69,15 @@ def configure_chinese_font() -> None:
         "Arial Unicode MS",
         "Heiti TC",
     ]
+
+    # Build final list: actually-available CJK fonts first, then preferred,
+    # then whatever the user already had configured.
+    candidates = list(discovered)
+    for name in preferred:
+        if name not in candidates:
+            candidates.append(name)
+
     current = plt.rcParams.get("font.sans-serif", [])
-    # Prepend CJK candidates (preserving existing fallbacks)
     plt.rcParams["font.sans-serif"] = candidates + [
         f for f in current if f not in candidates
     ]

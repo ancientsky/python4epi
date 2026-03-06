@@ -38,7 +38,8 @@ from sklearn.metrics import mean_absolute_error
 
 # -- CJK font setup (避免中文標籤顯示為方框) --
 plt.rcParams["font.sans-serif"] = [
-    "Noto Sans CJK TC", "Noto Sans TC", "Microsoft JhengHei",
+    "Noto Sans CJK TC", "Noto Sans CJK SC", "Noto Sans CJK JP",
+    "Noto Sans TC", "Microsoft JhengHei",
     "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS",
     "Heiti TC", "DejaVu Sans",
 ]

@@ -22,8 +22,24 @@ sphinx:
                           _fm.fontManager.addfont(str(_fp))
                       except Exception:
                           pass
-      _cjk_fonts = ["Noto Sans CJK TC", "Noto Sans TC", "Microsoft JhengHei",
-                     "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS", "Heiti TC"]
+      # Discover actually-registered CJK font names.  addfont() only reads
+      # face 0 of .ttc collections, so "Noto Sans CJK TC" may never appear;
+      # the JP/SC/KR variant registered at face 0 covers CJK Unified Ideographs
+      # equally well.
+      _discovered = []
+      for _entry in _fm.fontManager.ttflist:
+          _nlower = _entry.name.lower()
+          if any(_kw in _nlower for _kw in ("cjk", "wenquanyi", "wqy")):
+              if _entry.name not in _discovered:
+                  _discovered.append(_entry.name)
+      _preferred = ["Noto Sans CJK TC", "Noto Sans CJK SC", "Noto Sans CJK JP",
+                     "Noto Sans CJK KR", "Noto Sans CJK HK", "Noto Sans TC",
+                     "Microsoft JhengHei", "WenQuanYi Zen Hei", "SimHei",
+                     "Arial Unicode MS", "Heiti TC"]
+      _cjk_fonts = list(_discovered)
+      for _n in _preferred:
+          if _n not in _cjk_fonts:
+              _cjk_fonts.append(_n)
       plt.rcParams["font.sans-serif"] = _cjk_fonts + [
           f for f in plt.rcParams.get("font.sans-serif", []) if f not in _cjk_fonts]
       plt.rcParams["axes.unicode_minus"] = False
@@ -34,7 +50,7 @@ sphinx:
           del _pio
       except ImportError:
           pass
-      del _cjk_fonts, _fm, _pathlib
+      del _cjk_fonts, _fm, _pathlib, _discovered, _preferred
 repository:
   url: https://github.com/ancientsky/python4epi
   branch: main
