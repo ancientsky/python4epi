@@ -70,6 +70,44 @@ if 'google.colab' in sys.modules:
     !pip install -q -e .
 ```
 
+## CJK Font Troubleshooting (matplotlib 中文顯示)
+
+matplotlib 圖表如果出現方框 □□□ 或 `Glyph missing from font(s) DejaVu Sans` 警告，表示系統缺少 CJK 字型或字型未被正確註冊。
+
+**Linux (Ubuntu / CI):**
+
+```bash
+sudo apt-get install -y fonts-noto-cjk
+rm -rf ~/.cache/matplotlib    # 清除字型快取
+```
+
+> **注意：** Noto Sans CJK 以 `.ttc` 集合檔安裝，matplotlib 的 `addfont()` 只會註冊 face 0（通常是 JP 變體）。因此 `font.sans-serif` 候選清單中須包含 `"Noto Sans CJK JP"` 等多個變體——它們的 CJK 字集相同，都能顯示繁體中文。
+
+**所有平台通用設定（在 `import matplotlib.pyplot as plt` 之後）：**
+
+```python
+plt.rcParams["font.sans-serif"] = [
+    "Noto Sans CJK TC", "Noto Sans CJK SC", "Noto Sans CJK JP",
+    "Noto Sans TC", "Microsoft JhengHei",
+    "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS",
+    "Heiti TC", "DejaVu Sans",
+]
+plt.rcParams["axes.unicode_minus"] = False
+```
+
+詳細排錯步驟見書中 Ch15 附錄 E。
+
+## Plotly in Jupyter Book
+
+Plotly 圖表在 `jupyter-book build` 時顯示空白？設定渲染器：
+
+```python
+import plotly.io as pio
+pio.renderers.default = "notebook"
+```
+
+本教材已在 `book/_config.yml` 的 `nb_execution_pre_code` 中全域設定。
+
 ## Windows Troubleshooting
 
 - `uv : The term 'uv' is not recognized`

@@ -160,6 +160,23 @@ plt.rcParams["font.sans-serif"] = [
 ]
 plt.rcParams["axes.unicode_minus"] = False
 
+```
+
+```{admonition} 為什麼候選清單要列這麼多字型？
+:class: tip, dropdown
+
+matplotlib 會從 `font.sans-serif` 清單中**由左到右**嘗試每個字型名稱，找到第一個已安裝的就使用。不同作業系統預裝的字型不同：
+
+- **macOS**：Heiti TC, Arial Unicode MS
+- **Windows**：Microsoft JhengHei（微軟正黑體）
+- **Linux (Ubuntu)**：`sudo apt install fonts-noto-cjk` 安裝後可用 Noto Sans CJK 系列
+
+特別注意：Noto Sans CJK 系列通常以 `.ttc`（TrueType Collection）格式安裝，一個檔案裡包含 JP/KR/SC/TC/HK 五種變體。但 matplotlib 的 `addfont()` **只會註冊第一個變體（通常是 JP）**，所以候選清單中需要把 JP、SC 也列進去——它們的 CJK 字集相同，都能顯示繁體中文。
+
+詳細排錯步驟見 [Ch15 附錄 E. 中文圖表顯示排錯](15_appendix.md#e-中文圖表顯示排錯matplotlib--plotly)。
+```
+
+```python
 cases = df[df["infected"] == 1]
 daily = cases.groupby("symptom_onset_date").size().rename("cases")
 
