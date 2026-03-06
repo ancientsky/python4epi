@@ -9,18 +9,30 @@ import pandas as pd
 def configure_chinese_font() -> None:
     """Configure matplotlib to display CJK (Traditional Chinese) characters.
 
-    Searches for common CJK fonts available on the system and sets
-    ``font.sans-serif`` accordingly.  Also disables the minus-sign
-    substitution that can cause display issues with CJK fonts.
+    Explicitly scans system font directories to discover and register CJK
+    font files, then sets ``font.sans-serif`` accordingly.  Also disables
+    the minus-sign substitution that can cause display issues with CJK fonts.
 
     This function is called automatically when this module is imported.
     It can also be called explicitly to re-apply settings after an
     ``rcParams`` reset.
     """
+    import pathlib
+
     import matplotlib.font_manager as fm
 
-    # Rebuild font list to pick up newly installed fonts (e.g. in CI)
-    fm._load_fontmanager(try_read_cache=False)
+    # Explicitly discover and register CJK font files instead of relying
+    # on the font cache, which may be stale after installing new fonts.
+    for font_dir in map(pathlib.Path, ["/usr/share/fonts", "/usr/local/share/fonts"]):
+        if font_dir.exists():
+            for fp in sorted(font_dir.rglob("*")):
+                if fp.suffix.lower() in {".ttf", ".ttc", ".otf"} and (
+                    "CJK" in fp.name or "WenQuanYi" in fp.name or "wqy" in fp.name
+                ):
+                    try:
+                        fm.fontManager.addfont(str(fp))
+                    except Exception:  # noqa: BLE001
+                        pass
 
     candidates = [
         "Noto Sans CJK TC",
