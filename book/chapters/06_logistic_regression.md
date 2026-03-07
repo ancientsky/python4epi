@@ -73,7 +73,7 @@ factors = [
 
 crude_results = []
 for var in factors:
-    model = smf.logit(f"infected ~ {var}", data=df).fit(disp=0)
+    model = smf.logit(f"infected ~ {var}", data=df).fit(disp=0, method="bfgs")
     coef = model.params[var]
     ci = model.conf_int().loc[var]
     crude_results.append({
@@ -96,7 +96,7 @@ formula = (
     "comorbidity_copd + immunosuppressed + functional_score + "
     "C(floor)"
 )
-model_full = smf.logit(formula, data=df).fit(disp=0)
+model_full = smf.logit(formula, data=df).fit(disp=0, method="bfgs")
 print(model_full.summary2())
 ```
 
@@ -150,7 +150,7 @@ formula_reduced = (
     "infected ~ shower_use + hydrotherapy_use + age + "
     "immunosuppressed + functional_score"
 )
-model_reduced = smf.logit(formula_reduced, data=df).fit(disp=0)
+model_reduced = smf.logit(formula_reduced, data=df).fit(disp=0, method="bfgs")
 
 print(f"完整模型 AIC = {model_full.aic:.1f}")
 print(f"精簡模型 AIC = {model_reduced.aic:.1f}")
