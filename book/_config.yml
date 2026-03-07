@@ -43,6 +43,8 @@ sphinx:
       plt.rcParams["font.sans-serif"] = _cjk_fonts + [
           f for f in plt.rcParams.get("font.sans-serif", []) if f not in _cjk_fonts]
       plt.rcParams["axes.unicode_minus"] = False
+      plt.style.use("ggplot")
+      plt.rcParams["figure.dpi"] = 150
       # Set Plotly renderer for static Jupyter Book builds
       try:
           import plotly.io as _pio

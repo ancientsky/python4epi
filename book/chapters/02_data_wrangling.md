@@ -181,6 +181,10 @@ print(wing_stats.to_string(index=False))
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
+# -- 全域圖表風格設定 --
+plt.style.use("ggplot")                 # 學術風格：淡灰背景 + 白色格線
+plt.rcParams["figure.dpi"] = 150        # 提高解析度（預設 100 太模糊）
+
 # -- CJK font setup (避免中文標籤顯示為方框) --
 plt.rcParams["font.sans-serif"] = [
     "Noto Sans CJK TC", "Noto Sans CJK SC", "Noto Sans CJK JP",
@@ -189,6 +193,24 @@ plt.rcParams["font.sans-serif"] = [
     "Heiti TC", "DejaVu Sans",
 ]
 plt.rcParams["axes.unicode_minus"] = False
+```
+
+```{admonition} 圖表風格與解析度設定
+:class: tip, dropdown
+
+**`plt.style.use("ggplot")`** 套用 R 語言 ggplot2 的經典風格——淡灰背景搭配白色格線，整體視覺更專業。matplotlib 內建多種風格，可用 `plt.style.available` 查看完整列表，常見選擇：
+
+| 風格 | 特色 |
+|------|------|
+| `ggplot` | R 語言 ggplot2 風格，學術論文常用 |
+| `seaborn-v0_8` | seaborn 預設風格，柔和色調 |
+| `bmh` | Bayesian Methods for Hackers，清爽配色 |
+| `fivethirtyeight` | FiveThirtyEight 新聞網站風格 |
+| `default` | matplotlib 原始預設 |
+
+**`plt.rcParams["figure.dpi"] = 150`** 將圖片解析度從預設的 100 DPI 提升到 150 DPI，在 Jupyter Notebook 和網頁上顯示更清晰。若需要出版品質可設為 300。
+
+> 💡 `plt.style.use()` 會改變全域設定，建議放在 notebook 最前面。如果只想對單一圖表套用風格，可用 `with plt.style.context("ggplot"):` 包住繪圖程式碼。
 ```
 
 ```{admonition} 為什麼候選清單要列這麼多字型？
@@ -430,13 +452,13 @@ import seaborn as sns
 
 fig, ax = plt.subplots(figsize=(8, 4))
 sns.histplot(
-    data=df, x="age", hue="infected", bins=15,
-    multiple="stack", palette={0: "#cccccc", 1: "#e34a33"}, ax=ax,
+    data=df, x="age", hue="infected", hue_order=[1, 0], bins=15,
+    multiple="stack", palette={1: "#e34a33", 0: "#cccccc"}, ax=ax,
 )
 ax.set_title("年齡分布：感染 vs 未感染")
 ax.set_xlabel("年齡")
 ax.set_ylabel("人數")
-ax.legend(title="感染", labels=["未感染", "感染"])
+ax.legend(title="感染", labels=["感染", "未感染"])
 plt.tight_layout()
 plt.show()
 ```
