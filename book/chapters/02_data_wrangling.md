@@ -146,10 +146,24 @@ print(wing_stats.to_string(index=False))
 
 ### Step 7: 流行曲線（matplotlib）
 
-流行曲線是流行病學最經典的圖表——X 軸是發病日期，Y 軸是新增病例數。從曲線形狀可推斷傳播模式。
+流行曲線（epidemic curve）是流行病學最經典的圖表——X 軸是發病日期，Y 軸是新增病例數。從曲線形狀可推斷傳播模式。
+
+```{admonition} 流行曲線繪製要點
+:class: important
+
+流行曲線本質上是一種**直方圖（histogram）**，不是一般的長條圖（bar chart）。繪製時需注意：
+
+1. **相鄰長條不留間隙**：因為 X 軸是連續的時間軸，長條之間不應有空隙（`width=1.0`），以忠實反映時間的連續性。
+2. **補齊沒有病例的日期**：即使某天新增 0 例，也要讓它佔據 X 軸上的位置（用 `reindex` 填入 0），否則 X 軸間距會失真。
+3. **X 軸標籤**：標示「發病日期（Onset Date）」，說明時間基準是症狀出現日、通報日或其他日期。
+4. **Y 軸標籤**：標示「新增病例數（Number of Cases）」，必須是整數刻度（不會有 0.5 個病例）。
+5. **標題**：包含疾病名稱、時間區間及分組依據，例如「退伍軍人症流行曲線（依發病日）」。
+6. **去除多餘框線**：移除上方和右方的邊框（`spines`），讓圖表更清爽。
+```
 
 ```python
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 # -- CJK font setup (避免中文標籤顯示為方框) --
 plt.rcParams["font.sans-serif"] = [
@@ -159,7 +173,6 @@ plt.rcParams["font.sans-serif"] = [
     "Heiti TC", "DejaVu Sans",
 ]
 plt.rcParams["axes.unicode_minus"] = False
-
 ```
 
 ```{admonition} 為什麼候選清單要列這麼多字型？
@@ -176,21 +189,94 @@ matplotlib 會從 `font.sans-serif` 清單中**由左到右**嘗試每個字型�
 詳細排錯步驟見 [Ch15 附錄 E. 中文圖表顯示排錯](15_appendix.md#e-中文圖表顯示排錯matplotlib--plotly)。
 ```
 
+#### 標準流行曲線
+
 ```python
 cases = df[df["infected"] == 1]
 daily = cases.groupby("symptom_onset_date").size().rename("cases")
 
+# 補齊沒有病例的日期（包含 0 例的天數）
+date_range = pd.date_range(daily.index.min(), daily.index.max(), freq="D")
+daily = daily.reindex(date_range, fill_value=0)
+
 fig, ax = plt.subplots(figsize=(10, 4))
-ax.bar(daily.index, daily.values, color="#2c7fb8", edgecolor="white")
-ax.set_title("退伍軍人症流行曲線（依發病日）", fontsize=14)
-ax.set_xlabel("發病日期")
-ax.set_ylabel("新增病例數")
-fig.autofmt_xdate()
+ax.bar(
+    daily.index, daily.values,
+    width=1.0,                         # 相鄰長條緊密貼合（直方圖風格）
+    color="#2c7fb8", edgecolor="white", linewidth=0.5,
+)
+ax.set_title("退伍軍人症流行曲線（依發病日）", fontsize=14, fontweight="bold")
+ax.set_xlabel("發病日期（Onset Date）")
+ax.set_ylabel("新增病例數（Number of Cases）")
+
+# 日期格式化
+ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
+ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
+fig.autofmt_xdate(rotation=45)
+
+# X 軸緊貼資料範圍
+ax.set_xlim(
+    daily.index.min() - pd.Timedelta(hours=12),
+    daily.index.max() + pd.Timedelta(hours=12),
+)
+ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))  # Y 軸整數刻度
+ax.spines["top"].set_visible(False)     # 去除上邊框
+ax.spines["right"].set_visible(False)   # 去除右邊框
 plt.tight_layout()
 plt.show()
 ```
 
 **解讀**：峰值集中在幾天內 → 共同暴露源（point source）型態。
+
+#### 經典方格式流行曲線
+
+在教科書和 CDC 的疫調報告中，經常可以看到一種**方格式（unit chart / stacked squares）**的流行曲線——每個小方格代表一個病例，堆疊起來形成柱狀。這種圖的好處是可以直觀地「數病例」，也能用顏色對方格進行分類（例如確診 vs. 疑似）。
+
+```python
+import matplotlib.dates as mdates
+
+fig, ax = plt.subplots(figsize=(10, 5))
+box_size = 1.0  # 每個方格 = 1 個病例
+
+for date, count in daily.items():
+    if count == 0:
+        continue
+    x = mdates.date2num(date)
+    for j in range(int(count)):
+        rect = plt.Rectangle(
+            (x - box_size / 2, j * box_size),  # 左下角座標
+            box_size, box_size,                  # 寬、高
+            facecolor="#2c7fb8",
+            edgecolor="white", linewidth=0.8,
+        )
+        ax.add_patch(rect)
+
+# 座標軸設定
+ax.set_xlim(
+    mdates.date2num(daily.index.min()) - 1.5,
+    mdates.date2num(daily.index.max()) + 1.5,
+)
+ax.set_ylim(0, daily.max() + 1)
+ax.set_aspect("equal")                  # 正方形方格
+
+ax.xaxis_date()
+ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
+ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
+fig.autofmt_xdate(rotation=45)
+ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+
+ax.set_title("退伍軍人症流行曲線 — 方格式（依發病日）", fontsize=14, fontweight="bold")
+ax.set_xlabel("發病日期（Onset Date）")
+ax.set_ylabel("病例數（Number of Cases）")
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+plt.tight_layout()
+plt.show()
+```
+
+```{tip}
+方格式流行曲線特別適合**小規模群聚**（數十至一百多例），每個方格都可以用不同顏色代表個案屬性（例如確診 / 疑似、男 / 女、各樓層），讓讀者同時看到時間分布和個案組成。當病例數太大（> 200）時，方格會變得太小，此時改用標準直方圖更合適。
+```
 
 ### Step 8: 年齡分布（seaborn）
 
