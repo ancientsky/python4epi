@@ -229,6 +229,8 @@ plt.rcParams["font.sans-serif"] = [
     "DejaVu Sans",         # 最終退路（無中文）
 ]
 plt.rcParams["axes.unicode_minus"] = False
+plt.style.use("ggplot")
+plt.rcParams["figure.dpi"] = 150
 ```
 
 ```{note}

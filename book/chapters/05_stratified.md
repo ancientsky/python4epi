@@ -148,6 +148,8 @@ plt.rcParams["font.sans-serif"] = [
     "Heiti TC", "DejaVu Sans",
 ]
 plt.rcParams["axes.unicode_minus"] = False
+plt.style.use("ggplot")
+plt.rcParams["figure.dpi"] = 150
 
 fig, ax = plt.subplots(figsize=(8, 4))
 y_pos = range(len(results_df))

@@ -44,6 +44,8 @@ plt.rcParams["font.sans-serif"] = [
     "Heiti TC", "DejaVu Sans",
 ]
 plt.rcParams["axes.unicode_minus"] = False
+plt.style.use("ggplot")
+plt.rcParams["figure.dpi"] = 150
 
 df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
 df["symptom_onset_date"] = pd.to_datetime(df["symptom_onset_date"], errors="coerce")

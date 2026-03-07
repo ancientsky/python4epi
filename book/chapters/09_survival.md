@@ -82,6 +82,8 @@ plt.rcParams["font.sans-serif"] = [
     "Heiti TC", "DejaVu Sans",
 ]
 plt.rcParams["axes.unicode_minus"] = False
+plt.style.use("ggplot")
+plt.rcParams["figure.dpi"] = 150
 
 kmf = KaplanMeierFitter()
 kmf.fit(cases["time_to_event"], event_observed=cases["event"],
