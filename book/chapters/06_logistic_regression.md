@@ -64,6 +64,8 @@ df["functional_score"] = df["functional_status"].map(fs_map)
 ## Step 2: 單變項 Crude OR 彙整
 
 ```python
+import warnings
+
 factors = [
     "shower_use", "hydrotherapy_use", "ever_smoker",
     "comorbidity_chf", "comorbidity_dm", "comorbidity_cancer",
@@ -73,7 +75,14 @@ factors = [
 
 crude_results = []
 for var in factors:
-    model = smf.logit(f"infected ~ {var}", data=df).fit(disp=0, method="bfgs")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        model = smf.logit(f"infected ~ {var}", data=df).fit(disp=0, method="lbfgs")
+
+    if not model.mle_retvals["converged"]:
+        print(f"⚠ {var}: 模型未收斂（可能存在準完美分離），跳過")
+        continue
+
     coef = model.params[var]
     ci = model.conf_int().loc[var]
     crude_results.append({
@@ -87,6 +96,18 @@ crude_df = pd.DataFrame(crude_results)
 print(crude_df.to_string(index=False))
 ```
 
+```{admonition} 為什麼有些變數「模型未收斂」？
+:class: tip, dropdown
+
+當某個二元預測變數的其中一個類別完全（或幾乎完全）對應到某個結果時，稱為**完美分離（complete separation）**或**準完美分離（quasi-complete separation）**。此時最大概似估計法（MLE）的 OR 會趨近 0 或 ∞，Hessian 矩陣無法反轉，導致模型無法收斂。
+
+常見處理方式：
+1. 檢查 2×2 表，確認是否有某個格子 = 0
+2. 改用 **Firth's penalized likelihood**（`firthlogist` 套件）
+3. 改用 **Exact logistic regression**
+4. 在教學場景中，先跳過該變數，在多變項模型中一起納入
+```
+
 ## Step 3: 多變項 Adjusted OR
 
 ```python
@@ -96,7 +117,9 @@ formula = (
     "comorbidity_copd + immunosuppressed + functional_score + "
     "C(floor)"
 )
-model_full = smf.logit(formula, data=df).fit(disp=0, method="bfgs")
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    model_full = smf.logit(formula, data=df).fit(disp=0, method="lbfgs")
 print(model_full.summary2())
 ```
 
@@ -150,7 +173,9 @@ formula_reduced = (
     "infected ~ shower_use + hydrotherapy_use + age + "
     "immunosuppressed + functional_score"
 )
-model_reduced = smf.logit(formula_reduced, data=df).fit(disp=0, method="bfgs")
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    model_reduced = smf.logit(formula_reduced, data=df).fit(disp=0, method="lbfgs")
 
 print(f"完整模型 AIC = {model_full.aic:.1f}")
 print(f"精簡模型 AIC = {model_reduced.aic:.1f}")
