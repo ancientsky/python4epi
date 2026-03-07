@@ -31,7 +31,7 @@ A Traditional Chinese-first learning website for infectious disease epidemiology
 
 ## Terminology / 術語慣例
 
-本教材的流行病學中文術語依照**台灣（ROC）常用譯名**。例如：attack rate 譯為「侵襲率」（非「攻擊率」）、confidence interval 譯為「信賴區間」（非「置信區間」）。完整對照表請見 `CLAUDE.md` 及 Ch15 附錄。
+本教材的流行病學中文術語依照**台灣（Taiwan）常用譯名**。例如：attack rate 譯為「侵襲率」（非「攻擊率」）、confidence interval 譯為「信賴區間」（非「置信區間」）。完整對照表請見 `CLAUDE.md` 及 Ch15 附錄。
 
 ## Prerequisites
 
