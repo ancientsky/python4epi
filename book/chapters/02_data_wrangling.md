@@ -148,17 +148,33 @@ print(wing_stats.to_string(index=False))
 
 流行曲線（epidemic curve）是流行病學最經典的圖表——X 軸是發病日期，Y 軸是新增病例數。從曲線形狀可推斷傳播模式。
 
-```{admonition} 流行曲線繪製要點
+```{admonition} 流行曲線繪製規範（依 CDC / ECDC 指引）
 :class: important
 
-流行曲線本質上是一種**直方圖（histogram）**，不是一般的長條圖（bar chart）。繪製時需注意：
+流行曲線本質上是一種**直方圖（histogram）**，不是一般的長條圖（bar chart）。以下是根據 [CDC Epi Chart](https://www.cdc.gov/wcms/4.0/cdc-wp/data-presentation/epi-chart.html) 及 [CDC Field Epidemiology Manual](https://www.cdc.gov/field-epi-manual/php/chapters/describing-epi-data.html) 整理的繪製規範：
 
-1. **相鄰長條不留間隙**：因為 X 軸是連續的時間軸，長條之間不應有空隙（`width=1.0`），以忠實反映時間的連續性。
-2. **補齊沒有病例的日期**：即使某天新增 0 例，也要讓它佔據 X 軸上的位置（用 `reindex` 填入 0），否則 X 軸間距會失真。
-3. **X 軸標籤**：標示「發病日期（Onset Date）」，說明時間基準是症狀出現日、通報日或其他日期。
-4. **Y 軸標籤**：標示「新增病例數（Number of Cases）」，必須是整數刻度（不會有 0.5 個病例）。
-5. **標題**：包含疾病名稱、時間區間及分組依據，例如「退伍軍人症流行曲線（依發病日）」。
-6. **去除多餘框線**：移除上方和右方的邊框（`spines`），讓圖表更清爽。
+**結構與比例**
+1. **相鄰長條不留間隙**：X 軸是連續時間軸，長條之間不應有空隙，以忠實反映時間的連續性。
+2. **補齊沒有病例的日期**：即使某天新增 0 例，也要讓它佔據 X 軸上的位置，否則間距會失真。
+3. **不使用 Y 軸截斷（scale break）**：Y 軸必須從 0 開始，不可以截斷，否則會誇大或縮小趨勢。
+4. **顯示爆發前後的背景期**：X 軸應包含疫情爆發前 1–2 個潛伏期的日期，讓讀者看到疫情何時開始偏離背景值。
+
+**時間間距**
+5. **時間間距 ≈ 潛伏期的 1/4**：退伍軍人症潛伏期 2–10 天（平均 5–6 天），以 1 天為單位是適當的。病例數很多時可縮短間距，很少時可拉長。
+
+**標題與標籤**
+6. **標題要能獨立閱讀**：包含疾病名稱、地點、時間範圍，例如「松柏護理之家退伍軍人症流行曲線，依發病日，2026 年 1 月」。
+7. **X 軸**：標示「發病日期（Date of Symptom Onset）」——明確說明時間基準。若使用通報日等替代日期，須在圖表下方註明。
+8. **Y 軸**：標示「病例數（Number of Cases）」，必須使用整數刻度。
+
+**視覺風格**
+9. **隱藏格線**：CDC 建議隱藏水平和垂直格線以減少視覺干擾（reduce chart clutter）。
+10. **去除多餘框線**：移除上方和右方的邊框（`spines`）。
+11. **個案分類用顏色區分**：若同時呈現確診（confirmed）與疑似（probable）個案，須用不同顏色區分並附圖例。
+12. **不在長條上標數字**：ECDC 指引建議不要在圖表上同時呈現數位（數字）與類比（圖形）資訊，以免互相干擾。
+
+**標註（Annotation）**
+13. **加入關鍵事件標註**：在流行曲線上標註重要事件（如暴露時間、介入措施、通報日），可以幫助說明病例分布的原因。
 ```
 
 ```python
@@ -195,8 +211,12 @@ matplotlib 會從 `font.sans-serif` 清單中**由左到右**嘗試每個字型�
 cases = df[df["infected"] == 1]
 daily = cases.groupby("symptom_onset_date").size().rename("cases")
 
-# 補齊沒有病例的日期（包含 0 例的天數）
-date_range = pd.date_range(daily.index.min(), daily.index.max(), freq="D")
+# 補齊完整日期範圍：包含爆發前 3 天（顯示背景期）
+date_range = pd.date_range(
+    daily.index.min() - pd.Timedelta(days=3),
+    daily.index.max() + pd.Timedelta(days=1),
+    freq="D",
+)
 daily = daily.reindex(date_range, fill_value=0)
 
 fig, ax = plt.subplots(figsize=(10, 4))
@@ -205,59 +225,171 @@ ax.bar(
     width=1.0,                         # 相鄰長條緊密貼合（直方圖風格）
     color="#2c7fb8", edgecolor="white", linewidth=0.5,
 )
-ax.set_title("退伍軍人症流行曲線（依發病日）", fontsize=14, fontweight="bold")
-ax.set_xlabel("發病日期（Onset Date）")
-ax.set_ylabel("新增病例數（Number of Cases）")
+ax.set_title(
+    "松柏護理之家退伍軍人症流行曲線，依發病日，2026 年 1 月",
+    fontsize=13, fontweight="bold",
+)
+ax.set_xlabel("發病日期（Date of Symptom Onset）")
+ax.set_ylabel("病例數（Number of Cases）")
 
 # 日期格式化
 ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
 ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
 fig.autofmt_xdate(rotation=45)
 
-# X 軸緊貼資料範圍
-ax.set_xlim(
-    daily.index.min() - pd.Timedelta(hours=12),
-    daily.index.max() + pd.Timedelta(hours=12),
-)
-ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))  # Y 軸整數刻度
-ax.spines["top"].set_visible(False)     # 去除上邊框
-ax.spines["right"].set_visible(False)   # 去除右邊框
+# X 軸緊貼資料範圍、Y 軸從 0 開始且整數刻度
+ax.set_xlim(daily.index.min() - pd.Timedelta(hours=12),
+            daily.index.max() + pd.Timedelta(hours=12))
+ax.set_ylim(bottom=0)
+ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+
+# CDC 風格：隱藏格線、去除上右邊框
+ax.grid(False)
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
 plt.tight_layout()
 plt.show()
 ```
 
-**解讀**：峰值集中在幾天內 → 共同暴露源（point source）型態。
+**解讀**：峰值集中在幾天內 → 共同暴露源（point source）型態。爆發前 3 天（01/09–01/11）沒有病例，顯示疫情的起始時間點清晰。
 
-#### 經典方格式流行曲線
+#### 依個案分類分層（confirmed vs. probable）
 
-在教科書和 CDC 的疫調報告中，經常可以看到一種**方格式（unit chart / stacked squares）**的流行曲線——每個小方格代表一個病例，堆疊起來形成柱狀。這種圖的好處是可以直觀地「數病例」，也能用顏色對方格進行分類（例如確診 vs. 疑似）。
+CDC 建議：若同時呈現不同分類的個案，須用顏色區分。這裡我們用堆疊長條圖，將確診與疑似個案分開呈現。
 
 ```python
-import matplotlib.dates as mdates
+# 按日期 × 個案分類計算每日病例數
+daily_class = (
+    cases.groupby(["symptom_onset_date", "case_classification"])
+    .size()
+    .unstack(fill_value=0)
+)
+daily_class = daily_class.reindex(date_range, fill_value=0)
+
+colors = {"confirmed": "#2c7fb8", "probable": "#a6bddb"}
+fig, ax = plt.subplots(figsize=(10, 4))
+
+bottom = None
+for cls in ["confirmed", "probable"]:
+    if cls not in daily_class.columns:
+        continue
+    ax.bar(
+        daily_class.index, daily_class[cls],
+        width=1.0, bottom=bottom,
+        color=colors[cls], edgecolor="white", linewidth=0.5,
+        label="確診（Confirmed）" if cls == "confirmed" else "疑似（Probable）",
+    )
+    bottom = daily_class[cls] if bottom is None else bottom + daily_class[cls]
+
+ax.set_title(
+    "松柏護理之家退伍軍人症流行曲線，依個案分類與發病日，2026 年 1 月",
+    fontsize=12, fontweight="bold",
+)
+ax.set_xlabel("發病日期（Date of Symptom Onset）")
+ax.set_ylabel("病例數（Number of Cases）")
+ax.legend(loc="upper left", frameon=False)
+
+ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
+ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
+fig.autofmt_xdate(rotation=45)
+ax.set_xlim(daily.index.min() - pd.Timedelta(hours=12),
+            daily.index.max() + pd.Timedelta(hours=12))
+ax.set_ylim(bottom=0)
+ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+ax.grid(False)
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+plt.tight_layout()
+plt.show()
+```
+
+#### 加入關鍵事件標註
+
+CDC 建議在流行曲線上標註重要事件，幫助讀者理解病例分布的原因。
+
+```python
+fig, ax = plt.subplots(figsize=(10, 4))
+ax.bar(
+    daily.index, daily.values,
+    width=1.0, color="#2c7fb8", edgecolor="white", linewidth=0.5,
+)
+
+# 標註關鍵事件
+ax.annotate(
+    "首例通報",
+    xy=(pd.Timestamp("2026-01-14"), daily.get(pd.Timestamp("2026-01-14"), 0)),
+    xytext=(pd.Timestamp("2026-01-10"), daily.max() * 0.85),
+    fontsize=9,
+    arrowprops=dict(arrowstyle="->", color="#333333", lw=1.2),
+    bbox=dict(boxstyle="round,pad=0.3", fc="#ffffcc", ec="#cccccc"),
+)
+ax.annotate(
+    "水系統消毒",
+    xy=(pd.Timestamp("2026-01-22"), daily.get(pd.Timestamp("2026-01-22"), 0)),
+    xytext=(pd.Timestamp("2026-01-25"), daily.max() * 0.85),
+    fontsize=9,
+    arrowprops=dict(arrowstyle="->", color="#333333", lw=1.2),
+    bbox=dict(boxstyle="round,pad=0.3", fc="#ffffcc", ec="#cccccc"),
+)
+
+ax.set_title(
+    "松柏護理之家退伍軍人症流行曲線（含關鍵事件標註）",
+    fontsize=13, fontweight="bold",
+)
+ax.set_xlabel("發病日期（Date of Symptom Onset）")
+ax.set_ylabel("病例數（Number of Cases）")
+ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
+ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
+fig.autofmt_xdate(rotation=45)
+ax.set_xlim(daily.index.min() - pd.Timedelta(hours=12),
+            daily.index.max() + pd.Timedelta(hours=12))
+ax.set_ylim(bottom=0)
+ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+ax.grid(False)
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+plt.tight_layout()
+plt.show()
+```
+
+#### 經典方格式流行曲線（依個案分類著色）
+
+在教科書和 CDC 疫調報告中常見的**方格式（unit chart / stacked squares）**流行曲線——每個小方格代表一個病例。這裡我們用顏色區分確診與疑似個案。
+
+```python
+# 準備每日 confirmed / probable 的病例數
+daily_class = (
+    cases.groupby(["symptom_onset_date", "case_classification"])
+    .size()
+    .unstack(fill_value=0)
+)
+daily_class = daily_class.reindex(date_range, fill_value=0)
+colors_map = {"confirmed": "#2c7fb8", "probable": "#a6bddb"}
 
 fig, ax = plt.subplots(figsize=(10, 5))
-box_size = 1.0  # 每個方格 = 1 個病例
+box_size = 1.0
 
-for date, count in daily.items():
-    if count == 0:
-        continue
+for date in daily_class.index:
     x = mdates.date2num(date)
-    for j in range(int(count)):
-        rect = plt.Rectangle(
-            (x - box_size / 2, j * box_size),  # 左下角座標
-            box_size, box_size,                  # 寬、高
-            facecolor="#2c7fb8",
-            edgecolor="white", linewidth=0.8,
-        )
-        ax.add_patch(rect)
+    j = 0  # 目前堆疊高度
+    for cls in ["confirmed", "probable"]:
+        count = daily_class.at[date, cls] if cls in daily_class.columns else 0
+        for _ in range(int(count)):
+            rect = plt.Rectangle(
+                (x - box_size / 2, j * box_size),
+                box_size, box_size,
+                facecolor=colors_map[cls],
+                edgecolor="white", linewidth=0.8,
+            )
+            ax.add_patch(rect)
+            j += 1
 
 # 座標軸設定
-ax.set_xlim(
-    mdates.date2num(daily.index.min()) - 1.5,
-    mdates.date2num(daily.index.max()) + 1.5,
-)
-ax.set_ylim(0, daily.max() + 1)
-ax.set_aspect("equal")                  # 正方形方格
+ax.set_xlim(mdates.date2num(daily_class.index.min()) - 1.5,
+            mdates.date2num(daily_class.index.max()) + 1.5)
+y_max = daily_class.sum(axis=1).max()
+ax.set_ylim(0, y_max + 1)
+ax.set_aspect("equal")
 
 ax.xaxis_date()
 ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
@@ -265,9 +397,22 @@ ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
 fig.autofmt_xdate(rotation=45)
 ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
 
-ax.set_title("退伍軍人症流行曲線 — 方格式（依發病日）", fontsize=14, fontweight="bold")
-ax.set_xlabel("發病日期（Onset Date）")
+ax.set_title(
+    "松柏護理之家退伍軍人症流行曲線 — 方格式（依個案分類）",
+    fontsize=13, fontweight="bold",
+)
+ax.set_xlabel("發病日期（Date of Symptom Onset）")
 ax.set_ylabel("病例數（Number of Cases）")
+
+# 手動圖例
+from matplotlib.patches import Patch
+legend_elements = [
+    Patch(facecolor="#2c7fb8", edgecolor="white", label="確診（Confirmed）"),
+    Patch(facecolor="#a6bddb", edgecolor="white", label="疑似（Probable）"),
+]
+ax.legend(handles=legend_elements, loc="upper left", frameon=False)
+
+ax.grid(False)
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
 plt.tight_layout()
@@ -344,9 +489,13 @@ plt.show()
 
 ### Step 11: 互動式分層流行曲線（Plotly）
 
+Plotly 的互動式圖表同樣需要遵循 CDC 流行曲線繪製規範：無間隙、描述性標題、隱藏格線、Y 軸從 0 開始。
+
 ```python
 import plotly.express as px
+import plotly.graph_objects as go
 
+# 依樓層分層，並補齊完整日期範圍
 daily_floor = (
     cases.groupby(["symptom_onset_date", "floor"])
     .size()
@@ -355,12 +504,38 @@ daily_floor = (
 )
 daily_floor["floor"] = daily_floor["floor"].astype(str) + "F"
 
+# 補齊所有日期 × 樓層組合（含 0 例的天數）
+all_dates = pd.date_range(
+    cases["symptom_onset_date"].min() - pd.Timedelta(days=3),
+    cases["symptom_onset_date"].max() + pd.Timedelta(days=1),
+    freq="D",
+)
+all_floors = sorted(daily_floor["floor"].unique())
+full_idx = pd.MultiIndex.from_product([all_dates, all_floors], names=["symptom_onset_date", "floor"])
+daily_floor = (
+    daily_floor.set_index(["symptom_onset_date", "floor"])
+    .reindex(full_idx, fill_value=0)
+    .reset_index()
+)
+
 fig = px.bar(
     daily_floor,
     x="symptom_onset_date", y="cases", color="floor",
     barmode="stack",
-    title="互動式流行曲線（依樓層分層）",
-    labels={"symptom_onset_date": "發病日期", "cases": "病例數", "floor": "樓層"},
+    color_discrete_sequence=["#2c7fb8", "#41ae76", "#fe9929"],
+    title="松柏護理之家退伍軍人症流行曲線，依樓層與發病日，2026 年 1 月",
+    labels={"symptom_onset_date": "發病日期（Date of Symptom Onset）",
+            "cases": "病例數（Number of Cases）",
+            "floor": "樓層"},
+)
+
+# CDC 風格：無間隙、隱藏格線、Y 軸從 0 開始
+fig.update_layout(
+    bargap=0,                              # 長條之間無間隙
+    xaxis=dict(showgrid=False),            # 隱藏垂直格線
+    yaxis=dict(showgrid=False, rangemode="tozero"),  # 隱藏水平格線、Y 軸從 0
+    plot_bgcolor="white",                  # 白色背景
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
 )
 fig.show()
 ```
