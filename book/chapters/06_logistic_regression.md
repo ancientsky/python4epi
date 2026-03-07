@@ -53,6 +53,9 @@ import statsmodels.formula.api as smf
 df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
 df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
 
+# smoking_history 是三分類（never/former/current），轉為二分類
+df["ever_smoker"] = (df["smoking_history"] != "never").astype(int)
+
 # 功能狀態轉數值
 fs_map = {"bedridden": 0, "wheelchair": 1, "ambulatory": 2}
 df["functional_score"] = df["functional_status"].map(fs_map)
@@ -62,7 +65,7 @@ df["functional_score"] = df["functional_status"].map(fs_map)
 
 ```python
 factors = [
-    "shower_use", "hydrotherapy_use", "smoking_history",
+    "shower_use", "hydrotherapy_use", "ever_smoker",
     "comorbidity_chf", "comorbidity_dm", "comorbidity_cancer",
     "comorbidity_copd", "immunosuppressed",
     "age", "functional_score",

@@ -140,10 +140,14 @@ print(f"水療使用 → 感染的 RR = {rr2:.3f}, p = {p2:.4f}")
 
 ```python
 factors = [
-    "shower_use", "hydrotherapy_use", "smoking_history",
+    "shower_use", "hydrotherapy_use",
     "comorbidity_chf", "comorbidity_dm", "comorbidity_cancer",
     "comorbidity_copd", "immunosuppressed",
 ]
+
+# smoking_history 是三分類（never/former/current），先轉為二分類
+df["ever_smoker"] = (df["smoking_history"] != "never").astype(int)
+factors.append("ever_smoker")
 
 results = []
 for factor in factors:

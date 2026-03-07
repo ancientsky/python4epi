@@ -112,18 +112,39 @@ for col in comorbidity_cols:
 ## Step 4: 時 — Time
 
 ```python
+import matplotlib.dates as mdates
+
 daily = cases.groupby("symptom_onset_date").size().rename("cases")
 
+# 補齊完整日期範圍（含爆發前 3 天背景期）
+date_range = pd.date_range(
+    daily.index.min() - pd.Timedelta(days=3),
+    daily.index.max() + pd.Timedelta(days=1),
+    freq="D",
+)
+daily = daily.reindex(date_range, fill_value=0)
+
 fig, ax = plt.subplots(figsize=(10, 4))
-ax.bar(daily.index, daily.values, color="#2c7fb8", edgecolor="white")
-ax.set_title("流行曲線（依發病日）")
-ax.set_xlabel("發病日期")
-ax.set_ylabel("新增病例數")
-fig.autofmt_xdate()
+ax.bar(daily.index, daily.values, width=1.0,
+       color="#2c7fb8", edgecolor="white", linewidth=0.5)
+ax.set_title("松柏護理之家退伍軍人症流行曲線，依發病日，2026 年 1 月",
+             fontsize=13, fontweight="bold")
+ax.set_xlabel("發病日期（Date of Symptom Onset）")
+ax.set_ylabel("病例數（Number of Cases）")
+ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
+ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
+fig.autofmt_xdate(rotation=45)
+ax.set_xlim(daily.index.min() - pd.Timedelta(hours=12),
+            daily.index.max() + pd.Timedelta(hours=12))
+ax.set_ylim(bottom=0)
+ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+ax.grid(False)
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
 plt.tight_layout()
 plt.show()
 
-print(f"流行期間：{daily.index.min().date()} – {daily.index.max().date()}")
+print(f"流行期間：{cases['symptom_onset_date'].min().date()} – {cases['symptom_onset_date'].max().date()}")
 print(f"高峰日：{daily.idxmax().date()}（{daily.max()} 例）")
 ```
 
