@@ -91,8 +91,8 @@ DiD 的核心假設：如果沒有介入，兩組的趨勢會一樣。
 
 ## 練習題
 
-- 作業版：[`12_causal_exercise.ipynb`](../exercises/12_causal_exercise.ipynb)
-- 解答版（講師）：[`12_causal_solution.ipynb`](../solutions/12_causal_solution.ipynb)
+- 作業版：[`12_causal_exercise.ipynb`](exercises/12_causal_exercise.ipynb)
+- 解答版（講師）：[`12_causal_solution.ipynb`](solutions/12_causal_solution.ipynb)
 
 ## 常見誤用
 

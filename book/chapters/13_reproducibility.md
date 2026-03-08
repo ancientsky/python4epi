@@ -54,8 +54,8 @@ print(summary)
 
 ## 練習題
 
-- 作業版：[`13_reproducibility_exercise.ipynb`](../exercises/13_reproducibility_exercise.ipynb)
-- 解答版（講師）：[`13_reproducibility_solution.ipynb`](../solutions/13_reproducibility_solution.ipynb)
+- 作業版：[`13_reproducibility_exercise.ipynb`](exercises/13_reproducibility_exercise.ipynb)
+- 解答版（講師）：[`13_reproducibility_solution.ipynb`](solutions/13_reproducibility_solution.ipynb)
 
 ## 常見誤用
 

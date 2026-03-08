@@ -196,5 +196,5 @@ print("→ 住院高峰比發病高峰晚幾天，這個時間差可用於預測
 ## 練習本
 
 - 課堂筆記：{ref}`07_time_series_baseline.ipynb`
-- 作業版：[`07_time_series_exercise.ipynb`](../exercises/07_time_series_exercise.ipynb)
-- 解答版（教師版）：[`07_time_series_solution.ipynb`](../solutions/07_time_series_solution.ipynb)
+- 作業版：[`07_time_series_exercise.ipynb`](exercises/07_time_series_exercise.ipynb)
+- 解答版（教師版）：[`07_time_series_solution.ipynb`](solutions/07_time_series_solution.ipynb)

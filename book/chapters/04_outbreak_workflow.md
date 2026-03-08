@@ -240,5 +240,5 @@ uv run python notebooks/run_sitrep.py
 ## 練習本
 
 - 課堂筆記：{ref}`04_outbreak_workflow.ipynb`
-- 作業版：[`04_outbreak_workflow_exercise.ipynb`](../exercises/04_outbreak_workflow_exercise.ipynb)
-- 解答版（教師版）：[`04_outbreak_workflow_solution.ipynb`](../solutions/04_outbreak_workflow_solution.ipynb)
+- 作業版：[`04_outbreak_workflow_exercise.ipynb`](exercises/04_outbreak_workflow_exercise.ipynb)
+- 解答版（教師版）：[`04_outbreak_workflow_solution.ipynb`](solutions/04_outbreak_workflow_solution.ipynb)

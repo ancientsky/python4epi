@@ -207,5 +207,5 @@ print(f"精簡模型 AIC = {model_reduced.aic:.1f}")
 ## 練習本
 
 - 課堂筆記：{ref}`06_logistic_regression.ipynb`
-- 作業版：[`06_logistic_regression_exercise.ipynb`](../exercises/06_logistic_regression_exercise.ipynb)
-- 解答版（教師版）：[`06_logistic_regression_solution.ipynb`](../solutions/06_logistic_regression_solution.ipynb)
+- 作業版：[`06_logistic_regression_exercise.ipynb`](exercises/06_logistic_regression_exercise.ipynb)
+- 解答版（教師版）：[`06_logistic_regression_solution.ipynb`](solutions/06_logistic_regression_solution.ipynb)
