@@ -132,7 +132,7 @@ print(f"DL Validation AUC = {auc:.3f}")
 ## 練習題
 
 - 作業版：[`11_dl_exercise.ipynb`](exercises/11_dl_exercise.ipynb)
-- 解答版（講師）：[`11_dl_solution.ipynb`](solutions/11_dl_solution.ipynb)
+- 解答版（講師）：[`11_dl_solution.ipynb`](solutions/11_dl_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/11_dl_solution.ipynb>)
 
 ## 常見誤用
 

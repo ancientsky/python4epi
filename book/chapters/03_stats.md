@@ -201,4 +201,4 @@ print(rr_table.to_string(index=False))
 
 - 課堂筆記：{ref}`03_stats_basics.ipynb`
 - 作業版：[`03_stats_exercise.ipynb`](exercises/03_stats_exercise.ipynb)
-- 解答版（教師版）：[`03_stats_solution.ipynb`](solutions/03_stats_solution.ipynb)
+- 解答版（教師版）：[`03_stats_solution.ipynb`](solutions/03_stats_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/03_stats_solution.ipynb>)

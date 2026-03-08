@@ -10,6 +10,15 @@
 3. 完成所有 `TODO` 標記的程式碼區塊。
 4. 完成後再對照 Ch17 解答區的參考解答。
 
+```{admonition} 解答在哪裡？
+:class: tip
+
+解答版 notebook 收錄在 [Ch17 解答專區](17_solutions.md)，僅在**教師版**提供。
+
+- **學生版**（本站）：`https://ancientsky.github.io/python4epi/`
+- **教師版**（含解答）：`https://ancientsky.github.io/python4epi/instructor/`
+```
+
 > **提示**：每份作業都有 3 道題目，第 3 題為挑戰題。
 
 ## 作業清單

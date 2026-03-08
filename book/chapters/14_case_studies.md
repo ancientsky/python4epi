@@ -45,7 +45,7 @@
 ## 練習題
 
 - 作業版：[`14_case_study_exercise.ipynb`](exercises/14_case_study_exercise.ipynb)
-- 解答版（講師）：[`14_case_study_solution.ipynb`](solutions/14_case_study_solution.ipynb)
+- 解答版（講師）：[`14_case_study_solution.ipynb`](solutions/14_case_study_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/14_case_study_solution.ipynb>)
 
 ## 常見誤用
 

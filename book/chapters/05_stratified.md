@@ -254,4 +254,4 @@ for floor in sorted(df["floor"].unique()):
 
 - 課堂筆記：{ref}`05_stratified_analysis.ipynb`
 - 作業版：[`05_stratified_exercise.ipynb`](exercises/05_stratified_exercise.ipynb)
-- 解答版（教師版）：[`05_stratified_solution.ipynb`](solutions/05_stratified_solution.ipynb)
+- 解答版（教師版）：[`05_stratified_solution.ipynb`](solutions/05_stratified_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/05_stratified_solution.ipynb>)

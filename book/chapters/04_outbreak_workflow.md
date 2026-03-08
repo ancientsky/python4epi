@@ -241,4 +241,4 @@ uv run python notebooks/run_sitrep.py
 
 - 課堂筆記：{ref}`04_outbreak_workflow.ipynb`
 - 作業版：[`04_outbreak_workflow_exercise.ipynb`](exercises/04_outbreak_workflow_exercise.ipynb)
-- 解答版（教師版）：[`04_outbreak_workflow_solution.ipynb`](solutions/04_outbreak_workflow_solution.ipynb)
+- 解答版（教師版）：[`04_outbreak_workflow_solution.ipynb`](solutions/04_outbreak_workflow_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/04_outbreak_workflow_solution.ipynb>)

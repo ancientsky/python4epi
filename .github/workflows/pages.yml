@@ -45,23 +45,44 @@ jobs:
       - name: Sync deps
         run: uv sync --all-groups
 
-      - name: Build book
+      - name: Build student edition
         run: |
           cp book/_toc_student.yml book/_toc.yml
           uv run jupyter-book build book/
 
+      - name: Save student build
+        run: |
+          cp -a book/_build/html student_html
+
+      - name: Build instructor edition
+        run: |
+          cp book/_toc_instructor.yml book/_toc.yml
+          uv run jupyter-book build book/ --all
+
       - name: Prepare pages artifact
         run: |
-          if [ ! -d book/_build/html ] || [ -z "$(find book/_build/html -maxdepth 1 -name '*.html' | head -n 1)" ]; then
-            echo "ERROR: book/_build/html not found or contains no HTML files."
-            echo "Build output tree:"
-            find book/_build -type f 2>/dev/null | head -40 || echo "(no _build directory)"
+          # Validate student build
+          if [ ! -d student_html ] || [ -z "$(find student_html -maxdepth 1 -name '*.html' | head -n 1)" ]; then
+            echo "ERROR: student build not found or contains no HTML files."
             exit 1
           fi
+          # Validate instructor build
+          if [ ! -d book/_build/html ] || [ -z "$(find book/_build/html -maxdepth 1 -name '*.html' | head -n 1)" ]; then
+            echo "ERROR: instructor build not found or contains no HTML files."
+            exit 1
+          fi
+
+          # Root = student edition
           rm -rf page_artifact
-          cp -a book/_build/html page_artifact
+          cp -a student_html page_artifact
           if [ ! -f page_artifact/index.html ] && [ -f page_artifact/intro.html ]; then
             cp page_artifact/intro.html page_artifact/index.html
+          fi
+
+          # /instructor/ = instructor edition (includes solutions)
+          cp -a book/_build/html page_artifact/instructor
+          if [ ! -f page_artifact/instructor/index.html ] && [ -f page_artifact/instructor/intro.html ]; then
+            cp page_artifact/instructor/intro.html page_artifact/instructor/index.html
           fi
 
       - name: Upload artifact
