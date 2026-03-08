@@ -586,4 +586,4 @@ fig.show()
 - 資料處理課堂筆記：{ref}`02_data_wrangling_for_beginners.ipynb`
 - 視覺化課堂筆記：{ref}`02_visualization_epi_charts.ipynb`
 - 作業版：[`02_data_wrangling_exercise.ipynb`](exercises/02_data_wrangling_exercise.ipynb)
-- 解答版（教師版）：[`02_data_wrangling_solution.ipynb`](solutions/02_data_wrangling_solution.ipynb)
+- 解答版（教師版）：[`02_data_wrangling_solution.ipynb`](solutions/02_data_wrangling_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/02_data_wrangling_solution.ipynb>)

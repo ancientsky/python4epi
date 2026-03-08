@@ -61,6 +61,15 @@
 
 ## 如何使用
 
+### 線上閱讀
+
+本書提供兩個版本：
+
+| 版本 | 內容 | 網址 |
+|------|------|------|
+| **學生版** | 課文 + 作業（不含解答） | [ancientsky.github.io/python4epi/](https://ancientsky.github.io/python4epi/) |
+| **教師版** | 課文 + 作業 + 解答 | [ancientsky.github.io/python4epi/instructor/](https://ancientsky.github.io/python4epi/instructor/) |
+
 ### 本機環境
 
 ```bash

@@ -142,6 +142,12 @@ print(f"3 樓 B 翼侵襲率: {ar_3b:.2%}")
 - 直接改結果數字，不改原始輸入值（程式跑不出正確結果）。
 - CFR 的分母是「感染人數」不是「住民總數」——概念要搞清楚。
 
+## 練習本
+
+- 課堂筆記：{ref}`01_fundamentals_python_basics.ipynb`
+- 作業版：[`01_fundamentals_exercise.ipynb`](exercises/01_fundamentals_exercise.ipynb)
+- 解答版（教師版）：[`01_fundamentals_solution.ipynb`](solutions/01_fundamentals_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/01_fundamentals_solution.ipynb>)
+
 ## 最小可執行環境命令
 
 ```bash
