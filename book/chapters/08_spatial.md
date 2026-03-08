@@ -161,8 +161,8 @@ print("Only in geojson:", sorted(geo_ids - data_ids))
 
 ## 練習題
 
-- 作業版：[`08_spatial_exercise.ipynb`](../exercises/08_spatial_exercise.ipynb)
-- 解答版（講師）：[`08_spatial_solution.ipynb`](../solutions/08_spatial_solution.ipynb)
+- 作業版：[`08_spatial_exercise.ipynb`](exercises/08_spatial_exercise.ipynb)
+- 解答版（講師）：[`08_spatial_solution.ipynb`](solutions/08_spatial_solution.ipynb)
 
 ## 常見誤用
 

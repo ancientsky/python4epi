@@ -13,20 +13,20 @@
 
 | 章 | 主題 | 解答重點 | 解答 |
 |----|------|---------|------|
-| 01 | Python 基礎 | dict 組織疫情資料、函數封裝 | [解答](../solutions/01_fundamentals_solution.ipynb) |
-| 02 | 資料處理與視覺化 | 日期衍生欄位、年齡分組流行曲線 | [解答](../solutions/02_data_wrangling_solution.ipynb) |
-| 03 | 描述性統計與 2×2 表 | 水療 RR、年齡分組 RR、Fisher's exact | [解答](../solutions/03_stats_solution.ipynb) |
-| 04 | 群聚調查工作流 | 自動化 SitRep 函數、嚴重度分析 | [解答](../solutions/04_outbreak_workflow_solution.ipynb) |
-| 05 | 分層分析與交絡因子 | 年齡分層、共病交絡、MH adjusted RR | [解答](../solutions/05_stratified_solution.ipynb) |
-| 06 | 邏輯斯迴歸 | 重症模型、LRT 比較、預測機率 | [解答](../solutions/06_logistic_regression_solution.ipynb) |
-| 07 | 時間序列與預測 | 住院序列、窗口 MAE、嚴重度堆疊圖 | [解答](../solutions/07_time_series_solution.ipynb) |
-| 08 | 空間流病 | CFR 熱力圖、淋浴 × 空間相關、高風險房間 | [解答](../solutions/08_spatial_solution.ipynb) |
-| 09 | 存活分析 | CHF KM 曲線、年齡分組、Cox 多因子 | [解答](../solutions/09_survival_solution.ipynb) |
-| 10 | 機器學習 | 平衡類別、重症預測、三模型 ROC | [解答](../solutions/10_ml_solution.ipynb) |
-| 11 | 深度學習 | 三層架構、重症任務、Dropout 比較 | [解答](../solutions/11_dl_solution.ipynb) |
-| 12 | 因果推論 | 水療 AR/PAR、日期敏感度、碰撞偏差 | [解答](../solutions/12_causal_solution.ipynb) |
-| 13 | 可重現研究 | 摘要驗證、環境檢查、版本記錄 | [解答](../solutions/13_reproducibility_solution.ipynb) |
-| 14 | 實戰案例 | 摘要表、RR 比較、迷你 SitRep 圖 | [解答](../solutions/14_case_study_solution.ipynb) |
+| 01 | Python 基礎 | dict 組織疫情資料、函數封裝 | [解答](solutions/01_fundamentals_solution.ipynb) |
+| 02 | 資料處理與視覺化 | 日期衍生欄位、年齡分組流行曲線 | [解答](solutions/02_data_wrangling_solution.ipynb) |
+| 03 | 描述性統計與 2×2 表 | 水療 RR、年齡分組 RR、Fisher's exact | [解答](solutions/03_stats_solution.ipynb) |
+| 04 | 群聚調查工作流 | 自動化 SitRep 函數、嚴重度分析 | [解答](solutions/04_outbreak_workflow_solution.ipynb) |
+| 05 | 分層分析與交絡因子 | 年齡分層、共病交絡、MH adjusted RR | [解答](solutions/05_stratified_solution.ipynb) |
+| 06 | 邏輯斯迴歸 | 重症模型、LRT 比較、預測機率 | [解答](solutions/06_logistic_regression_solution.ipynb) |
+| 07 | 時間序列與預測 | 住院序列、窗口 MAE、嚴重度堆疊圖 | [解答](solutions/07_time_series_solution.ipynb) |
+| 08 | 空間流病 | CFR 熱力圖、淋浴 × 空間相關、高風險房間 | [解答](solutions/08_spatial_solution.ipynb) |
+| 09 | 存活分析 | CHF KM 曲線、年齡分組、Cox 多因子 | [解答](solutions/09_survival_solution.ipynb) |
+| 10 | 機器學習 | 平衡類別、重症預測、三模型 ROC | [解答](solutions/10_ml_solution.ipynb) |
+| 11 | 深度學習 | 三層架構、重症任務、Dropout 比較 | [解答](solutions/11_dl_solution.ipynb) |
+| 12 | 因果推論 | 水療 AR/PAR、日期敏感度、碰撞偏差 | [解答](solutions/12_causal_solution.ipynb) |
+| 13 | 可重現研究 | 摘要驗證、環境檢查、版本記錄 | [解答](solutions/13_reproducibility_solution.ipynb) |
+| 14 | 實戰案例 | 摘要表、RR 比較、迷你 SitRep 圖 | [解答](solutions/14_case_study_solution.ipynb) |
 
 ## 教學提示
 

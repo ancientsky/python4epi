@@ -16,20 +16,20 @@
 
 | 章 | 主題 | 練習重點 | 作業 |
 |----|------|---------|------|
-| 01 | Python 基礎 | 用群聚數字練習變數、dict、函數 | [作業](../exercises/01_fundamentals_exercise.ipynb) |
-| 02 | 資料處理與視覺化 | 讀取 line list、日期轉換、流行曲線 | [作業](../exercises/02_data_wrangling_exercise.ipynb) |
-| 03 | 描述性統計與 2×2 表 | 淋浴暴露 2×2 表、RR、卡方檢定 | [作業](../exercises/03_stats_exercise.ipynb) |
-| 04 | 群聚調查工作流 | 完整 SitRep 產出流程 | [作業](../exercises/04_outbreak_workflow_exercise.ipynb) |
-| 05 | 分層分析與交絡因子 | functional_status 分層、MH 檢定 | [作業](../exercises/05_stratified_exercise.ipynb) |
-| 06 | 邏輯斯迴歸 | crude vs adjusted OR、模型比較 | [作業](../exercises/06_logistic_regression_exercise.ipynb) |
-| 07 | 時間序列與預測 | 移動平均、MAE、住院時間序列 | [作業](../exercises/07_time_series_exercise.ipynb) |
-| 08 | 空間流病 | CFR 空間分布、淋浴 × 空間交叉 | [作業](../exercises/08_spatial_exercise.ipynb) |
-| 09 | 存活分析 | KM 曲線、Log-rank、Cox 迴歸 | [作業](../exercises/09_survival_exercise.ipynb) |
-| 10 | 機器學習 | class_weight、特徵重要性、ROC | [作業](../exercises/10_ml_exercise.ipynb) |
-| 11 | 深度學習 | PyTorch 架構設計、Dropout 效果 | [作業](../exercises/11_dl_exercise.ipynb) |
-| 12 | 因果推論 | AR/PAR 計算、DiD 日期敏感度 | [作業](../exercises/12_causal_exercise.ipynb) |
-| 13 | 可重現研究 | 摘要 dict、檢查清單、版本記錄 | [作業](../exercises/13_reproducibility_exercise.ipynb) |
-| 14 | 實戰案例 | 疫情摘要、RR 篩查、迷你 SitRep | [作業](../exercises/14_case_study_exercise.ipynb) |
+| 01 | Python 基礎 | 用群聚數字練習變數、dict、函數 | [作業](exercises/01_fundamentals_exercise.ipynb) |
+| 02 | 資料處理與視覺化 | 讀取 line list、日期轉換、流行曲線 | [作業](exercises/02_data_wrangling_exercise.ipynb) |
+| 03 | 描述性統計與 2×2 表 | 淋浴暴露 2×2 表、RR、卡方檢定 | [作業](exercises/03_stats_exercise.ipynb) |
+| 04 | 群聚調查工作流 | 完整 SitRep 產出流程 | [作業](exercises/04_outbreak_workflow_exercise.ipynb) |
+| 05 | 分層分析與交絡因子 | functional_status 分層、MH 檢定 | [作業](exercises/05_stratified_exercise.ipynb) |
+| 06 | 邏輯斯迴歸 | crude vs adjusted OR、模型比較 | [作業](exercises/06_logistic_regression_exercise.ipynb) |
+| 07 | 時間序列與預測 | 移動平均、MAE、住院時間序列 | [作業](exercises/07_time_series_exercise.ipynb) |
+| 08 | 空間流病 | CFR 空間分布、淋浴 × 空間交叉 | [作業](exercises/08_spatial_exercise.ipynb) |
+| 09 | 存活分析 | KM 曲線、Log-rank、Cox 迴歸 | [作業](exercises/09_survival_exercise.ipynb) |
+| 10 | 機器學習 | class_weight、特徵重要性、ROC | [作業](exercises/10_ml_exercise.ipynb) |
+| 11 | 深度學習 | PyTorch 架構設計、Dropout 效果 | [作業](exercises/11_dl_exercise.ipynb) |
+| 12 | 因果推論 | AR/PAR 計算、DiD 日期敏感度 | [作業](exercises/12_causal_exercise.ipynb) |
+| 13 | 可重現研究 | 摘要 dict、檢查清單、版本記錄 | [作業](exercises/13_reproducibility_exercise.ipynb) |
+| 14 | 實戰案例 | 疫情摘要、RR 篩查、迷你 SitRep | [作業](exercises/14_case_study_exercise.ipynb) |
 
 ## 常見問題
 

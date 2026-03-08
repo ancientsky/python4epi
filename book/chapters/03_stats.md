@@ -200,5 +200,5 @@ print(rr_table.to_string(index=False))
 ## 練習本
 
 - 課堂筆記：{ref}`03_stats_basics.ipynb`
-- 作業版：[`03_stats_exercise.ipynb`](../exercises/03_stats_exercise.ipynb)
-- 解答版（教師版）：[`03_stats_solution.ipynb`](../solutions/03_stats_solution.ipynb)
+- 作業版：[`03_stats_exercise.ipynb`](exercises/03_stats_exercise.ipynb)
+- 解答版（教師版）：[`03_stats_solution.ipynb`](solutions/03_stats_solution.ipynb)

@@ -152,8 +152,8 @@ plt.show()
 
 ## 練習題
 
-- 作業版：[`09_survival_exercise.ipynb`](../exercises/09_survival_exercise.ipynb)
-- 解答版（講師）：[`09_survival_solution.ipynb`](../solutions/09_survival_solution.ipynb)
+- 作業版：[`09_survival_exercise.ipynb`](exercises/09_survival_exercise.ipynb)
+- 解答版（講師）：[`09_survival_solution.ipynb`](solutions/09_survival_solution.ipynb)
 
 ## 常見誤用
 
