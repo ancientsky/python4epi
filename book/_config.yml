@@ -8,6 +8,18 @@ execute:
 sphinx:
   config:
     nb_execution_pre_code: |
+      import os as _os
+      import pathlib as _pathlib
+      # Ensure CWD is the project root (where data/ directory lives).
+      # Jupyter Book executes notebooks from the notebook's own directory,
+      # but all notebooks reference data/synthetic/ relative to the project root.
+      _cwd = _pathlib.Path.cwd()
+      for _ in range(5):
+          if (_cwd / "data" / "synthetic").is_dir():
+              _os.chdir(_cwd)
+              break
+          _cwd = _cwd.parent
+      del _cwd, _os
       import matplotlib.pyplot as plt
       import matplotlib.font_manager as _fm
       import pathlib as _pathlib
