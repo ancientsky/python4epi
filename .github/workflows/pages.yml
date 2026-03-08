@@ -45,6 +45,20 @@ jobs:
       - name: Sync deps
         run: uv sync --all-groups
 
+      - name: Create data symlinks for notebook execution
+        run: |
+          # Jupyter Book executes notebooks from their own directory.
+          # Symlinks let `data/synthetic/...` resolve from any subdirectory.
+          for dir in book book/chapters book/chapters/exercises book/chapters/solutions book/chapters/notebooks; do
+            if [ -d "$dir" ]; then
+              # Compute relative path back to repo-root data/
+              rel=$(python3 -c "import os.path; print(os.path.relpath('data', '$dir'))")
+              ln -sfn "$rel" "$dir/data"
+            fi
+          done
+          # Verify
+          ls -la book/chapters/solutions/data/synthetic/legionella_outbreak.csv
+
       - name: Build student edition
         run: |
           cp book/_toc_student.yml book/_toc.yml
