@@ -33,6 +33,15 @@ jobs:
       - name: Sync deps
         run: uv sync --all-groups
 
+      - name: Create data symlinks for notebook execution
+        run: |
+          for dir in book book/chapters book/chapters/exercises book/chapters/solutions book/chapters/notebooks; do
+            if [ -d "$dir" ]; then
+              rel=$(python3 -c "import os.path; print(os.path.relpath('data', '$dir'))")
+              ln -sfn "$rel" "$dir/data"
+            fi
+          done
+
       - name: Run tests
         run: uv run pytest
 
