@@ -38,22 +38,25 @@
 
 ## 教學影片
 
-每個概念都有配套的動畫教學影片，用退伍軍人症群聚調查的真實場景，手把手帶你上手 Python：
+每個概念都有配套的動畫教學影片（約 3 分鐘），嵌在下方對應的小節中。影片包含：主線教學 → 額外防疫範例 → 初學者常見盲點破解。
 
-| # | 概念 | 影片 |
-|---|------|------|
-| 1 | 數值變數 — 先把數字存起來 | `ch01_01_variables` |
-| 2 | 計算指標 — 除法得比率 + f-string | `ch01_02_arithmetic` |
-| 3 | 字典 — 同一主題資料放一起 | `ch01_03_dictionaries` |
-| 4 | 列表 — 存一組同類資料 | `ch01_04_lists` |
-| 5 | 條件判斷 — 指標轉行動訊號 | `ch01_05_conditionals` |
-| 6 | 函式 — 包成可重用工具 | `ch01_06_functions` |
-
-每支影片包含：主線教學 → 額外防疫範例 → 初學者常見盲點破解。
+建議先看影片再讀程式碼，學習效果更好！
 
 ## Python 基礎練習（一步一步）
 
 ### 1) 數值變數——先把數字存起來
+
+:::{admonition} 教學影片：數值變數
+:class: tip, dropdown
+
+```{raw} html
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01_VARIABLES" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+```
+
+影片內容：變數是貼了標籤的盒子 → COVID-19 校園群聚範例 → 盲點：字串 vs 數字、大小寫、等號方向
+:::
 
 ```python
 # 松柏護理之家退伍軍人症群聚事件的基本數據
@@ -67,6 +70,18 @@ deaths = 19                 # 死亡人數
 ```
 
 ### 2) 計算指標——用除法得到比率
+
+:::{admonition} 教學影片：計算指標
+:class: tip, dropdown
+
+```{raw} html
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_02_ARITHMETIC" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+```
+
+影片內容：除法算侵襲率/致死率 + f-string 格式化 → 登革熱盛行率範例 → 盲點：除法類型、忘加 f、:.2% 拆解
+:::
 
 ```python
 # 侵襲率 = 感染人數 / 住民總數
@@ -83,6 +98,18 @@ print(f"住院率: {hosp_rate:.2%}")
 ```
 
 ### 3) 字典——把同一主題的資料放一起
+
+:::{admonition} 教學影片：字典
+:class: tip, dropdown
+
+```{raw} html
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_03_DICTIONARIES" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+```
+
+影片內容：字典 = 有格子的收納盒 → 腸病毒通報個案範例 → 盲點：key 引號、() vs []、KeyError
+:::
 
 ```python
 # 用字典整理群聚事件摘要
@@ -102,6 +129,18 @@ print(f"{outbreak['facility']} CFR: {cfr:.2%}")
 
 ### 4) 列表——存放一組同類資料
 
+:::{admonition} 教學影片：列表
+:class: tip, dropdown
+
+```{raw} html
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_04_LISTS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+```
+
+影片內容：列表 = 一排格子櫃 → 每週 COVID 確診趨勢範例 → 盲點：索引從 0 開始、IndexError、列表不對齊
+:::
+
 ```python
 # 各樓層翼區的感染人數
 floor_wing_cases = [15, 10, 24, 25, 20, 27]  # 1A, 1B, 2A, 2B, 3A, 3B
@@ -115,6 +154,18 @@ print(f"感染人數最多的翼區：{floor_wing_names[max_index]}（{max_cases
 
 ### 5) 條件判斷——把指標轉成行動訊號
 
+:::{admonition} 教學影片：條件判斷
+:class: tip, dropdown
+
+```{raw} html
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_05_CONDITIONALS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+```
+
+影片內容：if/elif/else 路口指示牌 → 疫苗接種率門檻範例 → 盲點：= vs ==、忘記冒號、縮排錯誤
+:::
+
 ```python
 # 根據致死率決定應變層級
 if cfr > 0.15:
@@ -126,6 +177,18 @@ else:
 ```
 
 ### 6) 函式——把計算邏輯包成可重用的工具
+
+:::{admonition} 教學影片：函式
+:class: tip, dropdown
+
+```{raw} html
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_06_FUNCTIONS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+```
+
+影片內容：函式 = 自動計算機 → 結核病發生率範例 → 盲點：忘加括號、忘記 return、參數順序搞錯
+:::
 
 ```python
 def calc_attack_rate(cases, population):

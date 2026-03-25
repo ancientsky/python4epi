@@ -1,0 +1,20 @@
+# YouTube Video ID Mapping
+#
+# After uploading videos to YouTube, copy this file to youtube_ids.yaml
+# and fill in the real YouTube video IDs.
+#
+# Then run:
+#   uv run python videos/update_youtube_ids.py \
+#       --chapter book/chapters/01_fundamentals.md \
+#       --from-yaml videos/youtube_ids.yaml
+#
+# The placeholder format in the markdown is: YOUTUBE_ID_<KEY>
+# For example, YOUTUBE_ID_01_VARIABLES will be replaced with the value below.
+
+# Chapter 01: Python 基礎
+01_VARIABLES: "PASTE_YOUTUBE_ID_HERE"
+02_ARITHMETIC: "PASTE_YOUTUBE_ID_HERE"
+03_DICTIONARIES: "PASTE_YOUTUBE_ID_HERE"
+04_LISTS: "PASTE_YOUTUBE_ID_HERE"
+05_CONDITIONALS: "PASTE_YOUTUBE_ID_HERE"
+06_FUNCTIONS: "PASTE_YOUTUBE_ID_HERE"
