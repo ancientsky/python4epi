@@ -1,0 +1,148 @@
+meta:
+  chapter: "01"
+  concept: "arithmetic"
+  title: "計算指標——用除法得到比率"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch01_02_arithmetic"
+  scene_class: "Ch01ArithmeticScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：計算指標
+  # ========================================
+  - id: "intro"
+    narration: >
+      歡迎回來！上一課我們學會了把數字存進變數。
+      現在要來做真正的流行病學計算了。
+      你的主管要你算三個指標：侵襲率、致死率、還有住院率。
+      聽起來很專業？其實就是小學除法加上一點格式化！
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "attack_rate"
+    narration: >
+      首先是侵襲率，英文叫 attack rate。
+      公式很簡單：感染人數除以總人數。
+      infected 除以 total_residents，結果存進 attack_rate。
+      然後我們用 print 加上 f-string 來顯示結果。
+      你看那個大括號裡面的 attack_rate 冒號點 2 百分號，
+      意思是「顯示成百分比，保留兩位小數」。
+      結果是 43.21%。
+    animation: "show_attack_rate"
+    code: |
+      attack_rate = infected / total_residents
+      print(f"侵襲率 (Attack rate): {attack_rate:.2%}")
+    output: "侵襲率 (Attack rate): 43.21%"
+    pause_after: 0.5
+
+  - id: "cfr"
+    narration: >
+      接下來是致死率，CFR，case fatality rate。
+      注意喔，分母是感染人數，不是住民總數。
+      這是初學者最常搞混的地方。
+      deaths 除以 infected，結果是 15.70%。
+    animation: "show_cfr"
+    code: |
+      cfr = deaths / infected
+      print(f"致死率 (CFR): {cfr:.2%}")
+    output: "致死率 (CFR): 15.70%"
+    pause_after: 0.5
+
+  - id: "hosp_rate"
+    narration: >
+      最後是住院率，hospitalized 除以 infected。
+      同樣用 f-string 顯示，56.20%。
+      三個指標就這樣搞定了！
+    animation: "show_hosp_rate"
+    code: |
+      hosp_rate = hospitalized / infected
+      print(f"住院率: {hosp_rate:.2%}")
+    output: "住院率: 56.20%"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點整理：除法算比率，f-string 格式化輸出。
+      冒號點 2 百分號 就是你的格式化神器。
+      流行病學指標其實就是這麼簡單的算術！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：登革熱社區盛行率
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      換個場景！這次我們來算登革熱的社區盛行率。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設某個社區有 45000 位居民，
+      其中有 312 人確診登革熱。
+      盛行率就是 dengue_cases 除以 population。
+      一樣用 f-string 顯示，0.69%。
+      不管是退伍軍人症、登革熱、還是 COVID，
+      算法都是「個案數除以母群體」，只是分子分母的定義不同而已。
+    animation: "show_extra_example"
+    code: |
+      population = 45000
+      dengue_cases = 312
+      prevalence = dengue_cases / population
+      print(f"社區盛行率: {prevalence:.2%}")
+    output: "社區盛行率: 0.69%"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      來看三個初學者最容易踩的坑！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：Python 3 的除法會自動給你小數。
+      121 除以 280 等於 0.432，不會變成 0。
+      但如果你從其他程式語言轉過來，可能會習慣性地擔心整數除法。
+      在 Python 3 完全不用擔心，斜線就是浮點除法。
+    animation: "show_blindspot_division"
+    error_code: "# 不用擔心！\n121 // 280  # 這才是整數除法 → 0"
+    correct_code: "# Python 3 自動浮點\n121 / 280   # → 0.432..."
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：f-string 忘記加 f。
+      看看左邊，print 括號裡只有引號，沒有 f。
+      結果大括號直接被印出來了，完全沒有替換！
+      字串前面那個 f 就像開關，沒打開就不會幫你代入變數的值。
+    animation: "show_blindspot_fstring"
+    error_code: 'print("CFR: {cfr:.2%}")\n# 印出 CFR: {cfr:.2%}'
+    correct_code: 'print(f"CFR: {cfr:.2%}")\n# 印出 CFR: 15.70%'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：冒號點 2 百分號到底什麼意思？
+      讓我拆解給你看。
+      冒號是格式化的起點，
+      點 2 表示保留兩位小數，
+      百分號表示乘以 100 並加上百分號。
+      所以 0.157 就變成了 15.70%。
+      記住這個公式，以後寫報告超好用！
+    animation: "show_blindspot_format_spec"
+    code: "{cfr:.2%}  →  : 開始格式 / .2 兩位小數 / % 乘 100 加 %"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      太棒了！你已經會用 Python 算流行病學指標了。
+      下一課我們來學字典，把資料整理得更有條理。
+      下一支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

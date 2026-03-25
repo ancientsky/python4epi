@@ -31,7 +31,7 @@ jobs:
           rm -rf ~/.cache/matplotlib
 
       - name: Sync deps
-        run: uv sync --all-groups
+        run: uv sync --group dev
 
       - name: Create data symlinks for notebook execution
         run: |

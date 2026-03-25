@@ -1,0 +1,135 @@
+meta:
+  chapter: "01"
+  concept: "conditionals"
+  title: "條件判斷——把指標轉成行動訊號"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch01_05_conditionals"
+  scene_class: "Ch01ConditionalsScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：條件判斷
+  # ========================================
+  - id: "intro"
+    narration: >
+      歡迎回來！我們已經會算侵襲率和致死率了。
+      但算完之後呢？要怎麼根據數字決定行動？
+      這就是條件判斷的功能：if、elif、else。
+      你可以把它想像成一個路口的指示牌，
+      根據不同的條件走不同的路。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "if_elif_else"
+    narration: >
+      我們來看這段程式碼。
+      如果致死率大於 15%，建議升級應變層級。
+      如果致死率在 10% 到 15% 之間，持續加強監測。
+      否則，維持常規應變。
+      Python 從上往下檢查，碰到第一個成立的條件就執行，
+      後面的就跳過了。
+      我們的致死率是 15.7%，大於 15%，
+      所以印出「致死率偏高，建議升級應變層級」。
+    animation: "show_if_elif_else"
+    code: |
+      if cfr > 0.15:
+          print("致死率偏高（>15%），建議升級應變層級")
+      elif cfr > 0.10:
+          print("致死率中等（10-15%），持續加強監測")
+      else:
+          print("致死率尚可（<10%），維持常規應變")
+    output: "致死率偏高（>15%），建議升級應變層級"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點整理：if 判斷第一個條件，
+      elif 判斷其他條件（可以有很多個），
+      else 是「以上都不成立」時的預設行為。
+      每個條件後面要加冒號，裡面的程式碼要縮排四格。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：疫苗接種率門檻
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      換個場景！這次用 if/elif/else 來判斷疫苗接種率。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設目標接種率是 85%，目前只有 72%。
+      如果大於等於 85%，已達群體免疫門檻，維持監測。
+      如果大於等於 70%，接近目標，加強催打。
+      否則，接種率不足，啟動社區疫苗站。
+      72% 大於等於 70%，所以走第二條路：加強催打。
+      不只致死率，任何需要做決策的數字都能用 if 來判斷！
+    animation: "show_extra_example"
+    code: |
+      vaccination_rate = 0.72
+      if vaccination_rate >= 0.85:
+          print("已達群體免疫門檻，維持監測")
+      elif vaccination_rate >= 0.70:
+          print("接近目標，加強催打")
+      else:
+          print("接種率不足，啟動社區疫苗站")
+    output: "接近目標，加強催打"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      條件判斷的三個經典陷阱！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：用一個等號做比較。
+      if cfr 一個等號 0.15，Python 會噴 SyntaxError。
+      為什麼？因為一個等號是「裝東西」，就是指定值。
+      要做比較，要用兩個等號。
+      差一個符號差很多！
+    animation: "show_blindspot_single_equal"
+    error_code: "if cfr = 0.15:   # 一個等號\n    print(\"...\")  # SyntaxError!"
+    correct_code: "if cfr == 0.15:  # 兩個等號\n    print(\"...\")  # 比較 ✓"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：忘記冒號。
+      if cfr 大於 0.15 後面沒有冒號。
+      Python 會說 SyntaxError，因為冒號就像一扇門，
+      沒有門 Python 就進不去 if 的房間。
+      記住，if、elif、else 後面都要加冒號。
+    animation: "show_blindspot_missing_colon"
+    error_code: "if cfr > 0.15    # 少了冒號\n    print(\"...\")  # SyntaxError!"
+    correct_code: "if cfr > 0.15:   # 有冒號\n    print(\"...\")  # 正確 ✓"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：縮排錯誤。
+      if 下面的程式碼沒有縮排，或者縮排不一致。
+      Python 不像其他語言用大括號分區，
+      它用縮排來判斷「誰是 if 的小弟」。
+      沒縮排就不算 if 裡面的。
+      統一用四個空格就對了。
+    animation: "show_blindspot_indentation"
+    error_code: "if cfr > 0.15:\nprint(\"高\")  # 沒縮排！\n# IndentationError!"
+    correct_code: "if cfr > 0.15:\n    print(\"高\")  # 縮排 4 格\n    # 正確 ✓"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      條件判斷學會了！最後一課我們來學函式，
+      把你的計算邏輯包裝成可以重複使用的工具。
+      下一支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

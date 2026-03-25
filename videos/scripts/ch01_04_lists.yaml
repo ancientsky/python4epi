@@ -1,0 +1,137 @@
+meta:
+  chapter: "01"
+  concept: "lists"
+  title: "列表——存放一組同類資料"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch01_04_lists"
+  scene_class: "Ch01ListsScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：列表
+  # ========================================
+  - id: "intro"
+    narration: >
+      歡迎回來！前面我們用字典把同一個人的資料打包在一起。
+      但如果你有一整排的數字呢？比如六個翼區各自的感染人數？
+      這時候就要用列表了，list。
+      你可以把列表想像成一排格子櫃，每個格子有自己的編號。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "create_lists"
+    narration: >
+      我們用方括號建立列表。
+      floor_wing_cases 裡面放了六個翼區的感染人數：
+      15、10、24、25、20、27。
+      floor_wing_names 放了對應的翼區名稱。
+      兩個列表要對齊喔，第一個名稱對應第一個數字。
+    animation: "show_create_lists"
+    code: |
+      floor_wing_cases = [15, 10, 24, 25, 20, 27]
+      floor_wing_names = ["1A", "1B", "2A", "2B", "3A", "3B"]
+    pause_after: 0.5
+
+  - id: "find_max"
+    narration: >
+      想找出感染最多的翼區？
+      max 函式幫你找到最大值，27。
+      index 方法幫你找到 27 在列表裡的位置，是第 5 個。
+      然後用這個位置去 names 列表裡對應的翼區名稱：3B。
+      3B 翼區感染 27 人，是最嚴重的區域！
+    animation: "show_find_max"
+    code: |
+      max_cases = max(floor_wing_cases)
+      max_index = floor_wing_cases.index(max_cases)
+      print(f"感染最多的翼區：{floor_wing_names[max_index]}"
+            f"（{max_cases} 人）")
+    output: "感染最多的翼區：3B（27 人）"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點：列表用方括號建立，用索引取值。
+      max 和 index 是你的好幫手。
+      記得兩個列表要對齊，一個放名稱、一個放數字。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：每週 COVID 確診數
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      換個場景！這次來看每週的 COVID 確診趨勢。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設我們有一週七天的確診數據。
+      weekly_cases 列表裡放了每天的數字。
+      用同樣的 max 加 index 技巧，馬上找出高峰日。
+      週四，567 例，是本週的高峰！
+      監測每週確診趨勢，列表就是你的好幫手。
+    animation: "show_extra_example"
+    code: |
+      weekly_cases = [234, 198, 312, 567, 423, 389, 201]
+      days = ["週一", "週二", "週三", "週四",
+              "週五", "週六", "週日"]
+      peak_day = days[weekly_cases.index(max(weekly_cases))]
+      print(f"本週高峰日：{peak_day}"
+            f"（{max(weekly_cases)} 例）")
+    output: "本週高峰日：週四（567 例）"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      列表的三個常見陷阱來了！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：索引從 0 開始，不是 1。
+      names 方括號 1 拿到的是第二個元素 1B，不是 1A。
+      要拿第一個？要寫 names 方括號 0。
+      想像格子櫃的第一格貼了 0 號標籤，不是 1 號。
+      這是幾乎所有程式語言的共同規則。
+    animation: "show_blindspot_zero_index"
+    error_code: 'names[1]  # → "1B"\n# 不是第一個！'
+    correct_code: 'names[0]  # → "1A"\n# 這才是第一個'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：索引超出範圍。
+      列表有 6 個元素，索引是 0 到 5。
+      如果你寫 names 方括號 6，Python 會說 IndexError。
+      就像你伸手去拿第 7 格，但架子只有 6 格，手伸到空氣裡了。
+    animation: "show_blindspot_index_error"
+    error_code: 'names[6]  # 只有 0~5\n# IndexError!'
+    correct_code: 'names[5]  # → "3B"\n# 最後一個元素'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：兩個列表長度沒對齊。
+      如果 names 有 6 個但 cases 只有 5 個，
+      用 index 對應就會錯位或報錯。
+      就像兩排格子高度不同，連線連歪了。
+      建立平行列表時，一定要數一下數量有沒有一樣。
+    animation: "show_blindspot_misaligned"
+    error_code: 'names = ["1A", "1B", "2A",\n         "2B", "3A", "3B"]\ncases = [15, 10, 24, 25, 20]\n# 6 vs 5，少一個！'
+    correct_code: 'names = ["1A", "1B", "2A",\n         "2B", "3A", "3B"]\ncases = [15, 10, 24, 25, 20, 27]\n# 6 vs 6，對齊！'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      列表學會了！下一課我們來學條件判斷，
+      教 Python 自動幫你判斷要升級應變還是繼續觀察。
+      下一支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,154 @@
+meta:
+  chapter: "01"
+  concept: "variables"
+  title: "數值變數——先把數字存起來"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch01_01_variables"
+  scene_class: "Ch01VariablesScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：數值變數
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎來到 Python 流行病學教室！
+      今天我們要學的第一個超級重要的概念，就是「變數」。
+      你可以把變數想像成一個貼了標籤的盒子，
+      我們把數字放進去，之後隨時可以拿出來用。
+      就像你家冰箱上的標籤一樣，寫了「牛奶」你就知道裡面是什麼。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "scenario"
+    narration: >
+      我們的故事場景是這樣的。
+      松柏護理之家爆發了退伍軍人症群聚事件。
+      280 位住民中，有 121 人感染，19 人不幸死亡。
+      主管要你算出幾個關鍵數字。
+      我們先把這些數字存到 Python 變數裡。
+    animation: "show_scenario"
+    pause_after: 0.5
+
+  - id: "assign_total"
+    narration: >
+      首先，我們寫 total underscore residents 等於 280。
+      注意喔，這裡的等號不是數學的「相等」，
+      而是「把右邊的值，指定給左邊的盒子」。
+      所以 280 就被放進 total_residents 這個盒子裡了。
+    animation: "show_first_variable"
+    code: "total_residents = 280       # 住民總數"
+    pause_after: 0.3
+
+  - id: "assign_rest"
+    narration: >
+      接著我們把感染人數、確診人數、死亡人數，
+      都各自放到自己的盒子裡。
+      注意喔，每個變數名稱都用英文、用底線連接，
+      這是 Python 的命名習慣，叫做 snake case。
+    animation: "show_remaining_variables"
+    code: |
+      infected = 121              # 感染人數
+      confirmed = 89              # 確診個案
+      probable = 25               # 可能個案
+      hospitalized = 68           # 住院人數
+      icu = 23                    # ICU 人數
+      deaths = 19                 # 死亡人數
+    pause_after: 0.3
+
+  - id: "print_demo"
+    narration: >
+      要看盒子裡裝了什麼，用 print 就好。
+      你看，280 就乖乖印出來了。
+      就這麼簡單，對不對？
+    animation: "show_print"
+    code: "print(total_residents)"
+    output: "280"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      恭喜！你已經學會 Python 最基本的操作，
+      用等號把數值存進變數裡。
+      記住：等號是「指定」，不是「相等」喔！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：COVID-19 校園群聚
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      接下來，我們換個場景練習。
+      看看同樣的招式，在不同的疫情調查中也能派上用場。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設某大學爆發 COVID-19 校園群聚。
+      全校 1200 位學生中，有 86 人確診，210 人被匡列居家隔離。
+      同樣的做法：把數字存進變數裡。
+      students 等於 1200，covid_cases 等於 86，quarantined 等於 210。
+      同樣的招式，換個場景照樣好用！
+    animation: "show_extra_example"
+    code: |
+      students = 1200        # 全校學生數
+      covid_cases = 86       # 確診人數
+      quarantined = 210      # 居家隔離人數
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      最後，來看看初學者最容易踩的三個坑。
+      這些錯誤非常常見，但只要知道原因，就再也不會犯了。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：把數字加了引號。
+      cases 等於引號 86 引號，看起來像數字，但其實變成了文字。
+      盒子裡放的是「一張寫著 86 的紙條」，不是真正的數字。
+      你試著拿它做加法？碰！Python 就爆炸了。
+      正確的做法是：cases 等於 86，不加引號。
+    animation: "show_blindspot_string_vs_int"
+    error_code: 'cases = "86"  # 這是文字！'
+    correct_code: "cases = 86    # 這才是數字"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：大小寫打錯了。
+      Python 是大小寫敏感的語言。
+      大寫 C 的 Cases 和小寫 c 的 cases，
+      在 Python 眼裡是完全不同的兩個盒子。
+      所以要小心，變數名稱用全小寫就對了。
+    animation: "show_blindspot_case_sensitive"
+    error_code: "Cases = 86   # 大寫 C"
+    correct_code: "cases = 86   # 小寫 c"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：等號寫反了。
+      280 等於 total_residents？
+      Python 會說：「我不能把東西裝進 280 這個數字裡面啊！」
+      記住，等號左邊一定是變數名，右邊才是值。
+      盒子在左邊，要裝的東西在右邊。
+    animation: "show_blindspot_reversed_assignment"
+    error_code: "280 = total_residents  # 反了！"
+    correct_code: "total_residents = 280  # 對了"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      好的，恭喜你學完了第一個概念！
+      下一段我們來用這些變數算侵襲率和致死率。
+      我們下一支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
