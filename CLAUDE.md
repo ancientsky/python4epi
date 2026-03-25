@@ -102,7 +102,7 @@ Key facts: 121 infected (43.2%), 19 deaths (CFR 15.7%), onset range 2026-01-12 t
 
 - **Python 3.12** (pinned in `.python-version` and `pyproject.toml`)
 - **uv** as the sole package manager (no pip, conda, or poetry); notebooks also run on **Google Colab**
-- **Node.js 20+** required by Jupyter Book for building the site
+- **Node.js 24+** required by Jupyter Book for building the site
 - **Jupyter Book** for static site generation from markdown and notebooks
 - **pytest** for testing, **ruff** for linting, **mypy** for type checking
 
@@ -141,8 +141,8 @@ uv run python notebooks/run_sitrep.py
 ## CI Pipeline
 
 The CI workflow (`.github/workflows/ci.yml`) runs on every PR and push to `main`:
-1. Installs uv, Node.js 20, Python 3.12
-2. Runs `uv sync --all-groups`
+1. Installs uv, Node.js 24, Python 3.12
+2. Runs `uv sync --group dev`
 3. Runs `uv run pytest`
 4. Builds the Jupyter Book
 
