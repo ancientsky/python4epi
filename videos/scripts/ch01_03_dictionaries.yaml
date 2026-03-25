@@ -1,0 +1,143 @@
+meta:
+  chapter: "01"
+  concept: "dictionaries"
+  title: "字典——把同一主題的資料放一起"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch01_03_dictionaries"
+  scene_class: "Ch01DictionariesScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：字典
+  # ========================================
+  - id: "intro"
+    narration: >
+      歡迎回來！前面我們用了好幾個變數來存疫情數據。
+      但是散落的變數越來越多，很容易搞混。
+      有沒有辦法把同一主題的資料放在一起？
+      有！就是 Python 的字典，dictionary。
+      你可以把字典想像成一個有很多格子的收納盒，
+      每個格子都有標籤，你想拿什麼就用標籤去找。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "create_dict"
+    narration: >
+      我們來把群聚事件的資料整理成一個字典。
+      用大括號包起來，每一組是「鍵：值」。
+      facility 對應松柏護理之家，
+      pathogen 對應 Legionella pneumophila，
+      total_residents 對應 280，依此類推。
+      這樣所有資料都在同一個 outbreak 變數裡了。
+    animation: "show_create_dict"
+    code: |
+      outbreak = {
+          "facility": "松柏護理之家",
+          "pathogen": "Legionella pneumophila",
+          "total_residents": 280,
+          "infected": 121,
+          "confirmed": 89,
+          "deaths": 19,
+      }
+    pause_after: 0.5
+
+  - id: "access_dict"
+    narration: >
+      要從字典裡取值，用方括號加上鍵的名稱。
+      outbreak 方括號 deaths 就拿到 19。
+      然後直接拿來算致死率。
+      是不是很方便？資料集中管理，計算也更清楚。
+    animation: "show_access_dict"
+    code: |
+      cfr = outbreak["deaths"] / outbreak["infected"]
+      print(f"{outbreak['facility']} CFR: {cfr:.2%}")
+    output: "松柏護理之家 CFR: 15.70%"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點：字典用大括號建立，用方括號取值。
+      把相關資料放在一起，程式碼更好讀、更不容易出錯。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：腸病毒通報個案
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      換個場景！這次我們來看腸病毒的通報個案。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      每次通報一個個案，其實就是在填一張字典！
+      這個 case_card 字典記錄了個案編號、年齡、病原體、嚴重程度、通報日期。
+      用 f-string 把字典的值組合成一句通報摘要。
+      以後你收到通報單，腦子裡就會自動想到：「這就是一個字典嘛！」
+    animation: "show_extra_example"
+    code: |
+      case_card = {
+          "id": "EV-2026-0042",
+          "age": 3,
+          "pathogen": "Enterovirus 71",
+          "severity": "重症",
+          "notification_date": "2026-03-15",
+      }
+      print(f"個案 {case_card['id']}，"
+            f"{case_card['age']} 歲，"
+            f"{case_card['severity']}")
+    output: "個案 EV-2026-0042，3 歲，重症"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      字典的三個常見陷阱來了！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：鍵忘記加引號。
+      如果你寫 facility 冒號 松柏，沒有引號，
+      Python 會把 facility 當成一個變數名去找。
+      找不到就報錯了。記住，字典的鍵通常是字串，要加引號。
+    animation: "show_blindspot_key_quotes"
+    error_code: '# key 沒加引號\n{facility: "松柏"}\n# NameError!'
+    correct_code: '# key 要加引號\n{"facility": "松柏"}\n# 正確！'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：取值用了圓括號。
+      outbreak 圓括號 deaths？不對！
+      圓括號是「打電話叫函式」，方括號才是「打開盒子取東西」。
+      字典取值一定用方括號。
+    animation: "show_blindspot_bracket_type"
+    error_code: 'outbreak("deaths")\n# TypeError: 不能呼叫字典'
+    correct_code: 'outbreak["deaths"]\n# → 19 ✓'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：存取不存在的鍵。
+      如果你寫 outbreak 方括號 cure，
+      但字典裡根本沒有 cure 這個鍵。
+      Python 會翻遍了所有格子，找不到就報 KeyError。
+      就像你去收納盒找一個根本沒有的標籤，當然找不到嘛。
+    animation: "show_blindspot_key_error"
+    error_code: 'outbreak["cure"]\n# KeyError: 找不到此鍵'
+    correct_code: 'outbreak.get("cure", "未知")\n# → "未知"（安全取值）'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      字典學會了！下一課我們來學列表，
+      看看怎麼存一整排的資料。下一支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

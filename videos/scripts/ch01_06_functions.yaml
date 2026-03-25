@@ -1,0 +1,157 @@
+meta:
+  chapter: "01"
+  concept: "functions"
+  title: "函式——把計算邏輯包成可重用的工具"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch01_06_functions"
+  scene_class: "Ch01FunctionsScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：函式
+  # ========================================
+  - id: "intro"
+    narration: >
+      歡迎來到 Chapter 01 的最後一課！
+      前面你已經學會了變數、計算、字典、列表、條件判斷。
+      現在要來學最強大的概念：函式。
+      你可以把函式想像成一台自動計算機。
+      你給它材料，它幫你算好結果吐出來。
+      寫一次，到處都能用！
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "define_function"
+    narration: >
+      我們用 def 這個關鍵字來定義函式。
+      def calc_attack_rate，括號裡是參數：cases 和 population。
+      三個引號裡面是說明文字，叫做 docstring。
+      然後加一個防呆：如果 population 是 0，就報錯。
+      最後用 return 把結果交出來。
+      return 就像廚師做好菜端出來，沒有 return 你就拿不到結果。
+    animation: "show_define_function"
+    code: |
+      def calc_attack_rate(cases, population):
+          """計算侵襲率。"""
+          if population == 0:
+              raise ValueError("分母（population）不能為 0")
+          return cases / population
+    pause_after: 0.5
+
+  - id: "call_function"
+    narration: >
+      函式定義好了，怎麼用？
+      直接呼叫它，把材料丟進去就好。
+      calc_attack_rate 括號 121 逗號 280，算全機構的侵襲率。
+      再呼叫一次，括號 27 逗號 47，算 3 樓 B 翼的。
+      同一個函式，不同的材料，就能算出不同的結果。
+      這就是函式的威力：寫一次，重複用！
+    animation: "show_call_function"
+    code: |
+      ar_all = calc_attack_rate(121, 280)
+      print(f"全機構侵襲率: {ar_all:.2%}")
+
+      ar_3b = calc_attack_rate(27, 47)
+      print(f"3 樓 B 翼侵襲率: {ar_3b:.2%}")
+    output: "全機構侵襲率: 43.21%\n3 樓 B 翼侵襲率: 57.45%"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點整理：def 定義函式，return 交出結果。
+      括號裡的參數就是你要餵給函式的材料。
+      加上 docstring 說明功能，加上防呆避免除以零。
+      函式是程式設計最核心的概念之一，學會了你就跨過新手村了！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：通用發生率計算函式
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      再來一個例子，展示函式的通用性！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      這次我們定義一個更通用的函式：calc_incidence_rate。
+      計算發生率，新個案數除以 person-time。
+      同樣加上防呆：person-time 不能小於等於 0。
+      然後拿來算結核病的發生率：42 個新個案，
+      10 萬人年的觀察時間。結果是每 10 萬人年 0.0 例。
+      寫一次函式，TB、登革熱、COVID 的發生率都能算！
+      這就是函式的威力！
+    animation: "show_extra_example"
+    code: |
+      def calc_incidence_rate(new_cases, person_time):
+          """計算發生率 (incidence rate)。"""
+          if person_time <= 0:
+              raise ValueError("person-time 必須大於 0")
+          return new_cases / person_time
+
+      tb_ir = calc_incidence_rate(42, 100000)
+      print(f"結核病發生率: {tb_ir:.1f} per "
+            f"100,000 person-years")
+    output: "結核病發生率: 0.0 per 100,000 person-years"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      函式的三個經典陷阱！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：呼叫函式忘記加括號。
+      你寫了 calc_attack_rate 但沒加括號。
+      這不會報錯，但也不會計算。
+      你只是「拿出計算機看看」，沒有「按下等號」。
+      要加括號才會真正執行函式。
+    animation: "show_blindspot_no_parens"
+    error_code: "result = calc_attack_rate\n# 沒有括號 → 只是函式物件\n# 不會計算！"
+    correct_code: "result = calc_attack_rate(121, 280)\n# 有括號 → 真正執行\n# → 0.4321"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：忘記 return。
+      函式裡面算了結果，但沒有 return。
+      就像廚師做好了菜，但沒端出來給你。
+      你在外面 print 的結果會是 None，
+      不是你期待的數字。
+      記住：有算就要有 return！
+    animation: "show_blindspot_no_return"
+    error_code: "def bad_func(a, b):\n    rate = a / b\n    # 忘記 return!\n\nprint(bad_func(121, 280))\n# → None"
+    correct_code: "def good_func(a, b):\n    rate = a / b\n    return rate  # 交出來！\n\nprint(good_func(121, 280))\n# → 0.4321..."
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：參數順序搞錯了。
+      calc_attack_rate 括號 280 逗號 121？
+      你把 population 放到 cases 的位置了！
+      結果侵襲率變成 231%？一個地方怎麼可能有 231% 的侵襲率？
+      一定是材料放反了。
+      這也是為什麼我們建議用有意義的參數名稱，
+      讓你一看就知道哪個放前面。
+    animation: "show_blindspot_wrong_order"
+    error_code: "# 分子分母放反了\ncalc_attack_rate(280, 121)\n# → 2.314  (231%?!)"
+    correct_code: "# cases 在前, population 在後\ncalc_attack_rate(121, 280)\n# → 0.432  (43.2% ✓)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你完成了 Chapter 01 的全部六個概念！
+      你已經學會了變數、計算、字典、列表、條件判斷、還有函式。
+      這些就是用 Python 做流行病學分析的基本功。
+      下一章我們會進入 pandas 的世界，用真正的資料表來做分析。
+      Chapter 02 見！
+    animation: "show_outro"
+    pause_after: 1.0
