@@ -1,0 +1,112 @@
+name: Build Tutorial Videos
+
+on:
+  workflow_dispatch:
+    inputs:
+      concept:
+        description: "Which video to build (leave empty for all)"
+        required: false
+        default: ""
+        type: choice
+        options:
+          - ""
+          - variables
+          - arithmetic
+          - dictionaries
+          - lists
+          - conditionals
+          - functions
+      quality:
+        description: "Render quality"
+        required: false
+        default: "h"
+        type: choice
+        options:
+          - h
+          - m
+          - l
+      create_release:
+        description: "Create a GitHub Release with the videos"
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  build-videos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write  # needed for creating releases
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.6.12"
+
+      - name: Set up Python
+        run: uv python install 3.13
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-noto-cjk >/dev/null 2>&1
+
+      - name: Install Python dependencies
+        run: uv sync --group video
+
+      - name: Build videos
+        run: |
+          if [ -n "${{ inputs.concept }}" ]; then
+            uv run python videos/build.py --concept "${{ inputs.concept }}" --quality "${{ inputs.quality }}" -v
+          else
+            uv run python videos/build.py --all --quality "${{ inputs.quality }}" -v
+          fi
+
+      - name: List generated videos
+        run: |
+          echo "## Generated Videos" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          for f in videos/output/final/*.mp4; do
+            if [ -f "$f" ]; then
+              size=$(du -h "$f" | cut -f1)
+              echo "- $(basename $f) ($size)" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+
+      - name: Upload as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tutorial-videos
+          path: videos/output/final/*.mp4
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: inputs.create_release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="videos-$(date +%Y%m%d-%H%M%S)"
+          TITLE="Tutorial Videos $(date +%Y-%m-%d)"
+
+          # Build release notes
+          NOTES="## Ch01 Python 基礎教學影片\n\n"
+          NOTES+="Generated with Manim + edge-tts + ffmpeg.\n\n"
+          NOTES+="| # | Video | Size |\n"
+          NOTES+="|---|-------|------|\n"
+          for f in videos/output/final/*.mp4; do
+            if [ -f "$f" ]; then
+              name=$(basename "$f")
+              size=$(du -h "$f" | cut -f1)
+              NOTES+="| | $name | $size |\n"
+            fi
+          done
+          NOTES+="\n\nQuality: ${{ inputs.quality }} | Commit: ${{ github.sha }}"
+
+          # Create release with video files attached
+          gh release create "$TAG" \
+            --title "$TITLE" \
+            --notes "$(echo -e "$NOTES")" \
+            videos/output/final/*.mp4
