@@ -141,9 +141,9 @@ class CodePanel(VGroup):
             },
         )
         # Override background colour
-        if code_mob.background_mobject is not None:
-            code_mob.background_mobject.set_fill(ManimColor(CODE_BG), opacity=1)
-            code_mob.background_mobject.round_corners(0.15)
+        if hasattr(code_mob, "background") and code_mob.background is not None:
+            code_mob.background.set_fill(ManimColor(CODE_BG), opacity=1)
+            code_mob.background.round_corners(0.15)
 
         if title:
             title_mob = Text(
@@ -260,9 +260,9 @@ class ErrorVsCorrect(VGroup):
             formatter_style="monokai", background="rectangle",
             paragraph_config={"font_size": 16},
         )
-        if err_code.background_mobject is not None:
-            err_code.background_mobject.set_fill(ManimColor(CODE_BG), opacity=1)
-            err_code.background_mobject.round_corners(0.1)
+        if hasattr(err_code, "background") and err_code.background is not None:
+            err_code.background.set_fill(ManimColor(CODE_BG), opacity=1)
+            err_code.background.round_corners(0.1)
         err_code.move_to(err_card.get_center() + DOWN * 0.15)
         err_group = VGroup(err_card, err_label, err_code)
 
@@ -283,9 +283,9 @@ class ErrorVsCorrect(VGroup):
             formatter_style="monokai", background="rectangle",
             paragraph_config={"font_size": 16},
         )
-        if ok_code.background_mobject is not None:
-            ok_code.background_mobject.set_fill(ManimColor(CODE_BG), opacity=1)
-            ok_code.background_mobject.round_corners(0.1)
+        if hasattr(ok_code, "background") and ok_code.background is not None:
+            ok_code.background.set_fill(ManimColor(CODE_BG), opacity=1)
+            ok_code.background.round_corners(0.1)
         ok_code.move_to(ok_card.get_center() + DOWN * 0.15)
         ok_group = VGroup(ok_card, ok_label, ok_code)
 
