@@ -128,13 +128,17 @@ class CodePanel(VGroup):
     ) -> None:
         super().__init__()
         code_mob = Code(
-            code_string,
+            code_string=code_string,
             language=language,
-            font_size=font_size,
+            formatter_style="monokai",
             background="rectangle",
-            background_stroke_color=ManimColor(BORDER_LIGHT),
-            background_stroke_width=1,
-            style="monokai",
+            background_config={
+                "stroke_color": ManimColor(BORDER_LIGHT),
+                "stroke_width": 1,
+            },
+            paragraph_config={
+                "font_size": font_size,
+            },
         )
         # Override background colour
         if code_mob.background_mobject is not None:
@@ -252,8 +256,9 @@ class ErrorVsCorrect(VGroup):
             weight="BOLD",
         ).move_to(err_card.get_top() + DOWN * 0.3)
         err_code = Code(
-            error_code, language="python", font_size=16,
-            background="rectangle", style="monokai",
+            code_string=error_code, language="python",
+            formatter_style="monokai", background="rectangle",
+            paragraph_config={"font_size": 16},
         )
         if err_code.background_mobject is not None:
             err_code.background_mobject.set_fill(ManimColor(CODE_BG), opacity=1)
@@ -274,8 +279,9 @@ class ErrorVsCorrect(VGroup):
             weight="BOLD",
         ).move_to(ok_card.get_top() + DOWN * 0.3)
         ok_code = Code(
-            correct_code, language="python", font_size=16,
-            background="rectangle", style="monokai",
+            code_string=correct_code, language="python",
+            formatter_style="monokai", background="rectangle",
+            paragraph_config={"font_size": 16},
         )
         if ok_code.background_mobject is not None:
             ok_code.background_mobject.set_fill(ManimColor(CODE_BG), opacity=1)
