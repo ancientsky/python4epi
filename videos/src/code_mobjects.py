@@ -75,19 +75,22 @@ class VariableBox(VGroup):
 
     def __init__(
         self,
-        name: str,
-        value: str,
+        name: str = "",
+        value: str = "",
         *,
+        label: str = "",
+        label_color: str = TEXT_SECONDARY,
         width: float = 3.0,
         height: float = 1.0,
     ) -> None:
         super().__init__()
+        display_name = label or name
         card = _card(width, height)
-        label = Text(
-            name,
+        label_mob = Text(
+            display_name,
             font=FONT_MONO,
             font_size=22,
-            color=ManimColor(TEXT_SECONDARY),
+            color=ManimColor(label_color),
         ).move_to(card.get_top() + DOWN * 0.25)
         val = Text(
             str(value),
@@ -96,9 +99,9 @@ class VariableBox(VGroup):
             color=ManimColor(ACCENT_ORANGE),
             weight="BOLD",
         ).move_to(card.get_center() + DOWN * 0.1)
-        self.add(card, label, val)
+        self.add(card, label_mob, val)
         self.card = card
-        self.label = label
+        self.label = label_mob
         self.value_mob = val
 
 
@@ -117,8 +120,10 @@ class CodePanel(VGroup):
         self,
         code_string: str,
         *,
+        title: str = "",
         language: str = "python",
         width: float = 6.0,
+        height: float | None = None,
         font_size: int = 20,
     ) -> None:
         super().__init__()
@@ -135,7 +140,20 @@ class CodePanel(VGroup):
         if code_mob.background_mobject is not None:
             code_mob.background_mobject.set_fill(ManimColor(CODE_BG), opacity=1)
             code_mob.background_mobject.round_corners(0.15)
-        self.add(code_mob)
+
+        if title:
+            title_mob = Text(
+                title,
+                font=FONT_MONO,
+                font_size=14,
+                color=ManimColor(TEXT_SECONDARY),
+            )
+            title_mob.next_to(code_mob, UP, buff=0.15).align_to(code_mob, LEFT)
+            self.add(title_mob, code_mob)
+            self.title_mob = title_mob
+        else:
+            self.add(code_mob)
+            self.title_mob = None
         self.code_mob = code_mob
 
 
