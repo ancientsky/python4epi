@@ -184,7 +184,11 @@ def _render_manim(
 ) -> pathlib.Path:
     """Invoke manim CLI to render a scene with timing data."""
     output_dir.mkdir(parents=True, exist_ok=True)
-    env = {**os.environ, "EPI_VIDEO_TIMING": str(timing_path)}
+    project_root = str(pathlib.Path(__file__).resolve().parent.parent.parent)
+    pythonpath = os.environ.get("PYTHONPATH", "")
+    if project_root not in pythonpath.split(os.pathsep):
+        pythonpath = project_root + (os.pathsep + pythonpath if pythonpath else "")
+    env = {**os.environ, "EPI_VIDEO_TIMING": str(timing_path), "PYTHONPATH": pythonpath}
 
     module_path = module.replace(".", "/") + ".py"
     # Resolve relative to project root (videos/)
