@@ -128,7 +128,7 @@ class CodePanel(VGroup):
     ) -> None:
         super().__init__()
         code_mob = Code(
-            code=code_string,
+            code_string,
             language=language,
             font_size=font_size,
             background="rectangle",
@@ -252,7 +252,7 @@ class ErrorVsCorrect(VGroup):
             weight="BOLD",
         ).move_to(err_card.get_top() + DOWN * 0.3)
         err_code = Code(
-            code=error_code, language="python", font_size=16,
+            error_code, language="python", font_size=16,
             background="rectangle", style="monokai",
         )
         if err_code.background_mobject is not None:
@@ -274,7 +274,7 @@ class ErrorVsCorrect(VGroup):
             weight="BOLD",
         ).move_to(ok_card.get_top() + DOWN * 0.3)
         ok_code = Code(
-            code=correct_code, language="python", font_size=16,
+            correct_code, language="python", font_size=16,
             background="rectangle", style="monokai",
         )
         if ok_code.background_mobject is not None:
