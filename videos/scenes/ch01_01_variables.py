@@ -9,6 +9,7 @@ from __future__ import annotations
 from manim import (
     DOWN,
     LEFT,
+    ORIGIN,
     RIGHT,
     UP,
     UR,
