@@ -165,12 +165,21 @@ def _write_timing(segments: list[dict], path: pathlib.Path) -> None:
     """Write segment timing data as JSON for Manim scenes to read."""
     timing = []
     for seg in segments:
-        timing.append({
+        entry: dict = {
             "id": seg["id"],
+            "animation": seg["animation"],
             "audio_duration": seg["audio_duration"],
             "pause_after": seg.get("pause_after", 0),
             "total_duration": seg["audio_duration"] + seg.get("pause_after", 0),
-        })
+        }
+        # Forward extra keys (code, output, error_code, correct_code, etc.)
+        for k, v in seg.items():
+            if k not in {
+                "id", "animation", "narration", "audio_duration",
+                "pause_after", "audio_path", "total_duration",
+            }:
+                entry[k] = v
+        timing.append(entry)
     path.write_text(json.dumps(timing, indent=2, ensure_ascii=False), encoding="utf-8")
 
 

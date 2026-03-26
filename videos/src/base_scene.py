@@ -94,10 +94,10 @@ class EpiBaseScene(Scene):
     # Layout helpers
     # ------------------------------------------------------------------
 
-    def show_step_indicator(self, step: int) -> StepIndicator:
+    def show_step_indicator(self, step: int, total: int | None = None) -> StepIndicator:
         """Create and show a step indicator badge in the top-right corner."""
         self._step = step
-        ind = StepIndicator(step, self.total_steps)
+        ind = StepIndicator(step, total if total is not None else self.total_steps)
         ind.to_corner(UR, buff=0.4)
         self.play(FadeIn(ind), run_time=0.3)
         return ind
@@ -145,11 +145,12 @@ class EpiBaseScene(Scene):
         self,
         code: str,
         *,
+        title: str = "",
         position=LEFT * 3,
         duration: float = 2.0,
     ) -> CodePanel:
         """Create and fade-in a code panel."""
-        panel = CodePanel(code)
+        panel = CodePanel(code, title=title) if title else CodePanel(code)
         panel.move_to(position)
         self.play(FadeIn(panel), run_time=min(1.0, duration * 0.4))
         return panel
@@ -207,13 +208,18 @@ class EpiBaseScene(Scene):
     # Pipeline-driven construct
     # ------------------------------------------------------------------
 
-    def construct_from_segments(self, segments: list[dict]) -> None:
+    def construct_from_segments(self, segments: list[dict] | None = None) -> None:
         """Drive ``construct()`` from pipeline timing data.
 
-        Each segment dict must have ``animation`` (method name on this
-        scene) and ``total_duration`` (seconds).  Additional keys are
-        forwarded as keyword arguments to the animation method.
+        Parameters
+        ----------
+        segments : list[dict] | None
+            Segment dicts with ``animation`` and ``total_duration`` keys.
+            If *None*, loads the full segment data from the JSON file
+            pointed to by the ``EPI_VIDEO_TIMING`` environment variable.
         """
+        if segments is None:
+            segments = self._load_segments()
         timings = self.load_timings()
         for seg in segments:
             method_name = seg["animation"]
@@ -226,6 +232,19 @@ class EpiBaseScene(Scene):
             kwargs = {
                 k: v
                 for k, v in seg.items()
-                if k not in {"id", "narration", "animation", "pause_after", "total_duration"}
+                if k not in {
+                    "id", "narration", "animation", "pause_after",
+                    "total_duration", "audio_duration",
+                }
             }
             method(duration=duration, **kwargs)
+
+    def _load_segments(self) -> list[dict]:
+        """Load full segment data from the ``EPI_VIDEO_TIMING`` JSON file."""
+        timing_path = os.environ.get("EPI_VIDEO_TIMING")
+        if not timing_path:
+            raise RuntimeError(
+                "EPI_VIDEO_TIMING env var not set — cannot load segments. "
+                "Pass segments explicitly or run via the pipeline."
+            )
+        return json.loads(pathlib.Path(timing_path).read_text(encoding="utf-8"))
