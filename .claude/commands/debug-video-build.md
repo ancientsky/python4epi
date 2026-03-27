@@ -46,6 +46,11 @@ Code(
 **Cause:** Scene files pass kwargs that the mobject class doesn't accept.
 **Fix:** Add the missing kwargs to the class `__init__` in `videos/src/code_mobjects.py`. Audit all scene files for constructor call mismatches.
 
+### `IndexError: list index out of range` in `_gen_chars` (Code() / ErrorVsCorrect crash)
+**Cause:** Manim v0.20.1's `Code()` class has a bug in `Text._gen_chars()` where Pango/Cairo renders fewer glyphs than expected characters. Triggers on: `???`, `...`, CJK in code strings, multi-line code, non-Python syntax (shell commands).
+**Critical:** Even `language="text"` crashes — the bug is in the text rendering layer, not Pygments.
+**Fix:** `ErrorVsCorrect` must use `Text(font=FONT_MONO)` instead of `Code()`. Do NOT reintroduce `Code()` in `ErrorVsCorrect.__init__()`. Keep blindspot `error_code`/`correct_code` strings single-line, ASCII-only, no `???`, no CJK, no `\n`.
+
 ### `Package 'pangocairo' was not found` (manimpango build failure)
 **Cause:** Missing system libraries for Pango/Cairo.
 **Fix:** Add to `videos.yml` system dependencies:
@@ -58,8 +63,16 @@ sudo apt-get install -y -qq ffmpeg fonts-noto-cjk libpango1.0-dev libcairo2-dev 
 
 ## Step 3: Systematic audit approach
 
-When fixing scene/mobject mismatches, always audit ALL 6 scene files at once:
+When fixing scene/mobject mismatches, always audit ALL scene files at once:
 ```
+# Ch00 (6 files)
+videos/scenes/ch00_01_why_python.py
+videos/scenes/ch00_02_uv_setup.py
+videos/scenes/ch00_03_jupyter.py
+videos/scenes/ch00_04_hello_epi.py
+videos/scenes/ch00_05_git_basics.py
+videos/scenes/ch00_06_roadmap.py
+# Ch01 (6 files)
 videos/scenes/ch01_01_variables.py
 videos/scenes/ch01_02_arithmetic.py
 videos/scenes/ch01_03_dictionaries.py
@@ -89,8 +102,10 @@ Check for:
 | `videos/src/pipeline.py` | TTS → Manim → ffmpeg orchestrator |
 | `videos/src/tts.py` | edge-tts wrapper |
 | `videos/build.py` | CLI entry point |
-| `videos/scripts/ch01_*.yaml` | YAML narration scripts |
-| `videos/scenes/ch01_*.py` | Manim scene classes |
+| `videos/scripts/ch00_*.yaml` | Ch00 YAML narration scripts (6 files) |
+| `videos/scripts/ch01_*.yaml` | Ch01 YAML narration scripts (6 files) |
+| `videos/scenes/ch00_*.py` | Ch00 Manim scene classes (6 files) |
+| `videos/scenes/ch01_*.py` | Ch01 Manim scene classes (6 files) |
 | `.github/workflows/videos.yml` | GitHub Actions workflow |
 
 ## Reference: Manim v0.20.1 Code API
