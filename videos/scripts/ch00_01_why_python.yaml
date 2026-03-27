@@ -1,0 +1,162 @@
+meta:
+  chapter: "00"
+  concept: "why_python"
+  title: "為什麼用 Python——流行病學家的超級工具"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch00_01_why_python"
+  scene_class: "Ch00WhyPythonScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：為什麼用 Python
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎來到 Python 流行病學教室！
+      想像一下，你是一位疫調人員，凌晨三點手機突然響了。
+      松柏護理之家爆發退伍軍人症群聚，280 位住民的資料已經匯入系統。
+      主管要你在明天早上八點前交出完整的疫調報告。
+      你打開電腦，然後......用什麼工具呢？
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "excel_limit"
+    narration: >
+      很多人第一反應是打開 Excel。
+      但你想想看，280 筆資料、32 個欄位，光是篩選就點到手痠。
+      更慘的是，主管說：「上週的分析再跑一次，但改用不同的分組。」
+      你得從頭手動操作一遍，每次都怕按錯一個儲存格。
+      而且三個月後，沒人記得你當初是怎麼算出來的。
+      Excel 像是瑞士刀，什麼都能做一點，但每件事都做得很辛苦。
+    animation: "show_excel_limit"
+    pause_after: 0.5
+
+  - id: "python_power"
+    narration: >
+      換成 Python 呢？一行程式碼就能算出侵襲率。
+      attack_rate 等於 infected 除以 total_residents，搞定。
+      想換分組？改一個參數，三秒鐘重新跑完。
+      更棒的是，你的程式碼就是分析紀錄，
+      任何人拿到同一份 script，都能完整重現你的結果。
+      這就是所謂的「可重現研究」，也是現代流行病學的基本要求。
+    animation: "show_python_power"
+    code: |
+      attack_rate = infected / total_residents
+      print(f"侵襲率：{attack_rate:.1%}")
+    output: "侵襲率：43.2%"
+    pause_after: 0.5
+
+  - id: "python_vs_r"
+    narration: >
+      有人會問：「那 R 語言不是也很強嗎？」
+      沒錯，R 在統計分析上確實非常厲害。
+      但 Python 的優勢是：從資料清理、統計分析，
+      一路到機器學習、深度學習，全部一條龍搞定。
+      而且 Python 還能寫自動化腳本、架網站、串接 API。
+      在就業市場上，Python 也是目前需求量最大的程式語言之一。
+      簡單來說，學 Python 的投資報酬率特別高。
+    animation: "show_python_vs_r"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      總結一下為什麼選 Python。
+      第一，自動化：重複的苦工讓程式去做。
+      第二，可重現：你的 code 就是最好的分析紀錄。
+      第三，生態系強大：從統計到深度學習，一種語言全包。
+      記住這三個關鍵字：自動化、可重現、全方位。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：COVID-19 大規模疫調
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      接下來看一個真實世界的例子，
+      感受一下 Python 在大規模疫調中有多威。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      COVID-19 疫情期間，台灣某縣市一天就通報了十萬筆確診資料。
+      如果用 Excel 開，光是載入就要等五分鐘，篩選更是卡到當機。
+      但用 Python 的 pandas 套件，讀取加分析只要幾秒鐘。
+      一個 for 迴圈就能批次處理每一天的資料，
+      自動產出每日疫調摘要、流行曲線、各區侵襲率。
+      你喝杯咖啡回來，報告已經生好了。
+      這就是自動化的威力，也是我們學 Python 最實際的理由。
+    animation: "show_extra_example"
+    code: |
+      import pandas as pd
+      df = pd.read_csv("covid_cases.csv")  # 十萬筆，秒讀
+      daily = df.groupby("report_date").size()
+      print(daily.tail())
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      最後，來破解三個最常見的迷思。
+      這些想法每個初學者都有過，但其實完全不用擔心。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個迷思：「我數學不好，能學程式嗎？」
+      告訴你一個祕密：流行病學用到的計算，
+      百分之九十都是加減乘除。侵襲率？除法。致死率？還是除法。
+      你會用計算機，就會寫 Python。
+      真正需要數學的部分，交給套件就好，你只要會「呼叫函式」。
+      所以放心，數學不好完全不是問題。
+    animation: "show_blindspot_math"
+    error_code: "# 迷思：需要很強的數學底子"
+    correct_code: |
+      # 事實：大部分只需要加減乘除
+      attack_rate = 121 / 280  # 就是除法而已！
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個迷思：「要先學完 Python 才能開始做分析？」
+      錯！完全相反。邊做邊學才是最有效的方式。
+      這門課的設計就是讓你直接複製貼上範例程式碼，
+      改改數字，馬上看到結果。
+      複製貼上不丟臉，連資深工程師每天都在 Stack Overflow 上複製貼上。
+      用著用著，你就懂了。
+    animation: "show_blindspot_learn_first"
+    error_code: "# 迷思：要先把 Python 從頭學完"
+    correct_code: |
+      # 事實：邊做邊學，copy-paste 就是學習
+      # 先跑起來，再慢慢理解
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個迷思：「Python 要裝哪個版本？套件衝突怎麼辦？」
+      以前確實很頭痛，但現在我們有 uv 這個神器。
+      uv 會自動幫你安裝正確的 Python 版本，管理所有套件。
+      你只需要一行指令：uv sync，環境就搞定了。
+      整個課程都用 uv，所以版本問題你完全不用煩惱。
+    animation: "show_blindspot_version"
+    error_code: |
+      # 迷思：手動裝 Python、pip install 搞半天
+      pip install pandas  # 版本衝突 💥
+    correct_code: |
+      # 事實：uv 一行搞定
+      uv sync  # 自動安裝 Python + 所有套件
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      好的，今天我們認識了為什麼流行病學家需要 Python。
+      記住三個關鍵字：自動化、可重現、全方位。
+      下一支影片，我們來實際安裝 Python 環境，用 uv 建立你的第一個專案。
+      我們下一支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

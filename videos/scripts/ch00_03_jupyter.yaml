@@ -1,0 +1,161 @@
+meta:
+  chapter: "00"
+  concept: "jupyter"
+  title: "Jupyter Lab 入門——邊寫邊看結果的神器"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch00_03_jupyter"
+  scene_class: "Ch00JupyterScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：Jupyter Lab 基礎
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎回到 Python 流行病學教室！
+      今天要介紹一個讓全世界資料科學家都愛不釋手的工具——Jupyter Lab。
+      你可以把它想像成一本「數位實驗筆記本」，
+      寫一段程式、馬上看到結果，還能在旁邊加上文字說明。
+      就像在實驗室裡邊做實驗邊記筆記，只不過你的實驗室在瀏覽器裡。
+      做疫調的時候，能邊寫分析邊看圖表，超級方便！
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "launch"
+    narration: >
+      要啟動 Jupyter Lab 非常簡單。
+      打開終端機，輸入 uv run jupyter lab，然後按 Enter。
+      瀏覽器會自動跳出一個介面，左邊是檔案總管，右邊是你的工作區。
+      如果瀏覽器沒有自動開啟，終端機上會顯示一個網址，複製貼上就好。
+      恭喜你，你的數位實驗室開張了！
+    animation: "show_launch"
+    code: "uv run jupyter lab"
+    pause_after: 0.5
+
+  - id: "cells"
+    narration: >
+      Jupyter 最核心的概念就是「儲存格」，英文叫 cell。
+      儲存格分兩種：Code cell 用來寫程式碼，Markdown cell 用來寫文字說明。
+      你可以把 Code cell 想成「做事的格子」，Markdown cell 想成「寫筆記的格子」。
+      兩種交替使用，你的分析報告就會又有程式又有解說，一目了然。
+      切換方式很簡單，在上方的下拉選單選 Code 或 Markdown 就好。
+    animation: "show_cells"
+    pause_after: 0.5
+
+  - id: "run_cell"
+    narration: >
+      寫好程式碼之後，怎麼執行呢？最常用的快捷鍵是 Shift 加 Enter。
+      按下去，Python 就會乖乖幫你跑那一格的程式碼，結果直接顯示在下方。
+      注意看左邊的方括號，裡面的數字代表「執行順序」。
+      第一次執行的格子會顯示 1，第二次顯示 2，依此類推。
+      這個數字非常重要，等等講盲點的時候會再回來談它。
+    animation: "show_run_cell"
+    code: "print('Hello, 疫調人員！')"
+    output: "Hello, 疫調人員！"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      來幫大家整理一下重點。
+      第一，用 uv run jupyter lab 啟動環境。
+      第二，Code cell 寫程式，Markdown cell 寫筆記。
+      第三，Shift 加 Enter 執行儲存格，結果即時顯示。
+      掌握這三招，你就可以開始用 Jupyter 做分析了！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：用 Jupyter 寫疫情週報
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      接下來，我們來看一個超實用的應用情境。
+      看看 Jupyter 怎麼幫你寫出又專業又漂亮的疫情週報。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設你是衛生局的疫調人員，每週要交一份登革熱監測週報。
+      你可以在第一個 Markdown cell 寫標題和摘要，
+      像是「本週新增 12 例本土登革熱病例，集中於前鎮區」。
+      然後在下一個 Code cell 畫出流行曲線圖表，圖表直接嵌在筆記本裡。
+      最後再加一個 Markdown cell 寫結論和建議。
+      這樣一來，文字、程式碼、圖表全部在同一份文件裡，
+      主管打開就能看，完全可重現，再也不用 Word 貼圖貼到崩潰！
+    animation: "show_extra_example"
+    code: |
+      # Markdown cell 寫標題：
+      # # 登革熱監測週報 — 第 12 週
+
+      # Code cell 畫圖：
+      import matplotlib.pyplot as plt
+      weeks = [8, 9, 10, 11, 12]
+      cases = [3, 5, 7, 9, 12]
+      plt.bar(weeks, cases)
+      plt.title("本土登革熱週報趨勢")
+      plt.xlabel("週次")
+      plt.ylabel("病例數")
+      plt.show()
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      最後，來看看 Jupyter 初學者最容易踩的三個大坑。
+      這些坑我自己也踩過，知道了以後就再也不會浪費時間除錯了。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：儲存格的執行順序不等於排列順序！
+      很多人以為 Jupyter 會從上到下自動執行，其實不會。
+      你完全可以先跑第三格，再跑第一格，結果就亂套了。
+      比如你在第二格定義了 cases 等於 121，但你跳過它直接跑第三格的 print cases，
+      Python 就會跟你說：「我不認識 cases 這傢伙啊！」
+      養成好習慣：分析做完後，點選 Kernel 選單，選 Restart Kernel and Run All，
+      讓所有儲存格從頭到尾跑一遍，確保順序正確。
+    animation: "show_blindspot_order"
+    error_code: "# 跳過定義就執行 → NameError\nprint(cases)"
+    correct_code: "# Kernel → Restart & Run All\n# 從頭到尾依序執行，萬無一失"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：裝了套件卻 import 失敗。
+      你在某一格用 pip install 裝了新套件，
+      然後在下一格 import，結果 Python 說找不到？
+      這是因為套件裝進去了，但 kernel 的記憶還停在舊狀態。
+      解法很簡單：裝完套件後，去 Kernel 選單按 Restart Kernel，
+      重新啟動核心，再 import 就沒問題了。
+    animation: "show_blindspot_kernel"
+    error_code: "!pip install some_package\nimport some_package  # ModuleNotFoundError!"
+    correct_code: "# 裝完後 → Restart Kernel\n# 重啟核心再 import\nimport some_package  # 成功！"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：儲存格旁邊出現星號，一直轉不停。
+      方括號裡顯示星號代表「正在執行中」，
+      但如果等了老半天還是星號，通常只有兩個原因。
+      第一，你的程式碼裡有無窮迴圈，像是 while True 忘了加 break。
+      第二，程式在等你輸入東西，但 Jupyter 的輸入框不太明顯。
+      解法：按上方工具列的黑色方塊停止按鈕，強制中斷執行，
+      然後回去檢查你的程式碼，修好再重跑。
+    animation: "show_blindspot_stuck"
+    error_code: "# [*] 一直轉...\nwhile True:\n    pass  # 無窮迴圈！"
+    correct_code: "# 按 ■ 停止按鈕中斷\n# 修正程式碼後重新執行\nfor i in range(10):\n    print(i)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你！現在你已經會用 Jupyter Lab 了。
+      記住：Code cell 做事，Markdown cell 記筆記，Shift 加 Enter 執行。
+      下一支影片，我們要來寫人生第一支 Python 程式：Hello Epi！
+      我們下次見！
+    animation: "show_outro"
+    pause_after: 1.0

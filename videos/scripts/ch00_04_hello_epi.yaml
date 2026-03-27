@@ -1,0 +1,173 @@
+meta:
+  chapter: "00"
+  concept: "hello_epi"
+  title: "第一支程式 Hello Epi——十分鐘跑完你的第一個流病分析"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch00_04_hello_epi"
+  scene_class: "Ch00HelloEpiScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：第一支流病分析程式
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎來到 Python 流行病學教室！
+      今天我們要在十分鐘之內，跑完你人生中第一個流病分析程式。
+      沒錯，十分鐘，比泡一碗泡麵還快。
+      你不需要任何程式基礎，只要跟著我的步驟，
+      複製、貼上、按 Enter，就能算出侵襲率和致死率。
+      準備好了嗎？我們出發！
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "clone_repo"
+    narration: >
+      第一步，把教材下載到你的電腦。
+      打開終端機，輸入 git clone 加上我們的 repo 網址，
+      然後進入資料夾，執行 uv sync 安裝所有套件。
+      就像去超市買好所有食材，接下來就可以開始做菜了。
+      整個過程大概一兩分鐘，看你的網速。
+    animation: "show_clone_repo"
+    code: |
+      git clone https://github.com/user/python4epi.git
+      cd python4epi
+      uv sync
+    pause_after: 0.5
+
+  - id: "open_notebook"
+    narration: >
+      安裝完畢後，輸入 uv run jupyter lab 啟動 Jupyter。
+      瀏覽器會自動跳出一個介面，左邊是檔案列表。
+      找到 notebooks 資料夾，點進去，打開第一個 notebook。
+      Jupyter 就是你的流病分析廚房，所有的分析都在這裡進行。
+    animation: "show_open_notebook"
+    code: "uv run jupyter lab"
+    pause_after: 0.5
+
+  - id: "run_analysis"
+    narration: >
+      好，重頭戲來了！我們只需要三個步驟。
+      第一，用 pandas 的 read_csv 讀取退伍軍人症的 line list。
+      第二，呼叫 attack_rate 計算侵襲率。
+      第三，用 plot_epi_curve 畫出流行曲線。
+      三行程式碼，三個動作，就這樣搞定了。
+      是不是比你想像的簡單很多？
+    animation: "show_run_analysis"
+    code: |
+      import pandas as pd
+      from epi_learning import attack_rate
+      from epi_learning.viz import plot_epi_curve
+
+      df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
+      ar = attack_rate(infected=121, total=280)
+      plot_epi_curve(df, date_col="symptom_onset_date")
+    pause_after: 0.5
+
+  - id: "see_result"
+    narration: >
+      結果出來了！侵襲率是百分之 43.2，致死率是百分之 15.7。
+      280 位住民裡有 121 位感染，19 位不幸死亡。
+      而且你還得到一張漂亮的流行曲線圖，
+      可以清楚看到發病高峰大約在一月中旬到下旬。
+      這些數字以後會是你寫疫調報告的核心。
+    animation: "show_see_result"
+    output: |
+      侵襲率 (Attack Rate): 43.2%
+      致死率 (CFR): 15.7%
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      來回顧一下你剛才做了什麼。
+      第一，用 git clone 下載教材，uv sync 安裝環境。
+      第二，用 Jupyter 打開 notebook。
+      第三，三行程式碼完成讀資料、算指標、畫圖。
+      恭喜你！你已經完成了第一次流病數據分析。
+      從此你就是會寫程式的流病人了！
+    animation: "show_main_summary"
+    pause_after: 0.8
+
+  # ========================================
+  # [B] 額外防疫範例：腸病毒資料
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      接下來我們換個場景。
+      同樣的流程，換一組資料，看看能不能照樣跑起來。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設你拿到一份某幼兒園腸病毒群聚的 CSV 檔案。
+      一樣的三步驟：read_csv 讀檔、attack_rate 算侵襲率、plot_epi_curve 畫圖。
+      只是把檔名換掉，把數字改成 180 位小朋友、52 位感染。
+      侵襲率變成百分之 28.9，流行曲線的形狀也不一樣了。
+      重點是：同樣的程式碼架構，換個 CSV 就能分析不同的疫情。
+      這就是程式的威力，學一次，用一輩子。
+    animation: "show_extra_example"
+    code: |
+      df_ev = pd.read_csv("enterovirus_outbreak.csv")
+      ar_ev = attack_rate(infected=52, total=180)
+      plot_epi_curve(df_ev, date_col="onset_date")
+    output: "侵襲率 (Attack Rate): 28.9%"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      最後，來看三個初學者最容易卡住的地方。
+      這些問題每期學員都會遇到，先打預防針，你就不會慌。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：git clone 失敗。
+      最常見的原因是你的電腦根本沒裝 git，或是學校網路擋了 GitHub。
+      別慌！你可以直接到 GitHub 頁面，點右上角綠色按鈕，選 Download ZIP。
+      下載後解壓縮，效果完全一樣。
+      記住：條條大路通羅馬，重點是把教材弄到手。
+    animation: "show_blindspot_git_clone"
+    error_code: "fatal: git is not recognized as a command"
+    correct_code: "# 替代方案：到 GitHub 頁面點 Download ZIP"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：uv sync 跑很久，你以為壞掉了。
+      第一次執行的時候，uv 要下載所有的套件，
+      像 pandas、matplotlib、plotly 這些加起來不小。
+      放心，這是正常的，通常一兩分鐘就好了。
+      第二次之後 uv 會用快取，幾秒鐘就搞定，快到你會懷疑人生。
+    animation: "show_blindspot_uv_sync"
+    error_code: "# uv sync 卡在 Downloading... 好久好久"
+    correct_code: "# 正常！第一次需要下載，之後秒速完成"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：畫面上出現紅色或橘色的警告文字，你嚇到了。
+      Warning 是「警告」，不是「錯誤」，這兩個差很多。
+      Error 才會讓程式停下來，Warning 只是跟你碎碎念。
+      就像媽媽說「你少吃點鹹酥雞」，你還是可以繼續吃。
+      只要最後有跑出結果，Warning 通常可以安心忽略。
+    animation: "show_blindspot_warnings"
+    error_code: |
+      UserWarning: Matplotlib font fallback...
+      FutureWarning: DataFrame.groupby...
+    correct_code: "# Warning ≠ Error，有結果就 OK！"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你完成了第一支流病分析程式！
+      下一支影片我們要學 Git 版本控制，
+      讓你的分析可以被追蹤、被重現、不會搞丟。
+      我們下次見！
+    animation: "show_outro"
+    pause_after: 1.0
