@@ -374,7 +374,7 @@ segments:
 - `CodePanel` — syntax-highlighted code block with line highlighting
 - `OutputPanel` — terminal-style output display
 - `ArrowAssignment` — animated arrow showing value → box assignment
-- `ErrorVsCorrect` — side-by-side comparison panel (red error vs green correct)
+- `ErrorVsCorrect` — side-by-side NG/OK comparison panel using `Text(font=FONT_MONO)` on dark background (**NOT** `Code()` — see known issue below)
 - `BlindSpotBanner` / `ExtraExampleBanner` — section title banners
 
 ## CJK Font & Visualization Known Issues
@@ -430,6 +430,18 @@ Code(
 | `background_stroke_color=X` | `background_config={"stroke_color": X}` |
 | `background_stroke_width=1` | `background_config={"stroke_width": 1}` |
 | `code_mob.background_mobject` | `code_mob.background` |
+
+### Code() class `_gen_chars()` crash (IndexError: list index out of range)
+
+Manim v0.20.1's `Code()` class has a bug in `Text._gen_chars()` where the rendered glyph count from Pango/Cairo doesn't match the expected character count. This crashes with `IndexError: list index out of range` for:
+- Strings with `???`, `...`, or other special character sequences
+- Multi-line code strings with CJK characters
+- Non-Python code strings (shell commands like `git add .`, `pip install`, `command not found: uv`)
+- Even `language="text"` doesn't fix it — the bug is in the text rendering layer, not Pygments
+
+**Critical rule:** `ErrorVsCorrect` uses `Text(font=FONT_MONO)` instead of `Code()`. Do **NOT** reintroduce `Code()` in `ErrorVsCorrect.__init__()`. If you need syntax-highlighted code in comparison panels, use `CodePanel` (which handles the `Code()` lifecycle differently).
+
+**For blindspot `error_code`/`correct_code` strings:** keep them single-line, ASCII-only, valid-looking (no `???`, no CJK characters, no multi-line `\n`). The Chinese explanation is delivered through TTS narration, not the code text.
 
 ### System dependencies for CI
 
