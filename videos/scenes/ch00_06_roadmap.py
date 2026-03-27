@@ -328,52 +328,22 @@ class Ch00RoadmapScene(EpiBaseScene):
 
     def show_blindspot_where_start(self, duration: float = 5.0, **kwargs) -> None:
         """ErrorVsCorrect: random chapter vs Ch00-01 first."""
-        error_code = kwargs.get(
-            "error_code",
-            "# 隨便挑一章開始\n"
-            "# 直接跳到 Ch10 機器學習\n"
-            "import sklearn  # 基礎還沒學！",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "# 從 Ch00-01 開始\n"
-            "# 先學工具與 Python 基礎\n"
-            "print('Hello, Epi!')  # 穩扎穩打",
-        )
+        error_code = kwargs.get("error_code", "import sklearn  # Ch10 too early!")
+        correct_code = kwargs.get("correct_code", "print('Hello, Epi!')  # Ch00 first")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 
     def show_blindspot_skip(self, duration: float = 5.0, **kwargs) -> None:
         """ErrorVsCorrect: skip Ch02 vs sequential for Ch00-04."""
-        error_code = kwargs.get(
-            "error_code",
-            "# 跳過 Ch02 資料處理\n"
-            "# 直接做 Ch03 描述性統計\n"
-            "df.groupby(...)  # 看不懂！",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "# Ch00 → Ch01 → Ch02 → Ch03\n"
-            "# 按順序學完必修五章\n"
-            "# Ch02 教的 pandas 是基礎",
-        )
+        error_code = kwargs.get("error_code", "df.groupby(...)  # skip Ch02?")
+        correct_code = kwargs.get("correct_code", "# Ch00 > Ch01 > Ch02 > Ch03")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 
     def show_blindspot_colab(self, duration: float = 5.0, **kwargs) -> None:
         """ErrorVsCorrect: Colab-only vs local install for full features."""
-        error_code = kwargs.get(
-            "error_code",
-            "# 只用 Colab 不裝本機環境\n"
-            "# 網路斷線就無法練習\n"
-            "# 大型資料跑不動",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "# 本機安裝 uv + Python\n"
-            "# uv sync\n"
-            "# 離線也能練習，效能更好",
-        )
+        error_code = kwargs.get("error_code", "# Colab only = no offline")
+        correct_code = kwargs.get("correct_code", "uv sync  # local = full power")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 

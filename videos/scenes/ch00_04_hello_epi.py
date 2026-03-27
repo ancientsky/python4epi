@@ -269,46 +269,22 @@ class Ch00HelloEpiScene(EpiBaseScene):
 
     def show_blindspot_git_clone(self, duration: float = 5.0, **kwargs) -> None:
         """Error vs correct: git not installed vs download ZIP alternative."""
-        error_code = kwargs.get(
-            "error_code",
-            "git clone ...\n# 'git' is not recognized\n# git 尚未安裝！",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "# 解法：下載 ZIP\n# GitHub → Code → Download ZIP\n# 或先安裝 git:\n# https://git-scm.com/",
-        )
+        error_code = kwargs.get("error_code", "git clone ... # not recognized")
+        correct_code = kwargs.get("correct_code", "# GitHub > Code > Download ZIP")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 
     def show_blindspot_uv_sync(self, duration: float = 5.0, **kwargs) -> None:
         """Error vs correct: panic at slow install vs normal first-time behaviour."""
-        error_code = kwargs.get(
-            "error_code",
-            "uv sync\n# Downloading... (好慢！)\n# 是不是壞掉了？(按 Ctrl+C)",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "uv sync\n# Downloading... (第一次要下載套件)\n# 耐心等 1-2 分鐘即可\n# 之後就秒裝！",
-        )
+        error_code = kwargs.get("error_code", "uv sync  # Ctrl+C too early!")
+        correct_code = kwargs.get("correct_code", "uv sync  # wait 1-2 min first time")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 
     def show_blindspot_warnings(self, duration: float = 5.0, **kwargs) -> None:
         """Error vs correct: Warning (yellow, safe) vs Error (red, must fix)."""
-        error_code = kwargs.get(
-            "error_code",
-            "# 看到黃字就慌了\n"
-            "FutureWarning: ...\n"
-            "# Warning ≠ Error\n"
-            "# 程式其實還是會跑完！",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "# Warning（黃色）→ 提醒，可忽略\n"
-            "# Error （紅色）→ 程式掛了，要修\n"
-            "#\n"
-            "# 先看最後一行的訊息類型",
-        )
+        error_code = kwargs.get("error_code", "FutureWarning: ...  # panic!")
+        correct_code = kwargs.get("correct_code", "# Warning = OK, Error = fix it")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 

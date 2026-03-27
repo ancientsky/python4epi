@@ -285,40 +285,22 @@ class Ch00JupyterScene(EpiBaseScene):
 
     def show_blindspot_order(self, duration: float = 5.0, **kwargs) -> None:
         """Running cells out of order vs Restart & Run All."""
-        error_code = kwargs.get(
-            "error_code",
-            "# Cell [3] 先跑\nprint(result)\n# NameError: 'result' not defined",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "# Kernel → Restart & Run All\n# 從頭到尾按順序執行",
-        )
+        error_code = kwargs.get("error_code", "print(result)  # NameError")
+        correct_code = kwargs.get("correct_code", "Kernel > Restart and Run All")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 
     def show_blindspot_kernel(self, duration: float = 5.0, **kwargs) -> None:
         """Import fails after pip install vs restart kernel first."""
-        error_code = kwargs.get(
-            "error_code",
-            "!pip install pandas\nimport pandas  # ModuleNotFoundError",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "!pip install pandas\n# Restart Kernel 後再\nimport pandas  # OK",
-        )
+        error_code = kwargs.get("error_code", "import pandas  # ModuleNotFoundError")
+        correct_code = kwargs.get("correct_code", "# Restart Kernel, then import")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 
     def show_blindspot_stuck(self, duration: float = 5.0, **kwargs) -> None:
         """[*] spinning forever vs press stop button."""
-        error_code = kwargs.get(
-            "error_code",
-            "# In [*]:  一直轉圈...\nwhile True:\n    pass",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            '# 按工具列的 ■ 停止按鈕\n# 或 Kernel → Interrupt',
-        )
+        error_code = kwargs.get("error_code", "In [*]: while True: pass")
+        correct_code = kwargs.get("correct_code", "# Press stop button or Interrupt")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 
