@@ -1,0 +1,130 @@
+meta:
+  chapter: "00"
+  concept: "roadmap"
+  title: "課程地圖——18 章學習攻略"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch00_06_roadmap"
+  scene_class: "Ch00RoadmapScene"
+
+segments:
+  # ── [A] Main lesson ──────────────────────────────────────────────
+
+  - id: "intro"
+    narration: >
+      嗨！歡迎來到 Python 流行病學教室！
+      在正式寫程式之前，我們先來看一下這門課的全貌。
+      整整 18 章的內容，聽起來好像很多對吧？別擔心，其實它們全部串成了一個故事。
+      什麼故事呢？就是一間護理之家爆發了退伍軍人症——280 位住民、121 人感染、19 人死亡。
+      我們會從接到通報開始，一路做到最後的調查報告，超有臨場感的！
+    animation: "show_title"
+    pause_after: 0.8
+
+  - id: "five_acts"
+    narration: >
+      這 18 章被分成五幕，就像一齣連續劇一樣。
+      第一幕「接獲通報」，Chapter 00 到 02，教你裝好工具、學會 Python 基礎跟資料處理。
+      第二幕「描述性分析」，Chapter 03 到 04，開始算侵襲率、做 2×2 表、跑群聚調查。
+      第三幕「深入分析」，Chapter 05 到 08，進入分層分析、迴歸、時間序列跟空間流病。
+      第四幕「進階建模」，Chapter 09 到 12，存活分析、機器學習、深度學習、因果推論，滿滿硬菜。
+      第五幕「收尾與實戰」，Chapter 13 到 17，教你寫可重現報告、做實戰案例，還有練習跟解答。
+    animation: "show_five_acts"
+    pause_after: 0.8
+
+  - id: "must_do"
+    narration: >
+      那到底該怎麼讀呢？首先，Chapter 00 到 04 是必修路線，請你乖乖照順序讀完。
+      因為這五章是地基，後面所有進階主題都建立在這上面。
+      Chapter 00 教你裝環境，Chapter 01 教 Python 基礎語法，Chapter 02 教 pandas 跟視覺化。
+      Chapter 03 開始做描述性統計，Chapter 04 帶你跑完一次完整的群聚調查流程。
+      這五章讀完，你就已經可以獨立做一份基本的疫調分析了，是不是很划算？
+    animation: "show_must_do"
+    pause_after: 0.5
+
+  - id: "choose_path"
+    narration: >
+      讀完前五章之後，恭喜你解鎖了自由選課模式！
+      Chapter 05 到 14 的進階主題，你可以根據興趣或工作需要來挑著讀。
+      對統計建模有興趣？直接跳 Chapter 05 分層分析跟 Chapter 06 邏輯斯迴歸。
+      想做疫情預測？去看 Chapter 07 時間序列。想畫地圖？Chapter 08 空間流病等你。
+      當然，如果你是個狠人，從頭到尾全部讀完也非常歡迎，保證功力大增！
+    animation: "show_choose_path"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      總結一下學習建議。第一，前五章請按順序走，不要跳。
+      第二，每一章都有練習題在 Chapter 16，寫完再對 Chapter 17 的解答，效果最好。
+      第三，所有程式碼都可以直接複製貼上執行，不用自己從零開始打。
+      第四，善用 Google Colab，零安裝就能跑，適合剛入門或沒有本機環境的同學。
+      記住，學程式最重要的就是動手做，光看不練是學不會的喔！
+    animation: "show_main_summary"
+    pause_after: 1.0
+
+  # ── [B] Extra example ────────────────────────────────────────────
+
+  - id: "extra_banner"
+    narration: >
+      接下來我們看一個額外範例：不同角色的學習路線。
+      因為不是每個人都需要讀完全部 18 章，根據你的工作角色，可以有不同的重點。
+    animation: "show_extra_banner"
+    pause_after: 0.5
+
+  - id: "extra_example"
+    narration: >
+      如果你是醫院的感控護理師，Chapter 03 到 04 是你的核心，學會算侵襲率、致死率跟做群聚調查就很夠用了。
+      如果你是衛生局的疫調人員，除了基礎之外，建議加讀 Chapter 07 時間序列跟 Chapter 08 空間流病，
+      這樣你就能做疫情趨勢預測跟畫出漂亮的疫情地圖。
+      如果你是資料科學家或想轉職公衛數據分析，那就全部讀完吧！
+      特別是 Chapter 10 機器學習、Chapter 11 深度學習跟 Chapter 12 因果推論，這三章會讓你的履歷閃閃發光。
+      所以你看，同一門課可以根據需求客製化學習路線，是不是很彈性？
+    animation: "show_extra_example"
+    pause_after: 1.0
+
+  # ── [C] Blind spots ──────────────────────────────────────────────
+
+  - id: "blindspot_banner"
+    narration: >
+      最後，來聊聊三個新手最常問的問題，也就是初學者的盲點時間！
+      這些問題我被問過不下一百次，今天一次幫你解答。
+    animation: "show_blindspot_banner"
+    pause_after: 0.5
+
+  - id: "blindspot_1"
+    narration: >
+      盲點一：「到底要從哪一章開始？」
+      很多人會想直接跳到機器學習或深度學習，覺得那個比較酷。
+      但是！如果你連 pandas DataFrame 都不會操作，後面的章節你會看得很痛苦。
+      正確做法是：先從 Chapter 00 裝環境、Chapter 01 學 Python 基礎、Chapter 02 學 pandas。
+      這三章可能花你一個週末，但之後的學習速度會快非常多，磨刀不誤砍柴工啊！
+    animation: "show_blindspot_where_start"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      盲點二：「我可以跳章嗎？」
+      Chapter 00 到 04 請不要跳，這是有順序的，跳了會像看電影從第三集開始看一樣困惑。
+      但是 Chapter 05 之後就可以自由跳了！每一章的開頭都會告訴你需要哪些前置知識。
+      所以如果你只對空間流病有興趣，讀完前五章就可以直接跳到 Chapter 08，完全沒問題。
+      彈性學習，才是成人教育的王道！
+    animation: "show_blindspot_skip"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      盲點三：「Google Colab 跟本機環境到底差在哪？」
+      Colab 的優點是零安裝，打開瀏覽器就能跑，而且還有免費 GPU 可以用，適合快速上手。
+      但 Colab 也有限制，像是每次開新 session 套件都要重裝，檔案也不會自動保存在本機。
+      本機環境用 uv sync 一次裝好，之後就不用再煩了，跑大資料集也比較穩定。
+      我的建議是：剛開始用 Colab 試水溫，確定要認真學了再花十分鐘設定本機環境，兩全其美！
+    animation: "show_blindspot_colab"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你看完了課程地圖！現在你已經知道這 18 章在講什麼、該怎麼安排學習順序了。
+      接下來就前進 Chapter 01，開始寫你的第一行 Python 程式碼吧！
+      記住，最好的學習方式就是打開 notebook，把程式碼跑一遍。
+      我們 Chapter 01 見，加油！
+    animation: "show_outro"
+    pause_after: 1.0

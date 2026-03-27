@@ -1,0 +1,157 @@
+meta:
+  chapter: "00"
+  concept: "git_basics"
+  title: "Git 版本控制——程式碼的時光機"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch00_05_git_basics"
+  scene_class: "Ch00GitBasicsScene"
+
+segments:
+  # ── A. Main Lesson ──────────────────────────────────────────────
+
+  - id: "intro"
+    narration: >
+      嗨！歡迎回到 Python 流行病學教室！今天我們要聊一個拯救無數工程師跟研究者的神器——Git。
+      你有沒有看過桌面上躺著「分析報告_final_v2_真的最終版.py」這種檔名？
+      改了又改，最後根本不知道哪個才是對的，簡直是版本地獄。
+      別擔心，Git 就是來終結這場噩夢的。
+    animation: "show_title"
+    pause_after: 0.8
+
+  - id: "what_is_git"
+    narration: >
+      你可以把 Git 想像成一台時光機。每次你存檔，Git 就幫你拍一張快照，完整記錄當下所有檔案的狀態。
+      想回到三天前的版本？沒問題，一個指令就穿越回去。
+      想看看上禮拜到底改了什麼？Git 幫你逐行比對，清清楚楚。
+      再也不用手動複製一堆「備份_0325」資料夾了。
+    animation: "show_what_is_git"
+    pause_after: 0.5
+
+  - id: "three_areas"
+    narration: >
+      Git 的世界有三個重要區域，搞懂它們就掌握了八成功力。
+      第一個是工作目錄，就是你平常編輯程式碼的地方。
+      第二個是暫存區，你用 git add 把改好的檔案放進來，像是把東西放上傳送帶。
+      第三個是儲存庫，你用 git commit 把暫存區的內容正式存檔，就像按下時光機的「儲存快照」按鈕。
+      記住這個流程：工作目錄、暫存區、儲存庫，三站到底。
+    animation: "show_three_areas"
+    pause_after: 0.8
+
+  - id: "daily_workflow"
+    narration: >
+      來看看每天最常用的工作流程。寫完程式碼之後，先用 git add 把要存的檔案加入暫存區。
+      接著用 git commit 加上一段說明，把這次的修改正式記錄下來。
+      最後用 git push 把本機的紀錄推到遠端伺服器，像是 GitHub。
+      這三步就是日常開發的核心節奏：add、commit、push，簡單又踏實。
+    animation: "show_daily_workflow"
+    code: |
+      git add analysis.py
+      git commit -m "feat: add attack rate calculation"
+      git push origin main
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      最後整理一下五個最常用的 Git 指令。git init 建立新的儲存庫。
+      git status 查看目前有哪些檔案被修改了。git add 把檔案加入暫存區。
+      git commit 存檔並寫下紀錄。git push 把紀錄推上遠端。
+      這五個指令就能應付日常九成以上的情境，先記住它們就好！
+    animation: "show_main_summary"
+    code: |
+      git init
+      git status
+      git add <file>
+      git commit -m "message"
+      git push origin main
+    pause_after: 1.0
+
+  # ── B. Extra Example ────────────────────────────────────────────
+
+  - id: "extra_banner"
+    narration: >
+      接下來看一個額外範例：多人協作寫疫調報告的情境。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      想像一下，護理之家的退伍軍人症疫調報告要趕著交出去。
+      你負責描述性分析，同事小美負責空間流行病學的地圖。
+      如果兩個人改同一個檔案，互傳隨身碟，遲早會搞混。
+      用 Git 的話，你開一個 branch 叫 feat/descriptive，小美開一個叫 feat/spatial。
+      各自在自己的分支上工作，完成後發一個 Pull Request，審查沒問題就合併到主線。
+      這樣既不會互相干擾，又能留下完整的修改紀錄，團隊合作超順暢。
+    animation: "show_extra_example"
+    code: |
+      git checkout -b feat/descriptive
+      # ... 完成描述性分析 ...
+      git push origin feat/descriptive
+      # 在 GitHub 上發 Pull Request
+    pause_after: 0.8
+
+  # ── C. Blind Spots ──────────────────────────────────────────────
+
+  - id: "blindspot_banner"
+    narration: >
+      最後來看三個新手最容易踩的坑，學會閃過就能少走很多冤枉路。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：無腦用 git add 加點號，把所有東西都丟進去。
+      結果不小心把 .env 密碼檔、幾百 MB 的資料集通通推上 GitHub，超級危險。
+      正確做法是先建一個 .gitignore 檔案，把不該追蹤的東西列進去。
+      然後 git add 的時候指定檔名，別偷懶用點號，養成好習慣。
+    animation: "show_blindspot_git_add"
+    code: |
+      # 錯誤示範
+      git add .
+
+      # 正確做法
+      echo ".env" >> .gitignore
+      echo "data/large_file.csv" >> .gitignore
+      git add analysis.py epi_curve.py
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：commit 訊息只寫 update 或 fix。
+      三個月後回來看，完全不知道當初改了什麼，跟失憶沒兩樣。
+      好的 commit 訊息要寫清楚做了什麼、為什麼做。例如「feat: add attack rate by floor」。
+      未來的你會感謝現在多花十秒寫好訊息的自己，相信我。
+    animation: "show_blindspot_commit_msg"
+    code: |
+      # 錯誤示範
+      git commit -m "update"
+
+      # 正確做法
+      git commit -m "feat: add attack rate calculation by floor"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：git push 被拒絕，然後一臉問號。
+      這通常是因為同事比你早推了新的 commit，遠端已經走在你前面了。
+      解法很簡單，先 git pull 把遠端的變更拉回來合併，再重新 push 就好。
+      如果有衝突，Git 會標示出來讓你手動解決，別慌，看清楚再改就行。
+    animation: "show_blindspot_push_rejected"
+    code: |
+      # push 被拒絕
+      git push origin main
+      # error: rejected - remote contains work you do not have
+
+      # 正確做法
+      git pull origin main
+      # 解決衝突（如果有的話）
+      git push origin main
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你學會了 Git 的基本功！有了版本控制，程式碼再也不會迷路。
+      下一集我們會介紹整個課程的路線圖，讓你知道接下來會學到哪些精彩內容。
+      我們下次見，掰掰！
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,177 @@
+meta:
+  chapter: "00"
+  concept: "uv_setup"
+  title: "uv 與環境設定——一行搞定 Python 套件管理"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch00_02_uv_setup"
+  scene_class: "Ch00UvSetupScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：uv 與虛擬環境
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！今天我們來聊一個每個 Python 新手都會遇到的惡夢：套件管理。
+      你有沒有這種經驗？裝了一個套件之後，另一個套件突然壞掉了。
+      這就是江湖上赫赫有名的「依賴地獄」，dependency hell。
+      別怕，今天學完 uv，你就能一行指令搞定所有套件，
+      再也不用在 pip install 的泥沼裡掙扎了。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "what_is_venv"
+    narration: >
+      在解決問題之前，先來搞懂一個概念：虛擬環境。
+      你可以把虛擬環境想像成一個獨立的工具箱。
+      比方說，你同時在做登革熱的監測報告跟 COVID 疫苗接種儀表板，
+      登革熱報告需要 pandas 1.5 版，COVID 儀表板需要 pandas 2.0 版。
+      沒有虛擬環境的話，兩個版本打架，你的電腦就會崩潰。
+      有了虛擬環境，每個專案都有自己的工具箱，互不干擾，天下太平。
+    animation: "show_venv_metaphor"
+    pause_after: 0.5
+
+  - id: "install_uv"
+    narration: >
+      好，那 uv 要怎麼裝呢？超級簡單。
+      如果你用 macOS 或 Linux，打開終端機，貼上這行 curl 指令就搞定了。
+      Windows 的朋友也別擔心，用 PowerShell 貼上對應的指令就好。
+      安裝完之後記得重新開一個終端機視窗，讓系統認得 uv 這個指令。
+    animation: "show_install_uv"
+    code: |
+      # macOS / Linux
+      curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      # Windows PowerShell
+      powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+    pause_after: 0.5
+
+  - id: "uv_workflow"
+    narration: >
+      裝好 uv 之後，日常工作流程只有三步驟，超級好記。
+      第一步，uv init，建立新專案，它會自動幫你生成 pyproject.toml。
+      第二步，uv add，加入你需要的套件，比如 pandas、matplotlib。
+      第三步，uv run，在虛擬環境裡執行你的程式。
+      三步驟，三行指令，簡單到不行。
+    animation: "show_uv_workflow"
+    code: |
+      uv init my-epi-project        # 步驟一：建立專案
+      uv add pandas matplotlib      # 步驟二：安裝套件
+      uv run python analysis.py     # 步驟三：執行程式
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      最後來個比較表，讓你秒懂 pip 和 uv 的差別。
+      pip 要你自己手動建虛擬環境、手動啟動、手動管理 requirements.txt。
+      uv 全部自動搞定：自動建環境、自動鎖版本、速度還快十倍以上。
+      簡單來說，pip 是腳踏車，uv 是高鐵。
+      我們這門課全程使用 uv，從此跟依賴地獄說掰掰！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：同時開發兩個防疫專案
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      接下來，我們用一個實際的情境，
+      看看虛擬環境在真實的防疫工作中有多重要。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設你是疾管署的資料分析師，手上同時有兩個專案。
+      第一個是登革熱的每週監測報告，用的是 pandas 1.5 加上舊版的 folium。
+      第二個是 COVID 疫苗接種涵蓋率儀表板，用的是 pandas 2.1 加上最新的 plotly。
+      如果兩個專案共用同一個環境，pandas 版本一定會打架。
+      但用 uv，每個專案都有自己的 dot venv 資料夾，完全隔離。
+      你在登革熱專案裡跑 uv run，它自動用 pandas 1.5；
+      切到 COVID 專案跑 uv run，它自動用 pandas 2.1。就是這麼優雅。
+    animation: "show_extra_example"
+    code: |
+      # 專案 A：登革熱監測報告
+      cd dengue-report/
+      uv run python weekly_report.py    # pandas 1.5
+
+      # 專案 B：COVID 疫苗儀表板
+      cd covid-dashboard/
+      uv run python dashboard.py        # pandas 2.1
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      最後，來看看初學者在設定環境時最容易踩的三個坑。
+      這三個坑我自己以前也踩過，所以你踩了也不丟臉，學起來就好。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：裝完 uv 之後打 uv，結果跳出 command not found。
+      別緊張，這不是裝壞了。
+      安裝腳本把 uv 放到了你的 home 目錄底下的 dot cargo slash bin，
+      但你目前的終端機還不知道這個路徑。
+      解法很簡單：關掉終端機，重新開一個就好了。
+      或者手動執行 source 你的 shell 設定檔也行。
+    animation: "show_blindspot_not_found"
+    error_code: |
+      $ uv
+      command not found: uv
+    correct_code: |
+      # 關掉終端機重開，或執行：
+      source ~/.bashrc   # bash 用戶
+      source ~/.zshrc    # zsh 用戶
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：搞不懂為什麼要用 uv run，而不是直接打 python。
+      直接打 python，用的是系統全域的 Python，不在虛擬環境裡面。
+      uv run 的意思是：先幫我進入這個專案的虛擬環境，然後再執行後面的指令。
+      所以 uv run python 就等於：啟動虛擬環境加上執行 python，兩步合一步。
+      養成習慣，所有指令前面都加 uv run，就不會出問題。
+    animation: "show_blindspot_uv_run"
+    error_code: |
+      $ python analysis.py
+      ModuleNotFoundError: No module named 'pandas'
+    correct_code: |
+      $ uv run python analysis.py
+      分析完成！結果已儲存。
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：pyproject.toml 跟 requirements.txt 到底差在哪裡？
+      requirements.txt 是老方法，只列出套件名稱，沒有版本鎖定，容易出問題。
+      pyproject.toml 是 Python 社群的新標準，除了套件之外，
+      還能記錄專案名稱、Python 版本、開發工具設定，一個檔案全包。
+      uv 會自動幫你產生 pyproject.toml 和 uv.lock，
+      uv.lock 鎖住每個套件的精確版本，確保你跟同事的環境一模一樣。
+      所以，放心擁抱 pyproject.toml 吧，它就是未來。
+    animation: "show_blindspot_pyproject"
+    error_code: |
+      # requirements.txt（舊方法）
+      pandas
+      matplotlib
+      # 沒有鎖版本，每次裝可能不同
+    correct_code: |
+      # pyproject.toml（新標準）+ uv.lock
+      [project]
+      dependencies = ["pandas>=2.0", "matplotlib>=3.8"]
+      # uv.lock 精確鎖定每個版本
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      太棒了！你已經學會用 uv 管理 Python 環境了。
+      從今以後，不管接到幾個防疫專案，都不用怕套件打架。
+      下一支影片，我們來開啟 Jupyter Lab，正式開始寫程式！
+      我們下次見！
+    animation: "show_outro"
+    pause_after: 1.0
