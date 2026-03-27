@@ -328,40 +328,22 @@ class Ch00GitBasicsScene(EpiBaseScene):
 
     def show_blindspot_git_add(self, duration: float = 5.0, **kwargs) -> None:
         """ErrorVsCorrect: git add . (adds .env) vs .gitignore + specific add."""
-        error_code = kwargs.get(
-            "error_code",
-            "git add .\n# 不小心把 .env 密碼檔也加進去了！",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "# 先建 .gitignore 排除 .env\ngit add analysis.py data/",
-        )
+        error_code = kwargs.get("error_code", "git add .  # includes .env!")
+        correct_code = kwargs.get("correct_code", "git add analysis.py data/")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 
     def show_blindspot_commit_msg(self, duration: float = 5.0, **kwargs) -> None:
         """ErrorVsCorrect: vague 'update' message vs descriptive message."""
-        error_code = kwargs.get(
-            "error_code",
-            'git commit -m "update"',
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            'git commit -m "feat: add epi curve plot\n for chapter 02"',
-        )
+        error_code = kwargs.get("error_code", 'git commit -m "update"')
+        correct_code = kwargs.get("correct_code", 'git commit -m "feat: add epi curve"')
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 
     def show_blindspot_push_rejected(self, duration: float = 5.0, **kwargs) -> None:
         """ErrorVsCorrect: push rejected vs git pull first."""
-        error_code = kwargs.get(
-            "error_code",
-            "git push\n# rejected: 遠端有新的 commit！",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "git pull          # 先拉最新版\ngit push          # 再推上去",
-        )
+        error_code = kwargs.get("error_code", "git push  # rejected!")
+        correct_code = kwargs.get("correct_code", "git pull && git push")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 

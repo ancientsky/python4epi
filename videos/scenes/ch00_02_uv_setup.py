@@ -327,40 +327,22 @@ class Ch00UvSetupScene(EpiBaseScene):
 
     def show_blindspot_not_found(self, duration: float = 5.0, **kwargs) -> None:
         """ErrorVsCorrect: 'command not found: uv' vs restart terminal."""
-        error_code = kwargs.get(
-            "error_code",
-            "$ uv sync\ncommand not found: uv",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "# 重新開啟終端機，或執行：\nsource $HOME/.local/bin/env\n$ uv sync\nResolved 12 packages",
-        )
+        error_code = kwargs.get("error_code", "command not found: uv")
+        correct_code = kwargs.get("correct_code", "source ~/.local/bin/env")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 
     def show_blindspot_uv_run(self, duration: float = 5.0, **kwargs) -> None:
         """ErrorVsCorrect: python script.py vs uv run python script.py."""
-        error_code = kwargs.get(
-            "error_code",
-            "$ python script.py\nModuleNotFoundError:\n  No module named 'pandas'",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "$ uv run python script.py\n# 自動使用 .venv 裡的套件",
-        )
+        error_code = kwargs.get("error_code", "python script.py")
+        correct_code = kwargs.get("correct_code", "uv run python script.py")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 
     def show_blindspot_pyproject(self, duration: float = 5.0, **kwargs) -> None:
         """ErrorVsCorrect: requirements.txt vs pyproject.toml."""
-        error_code = kwargs.get(
-            "error_code",
-            "# requirements.txt\npandas\nnumpy\n# 沒有版本鎖定，每次裝可能不同",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "# pyproject.toml + uv.lock\n[project]\ndependencies = [\n  \"pandas>=2.1\",\n]\n# uv.lock 精確鎖定每個版本",
-        )
+        error_code = kwargs.get("error_code", "pip install -r requirements.txt")
+        correct_code = kwargs.get("correct_code", "uv sync  # pyproject.toml + lock")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 

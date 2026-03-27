@@ -256,52 +256,22 @@ class Ch00WhyPythonScene(EpiBaseScene):
 
     def show_blindspot_math(self, duration: float = 5.0, **kwargs) -> None:
         """ErrorVsCorrect: myth about needing strong math vs reality."""
-        error_code = kwargs.get(
-            "error_code",
-            "# 迷思：要先學好數學\n"
-            "# 才能寫 Python\n"
-            "import advanced_math  # ???",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "# 事實：加減乘除就夠了\n"
-            "attack_rate = 121 / 280\n"
-            "print(f'{attack_rate:.1%}')  # 43.2%",
-        )
+        error_code = kwargs.get("error_code", "import advanced_math  # ???")
+        correct_code = kwargs.get("correct_code", "attack_rate = 121 / 280")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 
     def show_blindspot_learn_first(self, duration: float = 5.0, **kwargs) -> None:
         """ErrorVsCorrect: learn everything first vs learn by doing."""
-        error_code = kwargs.get(
-            "error_code",
-            "# 迷思：要把 Python 全學完\n"
-            "# 才能開始做疫調分析\n"
-            "study(python, years=3)",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "# 事實：邊做邊學最有效\n"
-            "# 第一天就能算侵襲率！\n"
-            "print(121 / 280)",
-        )
+        error_code = kwargs.get("error_code", "study(python, years=3)")
+        correct_code = kwargs.get("correct_code", "print(121 / 280)")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 
     def show_blindspot_version(self, duration: float = 5.0, **kwargs) -> None:
         """ErrorVsCorrect: manual Python install vs uv."""
-        error_code = kwargs.get(
-            "error_code",
-            "# 手動安裝 Python\n"
-            "# 版本衝突、路徑搞不定\n"
-            "pip install ???  # 崩潰",
-        )
-        correct_code = kwargs.get(
-            "correct_code",
-            "# 用 uv 一鍵搞定\n"
-            "# uv sync\n"
-            "# 自動管理版本與套件",
-        )
+        error_code = kwargs.get("error_code", "pip install ???")
+        correct_code = kwargs.get("correct_code", "uv sync")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
 
