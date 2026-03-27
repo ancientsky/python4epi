@@ -51,7 +51,7 @@
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01_VARIABLES" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/RhqNl3LzjmU" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -76,7 +76,7 @@ deaths = 19                 # 死亡人數
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_02_ARITHMETIC" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/ZqqZmuVjoN0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -104,7 +104,7 @@ print(f"住院率: {hosp_rate:.2%}")
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_03_DICTIONARIES" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/4iriq9cNG-A" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -134,7 +134,7 @@ print(f"{outbreak['facility']} CFR: {cfr:.2%}")
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_04_LISTS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/bwRKaJYyGCU" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -159,7 +159,7 @@ print(f"感染人數最多的翼區：{floor_wing_names[max_index]}（{max_cases
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_05_CONDITIONALS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/8q6imxzb9mM" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -183,7 +183,7 @@ else:
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_06_FUNCTIONS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/CGux0-2swi8" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
