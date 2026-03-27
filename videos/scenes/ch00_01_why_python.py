@@ -256,7 +256,7 @@ class Ch00WhyPythonScene(EpiBaseScene):
 
     def show_blindspot_math(self, duration: float = 5.0, **kwargs) -> None:
         """ErrorVsCorrect: myth about needing strong math vs reality."""
-        error_code = kwargs.get("error_code", "import advanced_math  # ???")
+        error_code = kwargs.get("error_code", "import advanced_math")
         correct_code = kwargs.get("correct_code", "attack_rate = 121 / 280")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
@@ -270,7 +270,7 @@ class Ch00WhyPythonScene(EpiBaseScene):
 
     def show_blindspot_version(self, duration: float = 5.0, **kwargs) -> None:
         """ErrorVsCorrect: manual Python install vs uv."""
-        error_code = kwargs.get("error_code", "pip install ???")
+        error_code = kwargs.get("error_code", "pip install pandas==1.5")
         correct_code = kwargs.get("correct_code", "uv sync")
         panel = self.show_error_vs_correct(error_code, correct_code, duration=duration)
         self.play(FadeOut(panel), run_time=0.5)
