@@ -233,6 +233,26 @@ class ErrorVsCorrect(VGroup):
     Used in the *Beginner Blind Spots* section of every video.
     """
 
+    @staticmethod
+    def _safe_code(code_string: str, font_size: int = 16) -> Code:
+        """Create a Code mobject, falling back to plain text if Python highlighting crashes."""
+        for lang in ("python", "text"):
+            try:
+                mob = Code(
+                    code_string=code_string, language=lang,
+                    formatter_style="monokai", background="rectangle",
+                    paragraph_config={"font_size": font_size},
+                )
+                return mob
+            except (IndexError, ValueError):
+                continue
+        # Last resort: render as plain text with no highlighting
+        return Code(
+            code_string=code_string, language="text",
+            formatter_style="monokai", background="rectangle",
+            paragraph_config={"font_size": font_size},
+        )
+
     def __init__(
         self,
         error_code: str,
@@ -255,11 +275,7 @@ class ErrorVsCorrect(VGroup):
             color=ManimColor(ERROR_RED),
             weight="BOLD",
         ).move_to(err_card.get_top() + DOWN * 0.3)
-        err_code = Code(
-            code_string=error_code, language="python",
-            formatter_style="monokai", background="rectangle",
-            paragraph_config={"font_size": 16},
-        )
+        err_code = self._safe_code(error_code)
         if hasattr(err_code, "background") and err_code.background is not None:
             err_code.background.set_fill(ManimColor(CODE_BG), opacity=1)
             err_code.background.round_corners(0.1)
@@ -278,11 +294,7 @@ class ErrorVsCorrect(VGroup):
             color=ManimColor(ACCENT_GREEN),
             weight="BOLD",
         ).move_to(ok_card.get_top() + DOWN * 0.3)
-        ok_code = Code(
-            code_string=correct_code, language="python",
-            formatter_style="monokai", background="rectangle",
-            paragraph_config={"font_size": 16},
-        )
+        ok_code = self._safe_code(correct_code)
         if hasattr(ok_code, "background") and ok_code.background is not None:
             ok_code.background.set_fill(ManimColor(CODE_BG), opacity=1)
             ok_code.background.round_corners(0.1)
