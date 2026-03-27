@@ -233,26 +233,6 @@ class ErrorVsCorrect(VGroup):
     Used in the *Beginner Blind Spots* section of every video.
     """
 
-    @staticmethod
-    def _safe_code(code_string: str, font_size: int = 16) -> Code:
-        """Create a Code mobject, falling back to plain text if Python highlighting crashes."""
-        for lang in ("python", "text"):
-            try:
-                mob = Code(
-                    code_string=code_string, language=lang,
-                    formatter_style="monokai", background="rectangle",
-                    paragraph_config={"font_size": font_size},
-                )
-                return mob
-            except (IndexError, ValueError):
-                continue
-        # Last resort: render as plain text with no highlighting
-        return Code(
-            code_string=code_string, language="text",
-            formatter_style="monokai", background="rectangle",
-            paragraph_config={"font_size": font_size},
-        )
-
     def __init__(
         self,
         error_code: str,
@@ -275,12 +255,22 @@ class ErrorVsCorrect(VGroup):
             color=ManimColor(ERROR_RED),
             weight="BOLD",
         ).move_to(err_card.get_top() + DOWN * 0.3)
-        err_code = self._safe_code(error_code)
-        if hasattr(err_code, "background") and err_code.background is not None:
-            err_code.background.set_fill(ManimColor(CODE_BG), opacity=1)
-            err_code.background.round_corners(0.1)
-        err_code.move_to(err_card.get_center() + DOWN * 0.15)
-        err_group = VGroup(err_card, err_label, err_code)
+        err_text = Text(
+            error_code,
+            font=FONT_MONO,
+            font_size=16,
+            color=ManimColor(CODE_TEXT),
+            disable_ligatures=False,
+        )
+        err_bg = RoundedRectangle(
+            corner_radius=0.1,
+            width=max(err_text.width + 0.4, width - 0.6),
+            height=max(err_text.height + 0.3, 0.6),
+            fill_color=ManimColor(CODE_BG), fill_opacity=1,
+            stroke_width=0,
+        ).move_to(err_card.get_center() + DOWN * 0.15)
+        err_text.move_to(err_bg.get_center())
+        err_group = VGroup(err_card, err_label, err_bg, err_text)
 
         # Correct side
         ok_card = RoundedRectangle(
@@ -294,12 +284,22 @@ class ErrorVsCorrect(VGroup):
             color=ManimColor(ACCENT_GREEN),
             weight="BOLD",
         ).move_to(ok_card.get_top() + DOWN * 0.3)
-        ok_code = self._safe_code(correct_code)
-        if hasattr(ok_code, "background") and ok_code.background is not None:
-            ok_code.background.set_fill(ManimColor(CODE_BG), opacity=1)
-            ok_code.background.round_corners(0.1)
-        ok_code.move_to(ok_card.get_center() + DOWN * 0.15)
-        ok_group = VGroup(ok_card, ok_label, ok_code)
+        ok_text = Text(
+            correct_code,
+            font=FONT_MONO,
+            font_size=16,
+            color=ManimColor(CODE_TEXT),
+            disable_ligatures=False,
+        )
+        ok_bg = RoundedRectangle(
+            corner_radius=0.1,
+            width=max(ok_text.width + 0.4, width - 0.6),
+            height=max(ok_text.height + 0.3, 0.6),
+            fill_color=ManimColor(CODE_BG), fill_opacity=1,
+            stroke_width=0,
+        ).move_to(ok_card.get_center() + DOWN * 0.15)
+        ok_text.move_to(ok_bg.get_center())
+        ok_group = VGroup(ok_card, ok_label, ok_bg, ok_text)
 
         self.add(err_group, ok_group)
         self.arrange(RIGHT, buff=0.5)
