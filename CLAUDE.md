@@ -397,3 +397,51 @@ segments:
 ### CI font setup
 - `.github/workflows/ci.yml` installs `fonts-noto-cjk` and clears `~/.cache/matplotlib`
 - Font installation MUST happen before `uv sync` and before any matplotlib import to ensure the font cache is built correctly
+
+## Manim v0.20.1 API Compatibility (Known Breaking Changes)
+
+The video system uses Manim Community **v0.20.1**, which introduced major breaking changes from older tutorials/docs. When writing or modifying `Code()` calls, use the v0.20.1 API:
+
+### Code class (`manim.mobject.text.code_mobject.Code`)
+
+**Constructor signature (v0.20.1):**
+```python
+Code(
+    code_file: StrPath | None = None,
+    code_string: str | None = None,
+    language: str | None = None,
+    formatter_style: str = "vim",        # was: style
+    tab_width: int = 4,
+    add_line_numbers: bool = True,
+    line_numbers_from: int = 1,
+    background: Literal["rectangle", "window"] = "rectangle",
+    background_config: dict | None = None,   # was: background_stroke_color, etc.
+    paragraph_config: dict | None = None,    # was: font_size
+)
+```
+
+**Migration table:**
+
+| Old API (pre-0.20) | v0.20.1 API |
+|---------------------|-------------|
+| `Code(code="...")` | `Code(code_string="...")` |
+| `font_size=20` | `paragraph_config={"font_size": 20}` |
+| `style="monokai"` | `formatter_style="monokai"` |
+| `background_stroke_color=X` | `background_config={"stroke_color": X}` |
+| `background_stroke_width=1` | `background_config={"stroke_width": 1}` |
+| `code_mob.background_mobject` | `code_mob.background` |
+
+### System dependencies for CI
+
+Manim's `manimpango` requires C libraries to build from source. The `videos.yml` workflow installs:
+```
+ffmpeg fonts-noto-cjk libpango1.0-dev libcairo2-dev pkg-config
+```
+
+### PYTHONPATH for Manim subprocess
+
+Manim runs scene files in a subprocess. The pipeline (`videos/src/pipeline.py`) automatically adds the project root to `PYTHONPATH` so `from videos.src.base_scene import EpiBaseScene` resolves correctly.
+
+### GitHub Actions Node.js 24 migration
+
+All workflows use `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` because `actions/checkout@v4`, `astral-sh/setup-uv@v5`, etc. internally run on Node.js 20 which is deprecated. The env var forces them to use Node.js 24.
