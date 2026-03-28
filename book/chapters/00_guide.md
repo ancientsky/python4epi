@@ -469,13 +469,21 @@ df.head(10)
 **Cell 2：計算侵襲率與致死率**
 
 ```python
+# len(df) = 資料有幾列（= 住民人數）
 total_residents = len(df)
+
+# (df["clinical_severity"] != "not_ill") → 產生 True/False 的 Series
+# .sum() → True 當作 1 加總 = 感染人數
 infected = (df["clinical_severity"] != "not_ill").sum()
 deaths = (df["outcome"] == "dead").sum()
 
+# 侵襲率 = 感染人數 ÷ 全體人數 × 100
 attack_rate = infected / total_residents * 100
+# 致死率（CFR）= 死亡人數 ÷ 感染人數 × 100（注意分母是感染者！）
 cfr = deaths / infected * 100
 
+# f-string：f"..." 裡面的 {變數名} 會被替換成變數的值
+# :.1f → 顯示到小數點後 1 位
 print(f"住民總數：{total_residents} 人")
 print(f"感染人數：{infected} 人")
 print(f"侵襲率：{attack_rate:.1f}%")
@@ -486,45 +494,56 @@ print(f"致死率 (CFR)：{cfr:.1f}%")
 **Cell 3：畫流行曲線（epidemic curve）**
 
 ```python
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # plt = matplotlib 的慣用縮寫
 
-# -- CJK font setup (避免中文標籤顯示為方框) --
+# -- CJK font setup (避免中文標籤顯示為方框 □□□) --
+# matplotlib 預設只認英文字型，中文字會變成「豆腐塊」
+# 下面這行告訴它：「依序嘗試這些中文字型，找到哪個就用哪個」
 plt.rcParams["font.sans-serif"] = [
     "Noto Sans CJK TC", "Noto Sans CJK SC", "Noto Sans CJK JP",
     "Noto Sans TC", "Microsoft JhengHei",
     "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS",
     "Heiti TC", "DejaVu Sans",
 ]
-plt.rcParams["axes.unicode_minus"] = False
-plt.style.use("ggplot")
-plt.rcParams["figure.dpi"] = 150
+plt.rcParams["axes.unicode_minus"] = False  # 防止負號顯示為方塊
+plt.style.use("ggplot")        # 套用學術風格（淡灰背景 + 白色格線）
+plt.rcParams["figure.dpi"] = 150  # 提高圖片解析度（預設 100 太模糊）
 
-# 將發病日期轉為日期格式，並計算每日病例數
-onset = pd.to_datetime(df["symptom_onset_date"])
+# 將發病日期的文字轉為日期格式，並算出「每天有幾人發病」
+onset = pd.to_datetime(df["symptom_onset_date"])  # 文字 → 日期
 epi_curve = onset.dropna().dt.date.value_counts().sort_index()
+# dropna() = 丟掉沒有發病日期的人（未感染者）
+# .dt.date = 只取日期（去掉時分秒）
+# .value_counts() = 每個日期出現幾次 = 每日病例數
+# .sort_index() = 按日期排序
 
-# 畫長條圖
-fig, ax = plt.subplots(figsize=(10, 4))
+# fig = 整張圖紙, ax = 圖紙上的畫布（所有繪圖指令都對 ax 操作）
+fig, ax = plt.subplots(figsize=(10, 4))  # figsize=(寬, 高) 單位是英吋
 ax.bar(epi_curve.index, epi_curve.values, color="#2980B9", edgecolor="white")
-ax.set_xlabel("Onset Date（發病日期）")
-ax.set_ylabel("Cases（病例數）")
-ax.set_title("Epidemic Curve — 松柏護理之家退伍軍人症群聚")
-fig.autofmt_xdate()
-plt.tight_layout()
-plt.show()
+ax.set_xlabel("Onset Date（發病日期）")   # X 軸標籤
+ax.set_ylabel("Cases（病例數）")          # Y 軸標籤
+ax.set_title("Epidemic Curve — 松柏護理之家退伍軍人症群聚")  # 圖表標題
+fig.autofmt_xdate()    # 自動旋轉日期標籤，避免重疊
+plt.tight_layout()     # 自動調整邊距，防止標籤被裁切
+plt.show()             # 顯示圖表
 ```
 
 **Cell 4：按樓層翼區統計侵襲率**
 
 ```python
+# 建立感染旗標：not_ill 以外都算感染，True→1, False→0
 df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
+
+# 按樓層 + 翼區分組，同時算住民數和感染數
 wing_summary = df.groupby(["floor", "wing"]).agg(
-    total=("case_id", "count"),
-    cases=("infected", "sum"),
-).reset_index()
+    total=("case_id", "count"),     # 每組有幾位住民
+    cases=("infected", "sum"),      # 每組有幾位感染者
+).reset_index()  # 把分組索引攤平回普通欄位
+
+# 侵襲率 = 感染人數 ÷ 該區住民數 × 100（注意分母是各區人數！）
 wing_summary["attack_rate_%"] = (wing_summary["cases"] / wing_summary["total"] * 100).round(1)
 
-wing_summary
+wing_summary  # 在 Jupyter 裡，最後一行會自動顯示成表格
 ```
 
 ### Step 6：看到結果
@@ -539,6 +558,114 @@ wing_summary
 
 ```{tip}
 試著修改上面的程式碼：改用 `"shower_use"` 欄位分組看侵襲率、或只篩選 `"confirmed"` 個案畫流行曲線。每次改完按 `Shift + Enter` 就能立刻看到結果。這就是程式的威力——改一個條件，整個分析自動重算。
+```
+
+---
+
+## 程式碼裡的 `#` 是什麼？——Python 註解入門
+
+你剛才在 Hello World 的程式碼裡應該有看到這樣的東西：
+
+```python
+# 讀入松柏護理之家退伍軍人症群聚事件的 line list
+df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
+```
+
+那一行 `#` 開頭的文字就是**註解（comment）**——Python 會**完全忽略**它，不會執行。
+
+### 為什麼需要註解？
+
+- **給自己看**：三個月後回來看程式碼，你會忘記當初為什麼這樣寫
+- **給同事看**：疫調報告要交接給別人時，有註解他才看得懂你的分析邏輯
+- **給審稿人看**：期刊要求可重現研究（reproducible research），註解是程式碼的說明書
+
+### 註解的寫法
+
+```python
+# 整行註解：# 後面的所有文字都不會被執行
+attack_rate = infected / total * 100  # 行尾註解：程式碼後面也可以加
+
+# 多行註解？Python 沒有像 C 語言的 /* ... */
+# 每一行都要加 #（這其實是好事，因為對齊起來更整齊）
+
+# ✅ 好的註解：解釋「為什麼」
+# 用中位數填補年齡遺漏值，因為平均數容易受極端值影響
+df["age"].fillna(df["age"].median(), inplace=True)
+
+# ❌ 壞的註解：只重複程式碼已經說的事
+# 把 x 設為 5（這誰看不出來？）
+x = 5
+```
+
+```{tip}
+**新手建議：先養成加 `#` 註解的習慣。** 哪怕一開始寫得很囉嗦也沒關係，比完全不寫好一百倍。隨著經驗增加，你會越來越知道哪些地方需要解釋、哪些不用。
+```
+
+---
+
+## Jupyter 筆記本中的 Markdown 格式
+
+Jupyter Lab 的 cell 有兩種類型：
+
+| Cell 類型 | 用途 | 切換方式 |
+|----------|------|---------|
+| **Code** | 寫 Python 程式碼 | 選中 cell → 按 `Y` |
+| **Markdown** | 寫文字說明、標題、列表 | 選中 cell → 按 `M` |
+
+Markdown cell 讓你的 notebook 不只是一堆程式碼，而是一份**圖文並茂的分析報告**。
+
+### 最常用的 Markdown 語法
+
+```markdown
+# 大標題（一個 # 號）
+## 二級標題（兩個 # 號）
+### 三級標題（三個 # 號）
+
+**粗體文字**（前後兩個星號）
+*斜體文字*（前後一個星號）
+`行內程式碼`（前後一個反引號）
+
+- 無序列表項目 1
+- 無序列表項目 2
+
+1. 有序列表項目 1
+2. 有序列表項目 2
+
+> 引用文字（像這樣加 > 在前面）
+
+| 欄位 | 說明 |
+|------|------|
+| age  | 年齡 |
+| sex  | 性別 |
+```
+
+### 在 Notebook 裡的使用範例
+
+假設你正在分析松柏護理之家的資料，Markdown cell 可以這樣寫：
+
+```markdown
+## 侵襲率分析
+
+本分析使用松柏護理之家退伍軍人症群聚事件的 line list（n=280）。
+
+### 主要發現
+
+1. **侵襲率**：43.2%（121/280）
+2. **致死率**：15.7%（19/121）
+3. 2-3 樓 B 翼的侵襲率明顯較高
+
+> ⚠️ 注意：致死率的分母是感染人數（121），不是全體住民（280）
+```
+
+### 常用小技巧
+
+- **快速切換**：在命令模式（按 `Esc`）下，按 `M` 把 cell 變成 Markdown，按 `Y` 變回 Code
+- **執行 Markdown**：跟 Code cell 一樣按 `Shift + Enter`，Markdown 就會渲染成漂亮的格式
+- **雙擊編輯**：雙擊已渲染的 Markdown cell 可以回到編輯模式
+- **用 Markdown 做分析筆記**：好習慣是每段分析前加一個 Markdown cell 說明「這段在做什麼、為什麼」
+
+```{tip}
+**好的 notebook = 程式碼 + Markdown 說明 + 圖表輸出。** 把你的 notebook 想像成一份疫調報告，任何人打開它都能理解你的分析過程。這就是可重現研究（reproducible research）的精神。
 ```
 
 ---
