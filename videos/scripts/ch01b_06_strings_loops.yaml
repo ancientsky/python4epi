@@ -1,0 +1,191 @@
+meta:
+  chapter: "01b"
+  concept: "strings_loops"
+  title: "字串與迴圈進階——清理疫調資料的瑞士刀"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch01b_06_strings_loops"
+  scene_class: "Ch01bStringsLoopsScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：字串方法與迴圈
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！今天要學兩個資料清理的利器：
+      字串方法和進階迴圈技巧。
+      疫調資料永遠不會是乾淨的，
+      多餘的空白、大小寫不一致、奇怪的符號……
+      你需要一把瑞士刀來處理這些問題。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "strip_method"
+    narration: >
+      第一招：strip。
+      strip 會把字串前後的空白通通砍掉。
+      從 Excel 複製過來的資料常常前後帶空格，
+      不處理的話，"Legionella" 和 " Legionella " 會被當成不同的值。
+    animation: "show_strip"
+    code: |
+      raw = "  Legionella  "
+      clean = raw.strip()
+      print(f"[{clean}]")
+    output: "[Legionella]"
+    pause_after: 0.3
+
+  - id: "split_method"
+    narration: >
+      第二招：split。
+      split 把字串按照指定的分隔符號切開，變成列表。
+      比如用逗號分隔的症狀列表，
+      split 一下就變成 Python 的列表了。
+    animation: "show_split"
+    code: |
+      symptoms = "fever,cough,dyspnea"
+      parts = symptoms.split(",")
+      print(parts)
+    output: "['fever', 'cough', 'dyspnea']"
+    pause_after: 0.3
+
+  - id: "replace_method"
+    narration: >
+      第三招：replace。
+      把字串中某個片段替換成另一個。
+      比如把全形逗號換成半形，或把「是」換成 True。
+      資料清理時超級常用。
+    animation: "show_replace"
+    code: |
+      status = "confirmed_YES"
+      clean = status.replace("YES", "True")
+      print(clean)
+    output: "confirmed_True"
+    pause_after: 0.3
+
+  - id: "for_range"
+    narration: >
+      迴圈進階：for 搭配 range。
+      range 5 產生 0 到 4 這五個數字。
+      常用在需要跑固定次數的場景，
+      比如依序處理 5 個翼區的資料。
+    animation: "show_for_range"
+    code: |
+      for i in range(5):
+          print(f"processing wing {i}")
+    output: "processing wing 0\nprocessing wing 1\n..."
+    pause_after: 0.3
+
+  - id: "enumerate_method"
+    narration: >
+      超實用技巧：enumerate。
+      當你同時需要「第幾個」和「值是什麼」時，
+      用 enumerate 一次拿到索引和值。
+      不用再自己維護計數器了。
+    animation: "show_enumerate"
+    code: |
+      wings = ["1A", "1B", "2A", "2B"]
+      for i, wing in enumerate(wings):
+          print(f"#{i}: {wing}")
+    output: "#0: 1A\n#1: 1B\n#2: 2A\n#3: 2B"
+    pause_after: 0.3
+
+  - id: "in_operator"
+    narration: >
+      最後一招：in 成員檢查。
+      想知道某個值在不在列表裡？用 in。
+      "Legionella" in pathogens？True！
+      比自己寫 for 迴圈去找快多了。
+    animation: "show_in_operator"
+    code: |
+      pathogens = ["Legionella", "TB", "Dengue"]
+      print("Legionella" in pathogens)
+      print("COVID" in pathogens)
+    output: "True\nFalse"
+    pause_after: 0.3
+
+  - id: "main_summary"
+    narration: >
+      重點整理！
+      strip 去空白、split 切分字串、replace 取代。
+      for 加 range 跑固定次數。
+      enumerate 同時拿索引和值。
+      in 檢查成員是否存在。
+      這些是你做資料清理的基本武器。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：清理 TB 通報檢驗結果
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      來看個實例：清理結核病通報的檢驗結果欄位。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      結核病通報系統的檢驗結果欄位格式不統一，
+      有人寫 Positive、有人寫 positive、還有前後帶空格的。
+      用 strip 加上 lower，三行就搞定標準化。
+      然後用 in 檢查哪些是陽性個案。
+      這種清理在真實疫調中每天都在做。
+    animation: "show_extra_example"
+    code: |
+      results = [" Positive", "negative ", "POSITIVE"]
+      for r in results:
+          clean = r.strip().lower()
+          is_pos = clean == "positive"
+          print(f"{clean}: {is_pos}")
+    output: "positive: True\nnegative: False\npositive: True"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      三個字串和迴圈的地雷。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：以為 strip 會改變原本的字串。
+      字串在 Python 裡是不可變的。
+      strip 會回傳一個新的字串，原本的不會被改變。
+      你必須把結果存到變數裡。
+    animation: "show_blindspot_strip_inplace"
+    error_code: 'name = " John "\nname.strip()\nprint(name)  # " John "'
+    correct_code: 'name = " John "\nname = name.strip()\nprint(name)'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：在 for 迴圈裡修改正在遍歷的列表。
+      邊走邊搬椅子，你一定會跌倒。
+      正確做法：建一個新的列表，把要保留的放進去。
+    animation: "show_blindspot_modify_list"
+    error_code: "for x in items:\n    items.remove(x)  # bug!"
+    correct_code: "keep = [x for x in items if ok(x)]"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：range 的結尾不包含在內。
+      range 5 是 0 到 4，不是 0 到 5。
+      這叫「左閉右開」，Python 到處都是這個規則。
+      想要 1 到 5？用 range 1 逗號 6。
+    animation: "show_blindspot_range_off"
+    error_code: "range(5)  # 0,1,2,3,4 not 5!"
+    correct_code: "range(1, 6)  # 1,2,3,4,5"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      讚！你的瑞士刀已經備齊了。
+      下一集教你 uv 進階用法，管理 Python 版本和套件。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

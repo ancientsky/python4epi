@@ -1,0 +1,162 @@
+meta:
+  chapter: "01b"
+  concept: "indentation"
+  title: "縮排——Python 的必修規矩"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch01b_01_indentation"
+  scene_class: "Ch01bIndentationScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：縮排
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎回來！
+      今天要聊的是 Python 最獨特的規矩——縮排。
+      別的程式語言用大括號來分區塊，Python 用的是空格。
+      你可以把它想成是「排隊的規矩」：
+      誰站在誰後面、誰歸誰管，全靠位置來決定。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_indent"
+    narration: >
+      為什麼是 4 個空格呢？
+      其實 Python 只規定「同一層要對齊」，
+      但社群約定俗成都用 4 個空格。
+      就像疫調報告的格式，大家統一了，看起來才不會亂。
+      你用 2 格能跑，但同事會翻白眼。
+    animation: "show_why_four_spaces"
+    pause_after: 0.5
+
+  - id: "if_indent"
+    narration: >
+      看這段程式碼。
+      if 致死率大於零點一五，冒號，
+      然後下一行縮排 4 格，寫 print「升級應變」。
+      這個縮排告訴 Python：這行 print 屬於 if 的管轄範圍。
+      如果沒縮排？Python 會直接報錯！
+    animation: "show_if_indent"
+    code: |
+      cfr = 0.157
+      if cfr > 0.15:
+          print("CFR > 15%, alert!")
+    output: "CFR > 15%, alert!"
+    pause_after: 0.3
+
+  - id: "for_indent"
+    narration: >
+      for 迴圈也一樣。
+      for 加上 in 加上冒號，
+      下一行往右縮排 4 格，就是迴圈裡要重複做的事。
+      這裡我們列出六個翼區的感染人數，
+      用 for 一個一個印出來。
+    animation: "show_for_indent"
+    code: |
+      wings = ["1A", "1B", "2A", "2B", "3A", "3B"]
+      for wing in wings:
+          print(f"checking {wing}")
+    pause_after: 0.3
+
+  - id: "nested_indent"
+    narration: >
+      如果 for 裡面又套了 if，那就再往右縮 4 格，變成 8 格。
+      就像組織架構一樣，越往裡面層級越深。
+      但通常不建議超過三層，太深就不好讀了。
+    animation: "show_nested_indent"
+    code: |
+      cases = [15, 10, 24, 25, 20, 27]
+      for count in cases:
+          if count > 20:
+              print(f"{count} - high risk!")
+    pause_after: 0.3
+
+  - id: "main_summary"
+    narration: >
+      好，重點整理。
+      第一，Python 用縮排決定程式區塊，不是大括號。
+      第二，統一用 4 個空格。
+      第三，if、for、def 後面的冒號是提醒你要縮排。
+      第四，不要混用 Tab 和空格，會出事。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：登革熱分區篩檢
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      來看另一個防疫場景，用縮排寫出分區篩檢邏輯。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      台南市爆發登革熱，疫調人員要依照各里的病例數決定噴藥範圍。
+      如果某里超過 10 例，列為高風險要全里噴藥；
+      超過 5 例就做重點噴藥；其他就只做衛教。
+      你看，if、elif、else 各自管一塊，全靠縮排分區。
+    animation: "show_extra_example"
+    code: |
+      dengue_cases = 12
+      if dengue_cases > 10:
+          action = "full spray"
+      elif dengue_cases > 5:
+          action = "targeted spray"
+      else:
+          action = "education only"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      接下來，看三個縮排的地雷。
+      踩過一次，下次就會記住了。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：if 後面忘記縮排。
+      Python 看到 if 的冒號後面沒有縮排的下一行，
+      直接丟出 IndentationError。
+      修法很簡單：加上 4 個空格就好。
+    animation: "show_blindspot_no_indent"
+    error_code: "if cfr > 0.15:\nprint('alert')"
+    correct_code: "if cfr > 0.15:\n    print('alert')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：混用 Tab 和空格。
+      有些人按 Tab 有些人按空格，
+      混在一起 Python 就搞不清楚了。
+      解法：在編輯器裡設定 Tab 自動轉換成 4 個空格。
+      Jupyter Lab 預設就是這樣，不用擔心。
+    animation: "show_blindspot_tab_space"
+    error_code: "if x > 0:\n\tprint(x)  # Tab!"
+    correct_code: "if x > 0:\n    print(x)  # spaces"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：多餘的縮排。
+      明明沒有 if 或 for，你卻縮排了。
+      Python 會說：你這行為什麼要縮排？
+      記住：只有在冒號後面才需要縮排。
+    animation: "show_blindspot_unexpected"
+    error_code: "x = 10\n    print(x)  # why?"
+    correct_code: "x = 10\nprint(x)  # OK"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜！你已經搞定 Python 最重要的排版規矩了。
+      下一集我們來學 import，借用別人寫好的工具。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

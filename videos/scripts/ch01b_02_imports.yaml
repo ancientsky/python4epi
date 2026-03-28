@@ -1,0 +1,163 @@
+meta:
+  chapter: "01b"
+  concept: "imports"
+  title: "import——借用別人的工具"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch01b_02_imports"
+  scene_class: "Ch01bImportsScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：import
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！今天要學一個超實用的技能：import。
+      Python 有成千上萬的套件，別人已經寫好的工具，
+      你只要一行 import 就能借來用。
+      就像疫調不用自己做試劑，實驗室已經幫你準備好了。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "import_basic"
+    narration: >
+      最簡單的寫法：import 加上套件名。
+      比如 import math，就把整個 math 工具箱搬過來了。
+      要用裡面的工具，就寫 math 點 sqrt。
+      math 是工具箱名稱，sqrt 是裡面的平方根工具。
+    animation: "show_import_basic"
+    code: |
+      import math
+      print(math.sqrt(121))
+    output: "11.0"
+    pause_after: 0.3
+
+  - id: "from_import"
+    narration: >
+      如果你只想借一個工具，不用搬整個箱子，
+      就用 from math import sqrt。
+      這樣就可以直接寫 sqrt 121，不用再加 math 點。
+      就像你只借了一把螺絲起子，不用搬整個工具箱。
+    animation: "show_from_import"
+    code: |
+      from math import sqrt
+      print(sqrt(121))
+    output: "11.0"
+    pause_after: 0.3
+
+  - id: "import_as"
+    narration: >
+      最常見的進階寫法：import pandas as pd。
+      as 就是「取個綽號」。pandas 太長了，大家約定都叫它 pd。
+      就像陳大明在辦公室大家都叫他「小陳」。
+      類似的：numpy 叫 np、matplotlib.pyplot 叫 plt。
+    animation: "show_import_as"
+    code: |
+      import pandas as pd
+      import numpy as np
+      import matplotlib.pyplot as plt
+    pause_after: 0.5
+
+  - id: "import_order"
+    narration: >
+      import 應該放在檔案最上面，這是 Python 的慣例。
+      順序是：先標準函式庫、再第三方套件、最後你自己寫的模組。
+      就像疫調報告的架構：先寫背景、再寫方法、最後寫結果。
+      養成好習慣，別人看你的程式碼才能秒懂。
+    animation: "show_import_order"
+    code: |
+      # 1. standard library
+      import math
+      import datetime
+      # 2. third-party
+      import pandas as pd
+      # 3. local
+      from epi_learning import attack_rate
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點整理！
+      import 搬整個工具箱。
+      from X import Y 只借一個工具。
+      import X as Y 取綽號，大家約定的縮寫要照用。
+      import 放在檔案最上面。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：用 datetime 算發病天數
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      來看個防疫實例，用 import 借工具算發病到住院天數。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      某位退伍軍人症個案，1 月 15 日發病、1 月 18 日住院。
+      我們 import datetime 模組，把日期存成 date 物件，
+      然後兩個日期相減就得到天數。
+      看！3 天。這就是 import 的威力：
+      別人幫你寫好了日期運算，你只要借來用就好。
+    animation: "show_extra_example"
+    code: |
+      from datetime import date
+      onset = date(2026, 1, 15)
+      admitted = date(2026, 1, 18)
+      delay = (admitted - onset).days
+      print(f"onset-to-admission: {delay} days")
+    output: "onset-to-admission: 3 days"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      現在來看三個 import 的常見地雷。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：套件沒安裝就 import。
+      你寫了 import pandas，但環境裡根本沒裝 pandas。
+      Python 會噴 ModuleNotFoundError。
+      修法：先用 uv add pandas 安裝，再 import。
+    animation: "show_blindspot_not_installed"
+    error_code: "import pandas  # ModuleNotFoundError"
+    correct_code: "# uv add pandas  (install first)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：import 放在程式碼中間。
+      雖然 Python 不會報錯，但這是壞習慣。
+      你的同事會找不到你用了哪些套件。
+      養成好習慣，全部放在最上面。
+    animation: "show_blindspot_import_middle"
+    error_code: "x = 10\nimport math\nprint(math.sqrt(x))"
+    correct_code: "import math\nx = 10\nprint(math.sqrt(x))"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：用了 from import 卻還寫全名。
+      比如你寫了 from math import sqrt，
+      後面卻用 math.sqrt，Python 會說找不到 math。
+      因為你只借了 sqrt 工具，沒搬整個 math 箱子。
+    animation: "show_blindspot_wrong_ref"
+    error_code: "from math import sqrt\nprint(math.sqrt(9))  # NameError"
+    correct_code: "from math import sqrt\nprint(sqrt(9))  # 3.0"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      太好了！你現在知道怎麼借用別人的工具了。
+      下一集我們來聊型別和轉換，搞清楚數字跟文字的差別。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

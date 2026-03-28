@@ -1,0 +1,182 @@
+meta:
+  chapter: "01b"
+  concept: "jupyter_tips"
+  title: "Jupyter 實用密技——讓你的效率翻倍"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch01b_08_jupyter_tips"
+  scene_class: "Ch01bJupyterTipsScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：Jupyter 密技
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！今天是 Ch01b 工具箱的最後一集。
+      教你幾個 Jupyter Lab 的密技和捷徑，
+      讓你的分析效率翻倍。
+      這些是資深 Python 使用者天天在用的招式，
+      但很少有人專門教。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "shell_commands"
+    narration: >
+      第一招：驚嘆號指令。
+      在 Jupyter 的 code cell 裡，
+      前面加一個驚嘆號就能執行終端機指令。
+      驚嘆號 ls 看檔案列表、驚嘆號 head 看前幾行、
+      驚嘆號 wc 算行數。
+      不用另外開終端機，直接在 notebook 裡搞定。
+    animation: "show_shell_commands"
+    code: |
+      !ls data/synthetic/
+      !head -3 data/synthetic/legionella_outbreak.csv
+      !wc -l data/synthetic/legionella_outbreak.csv
+    pause_after: 0.5
+
+  - id: "install_in_jupyter"
+    narration: >
+      第二招：在 Jupyter 裡安裝套件。
+      驚嘆號 uv add seaborn，直接在 cell 裡裝。
+      裝完之後記得 Restart Kernel，
+      因為已經載入的模組不會自動更新。
+      Kernel 選單裡點 Restart Kernel 就好。
+    animation: "show_install_in_jupyter"
+    code: |
+      !uv add seaborn
+      # Then: Kernel > Restart Kernel
+      import seaborn as sns
+    pause_after: 0.5
+
+  - id: "question_mark"
+    narration: >
+      第三招：問號查說明。
+      在函式名稱後面加一個問號，執行就能看到它的說明文件。
+      加兩個問號，還能看到原始碼。
+      比如 pd.read_csv 問號，就能看到所有參數的說明。
+      不用另外開瀏覽器查文件了。
+    animation: "show_question_mark"
+    code: |
+      import pandas as pd
+      pd.read_csv?
+    pause_after: 0.3
+
+  - id: "tab_complete"
+    narration: >
+      第四招：Tab 自動完成。
+      打一個 df 點，然後按 Tab 鍵，
+      Jupyter 會列出所有可用的方法和屬性。
+      忘記方法名稱的時候超好用。
+      再搭配問號查說明，就是你的隨身字典。
+    animation: "show_tab_complete"
+    code: |
+      # Type: df.
+      # Then press Tab
+      # Shows: df.head, df.info, df.describe...
+    pause_after: 0.3
+
+  - id: "timeit_magic"
+    narration: >
+      第五招：百分號 timeit 測效能。
+      在一行程式碼前面加上百分號 timeit，
+      Jupyter 會自動跑很多次，告訴你平均花了多久。
+      想知道你的程式碼夠不夠快？一行指令搞定。
+    animation: "show_timeit"
+    code: |
+      import math
+      %timeit math.sqrt(121)
+    output: "47.3 ns per loop"
+    pause_after: 0.3
+
+  - id: "main_summary"
+    narration: >
+      重點整理！
+      驚嘆號執行 shell 指令，不用開終端機。
+      驚嘆號 uv add 在 Jupyter 裡裝套件。
+      問號查說明，兩個問號看原始碼。
+      Tab 自動完成，忘記方法名就靠它。
+      百分號 timeit 測效能。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：快速探索疫調資料
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      來看個實例：用這些密技快速探索疫調資料。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      你剛拿到一份新的通報 CSV 檔案。
+      第一步，驚嘆號 head 看前幾行，確認格式。
+      第二步，驚嘆號 wc 看有多少筆。
+      第三步，用 pd.read_csv 讀進來。
+      第四步，df.info 問號查看怎麼用。
+      不到兩分鐘，你就對資料有了初步了解。
+      這就是老手的工作節奏。
+    animation: "show_extra_example"
+    code: |
+      !head -2 data/synthetic/legionella_outbreak.csv
+      !wc -l data/synthetic/legionella_outbreak.csv
+    output: "281 lines (280 rows + header)"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      最後三個 Jupyter 的地雷。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：裝完套件沒 Restart Kernel。
+      你驚嘆號 uv add 裝了新套件，但 import 還是失敗。
+      因為 Kernel 還在用舊的環境。
+      記得裝完套件一定要 Restart Kernel。
+    animation: "show_blindspot_no_restart"
+    error_code: "!uv add X\nimport X  # still fails!"
+    correct_code: "!uv add X\n# Restart Kernel first!"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：驚嘆號指令在 Python 腳本裡用。
+      驚嘆號是 Jupyter 專用的語法，
+      在一般的 .py 檔案裡用會 SyntaxError。
+      如果要在 .py 裡執行 shell 指令，
+      用 subprocess 模組或 os.system。
+    animation: "show_blindspot_bang_in_py"
+    error_code: "# in script.py:\n!ls  # SyntaxError!"
+    correct_code: "import os\nos.system('ls')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：cell 執行順序搞混。
+      Jupyter 記的是你「執行的順序」，不是 cell 排列的順序。
+      如果你先跑第 5 格再跑第 2 格，
+      第 2 格裡如果用了第 5 格定義的變數，就會出錯。
+      解法：養成 Restart and Run All 的習慣。
+    animation: "show_blindspot_cell_order"
+    error_code: "# run cell 5, then cell 2: bug!"
+    correct_code: "# Restart + Run All: clean!"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你！Ch01b 的八支影片全部看完了！
+      你現在已經有了完整的 Python 開發者工具箱。
+      縮排、import、型別、debug、try except、
+      字串、uv 套件管理、Jupyter 密技。
+      準備好了嗎？下一章 Ch02 我們開始用 pandas 處理真正的疫調資料！
+      我們 Ch02 見！
+    animation: "show_outro"
+    pause_after: 1.0

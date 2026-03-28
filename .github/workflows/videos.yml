@@ -16,6 +16,14 @@ on:
           - hello_epi
           - git_basics
           - roadmap
+          - indentation
+          - imports
+          - types
+          - errors
+          - try_except
+          - strings_loops
+          - uv_advanced
+          - jupyter_tips
           - variables
           - arithmetic
           - dictionaries
@@ -101,7 +109,7 @@ jobs:
           TITLE="Tutorial Videos $(date +%Y-%m-%d)"
 
           # Build release notes
-          NOTES="## Tutorial Videos (Ch00 導讀與工具 / Ch01 Python 基礎)\n\n"
+          NOTES="## Tutorial Videos (Ch00 導讀與工具 / Ch01b 開發者工具箱 / Ch01 Python 基礎)\n\n"
           NOTES+="Generated with Manim + edge-tts + ffmpeg.\n\n"
           NOTES+="| # | Video | Size |\n"
           NOTES+="|---|-------|------|\n"

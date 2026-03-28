@@ -1,0 +1,182 @@
+meta:
+  chapter: "01b"
+  concept: "errors"
+  title: "讀懂錯誤訊息——traceback 不是天書"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch01b_04_errors"
+  scene_class: "Ch01bErrorsScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：錯誤訊息
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！今天來聊每個初學者都怕的東西——紅色錯誤訊息。
+      別怕！Traceback 其實是 Python 在跟你報告：
+      哪裡出了問題、問題是什麼。
+      它不是在罵你，而是在幫你 debug。
+      學會讀 traceback，就像學會讀疫調報告的結論一樣重要。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "traceback_anatomy"
+    narration: >
+      Traceback 要從最後一行開始看。
+      最後一行告訴你錯誤的「類型」和「原因」。
+      往上看，則是錯誤發生的「位置」：哪個檔案、第幾行。
+      就像疫調報告，先看結論，再看過程。
+      記住：由下往上讀！
+    animation: "show_traceback_anatomy"
+    pause_after: 0.5
+
+  - id: "name_error"
+    narration: >
+      第一種常見錯誤：NameError。
+      意思是 Python 找不到你說的那個名字。
+      通常是打錯字了，比如 infceted 少了一個 e。
+      Python 很嚴格，差一個字母就認不出來。
+    animation: "show_name_error"
+    code: |
+      infected = 121
+      print(infceted)
+    output: "NameError: name 'infceted' is not defined"
+    pause_after: 0.3
+
+  - id: "type_error"
+    narration: >
+      第二種：TypeError。
+      意思是你對某個型別做了不支援的操作。
+      比如把字串 "121" 除以整數 280，
+      Python 不知道怎麼算。
+      修法：把字串轉成數字再計算。
+    animation: "show_type_error"
+    code: |
+      cases = "121"
+      rate = cases / 280
+    output: "TypeError: unsupported operand type(s)"
+    pause_after: 0.3
+
+  - id: "key_error"
+    narration: >
+      第三種：KeyError。
+      字典裡找不到你要的鑰匙。
+      你存的是 deaths，但你打成 death 少了個 s。
+      修法：仔細對照字典的 key。
+    animation: "show_key_error"
+    code: |
+      data = {"deaths": 19, "cases": 121}
+      print(data["death"])
+    output: "KeyError: 'death'"
+    pause_after: 0.3
+
+  - id: "index_error"
+    narration: >
+      第四種：IndexError。
+      列表只有 6 個元素，索引 0 到 5，
+      你卻要第 6 個，超出範圍了。
+      就像護理之家只有 3 層，你卻問第 4 層的資料。
+    animation: "show_index_error"
+    code: |
+      wings = ["1A", "1B", "2A", "2B", "3A", "3B"]
+      print(wings[6])
+    output: "IndexError: list index out of range"
+    pause_after: 0.3
+
+  - id: "file_error"
+    narration: >
+      第五種：FileNotFoundError。
+      你要讀的檔案不存在。
+      通常是路徑寫錯了，或忘記切到正確的資料夾。
+      修法：用 ls 或 dir 確認檔案在哪裡。
+    animation: "show_file_error"
+    code: "open('data/outbreak.csv')"
+    output: "FileNotFoundError: [Errno 2]"
+    pause_after: 0.3
+
+  - id: "main_summary"
+    narration: >
+      重點整理！
+      Traceback 由下往上讀，最後一行是結論。
+      NameError 打錯名字、TypeError 型別不對、
+      KeyError 字典找不到 key、IndexError 超出範圍、
+      FileNotFoundError 檔案路徑錯誤。
+      這五個占了初學者 90% 的錯誤。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：批次處理通報資料的錯誤處理
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      來看實戰場景：批次讀取多個通報檔案時遇到錯誤。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設你要讀取五個縣市的通報 CSV 檔案，
+      但其中一個檔案名稱拼錯了。
+      如果不會讀錯誤訊息，你只知道程式掛了。
+      但現在你看到 FileNotFoundError，
+      馬上就知道是哪個檔案路徑有問題，修一下就好了。
+      會讀錯誤訊息，debug 速度快十倍！
+    animation: "show_extra_example"
+    code: |
+      files = ["taipei.csv", "tainan.csv"]
+      for f in files:
+          print(f"reading {f}")
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      三個 debug 的常見盲點。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個盲點：只看第一行 Traceback。
+      其實第一行只是告訴你「有錯誤發生」，
+      真正的重點在最後一行。
+      很多初學者看到紅字就慌了，連看都沒看完。
+      深呼吸，從最後一行開始看。
+    animation: "show_blindspot_read_wrong"
+    error_code: "# only reads first line"
+    correct_code: "# read LAST line first!"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個盲點：複製整段錯誤去問 ChatGPT。
+      當然可以，但你自己也要學會看。
+      最後一行的 Error 名稱加上冒號後的訊息，
+      搜尋這兩個關鍵字，通常就能找到答案。
+    animation: "show_blindspot_copy_paste"
+    error_code: "# copy 50 lines to ChatGPT"
+    correct_code: "# search: NameError + message"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個盲點：Warning 和 Error 搞混。
+      Warning 是警告，程式還是會繼續跑。
+      Error 才是真正的錯誤，程式會停下來。
+      看到黃色 Warning 不用慌，看到紅色 Error 再處理。
+    animation: "show_blindspot_warning_vs_error"
+    error_code: "# Warning: panic!"
+    correct_code: "# Warning: just a heads-up"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜！你現在已經不怕紅字了。
+      下一集教你用 try except 優雅地處理意外。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

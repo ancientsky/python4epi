@@ -1,0 +1,172 @@
+meta:
+  chapter: "01b"
+  concept: "types"
+  title: "型別與轉換——數字、文字、布林值"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch01b_03_types"
+  scene_class: "Ch01bTypesScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：型別
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！今天要來認識 Python 的「型別」。
+      簡單說，Python 裡的每個值都有一個身分證。
+      121 的身分證寫著 int 整數，
+      「松柏護理之家」寫著 str 字串，
+      True 寫著 bool 布林值。
+      搞混了身分證，Python 就不知道怎麼處理你的資料。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "type_function"
+    narration: >
+      怎麼查看身分證呢？用 type 函式。
+      type 括號裡放值，它就告訴你這是什麼型別。
+      int 是整數、float 是小數、str 是文字、bool 是布林。
+      這四個是你做資料分析最常遇到的。
+    animation: "show_type_function"
+    code: |
+      print(type(121))
+      print(type(43.2))
+      print(type("Legionella"))
+      print(type(True))
+    output: "<class 'int'>\n<class 'float'>\n<class 'str'>\n<class 'bool'>"
+    pause_after: 0.3
+
+  - id: "type_conversion"
+    narration: >
+      有時候你需要幫資料「換身分證」。
+      比如從 CSV 讀到的感染人數是文字 "121"，
+      你必須用 int 把它轉成數字才能做計算。
+      int 轉整數、float 轉小數、str 轉文字。
+      這叫型別轉換。
+    animation: "show_conversion"
+    code: |
+      raw = "121"
+      cases = int(raw)
+      print(cases + 1)
+    output: "122"
+    pause_after: 0.3
+
+  - id: "boolean_basics"
+    narration: >
+      布林值只有兩個：True 和 False。
+      比較運算就會回傳布林值：
+      121 大於 100 是 True，
+      19 等於等於 0 是 False。
+      這在後面做 if 判斷和資料篩選時超級重要。
+    animation: "show_boolean"
+    code: |
+      infected = 121
+      print(infected > 100)
+      print(infected == 0)
+    output: "True\nFalse"
+    pause_after: 0.3
+
+  - id: "logical_ops"
+    narration: >
+      布林值還能用 and、or、not 組合。
+      and 是「兩個都要 True 才是 True」。
+      or 是「其中一個 True 就是 True」。
+      not 是反轉。
+      流行病學常用：「年齡大於 80 且有共病」才是高風險。
+    animation: "show_logical_ops"
+    code: |
+      age = 85
+      has_copd = True
+      high_risk = age > 80 and has_copd
+      print(f"high risk: {high_risk}")
+    output: "high risk: True"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點整理！
+      type 函式查型別身分證。
+      int、float、str、bool 四大常用型別。
+      int()、float()、str() 做型別轉換。
+      and、or、not 組合布林條件。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：腸病毒通報資料清理
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      來看個實際場景：清理腸病毒通報表上的「文字數字」。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      衛生局收到一份 Excel 匯出的通報表，
+      年齡欄位全部是文字格式。
+      你要把它們轉成數字才能算平均年齡。
+      用 int 逐一轉換，就能做算術運算了。
+      這種型別轉換在資料清理中天天會碰到。
+    animation: "show_extra_example"
+    code: |
+      raw_ages = ["3", "5", "2", "4", "6"]
+      ages = []
+      for a in raw_ages:
+          ages.append(int(a))
+      avg = sum(ages) / len(ages)
+      print(f"mean age: {avg}")
+    output: "mean age: 4.0"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      三個型別地雷來了。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：文字的數字不能直接算。
+      "121" 加 "19" 等於 "12119"，不是 140！
+      因為兩邊都是字串，加號變成「接在一起」。
+      記得先用 int 轉型。
+    animation: "show_blindspot_str_add"
+    error_code: 'print("121" + "19")  # "12119"'
+    correct_code: "print(int('121') + int('19'))  # 140"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：True 和 "True" 不一樣。
+      大寫 T 的 True 是布林值，
+      加了引號的 "True" 是字串。
+      if 判斷時字串永遠是 True 值，不管裡面寫什麼。
+    animation: "show_blindspot_bool_str"
+    error_code: 'flag = "False"\nif flag: print("oops")'
+    correct_code: "flag = False\nif flag: print('yes')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：int 轉換失敗。
+      如果字串裡面不是純數字，比如 "N/A"，
+      int 會直接噴 ValueError。
+      解法：先檢查、或用 try except 保護。
+    animation: "show_blindspot_invalid_int"
+    error_code: 'int("N/A")  # ValueError!'
+    correct_code: 'val = "N/A"\nif val.isdigit(): int(val)'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      讚！你已經搞懂型別和轉換了。
+      下一集是重頭戲：教你讀懂 Python 的錯誤訊息。
+      再也不怕紅色大字了！
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

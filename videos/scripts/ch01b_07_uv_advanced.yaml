@@ -1,0 +1,165 @@
+meta:
+  chapter: "01b"
+  concept: "uv_advanced"
+  title: "uv 進階——管理 Python 版本與套件"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch01b_07_uv_advanced"
+  scene_class: "Ch01bUvAdvancedScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：uv 進階
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！之前在 Ch00 我們學了 uv 的基本用法。
+      今天要進階一點：教你怎麼用 uv 安裝不同版本的 Python、
+      管理套件、還有怎麼找到好用的第三方套件。
+      就像一個資深疫調人員，知道去哪裡找到最好的工具。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "python_versions"
+    narration: >
+      第一招：用 uv 管理 Python 版本。
+      uv python install 3.11 就能安裝 Python 3.11。
+      uv python pin 3.12 鎖定這個專案用 3.12。
+      不同專案可以用不同版本的 Python，互不干擾。
+      就像不同的疫調報告可以用不同版本的通報表格式。
+    animation: "show_python_versions"
+    code: |
+      # Install Python 3.11
+      # uv python install 3.11
+      # Pin project to 3.12
+      # uv python pin 3.12
+      # Check current version
+      # uv run python --version
+    pause_after: 0.5
+
+  - id: "add_packages"
+    narration: >
+      第二招：用 uv add 安裝套件。
+      uv add pandas 安裝最新版本的 pandas。
+      想要指定版本？uv add pandas 大於等於 2.0。
+      想加開發用工具？uv add 加上 dash dash dev pytest。
+      所有安裝紀錄都存在 pyproject.toml 裡，一目了然。
+    animation: "show_add_packages"
+    code: |
+      # uv add pandas
+      # uv add "pandas>=2.0"
+      # uv add --dev pytest
+      # uv add matplotlib seaborn
+    pause_after: 0.5
+
+  - id: "find_packages"
+    narration: >
+      第三招：怎麼找到好用的套件？
+      去 pypi.org 搜尋關鍵字，比如 epidemiology。
+      看三個指標：下載量高不高、GitHub 星星多不多、最近有沒有更新。
+      如果一個套件一年沒更新了，通常代表沒人在維護。
+      流行病學常用的：pandas 做資料處理、seaborn 畫圖、
+      scipy 做統計檢定、lifelines 做存活分析。
+    animation: "show_find_packages"
+    pause_after: 0.5
+
+  - id: "uv_sync"
+    narration: >
+      最後一個重要指令：uv sync。
+      當你 git clone 別人的專案回來，
+      只要那個專案有 pyproject.toml 和 uv.lock，
+      一個 uv sync 就把所有需要的套件裝好了。
+      就像疫調現場的標準作業程序，按照清單一項項備齊就好。
+    animation: "show_uv_sync"
+    code: |
+      # Clone a project and install deps
+      # git clone <repo-url>
+      # cd python4epi
+      # uv sync
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點整理！
+      uv python install 裝不同版本 Python。
+      uv add 安裝套件並記錄到 pyproject.toml。
+      uv sync 一鍵復原整個開發環境。
+      找套件去 pypi.org 看下載量和星星。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：建立疫苗覆蓋率分析專案
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      來看個實例：從零建立一個疫苗覆蓋率分析專案。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設你要分析全國 COVID-19 疫苗覆蓋率。
+      先用 uv init vaccine_coverage 建立新專案。
+      再 uv add pandas matplotlib 裝分析工具。
+      最後 uv run python analyze.py 執行分析。
+      三步驟，環境乾乾淨淨，套件清清楚楚。
+      同事接手時只要 uv sync 就能復現你的環境。
+    animation: "show_extra_example"
+    code: |
+      # uv init vaccine_coverage
+      # cd vaccine_coverage
+      # uv add pandas matplotlib
+      # uv run python analyze.py
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      三個 uv 使用的常見地雷。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：直接用 pip install 而不是 uv add。
+      pip install 只裝在當前環境裡，不會記錄到 pyproject.toml。
+      下次換電腦或同事接手時，根本不知道你裝了什麼。
+      uv add 裝套件的同時會幫你記錄。
+    animation: "show_blindspot_pip_vs_uv"
+    error_code: "pip install pandas  # not tracked!"
+    correct_code: "uv add pandas  # saved to toml"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：忘了 uv run。
+      你裝了 pandas 但直接打 python 去 import，
+      結果 ModuleNotFoundError。
+      因為你沒有進入 uv 的虛擬環境。
+      記得用 uv run python 才會使用正確的環境。
+    animation: "show_blindspot_forget_uv_run"
+    error_code: "python main.py  # wrong env!"
+    correct_code: "uv run python main.py  # OK"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：不提交 uv.lock 檔案。
+      uv.lock 記錄了精確的套件版本組合。
+      沒有它，別人 uv sync 裝到的版本可能跟你不一樣。
+      git add uv.lock，讓每個人的環境都一模一樣。
+    animation: "show_blindspot_no_lock"
+    error_code: "# .gitignore: uv.lock  WRONG!"
+    correct_code: "git add uv.lock  # reproducible!"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      太好了！你現在是套件管理小達人了。
+      最後一集教你 Jupyter 的密技和捷徑。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
