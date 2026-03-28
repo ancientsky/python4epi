@@ -24,6 +24,40 @@
 4. `groupby(...).size()` / `.mean()`：分組統計
 5. `plt.bar(...)` / `sns.barplot(...)` / `px.bar(...)`：各種圖表
 
+> 💡 如果你剛從 Ch01b 過來，恭喜！`import`、`type()`、`for` 迴圈、`try/except` 這些你已經會了，接下來只需要學 pandas 的語法。
+
+### 什麼是 pandas？什麼是 DataFrame？
+
+**pandas** 是 Python 最常用的資料處理套件。你可以把它想成「Python 版的 Excel」，但功能更強大、更可重現。
+
+pandas 有兩個核心物件：
+
+- **DataFrame**：一張二維表格，有行（row）和列（column）——就像 Excel 的工作表
+- **Series**：一個一維的欄位——就像 Excel 裡的「一行」或「一列」
+
+```python
+import pandas as pd
+
+# 讀取 CSV → 得到一個 DataFrame
+df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
+
+# df 就是一張表格：280 行（每行 = 一位住民）× 32 列（每列 = 一個變項）
+# 取出單一欄位 → 得到一個 Series
+ages = df["age"]        # 280 位住民的年齡，就是一個 Series
+```
+
+**你需要記住的 DataFrame 概念：**
+
+| 概念 | Excel 對照 | pandas 語法 |
+|------|-----------|------------|
+| 一張表格 | 整個工作表 | `df`（DataFrame） |
+| 一行資料 | 某一列（row） | `df.iloc[0]`（第一行） |
+| 一欄資料 | 某一行（column） | `df["age"]`（Series） |
+| 某個儲存格 | A1 | `df.loc[0, "age"]` |
+| 篩選 | 自動篩選 | `df[df["age"] > 80]` |
+| 欄位數量 | 看最上面的字母 | `df.shape[1]` |
+| 資料筆數 | 看最左邊的數字 | `df.shape[0]` 或 `len(df)` |
+
 ## 視覺化套件選擇
 
 | 套件 | 適合場景 | 特色 |
@@ -56,21 +90,42 @@ print(f"資料維度：{df.shape[0]} 筆 × {df.shape[1]} 欄")
 df.head()
 ```
 
+> **逐行解說：**
+> - `import pandas as pd`：匯入 pandas 套件，取綽號 `pd`（全世界的約定俗成）
+> - `pd.read_csv(...)`：讀取 CSV 檔案，回傳一個 **DataFrame**（就是一張表格）
+> - `df.shape`：回傳 `(列數, 欄數)` 的元組（tuple），`df.shape[0]` 是列數、`df.shape[1]` 是欄數
+> - `df.head()`：顯示前 5 筆資料（可以加數字，如 `df.head(10)` 看前 10 筆）
+
 ### Step 2: 檢視資料結構
+
+拿到新資料的第一件事：搞清楚「長什麼樣」。
 
 ```python
 df.info()
 ```
 
+> **`df.info()` 告訴你：**
+> - 總共幾列、幾欄
+> - 每個欄位的**名稱**和**型別**（`int64` 整數、`float64` 小數、`object` 文字、`bool` 布林）
+> - 每個欄位有幾個**非空值**——如果某欄只有 121 個非空值（而不是 280），就有遺漏值
+>
+> 💡 `object` 型別通常代表「文字」——日期欄位讀進來也是 `object`，需要手動轉換成 `datetime`。
+
 ```python
 df.describe()
 ```
 
-重點觀察：哪些欄位有遺漏值？數值欄位的範圍合理嗎？
+> **`df.describe()` 告訴你：**
+> - `count`：非空值數量
+> - `mean`：平均值、`std`：標準差
+> - `min`：最小值、`max`：最大值
+> - `25%`, `50%`, `75%`：四分位數
+>
+> 重點觀察：年齡 `min` 和 `max` 合理嗎？有沒有 -1 或 999 這種異常值？
 
 ### Step 3: 日期轉換
 
-line list 中有 5 個日期欄位，讀入時是文字，必須轉成 datetime 才能做時間分析。
+line list 中有 5 個日期欄位，讀入時都是**文字（object）**，Python 不知道它們是日期。必須手動轉成 `datetime` 型別，才能做時間排序、相減、取月份等操作。
 
 ```python
 date_cols = [
@@ -84,41 +139,118 @@ for col in date_cols:
     df[col] = pd.to_datetime(df[col], errors="coerce")
 ```
 
-### Step 4: 建立衍生變項
-
-疫調分析常需要從原始資料衍生新變項：
+> **逐行解說：**
+> - `pd.to_datetime(df[col])`：把文字型別的日期（如 `"2026-01-15"`）轉成 pandas 的 **datetime64** 物件
+> - `errors="coerce"`：如果遇到無法轉換的值（空白、`"N/A"` 等），不要報錯，改成 **NaT**（Not a Time，日期版的遺漏值）
+> - `df[col] = ...`：把轉換結果存回原本的欄位，覆蓋掉舊的文字值
+>
+> **轉換後你可以做什麼？**
 
 ```python
-# 1) 年齡組
+# 日期相減 → 得到天數
+delay = df["hospitalization_date"] - df["symptom_onset_date"]
+print(delay.head())  # 顯示如 "3 days", "2 days"...
+
+# 取出「月份」或「星期幾」
+print(df["symptom_onset_date"].dt.month.head())   # 1（一月）
+print(df["symptom_onset_date"].dt.day_name().head())  # "Thursday"
+```
+
+> 💡 **什麼是 `.dt`？** 這是 pandas 的「日期存取器（accessor）」。當一個 Series 是 datetime 型別時，你可以用 `.dt` 取出日期的各個部分：`.dt.year`（年）、`.dt.month`（月）、`.dt.day`（日）、`.dt.days`（天數差）、`.dt.isocalendar().week`（ISO 週次）。
+
+### Step 4: 建立衍生變項
+
+疫調分析常需要從原始資料**衍生新變項**——也就是用現有的欄位計算出新的欄位。語法很簡單：`df["新欄位名"] = 計算公式`。
+
+#### 4a) 年齡組 — 用 `pd.cut()` 把連續數字分組
+
+```python
 df["age_group"] = pd.cut(
     df["age"],
     bins=[59, 69, 79, 89, 100],
     labels=["60-69", "70-79", "80-89", "90+"],
 )
+```
 
-# 2) 共病數
+> **`pd.cut()` 做了什麼？** 把連續的年齡值「切」成幾組，就像把考試分數分成 A/B/C/D 等級。
+>
+> | 參數 | 意思 | 範例 |
+> |------|------|------|
+> | `df["age"]` | 要分組的欄位 | 72, 85, 68, 91... |
+> | `bins=[59, 69, 79, 89, 100]` | 切割點（左開右閉） | (59,69], (69,79], (79,89], (89,100] |
+> | `labels=["60-69", ...]` | 每組的標籤 | 72 → "70-79", 91 → "90+" |
+>
+> 💡 為什麼 bins 從 59 開始而不是 60？因為 `pd.cut()` 預設是**左開右閉**：`(59, 69]` 表示 60~69 歲。
+
+#### 4b) 共病數 — 用 `sum(axis=1)` 橫向加總
+
+```python
 comorbidity_cols = [
     "comorbidity_chf", "comorbidity_dm",
     "comorbidity_cancer", "comorbidity_copd",
     "immunosuppressed",
 ]
 df["n_comorbidities"] = df[comorbidity_cols].sum(axis=1)
+```
 
-# 3) 是否感染（二元變項）
+> **`axis=1` 是什麼？** 這是 pandas 最容易搞混的概念之一。
+>
+> | 參數 | 方向 | 意思 | 比喻 |
+> |------|------|------|------|
+> | `axis=0` | ↓ 往下 | 對每個**欄**做運算（跨列加總） | 每科的全班平均 |
+> | `axis=1` | → 往右 | 對每個**列**做運算（跨欄加總） | 每個學生的總分 |
+>
+> 這裡我們要算每位住民有幾種共病，所以是「橫向（axis=1）」加總那 5 個 0/1 欄位。
+
+#### 4c) 感染旗標 — 布林運算 + `astype(int)`
+
+```python
 df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
+```
 
-# 4) 發病到住院天數
+> **拆解這行：**
+> 1. `df["clinical_severity"] != "not_ill"` → 產生一個 True/False 的 Series（感染者為 True）
+> 2. `.astype(int)` → 把 True 轉成 1、False 轉成 0
+>
+> 這叫做**布林索引**（Boolean indexing），是 pandas 最常用的篩選方式。
+
+#### 4d) 發病到住院天數 — 日期相減 + `.dt.days`
+
+```python
 df["onset_to_hosp_days"] = (
     df["hospitalization_date"] - df["symptom_onset_date"]
 ).dt.days
+```
 
-# 5) 流行病學週
+> **拆解：** 兩個 datetime 欄位相減 → 得到 timedelta（時間差），用 `.dt.days` 取出天數整數。
+> 例如：`2026-01-18` 減 `2026-01-15` = `3 days` → `.dt.days` = `3`
+
+#### 4e) 流行病學週 — ISO 週次
+
+```python
 df["epi_week"] = df["symptom_onset_date"].dt.isocalendar().week
 ```
 
+> **什麼是 ISO 週次？** ISO 8601 標準的週次編號（1~53），疫調常用來建立「每週」的統計。`.dt.isocalendar()` 回傳年份、週次、星期幾三個欄位，我們只取 `.week`。
+
 ### Step 5: 處理遺漏值
 
-未感染者不會有 `symptom_onset_date`、`hospitalization_date` 等，這些 NaT 不是資料錯誤而是合理的結構性遺漏。
+未感染者不會有 `symptom_onset_date`、`hospitalization_date` 等——這些空值不是資料錯誤，而是**結構性遺漏**（structural missing）：沒生病當然沒有發病日期。
+
+> **遺漏值的型別：**
+>
+> | 型別 | 出現在 | 代表 |
+> |------|--------|------|
+> | `NaN` | 數值欄位 | 缺少數值（Not a Number） |
+> | `NaT` | 日期欄位 | 缺少日期（Not a Time） |
+> | `None` | 文字欄位 | 缺少文字 |
+
+```python
+# 查看每個欄位有多少遺漏值
+print(df.isnull().sum())
+```
+
+> **`df.isnull()`** 回傳一個同樣大小的 True/False 表格（空值 = True），接著用 `.sum()` 計算每欄有幾個 True。
 
 ```python
 # 確認：未感染者的 onset 日期應全為空
@@ -126,7 +258,26 @@ print("未感染者有 onset 日期的數量：",
       df.loc[df["infected"] == 0, "symptom_onset_date"].notna().sum())
 ```
 
+> **`.loc[列條件, 欄位名]` 語法解說：**
+> - `df.loc[df["infected"] == 0, "symptom_onset_date"]`
+>   - 第一部分 `df["infected"] == 0` → 篩選未感染的列
+>   - 第二部分 `"symptom_onset_date"` → 只看發病日期這一欄
+> - `.notna()` → True/False（有值 = True）
+> - `.sum()` → 加總 True 的數量
+> - 如果結果是 0，代表結構性遺漏沒問題
+
 ### Step 6: groupby 分組統計
+
+**`groupby` 是什麼？** 想像你在 Excel 裡做樞紐分析表（Pivot Table）：先選擇「依照哪個欄位分組」，再對每組做計算（計數、加總、平均等）。pandas 的 `groupby` 做的就是這件事。
+
+```
+                   ┌─ 1A 組 ──→ 計算侵襲率
+df ──→ groupby ──→ ├─ 1B 組 ──→ 計算侵襲率
+      (floor,wing) ├─ 2A 組 ──→ 計算侵襲率
+                   ├─ 2B 組 ──→ 計算侵襲率
+                   ├─ 3A 組 ──→ 計算侵襲率
+                   └─ 3B 組 ──→ 計算侵襲率
+```
 
 ```python
 # 按 floor × wing 計算侵襲率
@@ -140,9 +291,78 @@ wing_stats["attack_rate_pct"] = (wing_stats["attack_rate"] * 100).round(1)
 print(wing_stats.to_string(index=False))
 ```
 
+> **逐行拆解：**
+>
+> | 程式碼 | 做了什麼 |
+> |--------|---------|
+> | `df.groupby(["floor", "wing"])` | 按樓層 + 翼區分成 6 組 |
+> | `.agg(residents=("case_id", "size"))` | 對每組計算列數（= 住民人數），命名為 `residents` |
+> | `.agg(infected=("infected", "sum"))` | 對每組把 `infected` 欄位加總（= 感染人數） |
+> | `.reset_index()` | 把分組結果從「多層索引」轉回普通的表格 |
+> | `wing_stats["attack_rate"] = ...` | 新增一個侵襲率欄位 |
+> | `.round(1)` | 四捨五入到小數第一位 |
+>
+> **`.agg()` 語法小抄：**
+> ```python
+> .agg(
+>     新欄位名 = ("來源欄位", "聚合函數")
+> )
+> ```
+> 常用聚合函數：`"size"` 計數、`"sum"` 加總、`"mean"` 平均、`"max"` 最大值、`"min"` 最小值
+
 ---
 
 ## Part 2：視覺化
+
+### matplotlib 的 `fig, ax` 模式——看到不要怕
+
+在你看到下面的程式碼之前，先搞懂一件事：matplotlib 有兩種寫法。
+
+**簡單寫法（適合快速探索）：**
+```python
+import matplotlib.pyplot as plt
+plt.bar(["A", "B", "C"], [10, 20, 15])
+plt.title("My Chart")
+plt.show()
+```
+
+**專業寫法（本教材使用）：**
+```python
+fig, ax = plt.subplots(figsize=(10, 4))
+ax.bar(["A", "B", "C"], [10, 20, 15])
+ax.set_title("My Chart")
+plt.show()
+```
+
+兩種寫法結果一樣，但專業寫法更靈活。**你只需要記住這個公式：**
+
+```
+fig, ax = plt.subplots()     # fig = 整張畫布, ax = 畫布上的一塊畫板
+ax.bar(...)                   # 在畫板上畫圖（把 plt.bar 改成 ax.bar）
+ax.set_title(...)             # 設定標題（把 plt.title 改成 ax.set_title）
+ax.set_xlabel(...)            # 設定 X 軸標籤
+ax.set_ylabel(...)            # 設定 Y 軸標籤
+plt.tight_layout()            # 自動調整邊距，避免文字被裁切
+plt.show()                    # 顯示圖表
+```
+
+> 💡 **為什麼用 `fig, ax`？** 因為之後你需要在同一張畫布上畫多個子圖（如上下兩張流行曲線比較），只有 `fig, ax` 寫法能做到。現在先習慣這個模式，以後會感謝自己。
+
+### 三套繪圖工具的差異
+
+| 特性 | matplotlib | seaborn | plotly |
+|------|-----------|---------|--------|
+| **定位** | 底層引擎，什麼都能畫 | matplotlib 的高級包裝 | 互動式圖表引擎 |
+| **語法** | 手動設定每個元素 | 一行搞定統計圖 | 一行搞定互動圖 |
+| **互動** | 靜態圖片 | 靜態圖片 | 可懸停、縮放、點選 |
+| **投稿期刊** | ✅ 首選（完全可控） | ✅ 可以（底層是 matplotlib） | ⚠️ 需匯出靜態圖 |
+| **適合場景** | 需要精確控制、客製化 | 統計圖（分布、比較） | 簡報、互動儀表板 |
+| **學習曲線** | 最陡 😰 | 最平 😊 | 中等 |
+
+**簡單記法：**
+- **matplotlib** = 你自己從零搭建房子（累但完全自由）
+- **seaborn** = 住預售屋（設計師幫你配好，稍微改裝即可）
+- **plotly** = 住智慧宅（互動功能多，但不好改內裝）
 
 ### Step 7: 流行曲線（matplotlib）
 
@@ -447,6 +667,8 @@ plt.show()
 
 ### Step 8: 年齡分布（seaborn）
 
+seaborn 用一行就能畫出漂亮的統計圖，不用像 matplotlib 那樣手動設定每個元素。
+
 ```python
 import seaborn as sns
 
@@ -463,7 +685,24 @@ plt.tight_layout()
 plt.show()
 ```
 
+> **`sns.histplot()` 參數解說：**
+>
+> | 參數 | 意思 |
+> |------|------|
+> | `data=df` | 資料來源（整個 DataFrame） |
+> | `x="age"` | X 軸用哪個欄位 |
+> | `hue="infected"` | 按哪個欄位分色 |
+> | `hue_order=[1, 0]` | 圖例順序：感染者排前面 |
+> | `bins=15` | 分成 15 組（直方圖的柱子數量） |
+> | `multiple="stack"` | 堆疊而非重疊（`"layer"` 則是重疊） |
+> | `palette={1: "#e34a33", 0: "#cccccc"}` | 指定每組的顏色 |
+> | `ax=ax` | 畫在哪個畫板上 |
+>
+> 💡 seaborn 的函式可以直接接收 DataFrame + 欄位名稱，不用像 matplotlib 那樣先把資料取出來。
+
 ### Step 9: 翼區侵襲率長條圖（seaborn）
+
+> ⚠️ **不能直接比病例數！** 1A 翼區 15 人感染、3B 翼區 27 人感染——看起來 3B 比較嚴重？不一定！如果 1A 只有 30 位住民而 3B 有 47 位，侵襲率才是公平的比較基準。
 
 ```python
 wing_stats["label"] = wing_stats["floor"].astype(str) + wing_stats["wing"]
@@ -490,6 +729,8 @@ plt.show()
 
 ### Step 10: 嚴重度 × 共病熱力圖（seaborn）
 
+熱力圖用**顏色深淺**表示數值大小——像是溫度計一樣，顏色越深代表值越大。非常適合看兩個變項的交叉關係。
+
 ```python
 severity_order = ["mild", "moderate", "severe"]
 heat_data = (
@@ -502,6 +743,7 @@ heat_data = (
 
 fig, ax = plt.subplots(figsize=(8, 3.5))
 sns.heatmap(heat_data, annot=True, fmt="d", cmap="YlOrRd", ax=ax)
+# annot=True: 在每格顯示數字  fmt="d": 整數格式  cmap: 配色方案
 ax.set_title("臨床嚴重度 × 共病數")
 ax.set_xlabel("共病數")
 ax.set_ylabel("嚴重度")
@@ -510,6 +752,13 @@ plt.show()
 ```
 
 ### Step 11: 互動式分層流行曲線（Plotly）
+
+Plotly 最大的優勢是**互動性**——滑鼠懸停就能看到數值，可以縮放、平移。特別適合在簡報中展示疫調結果，讓聽眾自己探索資料。
+
+> **Plotly 語法跟 matplotlib 完全不同：**
+> - matplotlib 用 `fig, ax = plt.subplots()` → `ax.bar()`
+> - plotly 用 `fig = px.bar(data, x=..., y=...)` → `fig.update_layout()`
+> - Plotly 不需要 `plt.show()`，直接用 `fig.show()`
 
 Plotly 的互動式圖表同樣需要遵循 CDC 流行曲線繪製規範：無間隙、描述性標題、隱藏格線、Y 軸從 0 開始。
 
@@ -564,6 +813,131 @@ fig.show()
 
 ---
 
+### Step 12: 匯出圖表——疫調報告與期刊投稿
+
+做完圖不存檔就白費了。以下教你如何輸出專業品質的圖表。
+
+#### 基本匯出：`savefig()`
+
+```python
+fig, ax = plt.subplots(figsize=(10, 4))
+ax.bar(daily.index, daily.values, width=1.0, color="#2c7fb8")
+ax.set_title("流行曲線")
+ax.set_xlabel("發病日期")
+ax.set_ylabel("病例數")
+plt.tight_layout()
+
+# 存成 PNG（適合報告、簡報）
+fig.savefig("epi_curve.png", dpi=300, bbox_inches="tight")
+
+# 存成 PDF（適合期刊投稿，向量圖不會糊掉）
+fig.savefig("epi_curve.pdf", bbox_inches="tight")
+
+# 存成 SVG（適合網頁、可後製編輯）
+fig.savefig("epi_curve.svg", bbox_inches="tight")
+```
+
+> **參數說明：**
+>
+> | 參數 | 意思 | 建議值 |
+> |------|------|--------|
+> | `dpi=300` | 解析度（每吋像素數） | 報告用 150~200，期刊投稿 300~600 |
+> | `bbox_inches="tight"` | 自動裁切白邊 | 永遠加上 |
+> | `facecolor="white"` | 背景色 | 投稿時加上，避免透明背景 |
+> | `transparent=True` | 透明背景 | 簡報疊在有色背景上時使用 |
+
+#### Plotly 匯出
+
+```python
+# 存成互動 HTML（可嵌入網頁報告）
+fig.write_html("epi_curve_interactive.html")
+
+# 存成靜態 PNG（需要安裝 kaleido 套件）
+# uv add kaleido
+fig.write_image("epi_curve_plotly.png", scale=2)
+
+# 存成 PDF
+fig.write_image("epi_curve_plotly.pdf")
+```
+
+#### 期刊投稿的圖表規格
+
+如果你的疫調報告要投稿 NEJM、Lancet、JAMA 等期刊，圖表有嚴格要求：
+
+```{admonition} 期刊等級圖表規格（NEJM / Lancet / JAMA）
+:class: important
+
+**檔案格式**
+- **首選**：PDF 或 EPS（向量圖，放大不失真）
+- **可接受**：TIFF 或 PNG（點陣圖，需要高 DPI）
+- **不接受**：JPG（有壓縮失真，不適合科學圖表）
+
+**解析度要求**
+- 線條圖（line art）：≥ 1000 DPI
+- 灰階圖（halftone）：≥ 300 DPI
+- 混合圖（combination）：≥ 600 DPI
+
+**尺寸**
+- 單欄寬：8.3 cm（3.27 inch）
+- 雙欄寬：17.1 cm（6.73 inch）
+- 最大高度：23.4 cm（9.21 inch）
+
+**字型**
+- 建議：Arial、Helvetica（無襯線字型）
+- 圖表內文字：8~10 pt
+- 座標軸標籤：不小於 6 pt
+
+**配色**
+- 使用色盲友善（colorblind-safe）的配色方案
+- 避免紅/綠同時出現（約 8% 的男性有紅綠色盲）
+- 推薦配色套件：`seaborn` 的 `"colorblind"` 調色盤
+```
+
+**實際操作範例——投稿等級圖表：**
+
+```python
+# 投稿 Lancet 的流行曲線
+fig, ax = plt.subplots(figsize=(6.73, 3.5))  # 雙欄寬
+
+ax.bar(daily.index, daily.values, width=1.0,
+       color="#2c7fb8", edgecolor="white", linewidth=0.3)
+
+# 標題和軸標籤用英文（國際期刊要求）
+ax.set_title("Epidemic curve of Legionnaires' disease outbreak\n"
+             "Pine Cedar Nursing Home, January 2026",
+             fontsize=10, fontweight="bold")
+ax.set_xlabel("Date of symptom onset", fontsize=9)
+ax.set_ylabel("Number of cases", fontsize=9)
+
+# 字型大小：軸刻度 8 pt
+ax.tick_params(labelsize=8)
+
+# 日期格式化
+ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
+ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
+fig.autofmt_xdate(rotation=45)
+
+ax.set_ylim(bottom=0)
+ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+ax.grid(False)
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+plt.tight_layout()
+
+# 存成投稿用的 PDF（向量圖）
+fig.savefig("Figure1_epi_curve.pdf",
+            bbox_inches="tight", facecolor="white")
+
+# 或存成 TIFF（某些期刊要求）
+fig.savefig("Figure1_epi_curve.tiff",
+            dpi=600, bbox_inches="tight", facecolor="white")
+plt.show()
+```
+
+> 💡 **色盲友善配色**：用 `sns.color_palette("colorblind")` 取得預設的色盲友善色票，或用 [ColorBrewer](https://colorbrewer2.org/) 網站挑選。
+
+---
+
 ## 圖表解讀重點
 
 | 圖表 | 觀察重點 |
@@ -574,12 +948,36 @@ fig.show()
 | 嚴重度×共病 | 共病多的人是否更容易重症 |
 | 互動曲線 | 各樓層的流行高峰是否同步 |
 
+## pandas 常用語法速查表
+
+初學者隨時回來翻這張表就好：
+
+| 需求 | 語法 | 說明 |
+|------|------|------|
+| 讀取 CSV | `pd.read_csv("file.csv")` | 回傳 DataFrame |
+| 看前 N 筆 | `df.head(10)` | 預設 5 筆 |
+| 看結構 | `df.info()` | 欄位名、型別、非空值 |
+| 看統計 | `df.describe()` | 平均、標準差、四分位 |
+| 看維度 | `df.shape` | `(列數, 欄數)` |
+| 取一欄 | `df["age"]` | 回傳 Series |
+| 取多欄 | `df[["age", "sex"]]` | 回傳 DataFrame |
+| 篩選列 | `df[df["age"] > 80]` | 布林索引 |
+| 新增欄位 | `df["new"] = ...` | 直接賦值 |
+| 日期轉換 | `pd.to_datetime(df["col"])` | 文字 → datetime |
+| 日期部分 | `df["col"].dt.year` | `.dt.month`, `.dt.day` |
+| 遺漏值 | `df.isnull().sum()` | 每欄遺漏值數量 |
+| 分組統計 | `df.groupby("col").size()` | 每組計數 |
+| 排序 | `df.sort_values("col")` | 依欄位排序 |
+| 四捨五入 | `df["col"].round(1)` | 保留 1 位小數 |
+
 ## 常見錯誤
 
-1. **日期沒轉換**：`symptom_onset_date` 仍是字串，時間排序會亂掉
+1. **日期沒轉換**：`symptom_onset_date` 仍是字串，時間排序會亂掉（`"2026-01-09"` < `"2026-01-15"` 用字串排序碰巧正確，但 `"2026-1-9"` 就會出錯）
 2. **忽略分母**：直接比病例數而不算侵襲率，大翼區天生病例多
-3. **圖表缺標題/軸標籤**：讀者無法獨立解讀
+3. **圖表缺標題/軸標籤**：讀者無法獨立解讀——任何圖表都要能「離開上下文也能看懂」
 4. **混淆感染者與全體**：畫年齡分布時忘了區分
+5. **`axis=0` 和 `axis=1` 搞反**：加總共病數用 `axis=1`（橫向），算每欄平均用 `axis=0`（直向）
+6. **忘了 `.reset_index()`**：`groupby` 後的結果索引是分組欄位，需要 `reset_index()` 才能正常使用
 
 ## 練習本
 
