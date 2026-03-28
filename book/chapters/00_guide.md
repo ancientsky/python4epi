@@ -46,7 +46,7 @@
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_00_01_WHY_PYTHON" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/eMWQ-IqYjvM" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -120,7 +120,7 @@ Python 在這些**自動化、排程、系統串接**的工作上比 R 強很多
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_00_02_UV_SETUP" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/AnPBQW8Vqq0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -400,7 +400,7 @@ uv add seaborn
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_00_04_HELLO_EPI" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/VcxttnJxwG4" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -711,7 +711,7 @@ Markdown cell 讓你的 notebook 不只是一堆程式碼，而是一份**圖文
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_00_03_JUPYTER" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/iELUPwdPk7M" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -897,7 +897,7 @@ crontab -e
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_00_05_GIT_BASICS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/SdtrxhPbRqk" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -1392,7 +1392,7 @@ uv run jupyter lab
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_00_06_ROADMAP" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/H3fMhNhj3u4" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
