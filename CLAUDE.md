@@ -64,7 +64,7 @@ tests/                         # pytest test suite
   Ch04  群聚調查工作流
 
 【第三幕：深入分析】
-  Ch05  分層分析與交絡因子 [新增]
+  Ch05  分層分析與干擾因子 [新增]
   Ch06  邏輯斯迴歸 [新增]
   Ch07  時間序列與預測
   Ch08  空間流病
@@ -200,7 +200,9 @@ All Chinese epidemiological terms must follow **Taiwan (ROC) standard usage**. K
 | Specificity | 特異度 | 特異性 |
 | Chi-square test | 卡方檢定 | 卡方检验 |
 | Exposure | 暴露 | — |
-| Confounding | 交絡 | 混淆 |
+| Confounding | 干擾作用 | 交絡（統計學語境）、混淆 |
+| Confounder / Confounding variable | 干擾因子 / 干擾因素 | 交絡因子、混淆變項 |
+| Adjust for confounding | 校正干擾 / 調整干擾因子 | 控制交絡 |
 | Stratified analysis | 分層分析 | — |
 | Hazard ratio (HR) | 風險比 | 危險比 |
 | Kaplan-Meier | Kaplan-Meier 估計式 | — |

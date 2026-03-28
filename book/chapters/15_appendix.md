@@ -22,8 +22,8 @@
 | Sensitivity | 敏感度 | 真正陽性率（檢驗指標） |
 | Specificity | 特異度 | 真正陰性率（檢驗指標） |
 | Exposure | 暴露 | 接觸危險因子 |
-| Confounding | 交絡 | 第三變項同時影響暴露與結果 |
-| Stratified analysis | 分層分析 | 按潛在交絡因子分組後分別分析 |
+| Confounding | 干擾作用 | 第三變項同時影響暴露與結果 |
+| Stratified analysis | 分層分析 | 按潛在干擾因子分組後分別分析 |
 | Attributable risk (AR) | 歸因風險 | 暴露組風險 − 非暴露組風險 |
 | Population attributable risk (PAR) | 族群歸因風險 | 族群中可歸因於暴露的風險比例 |
 

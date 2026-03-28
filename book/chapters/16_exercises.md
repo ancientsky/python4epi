@@ -29,7 +29,7 @@
 | 02 | 資料處理與視覺化 | 讀取 line list、日期轉換、流行曲線 | [作業](exercises/02_data_wrangling_exercise.ipynb) |
 | 03 | 描述性統計與 2×2 表 | 淋浴暴露 2×2 表、RR、卡方檢定 | [作業](exercises/03_stats_exercise.ipynb) |
 | 04 | 群聚調查工作流 | 完整 SitRep 產出流程 | [作業](exercises/04_outbreak_workflow_exercise.ipynb) |
-| 05 | 分層分析與交絡因子 | functional_status 分層、MH 檢定 | [作業](exercises/05_stratified_exercise.ipynb) |
+| 05 | 分層分析與干擾因子 | functional_status 分層、MH 檢定 | [作業](exercises/05_stratified_exercise.ipynb) |
 | 06 | 邏輯斯迴歸 | crude vs adjusted OR、模型比較 | [作業](exercises/06_logistic_regression_exercise.ipynb) |
 | 07 | 時間序列與預測 | 移動平均、MAE、住院時間序列 | [作業](exercises/07_time_series_exercise.ipynb) |
 | 08 | 空間流病 | CFR 空間分布、淋浴 × 空間交叉 | [作業](exercises/08_spatial_exercise.ipynb) |

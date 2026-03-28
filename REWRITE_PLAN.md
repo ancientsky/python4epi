@@ -30,7 +30,7 @@
 | 06 | 空間流病 | line_list + GeoJSON | **改寫** — 樓層翼區 spot map + 保留 choropleth 概念 |
 | 07 | 機器學習 | line_list.csv (10 筆) | **全面改寫** — 32 欄豐富特徵 |
 | 08 | 深度學習 | line_list.csv (10 筆) | **全面改寫** — 同上 |
-| 09 | 因果推論 | 合成 panel data | **改寫** — DAG + 交絡因子實例 |
+| 09 | 因果推論 | 合成 panel data | **改寫** — DAG + 干擾因子實例 |
 | 10 | 可重現研究 | line_list.csv | **更新** — 改用 Legionella 工作流 |
 | 11 | 實戰案例 | 登革熱情境 | **全面改寫** — Legionella 疫調總整合 |
 | 12 | 附錄 | — | **更新** — 新增 Legionella 術語 |
@@ -41,7 +41,7 @@
 
 | 缺口 | 重要性 | Legionella 資料集支援度 |
 |------|--------|----------------------|
-| **分層分析與交絡因子** | ★★★ 流行病學核心技能 | `functional_status` → `shower_use` → `infected` 完美示範 |
+| **分層分析與干擾因子** | ★★★ 流行病學核心技能 | `functional_status` → `shower_use` → `infected` 完美示範 |
 | **邏輯斯迴歸** | ★★★ 從卡方到 ML 的必要橋樑 | 多個二元危險因子，crude/adjusted OR |
 | **存活分析** | ★★☆ 臨床流病常用 | `symptom_onset_date` → `death_date` 可算存活時間 |
 
@@ -62,7 +62,7 @@
   Ch04  群聚調查工作流 — 產出第一份 SitRep 給長官
 
 【第三幕：深入分析】
-  Ch05  分層分析與交絡因子 [新增] — 臥床老人不淋浴也不生病，是真的保護還是交絡？
+  Ch05  分層分析與干擾因子 [新增] — 臥床老人不淋浴也不生病，是真的保護還是干擾？
   Ch06  邏輯斯迴歸 [新增] — 同時調整年齡、共病、暴露，算出 adjusted OR
   Ch07  時間序列與預測 — 預測未來一週還會有多少新個案？
   Ch08  空間流病 — 哪個樓層翼區最危險？畫出 spot map
@@ -90,7 +90,7 @@
 | 02 | 資料處理與視覺化 | 原 Ch02 | 🔴 全面改寫 |
 | 03 | 描述性統計與 2×2 表 | 原 Ch03 | 🔴 全面改寫 |
 | 04 | 群聚調查工作流 | 原 Ch04 | 🔴 全面改寫 |
-| **05** | **分層分析與交絡因子** | **🆕 新增** | 🟣 全新 |
+| **05** | **分層分析與干擾因子** | **🆕 新增** | 🟣 全新 |
 | **06** | **邏輯斯迴歸** | **🆕 新增** | 🟣 全新 |
 | 07 | 時間序列與預測 | 原 Ch05 | 🟠 改寫 |
 | 08 | 空間流病 | 原 Ch06 | 🟠 改寫 |
@@ -253,12 +253,12 @@
 
 ---
 
-### Ch05 分層分析與交絡因子 `05_stratified.md` 🆕
+### Ch05 分層分析與干擾因子 `05_stratified.md` 🆕
 **變動：🟣 全新章節**
 
 | 項目 | 說明 |
 |------|------|
-| 教學目標 | 交絡因子概念、分層分析、Mantel-Haenszel 法 |
+| 教學目標 | 干擾因子概念、分層分析、Mantel-Haenszel 法 |
 | 新 Notebook | `05_stratified_analysis.ipynb` |
 | 新 Exercise | `05_stratified_exercise.ipynb` |
 
@@ -269,7 +269,7 @@
 因為臥床老人本來就不淋浴、也比較不容易被感染（接觸少）？
 
 1. 回顧 Ch03 的粗 RR：shower_use → infected
-2. 觀察交絡因子嫌疑人：
+2. 觀察干擾因子嫌疑人：
    - functional_status 與 shower_use 的關聯（臥床者僅 5% 淋浴）
    - functional_status 與 infected 的關聯（臥床者暴露機會低）
 3. DAG（有向無環圖）概念介紹：
@@ -286,9 +286,9 @@
 ```
 
 **為什麼需要這一章：**
-- 交絡因子是流行病學最核心的概念之一
+- 干擾因子是流行病學最核心的概念之一
 - 從 2×2（Ch03）到邏輯斯迴歸（Ch06）的關鍵橋樑
-- Legionella 資料的 `functional_status → shower_use → infected` 路徑是教科書級的交絡範例
+- Legionella 資料的 `functional_status → shower_use → infected` 路徑是教科書級的干擾範例
 
 ---
 
@@ -508,7 +508,7 @@
      floor_wing → water_contamination → shower_aerosol → infection
      functional_status → shower_use → infection
      age → comorbidities → severity → death
-   - 辨識交絡路徑、中介變項、碰撞因子
+   - 辨識干擾路徑、中介變項、碰撞因子
 2. 反事實思考：
    - 「如果所有住民都不淋浴，會減少多少感染？」
    - Attributable Risk 與 Population Attributable Risk
@@ -651,7 +651,7 @@
 |------|------|-----------|
 | 2-1 | Ch03 描述性統計與 2×2 表 — 全面改寫 | 大 |
 | 2-2 | Ch04 群聚調查工作流 — 全面改寫 | 大 |
-| 2-3 | Ch05 分層分析與交絡因子 — 🆕 全新 | 大 |
+| 2-3 | Ch05 分層分析與干擾因子 — 🆕 全新 | 大 |
 | 2-4 | Ch06 邏輯斯迴歸 — 🆕 全新 | 大 |
 
 ### Phase 3：進階方法（Ch07–Ch12）

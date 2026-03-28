@@ -17,7 +17,7 @@
 | 02 | 資料處理與視覺化 | 日期衍生欄位、年齡分組流行曲線 | [解答](solutions/02_data_wrangling_solution.ipynb) |
 | 03 | 描述性統計與 2×2 表 | 水療 RR、年齡分組 RR、Fisher's exact | [解答](solutions/03_stats_solution.ipynb) |
 | 04 | 群聚調查工作流 | 自動化 SitRep 函數、嚴重度分析 | [解答](solutions/04_outbreak_workflow_solution.ipynb) |
-| 05 | 分層分析與交絡因子 | 年齡分層、共病交絡、MH adjusted RR | [解答](solutions/05_stratified_solution.ipynb) |
+| 05 | 分層分析與干擾因子 | 年齡分層、共病干擾、MH adjusted RR | [解答](solutions/05_stratified_solution.ipynb) |
 | 06 | 邏輯斯迴歸 | 重症模型、LRT 比較、預測機率 | [解答](solutions/06_logistic_regression_solution.ipynb) |
 | 07 | 時間序列與預測 | 住院序列、窗口 MAE、嚴重度堆疊圖 | [解答](solutions/07_time_series_solution.ipynb) |
 | 08 | 空間流病 | CFR 熱力圖、淋浴 × 空間相關、高風險房間 | [解答](solutions/08_spatial_solution.ipynb) |

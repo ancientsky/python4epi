@@ -49,7 +49,7 @@ cfr = 19 / 121
 - **Line list**：每列一位個案、每欄一個變數（本教材使用 280 位住民 × 32 欄位的 Legionella 群聚資料）。
 - **Attack rate（侵襲率）**：`cases / population`——本群聚中為 121 / 280 = 43.2%。
 - **Case fatality rate（致死率，CFR）**：`deaths / cases`——本群聚中為 19 / 121 = 15.7%。
-- **Bias / confounding（偏差 / 交絡）**：資料蒐集與解釋時最常見的問題來源（Ch05 會深入探討）。
+- **Bias / confounding（偏差 / 干擾作用）**：資料蒐集與解釋時最常見的問題來源（Ch05 會深入探討）。
 
 ## 教學影片
 
