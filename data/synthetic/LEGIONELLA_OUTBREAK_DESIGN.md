@@ -81,7 +81,7 @@
 | `shower_use` | 使用淋浴 | int | 0 / 1 | **主要暴露途徑**：直接吸入氣溶膠 |
 | `hydrotherapy_use` | 使用水療池 | int | 0 / 1 | **次要暴露途徑**：間接氣溶膠接觸 |
 
-> **注意**：`shower_use` 與 `functional_status` 有關聯——臥床住民幾乎不使用淋浴（改以擦澡），這是一個潛在的交絡因子（confounder），適合教分層分析。
+> **注意**：`shower_use` 與 `functional_status` 有關聯——臥床住民幾乎不使用淋浴（改以擦澡），這是一個潛在的干擾因子（confounder），適合教分層分析。
 
 ### 2.4 臨床資訊
 
@@ -364,7 +364,7 @@ elif 無症狀且未確認 → "not_a_case"
 | **2×2 表與風險比（Risk Ratio）** | `shower_use` × `infected` | 暴露與疾病的關聯量化 |
 | **2×2 表（水療池）** | `hydrotherapy_use` × `infected` | 第二種暴露因子 |
 | **卡方檢定** | 各危險因子 × `infected` | 關聯的統計顯著性 |
-| **分層分析（Stratified analysis）** | `shower_use` × `infected`，按 `floor` 分層 | 交絡因子控制、Mantel-Haenszel 法 |
+| **分層分析（Stratified analysis）** | `shower_use` × `infected`，按 `floor` 分層 | 干擾因子控制、Mantel-Haenszel 法 |
 | **多變項邏輯斯迴歸** | `age`, `sex`, 所有共病, `shower_use`, `floor`, `wing` | 同時調整多個危險因子，計算 adjusted OR |
 
 ### 6.3 臨床與結果分析
@@ -386,7 +386,7 @@ elif 無症狀且未確認 → "not_a_case"
 | **空間分析（Spot map）** | `floor`, `wing`, `room`, `infected` | 視覺化感染分布、辨識高風險區域 |
 | **機器學習分類** | 所有特徵 → `infected` 或 `outcome` | Random Forest / Logistic Regression 比較 |
 | **聚類分析（Clustering）** | 症狀欄位 | 無監督式學習辨識臨床表型 |
-| **交絡因子探討** | `functional_status` ↔ `shower_use` ↔ `infected` | DAG（Directed Acyclic Graph）教學 |
+| **干擾因子探討** | `functional_status` ↔ `shower_use` ↔ `infected` | DAG（Directed Acyclic Graph）教學 |
 
 ### 6.5 資料清理與前處理
 

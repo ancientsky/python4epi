@@ -4,7 +4,7 @@
 
 - 用 **DAG（有向無環圖）** 視覺化因果關係
 - 區分 **因果效應** 與 **統計關聯**
-- 辨識 **交絡路徑、中介變項、碰撞因子**
+- 辨識 **干擾路徑、中介變項、碰撞因子**
 - 計算 **歸因風險（AR）** 與 **族群歸因風險（PAR）**
 - 用 **Difference-in-Differences (DiD)** 評估介入效果
 
@@ -36,7 +36,7 @@ age → comorbidities → severity → death
 
 | 結構 | 說明 | 本案範例 |
 |------|------|---------|
-| **交絡因子（Confounder）** | 同時影響暴露和結果 | `functional_status` → `shower_use` 和 `infection` |
+| **干擾因子（Confounder）** | 同時影響暴露和結果 | `functional_status` → `shower_use` 和 `infection` |
 | **中介變項（Mediator）** | 在暴露和結果之間的路徑上 | `shower_aerosol` 在 `water_contamination` → `infection` 之間 |
 | **碰撞因子（Collider）** | 同時被暴露和結果影響 | `hospitalized` ← `severity` 和 `infection` |
 
