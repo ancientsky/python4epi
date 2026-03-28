@@ -1,0 +1,192 @@
+meta:
+  chapter: "02"
+  concept: "epicurve"
+  title: "用 matplotlib 畫出疫調等級的流行曲線"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch02_07_epicurve"
+  scene_class: "Ch02EpiCurveScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：matplotlib 流行曲線
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎回來！今天要畫的這張圖，是每位流行病學家的靈魂之作——流行曲線。
+      看到流行曲線的形狀，你就能推斷這是點源爆發、持續性傳播、還是人傳人。
+      就像醫生聽心跳就知道有沒有問題一樣，疫調人員看曲線就能抓到疫情的脈搏。
+      今天我們就用 matplotlib 來畫一張 CDC 等級的流行曲線。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "fig_ax"
+    narration: >
+      matplotlib 畫圖有個固定起手式：fig 逗號 ax 等於 plt 點 subplots。
+      fig 是整張圖紙，ax 是上面的畫布。
+      你可以把 fig 想成一張 A4 紙，ax 是紙上面框好的畫框。
+      所有的圖都畫在 ax 上面，fig 只負責控制紙張大小和存檔。
+      記住這對搭檔，以後畫什麼圖都從這裡開始。
+    animation: "show_fig_ax"
+    code: |
+      import matplotlib.pyplot as plt
+      fig, ax = plt.subplots(figsize=(10, 5))
+    pause_after: 0.5
+
+  - id: "bar_basic"
+    narration: >
+      流行曲線的本體就是長條圖。
+      x 軸是日期，y 軸是每天的新增個案數。
+      ax 點 bar，傳入 daily 的 index 當 x，daily 的 values 當 y。
+      重點來了：width 要設 1.0，讓長條之間沒有間隙！
+      因為流行曲線的每根長條代表一天，中間不該有空隙。
+      這是 CDC 的規矩，不能隨便偷工減料。
+    animation: "show_bar_basic"
+    code: |
+      daily = df.groupby("symptom_onset_date").size()
+      ax.bar(daily.index, daily.values, width=1.0,
+             color="#D97757", edgecolor="white")
+    pause_after: 0.5
+
+  - id: "date_format"
+    narration: >
+      日期軸如果不處理，會顯示一堆又臭又長的時間戳記。
+      用 mdates 點 DateFormatter 可以把日期格式化成月斜線日。
+      再用 AutoDateLocator 讓 matplotlib 自己決定要標幾個刻度。
+      最後 fig 點 autofmt_xdate 把日期標籤轉個角度，
+      不然日期會像沙丁魚一樣擠在一起，根本看不清楚。
+    animation: "show_date_format"
+    code: |
+      import matplotlib.dates as mdates
+      ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
+      ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+      fig.autofmt_xdate()
+    pause_after: 0.5
+
+  - id: "reindex_zero"
+    narration: >
+      有時候某幾天完全沒有個案，groupby 就不會產生那幾天的資料。
+      但流行曲線裡那些天應該要顯示 0，不能直接跳過。
+      用 reindex 搭配完整的日期範圍，把缺的天數補上 0。
+      這樣圖表才是連續的，不會突然斷掉讓人以為是程式 bug。
+    animation: "show_reindex_zero"
+    code: |
+      date_range = pd.date_range("2026-01-12", "2026-01-28")
+      daily = daily.reindex(date_range, fill_value=0)
+    pause_after: 0.5
+
+  - id: "cdc_style"
+    narration: >
+      想讓你的流行曲線看起來跟 CDC 報告一樣專業？有三個小撇步。
+      第一：把格線關掉，ax 點 grid 括號 False，流行曲線不需要格線。
+      第二：去掉上面和右邊的邊框，用 spines 把它們設成不可見。
+      第三：y 軸從 0 開始，ylim 的 bottom 設成 0。
+      三招下來，你的圖馬上從業餘升級成專業等級。
+    animation: "show_cdc_style"
+    code: |
+      ax.grid(False)
+      ax.spines["top"].set_visible(False)
+      ax.spines["right"].set_visible(False)
+      ax.set_ylim(bottom=0)
+    pause_after: 0.5
+
+  - id: "title_labels"
+    narration: >
+      最後一步也是最重要的一步：標題和軸標籤。
+      好的標題要包含三個元素：疾病名稱、地點、時間。
+      比如「退伍軍人症個案，松柏護理之家，2026 年 1 月」。
+      這樣即使圖片被單獨截取出來，別人也看得懂這張圖在講什麼。
+      做疫調報告，每張圖都要能獨立存在，不依賴上下文。
+    animation: "show_title_labels"
+    code: |
+      ax.set_title("Legionellosis cases, Songbai NH, Jan 2026")
+      ax.set_xlabel("Date of symptom onset")
+      ax.set_ylabel("Number of cases")
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      畫流行曲線的六步口訣！
+      fig ax 起手式、bar 畫長條、日期格式化、
+      reindex 補零、CDC 風格美化、標題標籤不能少。
+      六步走完，你就有一張可以放進疫調報告的專業流行曲線了。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：麻疹群聚
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      換個場景！我們來畫一條麻疹群聚的流行曲線。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設某國小爆發麻疹群聚，你拿到 45 位個案的通報資料。
+      畫法完全一樣：先用 groupby 算每天的個案數，
+      reindex 補零，bar 畫長條，CDC 風格美化。
+      但麻疹的潛伏期是 10 到 14 天，所以曲線會比退伍軍人症更分散。
+      看到兩個高峰？那代表可能有兩波傳播，第二波是人傳人。
+      同樣的畫圖技術，不同的疫情故事，曲線自己會說話。
+    animation: "show_extra_example"
+    code: |
+      measles_daily = measles.groupby("onset_date").size()
+      full_range = pd.date_range("2026-02-01", "2026-03-15")
+      measles_daily = measles_daily.reindex(full_range, fill_value=0)
+      ax.bar(measles_daily.index, measles_daily.values, width=1.0)
+      ax.set_title("Measles cases, XX Elementary, Feb-Mar 2026")
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      流行曲線的三個經典踩坑時刻！學起來可以少走很多冤枉路。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：先 show 再 savefig，存出來的圖是空白的！
+      因為 plt 點 show 會清除畫布上的所有內容。
+      就像你拍完照才按快門，什麼都拍不到。
+      正確順序：先 savefig 存檔，再 show 顯示。
+    animation: "show_blindspot_save_order"
+    error_code: 'plt.show(); plt.savefig("f.png")'
+    correct_code: 'plt.savefig("f.png"); plt.show()'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：長條圖的 width 沒設 1.0，中間留了間隙。
+      流行曲線的長條代表連續的時間單位，中間不該有空白。
+      有空白的話看起來像普通柱狀圖，不像流行曲線。
+      CDC 的風格指南明確要求：長條之間無間隙。width 等於 1.0，記住！
+    animation: "show_blindspot_bar_width"
+    error_code: "ax.bar(x, y)"
+    correct_code: "ax.bar(x, y, width=1.0)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：存檔忘記設 DPI 和裁切。
+      預設的 DPI 只有 100，放進報告裡會糊成一團。
+      而且預設不會裁切白邊，圖片四周會有大片空白。
+      加上 dpi 等於 300 和 bbox_inches 等於 tight，
+      你的圖才能清晰又緊湊，放進投影片或報告裡都好看。
+    animation: "show_blindspot_dpi"
+    error_code: 'fig.savefig("f.png")'
+    correct_code: 'fig.savefig("f.png", dpi=300, bbox_inches="tight")'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      流行曲線畫好了！你現在已經能產出 CDC 等級的疫調圖表了。
+      下一集我們要介紹 seaborn 和 plotly，
+      讓你用更少的程式碼畫出更炫的圖，還能做互動式視覺化。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

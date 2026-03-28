@@ -1,0 +1,170 @@
+meta:
+  chapter: "02"
+  concept: "data_inspect"
+  title: "一分鐘看懂你的資料——info() 與 describe()"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch02_02_data_inspect"
+  scene_class: "Ch02DataInspectScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：info() 與 describe()
+  # ========================================
+  - id: "intro"
+    narration: >
+      歡迎回來！上一支影片我們學會了讀 CSV 和取資料。
+      但等等，拿到資料的第一件事不是急著分析，
+      而是「驗貨」！
+      就像你網購收到包裹，總要先打開看看東西對不對、有沒有缺件。
+      今天我們要學兩個驗貨神器：info 和 describe。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "info_call"
+    narration: >
+      首先是 df.info 括號。
+      這一招會告訴你：總共有幾筆資料、有哪些欄位、
+      每個欄位有多少非空值、還有每個欄位的資料型別。
+      就像一張健檢報告，幫你快速掃描整張表格的健康狀態。
+      280 筆資料、32 個欄位，一目了然。
+    animation: "show_info"
+    code: "df.info()"
+    pause_after: 0.5
+
+  - id: "dtypes_explain"
+    narration: >
+      info 裡面最重要的資訊就是 dtype，也就是資料型別。
+      int64 是整數，float64 是浮點數（有小數點的數字），
+      object 通常代表文字，datetime64 是日期時間。
+      為什麼要在意型別？因為型別不對，計算就會出錯。
+      你不能把文字拿來算平均值，對吧？
+      就像你不能拿橡皮擦去量體溫一樣，工具要配對。
+    animation: "show_dtypes"
+    pause_after: 0.5
+
+  - id: "describe_call"
+    narration: >
+      接下來是 df.describe 括號。
+      這一招會自動幫你算出所有數值欄位的統計摘要。
+      count 是非空值個數，mean 是平均值，std 是標準差。
+      min 是最小值，25% 50% 75% 是四分位數，max 是最大值。
+      一行程式碼，八個統計量，全部幫你算好。
+    animation: "show_describe"
+    code: "df.describe()"
+    pause_after: 0.5
+
+  - id: "describe_interpret"
+    narration: >
+      來解讀一下松柏護理之家的資料。
+      age 的 mean 是大約 79 歲，std 大約 8 歲。
+      最小 60 歲，最大 99 歲。
+      50% 也就是中位數大約 79 歲。
+      這告訴我們住民年齡集中在 70 到 89 歲之間。
+      不意外啦，畢竟是護理之家嘛。
+    animation: "show_describe_interpret"
+    pause_after: 0.5
+
+  - id: "value_counts"
+    narration: >
+      如果你想看某個類別欄位的分布呢？
+      用 value_counts 括號。
+      clinical_severity 的 value_counts 告訴你：
+      not_ill 有多少人、mild 有多少人、moderate、severe 各幾人。
+      這就像問：「這場群聚裡，輕重症的比例是多少？」
+      一行程式碼就有答案了。
+    animation: "show_value_counts"
+    code: 'df["clinical_severity"].value_counts()'
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      記住：拿到資料先驗貨。
+      info 看型別和空值，describe 看統計摘要，
+      value_counts 看類別分布。
+      這三招是你的資料品質快篩組，每次都要用！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：結核病接觸者追蹤
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      換個場景！這次我們來看結核病接觸者追蹤資料。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設你拿到一份 TB 接觸者追蹤的資料。
+      先跑 info 看看：嗯，contact_date 是 object，不是 datetime。
+      這代表日期還是文字格式，等一下要轉換。
+      再跑 describe：年齡的 mean 是 42 歲，
+      比護理之家年輕多了，因為接觸者可能是家屬或同事。
+      value_counts 看 tst_result：positive 有多少、negative 有多少。
+      同樣的驗貨流程，換個資料集照樣順暢。
+    animation: "show_extra_example"
+    code: |
+      tb = pd.read_csv("tb_contacts.csv")
+      tb.info()
+      print(tb.describe())
+      print(tb["tst_result"].value_counts())
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      info 和 describe 看起來簡單，但新手還是有三個容易搞混的地方！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：忘記加括號。
+      你寫了 df.describe 但沒加括號。
+      這樣你拿到的不是統計結果，而是函式本身。
+      Python 會告訴你：「這是一個 method 物件。」
+      你心想，我要的是統計表啊！
+      解法：加上括號，df.describe 括號，才會真正執行。
+    animation: "show_blindspot_no_parens"
+    error_code: "df.describe  # returns method object"
+    correct_code: "df.describe()  # returns stats table"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：看到 info 裡面寫 object 就以為是字串。
+      object 在 pandas 裡是一個很曖昧的型別。
+      它可以是文字、也可能是混合型別。
+      看到 object 不要掉以輕心，最好再用 head 看看實際內容。
+      有時候你的日期欄位也會是 object，
+      那就需要用 to_datetime 來轉換，我們下一支影片會教。
+    animation: "show_blindspot_object"
+    error_code: "df.info()  # shows 'object' dtype"
+    correct_code: "df['col'].head()  # check actual content"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：describe 預設只顯示數值欄位。
+      如果你只跑 df.describe 括號，文字欄位通通不見了。
+      你可能會想說：「我的 sex 欄位呢？clinical_severity 呢？」
+      解法：加上 include 等於 all。
+      這樣所有欄位，不管數字還是文字，通通都會出現。
+      多了 top、freq、unique 這幾個統計量。
+    animation: "show_blindspot_include_all"
+    error_code: 'df.describe()  # numeric columns only'
+    correct_code: 'df.describe(include="all")  # all columns'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      驗貨完畢！現在你知道怎麼快速了解一張資料表了。
+      下一支影片我們要挑戰日期時間的大魔王 to_datetime！
+      別怕，跟著老師走，包你順利通關。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

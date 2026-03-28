@@ -1,0 +1,175 @@
+meta:
+  chapter: "02"
+  concept: "missing"
+  title: "遺漏值偵探社——NaN, NaT, None 一次搞懂"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch02_05_missing"
+  scene_class: "Ch02MissingScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：遺漏值處理
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎回來！今天我們要當偵探，調查一群神祕的嫌疑犯——遺漏值。
+      真實世界的資料永遠不完美，就像你點外送永遠少一雙筷子一樣。
+      在流行病學資料分析裡，遺漏值是家常便飯。
+      學會處理它，你才能從坑坑洞洞的資料裡挖出真正的線索。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "nan_nat_none"
+    narration: >
+      遺漏值有三兄弟，各有各的地盤。
+      大哥 NaN，Not a Number，專門佔據數字欄位，年齡沒填就是它。
+      二哥 NaT，Not a Time，霸佔日期欄位，發病日期沒填就是它。
+      老三 None，Python 原生的空值大師，哪裡都能出沒。
+      三兄弟長不一樣，但意思都是「這格沒有資料」。
+    animation: "show_nan_nat_none"
+    code: |
+      import numpy as np
+      import pandas as pd
+      print(np.nan)        # NaN - numeric missing
+      print(pd.NaT)        # NaT - datetime missing
+      print(None)           # None - Python native null
+    pause_after: 0.5
+
+  - id: "isnull_sum"
+    narration: >
+      要偵查有多少遺漏值，只要一行咒語。
+      df 點 isnull 點 sum，碰！每個欄位的遺漏數量一次看完。
+      就像拿金屬探測器掃犯罪現場，叮叮叮，哪裡有破洞通通現形。
+      松柏護理之家的資料裡，發病日期缺了 159 筆，死亡日期缺了 261 筆。
+    animation: "show_isnull_sum"
+    code: "df.isnull().sum()"
+    output: |
+      age                  3
+      symptom_onset_date  159
+      death_date          261
+    pause_after: 0.5
+
+  - id: "structural_vs_error"
+    narration: >
+      但是！遺漏值不一定都是壞事。
+      有一種叫「結構性遺漏」，是正常的、天經地義的。
+      比如 280 位住民裡有 159 位沒感染，他們當然沒有發病日期啊！
+      261 人還活著，他們當然沒有死亡日期啊！這叫做結構性遺漏。
+      但如果一位確診個案的年齡是空的，那才是真正的資料錯誤。
+      搞混這兩種，你就會冤枉好資料。
+    animation: "show_structural_vs_error"
+    pause_after: 0.5
+
+  - id: "loc_filter"
+    narration: >
+      怎麼驗證是不是結構性遺漏？用 loc 過濾交叉比對。
+      篩出感染狀態為 0 的住民，看看他們的發病日期有沒有值。
+      如果 notna 的結果是 0，代表未感染者確實通通沒有發病日期。
+      偵探結案！結構性遺漏無罪釋放。
+    animation: "show_loc_filter"
+    code: 'df.loc[df["infected"]==0, "symptom_onset_date"].notna().sum()'
+    output: "0"
+    pause_after: 0.5
+
+  - id: "fillna_dropna"
+    narration: >
+      處理遺漏值有兩大絕招：fillna 填補和 dropna 刪除。
+      fillna 像補牙，找個合理的值把洞填起來。
+      dropna 像拔牙，直接把有問題的那列整個丟掉。
+      遺漏比例低、有合理填補方式，就用 fillna 補。
+      整欄缺太多或沒有合理值可填，就用 dropna 丟。
+      記住：補牙比拔牙好，能救就救！
+    animation: "show_fillna_dropna"
+    code: |
+      df["age"].fillna(df["age"].median(), inplace=True)
+      df_clean = df.dropna(subset=["symptom_onset_date"])
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      偵探社結案報告！
+      NaN、NaT、None 是遺漏值三兄弟。
+      isnull 加 sum 一行掃完所有遺漏。
+      結構性遺漏是正常的，資料錯誤才需要處理。
+      fillna 填補、dropna 刪除，對症下藥。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：疫苗接種紀錄
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      換個場景來練功！
+      這次我們看看疫苗接種紀錄裡的遺漏值怎麼處理。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      疫苗接種紀錄是遺漏值的重災區。
+      有人打了第一劑就消失了，第二劑日期當然是空的——這是結構性遺漏。
+      但如果連身分證字號都沒有，那就是登錄人員忘記填了。
+      處理方式一模一樣：先用 isnull 加 sum 掃一遍，
+      再用 loc 過濾交叉比對，分清楚哪些是正常的、哪些是錯誤的。
+      遺漏值偵探的技術，走到哪裡都管用！
+    animation: "show_extra_example"
+    code: |
+      vax = pd.read_csv("vaccination.csv")
+      vax.isnull().sum()
+      vax.loc[vax["dose1_date"].isna(), "person_id"]
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      最後是遺漏值的三大經典地雷。
+      這些錯我保證你至少會踩到一次，先看過就能少受一次傷。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：用雙等號比較 NaN。
+      age 等等於 None？永遠回傳 False！
+      因為 NaN 是個怪咖，它連跟自己比都不相等。
+      就像你問一個失憶的人「你是不是你」，他只會搖頭。
+      正確做法：用 isnull 方法來偵測。
+    animation: "show_blindspot_nan_compare"
+    error_code: 'df["age"] == None'
+    correct_code: 'df["age"].isnull()'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：dropna 不加參數，殺傷力太強。
+      不指定 subset，只要任何一欄有遺漏，整列就被刪掉。
+      280 筆資料可能瞬間剩下 50 筆，你的主管會以為你把資料弄丟了。
+      正確做法：subset 參數指定你真正在意的欄位。
+    animation: "show_blindspot_dropna_aggressive"
+    error_code: "df.dropna()"
+    correct_code: 'df.dropna(subset=["age"])'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：年齡遺漏就填 0。
+      0 歲？護理之家住的是嬰兒嗎？這填法會讓平均年齡暴跌。
+      用 0 填補數值欄位，統計結果會嚴重失真。
+      正確做法：填中位數或平均數，至少不會偏離太離譜。
+    animation: "show_blindspot_fillna_zero"
+    error_code: 'df["age"].fillna(0)'
+    correct_code: 'df["age"].fillna(df["age"].median())'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜！你正式成為遺漏值偵探社的合格成員了。
+      下一集我們要學 groupby 分組統計，
+      把資料按樓層、翼區分組來算各區的侵襲率。
+      偵探社繼續辦案，下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

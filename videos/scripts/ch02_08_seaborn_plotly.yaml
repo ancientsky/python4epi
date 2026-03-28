@@ -1,0 +1,202 @@
+meta:
+  chapter: "02"
+  concept: "seaborn_plotly"
+  title: "seaborn + plotly + 圖表輸出投稿密技"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch02_08_seaborn_plotly"
+  scene_class: "Ch02SeabornPlotlyScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：seaborn + plotly + 輸出
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！上一集我們用 matplotlib 畫了流行曲線，
+      但你有沒有覺得寫了好多行程式碼才畫出一張圖？
+      今天介紹兩個神隊友：seaborn 一行搞定統計圖，plotly 讓圖表動起來！
+      matplotlib 是手排車，seaborn 是自排車，plotly 是特斯拉自動駕駛。
+      三種都要會，但日常通勤用自排就夠了。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "sns_histplot"
+    narration: >
+      seaborn 的第一招：histplot，一行畫直方圖。
+      sns 點 histplot，data 傳入 DataFrame，x 設定 age，hue 設定 infected。
+      碰！年齡分布圖就出來了，還自動按感染狀態上了不同顏色。
+      在松柏護理之家的資料裡，你馬上能看到感染者和未感染者的年齡分布差異。
+      matplotlib 要寫十行的東西，seaborn 一行就搞定。
+    animation: "show_sns_histplot"
+    code: |
+      import seaborn as sns
+      sns.histplot(data=df, x="age", hue="infected",
+                   multiple="stack", bins=10)
+    pause_after: 0.5
+
+  - id: "sns_barplot"
+    narration: >
+      第二招：barplot，分組長條圖。
+      想比較每個翼區的侵襲率？一行搞定。
+      sns 點 barplot，x 是 wing，y 是 attack_rate。
+      seaborn 還會自動幫你加上信賴區間的誤差線。
+      信賴區間就是告訴你「真正的侵襲率大概在這個範圍內」。
+      這在 matplotlib 裡要自己算、自己畫，seaborn 直接送你。
+    animation: "show_sns_barplot"
+    code: |
+      sns.barplot(data=wing_stats, x="wing", y="attack_rate",
+                  palette="YlOrRd")
+    pause_after: 0.5
+
+  - id: "sns_heatmap"
+    narration: >
+      第三招：heatmap，熱力圖。
+      把樓層和翼區的侵襲率做成交叉表，再丟給 heatmap。
+      annot 等於 True 會在每格顯示數值，cmap 用 YlOrRd 從黃到紅。
+      一眼就看出哪個區域疫情最嚴重，紅通通的那格就是重災區。
+      疫調簡報放這張圖，長官們馬上就懂了。
+    animation: "show_sns_heatmap"
+    code: |
+      pivot = df.pivot_table(values="infected", index="floor",
+                              columns="wing", aggfunc="mean")
+      sns.heatmap(pivot, annot=True, cmap="YlOrRd", fmt=".1%")
+    pause_after: 0.5
+
+  - id: "plotly_bar"
+    narration: >
+      接下來是 plotly！它的圖可以互動，滑鼠移上去就能看到數值。
+      px 點 bar，跟 seaborn 的語法很像，但產出的是一個互動式圖表。
+      你可以放大、縮小、hover 看細節，甚至下載成圖片。
+      做疫調簡報或是分享給同事看，互動式圖表超級加分。
+    animation: "show_plotly_bar"
+    code: |
+      import plotly.express as px
+      fig = px.bar(daily_df, x="date", y="cases", color="floor",
+                   title="Daily cases by floor")
+      fig.show()
+    pause_after: 0.5
+
+  - id: "plotly_vs_mpl"
+    narration: >
+      matplotlib 跟 plotly 最大的差異是什麼？
+      matplotlib 是命令式：你一步一步告訴它怎麼畫。
+      先建畫布、再畫長條、再加標題、再調格式，很像組裝家具。
+      plotly 是宣告式：你告訴它你想要什麼，它幫你搞定。
+      哪個好？看場合。報告用 matplotlib 精雕細琢，探索資料用 plotly 快速產圖。
+    animation: "show_plotly_vs_mpl"
+    pause_after: 0.5
+
+  - id: "savefig"
+    narration: >
+      圖畫好了，怎麼存檔？savefig 是你的好朋友。
+      fig 點 savefig，檔名結尾用 png 或 pdf。
+      但是！一定要加兩個參數：dpi 等於 300，bbox_inches 等於 tight。
+      dpi 300 確保解析度夠高，bbox_inches tight 裁掉多餘的白邊。
+      少了這兩個參數，你的圖放進報告裡會糊成一片。
+    animation: "show_savefig"
+    code: |
+      fig_mpl.savefig("epi_curve.png", dpi=300, bbox_inches="tight")
+      fig_mpl.savefig("epi_curve.pdf", bbox_inches="tight")
+    pause_after: 0.5
+
+  - id: "journal_spec"
+    narration: >
+      如果你要投稿國際期刊，圖表規格可是有嚴格要求的。
+      NEJM 要求解析度至少 1000 DPI，Lancet 至少 300 DPI。
+      字體通常要求 Arial 或 Helvetica，不能用花俏的。
+      而且圖表必須是色盲友善的配色，不能只靠紅綠區分。
+      PDF 格式是最安全的選擇，因為它是向量圖，放再大都不會糊。
+      養成好習慣，從第一張圖就按投稿規格畫。
+    animation: "show_journal_spec"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點整理！
+      seaborn 一行搞定統計圖：histplot、barplot、heatmap。
+      plotly 做互動式圖表，探索資料超好用。
+      存檔一定記得 dpi 300 加 bbox_inches tight。
+      投稿期刊要注意解析度、字體、色盲友善配色。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：流感季節趨勢
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      來看看 seaborn 和 plotly 在流感監測裡怎麼大顯身手。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      流感每年冬天都來報到，疾管署會公布每週的類流感就診人次。
+      用 seaborn 的 lineplot 畫趨勢線，hue 按年份分色，
+      一張圖就能比較今年跟往年的流行趨勢有什麼不同。
+      再用 plotly 的 line 畫互動版，滑鼠一移就能看到確切數值。
+      疫情監測會議上放這種圖，主管一定對你刮目相看。
+    animation: "show_extra_example"
+    code: |
+      sns.lineplot(data=flu, x="epi_week", y="ili_visits",
+                   hue="year", palette="coolwarm")
+      fig = px.line(flu, x="epi_week", y="ili_visits",
+                    color="year", title="ILI trend by year")
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      最後是三個視覺化的經典踩坑時刻，特別容易發生在 seaborn 和 plotly 新手身上。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：seaborn 的函數名稱搞混。
+      有人會寫 sns 點 bindspots，但正確的名字是 histplot。
+      seaborn 的函數名不是亂取的：hist 代表 histogram 直方圖，plot 代表畫圖。
+      打錯名字 Python 會跟你說 AttributeError，找不到這個函數。
+      不確定的時候，查官方文件最保險。
+    animation: "show_blindspot_func_name"
+    error_code: 'sns.bindspots(data=df, x="age")'
+    correct_code: 'sns.histplot(data=df, x="age")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：存圖忘記加高解析度和裁切白邊。
+      很多同學直接寫 fig 點 savefig 加檔名就收工了，
+      結果圖片放進報告裡模糊到不行，白邊還超大。
+      期刊投稿更慘，編輯直接退稿叫你重畫。
+      記住口訣：PDF 加 dpi 300 加 bbox_inches tight，三件套缺一不可。
+    animation: "show_blindspot_journal_format"
+    error_code: 'fig.savefig("f.png")'
+    correct_code: 'fig.savefig("f.pdf", dpi=300, bbox_inches="tight")'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：plotly 的函數名跟 seaborn 不一樣。
+      seaborn 用 histplot，plotly 用 histogram。
+      有人會寫 px 點 bindspots，Python 一樣找不到。
+      每個套件有自己的命名規則，不能混著用。
+      建議：常用的函數名列一張小抄貼在螢幕旁邊。
+    animation: "show_blindspot_plotly_name"
+    error_code: 'px.bindspots(df, x="age")'
+    correct_code: 'px.histogram(df, x="age")'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      三大視覺化工具全部到手！
+      matplotlib 精雕細琢、seaborn 快速出圖、plotly 互動展示。
+      你現在有了做疫調報告和學術投稿的完整視覺化工具箱。
+      Chapter 02 的旅程到這裡告一段落。
+      下一章我們要進入描述性統計和二乘二表的世界，正式開始分析疫情資料。
+      我們下一章見！
+    animation: "show_outro"
+    pause_after: 1.0

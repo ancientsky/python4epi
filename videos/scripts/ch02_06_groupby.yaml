@@ -1,0 +1,188 @@
+meta:
+  chapter: "02"
+  concept: "groupby"
+  title: "分組統計秘密武器——groupby + agg 完全攻略"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch02_06_groupby"
+  scene_class: "Ch02GroupbyScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：groupby + agg
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！今天要教你 pandas 裡最強的招式之一——groupby。
+      想像你是老師，手上有一疊全班考卷。
+      你先按班級分堆，再分別算每班平均分數，最後把結果合併成一張成績單。
+      這就是 groupby 的精髓：分堆、計算、合併。簡單到不行，但威力無窮。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "split_apply_combine"
+    narration: >
+      groupby 背後有個經典觀念，叫做 Split Apply Combine。
+      第一步 Split：把資料按照某個欄位分成好幾組。
+      第二步 Apply：對每一組執行你要的計算。
+      第三步 Combine：把所有組的結果黏回一張表。
+      就像洗衣服：分色、分別洗、曬在同一條繩子上。記住這三步就對了。
+    animation: "show_split_apply_combine"
+    pause_after: 0.5
+
+  - id: "groupby_basic"
+    narration: >
+      來看最簡單的範例。
+      松柏護理之家有 6 層樓，我們想知道每層樓住了多少人。
+      df 點 groupby 括號 floor 點 size，一行搞定！
+      結果直接告訴你每層樓有幾位住民。
+      是不是比 Excel 拉 pivot table 還快？
+    animation: "show_groupby_basic"
+    code: 'df.groupby("floor").size()'
+    output: |
+      floor
+      1    48
+      2    52
+      3    45
+      4    47
+      5    44
+      6    44
+    pause_after: 0.5
+
+  - id: "agg_named"
+    narration: >
+      但做疫調不可能只算一件事。
+      你想同時知道每層樓的人數、感染人數、死亡人數？用 agg 加命名聚合！
+      agg 裡面用 n 等於括號 case_id 逗號 size，
+      infected 等於括號 infected 逗號 sum。
+      每個計算自己取名字，結果欄位名就是你取的名字，乾淨整齊像閱兵一樣。
+    animation: "show_agg_named"
+    code: |
+      stats = df.groupby("floor").agg(
+          n=("case_id", "size"),
+          infected=("infected", "sum"),
+          deaths=("outcome_dead", "sum"),
+      )
+    pause_after: 0.5
+
+  - id: "reset_index"
+    narration: >
+      groupby 之後你會發現索引變得奇奇怪怪的，像疊積木一樣。
+      這時候加一個 reset_index，就能把索引攤平回正常的 DataFrame。
+      就像把倒扣的杯子翻回來放好，世界瞬間恢復秩序。
+    animation: "show_reset_index"
+    code: "stats = stats.reset_index()"
+    pause_after: 0.3
+
+  - id: "attack_rate"
+    narration: >
+      有了分組統計，重頭戲來了——算每層樓的侵襲率！
+      侵襲率等於該組感染人數除以該組住民數再乘以 100。
+      注意！分母一定是「那一層樓的住民數」，不是全院 280 人！
+      這是流行病學的鐵律，分母搞錯，算出來的數字就是垃圾。
+      垃圾進垃圾出，garbage in garbage out。
+    animation: "show_attack_rate"
+    code: 'stats["attack_rate"] = stats["infected"] / stats["n"] * 100'
+    pause_after: 0.5
+
+  - id: "multiple_groupby"
+    narration: >
+      如果你想更精準定位疫情熱區怎麼辦？
+      groupby 裡放一個列表，同時傳入 floor 和 wing，雙重分組。
+      這樣你就能看到比如 3 樓 A 翼的侵襲率特別高。
+      也許那裡的蓮蓬頭就是退伍軍人菌的祕密基地呢。
+      groupby 不只是統計工具，它是疫調的破案神器！
+    animation: "show_multiple_groupby"
+    code: |
+      detail = df.groupby(["floor", "wing"]).agg(
+          n=("case_id", "size"),
+          infected=("infected", "sum"),
+      ).reset_index()
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點複習！
+      groupby 的核心是 Split Apply Combine 三步驟。
+      size 算筆數，agg 做多種計算，reset_index 攤平索引。
+      算侵襲率時分母一定是各組人數，不是全體人數。
+      多欄位分組可以幫你鎖定疫情熱區，破案就靠它了。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：COVID-19 各縣市統計
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看 groupby 在 COVID-19 全國疫情分析裡怎麼用。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設你拿到一份全台灣各縣市的 COVID-19 通報資料。
+      用 groupby 按縣市分組，agg 同時算確診數和死亡數。
+      再多一行算各縣市的致死率。
+      你可能會發現某些縣市致死率特別高，
+      也許跟人口老化程度或醫療資源分布有關。
+      同樣的 groupby 招式，從護理之家到全國疫情都能用。
+    animation: "show_extra_example"
+    code: |
+      covid = df.groupby("county").agg(
+          cases=("case_id", "size"),
+          deaths=("death", "sum"),
+      ).reset_index()
+      covid["cfr"] = covid["deaths"] / covid["cases"] * 100
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      groupby 的三大經典陷阱登場！新手幾乎百分之百會踩到。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個陷阱：agg 括號裡傳字串 size，跟直接呼叫 size 方法，結果不一樣！
+      agg 括號 size 回傳的是每個欄位的非空值數量，不是你要的總筆數。
+      直接呼叫 groupby 點 size 才是算每組有幾筆資料。
+      這兩個長很像，但意思完全不同，千萬別搞混。
+    animation: "show_blindspot_agg_vs_size"
+    error_code: 'df.groupby("floor").agg("size")'
+    correct_code: 'df.groupby("floor").size()'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個陷阱：算侵襲率的時候，分母寫死 280。
+      280 是全院的總人數，不是每層樓的人數！
+      用全體當分母算出來的不是侵襲率，是整體佔比，意義完全不同。
+      正確做法：分母用各組的住民數欄位，讓每組各算各的。
+    animation: "show_blindspot_wrong_denominator"
+    error_code: 'stats["infected"] / 280 * 100'
+    correct_code: 'stats["infected"] / stats["residents"] * 100'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個陷阱：groupby 之後直接呼叫 sum，把所有數字欄位都加起來。
+      case_id 被加了？年齡也被加了？那些數字加起來有什麼意義？毫無意義。
+      就像你把全班同學的身分證字號加起來，得到一個天文數字，然後呢？
+      正確做法：用 agg 指定你要計算的欄位，其他的不要碰。
+    animation: "show_blindspot_sum_all"
+    error_code: 'df.groupby("floor").sum()'
+    correct_code: 'df.groupby("floor").agg(n=("infected","sum"))'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜！你已經掌握了分組統計的秘密武器。
+      下一集我們要用 matplotlib 畫出疫調等級的流行曲線，
+      讓你的分析結果變成一張漂亮的圖表，跟 CDC 報告一樣專業。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
