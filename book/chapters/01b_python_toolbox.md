@@ -35,11 +35,29 @@
 
 如果還不熟，請先回 Ch01 練習一次再來。
 
+## 教學影片
+
+每個概念都有配套的動畫教學影片（約 3 分鐘），嵌在下方對應的小節中。影片包含：主線教學 → 額外防疫範例 → 初學者常見盲點破解。
+
+建議先看影片再讀程式碼，學習效果更好！
+
 ---
 
 ## Part 1：Python 語法規範
 
 ### 1) 縮排——Python 的必修規矩
+
+:::{admonition} 教學影片：縮排
+:class: tip, dropdown
+
+```{raw} html
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_01_INDENTATION" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+```
+
+影片內容：為什麼空 4 格、if/for/巢狀縮排 → 登革熱分區噴藥範例 → 盲點：忘記縮排、混用 Tab 和空格、多餘縮排
+:::
 
 在大多數程式語言裡，縮排只是讓程式「好看」。但在 Python 裡，**縮排是語法的一部分**——少一格或多一格，程式就會壞掉。
 
@@ -77,6 +95,18 @@ for cases in floor_cases:       # 第一層
 ```
 
 ### 2) import——借用別人的工具
+
+:::{admonition} 教學影片：import
+:class: tip, dropdown
+
+```{raw} html
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_02_IMPORTS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+```
+
+影片內容：import 三種寫法、約定俗成的別名 → 用 datetime 算發病天數 → 盲點：套件沒裝、import 放中間、from import 後用全名
+:::
 
 Ch01 裡所有計算都用 Python 內建功能。但真正做疫調分析時，你需要「借用」別人寫好的強大工具——這就是 `import`。
 
@@ -121,6 +151,18 @@ print(f"標準差:   {statistics.stdev(ages):.1f}")      # 7.8
 ```
 
 ### 3) 型別與轉換——數字、文字、布林值
+
+:::{admonition} 教學影片：型別與轉換
+:class: tip, dropdown
+
+```{raw} html
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_03_TYPES" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+```
+
+影片內容：type() 查型別、int/float/str/bool 四大型別、布林與邏輯運算 → 腸病毒年齡欄位清理 → 盲點：字串加法、"False" vs False、int("N/A")
+:::
 
 Python 裡每個值都有**型別（type）**。型別搞錯，程式就會出錯。
 
@@ -173,6 +215,18 @@ if not (cfr < 0.05):
 ## Part 2：Debug 生存技能
 
 ### 4) 讀懂錯誤訊息——traceback 不是天書
+
+:::{admonition} 教學影片：讀懂錯誤訊息
+:class: tip, dropdown
+
+```{raw} html
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_04_ERRORS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+```
+
+影片內容：traceback 由下往上讀、五大常見錯誤實演 → 批次讀取通報檔案 → 盲點：只看第一行、全複製問 AI、Warning vs Error
+:::
 
 看到滿螢幕的紅字別慌。Python 的錯誤訊息其實很貼心——**從最後一行往上讀**就好。
 
@@ -235,6 +289,18 @@ print(wings[5])  # "3B"
 
 ### 5) try/except——優雅處理意外
 
+:::{admonition} 教學影片：try/except
+:class: tip, dropdown
+
+```{raw} html
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_05_TRY_EXCEPT" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+```
+
+影片內容：try/except 基本語法、疫調資料清洗實例、多重 except → 疫苗接種紀錄清洗 → 盲點：bare except、範圍太大、掩蓋 bug
+:::
+
 有時候錯誤是「預期中的意外」——例如資料裡有遺漏值。與其讓程式崩潰，不如告訴 Python 怎麼處理。
 
 ```python
@@ -274,6 +340,18 @@ print(f"平均年齡: {sum(ages) / len(ages):.1f}")          # 平均年齡: 70.
 ## Part 3：實用開發技巧
 
 ### 6) 字串與迴圈進階
+
+:::{admonition} 教學影片：字串與迴圈進階
+:class: tip, dropdown
+
+```{raw} html
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_06_STRINGS_LOOPS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+```
+
+影片內容：strip/split/replace、for+range/enumerate、in 成員檢查 → TB 通報檢驗結果清理 → 盲點：strip 不改原值、迴圈中改列表、range 左閉右開
+:::
 
 Ch02 處理 CSV 資料時，你會大量操作字串和迴圈。先在這裡打好基礎。
 
@@ -328,6 +406,18 @@ if "deaths" not in outbreak:
 ```
 
 ### 7) uv 進階——管理 Python 版本與套件
+
+:::{admonition} 教學影片：uv 進階
+:class: tip, dropdown
+
+```{raw} html
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_07_UV_ADVANCED" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+```
+
+影片內容：uv python install/pin、uv add 安裝套件、找好用套件、uv sync → 從零建立疫苗覆蓋率分析專案 → 盲點：pip vs uv、忘了 uv run、不提交 uv.lock
+:::
 
 Ch00 教了 `uv sync` 安裝教材的所有依賴。這裡進一步介紹 `uv` 的實用功能。
 
@@ -386,6 +476,18 @@ uv pip list
 | `tensorflow` | 深度學習 | Ch11 |
 
 ### 8) Jupyter 實用密技
+
+:::{admonition} 教學影片：Jupyter 實用密技
+:class: tip, dropdown
+
+```{raw} html
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_08_JUPYTER_TIPS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+```
+
+影片內容：! shell 指令、!uv add 安裝套件、? 查說明、Tab 自動完成、%timeit → 快速探索疫調 CSV → 盲點：裝完沒 Restart、! 在 .py 裡用、cell 執行順序
+:::
 
 以下技巧讓你在 Jupyter Lab 裡工作更有效率。
 

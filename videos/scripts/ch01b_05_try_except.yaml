@@ -1,0 +1,170 @@
+meta:
+  chapter: "01b"
+  concept: "try_except"
+  title: "try/except——優雅處理意外"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch01b_05_try_except"
+  scene_class: "Ch01bTryExceptScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：try/except
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！上一集我們學會看錯誤訊息了。
+      但有些錯誤是可以預期的，比如資料裡有遺漏值。
+      這時候我們不希望程式直接崩潰，
+      而是優雅地處理它，繼續跑下去。
+      這就是 try except 的用途。
+      就像疫調時碰到一筆不完整的通報單，
+      你不會整疊都丟掉，而是跳過那筆繼續看。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "basic_syntax"
+    narration: >
+      基本語法很簡單。
+      try 冒號，下面放可能會出錯的程式碼。
+      except 加上錯誤類型冒號，下面放出錯時要做的事。
+      Python 先試著執行 try 裡的程式碼，
+      如果出錯了，就跳到 except 裡面。
+      就像你先試著打電話聯繫個案，打不通就改寄簡訊。
+    animation: "show_basic_syntax"
+    code: |
+      try:
+          result = int("N/A")
+      except ValueError:
+          result = 0
+          print("bad value, using 0")
+    output: "bad value, using 0"
+    pause_after: 0.3
+
+  - id: "real_scenario"
+    narration: >
+      來看個疫調場景。
+      你有一列年齡資料，但有些欄位是空的或寫了「不詳」。
+      用 try except 包起來，遇到壞資料就跳過，
+      不影響其他資料的處理。
+      最後告訴你有幾筆被跳過了。
+    animation: "show_real_scenario"
+    code: |
+      raw = ["72", "85", "N/A", "68", ""]
+      ages = []
+      skipped = 0
+      for val in raw:
+          try:
+              ages.append(int(val))
+          except ValueError:
+              skipped += 1
+      print(f"valid: {len(ages)}, skipped: {skipped}")
+    output: "valid: 3, skipped: 2"
+    pause_after: 0.5
+
+  - id: "multiple_except"
+    narration: >
+      你可以用多個 except 處理不同類型的錯誤。
+      比如讀檔案時，可能檔案不存在，也可能權限不夠。
+      FileNotFoundError 和 PermissionError 分開處理，
+      給使用者不同的提示訊息。
+    animation: "show_multiple_except"
+    code: |
+      try:
+          f = open("report.csv")
+      except FileNotFoundError:
+          print("file not found!")
+      except PermissionError:
+          print("no permission!")
+    pause_after: 0.3
+
+  - id: "main_summary"
+    narration: >
+      重點整理！
+      try 放可能出錯的程式碼。
+      except 加上錯誤類型，處理特定錯誤。
+      不要寫 except 什麼都不加，那會把所有錯誤都吞掉。
+      只在處理外部資料時用 try except，別當萬靈丹。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：疫苗接種紀錄清洗
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      來看另一個場景：清洗有雜訊的疫苗接種紀錄。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      某校的 COVID-19 疫苗接種紀錄裡，
+      有些人的接種日期欄位是空白或寫了「未接種」。
+      用 try except 保護日期解析，
+      解析失敗就標記為「未接種」，程式照跑不停。
+      實務上，你的資料永遠不會是完美的，
+      try except 是你處理髒資料的安全網。
+    animation: "show_extra_example"
+    code: |
+      from datetime import date
+      raw_dates = ["2025-03-15", "", "N/A"]
+      for d in raw_dates:
+          try:
+              parsed = date.fromisoformat(d)
+              print(f"vaccinated: {parsed}")
+          except ValueError:
+              print(f"skipped: {d!r}")
+    output: "vaccinated: 2025-03-15\nskipped: ''\nskipped: 'N/A'"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      三個 try except 的常見地雷。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：bare except，什麼都不寫。
+      except 冒號，下面 pass。
+      這會把所有錯誤都默默吞掉，你永遠不知道哪裡出問題。
+      正確做法：永遠指定你要抓的錯誤類型。
+    animation: "show_blindspot_bare_except"
+    error_code: "try:\n    x = bad()\nexcept:\n    pass"
+    correct_code: "try:\n    x = bad()\nexcept ValueError:\n    print('bad!')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：把整段程式碼都放進 try 裡面。
+      try 應該只包住「可能出錯的那一行」，
+      不是包住一百行程式碼。
+      範圍太大，你不知道是哪行出的錯。
+    animation: "show_blindspot_too_broad"
+    error_code: "try:\n    # 100 lines here\nexcept: ..."
+    correct_code: "# only wrap risky line\ntry:\n    val = int(x)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：用 try except 掩蓋 bug。
+      如果你的程式碼本身就寫錯了，比如拼錯變數名，
+      不應該用 try except 來「修」，
+      你應該直接修正那個 bug。
+      try except 是處理「不可控的外部資料」用的。
+    animation: "show_blindspot_hide_bug"
+    error_code: "try:\n    print(infceted)\nexcept: pass"
+    correct_code: "infected = 121\nprint(infected)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      太棒了！你現在有了錯誤處理的安全網。
+      下一集我們來學字串方法和迴圈進階技巧。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
