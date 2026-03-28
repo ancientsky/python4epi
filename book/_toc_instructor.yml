@@ -5,6 +5,9 @@ chapters:
   - file: chapters/01_fundamentals
     sections:
       - file: chapters/notebooks/01_fundamentals_python_basics
+  - file: chapters/01b_python_toolbox
+    sections:
+      - file: chapters/notebooks/01b_python_toolbox
   - file: chapters/02_data_wrangling
     sections:
       - file: chapters/notebooks/02_data_wrangling_for_beginners
@@ -50,6 +53,7 @@ chapters:
   - file: chapters/16_exercises
     sections:
       - file: chapters/exercises/01_fundamentals_exercise
+      - file: chapters/exercises/01b_python_toolbox_exercise
       - file: chapters/exercises/02_data_wrangling_exercise
       - file: chapters/exercises/03_stats_exercise
       - file: chapters/exercises/04_outbreak_workflow_exercise
@@ -66,6 +70,7 @@ chapters:
   - file: chapters/17_solutions
     sections:
       - file: chapters/solutions/01_fundamentals_solution
+      - file: chapters/solutions/01b_python_toolbox_solution
       - file: chapters/solutions/02_data_wrangling_solution
       - file: chapters/solutions/03_stats_solution
       - file: chapters/solutions/04_outbreak_workflow_solution
