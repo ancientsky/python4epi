@@ -56,6 +56,7 @@ tests/                         # pytest test suite
 【第一幕：接獲通報】
   Ch00  導讀與工具
   Ch01  Python 基礎
+  Ch01b Python 開發者工具箱（銜接 Ch01→Ch02）
   Ch02  資料處理與視覺化
 
 【第二幕：描述性分析】
