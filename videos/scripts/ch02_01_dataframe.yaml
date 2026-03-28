@@ -1,0 +1,192 @@
+meta:
+  chapter: "02"
+  concept: "dataframe"
+  title: "DataFrame 是什麼？從 CSV 到表格的第一步"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch02_01_dataframe"
+  scene_class: "Ch02DataFrameScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：DataFrame 基礎
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎來到 Chapter 02！
+      上一章我們學會用變數存數字、用列表存一排數字。
+      但真正做疫調的時候，你面對的是一整張大表格，有幾百列、幾十欄。
+      這時候就要請出 pandas 的 DataFrame 了。
+      你可以把 DataFrame 想像成一個超強版的 Excel 表格，
+      會自己算、會自己篩、還不會當機。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "excel_analogy"
+    narration: >
+      DataFrame 跟 Excel 有什麼不同？
+      首先，每一橫排叫做一個 row，就是一筆資料。
+      每一直欄叫做一個 column，就是一個欄位。
+      最大的差別是：DataFrame 每一欄只能有一種資料型別。
+      年齡那欄就是數字，姓名那欄就是文字，不能混在一起。
+      這看起來像限制，但其實是保護你不會算出奇怪的結果。
+    animation: "show_excel_analogy"
+    pause_after: 0.5
+
+  - id: "read_csv"
+    narration: >
+      要怎麼把 CSV 檔案變成 DataFrame？
+      只要一行程式碼！pd.read_csv 括號裡放檔案路徑。
+      碰！280 列乘以 32 欄的資料就瞬間載入了。
+      就像把一箱紙本資料，一秒鐘掃描進電腦裡。
+    animation: "show_read_csv"
+    code: |
+      import pandas as pd
+      df = pd.read_csv("legionella_outbreak.csv")
+    pause_after: 0.5
+
+  - id: "shape_head"
+    narration: >
+      資料讀進來了，第一件事就是看看它有多大。
+      df.shape 告訴你有 280 列、32 欄。
+      df.head 括號，可以偷看前五筆資料長什麼樣子。
+      就像收到快遞，先打開看看裡面是不是你訂的東西。
+    animation: "show_shape_head"
+    code: |
+      print(df.shape)
+      df.head()
+    output: "(280, 32)"
+    pause_after: 0.5
+
+  - id: "columns"
+    narration: >
+      想知道這張表有哪些欄位？
+      df.columns 一打，所有欄位名稱通通列出來。
+      case_id、age、sex、floor、wing 等等 32 個欄位。
+      如果只想拿其中一欄，就用方括號加欄位名稱。
+      df 方括號 age，就會拿到一整欄年齡資料。
+      注意喔，拿出來的東西叫做 Series，是 DataFrame 的小兄弟。
+    animation: "show_columns"
+    code: |
+      print(df.columns.tolist())
+      ages = df["age"]
+      print(type(ages))
+    output: "<class 'pandas.core.series.Series'>"
+    pause_after: 0.5
+
+  - id: "iloc_loc"
+    narration: >
+      要精準取某一個值，有兩種方法。
+      df.iloc 方括號 0，用位置取第一列，就像座位號碼。
+      df.loc 方括號 0 逗號 age，用標籤取值，像查字典一樣。
+      iloc 是 integer location，用數字。loc 是 label location，用名稱。
+      記住：iloc 用數字，loc 用標籤。這是 pandas 的兩把鑰匙。
+    animation: "show_iloc_loc"
+    code: |
+      first_row = df.iloc[0]
+      first_age = df.loc[0, "age"]
+      print(f"第一位住民的年齡：{first_age}")
+    output: "第一位住民的年齡：72"
+    pause_after: 0.5
+
+  - id: "boolean_filter"
+    narration: >
+      最強大的功能來了：布林篩選！
+      df 方括號 df 方括號 outcome 等等於 dead。
+      這行的意思是：幫我找出所有死亡個案。
+      你可以想像成 Excel 的篩選功能，
+      但不用手動點來點去，一行程式碼搞定。
+      19 筆！跟我們故事裡的 19 位死亡個案完全吻合。
+    animation: "show_boolean_filter"
+    code: |
+      dead = df[df["outcome"] == "dead"]
+      print(f"死亡個案數：{len(dead)}")
+    output: "死亡個案數：19"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      恭喜！你已經學會了 DataFrame 的五大基本功。
+      read_csv 讀檔、shape 看大小、head 偷看、
+      方括號取欄位、布林篩選找資料。
+      這五招就是你做資料分析的起手式，記好了喔！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：登革熱監測資料
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      接下來換個場景！這次我們用登革熱監測資料來練習。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設你拿到一份登革熱監測的 CSV 檔。
+      同樣用 read_csv 讀進來，shape 看看有 1500 筆通報。
+      然後用布林篩選，找出所有重症個案。
+      dengue_severe 等等於 1 的有幾筆？
+      同樣的招式，不同的疫情，一樣好用！
+      不管是退伍軍人症還是登革熱，DataFrame 的操作都一模一樣。
+    animation: "show_extra_example"
+    code: |
+      dengue = pd.read_csv("dengue_surveillance.csv")
+      print(dengue.shape)
+      severe = dengue[dengue["dengue_severe"] == 1]
+      print(f"重症個案數：{len(severe)}")
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      最後來看 DataFrame 新手最常踩的三個坑！
+      這三個錯誤我保證你一定會遇到，先學起來以後就不怕了。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：欄位名稱的大小寫打錯。
+      你寫 df 方括號大寫 A 的 Age，但資料裡的欄位是小寫 a 的 age。
+      Python 會跟你說 KeyError，找不到這個欄位。
+      解法很簡單：先用 df.columns 看一下正確的名稱，再照著打。
+    animation: "show_blindspot_case"
+    error_code: 'df["Age"]  # KeyError!'
+    correct_code: 'df["age"]  # column names are lowercase'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：用 slice 取前五筆但語意不清楚。
+      df 方括號 0 冒號 5 雖然可以用，但語意不夠明確。
+      如果你的 index 被打亂了，slice 的行為可能跟你想的不一樣。
+      建議用 df.head 括號或 df.iloc 方括號 0 冒號 5，
+      意圖更清楚，也更安全。
+    animation: "show_blindspot_slice"
+    error_code: 'df[0:5]  # works but unclear intent'
+    correct_code: 'df.head()  # or df.iloc[0:5]'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：取多欄的時候忘記用雙層方括號。
+      df 方括號 age 逗號 sex，Python 會報錯。
+      因為你只給了一層方括號，Python 以為你在傳兩個參數。
+      正確的寫法是雙層方括號：外層是取資料的語法，內層是欄位名稱的列表。
+      就像你去便利商店買兩樣東西，要用一個袋子裝起來。
+    animation: "show_blindspot_double_brackets"
+    error_code: 'df["age","sex"]  # TypeError!'
+    correct_code: 'df[["age","sex"]]  # double brackets'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      DataFrame 的基本功學完了！
+      下一支影片我們來學怎麼用 info 和 describe 一分鐘看懂你的資料。
+      我們馬上見！
+    animation: "show_outro"
+    pause_after: 1.0

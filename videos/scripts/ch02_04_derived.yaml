@@ -1,0 +1,224 @@
+meta:
+  chapter: "02"
+  concept: "derived"
+  title: "衍生變項四大招——cut, axis, astype, dt"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch02_04_derived"
+  scene_class: "Ch02DerivedScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：衍生變項
+  # ========================================
+  - id: "intro"
+    narration: >
+      歡迎回來！今天要教你一個超實用的技能——自己變出新欄位。
+      原始資料裡的欄位不夠用怎麼辦？自己算！
+      年齡要分組、共病要加總、布林要轉 0 和 1、日期要算天數。
+      這四招學完，你的資料分析功力馬上升級。
+      就像廚師有了食材還要會調味，資料有了還要會加工。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "pd_cut"
+    narration: >
+      第一招：pd.cut，把連續數值切成分組。
+      松柏護理之家的住民年齡從 60 到 99 歲。
+      如果你想按照每十歲分一組來分析，就用 pd.cut。
+      bins 放分界點，labels 放標籤。
+      碰！每個人就被分到自己的年齡組了。
+      就像把一盒彩色糖果按顏色分到不同碗裡。
+    animation: "show_pd_cut"
+    code: |
+      df["age_group"] = pd.cut(
+          df["age"],
+          bins=[59, 69, 79, 89, 100],
+          labels=["60-69", "70-79", "80-89", "90+"]
+      )
+      print(df["age_group"].value_counts().sort_index())
+    pause_after: 0.5
+
+  - id: "sum_axis1"
+    narration: >
+      第二招：用 sum 加上 axis 等於 1，橫向加總。
+      松柏的資料有好幾個共病欄位，心衰竭、糖尿病、癌症、慢性肺病。
+      每個欄位是 0 或 1，代表有沒有這個疾病。
+      如果想知道每個人總共有幾種共病，就把這幾欄橫向加總。
+      axis 等於 0 是直向，也就是加同一欄。
+      axis 等於 1 是橫向，也就是加同一列。
+      記不住的話，想像 axis 1 是往右邊走，把同一行的數字加起來。
+    animation: "show_sum_axis"
+    code: |
+      comorbidity_cols = [
+          "comorbidity_chf", "comorbidity_dm",
+          "comorbidity_cancer", "comorbidity_copd"
+      ]
+      df["n_comorbidities"] = df[comorbidity_cols].sum(axis=1)
+      print(df["n_comorbidities"].value_counts().sort_index())
+    pause_after: 0.5
+
+  - id: "astype"
+    narration: >
+      第三招：astype 把布林值轉成 0 和 1。
+      有時候你需要一個 0 和 1 的旗標欄位，
+      比如「有沒有生病」。
+      clinical_severity 不等於 not_ill，得到的是 True 或 False。
+      但統計模型通常吃數字不吃布林，所以用 astype int 轉換。
+      True 變 1，False 變 0，乾淨俐落。
+      就像把開關的「開」和「關」，翻譯成 1 和 0。
+    animation: "show_astype"
+    code: |
+      df["is_ill"] = (
+          df["clinical_severity"] != "not_ill"
+      ).astype(int)
+      print(df["is_ill"].value_counts())
+    output: |
+      1    121
+      0    159
+    pause_after: 0.5
+
+  - id: "dt_days"
+    narration: >
+      第四招：用日期相減算天數。
+      這招上一支影片有提到，但在衍生變項的語境裡特別好用。
+      住院日期減掉發病日期，就是發病到住院的延遲天數。
+      記得用 dt 點 days 把 Timedelta 轉成整數。
+      這個延遲天數可以幫你判斷醫療系統的反應速度。
+    animation: "show_dt_days"
+    code: |
+      df["hosp_delay"] = (
+          pd.to_datetime(df["hospitalization_date"])
+          - pd.to_datetime(df["symptom_onset_date"])
+      ).dt.days
+      print(df["hosp_delay"].describe())
+    pause_after: 0.5
+
+  - id: "isocalendar"
+    narration: >
+      加碼一招！用 isocalendar 取得發病的流行病學週別。
+      這在畫流行曲線的時候超好用，把每天的個案彙整到每週來看。
+      松柏護理之家的群聚從第 3 週開始爆發，第 4 週達到高峰。
+      一欄新的 epi_week 就這樣誕生了。
+    animation: "show_isocalendar"
+    code: |
+      df["epi_week"] = pd.to_datetime(
+          df["symptom_onset_date"]
+      ).dt.isocalendar().week
+      print(df["epi_week"].value_counts().sort_index())
+    pause_after: 0.5
+
+  - id: "assign"
+    narration: >
+      所有新欄位的語法都是一樣的：
+      df 方括號 新欄位名稱 等於 運算結果。
+      等號左邊是你取的名字，右邊是你算出來的值。
+      就像在 Excel 裡新增一欄，然後填公式。
+      但我們用一行程式碼就搞定，不用拖拉公式。
+    animation: "show_assign"
+    code: |
+      df["new_column"] = some_calculation
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      衍生變項四大招回顧！
+      pd.cut 分組，sum axis 1 橫向加總，
+      astype int 布林轉數字，dt.days 算天數。
+      這四招組合起來，你可以從原始資料變出無限多的新欄位。
+      資料分析的創意就在這裡！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：登革熱嚴重度與就醫延遲
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      換個場景來練習！這次我們用登革熱資料來試試衍生變項。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設你有一份登革熱通報資料。
+      首先用 pd.cut 把年齡分成三組：兒童、成人、老人。
+      然後算每個人從發病到就醫的延遲天數。
+      onset_date 減 visit_date，用 dt 點 days。
+      最後用 astype 把有沒有重症轉成 0 和 1 的旗標。
+      三種衍生變項，一次全部練到。
+      你看，不管是退伍軍人症還是登革熱，招式都是一樣的！
+    animation: "show_extra_example"
+    code: |
+      dengue = pd.read_csv("dengue_notifications.csv")
+      dengue["age_group"] = pd.cut(
+          dengue["age"], bins=[0, 18, 65, 100],
+          labels=["child", "adult", "elderly"]
+      )
+      dengue["visit_delay"] = (
+          pd.to_datetime(dengue["visit_date"])
+          - pd.to_datetime(dengue["onset_date"])
+      ).dt.days
+      dengue["is_severe"] = (dengue["severity"] == "severe").astype(int)
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      衍生變項看起來簡單，但有三個經典的坑。
+      保證你遲早會踩到，先學起來就能少走冤枉路。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：axis 方向搞反。
+      axis 等於 0 是直向加總，每個欄位各自加。
+      axis 等於 1 才是橫向加總，每一列的數字加在一起。
+      你想算每個人有幾種共病，結果用了 axis 0，
+      得到的是每種共病全部住民的總數，完全不是你要的。
+      記住：算每個人的東西，用 axis 等於 1。
+    animation: "show_blindspot_axis"
+    error_code: 'df[cols].sum(axis=0)  # sums each column'
+    correct_code: 'df[cols].sum(axis=1)  # sums each row'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：pd.cut 用等寬分組而不是自訂分界點。
+      bins 等於 4 會把年齡等寬切成 4 組，
+      但護理之家的年齡集中在 70 到 89 歲，
+      等寬分組可能把 60 到 69 歲和 90 到 100 歲各分一組，但人數超少。
+      更好的做法是自己指定分界點，讓每組都有足夠的樣本數。
+      自訂 bins 才能反映你的分析目的。
+    animation: "show_blindspot_bins"
+    error_code: 'pd.cut(df["age"], bins=4)  # equal-width'
+    correct_code: 'pd.cut(df["age"], bins=[59,69,79,89,100])'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：忘記用 astype 把布林轉成整數。
+      df 方括號 x 大於 5 得到的是 True 和 False。
+      有些函式可以吃布林，但很多統計模型只吃數字。
+      而且你想算總數的時候，True 加 True 雖然等於 2，
+      但閱讀起來不直覺，0 和 1 更清楚。
+      養成習慣，布林旗標一律 astype int。
+    animation: "show_blindspot_astype"
+    error_code: 'df["flag"] = df["x"] > 5  # bool column'
+    correct_code: 'df["flag"] = (df["x"] > 5).astype(int)'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      衍生變項四大招都學完了！
+      現在你不只會讀資料、驗資料、處理日期，
+      還會自己變出新的欄位了。
+      Chapter 02 的核心武器全部到齊！
+      下一支影片我們來學怎麼處理遺漏值，
+      因為真實世界的資料永遠不完美。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

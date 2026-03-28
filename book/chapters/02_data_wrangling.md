@@ -78,6 +78,56 @@ ages = df["age"]        # 280 位住民的年齡，就是一個 Series
 
 ---
 
+## 教學影片
+
+每個重要概念都有搭配的教學影片，由老師傅手把手帶你從零學會。點擊展開即可觀看：
+
+### Part 1 資料處理系列
+
+````{dropdown} 🎬 DataFrame 是什麼？從 CSV 到表格的第一步
+```{youtube} YOUTUBE_ID_02_01_DATAFRAME
+```
+````
+
+````{dropdown} 🎬 一分鐘看懂你的資料——info() 與 describe()
+```{youtube} YOUTUBE_ID_02_02_DATA_INSPECT
+```
+````
+
+````{dropdown} 🎬 日期時間大魔王——to_datetime 完全攻略
+```{youtube} YOUTUBE_ID_02_03_DATETIME
+```
+````
+
+````{dropdown} 🎬 衍生變項四大招——cut, axis, astype, dt
+```{youtube} YOUTUBE_ID_02_04_DERIVED
+```
+````
+
+````{dropdown} 🎬 遺漏值偵探社——NaN, NaT, None 一次搞懂
+```{youtube} YOUTUBE_ID_02_05_MISSING
+```
+````
+
+````{dropdown} 🎬 分組統計秘密武器——groupby + agg 完全攻略
+```{youtube} YOUTUBE_ID_02_06_GROUPBY
+```
+````
+
+### Part 2 視覺化系列
+
+````{dropdown} 🎬 用 matplotlib 畫出疫調等級的流行曲線
+```{youtube} YOUTUBE_ID_02_07_EPICURVE
+```
+````
+
+````{dropdown} 🎬 seaborn + plotly + 圖表輸出投稿密技
+```{youtube} YOUTUBE_ID_02_08_SEABORN_PLOTLY
+```
+````
+
+---
+
 ## Part 1：資料處理
 
 ### Step 1: 讀入 line list

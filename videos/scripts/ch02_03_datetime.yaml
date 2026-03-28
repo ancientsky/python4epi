@@ -1,0 +1,208 @@
+meta:
+  chapter: "02"
+  concept: "datetime"
+  title: "日期時間大魔王——to_datetime 完全攻略"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch02_03_datetime"
+  scene_class: "Ch02DatetimeScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：日期時間處理
+  # ========================================
+  - id: "intro"
+    narration: >
+      歡迎回來！今天我們要挑戰 Python 新手公認的大魔王——日期時間。
+      為什麼日期這麼重要？因為流行病學的靈魂就是「時間」。
+      什麼時候發病、什麼時候通報、潛伏期幾天，
+      這些都需要日期來算。
+      但偏偏日期格式千奇百怪，什麼斜線、橫線、年月日順序都不一樣。
+      別怕，跟著老師走，今天就把這個大魔王收服！
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "to_datetime"
+    narration: >
+      pandas 讀進來的日期，預設是文字格式，不是真正的日期。
+      你沒辦法拿兩個文字去相減，對吧？
+      所以第一步就是用 pd.to_datetime 把文字變成日期物件。
+      一行程式碼，整欄 280 筆日期就從文字變成真正的時間了。
+      就像把一堆手寫的日期紙條，通通掃描成電腦可以計算的格式。
+    animation: "show_to_datetime"
+    code: |
+      df["symptom_onset_date"] = pd.to_datetime(
+          df["symptom_onset_date"]
+      )
+      print(df["symptom_onset_date"].dtype)
+    output: "datetime64[ns]"
+    pause_after: 0.5
+
+  - id: "errors_coerce"
+    narration: >
+      但如果資料裡面有打錯的日期呢？
+      比如有人手抖把 2026 打成 20x6，pd.to_datetime 就會整個爆掉。
+      這時候加上 errors 等於 coerce，就像幫它裝一個安全氣囊。
+      無法轉換的值會變成 NaT，也就是 Not a Time，不會讓程式整個掛掉。
+      先讓程式跑完，再回頭處理那幾筆有問題的資料。
+    animation: "show_errors_coerce"
+    code: |
+      df["onset"] = pd.to_datetime(
+          df["symptom_onset_date"], errors="coerce"
+      )
+      print(df["onset"].isna().sum())
+    pause_after: 0.5
+
+  - id: "dt_accessor"
+    narration: >
+      日期物件有一個超好用的工具箱，叫做 dt accessor。
+      dt 點 year 取年份，dt 點 month 取月份，
+      dt 點 day 取日，dt 點 dayofweek 取星期幾。
+      星期一是 0，星期日是 6。
+      就像一把瑞士刀，一個工具拆出各種零件。
+      在松柏護理之家的案例裡，所有人都是 2026 年 1 月發病的。
+    animation: "show_dt_accessor"
+    code: |
+      df["onset_month"] = df["onset"].dt.month
+      df["onset_dow"] = df["onset"].dt.dayofweek
+      print(df[["onset", "onset_month", "onset_dow"]].head(3))
+    pause_after: 0.5
+
+  - id: "timedelta"
+    narration: >
+      日期最強的功能就是可以相減！
+      兩個日期相減得到的是 Timedelta，代表時間差。
+      比如住院日期減發病日期，就是發病到住院的天數。
+      記得用 dt 點 days 把 Timedelta 轉成整數天。
+      在松柏護理之家，我們可以看每個人從發病到住院花了幾天。
+    animation: "show_timedelta"
+    code: |
+      df["delay"] = (
+          df["hospitalization_date"] - df["onset"]
+      ).dt.days
+      print(df["delay"].describe())
+    pause_after: 0.5
+
+  - id: "epi_week"
+    narration: >
+      流行病學有一個特殊的時間單位叫做流行病學週，
+      英文叫 epi week 或 ISO week。
+      用 dt 點 isocalendar 括號 點 week 就可以取得。
+      在畫流行曲線的時候，常常會用週別而不是日期來分組，
+      因為每天的個案數波動太大，用週來看趨勢更平滑。
+      松柏的群聚主要集中在第 3 週和第 4 週。
+    animation: "show_epi_week"
+    code: |
+      df["epi_week"] = df["onset"].dt.isocalendar().week
+      print(df["epi_week"].value_counts().sort_index())
+    pause_after: 0.5
+
+  - id: "strftime"
+    narration: >
+      最後一招：把日期轉回字串。
+      什麼時候需要？當你要輸出報表、存成 CSV、或是放在圖表標題的時候。
+      用 dt 點 strftime，括號裡放你想要的格式。
+      大寫 Y 是四位數年份，小寫 m 是月份，小寫 d 是日。
+      就像幫日期穿上你指定的衣服，要什麼格式就穿什麼格式。
+    animation: "show_strftime"
+    code: |
+      df["onset_str"] = df["onset"].dt.strftime("%Y-%m-%d")
+      print(df["onset_str"].head(3))
+    output: |
+      0    2026-01-15
+      1    2026-01-13
+      2    2026-01-18
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      恭喜你把日期大魔王收服了！
+      to_datetime 把文字變日期，errors coerce 防爆。
+      dt accessor 拆年月日，Timedelta 算時間差。
+      isocalendar 取流行病學週，strftime 轉回字串。
+      六大招學完，你就是日期處理達人了！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：COVID-19 潛伏期計算
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      換個場景！這次我們來算 COVID-19 的潛伏期。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      潛伏期就是從暴露到發病的天數，是流行病學最重要的指標之一。
+      假設你有一份 COVID-19 資料，裡面有 exposure_date 和 onset_date 兩個欄位。
+      先用 to_datetime 把兩欄都轉成日期格式。
+      然後 onset 減 exposure，用 dt 點 days 取天數，就得到潛伏期了。
+      你還可以用 describe 看潛伏期的中位數和四分位距。
+      同樣的招式，從退伍軍人症到 COVID-19 通通適用！
+    animation: "show_extra_example"
+    code: |
+      covid = pd.read_csv("covid_cases.csv")
+      covid["exposure_date"] = pd.to_datetime(covid["exposure_date"])
+      covid["onset_date"] = pd.to_datetime(covid["onset_date"])
+      covid["incubation"] = (covid["onset_date"] - covid["exposure_date"]).dt.days
+      print(covid["incubation"].describe())
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      日期大魔王被打敗了，但地上還有三顆地雷！
+      新手最常踩到的三個日期陷阱，我們一個一個拆。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一顆地雷：拿字串直接跟日期比大小。
+      df 方括號 date 大於 引號 2026-01-15。
+      看起來好像可以，但其實你是在做字串比較，不是日期比較。
+      字串比較是用字母順序，結果可能完全不對。
+      正確做法是用 pd.Timestamp 把右邊也變成日期物件。
+    animation: "show_blindspot_string_compare"
+    error_code: 'df["date"] > "2026-01-15"'
+    correct_code: 'df["date"] > pd.Timestamp("2026-01-15")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二顆地雷：月日順序搞混。
+      01 斜線 15 斜線 2026，到底是 1 月 15 號還是 15 月 1 號？
+      美國格式是月在前，歐洲格式是日在前。
+      pd.to_datetime 預設用美國格式，所以 01 斜線 15 會被當成 1 月 15 號。
+      如果你的資料是日在前，記得加 dayfirst 等於 True。
+      搞混的話，13 號以後的日期就全部變亂了。
+    animation: "show_blindspot_dayfirst"
+    error_code: 'pd.to_datetime("15/01/2026")'
+    correct_code: 'pd.to_datetime("15/01/2026", dayfirst=True)'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三顆地雷：對 Series 取 days 忘記用 dt。
+      兩個日期欄位相減之後，結果是一整欄的 Timedelta。
+      如果你直接點 days，Python 會跟你說找不到這個屬性。
+      因為那是 Series，不是單一個 Timedelta。
+      正確做法是用 dt 點 days，先透過 dt accessor 存取。
+      單一值用點 days，一整欄用 dt 點 days，記住這個差別！
+    animation: "show_blindspot_dt_days"
+    error_code: '(d2 - d1).days  # AttributeError on Series'
+    correct_code: '(d2 - d1).dt.days  # use .dt accessor'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      日期大魔王已經被你收服了，恭喜！
+      下一支影片我們要學衍生變項四大招，
+      教你怎麼從既有的欄位變出新的資訊。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
