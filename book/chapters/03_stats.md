@@ -134,7 +134,7 @@ chi2_2, p2, _, _ = chi2_contingency([[a2, b2], [c2, d2]])
 print(f"水療使用 → 感染的 RR = {rr2:.3f}, p = {p2:.4f}")
 ```
 
-## Step 7: 多因子粗 RR 彙整表
+## Step 9: 多因子粗效應量彙整表 + 森林圖
 
 一次比較所有可能的危險因子，找出「嫌疑最大」的暴露：
 
@@ -144,8 +144,6 @@ factors = [
     "comorbidity_chf", "comorbidity_dm", "comorbidity_cancer",
     "comorbidity_copd", "immunosuppressed",
 ]
-
-# smoking_history 是三分類（never/former/current），先轉為二分類
 df["ever_smoker"] = (df["smoking_history"] != "never").astype(int)
 factors.append("ever_smoker")
 
@@ -157,8 +155,8 @@ for factor in factors:
     c_i = int(ct.loc[0, 1])
     d_i = int(ct.loc[0, 0])
     rr_i = risk_ratio(a_i, a_i + b_i, c_i, c_i + d_i)
+    or_i = odds_ratio(a_i, b_i, c_i, d_i)
     chi2_i, p_i, _, _ = chi2_contingency([[a_i, b_i], [c_i, d_i]])
-    # 95% CI
     ln_rr_i = np.log(rr_i)
     se_i = np.sqrt(1/a_i - 1/(a_i+b_i) + 1/c_i - 1/(c_i+d_i))
     ci_lo = np.exp(ln_rr_i - 1.96 * se_i)
@@ -166,13 +164,72 @@ for factor in factors:
     results.append({
         "factor": factor,
         "RR": round(rr_i, 3),
-        "95% CI lower": round(ci_lo, 3),
-        "95% CI upper": round(ci_hi, 3),
+        "CI_lower": round(ci_lo, 3),
+        "CI_upper": round(ci_hi, 3),
+        "OR": round(or_i, 3),
         "p-value": round(p_i, 4),
     })
 
 rr_table = pd.DataFrame(results).sort_values("RR", ascending=False)
-print(rr_table.to_string(index=False))
+display_df = rr_table.copy()
+display_df["95% CI"] = display_df.apply(
+    lambda r: f"{r['CI_lower']:.3f}–{r['CI_upper']:.3f}", axis=1
+)
+print(display_df[["factor", "RR", "95% CI", "OR", "p-value"]].to_string(index=False))
+```
+
+### 森林圖（Forest Plot）
+
+**森林圖**是流行病學和實證醫學中最常見的圖表之一，常用於系統性回顧（systematic review）和統合分析（meta-analysis），但在群聚調查中也非常實用——可以**一眼比較多個暴露因子的效應量大小和統計顯著性**。
+
+怎麼看森林圖：
+- **圓點（●）**：點估計值（本例為 RR）
+- **水平線段（─）**：95% 信賴區間
+- **虛線（RR = 1）**：無效果線。CI 與虛線交叉 = 不顯著；CI 完全在虛線右側 = 暴露顯著增加風險
+
+```python
+import pathlib
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+
+# -- CJK font setup (避免中文標籤顯示為方框 □□□) --
+for _font_dir in map(pathlib.Path, ["/usr/share/fonts", "/usr/local/share/fonts"]):
+    if _font_dir.exists():
+        for _fp in sorted(_font_dir.rglob("*")):
+            if _fp.suffix.lower() in {".ttf", ".ttc", ".otf"} and (
+                "CJK" in _fp.name or "WenQuanYi" in _fp.name or "wqy" in _fp.name
+            ):
+                try:
+                    fm.fontManager.addfont(str(_fp))
+                except Exception:
+                    pass
+
+plt.rcParams["font.sans-serif"] = [
+    "Noto Sans CJK TC", "Noto Sans CJK SC", "Noto Sans CJK JP",
+    "Noto Sans TC", "Microsoft JhengHei",
+    "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS",
+    "Heiti TC", "DejaVu Sans",
+]
+plt.rcParams["axes.unicode_minus"] = False
+
+fig, ax = plt.subplots(figsize=(8, 5))
+rr_sorted = rr_table.reset_index(drop=True)
+y_pos = range(len(rr_sorted))
+ax.errorbar(
+    rr_sorted["RR"], y_pos,
+    xerr=[rr_sorted["RR"] - rr_sorted["CI_lower"],
+          rr_sorted["CI_upper"] - rr_sorted["RR"]],
+    fmt="o", color="#D97757", ecolor="#6B6B6B", capsize=4, markersize=7,
+)
+ax.axvline(x=1, color="#6B6B6B", linestyle="--", alpha=0.7, label="RR = 1（無效果）")
+ax.set_yticks(list(y_pos))
+ax.set_yticklabels(rr_sorted["factor"])
+ax.set_xlabel("Risk Ratio (95% CI)")
+ax.set_title("各因子粗風險比（Forest Plot）")
+ax.legend(loc="lower right")
+ax.invert_yaxis()
+plt.tight_layout()
+plt.show()
 ```
 
 ---
