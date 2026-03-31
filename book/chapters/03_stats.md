@@ -316,6 +316,38 @@ print(display_df[["factor", "RR", "95% CI", "OR", "p-value"]].to_string(index=Fa
 
 ### 森林圖（Forest Plot）
 
+**森林圖**是流行病學和實證醫學中最常見的圖表之一，常用於系統性回顧（systematic review）和統合分析（meta-analysis），但在群聚調查中也非常實用——可以**一眼比較多個暴露因子的效應量大小和統計顯著性**。
+
+怎麼看森林圖：
+- **圓點（●）**：點估計值（本例為 RR）
+- **水平線段（─）**：95% 信賴區間
+- **虛線（RR = 1）**：無效果線。CI 與虛線交叉 = 不顯著；CI 完全在虛線右側 = 暴露顯著增加風險
+
+```python
+import pathlib
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+
+# -- CJK font setup (避免中文標籤顯示為方框 □□□) --
+for _font_dir in map(pathlib.Path, ["/usr/share/fonts", "/usr/local/share/fonts"]):
+    if _font_dir.exists():
+        for _fp in sorted(_font_dir.rglob("*")):
+            if _fp.suffix.lower() in {".ttf", ".ttc", ".otf"} and (
+                "CJK" in _fp.name or "WenQuanYi" in _fp.name or "wqy" in _fp.name
+            ):
+                try:
+                    fm.fontManager.addfont(str(_fp))
+                except Exception:
+                    pass
+
+plt.rcParams["font.sans-serif"] = [
+    "Noto Sans CJK TC", "Noto Sans CJK SC", "Noto Sans CJK JP",
+    "Noto Sans TC", "Microsoft JhengHei",
+    "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS",
+    "Heiti TC", "DejaVu Sans",
+]
+plt.rcParams["axes.unicode_minus"] = False
+
 ```python
 fig, ax = plt.subplots(figsize=(8, 5))
 rr_sorted = rr_table.reset_index(drop=True)
