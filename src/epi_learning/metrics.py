@@ -34,3 +34,30 @@ def risk_ratio(exposed_cases: int, exposed_total: int, unexposed_cases: int, une
     if risk_unexposed == 0:
         raise ZeroDivisionError("unexposed risk is zero")
     return risk_exposed / risk_unexposed
+
+
+def odds_ratio(a: int, b: int, c: int, d: int) -> float:
+    """Compute odds ratio from a 2×2 table.
+
+    Parameters
+    ----------
+    a : int
+        Exposed **and** diseased.
+    b : int
+        Exposed **and** not diseased.
+    c : int
+        Unexposed **and** diseased.
+    d : int
+        Unexposed **and** not diseased.
+
+    Returns
+    -------
+    float
+        Odds ratio ``(a * d) / (b * c)``.
+    """
+    for name, value in [("a", a), ("b", b), ("c", c), ("d", d)]:
+        if value < 0:
+            raise ValueError(f"{name} must be non-negative")
+    if b * c == 0:
+        raise ZeroDivisionError("b and c must both be > 0")
+    return (a * d) / (b * c)
