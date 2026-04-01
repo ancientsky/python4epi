@@ -116,6 +116,33 @@ ages = df["age"]        # 280 位住民的年齡，就是一個 Series
 ```
 ````
 
+### Part 1.5 進階資料操作系列
+
+````{dropdown} 🎬 頻率表速成——value_counts + crosstab 完全攻略
+```{youtube} YOUTUBE_ID_02_09_VALUE_COUNTS
+```
+````
+
+````{dropdown} 🎬 Excel 樞紐分析表——pivot_table 完全攻略
+```{youtube} YOUTUBE_ID_02_10_PIVOT_TABLE
+```
+````
+
+````{dropdown} 🎬 一行寫完分析——Method Chaining 流水線
+```{youtube} YOUTUBE_ID_02_11_METHOD_CHAINING
+```
+````
+
+````{dropdown} 🎬 合併資料表——merge 就是你的 VLOOKUP
+```{youtube} YOUTUBE_ID_02_12_MERGE
+```
+````
+
+````{dropdown} 🎬 文字清理三板斧——str + drop_duplicates + rename
+```{youtube} YOUTUBE_ID_02_13_STR_CLEANUP
+```
+````
+
 ### Part 2 視覺化系列
 
 ````{dropdown} 🎬 用 matplotlib 畫出疫調等級的流行曲線

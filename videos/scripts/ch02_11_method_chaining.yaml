@@ -1,0 +1,225 @@
+meta:
+  chapter: "02"
+  concept: "method_chaining"
+  title: "一行寫完分析——Method Chaining 流水線"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch02_11_method_chaining"
+  scene_class: "Ch02MethodChainingScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：Method Chaining 流水線
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎回來！今天要教你一招讓程式碼變短、變帥、變好讀的絕招。
+      它叫做 Method Chaining，中文我喜歡叫它「流水線」。
+      想像一下工廠的生產線：原料從一端進去，經過切割、組裝、包裝，
+      成品從另一端出來，中間完全不用搬來搬去。
+      pandas 的 method chaining 就是這個概念，資料進去，分析結果出來，一氣呵成！
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "problem_with_temps"
+    narration: >
+      先來看看沒有 method chaining 的世界長什麼樣子。
+      你要從松柏護理之家的資料裡，找出每層樓的感染人數。
+      第一行：篩選感染者，存到 df_infected。
+      第二行：依樓層分組，存到 grouped。
+      第三行：計算每組人數，存到 counts。
+      第四行：重設索引，存到 result。
+      第五行：排序，存到 final。
+      每一行都要取一個變數名，取到腦袋爆炸！
+      而且這些中間變數用完就丟，根本是拋棄式命名大賽。
+    animation: "show_problem_with_temps"
+    code: |
+      df_infected = df[df["infected"] == 1]
+      grouped = df_infected.groupby("floor")
+      counts = grouped.size()
+      result = counts.reset_index(name="n_cases")
+      final = result.sort_values("n_cases", ascending=False)
+    pause_after: 0.5
+
+  - id: "chaining_basic"
+    narration: >
+      現在看看 method chaining 的版本。
+      同樣的邏輯，用小括號把整個表達式包起來，
+      每個方法用點號串接，一行接一行，就像流水線一樣。
+      query 篩選、groupby 分組、size 計數、reset_index 整理、sort_values 排序。
+      原料進去，成品出來，中間沒有任何拋棄式變數。
+      程式碼從五個變數變成零個中間變數，乾淨俐落！
+    animation: "show_chaining_basic"
+    code: |
+      result = (
+          df
+          .query("infected == 1")
+          .groupby("floor")
+          .size()
+          .reset_index(name="n_cases")
+          .sort_values("n_cases", ascending=False)
+      )
+    pause_after: 0.5
+
+  - id: "query_intro"
+    narration: >
+      流水線的第一站通常是 query，它是篩選資料的利器。
+      用字串寫條件，讀起來就像英文句子一樣自然。
+      infected 等於 1 and age 大於等於 70，一目瞭然。
+      注意喔，在 query 裡面用 and、or、not，不是用 ampersand 和 pipe。
+      如果你有一個外部變數想帶進去，前面加個小老鼠 at 符號就行了。
+      比如 threshold 等於 70，query 裡面寫 at threshold，pandas 就會自動幫你代入。
+    animation: "show_query_intro"
+    code: |
+      threshold = 70
+      result = (
+          df
+          .query("infected == 1 and age >= @threshold")
+      )
+    pause_after: 0.5
+
+  - id: "assign_intro"
+    narration: >
+      流水線的另一個好朋友是 assign，它可以在流水線上直接加工新欄位。
+      語法是 assign，然後用 lambda 函數定義新欄位的計算方式。
+      lambda d 代表「目前流水線上的 DataFrame」，
+      所以 d 中括號 infected 除以 d 中括號 n 再乘以 100，就是侵襲率。
+      重點是：你不需要跳出流水線，不需要另外寫一行 df 中括號 attack_rate 等於什麼。
+      在流水線上直接加工，一站搞定！
+    animation: "show_assign_intro"
+    code: |
+      result = (
+          df
+          .groupby("floor")
+          .agg(n=("case_id", "count"),
+               infected=("infected", "sum"))
+          .assign(attack_rate=lambda d: d["infected"] / d["n"] * 100)
+      )
+    pause_after: 0.5
+
+  - id: "full_pipeline"
+    narration: >
+      好，現在把所有招式組合起來，看一個完整的分析流水線。
+      從松柏護理之家的原始資料開始：
+      第一站 query 篩選七十歲以上的住民，
+      第二站 groupby 依樓層分組，
+      第三站 agg 同時算人數、感染數、死亡數，
+      第四站 assign 算出侵襲率和致死率，
+      最後 sort_values 由高到低排序。
+      從原始資料到完整的分析報表，一口氣搞定，中間零個拋棄式變數。
+      這就是 method chaining 的威力！
+    animation: "show_full_pipeline"
+    code: |
+      report = (
+          df
+          .query("age >= 70")
+          .groupby("floor")
+          .agg(n=("case_id", "count"),
+               infected=("infected", "sum"),
+               deaths=("outcome", lambda x: (x == "dead").sum()))
+          .assign(
+              attack_rate=lambda d: d["infected"] / d["n"] * 100,
+              cfr=lambda d: d["deaths"] / d["infected"] * 100,
+          )
+          .sort_values("attack_rate", ascending=False)
+      )
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      來整理一下重點。
+      Method chaining 的核心精神：資料像流水線一樣，一站接一站處理。
+      query 篩選、groupby 分組、agg 彙總、assign 加工、sort_values 排序。
+      用小括號包起來就能換行，每個方法一行，清楚好讀。
+      但是！超過八行的 chain 就考慮拆開，可讀性永遠比炫技重要。
+      記住：流水線是讓程式碼更好讀，不是讓你寫出沒人看得懂的天書。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：結核病接觸者追蹤
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      來看看 method chaining 在另一個場景的應用：結核病接觸者追蹤。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      結核病的接觸者追蹤是公衛護理師的日常工作。
+      一個指標個案確診後，需要追蹤所有密切接觸者，幫他們做結核菌素皮膚試驗。
+      假設你拿到一份接觸者名單，要分析各暴露場所的陽轉率。
+      用 method chaining：先 query 篩選 TST 陽性的接觸者，
+      再 groupby 暴露場所，size 算人數，reset_index 整理，sort_values 排序。
+      一條流水線就能看出哪個場所的傳播風險最高，精準投入防疫資源。
+    animation: "show_extra_example"
+    code: |
+      high_risk = (
+          contacts
+          .query("tst_result == 'positive'")
+          .groupby("exposure_setting")
+          .size()
+          .reset_index(name="n_positive")
+          .sort_values("n_positive", ascending=False)
+      )
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      最後是 method chaining 的三大翻車現場，新手幾乎人人都會踩到。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：忘記用小括號包住多行的 chain。
+      如果你直接在行尾加反斜線換行，然後接點號，Python 有時候會搞不清楚你在幹嘛。
+      更常見的是根本忘記任何續行符號，Python 直接噴 SyntaxError。
+      正確做法：用小括號把整個表達式包起來，
+      Python 就知道括號沒關之前都是同一個表達式，換行隨你換。
+      小括號是 method chaining 的安全帶，一定要繫！
+    animation: "show_blindspot_parens"
+    error_code: 'df.query("x > 1").groupby("a")  # no parens'
+    correct_code: '(df.query("x > 1").groupby("a"))  # wrapped'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：在 chain 裡面用 inplace 等於 True。
+      inplace 等於 True 的意思是「直接修改原本的 DataFrame，不回傳新的」。
+      但 method chaining 的精髓就是每個方法回傳一個新的 DataFrame，
+      然後傳給下一站繼續處理。
+      如果你用了 inplace 等於 True，它回傳 None，流水線直接斷掉。
+      None 點 head 括號？Python 跟你說 AttributeError，None 沒有 head 方法。
+      在 chain 裡面永遠不要用 inplace！
+    animation: "show_blindspot_inplace"
+    error_code: 'df.sort_values("a", inplace=True).head()'
+    correct_code: 'df.sort_values("a").head()  # no inplace'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：query 裡面用 ampersand 代替 and。
+      在一般的 pandas 布林篩選裡，你確實會用 ampersand，
+      但 query 用的是字串語法，裡面要寫 and、or、not，就像寫英文一樣。
+      寫 ampersand 不會報錯，但行為可能跟你預期的不一樣，超級陰險。
+      記住：query 裡面就是 and、or、not，三個英文字搞定。
+    animation: "show_blindspot_query_syntax"
+    error_code: 'df.query("age > 70 & infected == 1")'
+    correct_code: 'df.query("age > 70 and infected == 1")'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你學會了 method chaining 流水線！
+      從今天開始，你的 pandas 程式碼會變得更短、更乾淨、更好讀。
+      記住三個關鍵：小括號包起來、不要用 inplace、query 裡面用 and。
+      下一集我們要學 merge，把不同的表格合併在一起，
+      就像把兩條流水線接在一起，威力加倍！
+      我們下一集見！
+    animation: "show_outro"
+    pause_after: 1.0

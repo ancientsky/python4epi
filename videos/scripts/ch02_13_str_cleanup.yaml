@@ -1,0 +1,211 @@
+meta:
+  chapter: "02"
+  concept: "str_cleanup"
+  title: "文字清理三板斧——str + drop_duplicates + rename"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch02_13_str_cleanup"
+  scene_class: "Ch02StrCleanupScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：文字清理三板斧
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！今天要教你資料清理的三板斧——str 字串方法、drop_duplicates 去重、還有 rename 改名。
+      這三招學起來，你就能把現實世界亂七八糟的資料整理成分析用的乾淨表格。
+      別小看資料清理，做疫調的人都知道，八成的時間都花在洗資料上。
+      好，我們開始吧！
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "dirty_data_reality"
+    narration: >
+      理想中的資料整整齊齊，每個欄位都填好填滿，格式統一。
+      現實呢？同一家醫院名字有三種寫法，地址大小寫不一致，重複通報到處都是。
+      在松柏護理之家的疫調資料裡，光是翼別欄位就可能出現大寫 A、小寫 a、還有前面多一個空白的 A。
+      如果你不先清理，groupby 會把同一組拆成三組，分析結果直接報廢。
+      所以記住：在做任何分析之前，先把資料洗乾淨！
+    animation: "show_dirty_data_reality"
+    pause_after: 0.5
+
+  - id: "str_basic"
+    narration: >
+      第一招：str 字串方法。pandas 的 Series 有個神奇的 str 屬性，
+      讓你可以對整欄資料做字串操作，不用寫迴圈。
+      str.upper 全部轉大寫，str.lower 全部轉小寫，str.strip 去掉前後空白。
+      看這個例子，wing 欄位裡面有空白 A、小寫 a、正常的 A，
+      一個 str.strip 加一個 str.upper，三種寫法全部變成統一的大寫 A。
+      就這麼簡單，一行解決。
+    animation: "show_str_basic"
+    code: |
+      df["wing"] = df["wing"].str.strip().str.upper()
+      print(df["wing"].value_counts())
+    output: |
+      A    142
+      B    138
+    pause_after: 0.5
+
+  - id: "str_contains"
+    narration: >
+      第二招的第一式：str.contains，文字搜尋過濾器。
+      比 Excel 的 Ctrl 加 F 強一百倍，因為它可以用正則表達式！
+      想找出所有重症病例？str.contains，填入 severe，加上 na 等於 False 避免空值報錯。
+      結果是一個布林 Series，直接拿來做篩選就好。
+      在疫調裡超好用，比如搜尋症狀描述裡有沒有提到「發燒」或「咳嗽」。
+    animation: "show_str_contains"
+    code: |
+      severe = df["clinical_severity"].str.contains(
+          "severe", na=False
+      )
+      print(df[severe].shape[0], "severe cases")
+    output: |
+      23 severe cases
+    pause_after: 0.5
+
+  - id: "str_replace"
+    narration: >
+      第二招的第二式：str.replace，批次取代文字。
+      疫調資料裡最常見的問題就是同一個東西有不同寫法。
+      比如醫院名稱，有人寫台大醫院，有人寫臺大醫院，還有人寫英文縮寫。
+      用 str.replace 一行一行替換，就能把所有寫法統一。
+      這招在清理地址、機構名稱、藥品名稱的時候特別好用。
+    animation: "show_str_replace"
+    code: |
+      df["hospital"] = (
+          df["hospital"]
+          .str.replace("NTU Hospital", "NTUH")
+          .str.replace("ntu hospital", "NTUH")
+      )
+    pause_after: 0.5
+
+  - id: "drop_duplicates"
+    narration: >
+      第二板斧：drop_duplicates，去除重複資料。
+      疫調實務中重複通報超常見，同一個病人可能被通報兩三次。
+      每次分析之前都要先去重，不然病例數會灌水。
+      用 drop_duplicates，subset 指定用哪個欄位判斷重複，keep 等於 first 保留第一筆。
+      在護理之家的資料裡，用 case_id 當 key 去重，確保每個住民只出現一次。
+    animation: "show_drop_duplicates"
+    code: |
+      df = df.drop_duplicates(
+          subset="case_id", keep="first"
+      )
+      print(f"Unique cases: {len(df)}")
+    output: |
+      Unique cases: 280
+    pause_after: 0.5
+
+  - id: "rename_nlargest"
+    narration: >
+      第三板斧：rename 改欄位名稱，加碼送你 nlargest 找前幾名。
+      報告要交給長官看，欄位名稱當然要清楚易懂。
+      rename 的 columns 參數傳一個字典，舊名對新名，一行搞定。
+      然後 nlargest 可以幫你快速找出前 N 名，比如侵襲率最高的前三個樓層。
+      這兩招組合起來，做週報超快。
+    animation: "show_rename_nlargest"
+    code: |
+      df = df.rename(columns={"wing": "Wing"})
+      top3 = df.nlargest(3, "attack_rate")
+      print(top3[["floor", "attack_rate"]])
+    output: |
+      floor  attack_rate
+        3       0.55
+        2       0.44
+        1       0.39
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      來做個三板斧總整理！
+      第一斧 str：strip 去空白、upper 或 lower 統一大小寫、contains 搜尋過濾、replace 批次替換。
+      第二斧 drop_duplicates：去除重複資料，subset 指定 key 欄位。
+      第三斧 rename 加 nlargest：改欄位名稱讓報告好讀，nlargest 快速找前幾名。
+      這三招是每次疫調資料前處理的標準動作，先洗再分析，養成好習慣！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：流感監測資料清理
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看文字清理在流感監測資料裡怎麼派上用場。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設你拿到一份流感監測資料，醫院名稱欄位一片混亂。
+      台大醫院、臺大醫院、NTU Hospital，三種寫法指的都是同一家。
+      如果你直接做 groupby，會變成三個不同的群組，統計數字全部錯誤。
+      解法就是用 str.replace 把所有寫法統一，然後再做分析。
+      實際疫調資料清理佔了八成的時間，認真的，這不是開玩笑。
+      所以這三板斧一定要練到像呼吸一樣自然！
+    animation: "show_extra_example"
+    code: |
+      flu["hospital"] = (
+          flu["hospital"]
+          .str.strip()
+          .str.replace("NTU Hospital", "NTUH")
+          .str.replace("ntu hospital", "NTUH")
+      )
+      print(flu["hospital"].value_counts())
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      資料清理三大翻車現場來了！每一個都是血淚教訓。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個翻車現場：str.contains 忘記加 na 等於 False。
+      如果欄位裡有空值 NaN，直接用 str.contains 會回傳 NaN 而不是布林值。
+      拿這個結果去做篩選就會噴 ValueError，整個程式當掉。
+      修正方法超簡單，加上 na 等於 False，空值自動變 False，安全過關。
+      養成習慣，每次用 str.contains 都加 na 等於 False，省得翻車。
+    animation: "show_blindspot_na_false"
+    error_code: 'df["col"].str.contains("text")  # NaN crash'
+    correct_code: 'df["col"].str.contains("text", na=False)'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個翻車現場：大小寫敏感。
+      你做 value_counts，結果看到 Male、male、MALE 三個類別。
+      明明都是男性，但 Python 認為它們是三個不同的字串。
+      修正方法：在做任何統計之前，先用 str.lower 或 str.upper 統一大小寫。
+      這是最基本也最容易忘記的清理步驟。
+    animation: "show_blindspot_case_sensitive"
+    error_code: 'df["sex"].value_counts()  # Male, male, MALE'
+    correct_code: 'df["sex"].str.lower().value_counts()'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個翻車現場：到處用 inplace 等於 True。
+      很多教學會教你用 inplace 等於 True 來就地修改 DataFrame。
+      但這樣你沒辦法串接方法，也沒辦法用一行程式碼完成多步操作。
+      更慘的是 debug 的時候，你不知道 DataFrame 在哪一步被改掉了。
+      最佳實踐是用明確的賦值，df 等於 df 點 drop_duplicates，清楚又安全。
+    animation: "show_blindspot_inplace"
+    error_code: 'df.drop_duplicates(inplace=True)  # no chain'
+    correct_code: 'df = df.drop_duplicates()  # explicit assign'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜！Ch02 的 pandas 技能全部教完了！
+      你已經從零基礎變成能處理真實疫調資料的 Python 使用者。
+      從 DataFrame 建立、資料檢視、時間處理、衍生欄位、缺失值、groupby、
+      流行曲線、視覺化，一直到今天的文字清理三板斧，全部收入囊中。
+      下一章 Ch03 要進入統計推論——2 乘 2 表、風險比、勝算比、卡方檢定，
+      讓你的分析從描述升級到統計推論，加油！
+    animation: "show_outro"
+    pause_after: 1.0

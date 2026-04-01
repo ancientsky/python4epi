@@ -1,0 +1,194 @@
+meta:
+  chapter: "02"
+  concept: "value_counts"
+  title: "頻率表速成——value_counts + crosstab 完全攻略"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch02_09_value_counts"
+  scene_class: "Ch02ValueCountsScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：value_counts + crosstab
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎回來。今天要教你兩招超實用的頻率表神技：value_counts 和 crosstab。
+      拿到一份資料，第一件事不是畫圖，也不是跑模型，而是看分布！
+      就像收到一大袋信件，你會先按類別分堆，看看哪堆最多，對吧？
+      頻率表就是這個「分堆數數」的動作，簡單卻超級重要。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_frequency"
+    narration: >
+      為什麼頻率表是疫調的第一步？因為它能讓你一秒看出資料的全貌。
+      比如松柏護理之家這次退伍軍人菌疫情，280 位住民裡到底有多少人是輕症、多少重症？
+      你不可能一行一行慢慢看，但頻率表一秒就幫你分好堆。
+      這就像去超市買菜前先列清單，知道冰箱缺什麼才不會亂買一通。
+      養成習慣：拿到資料先跑 value_counts，比什麼都重要。
+    animation: "show_why_frequency"
+    pause_after: 0.5
+
+  - id: "value_counts_basic"
+    narration: >
+      來看最基本的用法。df 中括號 clinical_severity 點 value_counts。
+      一行程式碼，pandas 自動幫你數每個嚴重程度各有幾個人。
+      結果由多到少排列，一眼就能看出 mild 最多、severe 最少。
+      這麼簡單的東西，偏偏很多人都忘記用，直接跳去跑迴歸。
+      先看分布再做分析，這是鐵律！
+    animation: "show_value_counts_basic"
+    code: 'df["clinical_severity"].value_counts()'
+    output: |
+      mild        52
+      moderate    38
+      severe      18
+      not_ill     13
+      Name: clinical_severity, dtype: int64
+    pause_after: 0.5
+
+  - id: "value_counts_normalize"
+    narration: >
+      光看個數有時候不夠直覺，你會想知道比例。
+      加上 normalize 等於 True，value_counts 就幫你算好百分比了。
+      但注意一個隱藏地雷：預設情況下 value_counts 會自動忽略缺失值！
+      如果你的資料有 NaN，不加 dropna 等於 False 的話，那些缺失值就像隱形人一樣消失了。
+      做疫調最怕的就是漏掉資料，所以記得兩個參數一起用。
+    animation: "show_value_counts_normalize"
+    code: |
+      # 比例 + 顯示缺失值
+      df["clinical_severity"].value_counts(
+          normalize=True, dropna=False
+      )
+    output: |
+      mild            0.429
+      moderate        0.314
+      severe          0.149
+      not_ill         0.107
+      NaN             0.000
+      Name: clinical_severity, dtype: float64
+    pause_after: 0.5
+
+  - id: "crosstab_intro"
+    narration: >
+      如果你想看兩個變數的交叉分布呢？這時候就是 crosstab 出場的時候了。
+      pd 點 crosstab 括號裡放兩個 Series，比如性別和是否感染。
+      結果就是一張漂亮的交叉表，行是性別、列是感染狀態，格子裡是人數。
+      加上 margins 等於 True，還能自動幫你算行列小計。
+      這就是第三章 2 乘 2 表的預習，先看個影子，之後我們會深入講。
+    animation: "show_crosstab_intro"
+    code: |
+      pd.crosstab(
+          df["sex"], df["infected"],
+          margins=True
+      )
+    output: |
+      infected  False  True   All
+      sex
+      F           82    58   140
+      M           77    63   140
+      All        159   121   280
+    pause_after: 0.5
+
+  - id: "crosstab_vs_pivot"
+    narration: >
+      很多同學會問：crosstab 跟 pivot_table 有什麼不同？
+      簡單說，crosstab 預設就是數個數，丟兩個 Series 進去就好。
+      pivot_table 要先指定 DataFrame，還要設定 aggfunc，比較囉嗦。
+      所以如果你只是想快速做交叉計數，用 crosstab 最省事。
+      需要更複雜的聚合計算？那就交給 pivot_table。
+      各有各的適用場合，就像筷子跟叉子，看你吃什麼菜。
+    animation: "show_crosstab_vs_pivot"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      快速複習！
+      value_counts 一行搞定單欄位頻率表，加 normalize 看比例。
+      記得永遠加 dropna 等於 False，避免缺失值偷偷消失。
+      crosstab 用來看雙變數交叉分布，加 margins 自動算小計。
+      拿到資料的第一件事：跑頻率表看分布，不要直接衝去跑模型！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：腸病毒校園群聚
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看 value_counts 和 crosstab 在腸病毒校園群聚調查裡怎麼用。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設某國小爆發腸病毒群聚，你拿到一份通報名冊。
+      第一步用 value_counts 看每個班級有幾個病例。
+      馬上發現二年三班最多，有 8 個，其他班大概兩三個。
+      接著用 crosstab 交叉比對年級和嚴重程度。
+      結果顯示低年級重症比例明顯高於高年級。
+      這就是為什麼衛生局會優先對低年級做停課評估，數據說話！
+    animation: "show_extra_example"
+    code: |
+      # 各班病例數
+      ev["class"].value_counts()
+      # 年級 x 嚴重程度
+      pd.crosstab(ev["grade"], ev["severity"])
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      value_counts 的三大新手坑來了！保證你身邊的人至少踩過一個。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：忘記加 dropna 等於 False。
+      預設情況下 value_counts 會自動把 NaN 排除掉，結果看起來很正常，
+      但其實你可能少算了一大堆人！
+      做疫調最怕的就是分母不對，缺失值消失代表分母縮水。
+      解法很簡單，加上 dropna 等於 False，讓缺失值無所遁形。
+    animation: "show_blindspot_dropna"
+    error_code: 'df["col"].value_counts()'
+    correct_code: 'df["col"].value_counts(dropna=False)'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：對連續型數值欄位直接用 value_counts。
+      比如年齡，每個人的歲數都不太一樣，你會得到五十幾個不同的值。
+      結果每個值只有一兩個人，這張表根本看不出什麼規律。
+      就像把一堆沙子一粒一粒數，有什麼意義？
+      正確做法：先用 pd 點 cut 分成幾個區間，再跑 value_counts。
+    animation: "show_blindspot_continuous"
+    error_code: 'df["age"].value_counts()'
+    correct_code: 'pd.cut(df["age"], bins=4).value_counts()'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：把 crosstab 和 pivot_table 的參數搞混。
+      crosstab 吃的是兩個 Series，你直接丟 df 中括號欄位名就好。
+      但有些人把整個 DataFrame 丟進去，然後加一個 values 參數，結果就爆炸了。
+      crosstab 的第一個和第二個參數就是你要交叉的兩個欄位，就這麼簡單。
+      搞混的話，Python 會直接噴錯給你看。
+    animation: "show_blindspot_crosstab"
+    error_code: 'pd.crosstab(df, values="infected")'
+    correct_code: 'pd.crosstab(df["sex"], df["infected"])'
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      恭喜！你已經學會用 value_counts 和 crosstab 快速摸清資料長相了。
+      下一集我們要來教 pivot_table，把分組統計玩到更進階的程度。
+      記得練習的時候先跑頻率表再做分析，養成好習慣。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
