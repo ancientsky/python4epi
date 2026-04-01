@@ -25,6 +25,8 @@
 5. `plt.bar(...)` / `sns.barplot(...)` / `px.bar(...)`：各種圖表
 
 > 💡 如果你剛從 Ch01b 過來，恭喜！`import`、`type()`、`for` 迴圈、`try/except` 這些你已經會了，接下來只需要學 pandas 的語法。
+>
+> 📄 **pandas 速查表**：建議列印這份一頁式 PDF 放在手邊——[Pandas Cheat Sheet](https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf)
 
 ### 什麼是 pandas？什麼是 DataFrame？
 
@@ -359,6 +361,223 @@ print(wing_stats.to_string(index=False))
 > )
 > ```
 > 常用聚合函數：`"size"` 計數、`"sum"` 加總、`"mean"` 平均、`"max"` 最大值、`"min"` 最小值
+
+### Step 6b: 進階資料操作——Excel 使用者必學
+
+學完 `groupby` 之後，你已經可以做基本的分組統計了。但在實際疫調中，你還會需要以下技巧。這些都是 Excel 使用者轉換到 pandas 時最常問的問題。
+
+> 📄 **官方速查表**：pandas 官方提供了一頁式的速查表 PDF，建議列印出來放在手邊：[Pandas Cheat Sheet (PDF)](https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf)
+
+#### 頻率表：`value_counts()` — 你的第一張統計表
+
+疫調的第一步通常是看各欄位的次數分布。`value_counts()` 就是 Excel 裡的 `COUNTIF`。
+
+```python
+# 臨床嚴重度分布
+print(df["clinical_severity"].value_counts())
+
+# 加上百分比
+print(df["clinical_severity"].value_counts(normalize=True).round(3) * 100)
+```
+
+> **常用參數：**
+>
+> | 參數 | 效果 |
+> |------|------|
+> | `normalize=True` | 顯示比例而非次數 |
+> | `sort=False` | 不依次數排序，保持原始順序 |
+> | `dropna=False` | 把遺漏值也算進去 |
+
+#### 樞紐分析表：`pivot_table()` — Excel 最愛的功能
+
+如果你在 Excel 常用樞紐分析表（Pivot Table），`pd.pivot_table()` 就是它的 Python 版本。
+
+```python
+# Excel 的 Pivot Table：欄 = 樓層, 列 = 翼區, 值 = 侵襲率
+pivot = pd.pivot_table(
+    df,
+    values="infected",       # 要計算的欄位
+    index="wing",            # 列標籤（Excel 的「列」區域）
+    columns="floor",         # 欄標籤（Excel 的「欄」區域）
+    aggfunc="mean",          # 聚合函數：mean = 侵襲率
+)
+print((pivot * 100).round(1))  # 轉成百分比
+```
+
+> **`pivot_table` vs `groupby`？**
+>
+> | 場景 | 用哪個 |
+> |------|--------|
+> | 單一分組 + 一個統計量 | `groupby` 更簡潔 |
+> | 兩個維度交叉 + 需要表格輸出 | `pivot_table` 更直覺 |
+> | 需要加小計（margins） | `pivot_table(margins=True)` |
+>
+> ```python
+> # 加上小計列和小計欄（Excel 的「總計」）
+> pivot_with_totals = pd.pivot_table(
+>     df, values="infected", index="wing", columns="floor",
+>     aggfunc="mean", margins=True, margins_name="合計",
+> )
+> print((pivot_with_totals * 100).round(1))
+> ```
+
+#### 交叉表：`pd.crosstab()` — 做 2×2 表的捷徑
+
+Ch03 會大量使用 `crosstab` 來建 2×2 列聯表。先在這裡認識它：
+
+```python
+# 性別 × 感染狀態的交叉表
+print(pd.crosstab(df["sex"], df["infected"], margins=True))
+```
+
+> `crosstab` 和 `pivot_table` 很像，差別是：`crosstab` 直接吃兩個 Series，預設做計數；`pivot_table` 吃 DataFrame，需要指定 `aggfunc`。
+
+#### 新增欄位的三種方式
+
+```python
+# 方法 1：直接賦值（你已經會了）
+df["bmi_category"] = pd.cut(df["age"], bins=[0, 70, 80, 100], labels=["<70", "70-80", "80+"])
+
+# 方法 2：用 assign()——適合 method chaining（見下節）
+df = df.assign(
+    is_elderly = df["age"] >= 80,
+    has_comorbidity = df["n_comorbidities"] > 0,
+)
+
+# 方法 3：用 apply()——需要複雜邏輯時
+def classify_risk(row):
+    if row["age"] >= 80 and row["n_comorbidities"] >= 2:
+        return "high"
+    elif row["age"] >= 70 or row["n_comorbidities"] >= 1:
+        return "medium"
+    return "low"
+
+df["risk_level"] = df.apply(classify_risk, axis=1)
+print(df["risk_level"].value_counts())
+```
+
+> **什麼時候用哪種？**
+>
+> | 方法 | 適合場景 | 速度 |
+> |------|---------|------|
+> | `df["new"] = ...` | 簡單運算（加減乘除、比較） | 最快 |
+> | `.assign()` | 串接多步操作（method chaining） | 快 |
+> | `.apply(func, axis=1)` | 需要 if/else 判斷、跨欄邏輯 | 較慢（逐列計算） |
+
+#### Method Chaining — 現代 pandas 風格
+
+傳統寫法把每一步拆開，中間產生很多暫時變數。**Method chaining**（方法鏈）把多步操作串成一條流水線，可讀性更高：
+
+```python
+# 傳統寫法（很多暫時變數）
+cases = df[df["infected"] == 1]
+cases = cases[cases["age"] >= 70]
+result = cases.groupby("floor").size()
+result = result.reset_index(name="n_cases")
+result = result.sort_values("n_cases", ascending=False)
+print(result)
+
+# Method chaining（一氣呵成）
+result = (
+    df
+    .query("infected == 1 and age >= 70")     # 篩選（取代布林索引）
+    .groupby("floor")
+    .size()
+    .reset_index(name="n_cases")
+    .sort_values("n_cases", ascending=False)
+)
+print(result)
+```
+
+> **`.query()` 語法重點：**
+> - 條件用字串寫，`and` / `or` / `not` 取代 `&` / `|` / `~`
+> - 欄位名不用加引號（除非欄位名有空格或特殊字元）
+> - 可以引用外部變數：`df.query("age > @threshold")`
+>
+> **更複雜的 chaining 範例：**
+>
+> ```python
+> summary = (
+>     df
+>     .assign(age_group=pd.cut(df["age"], bins=[59, 69, 79, 89, 100],
+>                              labels=["60-69", "70-79", "80-89", "90+"]))
+>     .groupby("age_group", observed=True)
+>     .agg(
+>         n_residents=("case_id", "size"),
+>         n_infected=("infected", "sum"),
+>         n_dead=("outcome", lambda x: (x == "dead").sum()),
+>     )
+>     .assign(
+>         attack_rate=lambda d: (d["n_infected"] / d["n_residents"] * 100).round(1),
+>         cfr=lambda d: (d["n_dead"] / d["n_infected"] * 100).round(1),
+>     )
+> )
+> print(summary)
+> ```
+
+#### 合併資料表：`merge()` — 疫調最常見的需求
+
+實際疫調中，個案名冊和檢驗結果、環境檢體資料往往存在不同的檔案裡。`merge()` 就是 Excel 的 `VLOOKUP`，但更強大。
+
+```python
+# 假設有兩張表：個案名冊和檢驗結果
+cases_df = df[["case_id", "age", "sex", "infected"]].head(10)
+lab_df = pd.DataFrame({
+    "case_id": [1, 2, 3, 5, 8],
+    "lab_method": ["culture", "PCR", "culture", "PCR", "culture"],
+    "ct_value": [25.3, 28.1, 22.5, 31.0, 24.8],
+})
+
+# 合併（以 case_id 為 key）
+merged = pd.merge(cases_df, lab_df, on="case_id", how="left")
+print(merged)
+```
+
+> **`how` 參數——四種合併方式：**
+>
+> | `how` | 行為 | Excel 對照 |
+> |-------|------|-----------|
+> | `"left"` | 保留左表所有列 | VLOOKUP（找不到 = 空白） |
+> | `"right"` | 保留右表所有列 | 反向 VLOOKUP |
+> | `"inner"` | 只保留兩邊都有的 | VLOOKUP 再刪除空白列 |
+> | `"outer"` | 兩邊全部保留 | 完整合併 |
+>
+> 💡 疫調最常用 `"left"`：以個案名冊為主表，把檢驗結果「補」上去。
+
+#### 文字清理：`.str` accessor
+
+```python
+# 清理翼區欄位：統一大小寫
+df["wing_clean"] = df["wing"].str.upper()
+
+# 檢查欄位是否包含特定文字
+severe_mask = df["clinical_severity"].str.contains("severe", na=False)
+print(f"含有 'severe' 的筆數：{severe_mask.sum()}")
+```
+
+> **常用 `.str` 方法：**
+>
+> | 方法 | 效果 |
+> |------|------|
+> | `.str.upper()` / `.str.lower()` | 轉大寫 / 小寫 |
+> | `.str.strip()` | 去除前後空白 |
+> | `.str.contains("pattern")` | 是否包含特定文字（回傳 True/False） |
+> | `.str.replace("old", "new")` | 取代文字 |
+> | `.str.split("_")` | 以分隔符切割 |
+> | `.str.len()` | 文字長度 |
+
+#### 去重與排名
+
+```python
+# 去除重複通報（以 case_id 為準）
+df_unique = df.drop_duplicates(subset="case_id", keep="first")
+
+# 重新命名欄位
+df_renamed = df.rename(columns={"symptom_onset_date": "onset_date"})
+
+# 找出侵襲率最高的前 3 個翼區
+print(wing_stats.nlargest(3, "attack_rate_pct"))
+```
 
 ---
 
@@ -1000,7 +1219,9 @@ plt.show()
 
 ## pandas 常用語法速查表
 
-初學者隨時回來翻這張表就好：
+初學者隨時回來翻這張表就好。更完整的版本請參考 [Pandas Cheat Sheet (PDF)](https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf)。
+
+**基本操作**
 
 | 需求 | 語法 | 說明 |
 |------|------|------|
@@ -1012,13 +1233,36 @@ plt.show()
 | 取一欄 | `df["age"]` | 回傳 Series |
 | 取多欄 | `df[["age", "sex"]]` | 回傳 DataFrame |
 | 篩選列 | `df[df["age"] > 80]` | 布林索引 |
+| 可讀篩選 | `df.query("age > 80")` | 字串語法，適合 chaining |
 | 新增欄位 | `df["new"] = ...` | 直接賦值 |
+| 新增（鏈式） | `df.assign(new=...)` | 適合 method chaining |
 | 日期轉換 | `pd.to_datetime(df["col"])` | 文字 → datetime |
 | 日期部分 | `df["col"].dt.year` | `.dt.month`, `.dt.day` |
+
+**統計與聚合**
+
+| 需求 | 語法 | 說明 |
+|------|------|------|
+| 頻率表 | `df["col"].value_counts()` | 每個值出現幾次 |
 | 遺漏值 | `df.isnull().sum()` | 每欄遺漏值數量 |
+| 填補遺漏 | `df["col"].fillna(0)` | 用 0 填補空值 |
 | 分組統計 | `df.groupby("col").size()` | 每組計數 |
+| 樞紐分析 | `pd.pivot_table(df, ...)` | Excel Pivot Table |
+| 交叉表 | `pd.crosstab(df["a"], df["b"])` | 2×2 列聯表 |
+| 前 N 大 | `df.nlargest(3, "col")` | 最大的 N 筆 |
 | 排序 | `df.sort_values("col")` | 依欄位排序 |
 | 四捨五入 | `df["col"].round(1)` | 保留 1 位小數 |
+
+**資料整理**
+
+| 需求 | 語法 | 說明 |
+|------|------|------|
+| 合併表格 | `pd.merge(df1, df2, on="key")` | VLOOKUP 等價物 |
+| 去除重複 | `df.drop_duplicates("col")` | 依欄位去重 |
+| 重新命名 | `df.rename(columns={"old": "new"})` | 改欄位名 |
+| 文字大寫 | `df["col"].str.upper()` | `.str.lower()`, `.str.strip()` |
+| 文字搜尋 | `df["col"].str.contains("pattern")` | 回傳 True/False |
+| 自定義函數 | `df.apply(func, axis=1)` | 逐列套用函數 |
 
 ## 常見錯誤
 
