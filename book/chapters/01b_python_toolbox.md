@@ -52,7 +52,7 @@
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_01_INDENTATION" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/lQPKMgHv1UQ" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -101,7 +101,7 @@ for cases in floor_cases:       # 第一層
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_02_IMPORTS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/srlzHIPR3nk" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -157,7 +157,7 @@ print(f"標準差:   {statistics.stdev(ages):.1f}")      # 7.8
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_03_TYPES" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/xetiso2OCl8" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -221,7 +221,7 @@ if not (cfr < 0.05):
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_04_ERRORS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/aZx7TFtcrvc" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -294,7 +294,7 @@ print(wings[5])  # "3B"
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_05_TRY_EXCEPT" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/QCKTumk34fA" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -346,7 +346,7 @@ print(f"平均年齡: {sum(ages) / len(ages):.1f}")          # 平均年齡: 70.
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_06_STRINGS_LOOPS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/SmKi_i3PC-U" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -412,7 +412,7 @@ if "deaths" not in outbreak:
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_07_UV_ADVANCED" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/cXSoTKvgtEo" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
@@ -482,7 +482,7 @@ uv pip list
 
 ```{raw} html
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/YOUTUBE_ID_01B_08_JUPYTER_TIPS" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/krpakr9TtZM" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
 </div>
 ```
 
