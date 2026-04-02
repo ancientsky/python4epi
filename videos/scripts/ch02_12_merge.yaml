@@ -1,0 +1,185 @@
+meta:
+  chapter: "02"
+  concept: "merge"
+  title: "合併資料表——merge 就是你的 VLOOKUP"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch02_12_merge"
+  scene_class: "Ch02MergeScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：pandas merge
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！今天要教你一個超實用的技能——合併資料表。
+      如果你用過 Excel 的 VLOOKUP，那恭喜你，merge 就是它的超級進化版。
+      差別在哪？VLOOKUP 一次只能查一個欄位，merge 直接把整張表黏過來。
+      而且不會像 VLOOKUP 一樣，欄位順序換一下就整個爆掉。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_merge"
+    narration: >
+      做流行病學調查的時候，資料永遠不會乖乖待在同一張表裡。
+      個案名冊一張、實驗室報告一張、住院紀錄又是另一張。
+      你不可能叫老師傅把所有資料手動貼到同一張 Excel 吧？
+      那要貼到什麼時候？merge 一行程式碼搞定，而且不會貼錯列。
+      這就是為什麼每個做疫調的人都一定要學 merge。
+    animation: "show_why_merge"
+    pause_after: 0.5
+
+  - id: "merge_basic"
+    narration: >
+      來看最基本的用法。
+      我們有個案名冊 cases 和實驗室報告 lab，兩張表都有 case_id 這個欄位。
+      pd 點 merge，傳入兩張表，on 等於 case_id，how 等於 left。
+      意思是：以左邊的個案名冊為主，把右邊的檢驗結果貼過來。
+      沒有配對到的人就留空值，不會被丟掉。
+      跟 VLOOKUP 一模一樣的邏輯，但語法乾淨一百倍。
+    animation: "show_merge_basic"
+    code: |
+      merged = pd.merge(
+          cases_df, lab_df,
+          on="case_id", how="left"
+      )
+    output: "cases: 280 rows -> merged: 280 rows (lab matched: 241)"
+    pause_after: 0.5
+
+  - id: "how_parameter"
+    narration: >
+      merge 最重要的參數就是 how，它決定了合併的方式。
+      left join：保留左表所有資料，右表有就配、沒有就填空值。這是疫調最常用的。
+      inner join：只保留兩邊都有的，沒配到的直接丟掉。pandas 的預設值就是這個，要小心。
+      outer join：兩邊通通保留，沒配到的都填空值。
+      right join：跟 left 反過來，保留右表所有資料。比較少用。
+      記住，做疫調的時候，how 等於 left 是你的好朋友，因為你不想弄丟任何一個個案。
+    animation: "show_how_parameter"
+    pause_after: 0.5
+
+  - id: "merge_different_keys"
+    narration: >
+      現實世界的欄位名從來不會統一的。
+      你的個案名冊叫 case_id，結果實驗室那邊叫 patient_id。
+      這時候就用 left_on 和 right_on 分別指定左右兩邊的 key 欄位。
+      merge 照樣幫你配對，完全不受欄位名不同的影響。
+      這招在整合不同來源的資料時超級好用。
+    animation: "show_merge_different_keys"
+    code: |
+      merged = pd.merge(
+          cases_df, lab_df,
+          left_on="case_id",
+          right_on="patient_id",
+          how="left"
+      )
+    pause_after: 0.5
+
+  - id: "validate"
+    narration: >
+      merge 之前一定要先想清楚：你期待的是什麼關係？
+      一個個案配一筆檢驗？還是一個個案可能有多筆住院紀錄？
+      用 validate 參數就能讓 pandas 幫你檢查。
+      one_to_one 表示一對一，many_to_one 表示多對一。
+      如果資料不符合你的預期，pandas 會直接報錯，而不是默默生出一堆重複的列。
+      這個習慣可以救你無數次，merge 前先想清楚你期待什麼關係。
+    animation: "show_validate"
+    code: |
+      merged = pd.merge(
+          cases_df, lab_df,
+          on="case_id", how="left",
+          validate="one_to_one"
+      )
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點複習！
+      merge 就是 Python 版的 VLOOKUP，但功能更強更不容易出錯。
+      how 等於 left 是疫調最常用的合併方式，保留所有個案不遺漏。
+      欄位名不同就用 left_on 加 right_on。
+      merge 完一定要檢查結果的 shape，確認列數有沒有暴增。
+      養成用 validate 的習慣，讓 pandas 幫你抓蟲。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：疫苗接種紀錄連結
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看 merge 在疫苗接種分析裡怎麼用。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設你拿到一份疫苗接種紀錄，裡面有每位住民的接種日期和疫苗種類。
+      用 merge 把接種紀錄跟個案名冊串在一起，how 當然是 left。
+      因為你要保留所有住民，不管他有沒有打疫苗。
+      合併之後就能分析：有打疫苗的人，感染後症狀是不是比較輕？
+      致死率有沒有比較低？merge 幫你把兩張表黏起來，後續分析就水到渠成。
+      同樣的招式，從退伍軍人症到流感、到 COVID，全部通用。
+    animation: "show_extra_example"
+    code: |
+      merged = pd.merge(
+          cases_df, vaccine_df,
+          on="case_id", how="left"
+      )
+      merged["vaccinated"] = merged["vaccine_date"].notna()
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      merge 的三大翻車現場登場！新手幾乎百分之百會踩到，先打預防針。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個翻車現場：key 欄位有重複值，merge 之後列數爆炸！
+      如果左表有兩筆 case_id 等於 A001，右表也有兩筆 A001，
+      merge 會產生 2 乘 2 等於 4 筆——這就是多對多的笛卡爾積。
+      原本 280 列的資料突然變成好幾千列，你還不知道為什麼。
+      解法就是加 validate 等於 one_to_many 或 one_to_one，
+      讓 pandas 在發生多對多的時候直接報錯，而不是默默爆炸。
+    animation: "show_blindspot_duplicate_keys"
+    error_code: 'pd.merge(df1, df2, on="name")  # duplicates!'
+    correct_code: 'pd.merge(df1, df2, on="name", validate="1:m")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個翻車現場：忘記指定 how，結果預設用了 inner join。
+      inner join 只保留兩邊都有的資料，沒配到的全部被丟掉。
+      你原本 280 筆個案，merge 完剩 241 筆，少了 39 個人，你還沒發現。
+      在疫調裡漏掉個案是非常嚴重的事情，等於漏報。
+      所以每次 merge 都要明確寫出 how 等於 left，不要依賴預設值。
+    animation: "show_blindspot_inner_default"
+    error_code: 'pd.merge(cases, labs, on="id")  # inner join'
+    correct_code: 'pd.merge(cases, labs, on="id", how="left")'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個翻車現場：兩張表都有同名欄位，merge 之後自動加了後綴。
+      比如兩邊都有 date 欄位，合併後就變成 date_x 和 date_y。
+      然後你寫 result 中括號 date，直接 KeyError！
+      解法是在 merge 的時候用 suffixes 參數，幫這些同名欄位取有意義的名字。
+      比如 case 底線 date 和 lab 底線 date，一眼就知道哪個是哪個。
+    animation: "show_blindspot_suffix_collision"
+    error_code: 'result["date"]  # KeyError: date_x / date_y'
+    correct_code: 'pd.merge(a, b, on="id", suffixes=("_case","_lab"))'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜！你已經學會了 merge 的核心用法和三大陷阱。
+      下一集我們來處理字串清理，教你怎麼把髒亂的文字欄位變乾淨。
+      畢竟，資料分析有八成的時間都在清資料嘛。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

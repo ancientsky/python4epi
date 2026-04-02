@@ -38,6 +38,11 @@ on:
           - groupby
           - epicurve
           - seaborn_plotly
+          - value_counts
+          - pivot_table
+          - method_chaining
+          - merge
+          - str_cleanup
       quality:
         description: "Render quality"
         required: false

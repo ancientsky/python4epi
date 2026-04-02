@@ -1,0 +1,200 @@
+meta:
+  chapter: "02"
+  concept: "pivot_table"
+  title: "Excel 樞紐分析表——pivot_table 完全攻略"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch02_10_pivot_table"
+  scene_class: "Ch02PivotTableScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：pivot_table
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！今天要帶你學一個超實用的招式——pivot_table。
+      如果你做過疫調報告，一定很熟悉 Excel 的樞紐分析表。
+      用滑鼠拖拖拉拉就能做出漂亮的交叉表，超方便對不對？
+      但你有沒有想過，每次都要手動操作，萬一資料更新了，又得重做一次。
+      今天教你用 Python 一行程式碼就搞定，而且可以重複執行，再也不用重做。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "excel_analogy"
+    narration: >
+      如果你用 Excel 做過樞紐分析表，恭喜你，你已經會 pivot_table 的概念了！
+      回想一下 Excel 的介面：你把欄位拖到列區域、欄區域、值區域，再選聚合方式。
+      在 pandas 裡，列區域就是 index，欄區域就是 columns，值區域就是 values，
+      聚合方式就是 aggfunc。
+      就這四個參數，完全對應 Excel 的四個區塊。
+      學會這個對應關係，你就能秒懂 pivot_table 的所有參數。
+    animation: "show_excel_analogy"
+    pause_after: 0.5
+
+  - id: "pivot_basic"
+    narration: >
+      來看第一個範例。
+      松柏護理之家有不同樓層和翼別，我們想知道每個樓層、每個翼別的平均感染情況。
+      pd 點 pivot_table，values 放 infected，index 放 wing，columns 放 floor，
+      aggfunc 設 mean。一行搞定！
+      結果就是一張漂亮的二維表格，橫軸是樓層，縱軸是翼別，格子裡是平均感染率。
+      這在 Excel 要拖半天，Python 只要一行。
+    animation: "show_pivot_basic"
+    code: |
+      pd.pivot_table(
+          df,
+          values="infected",
+          index="wing",
+          columns="floor",
+          aggfunc="mean",
+      )
+    output: |
+      floor      1      2      3
+      wing
+      A       0.38   0.42   0.50
+      B       0.40   0.45   0.48
+    pause_after: 0.5
+
+  - id: "margins"
+    narration: >
+      Excel 樞紐分析表有個「小計」功能，pandas 也有！
+      只要加上 margins 等於 True，就會自動幫你算出每一行、每一列的合計。
+      還可以用 margins_name 自訂小計那一列的名稱，比如寫「合計」。
+      就像 Excel 按一個勾就出現的小計列，但這裡你用程式碼控制，更精確也更好追蹤。
+    animation: "show_margins"
+    code: |
+      pd.pivot_table(
+          df,
+          values="infected",
+          index="wing",
+          columns="floor",
+          aggfunc="mean",
+          margins=True,
+          margins_name="合計",
+      )
+    pause_after: 0.5
+
+  - id: "multiple_aggfunc"
+    narration: >
+      如果你想同時看平均值、總數、和筆數怎麼辦？
+      aggfunc 可以傳一個列表！放入 mean、sum、count，一次算三種。
+      結果會變成多層欄位，最上層是聚合方式，下層是原本的 columns。
+      一張表搞定三種統計，不用寫三行程式碼，效率爆表。
+      不過要注意，多個 aggfunc 會產生 MultiIndex 欄位，等一下盲點區會教你怎麼讀。
+    animation: "show_multiple_aggfunc"
+    code: |
+      pd.pivot_table(
+          df,
+          values="infected",
+          index="wing",
+          columns="floor",
+          aggfunc=["mean", "sum", "count"],
+      )
+    pause_after: 0.5
+
+  - id: "pivot_vs_groupby"
+    narration: >
+      你可能會問：groupby 跟 pivot_table 到底差在哪？
+      簡單說，groupby 適合一維聚合，算完接著做更多運算，像流水線一樣。
+      pivot_table 適合做二維交叉表，直接展示結果，像報告用的表格。
+      如果你要寫進報告給長官看，用 pivot_table；
+      如果你要接著做更多資料處理，用 groupby。
+      兩個都是好工具，看場景選擇就對了。
+    animation: "show_pivot_vs_groupby"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      來做個重點整理！
+      pivot_table 的四個核心參數：index、columns、values、aggfunc，
+      完全對應 Excel 樞紐分析表的列區域、欄區域、值區域、聚合方式。
+      margins 加小計，aggfunc 可以傳列表一次算多種。
+      groupby 適合流水線運算，pivot_table 適合二維報表展示。
+      記住這些，你的疫調報告效率直接翻倍。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：登革熱各區月份分析
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看 pivot_table 在登革熱疫情分析裡怎麼大顯身手。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設你拿到一份登革熱通報資料，有行政區和發病月份。
+      用 pivot_table，index 放 district，columns 放 month，values 放 cases，
+      aggfunc 用 sum。
+      一張表就能看出哪個區哪個月疫情最嚴重。
+      比如前鎮區八月份病例數爆增，可能跟那邊的積水容器沒清有關。
+      這種交叉表在疫調週報裡超常見，pivot_table 幫你秒產出。
+    animation: "show_extra_example"
+    code: |
+      dengue_pivot = pd.pivot_table(
+          dengue_df,
+          values="cases",
+          index="district",
+          columns="month",
+          aggfunc="sum",
+          fill_value=0,
+      )
+      print(dengue_pivot)
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      pivot_table 的三大新手坑來了！幾乎每個初學者都會踩到至少一個。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個陷阱：忘記指定 aggfunc。
+      如果你不寫 aggfunc，pandas 預設用 mean 幫你算平均值。
+      但你其實想算筆數啊！結果你看到一堆小數點，還以為程式壞了。
+      記得永遠明確指定 aggfunc，不要依賴預設值。
+      寫程式跟做疫調一樣，明確比隱含好。
+    animation: "show_blindspot_no_aggfunc"
+    error_code: 'pivot_table(df, values="age", index="floor")'
+    correct_code: 'pivot_table(df, values="age", index="floor", aggfunc="count")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個陷阱：搞混 pivot 和 pivot_table。
+      pandas 有兩個方法，pivot 跟 pivot_table，名字很像但行為不同。
+      pivot 要求 index 加 columns 的組合必須唯一，有重複值就會報錯。
+      pivot_table 會自動幫你聚合重複值，所以不會報錯。
+      做疫調資料重複是常態，乖乖用 pivot_table 就對了。
+    animation: "show_blindspot_pivot_vs_pivot_table"
+    error_code: 'df.pivot(index="floor", columns="wing", values="infected")'
+    correct_code: 'pd.pivot_table(df, index="floor", columns="wing", values="infected")'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個陷阱：多個 aggfunc 之後，欄位變成 MultiIndex，不知道怎麼讀。
+      你用 result 中括號 mean，結果噴 KeyError，嚇到以為自己寫錯。
+      其實多個 aggfunc 的結果欄位是元組格式，要用 result 中括號，
+      括號裡面放括號 mean 逗號 infected。
+      就像地址要寫到門牌號碼才找得到人，光寫路名不夠。
+    animation: "show_blindspot_multiindex"
+    error_code: 'result["mean"]'
+    correct_code: 'result[("mean", "infected")]'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜！你已經學會用 pivot_table 做出專業級的交叉分析表。
+      下一集我們要進入 method chaining 的世界，
+      教你像串珠子一樣把多個操作串在一起，寫出又短又漂亮的程式碼。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
