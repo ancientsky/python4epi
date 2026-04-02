@@ -80,86 +80,17 @@ ages = df["age"]        # 280 位住民的年齡，就是一個 Series
 
 ---
 
-## 教學影片
-
-每個重要概念都有搭配的教學影片，由老師傅手把手帶你從零學會。點擊展開即可觀看：
-
-### Part 1 資料處理系列
-
-````{dropdown} 🎬 DataFrame 是什麼？從 CSV 到表格的第一步
-```{youtube} 6VaRmrPorog
-```
-````
-
-````{dropdown} 🎬 一分鐘看懂你的資料——info() 與 describe()
-```{youtube} 0nr8EO2EYgU
-```
-````
-
-````{dropdown} 🎬 日期時間大魔王——to_datetime 完全攻略
-```{youtube} fjflhonc_7Y
-```
-````
-
-````{dropdown} 🎬 衍生變項四大招——cut, axis, astype, dt
-```{youtube} nizzbpAajlw
-```
-````
-
-````{dropdown} 🎬 遺漏值偵探社——NaN, NaT, None 一次搞懂
-```{youtube} Eb4xFn8MAtI
-```
-````
-
-````{dropdown} 🎬 分組統計秘密武器——groupby + agg 完全攻略
-```{youtube} A08xPAxb3Fc
-```
-````
-
-### Part 1.5 進階資料操作系列
-
-````{dropdown} 🎬 頻率表速成——value_counts + crosstab 完全攻略
-```{youtube} awq3VxbW9qo
-```
-````
-
-````{dropdown} 🎬 Excel 樞紐分析表——pivot_table 完全攻略
-```{youtube} eFAQ4Xz7gq8
-```
-````
-
-````{dropdown} 🎬 一行寫完分析——Method Chaining 流水線
-```{youtube} sSw-xiaUafM
-```
-````
-
-````{dropdown} 🎬 合併資料表——merge 就是你的 VLOOKUP
-```{youtube} b2W8rfIn8Ts
-```
-````
-
-````{dropdown} 🎬 文字清理三板斧——str + drop_duplicates + rename
-```{youtube} AasXdk4-i_E
-```
-````
-
-### Part 2 視覺化系列
-
-````{dropdown} 🎬 用 matplotlib 畫出疫調等級的流行曲線
-```{youtube} OnHzOWIP12s
-```
-````
-
-````{dropdown} 🎬 seaborn + plotly + 圖表輸出投稿密技
-```{youtube} cLjVwKlXHVM
-```
-````
-
----
-
 ## Part 1：資料處理
 
 ### Step 1: 讀入 line list
+
+:::{admonition} 教學影片：DataFrame 是什麼？從 CSV 到表格的第一步
+:class: tip, dropdown
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/6VaRmrPorog" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+:::
 
 ```python
 import pandas as pd
@@ -176,6 +107,14 @@ df.head()
 > - `df.head()`：顯示前 5 筆資料（可以加數字，如 `df.head(10)` 看前 10 筆）
 
 ### Step 2: 檢視資料結構
+
+:::{admonition} 教學影片：一分鐘看懂你的資料——info() 與 describe()
+:class: tip, dropdown
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/0nr8EO2EYgU" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+:::
 
 拿到新資料的第一件事：搞清楚「長什麼樣」。
 
@@ -203,6 +142,14 @@ df.describe()
 > 重點觀察：年齡 `min` 和 `max` 合理嗎？有沒有 -1 或 999 這種異常值？
 
 ### Step 3: 日期轉換
+
+:::{admonition} 教學影片：日期時間大魔王——to_datetime 完全攻略
+:class: tip, dropdown
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/fjflhonc_7Y" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+:::
 
 line list 中有 5 個日期欄位，讀入時都是**文字（object）**，Python 不知道它們是日期。必須手動轉成 `datetime` 型別，才能做時間排序、相減、取月份等操作。
 
@@ -238,6 +185,14 @@ print(df["symptom_onset_date"].dt.day_name().head())  # "Thursday"
 > 💡 **什麼是 `.dt`？** 這是 pandas 的「日期存取器（accessor）」。當一個 Series 是 datetime 型別時，你可以用 `.dt` 取出日期的各個部分：`.dt.year`（年）、`.dt.month`（月）、`.dt.day`（日）、`.dt.days`（天數差）、`.dt.isocalendar().week`（ISO 週次）。
 
 ### Step 4: 建立衍生變項
+
+:::{admonition} 教學影片：衍生變項四大招——cut, axis, astype, dt
+:class: tip, dropdown
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/nizzbpAajlw" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+:::
 
 疫調分析常需要從原始資料**衍生新變項**——也就是用現有的欄位計算出新的欄位。語法很簡單：`df["新欄位名"] = 計算公式`。
 
@@ -314,6 +269,14 @@ df["epi_week"] = df["symptom_onset_date"].dt.isocalendar().week
 
 ### Step 5: 處理遺漏值
 
+:::{admonition} 教學影片：遺漏值偵探社——NaN, NaT, None 一次搞懂
+:class: tip, dropdown
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/Eb4xFn8MAtI" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+:::
+
 未感染者不會有 `symptom_onset_date`、`hospitalization_date` 等——這些空值不是資料錯誤，而是**結構性遺漏**（structural missing）：沒生病當然沒有發病日期。
 
 > **遺漏值的型別：**
@@ -346,6 +309,14 @@ print("未感染者有 onset 日期的數量：",
 > - 如果結果是 0，代表結構性遺漏沒問題
 
 ### Step 6: groupby 分組統計
+
+:::{admonition} 教學影片：分組統計秘密武器——groupby + agg 完全攻略
+:class: tip, dropdown
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/A08xPAxb3Fc" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+:::
 
 **`groupby` 是什麼？** 想像你在 Excel 裡做樞紐分析表（Pivot Table）：先選擇「依照哪個欄位分組」，再對每組做計算（計數、加總、平均等）。pandas 的 `groupby` 做的就是這件事。
 
@@ -397,6 +368,14 @@ print(wing_stats.to_string(index=False))
 
 #### 頻率表：`value_counts()` — 你的第一張統計表
 
+:::{admonition} 教學影片：頻率表速成——value_counts + crosstab 完全攻略
+:class: tip, dropdown
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/awq3VxbW9qo" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+:::
+
 疫調的第一步通常是看各欄位的次數分布。`value_counts()` 就是 Excel 裡的 `COUNTIF`。
 
 ```python
@@ -416,6 +395,14 @@ print(df["clinical_severity"].value_counts(normalize=True).round(3) * 100)
 > | `dropna=False` | 把遺漏值也算進去 |
 
 #### 樞紐分析表：`pivot_table()` — Excel 最愛的功能
+
+:::{admonition} 教學影片：Excel 樞紐分析表——pivot_table 完全攻略
+:class: tip, dropdown
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/eFAQ4Xz7gq8" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+:::
 
 如果你在 Excel 常用樞紐分析表（Pivot Table），`pd.pivot_table()` 就是它的 Python 版本。
 
@@ -493,6 +480,14 @@ print(df["risk_level"].value_counts())
 
 #### Method Chaining — 現代 pandas 風格
 
+:::{admonition} 教學影片：一行寫完分析——Method Chaining 流水線
+:class: tip, dropdown
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/sSw-xiaUafM" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+:::
+
 傳統寫法把每一步拆開，中間產生很多暫時變數。**Method chaining**（方法鏈）把多步操作串成一條流水線，可讀性更高：
 
 ```python
@@ -544,6 +539,14 @@ print(result)
 
 #### 合併資料表：`merge()` — 疫調最常見的需求
 
+:::{admonition} 教學影片：合併資料表——merge 就是你的 VLOOKUP
+:class: tip, dropdown
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/b2W8rfIn8Ts" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+:::
+
 實際疫調中，個案名冊和檢驗結果、環境檢體資料往往存在不同的檔案裡。`merge()` 就是 Excel 的 `VLOOKUP`，但更強大。
 
 ```python
@@ -572,6 +575,14 @@ print(merged)
 > 💡 疫調最常用 `"left"`：以個案名冊為主表，把檢驗結果「補」上去。
 
 #### 文字清理：`.str` accessor
+
+:::{admonition} 教學影片：文字清理三板斧——str + drop_duplicates + rename
+:class: tip, dropdown
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/AasXdk4-i_E" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+:::
 
 ```python
 # 清理翼區欄位：統一大小寫
@@ -661,6 +672,14 @@ plt.show()                    # 顯示圖表
 - **plotly** = 住智慧宅（互動功能多，但不好改內裝）
 
 ### Step 7: 流行曲線（matplotlib）
+
+:::{admonition} 教學影片：用 matplotlib 畫出疫調等級的流行曲線
+:class: tip, dropdown
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/OnHzOWIP12s" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+:::
 
 流行曲線（epidemic curve）是流行病學最經典的圖表——X 軸是發病日期，Y 軸是新增病例數。從曲線形狀可推斷傳播模式。
 
@@ -962,6 +981,14 @@ plt.show()
 ```
 
 ### Step 8: 年齡分布（seaborn）
+
+:::{admonition} 教學影片：seaborn + plotly + 圖表輸出投稿密技
+:class: tip, dropdown
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
+  <iframe src="https://www.youtube.com/embed/cLjVwKlXHVM" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+</div>
+:::
 
 seaborn 用一行就能畫出漂亮的統計圖，不用像 matplotlib 那樣手動設定每個元素。
 
