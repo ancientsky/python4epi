@@ -87,71 +87,71 @@ ages = df["age"]        # 280 位住民的年齡，就是一個 Series
 ### Part 1 資料處理系列
 
 ````{dropdown} 🎬 DataFrame 是什麼？從 CSV 到表格的第一步
-```{youtube} YOUTUBE_ID_02_01_DATAFRAME
+```{youtube} 6VaRmrPorog
 ```
 ````
 
 ````{dropdown} 🎬 一分鐘看懂你的資料——info() 與 describe()
-```{youtube} YOUTUBE_ID_02_02_DATA_INSPECT
+```{youtube} 0nr8EO2EYgU
 ```
 ````
 
 ````{dropdown} 🎬 日期時間大魔王——to_datetime 完全攻略
-```{youtube} YOUTUBE_ID_02_03_DATETIME
+```{youtube} fjflhonc_7Y
 ```
 ````
 
 ````{dropdown} 🎬 衍生變項四大招——cut, axis, astype, dt
-```{youtube} YOUTUBE_ID_02_04_DERIVED
+```{youtube} nizzbpAajlw
 ```
 ````
 
 ````{dropdown} 🎬 遺漏值偵探社——NaN, NaT, None 一次搞懂
-```{youtube} YOUTUBE_ID_02_05_MISSING
+```{youtube} Eb4xFn8MAtI
 ```
 ````
 
 ````{dropdown} 🎬 分組統計秘密武器——groupby + agg 完全攻略
-```{youtube} YOUTUBE_ID_02_06_GROUPBY
+```{youtube} A08xPAxb3Fc
 ```
 ````
 
 ### Part 1.5 進階資料操作系列
 
 ````{dropdown} 🎬 頻率表速成——value_counts + crosstab 完全攻略
-```{youtube} YOUTUBE_ID_02_09_VALUE_COUNTS
+```{youtube} awq3VxbW9qo
 ```
 ````
 
 ````{dropdown} 🎬 Excel 樞紐分析表——pivot_table 完全攻略
-```{youtube} YOUTUBE_ID_02_10_PIVOT_TABLE
+```{youtube} eFAQ4Xz7gq8
 ```
 ````
 
 ````{dropdown} 🎬 一行寫完分析——Method Chaining 流水線
-```{youtube} YOUTUBE_ID_02_11_METHOD_CHAINING
+```{youtube} sSw-xiaUafM
 ```
 ````
 
 ````{dropdown} 🎬 合併資料表——merge 就是你的 VLOOKUP
-```{youtube} YOUTUBE_ID_02_12_MERGE
+```{youtube} b2W8rfIn8Ts
 ```
 ````
 
 ````{dropdown} 🎬 文字清理三板斧——str + drop_duplicates + rename
-```{youtube} YOUTUBE_ID_02_13_STR_CLEANUP
+```{youtube} AasXdk4-i_E
 ```
 ````
 
 ### Part 2 視覺化系列
 
 ````{dropdown} 🎬 用 matplotlib 畫出疫調等級的流行曲線
-```{youtube} YOUTUBE_ID_02_07_EPICURVE
+```{youtube} OnHzOWIP12s
 ```
 ````
 
 ````{dropdown} 🎬 seaborn + plotly + 圖表輸出投稿密技
-```{youtube} YOUTUBE_ID_02_08_SEABORN_PLOTLY
+```{youtube} cLjVwKlXHVM
 ```
 ````
 
