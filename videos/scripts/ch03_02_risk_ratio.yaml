@@ -1,0 +1,204 @@
+meta:
+  chapter: "03"
+  concept: "risk_ratio"
+  title: "風險比 RR——暴露到底有沒有增加風險？"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch03_02_risk_ratio"
+  scene_class: "Ch03RiskRatioScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：風險比 RR
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！上一集我們學了 2×2 表，拿到 a、b、c、d 四個數字。
+      但光看數字不夠，我們需要一個指標來量化「暴露跟生病的關聯有多強」。
+      今天的主角就是風險比，英文叫 Risk Ratio，簡稱 RR。
+      你可以把 RR 想成一個放大鏡——它會告訴你，暴露組的風險是未暴露組的幾倍。
+      超簡單的概念，但超級重要，幾乎每篇疫調報告都會算。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "formula"
+    narration: >
+      RR 的公式長這樣：暴露組的侵襲率，除以未暴露組的侵襲率。
+      分子是 a 除以 a 加 b，分母是 c 除以 c 加 d。
+      就是把兩組的「生病機率」拿來比一比。
+      像在比兩家餐廳的食物中毒機率，一除就知道誰比較危險。
+    animation: "show_formula"
+    code: |
+      risk_exposed = a / (a + b)
+      risk_unexposed = c / (c + d)
+      rr = risk_exposed / risk_unexposed
+    pause_after: 0.5
+
+  - id: "legionella_calc"
+    narration: >
+      回到松柏護理之家。上一集算過，淋浴暴露組侵襲率約 48.8%，
+      未暴露組約 34.5%。
+      RR 等於 0.488 除以 0.345，大約是 1.41。
+      意思是「使用淋浴的住民，感染退伍軍人症的風險是沒使用淋浴的 1.41 倍」。
+      注意我說的是「1.41 倍」，不是「多了 1.41 倍」，這個差別等一下盲點區會細講。
+    animation: "show_legionella_calc"
+    code: |
+      rr = (83 / 170) / (38 / 110)
+      print(f"Risk Ratio = {rr:.2f}")
+    output: |
+      Risk Ratio = 1.41
+    pause_after: 0.5
+
+  - id: "interpretation_1"
+    narration: >
+      RR 等於 1 代表什麼？代表暴露組跟未暴露組的風險一模一樣，沒有關聯。
+      就像兩個人吃不同餐廳，結果拉肚子的機率一樣高，那就不能怪餐廳。
+      RR 等於 1 是我們的基準線，也叫虛無值。
+    animation: "show_interpretation_null"
+    pause_after: 0.5
+
+  - id: "interpretation_2"
+    narration: >
+      RR 大於 1 呢？代表暴露組的風險比較高，這個暴露可能是一個風險因子。
+      RR 等於 2 就是「暴露組的風險是未暴露組的 2 倍」。
+      RR 等於 5 就是 5 倍，數字越大，關聯越強。
+      但記住，關聯不等於因果！RR 大只是說有統計上的關聯，
+      不能直接說「就是這個暴露害的」，還需要更多證據。
+    animation: "show_interpretation_above"
+    pause_after: 0.5
+
+  - id: "interpretation_3"
+    narration: >
+      RR 小於 1 又是什麼意思？代表暴露組的風險反而比較低！
+      這時候暴露是一個保護因子。
+      最經典的例子就是疫苗——打過疫苗的人，感染風險比沒打的低。
+      RR 等於 0.3 就是說打疫苗的人風險只有沒打的三成，保護效果很好。
+    animation: "show_interpretation_below"
+    pause_after: 0.5
+
+  - id: "python_function"
+    narration: >
+      來寫一個完整的 Python 函式。
+      輸入 a、b、c、d 四個數字，輸出風險比。
+      加一個小小的防呆：如果分母是零，就沒辦法算，回傳 None。
+      以後任何疫調資料，只要做好 2×2 表抓出數字，丟進這個函式就搞定。
+    animation: "show_python_function"
+    code: |
+      def calc_risk_ratio(a, b, c, d):
+          risk_exp = a / (a + b)
+          risk_unexp = c / (c + d)
+          if risk_unexp == 0:
+              return None
+          return risk_exp / risk_unexp
+
+      rr = calc_risk_ratio(83, 87, 38, 72)
+      print(f"RR = {rr:.2f}")
+    output: |
+      RR = 1.41
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點整理！RR 等於暴露組侵襲率除以未暴露組侵襲率。
+      RR 等於 1 表示沒關聯，大於 1 是風險因子，小於 1 是保護因子。
+      RR 看的是「幾倍」，不是「多了幾倍」。
+      而且 RR 只適用於世代研究或橫斷研究，case-control 研究不能用，要用 OR。
+      這些都是超重要的觀念，搞混的話報告會被審查委員退件的。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：麻疹疫苗保護力
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看 RR 在疫苗保護力評估裡怎麼用。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_context"
+    narration: >
+      某幼兒園爆發麻疹群聚，共 100 位小朋友。
+      其中 60 位有接種 MMR 疫苗，40 位沒有。
+      有接種的小朋友中 6 位感染，沒接種的有 20 位感染。
+      來算 RR！
+    animation: "show_extra_context"
+    pause_after: 0.5
+
+  - id: "extra_calc"
+    narration: >
+      有接種組的侵襲率是 6 除以 60，等於百分之十。
+      沒接種組是 20 除以 40，等於百分之五十。
+      RR 等於 0.1 除以 0.5，等於 0.2。
+      RR 小於 1！代表打疫苗是保護因子。
+      接種組的感染風險只有未接種組的兩成，也就是降低了百分之八十的風險。
+      這個百分之八十就是疫苗保護力 VE 的概念——VE 等於 1 減 RR。
+    animation: "show_extra_calc"
+    code: |
+      rr_vaccine = (6 / 60) / (20 / 40)
+      ve = 1 - rr_vaccine
+      print(f"RR = {rr_vaccine:.2f}")
+      print(f"VE = {ve:.0%}")
+    output: |
+      RR = 0.20
+      VE = 80%
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      盲點時間！這三個錯誤，連碩班學生都會犯，你一定要注意。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個陷阱：RR 等於 2，很多人說「風險多了 2 倍」。
+      錯！RR 等於 2 是「風險是 2 倍」，也就是「多了 1 倍」。
+      就像你身高 180 公分，我 90 公分，你是我的 2 倍高，不是多了 2 倍高。
+      多了 2 倍高的話你要 270 公分，那是巨人了。
+      正確的說法是「2 times as likely」，不是「2 times more likely」。
+    animation: "show_blindspot_times"
+    error_code: 'print("2 times MORE likely")'
+    correct_code: 'print("2 times AS likely")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個陷阱：RR 大於 1 就喊「有因果關係」。
+      不對！RR 只能告訴你有統計上的關聯，不能證明因果。
+      可能有干擾因子在搞鬼。比如使用淋浴的住民可能活動力比較好，
+      他們也更常去公共區域走動，到底是淋浴還是公共區域造成感染？
+      要證明因果，需要分層分析或迴歸模型來校正干擾因子。
+    animation: "show_blindspot_causation"
+    error_code: "rr = 1.41  # shower CAUSES infection"
+    correct_code: "rr = 1.41  # shower ASSOCIATED with infection"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個陷阱：在 case-control 研究裡算 RR。
+      case-control 研究是先找到病人和健康人，再回頭問暴露史。
+      因為你人為決定了多少病人、多少健康人，所以分母不是自然的族群比例。
+      這時候算出來的侵襲率是假的，RR 也是假的！
+      case-control 研究只能算勝算比 OR，這個下一集會教。
+      記住口訣：「世代研究用 RR，病例對照用 OR」。
+    animation: "show_blindspot_study_design"
+    error_code: "rr = risk_cases / risk_controls  # case-control"
+    correct_code: "or_val = (a * d) / (b * c)  # case-control"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      太棒了！你現在會算風險比 RR，也知道怎麼正確解讀它。
+      RR 大於 1 是風險因子，小於 1 是保護因子，等於 1 是沒關聯。
+      但如果你的研究是 case-control 設計，就不能用 RR，要改用勝算比 OR。
+      下一集就來教你 OR 到底怎麼算、跟 RR 差在哪裡。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

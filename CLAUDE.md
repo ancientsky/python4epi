@@ -292,6 +292,22 @@ CODE_TEXT = "#F8F8F2"        # Code text (light)
 BORDER_LIGHT = "#E8E5DF"    # Card border (light gray)
 ```
 
+> **Note:** This color palette is shared across **all visual assets**: Manim videos, SVG diagrams (in `book/chapters/images/`), and the `youtube-lite` CSS (`book/_static/`). When creating or modifying any visual element, always use these colors for consistency.
+
+### SVG Diagram Style Guide
+
+All hand-crafted SVG diagrams in `book/chapters/images/` follow these conventions:
+
+- **Background**: `fill="#FAF8F3"` warm white with `rx="12"` rounded corners
+- **Cards**: `fill="#FFFFFF"` white with `stroke="#E8E5DF"` border and drop shadow filter
+- **Color usage**: `#D97757` for emphasis/disease/exposed, `#6A9BCC` for secondary/healthy/unexposed, `#788C5D` for success/CI/merge, `#D94452` for errors/warnings
+- **Text**: `#1A1A1A` primary, `#6B6B6B` secondary, system-ui font stack
+- **Structure**: `<svg xmlns="..." viewBox="0 0 W H" font-family="system-ui, -apple-system, sans-serif">`
+- **Shadow filter**: `<filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter>`
+- **Labels**: Chinese prose for descriptions, English for technical terms (e.g., "暴露 Exposed")
+- **Figure directive**: `{figure} images/filename.svg` with `:name:`, `:alt:`, `:width: 100%`
+- **Self-contained**: no external fonts or assets; rely on system fonts
+
 **Design principles:**
 - Light warm-white background (#FAF8F3), clean and minimal
 - Motion graphics style — no talking head, all animated

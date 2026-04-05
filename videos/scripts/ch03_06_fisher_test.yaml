@@ -1,0 +1,208 @@
+meta:
+  chapter: "03"
+  concept: "fisher_test"
+  title: "Fisher 精確檢定——小樣本的救星"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch03_06_fisher_test"
+  scene_class: "Ch03FisherTestScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：Fisher 精確檢定
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎回來！今天要講一個統計界的精密武器——Fisher 精確檢定。
+      上一集我們學了卡方檢定，它又快又好用，但有一個致命弱點。
+      就像你帶了一把大砲去打仗，結果敵人藏在巷子裡，大砲根本施展不開。
+      當樣本數太小的時候，卡方檢定就失靈了。
+      這時候，就輪到 Fisher 精確檢定登場了。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "chisq_limitation"
+    narration: >
+      先來回顧一下卡方檢定的地雷區。
+      卡方檢定有一個前提假設：每個格子的期望值至少要 5 以上。
+      期望值怎麼算？就是那個格子的行合計乘以列合計，再除以總數。
+      如果任何一個格子的期望值小於 5，卡方檢定的近似公式就不準了。
+      就像拿計算機算圓周率，精度不夠的時候，後面幾位都是亂的。
+    animation: "show_chisq_limitation"
+    code: |
+      expected = (row_total * col_total) / grand_total
+      # Rule of thumb: all expected >= 5
+    pause_after: 0.5
+
+  - id: "fisher_idea"
+    narration: >
+      Fisher 精確檢定的想法其實很暴力，也很優雅。
+      它不用什麼近似公式，它直接把所有可能的 2 乘 2 表都列出來，
+      然後算出每一種排列的機率，最後把比觀察到的結果更極端的機率加起來。
+      聽起來很瘋狂對吧？但這就是為什麼它叫「精確」檢定。
+      不靠估計，不靠近似，每一步都是精確計算。
+      就像老師改考卷，不是抽查，是每一題都仔細看過。
+    animation: "show_fisher_idea"
+    pause_after: 0.5
+
+  - id: "legionella_small"
+    narration: >
+      回到我們的松柏護理之家。
+      假設我們想看 ICU 入住跟水療池使用的關係。
+      但 ICU 入住的人本來就少，只有個位數。
+      這時候 2 乘 2 表裡面就會出現很小的數字，期望值可能不到 5。
+      讓我們先用 crosstab 做出這張表，然後檢查期望值。
+    animation: "show_legionella_small"
+    code: |
+      ct = pd.crosstab(df["icu_admission"], df["hydrotherapy_use"])
+      chi2, p, dof, expected = stats.chi2_contingency(ct)
+      print(expected)
+    pause_after: 0.5
+
+  - id: "check_expected"
+    narration: >
+      看到了嗎？expected 陣列裡有格子小於 5。
+      這時候如果你硬用卡方，得到的 p 值就不可靠。
+      就像量體溫用壞掉的溫度計，數字有了但不能信。
+      所以我們需要換一把更精準的尺——Fisher 精確檢定。
+    animation: "show_check_expected"
+    code: |
+      if (expected < 5).any():
+          print("Expected < 5 detected, use Fisher!")
+    pause_after: 0.5
+
+  - id: "fisher_scipy"
+    narration: >
+      在 Python 裡用 Fisher 精確檢定超簡單。
+      scipy 點 stats 點 fisher_exact，傳入 2 乘 2 表就好了。
+      它會回傳兩個東西：勝算比和 p 值。
+      注意！fisher_exact 吃的是原始次數的 2 乘 2 陣列，不是 DataFrame。
+      所以要先用 values 轉成 numpy 陣列。
+    animation: "show_fisher_scipy"
+    code: |
+      from scipy.stats import fisher_exact
+      odds_ratio, p_value = fisher_exact(ct.values)
+      print(f"OR = {odds_ratio:.2f}, p = {p_value:.4f}")
+    pause_after: 0.5
+
+  - id: "compare_p"
+    narration: >
+      有趣的來了！讓我們同時算卡方和 Fisher 的 p 值來比較。
+      當樣本夠大的時候，兩個 p 值會非常接近，幾乎一模一樣。
+      但當樣本小、期望值低的時候，卡方的 p 值會偏掉。
+      Fisher 才是真正的標準答案。
+      所以經驗法則是：先檢查期望值，有任何格子小於 5，就用 Fisher。
+    animation: "show_compare_p"
+    code: |
+      chi2, p_chi2, _, _ = stats.chi2_contingency(ct)
+      _, p_fisher = fisher_exact(ct.values)
+      print(f"Chi-square p = {p_chi2:.4f}")
+      print(f"Fisher p     = {p_fisher:.4f}")
+    pause_after: 0.5
+
+  - id: "decision_flow"
+    narration: >
+      來整理一個簡單的決策流程。
+      拿到 2 乘 2 表，先算期望值。
+      所有格子都大於等於 5？用卡方檢定，又快又好。
+      有任何格子小於 5？乖乖用 Fisher 精確檢定。
+      其實很多期刊論文在小樣本時都要求用 Fisher，
+      這已經是學術界的標準做法了。
+    animation: "show_decision_flow"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      主線教學總結！
+      卡方檢定是近似法，期望值太小就不準。
+      Fisher 精確檢定是精確法，不受樣本大小限制。
+      scipy 點 stats 點 fisher_exact 一行搞定。
+      先檢查期望值，再決定用哪個檢定，這就是正確的流程。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：罕見癌症群聚
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      換個場景！我們來看一個罕見疾病群聚的案例。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      某個小鎮的工廠附近，三年內出現了 3 例罕見的血管肉瘤。
+      這種癌症在一般人群中發生率極低，一個小鎮通常幾十年才出現一例。
+      衛生單位趕緊調查，比較工廠附近居民跟其他地區居民的發病狀況。
+      但因為個案數只有 3 例，2 乘 2 表裡面都是個位數。
+      期望值最小的格子只有 0.8。這種情況下，卡方檢定完全不能用。
+      Fisher 精確檢定是唯一的選擇。
+      結果 p 值是 0.03，統計上顯著！
+      這個結果促使環保單位進一步調查工廠的排放物質。
+    animation: "show_extra_example"
+    code: |
+      rare_cancer = np.array([[3, 497], [1, 4999]])
+      odds_ratio, p_value = fisher_exact(rare_cancer)
+      print(f"OR = {odds_ratio:.1f}, p = {p_value:.3f}")
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Fisher 精確檢定的三個經典誤區！來看看你有沒有中招。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：不管三七二十一，直接用卡方檢定，完全不檢查期望值。
+      很多人拿到 2 乘 2 表就直接 chi2_contingency，得到一個 p 值就交差了。
+      但如果期望值太小，那個 p 值根本不可信。
+      正確做法：每次都先檢查 expected 陣列，有小於 5 的就改用 Fisher。
+      養成這個習慣，你的統計分析才站得住腳。
+    animation: "show_blindspot_always_chisq"
+    error_code: "chi2, p, dof, exp = chi2_contingency(ct)"
+    correct_code: "if (exp < 5).any(): use fisher_exact(ct)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：以為 Fisher 比卡方「沒力」、比較不容易達到顯著。
+      這是一個常見的誤解。Fisher 不是比較弱，它是比較嚴謹。
+      卡方是用近似公式估算 p 值，Fisher 是精確算出 p 值。
+      當樣本夠大的時候，兩者的 p 值幾乎一樣。
+      當樣本小的時候，Fisher 的結果才是正確的，卡方反而是亂猜的那個。
+      所以不要怕用 Fisher，它才是真正的金標準。
+    animation: "show_blindspot_fisher_weak"
+    error_code: "# Fisher is less powerful than chi-square"
+    correct_code: "# Fisher is exact, chi-square approximates"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：搞混單尾跟雙尾檢定。
+      scipy 的 fisher_exact 預設是雙尾檢定，也就是看勝算比不等於 1。
+      但你可以傳入 alternative 等於 greater 或 less 來做單尾檢定。
+      什麼時候用單尾？只有當你事前有明確的方向性假設時才用。
+      比如你確定暴露只會增加風險、不可能降低風險。
+      如果沒有很強的理由，就用預設的雙尾，比較保守也比較安全。
+    animation: "show_blindspot_one_vs_two"
+    error_code: "fisher_exact(ct, alternative='greater')"
+    correct_code: "fisher_exact(ct)  # two-sided by default"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      Fisher 精確檢定學會了！
+      記住口訣：期望值小於 5，卡方不可信，Fisher 來救場。
+      下一集我們要畫森林圖，把所有危險因子的風險比一字排開，
+      一張圖就能看出誰是最大的嫌疑犯！
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

@@ -145,13 +145,39 @@ uv run jupyter-book build book/
 uv run pytest
 ```
 
+## Tutorial Videos
+
+每章都有配套教學影片（Manim + TTS + FFMPEG），以輕鬆幽默的語調手把手教學。
+
+影片採用統一的視覺風格：暖白色背景 `#FAF8F3`、橘色強調 `#D97757`、藍色輔助 `#6A9BCC`、綠色成功 `#788C5D`。每支影片包含三個部分：
+
+1. **主線教學** — 用退伍軍人症群聚資料解說核心概念
+2. **額外防疫範例** — 同一概念應用到其他疫情（COVID-19、登革熱、腸病毒等）
+3. **初學者盲點** — 3 個常見錯誤，用「錯誤 vs 正確」對照動畫呈現
+
+```bash
+uv sync --group video
+uv run python videos/build.py --all
+```
+
+## Visual Diagrams
+
+章節中嵌入手繪 SVG 教學圖（`book/chapters/images/`），用統一色彩配置視覺化解說困難概念：
+
+- 2×2 列聯表解剖圖、RR vs OR 直覺圖、CI log 轉換三步驟
+- 卡方檢定觀察值 vs 期望值、森林圖閱讀指南
+- Git 工作流程、分支概念、PR 協作流程、學習路線圖
+
 ## Repository Layout
 
 - `book/`: Jupyter Book source (`_config.yml`, TOCs, 18 chapter markdown files, embedded notebooks)
+- `book/chapters/images/`: hand-crafted SVG diagrams for visual explanations
+- `book/_static/`: custom CSS/JS (youtube-lite embed)
 - `notebooks/`: standalone runnable lesson notebooks
 - `notebooks/exercises/`: exercise/solution notebook pairs (14 chapters)
 - `src/epi_learning/`: reusable helper package (`cleaning`, `metrics`, `tabulate`, `viz`)
 - `data/synthetic/`: teaching datasets — primary: `legionella_outbreak.csv` (280 × 32)
+- `videos/`: tutorial video generation (Manim + TTS + FFMPEG)
 - `tests/`: unit tests and notebook JSON smoke tests
 - `.github/workflows/`: CI and GitHub Pages workflows
 

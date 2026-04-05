@@ -1,0 +1,254 @@
+meta:
+  chapter: "03"
+  concept: "forest_plot"
+  title: "森林圖——一張圖比較所有嫌疑因子"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch03_07_forest_plot"
+  scene_class: "Ch03ForestPlotScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：森林圖
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎回來！今天我們要學一張超強的圖——森林圖。
+      之前我們一個一個分析危險因子，算了很多 2 乘 2 表和風險比。
+      但老闆看了你的報告，問：「所以到底哪個因子最可疑？」
+      你總不能叫他翻 8 張表格慢慢比對吧？
+      森林圖就是解決這個問題的。一張圖，把所有嫌疑因子排排站，
+      誰的風險比最高、誰的信賴區間最寬，一目了然。
+      就像警察局的嫌犯排列指認，所有人站成一排讓你挑。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "anatomy"
+    narration: >
+      先來認識森林圖的解剖結構。
+      每一行代表一個因子，水平方向是風險比的量尺。
+      圓點是點估計值，就是你算出來的風險比。
+      左右延伸的橫線是百分之 95 信賴區間，代表估計的不確定性。
+      最重要的是那條虛線，畫在風險比等於 1 的位置。
+      風險比等於 1 代表「沒有效應」，暴露跟疾病無關。
+      如果信賴區間的橫線有碰到這條虛線，就表示結果不顯著。
+      如果整條橫線都在虛線右邊，那就是顯著的危險因子。
+    animation: "show_anatomy"
+    pause_after: 0.5
+
+  - id: "loop_setup"
+    narration: >
+      在松柏護理之家的案例中，我們有好幾個暴露因子要檢驗。
+      淋浴、水療池、吸菸、免疫抑制等等。
+      一個一個手動算太累了，我們用 for 迴圈來自動化。
+      先建立一個清單，放所有要檢驗的因子名稱。
+      然後準備一個空的 list，等一下每算完一個就把結果存進去。
+    animation: "show_loop_setup"
+    code: |
+      factors = ["shower_use", "hydrotherapy_use",
+                 "smoking_history", "immunosuppressed",
+                 "comorbidity_dm", "comorbidity_copd",
+                 "comorbidity_chf", "comorbidity_cancer"]
+      results = []
+    pause_after: 0.5
+
+  - id: "loop_body"
+    narration: >
+      迴圈的本體長這樣。
+      對每個因子，先建 2 乘 2 表，算出四個格子的數字。
+      a 是暴露且生病，b 是暴露沒生病，c 是沒暴露但生病，d 是都沒有。
+      然後用公式算風險比：a 除以 a 加 b，再除以 c 除以 c 加 d。
+      信賴區間用對數轉換法：先取 log，加減 1.96 倍標準誤，再 exp 回來。
+      最後把因子名稱、風險比、上下界都存進 results。
+    animation: "show_loop_body"
+    code: |
+      for factor in factors:
+          ct = pd.crosstab(df[factor], df["sick"])
+          a, b = ct.iloc[1, 1], ct.iloc[1, 0]
+          c, d = ct.iloc[0, 1], ct.iloc[0, 0]
+          rr = (a/(a+b)) / (c/(c+d))
+          log_se = np.sqrt(1/a - 1/(a+b) + 1/c - 1/(c+d))
+          lo = np.exp(np.log(rr) - 1.96 * log_se)
+          hi = np.exp(np.log(rr) + 1.96 * log_se)
+          results.append({"factor": factor, "rr": rr,
+                          "ci_lo": lo, "ci_hi": hi})
+    pause_after: 0.5
+
+  - id: "to_dataframe"
+    narration: >
+      迴圈跑完，results 裡面就有所有因子的風險比和信賴區間了。
+      把它轉成 DataFrame，方便後續操作。
+      這裡有個重要的小技巧：用 sort_values 把風險比從大到小排序。
+      這樣畫出來的森林圖，最可疑的因子會在最上面，一眼就能看到重點。
+    animation: "show_to_dataframe"
+    code: |
+      res = pd.DataFrame(results)
+      res = res.sort_values("rr", ascending=True)
+    pause_after: 0.5
+
+  - id: "errorbar"
+    narration: >
+      畫森林圖的核心就是 matplotlib 的 errorbar 函數。
+      y 軸放因子名稱，x 軸放風險比。
+      xerr 需要的是從點估計到上界和下界的距離，不是上下界本身。
+      所以要先算 xerr 等於一個二維陣列，第一行是 rr 減 ci_lo，第二行是 ci_hi 減 rr。
+      fmt 用 o 代表圓點，capsize 加上末端的小橫線。
+      這樣每個因子就會顯示成一個圓點加上左右延伸的橫線。
+    animation: "show_errorbar"
+    code: |
+      fig, ax = plt.subplots(figsize=(8, 5))
+      xerr = np.array([res["rr"] - res["ci_lo"],
+                       res["ci_hi"] - res["rr"]])
+      ax.errorbar(res["rr"], res["factor"], xerr=xerr,
+                  fmt="o", color="#D97757", capsize=4)
+    pause_after: 0.5
+
+  - id: "null_line"
+    narration: >
+      接下來畫那條最重要的虛線——null effect line。
+      在風險比等於 1 的位置畫一條垂直虛線。
+      用 axvline，x 等於 1，linestyle 用虛線，顏色用灰色。
+      這條線就是判定顯著與否的標準線。
+      信賴區間有碰到它的因子，就不能說有統計顯著的關聯。
+    animation: "show_null_line"
+    code: |
+      ax.axvline(x=1, linestyle="--", color="gray",
+                 linewidth=1, label="Null (RR=1)")
+    pause_after: 0.5
+
+  - id: "polish"
+    narration: >
+      最後美化一下。
+      x 軸標籤寫 Risk Ratio，標題寫清楚是什麼資料的分析結果。
+      去掉上邊框和右邊框，讓圖看起來乾淨俐落。
+      加上圖例說明虛線代表什麼。
+      完成！你現在有一張可以放進疫調報告的專業森林圖了。
+    animation: "show_polish"
+    code: |
+      ax.set_xlabel("Risk Ratio (95% CI)")
+      ax.set_title("Forest plot: Legionella risk factors")
+      ax.spines["top"].set_visible(False)
+      ax.spines["right"].set_visible(False)
+      ax.legend()
+    pause_after: 0.5
+
+  - id: "interpret"
+    narration: >
+      怎麼解讀這張圖？
+      圓點在虛線右邊、而且整條信賴區間都沒碰到虛線的，就是顯著的危險因子。
+      圓點離虛線越遠，關聯越強。
+      信賴區間越窄，估計越精確。
+      如果信賴區間橫跨虛線，就像嫌犯有不在場證明，暫時不能定罪。
+      但記住！這裡看到的是粗略的風險比，還沒有校正干擾因子。
+      後面的章節會教你怎麼用分層分析和迴歸來處理干擾。
+    animation: "show_interpret"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      主線教學總結！
+      森林圖四步驟：for 迴圈算所有因子的風險比和信賴區間，
+      轉成 DataFrame 並排序，errorbar 畫圖，axvline 畫虛線。
+      一張圖就能讓老闆秒懂哪個因子最可疑。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：食物中毒調查
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      換個場景！我們來看食物中毒調查怎麼用森林圖。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_context"
+    narration: >
+      某公司尾牙聚餐後，200 位員工裡有 60 人上吐下瀉。
+      菜單上有沙拉、炸雞、玉米濃湯、提拉米蘇四道菜。
+      每個人吃了哪些菜都有紀錄。
+      疫調人員要找出是哪道菜害的。
+      用 for 迴圈對四道菜各算一次風險比，做出森林圖。
+    animation: "show_extra_context"
+    code: |
+      foods = ["salad", "chicken", "soup", "tiramisu"]
+      food_results = []
+      for food in foods:
+          ct = pd.crosstab(df[food], df["ill"])
+          # ... same RR calculation ...
+          food_results.append({"food": food, "rr": rr,
+                               "ci_lo": lo, "ci_hi": hi})
+    pause_after: 0.5
+
+  - id: "extra_result"
+    narration: >
+      結果一目了然！提拉米蘇的風險比高達 3.8，信賴區間完全在虛線右邊。
+      沙拉的風險比是 1.1，信賴區間橫跨虛線，不顯著。
+      炸雞和濃湯也差不多在 1 附近。
+      所以最大嫌疑就是提拉米蘇！
+      後來檢驗發現，提拉米蘇的生雞蛋裡驗出沙門氏菌，破案了。
+      森林圖讓你不用一張一張表格翻，一張圖就能鎖定嫌犯。
+    animation: "show_extra_result"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      森林圖的三個經典陷阱！來避避坑。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：因子沒有排序，圖上的點七零八落，看不出規律。
+      想像你去超市買東西，貨架上的商品隨便亂放，你要找醬油得找半天。
+      森林圖也一樣，如果因子沒排序，讀者的眼睛要來回掃描，非常累。
+      正確做法：用 sort_values 依風險比排序。
+      風險比最大的放上面或下面，讓圖有視覺層次感。
+    animation: "show_blindspot_sort"
+    error_code: "res = pd.DataFrame(results)"
+    correct_code: "res = pd.DataFrame(results).sort_values('rr')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：看到風險比很高就直接下結論說「這就是原因」。
+      森林圖上的是粗略風險比，沒有校正任何干擾因子。
+      比如年紀大的人既容易有慢性病，也比較容易得重症。
+      你看到慢性病的風險比很高，但也許只是因為年紀的關係。
+      這叫干擾作用，需要用分層分析或迴歸模型來處理。
+      森林圖是起點，不是終點。它幫你列出嫌疑犯，但定罪還需要更多證據。
+    animation: "show_blindspot_crude_rr"
+    error_code: "# high RR = causal factor"
+    correct_code: "# high crude RR = suspect, need adjustment"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：測了一堆因子，每個都用百分之 5 的顯著水準，忽略多重比較問題。
+      如果你測了 8 個因子，每個用 alpha 等於 0.05，
+      那至少出現一個假陽性的機率是 1 減 0.95 的 8 次方，大約百分之 34。
+      三分之一的機率會有假陽性！
+      所以因子很多的時候，要對 p 值保持警覺。
+      可以用 Bonferroni 校正：alpha 除以比較次數，0.05 除以 8 大約 0.006。
+      或者至少在報告裡註明測了多少個因子，讓讀者自己判斷。
+    animation: "show_blindspot_multiple"
+    error_code: "if p < 0.05: print('significant')"
+    correct_code: "if p < 0.05 / n_tests: print('significant')"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      森林圖學會了！
+      for 迴圈加 errorbar，就能把所有嫌疑因子排排站，一張圖講完整個故事。
+      記住：排序讓圖更好讀，粗略風險比不等於因果，多重比較要小心。
+      下一集我們要進入第四章，學群聚調查工作流，
+      把目前學到的所有工具串成一套完整的疫調 SOP。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
