@@ -61,17 +61,15 @@ cfr = 19 / 121
 
 ### 1) 數值變數——先把數字存起來
 
-:::{admonition} 教學影片：數值變數
-:class: tip, dropdown
-
 ```{raw} html
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/RhqNl3LzjmU" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+<div class="video-card">
+  <div class="video-title">教學影片：數值變數</div>
+  <div class="youtube-lite" data-id="RhqNl3LzjmU">
+    <img src="https://img.youtube.com/vi/RhqNl3LzjmU/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：變數是貼了標籤的盒子 → COVID-19 校園群聚範例 → 盲點：字串 vs 數字、大小寫、等號方向</p>
 </div>
 ```
-
-影片內容：變數是貼了標籤的盒子 → COVID-19 校園群聚範例 → 盲點：字串 vs 數字、大小寫、等號方向
-:::
 
 ```python
 # 松柏護理之家退伍軍人症群聚事件的基本數據
@@ -86,17 +84,15 @@ deaths = 19                 # 死亡人數
 
 ### 2) 計算指標——用除法得到比率
 
-:::{admonition} 教學影片：計算指標
-:class: tip, dropdown
-
 ```{raw} html
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/ZqqZmuVjoN0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+<div class="video-card">
+  <div class="video-title">教學影片：計算指標</div>
+  <div class="youtube-lite" data-id="ZqqZmuVjoN0">
+    <img src="https://img.youtube.com/vi/ZqqZmuVjoN0/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：除法算侵襲率/致死率 + f-string 格式化 → 登革熱盛行率範例 → 盲點：除法類型、忘加 f、:.2% 拆解</p>
 </div>
 ```
-
-影片內容：除法算侵襲率/致死率 + f-string 格式化 → 登革熱盛行率範例 → 盲點：除法類型、忘加 f、:.2% 拆解
-:::
 
 ```python
 # 侵襲率 = 感染人數 / 住民總數
@@ -114,17 +110,15 @@ print(f"住院率: {hosp_rate:.2%}")
 
 ### 3) 字典——把同一主題的資料放一起
 
-:::{admonition} 教學影片：字典
-:class: tip, dropdown
-
 ```{raw} html
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/4iriq9cNG-A" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+<div class="video-card">
+  <div class="video-title">教學影片：字典</div>
+  <div class="youtube-lite" data-id="4iriq9cNG-A">
+    <img src="https://img.youtube.com/vi/4iriq9cNG-A/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：字典 = 有格子的收納盒 → 腸病毒通報個案範例 → 盲點：key 引號、() vs []、KeyError</p>
 </div>
 ```
-
-影片內容：字典 = 有格子的收納盒 → 腸病毒通報個案範例 → 盲點：key 引號、() vs []、KeyError
-:::
 
 ```python
 # 用字典整理群聚事件摘要
@@ -144,17 +138,15 @@ print(f"{outbreak['facility']} CFR: {cfr:.2%}")
 
 ### 4) 列表——存放一組同類資料
 
-:::{admonition} 教學影片：列表
-:class: tip, dropdown
-
 ```{raw} html
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/bwRKaJYyGCU" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+<div class="video-card">
+  <div class="video-title">教學影片：列表</div>
+  <div class="youtube-lite" data-id="bwRKaJYyGCU">
+    <img src="https://img.youtube.com/vi/bwRKaJYyGCU/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：列表 = 一排格子櫃 → 每週 COVID 確診趨勢範例 → 盲點：索引從 0 開始、IndexError、列表不對齊</p>
 </div>
 ```
-
-影片內容：列表 = 一排格子櫃 → 每週 COVID 確診趨勢範例 → 盲點：索引從 0 開始、IndexError、列表不對齊
-:::
 
 ```python
 # 各樓層翼區的感染人數
@@ -169,17 +161,15 @@ print(f"感染人數最多的翼區：{floor_wing_names[max_index]}（{max_cases
 
 ### 5) 條件判斷——把指標轉成行動訊號
 
-:::{admonition} 教學影片：條件判斷
-:class: tip, dropdown
-
 ```{raw} html
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/8q6imxzb9mM" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+<div class="video-card">
+  <div class="video-title">教學影片：條件判斷</div>
+  <div class="youtube-lite" data-id="8q6imxzb9mM">
+    <img src="https://img.youtube.com/vi/8q6imxzb9mM/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：if/elif/else 路口指示牌 → 疫苗接種率門檻範例 → 盲點：= vs ==、忘記冒號、縮排錯誤</p>
 </div>
 ```
-
-影片內容：if/elif/else 路口指示牌 → 疫苗接種率門檻範例 → 盲點：= vs ==、忘記冒號、縮排錯誤
-:::
 
 ```python
 # 根據致死率決定應變層級
@@ -193,17 +183,15 @@ else:
 
 ### 6) 函式——把計算邏輯包成可重用的工具
 
-:::{admonition} 教學影片：函式
-:class: tip, dropdown
-
 ```{raw} html
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 1em;">
-  <iframe src="https://www.youtube.com/embed/CGux0-2swi8" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+<div class="video-card">
+  <div class="video-title">教學影片：函式</div>
+  <div class="youtube-lite" data-id="CGux0-2swi8">
+    <img src="https://img.youtube.com/vi/CGux0-2swi8/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：函式 = 自動計算機 → 結核病發生率範例 → 盲點：忘加括號、忘記 return、參數順序搞錯</p>
 </div>
 ```
-
-影片內容：函式 = 自動計算機 → 結核病發生率範例 → 盲點：忘加括號、忘記 return、參數順序搞錯
-:::
 
 ```python
 def calc_attack_rate(cases, population):
