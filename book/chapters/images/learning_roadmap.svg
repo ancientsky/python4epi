@@ -1,138 +1,155 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" font-family="system-ui, -apple-system, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 580" font-family="system-ui, -apple-system, sans-serif">
   <defs>
     <marker id="arrowDown" markerWidth="8" markerHeight="8" refX="4" refY="8" orient="auto">
-      <polygon points="0 0, 8 0, 4 8" fill="#4A90D9"/>
+      <polygon points="0 0, 8 0, 4 8" fill="#6A9BCC"/>
     </marker>
-    <filter id="shadow5" x="-2%" y="-2%" width="104%" height="104%">
+    <marker id="arrowRight" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#6B6B6B"/>
+    </marker>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
       <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
     </filter>
   </defs>
 
-  <!-- Background -->
-  <rect width="800" height="520" fill="#FAFBFC" rx="12"/>
+  <rect width="800" height="580" fill="#FAF8F3" rx="12"/>
 
-  <!-- Title -->
-  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#2C3E50">學習路線圖</text>
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">學習路線圖</text>
 
-  <!-- ===== Foundation Track (left side) ===== -->
-  <text x="220" y="58" text-anchor="middle" font-size="14" font-weight="bold" fill="#4A90D9">📚 基礎必修</text>
+  <!-- ===== Foundation Track (left) ===== -->
+  <text x="200" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A9BCC">基礎必修（按順序）</text>
 
   <!-- Ch 00 -->
-  <g filter="url(#shadow5)">
-    <rect x="120" y="68" width="200" height="44" rx="10" fill="#4A90D9"/>
-    <text x="220" y="87" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 00 導讀與工具</text>
-    <text x="220" y="104" text-anchor="middle" font-size="11" fill="#D6EAF8">安裝、Git、uv</text>
+  <g filter="url(#shadow)">
+    <rect x="100" y="68" width="200" height="42" rx="10" fill="#6A9BCC"/>
+    <text x="200" y="86" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 00 導讀與工具</text>
+    <text x="200" y="103" text-anchor="middle" font-size="10" fill="#FFFFFF" opacity="0.8">Python、uv、Git、Jupyter</text>
   </g>
-  <text x="140" y="91" font-size="14" fill="#FFFFFF">📍</text>
-
-  <!-- Arrow -->
-  <line x1="220" y1="114" x2="220" y2="132" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowDown)"/>
+  <line x1="200" y1="112" x2="200" y2="128" stroke="#6A9BCC" stroke-width="2.5" marker-end="url(#arrowDown)"/>
 
   <!-- Ch 01 -->
-  <g filter="url(#shadow5)">
-    <rect x="120" y="140" width="200" height="44" rx="10" fill="#4A90D9"/>
-    <text x="220" y="159" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 01 流病核心概念</text>
-    <text x="220" y="176" text-anchor="middle" font-size="11" fill="#D6EAF8">侵襲率、CFR、Python 基礎</text>
+  <g filter="url(#shadow)">
+    <rect x="100" y="136" width="200" height="42" rx="10" fill="#6A9BCC"/>
+    <text x="200" y="154" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 01 Python 基礎</text>
+    <text x="200" y="171" text-anchor="middle" font-size="10" fill="#FFFFFF" opacity="0.8">變數、函式、侵襲率、CFR</text>
   </g>
+  <line x1="200" y1="180" x2="200" y2="196" stroke="#6A9BCC" stroke-width="2.5" marker-end="url(#arrowDown)"/>
 
-  <!-- Arrow -->
-  <line x1="220" y1="186" x2="220" y2="204" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowDown)"/>
+  <!-- Ch 01b -->
+  <g filter="url(#shadow)">
+    <rect x="100" y="204" width="200" height="42" rx="10" fill="#6A9BCC" opacity="0.85"/>
+    <text x="200" y="222" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 01b 開發者工具箱</text>
+    <text x="200" y="239" text-anchor="middle" font-size="10" fill="#FFFFFF" opacity="0.8">縮排、import、型別、錯誤處理</text>
+  </g>
+  <line x1="200" y1="248" x2="200" y2="264" stroke="#6A9BCC" stroke-width="2.5" marker-end="url(#arrowDown)"/>
 
   <!-- Ch 02 -->
-  <g filter="url(#shadow5)">
-    <rect x="120" y="212" width="200" height="44" rx="10" fill="#4A90D9"/>
-    <text x="220" y="231" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 02 資料處理與視覺化</text>
-    <text x="220" y="248" text-anchor="middle" font-size="11" fill="#D6EAF8">pandas、流行曲線、畫圖</text>
+  <g filter="url(#shadow)">
+    <rect x="100" y="272" width="200" height="42" rx="10" fill="#6A9BCC"/>
+    <text x="200" y="290" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 02 資料處理與視覺化</text>
+    <text x="200" y="307" text-anchor="middle" font-size="10" fill="#FFFFFF" opacity="0.8">pandas、流行曲線、matplotlib</text>
   </g>
-
-  <!-- Arrow -->
-  <line x1="220" y1="258" x2="220" y2="276" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowDown)"/>
+  <line x1="200" y1="316" x2="200" y2="332" stroke="#6A9BCC" stroke-width="2.5" marker-end="url(#arrowDown)"/>
 
   <!-- Ch 03 -->
-  <g filter="url(#shadow5)">
-    <rect x="120" y="284" width="200" height="44" rx="10" fill="#4A90D9"/>
-    <text x="220" y="303" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 03 統計基礎</text>
-    <text x="220" y="320" text-anchor="middle" font-size="11" fill="#D6EAF8">風險比、信賴區間、卡方</text>
+  <g filter="url(#shadow)">
+    <rect x="100" y="340" width="200" height="42" rx="10" fill="#6A9BCC"/>
+    <text x="200" y="358" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 03 2x2 表與推論統計</text>
+    <text x="200" y="375" text-anchor="middle" font-size="10" fill="#FFFFFF" opacity="0.8">RR、OR、CI、卡方、森林圖</text>
   </g>
-
-  <!-- Arrow -->
-  <line x1="220" y1="330" x2="220" y2="348" stroke="#4A90D9" stroke-width="2.5" marker-end="url(#arrowDown)"/>
+  <line x1="200" y1="384" x2="200" y2="400" stroke="#6A9BCC" stroke-width="2.5" marker-end="url(#arrowDown)"/>
 
   <!-- Ch 04 -->
-  <g filter="url(#shadow5)">
-    <rect x="120" y="356" width="200" height="44" rx="10" fill="#4A90D9"/>
-    <text x="220" y="375" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 04 疫調工作流程</text>
-    <text x="220" y="392" text-anchor="middle" font-size="11" fill="#D6EAF8">串接完整分析流程</text>
+  <g filter="url(#shadow)">
+    <rect x="100" y="408" width="200" height="42" rx="10" fill="#6A9BCC"/>
+    <text x="200" y="426" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 04 群聚調查工作流</text>
+    <text x="200" y="443" text-anchor="middle" font-size="10" fill="#FFFFFF" opacity="0.8">串接完整分析流程</text>
+  </g>
+
+  <!-- Foundation complete -->
+  <g filter="url(#shadow)">
+    <rect x="100" y="464" width="200" height="32" rx="8" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.5"/>
+    <text x="200" y="485" text-anchor="middle" font-size="13" font-weight="bold" fill="#788C5D">基礎完成！</text>
   </g>
 
   <!-- Arrow to elective -->
-  <line x1="322" y1="378" x2="420" y2="378" stroke="#7F8C8D" stroke-width="2" stroke-dasharray="6,3"/>
-  <text x="371" y="370" text-anchor="middle" font-size="18" fill="#7F8C8D">→</text>
+  <line x1="302" y1="430" x2="410" y2="430" stroke="#6B6B6B" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrowRight)"/>
 
-  <!-- Foundation complete badge -->
-  <g filter="url(#shadow5)">
-    <rect x="120" y="416" width="200" height="34" rx="8" fill="#EAFAF1" stroke="#27AE60" stroke-width="1.5"/>
-    <text x="220" y="438" text-anchor="middle" font-size="13" font-weight="bold" fill="#27AE60">✅ 基礎完成！</text>
+  <!-- ===== Elective Track (right) ===== -->
+  <text x="580" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#D97757">進階選修（任選順序）</text>
+
+  <!-- Row 1 -->
+  <g filter="url(#shadow)">
+    <rect x="420" y="72" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+    <text x="492" y="90" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 05 分層分析</text>
+    <text x="492" y="108" text-anchor="middle" font-size="9" fill="#6B6B6B">干擾因子、Mantel-Haenszel</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="580" y="72" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+    <text x="652" y="90" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 06 邏輯斯迴歸</text>
+    <text x="652" y="108" text-anchor="middle" font-size="9" fill="#6B6B6B">多變項 OR、模型建構</text>
   </g>
 
-  <!-- ===== Elective Track (right side) ===== -->
-  <text x="570" y="58" text-anchor="middle" font-size="14" font-weight="bold" fill="#8E44AD">🎯 進階選修（任選）</text>
-
-  <!-- Elective chapters in a grid -->
-  <g filter="url(#shadow5)">
-    <rect x="430" y="75" width="145" height="38" rx="8" fill="#F4ECF7" stroke="#8E44AD" stroke-width="1.5"/>
-    <text x="502" y="92" text-anchor="middle" font-size="11" font-weight="bold" fill="#6C3483">Ch 05</text>
-    <text x="502" y="106" text-anchor="middle" font-size="10" fill="#7F8C8D">進階疫調統計</text>
+  <!-- Row 2 -->
+  <g filter="url(#shadow)">
+    <rect x="420" y="128" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+    <text x="492" y="146" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 07 時間序列</text>
+    <text x="492" y="164" text-anchor="middle" font-size="9" fill="#6B6B6B">趨勢、預測、ARIMA</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="580" y="128" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+    <text x="652" y="146" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 08 空間流病</text>
+    <text x="652" y="164" text-anchor="middle" font-size="9" fill="#6B6B6B">地圖、熱點分析、GIS</text>
   </g>
 
-  <g filter="url(#shadow5)">
-    <rect x="590" y="75" width="145" height="38" rx="8" fill="#F4ECF7" stroke="#8E44AD" stroke-width="1.5"/>
-    <text x="662" y="92" text-anchor="middle" font-size="11" font-weight="bold" fill="#6C3483">Ch 06</text>
-    <text x="662" y="106" text-anchor="middle" font-size="10" fill="#7F8C8D">空間分析</text>
+  <!-- Row 3 -->
+  <g filter="url(#shadow)">
+    <rect x="420" y="184" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+    <text x="492" y="202" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 09 存活分析</text>
+    <text x="492" y="220" text-anchor="middle" font-size="9" fill="#6B6B6B">Kaplan-Meier、Cox</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="580" y="184" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+    <text x="652" y="202" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 10 機器學習</text>
+    <text x="652" y="220" text-anchor="middle" font-size="9" fill="#6B6B6B">分類、預測、特徵工程</text>
   </g>
 
-  <g filter="url(#shadow5)">
-    <rect x="430" y="125" width="145" height="38" rx="8" fill="#F4ECF7" stroke="#8E44AD" stroke-width="1.5"/>
-    <text x="502" y="142" text-anchor="middle" font-size="11" font-weight="bold" fill="#6C3483">Ch 07</text>
-    <text x="502" y="156" text-anchor="middle" font-size="10" fill="#7F8C8D">時間序列</text>
+  <!-- Row 4 -->
+  <g filter="url(#shadow)">
+    <rect x="420" y="240" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+    <text x="492" y="258" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 11 深度學習</text>
+    <text x="492" y="276" text-anchor="middle" font-size="9" fill="#6B6B6B">神經網路、影像辨識</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="580" y="240" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+    <text x="652" y="258" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 12 因果推論</text>
+    <text x="652" y="276" text-anchor="middle" font-size="9" fill="#6B6B6B">DAG、反事實推論</text>
   </g>
 
-  <g filter="url(#shadow5)">
-    <rect x="590" y="125" width="145" height="38" rx="8" fill="#F4ECF7" stroke="#8E44AD" stroke-width="1.5"/>
-    <text x="662" y="142" text-anchor="middle" font-size="11" font-weight="bold" fill="#6C3483">Ch 08</text>
-    <text x="662" y="156" text-anchor="middle" font-size="10" fill="#7F8C8D">機器學習基礎</text>
+  <!-- Row 5 -->
+  <g filter="url(#shadow)">
+    <rect x="420" y="296" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+    <text x="492" y="314" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 13 可重現研究</text>
+    <text x="492" y="332" text-anchor="middle" font-size="9" fill="#6B6B6B">報告自動化、Docker</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="580" y="296" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+    <text x="652" y="314" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 14 實戰案例</text>
+    <text x="652" y="332" text-anchor="middle" font-size="9" fill="#6B6B6B">完整疫調案例演練</text>
   </g>
 
-  <g filter="url(#shadow5)">
-    <rect x="430" y="175" width="145" height="38" rx="8" fill="#F4ECF7" stroke="#8E44AD" stroke-width="1.5"/>
-    <text x="502" y="192" text-anchor="middle" font-size="11" font-weight="bold" fill="#6C3483">Ch 09</text>
-    <text x="502" y="206" text-anchor="middle" font-size="10" fill="#7F8C8D">深度學習入門</text>
-  </g>
+  <!-- Hint -->
+  <rect x="420" y="355" width="305" height="35" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1" stroke-dasharray="4"/>
+  <text x="572" y="377" text-anchor="middle" font-size="12" fill="#D97757">完成基礎後，依工作或研究需求任選！</text>
 
-  <g filter="url(#shadow5)">
-    <rect x="590" y="175" width="145" height="38" rx="8" fill="#F4ECF7" stroke="#8E44AD" stroke-width="1.5"/>
-    <text x="662" y="192" text-anchor="middle" font-size="11" font-weight="bold" fill="#6C3483">Ch 10</text>
-    <text x="662" y="206" text-anchor="middle" font-size="10" fill="#7F8C8D">可重現研究</text>
-  </g>
-
-  <g filter="url(#shadow5)">
-    <rect x="510" y="225" width="145" height="38" rx="8" fill="#F4ECF7" stroke="#8E44AD" stroke-width="1.5"/>
-    <text x="582" y="242" text-anchor="middle" font-size="11" font-weight="bold" fill="#6C3483">Ch 11</text>
-    <text x="582" y="256" text-anchor="middle" font-size="10" fill="#7F8C8D">AI 輔助流病</text>
-  </g>
-
-  <!-- Hint text -->
-  <rect x="430" y="280" width="305" height="38" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="1"/>
-  <text x="582" y="298" text-anchor="middle" font-size="12" fill="#9A7D0A">💡 完成基礎四章後，依照工作或</text>
-  <text x="582" y="313" text-anchor="middle" font-size="12" fill="#9A7D0A">　 研究需求，任選感興趣的主題！</text>
-
-  <!-- ===== Exercises Track ===== -->
-  <rect x="430" y="340" width="305" height="65" rx="10" fill="#FDF2F2" stroke="#E74C3C" stroke-width="1.5"/>
-  <text x="582" y="363" text-anchor="middle" font-size="13" font-weight="bold" fill="#C0392B">📝 每章都有練習題</text>
-  <text x="582" y="382" text-anchor="middle" font-size="11" fill="#922B21">Ch 12 附錄 ｜ Ch 13 練習 ｜ Ch 14 解答</text>
-  <text x="582" y="398" text-anchor="middle" font-size="11" fill="#7F8C8D">搭配各章內容同步練習</text>
+  <!-- Resources section -->
+  <rect x="420" y="405" width="305" height="90" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  <text x="572" y="428" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">工具與練習</text>
+  <text x="435" y="450" font-size="11" fill="#6B6B6B">Ch 15 附錄 — 常用參考資料</text>
+  <text x="435" y="470" font-size="11" fill="#6B6B6B">Ch 16 作業區 — 每章練習題（14 組）</text>
+  <text x="435" y="490" font-size="11" fill="#6B6B6B">Ch 17 解答區 — 完整解答（講師版）</text>
 
   <!-- Bottom note -->
-  <rect x="100" y="470" width="600" height="36" rx="8" fill="#F8F9FA" stroke="#DEE2E6" stroke-width="1"/>
-  <text x="400" y="493" text-anchor="middle" font-size="13" fill="#7F8C8D">建議按順序學完 Ch 00–04 基礎，之後可以跳著看 Ch 05–11 進階主題</text>
+  <rect x="80" y="520" width="640" height="40" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1"/>
+  <text x="400" y="540" text-anchor="middle" font-size="12" fill="#6B6B6B">建議按順序學完 Ch 00–04 基礎，之後可依興趣跳選 Ch 05–14 進階主題</text>
+  <text x="400" y="555" text-anchor="middle" font-size="11" fill="#6B6B6B">所有章節都使用同一個退伍軍人症群聚資料集，故事一路串到底！</text>
 </svg>
