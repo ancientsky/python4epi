@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#D97757"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="400" fill="#FAF8F3" rx="12"/>
+
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">卡方檢定的核心邏輯：觀察值 vs 期望值</text>
+  <text x="400" y="50" text-anchor="middle" font-size="12" fill="#6B6B6B">如果暴露和感染「無關」（H₀ 為真），我們預期看到什麼？實際觀察到的有多遠？</text>
+
+  <!-- Left table: Observed -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="70" width="320" height="180" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="30" y="70" width="320" height="32" rx="10" fill="#D97757"/>
+  <rect x="30" y="88" width="320" height="14" fill="#D97757"/>
+  <text x="190" y="93" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">觀察值 Observed（實際數據）</text>
+
+  <!-- Observed headers -->
+  <text x="190" y="122" text-anchor="middle" font-size="11" fill="#6B6B6B">感染</text>
+  <text x="285" y="122" text-anchor="middle" font-size="11" fill="#6B6B6B">未感染</text>
+
+  <text x="80" y="155" text-anchor="middle" font-size="12" fill="#1A1A1A">暴露</text>
+  <text x="80" y="200" text-anchor="middle" font-size="12" fill="#1A1A1A">未暴露</text>
+
+  <!-- Observed cells with numbers -->
+  <rect x="135" y="132" width="80" height="38" rx="4" fill="#D97757" fill-opacity="0.15"/>
+  <text x="175" y="157" text-anchor="middle" font-size="18" font-weight="bold" fill="#D97757">O₁</text>
+  <rect x="240" y="132" width="80" height="38" rx="4" fill="#6A9BCC" fill-opacity="0.1"/>
+  <text x="280" y="157" text-anchor="middle" font-size="18" font-weight="bold" fill="#6A9BCC">O₂</text>
+  <rect x="135" y="178" width="80" height="38" rx="4" fill="#D97757" fill-opacity="0.08"/>
+  <text x="175" y="203" text-anchor="middle" font-size="18" font-weight="bold" fill="#D97757" fill-opacity="0.6">O₃</text>
+  <rect x="240" y="178" width="80" height="38" rx="4" fill="#6A9BCC" fill-opacity="0.06"/>
+  <text x="280" y="203" text-anchor="middle" font-size="18" font-weight="bold" fill="#6A9BCC" fill-opacity="0.6">O₄</text>
+
+  <!-- VS arrow -->
+  <text x="400" y="170" text-anchor="middle" font-size="20" font-weight="bold" fill="#D97757">vs</text>
+  <line x1="360" y1="165" x2="375" y2="165" stroke="#D97757" stroke-width="2"/>
+  <line x1="425" y1="165" x2="440" y2="165" stroke="#D97757" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Right table: Expected -->
+  <g filter="url(#shadow)">
+    <rect x="450" y="70" width="320" height="180" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="450" y="70" width="320" height="32" rx="10" fill="#6A9BCC"/>
+  <rect x="450" y="88" width="320" height="14" fill="#6A9BCC"/>
+  <text x="610" y="93" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">期望值 Expected（H₀ 預測）</text>
+
+  <!-- Expected headers -->
+  <text x="610" y="122" text-anchor="middle" font-size="11" fill="#6B6B6B">感染</text>
+  <text x="705" y="122" text-anchor="middle" font-size="11" fill="#6B6B6B">未感染</text>
+
+  <text x="500" y="155" text-anchor="middle" font-size="12" fill="#1A1A1A">暴露</text>
+  <text x="500" y="200" text-anchor="middle" font-size="12" fill="#1A1A1A">未暴露</text>
+
+  <!-- Expected cells with formula -->
+  <rect x="555" y="132" width="80" height="38" rx="4" fill="#6A9BCC" fill-opacity="0.1"/>
+  <text x="595" y="157" text-anchor="middle" font-size="18" font-weight="bold" fill="#6A9BCC">E₁</text>
+  <rect x="660" y="132" width="80" height="38" rx="4" fill="#6A9BCC" fill-opacity="0.06"/>
+  <text x="700" y="157" text-anchor="middle" font-size="18" font-weight="bold" fill="#6A9BCC">E₂</text>
+  <rect x="555" y="178" width="80" height="38" rx="4" fill="#6A9BCC" fill-opacity="0.06"/>
+  <text x="595" y="203" text-anchor="middle" font-size="18" font-weight="bold" fill="#6A9BCC" fill-opacity="0.6">E₃</text>
+  <rect x="660" y="178" width="80" height="38" rx="4" fill="#6A9BCC" fill-opacity="0.04"/>
+  <text x="700" y="203" text-anchor="middle" font-size="18" font-weight="bold" fill="#6A9BCC" fill-opacity="0.6">E₄</text>
+
+  <!-- Expected formula -->
+  <rect x="480" y="225" width="260" height="22" rx="4" fill="#6A9BCC" fill-opacity="0.08"/>
+  <text x="610" y="241" text-anchor="middle" font-size="11" fill="#6A9BCC" font-family="monospace">E = (列合計 × 欄合計) / 總合計</text>
+
+  <!-- Bottom: Chi-square formula -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="270" width="740" height="120" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+
+  <text x="400" y="298" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">卡方統計量 = 每個格子的「差距」加總</text>
+
+  <!-- Formula visualization -->
+  <text x="90" y="335" text-anchor="middle" font-size="14" fill="#1A1A1A" font-family="monospace" font-weight="bold">χ²  =</text>
+
+  <!-- Cell 1 -->
+  <rect x="130" y="315" width="120" height="32" rx="4" fill="#D97757" fill-opacity="0.1"/>
+  <text x="190" y="336" text-anchor="middle" font-size="12" fill="#D97757" font-family="monospace">(O₁-E₁)²/E₁</text>
+
+  <text x="265" y="336" text-anchor="middle" font-size="16" fill="#1A1A1A">+</text>
+
+  <!-- Cell 2 -->
+  <rect x="280" y="315" width="120" height="32" rx="4" fill="#6A9BCC" fill-opacity="0.1"/>
+  <text x="340" y="336" text-anchor="middle" font-size="12" fill="#6A9BCC" font-family="monospace">(O₂-E₂)²/E₂</text>
+
+  <text x="415" y="336" text-anchor="middle" font-size="16" fill="#1A1A1A">+</text>
+
+  <!-- Cell 3 -->
+  <rect x="430" y="315" width="120" height="32" rx="4" fill="#D97757" fill-opacity="0.06"/>
+  <text x="490" y="336" text-anchor="middle" font-size="12" fill="#D97757" fill-opacity="0.7" font-family="monospace">(O₃-E₃)²/E₃</text>
+
+  <text x="565" y="336" text-anchor="middle" font-size="16" fill="#1A1A1A">+</text>
+
+  <!-- Cell 4 -->
+  <rect x="580" y="315" width="120" height="32" rx="4" fill="#6A9BCC" fill-opacity="0.06"/>
+  <text x="640" y="336" text-anchor="middle" font-size="12" fill="#6A9BCC" fill-opacity="0.7" font-family="monospace">(O₄-E₄)²/E₄</text>
+
+  <!-- Interpretation -->
+  <rect x="50" y="358" width="300" height="24" rx="4" fill="#788C5D" fill-opacity="0.1"/>
+  <text x="200" y="375" text-anchor="middle" font-size="12" fill="#788C5D" font-weight="bold">差距小 → χ² 小 → p 大 → 不顯著</text>
+
+  <rect x="430" y="358" width="300" height="24" rx="4" fill="#D97757" fill-opacity="0.1"/>
+  <text x="580" y="375" text-anchor="middle" font-size="12" fill="#D97757" font-weight="bold">差距大 → χ² 大 → p 小 → 顯著！</text>
+</svg>

@@ -130,28 +130,46 @@ from scipy.stats import chi2_contingency, fisher_exact
 from epi_learning.metrics import risk_ratio, odds_ratio
 
 df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
+
+# 建立「是否感染」的二元欄位 (0/1)
+# clinical_severity == "not_ill" 表示沒有症狀也沒有感染，其餘都算感染
 df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
+
 print(f"全體：{len(df)} 人，感染：{df['infected'].sum()} 人")
 print(f"整體侵襲率：{df['infected'].mean():.1%}")
 ```
 
 ## Step 2: 建立 2×2 表（淋浴 × 感染）
 
+我們已有 280 位住民和 `infected` 欄位。現在要整理成 **2×2 列聯表**——流行病學關聯分析的基本資料結構。下方圖示說明每個格子如何對應公式。
+
+```{figure} images/two_by_two_anatomy.svg
+:name: fig-two-by-two-anatomy
+:alt: 2×2 列聯表的 a, b, c, d 格子對應圖，顯示每個格子如何用於計算 RR 和 OR
+:width: 100%
+```
+
 ```python
+# pd.crosstab() 的第一個參數 → 列（rows），第二個 → 欄（columns）
+# margins=True 自動加上小計列和小計欄
 ct_shower = pd.crosstab(
     df["shower_use"], df["infected"],
     margins=True, margins_name="合計",
 )
+# 重新命名，讓輸出更好讀（原始值 0/1 不直觀）
 ct_shower.index = ["未使用淋浴", "使用淋浴", "合計"]
 ct_shower.columns = ["未感染", "感染", "合計"]
 print(ct_shower)
 
-# 提取四格
-a = int(ct_shower.loc["使用淋浴", "感染"])        # 暴露+感染
-b = int(ct_shower.loc["使用淋浴", "未感染"])      # 暴露+未感染
-c = int(ct_shower.loc["未使用淋浴", "感染"])      # 未暴露+感染
-d = int(ct_shower.loc["未使用淋浴", "未感染"])    # 未暴露+未感染
+# ── 提取 2×2 表的四個格子（參考上方圖示）──
+# crosstab 的列順序取決於原始值排序（0 在 1 前面）
+# 重新命名後，我們用中文標籤來提取，就不用記哪個是 0、哪個是 1
+a = int(ct_shower.loc["使用淋浴", "感染"])        # a = 暴露＋感染
+b = int(ct_shower.loc["使用淋浴", "未感染"])      # b = 暴露＋未感染
+c = int(ct_shower.loc["未使用淋浴", "感染"])      # c = 未暴露＋感染
+d = int(ct_shower.loc["未使用淋浴", "未感染"])    # d = 未暴露＋未感染
 
+# 分別計算兩組的侵襲率（attack rate）
 print(f"\n暴露組（使用淋浴）侵襲率: {a/(a+b):.1%}")
 print(f"未暴露組（未使用淋浴）侵襲率: {c/(c+d):.1%}")
 ```
@@ -167,6 +185,16 @@ print(f"  RR = 1 → 無關聯 | RR > 1 → 暴露可能增加風險 | RR < 1 �
 
 > **注意**：RR > 1 代表有「關聯」，不代表有「因果」。可能有干擾因子——Ch05 會處理。
 
+---
+
+剛算出 RR，但論文和報告裡也常看到 OR。差別在哪？**風險（risk）是機率，勝算（odds）是比值**——下圖說明。
+
+```{figure} images/rr_vs_or_intuition.svg
+:name: fig-rr-vs-or-intuition
+:alt: Risk vs Odds 直覺圖：10 位住民中 3 位感染，Risk = 3/10，Odds = 3/7；世代研究用 RR，病例對照用 OR
+:width: 100%
+```
+
 ## Step 4: 計算 Odds Ratio（勝算比）
 
 ```python
@@ -180,14 +208,31 @@ print(f"→ 疾病罕見時 OR ≈ RR；侵襲率越高，OR 偏離 RR 越多")
 
 ## Step 5: 95% 信賴區間（RR 和 OR）
 
+CI 是新手最容易「看到就頭暈」的部分。關鍵直覺：RR/OR 的尺度是**不對稱的**（0 到無限大），不能直接加減誤差範圍。我們先 **log 轉換**到對稱尺度，做完再 **exp 轉回**。下圖用三個步驟說明：
+
+```{figure} images/ci_log_transform.svg
+:name: fig-ci-log-transform
+:alt: 為什麼算 CI 要先取 log？三步驟圖解：原始尺度（不對稱）→ log 尺度（對稱，可用常態分布）→ exp 轉回
+:width: 100%
+```
+
 ```python
-# RR 的 CI：Katz method
+# ── RR 的 95% CI：Katz method ──
+
+# (a) 取自然對數：把 RR 從不對稱尺度 (0, ∞) 轉到對稱尺度 (-∞, +∞)
 ln_rr = np.log(rr)
+
+# (b) 計算標準誤（SE）：衡量 ln(RR) 估計值的精準度
+#     公式來自 Katz（1978），利用 2×2 表的四格推導
 se_ln_rr = np.sqrt(1/a - 1/(a+b) + 1/c - 1/(c+d))
+
+# (c) 在 log 尺度上 ±1.96 × SE（1.96 是常態分布 95% 的 z 值）
+# (d) 用 exp() 轉回原始尺度 → 得到 CI 的上下界
 ci_rr_lo = np.exp(ln_rr - 1.96 * se_ln_rr)
 ci_rr_hi = np.exp(ln_rr + 1.96 * se_ln_rr)
 
-# OR 的 CI：Woolf method
+# ── OR 的 95% CI：Woolf method ──
+# 原理相同，只是 SE 的公式不同（直接用 a, b, c, d 的倒數和）
 ln_or = np.log(or_val)
 se_ln_or = np.sqrt(1/a + 1/b + 1/c + 1/d)
 ci_or_lo = np.exp(ln_or - 1.96 * se_ln_or)
@@ -201,6 +246,14 @@ print(f"OR = {or_val:.3f} (95% CI: {ci_or_lo:.3f} – {ci_or_hi:.3f})")
 > **解讀**：如果你把這個調查重複做 100 次，大約 95 次算出的 CI 會包含真正的 RR/OR。CI 不包含 1 = 在 α=0.05 下有統計顯著性，等同於 p < 0.05。
 
 ## Step 6: 卡方檢定
+
+卡方檢定的核心邏輯：如果暴露和感染真的「無關」（H₀ 為真），每個格子應該觀察到多少人？實際數字離這個預期有多遠？
+
+```{figure} images/chi_square_intuition.svg
+:name: fig-chi-square-intuition
+:alt: 卡方檢定直覺圖：觀察值與期望值的比較，差距越大 → χ² 越大 → p 越小
+:width: 100%
+```
 
 ```python
 # H₀: 淋浴使用與感染互相獨立（無關聯）
@@ -240,22 +293,26 @@ print("（此例樣本夠大，兩種檢定結果相近；小樣本時差異會�
 
 ## Step 8: 第二個暴露因子 — 水療使用
 
-```python
-ct_hydro = pd.crosstab(df["hydrotherapy_use"], df["infected"])
-a2, b2 = int(ct_hydro.loc[1, 1]), int(ct_hydro.loc[1, 0])
-c2, d2 = int(ct_hydro.loc[0, 1]), int(ct_hydro.loc[0, 0])
+用同一套分析流程處理第二個暴露因子。程式碼和 Steps 2–6 完全相同，只是把 `shower_use` 換成 `hydrotherapy_use`。Step 9 會用迴圈自動化這個過程，不用再手動複製貼上。
 
+```python
+# 和 Step 2–6 完全相同的流程，換成水療暴露
+ct_hydro = pd.crosstab(df["hydrotherapy_use"], df["infected"])
+a2, b2 = int(ct_hydro.loc[1, 1]), int(ct_hydro.loc[1, 0])  # 暴露+感染, 暴露+未感染
+c2, d2 = int(ct_hydro.loc[0, 1]), int(ct_hydro.loc[0, 0])  # 未暴露+感染, 未暴露+未感染
+
+# 效應量
 rr2 = risk_ratio(a2, a2 + b2, c2, c2 + d2)
 or2 = odds_ratio(a2, b2, c2, d2)
 chi2_2, p2, _, _ = chi2_contingency([[a2, b2], [c2, d2]])
 
-# RR CI
+# RR CI（Katz method，同 Step 5）
 ln_rr2 = np.log(rr2)
 se_rr2 = np.sqrt(1/a2 - 1/(a2+b2) + 1/c2 - 1/(c2+d2))
 ci_rr2_lo = np.exp(ln_rr2 - 1.96 * se_rr2)
 ci_rr2_hi = np.exp(ln_rr2 + 1.96 * se_rr2)
 
-# OR CI
+# OR CI（Woolf method，同 Step 5）
 ln_or2 = np.log(or2)
 se_or2 = np.sqrt(1/a2 + 1/b2 + 1/c2 + 1/d2)
 ci_or2_lo = np.exp(ln_or2 - 1.96 * se_or2)
@@ -269,33 +326,46 @@ print(f"  卡方 p-value = {p2:.4f}")
 
 ## Step 9: 多因子粗效應量彙整表 + 森林圖
 
-一次比較所有可能的危險因子，找出「嫌疑最大」的暴露：
+實際疫調中不會只看一兩個因子。下面的迴圈把 **Steps 2–6 系統性地套用到所有候選暴露**，再用森林圖一目瞭然地比較。
 
 ```python
 import matplotlib.pyplot as plt
 
+# 列出所有要檢驗的暴露因子（二元 0/1 變數）
 factors = [
     "shower_use", "hydrotherapy_use",
     "comorbidity_chf", "comorbidity_dm", "comorbidity_cancer",
     "comorbidity_copd", "immunosuppressed",
 ]
+# 把「曾經吸菸」轉成二元變數
 df["ever_smoker"] = (df["smoking_history"] != "never").astype(int)
 factors.append("ever_smoker")
 
+# ── 迴圈：對每個因子重複 Steps 2–6 ──
+# 每一輪做 5 件事：(a) 建 2×2 表 → (b) 算 RR/OR → (c) 算 CI → (d) 卡方檢定 → (e) 存結果
 results = []
 for factor in factors:
+    # (a) 建立 2×2 表，提取 a, b, c, d
     ct = pd.crosstab(df[factor], df["infected"])
-    a_i = int(ct.loc[1, 1])
-    b_i = int(ct.loc[1, 0])
-    c_i = int(ct.loc[0, 1])
-    d_i = int(ct.loc[0, 0])
+    a_i = int(ct.loc[1, 1])   # 暴露＋感染
+    b_i = int(ct.loc[1, 0])   # 暴露＋未感染
+    c_i = int(ct.loc[0, 1])   # 未暴露＋感染
+    d_i = int(ct.loc[0, 0])   # 未暴露＋未感染
+
+    # (b) 效應量：RR 和 OR
     rr_i = risk_ratio(a_i, a_i + b_i, c_i, c_i + d_i)
     or_i = odds_ratio(a_i, b_i, c_i, d_i)
-    chi2_i, p_i, _, _ = chi2_contingency([[a_i, b_i], [c_i, d_i]])
+
+    # (c) RR 的 95% CI（Katz method，同 Step 5）
     ln_rr_i = np.log(rr_i)
     se_i = np.sqrt(1/a_i - 1/(a_i+b_i) + 1/c_i - 1/(c_i+d_i))
     ci_lo = np.exp(ln_rr_i - 1.96 * se_i)
     ci_hi = np.exp(ln_rr_i + 1.96 * se_i)
+
+    # (d) 卡方檢定
+    chi2_i, p_i, _, _ = chi2_contingency([[a_i, b_i], [c_i, d_i]])
+
+    # (e) 把這個因子的結果存起來
     results.append({
         "factor": factor,
         "RR": round(rr_i, 3),
@@ -305,6 +375,7 @@ for factor in factors:
         "p-value": round(p_i, 4),
     })
 
+# 彙整成表格，按 RR 由大到小排序（最可疑的因子排最前面）
 rr_table = pd.DataFrame(results).sort_values("RR", ascending=False)
 display_df = rr_table.copy()
 display_df["95% CI"] = display_df.apply(
@@ -322,6 +393,12 @@ print(display_df[["factor", "RR", "95% CI", "OR", "p-value"]].to_string(index=Fa
 - **圓點（●）**：點估計值（本例為 RR）
 - **水平線段（─）**：95% 信賴區間
 - **虛線（RR = 1）**：無效果線。CI 與虛線交叉 = 不顯著；CI 完全在虛線右側 = 暴露顯著增加風險
+
+```{figure} images/forest_plot_reading_guide.svg
+:name: fig-forest-plot-reading-guide
+:alt: 森林圖閱讀指南：圓點表示點估計值，水平線段表示 95% CI，虛線表示 RR=1 無效果線
+:width: 100%
+```
 
 ```python
 import pathlib
