@@ -1,0 +1,224 @@
+meta:
+  chapter: "03"
+  concept: "two_by_two"
+  title: "2×2 列聯表——把疫調資料變成四格表"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch03_01_two_by_two"
+  scene_class: "Ch03TwoByTwoScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：2×2 列聯表
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎回來。今天我們要學流行病學裡最經典、最萬用的工具——2×2 列聯表。
+      你可以把它想成流行病學界的瑞士刀，幾乎每一篇疫調報告都會出現。
+      這張小小的四格表，只有四個數字，但能回答一個超級重要的問題：
+      「暴露跟生病，到底有沒有關係？」
+      今天就用松柏護理之家的退伍軍人症資料，帶你從零開始做出這張表。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "concept_layout"
+    narration: >
+      先來認識 2×2 表的長相。想像一張井字格，但只有四個格子。
+      橫軸是「結果」——有生病、沒生病。
+      縱軸是「暴露」——有暴露、沒暴露。
+      左上角叫 a，是有暴露又生病的人；右上角叫 b，有暴露沒生病。
+      左下角叫 c，沒暴露但生病；右下角叫 d，沒暴露也沒生病。
+      就這四個英文字母，a、b、c、d，記住它們的位置就成功一半了。
+    animation: "show_concept_layout"
+    pause_after: 0.5
+
+  - id: "legionella_context"
+    narration: >
+      回到松柏護理之家的案例。280 位住民，121 位感染退伍軍人症。
+      調查發現有些住民常使用淋浴設備，有些沒有。
+      我們懷疑淋浴暴露跟感染有關，所以要建一張暴露是 shower_use、
+      結果是 infected 的 2×2 表。
+      聽起來很複雜？放心，Python 一行搞定。
+    animation: "show_legionella_context"
+    pause_after: 0.5
+
+  - id: "crosstab_basic"
+    narration: >
+      pd.crosstab 就是你的好朋友。第一個參數放「暴露」，第二個參數放「結果」。
+      注意順序！第一個參數變成列，也就是表格的橫排；
+      第二個參數變成欄，也就是表格的直排。
+      跑出來就是一張漂亮的 2×2 表。
+      就像點飲料一樣，先說大杯小杯，再說要什麼口味，順序不能亂。
+    animation: "show_crosstab_basic"
+    code: |
+      table = pd.crosstab(
+          df["shower_use"],
+          df["infected"],
+      )
+      print(table)
+    output: |
+      infected      0    1
+      shower_use
+      0            72   38
+      1            87   83
+    pause_after: 0.5
+
+  - id: "extract_abcd"
+    narration: >
+      表格做出來了，接下來要把 a、b、c、d 四個數字抓出來。
+      用 iloc 定位法，第零列第零行是左上角，依此類推。
+      不過要小心！pandas crosstab 預設會按照值的大小排序，
+      所以你要確認哪一列是暴露組、哪一列是未暴露組。
+      把數字抓出來之後，就能開始算侵襲率、風險比、勝算比，超級方便。
+    animation: "show_extract_abcd"
+    code: |
+      a = table.iloc[1, 1]  # exposed + sick
+      b = table.iloc[1, 0]  # exposed + well
+      c = table.iloc[0, 1]  # unexposed + sick
+      d = table.iloc[0, 0]  # unexposed + well
+      print(f"a={a}, b={b}, c={c}, d={d}")
+    output: |
+      a=83, b=87, c=38, d=72
+    pause_after: 0.5
+
+  - id: "attack_rate"
+    narration: >
+      有了 a、b、c、d，馬上來算侵襲率。
+      暴露組的侵襲率等於 a 除以 a 加 b，就是「有暴露的人裡面，多少比例生病了」。
+      未暴露組的侵襲率等於 c 除以 c 加 d。
+      松柏護理之家的淋浴暴露組，侵襲率大約是百分之四十九；
+      未暴露組大約是百分之三十五。
+      暴露組明顯比較高！但到底高多少？這就要靠下一集的風險比來回答了。
+    animation: "show_attack_rate"
+    code: |
+      ar_exposed = a / (a + b)
+      ar_unexposed = c / (c + d)
+      print(f"Exposed AR: {ar_exposed:.1%}")
+      print(f"Unexposed AR: {ar_unexposed:.1%}")
+    output: |
+      Exposed AR: 48.8%
+      Unexposed AR: 34.5%
+    pause_after: 0.5
+
+  - id: "margins_totals"
+    narration: >
+      做報告的時候，長官一定會問：「合計呢？」
+      加上 margins 等於 True，crosstab 就會自動幫你算每一列、每一欄的小計。
+      這樣一張表就有完整的行列合計，直接貼進報告裡超專業。
+      就像寫考卷最後要寫總分一樣，有合計才完整。
+    animation: "show_margins"
+    code: |
+      table_m = pd.crosstab(
+          df["shower_use"],
+          df["infected"],
+          margins=True,
+          margins_name="Total",
+      )
+      print(table_m)
+    output: |
+      infected      0    1  Total
+      shower_use
+      0            72   38    110
+      1            87   83    170
+      Total       159  121    280
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      快速複習！2×2 表就是四個格子，a、b、c、d。
+      pd.crosstab 第一個參數是列，第二個參數是欄，順序要記好。
+      用 iloc 可以把四個數字抓出來做計算。
+      加 margins 等於 True 就有合計。
+      這張小小的表格是後面學風險比、勝算比、卡方檢定的基礎，一定要搞熟它。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：諾羅病毒校園群聚
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看一個校園諾羅病毒群聚的案例。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      某國小發生腸胃炎群聚，疫調人員懷疑是營養午餐搞的鬼。
+      全校 200 位學生，有 150 位吃了營養午餐，50 位沒吃。
+      吃午餐的學生中，有 90 位上吐下瀉；沒吃的只有 10 位。
+      用 crosstab 一做，a 等於 90，b 等於 60，c 等於 10，d 等於 40。
+      吃午餐組的侵襲率是百分之六十，沒吃的只有百分之二十。
+      差這麼多，營養午餐嫌疑超大！接下來就是要算風險比來量化這個關聯。
+    animation: "show_extra_example"
+    code: |
+      noro = pd.crosstab(
+          lunch_df["ate_lunch"],
+          lunch_df["sick"],
+          margins=True,
+      )
+      print(noro)
+    output: |
+      sick         0    1  All
+      ate_lunch
+      0           40   10   50
+      1           60   90  150
+      All        100  100  200
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      接下來是初學者最容易踩的三個坑！每一個都有人在實戰中哭過，先預防勝於治療。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個陷阱：crosstab 的列跟欄搞反了。
+      很多人直覺把結果放第一個、暴露放第二個，結果整張表的行列顛倒。
+      記住口訣：「先暴露、後結果」，第一個參數是暴露，第二個是結果。
+      就像醫生問診，先問「你接觸了什麼」，再問「你哪裡不舒服」。
+    animation: "show_blindspot_row_col"
+    error_code: 'pd.crosstab(df["infected"], df["shower_use"])'
+    correct_code: 'pd.crosstab(df["shower_use"], df["infected"])'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個陷阱：忘記加 margins 等於 True。
+      你辛辛苦苦做好表格，長官說：「合計在哪裡？」
+      你只好手動加一列合計，結果還算錯了。
+      一開始就加 margins 等於 True，一勞永逸。
+      別等長官問了才補，做疫調要有預判能力。
+    animation: "show_blindspot_margins"
+    error_code: "pd.crosstab(exposure, outcome)"
+    correct_code: "pd.crosstab(exposure, outcome, margins=True)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個陷阱：a、b、c、d 的位置搞混。
+      有些課本 a 在左上角是「暴露且生病」，但有些課本的排列方式不同。
+      如果你用錯了位置，算出來的風險比就會是倒數，完全相反。
+      最安全的做法是先 print 出表格，用眼睛確認哪一格是哪一組，
+      再用 iloc 去抓值。別憑記憶，要用眼睛確認。
+    animation: "show_blindspot_abcd"
+    error_code: "a = table.iloc[0, 0]"
+    correct_code: "print(table); a = table.iloc[1, 1]"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      恭喜你學會了 2×2 列聯表！這是流行病學計算的地基。
+      有了這四個數字，你就能算侵襲率、風險比、勝算比，
+      幾乎所有描述性流行病學的指標都從這裡出發。
+      下一集我們要正式進入風險比 RR 的世界，教你用一個數字衡量暴露的風險。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,223 @@
+meta:
+  chapter: "03"
+  concept: "chi_square"
+  title: "卡方檢定——觀察值 vs 期望值的擂台賽"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch03_05_chi_square"
+  scene_class: "Ch03ChiSquareScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：卡方檢定
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎回來！今天的主角是卡方檢定。
+      上一集我們算了信賴區間，知道估計值有多精確。
+      但有時候老闆只想聽一句話：「這個暴露跟疾病到底有沒有關係？」
+      卡方檢定就是用來回答這個問題的。
+      它的邏輯超直覺：如果暴露跟疾病真的沒關係，
+      你觀察到的數字應該跟「理論上預期的數字」差不多。
+      差很多的話？那就有鬼了！
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "h0_concept"
+    narration: >
+      先來認識虛無假設 H0。
+      H0 就是說：暴露跟疾病是獨立的，彼此之間毫無關係。
+      就像擲骰子，不管你前一把擲了什麼，下一把的結果都跟它無關。
+      卡方檢定的任務就是：用數據來決定要不要推翻 H0。
+      如果數據跟 H0 的預測差太多，我們就拒絕 H0，宣布暴露跟疾病有關。
+      如果差不多，那就「證據不足，無法拒絕 H0」。
+      注意！我們從來不說「接受 H0」，因為沒有關係不代表證明了沒有關係。
+    animation: "show_h0_concept"
+    pause_after: 0.5
+
+  - id: "expected_values"
+    narration: >
+      卡方檢定的核心是「期望值」。
+      期望值就是「如果 H0 是對的，每個格子應該有多少人」。
+      公式超級簡單：期望值等於那一列的總和，乘以那一行的總和，再除以全部的總和。
+      用我們的退伍軍人症資料，暴露組 200 人，總共 121 人感染，全部 280 人。
+      暴露組感染的期望值就是 200 乘 121 除以 280，等於 86.4。
+      實際上有 100 人感染，比期望的多了 13.6 人。多出來的部分，就是卡方要量的東西。
+    animation: "show_expected_values"
+    code: |
+      expected = (row_total * col_total) / grand_total
+      # exposed & infected: 200 * 121 / 280 = 86.4
+    pause_after: 0.5
+
+  - id: "expected_table"
+    narration: >
+      讓我們把四個格子的期望值都算出來。
+      暴露感染 86.4，暴露未感染 113.6，非暴露感染 34.6，非暴露未感染 45.4。
+      你會發現期望值的行總和跟列總和，跟觀察值完全一樣。
+      這是一定的，因為期望值就是在「保持邊際總和不變」的前提下，
+      用獨立假設重新分配人數。
+    animation: "show_expected_table"
+    code: |
+      # Observed:  [100, 100, 21, 59]
+      # Expected:  [86.4, 113.6, 34.6, 45.4]
+    pause_after: 0.5
+
+  - id: "chi2_formula"
+    narration: >
+      現在來算卡方統計量！公式是：對每個格子，
+      用觀察值 O 減掉期望值 E，平方之後，再除以 E，全部加起來。
+      為什麼要平方？因為有些格子是多了人，有些是少了人，
+      正負會互相抵消。平方之後全部變正的，才能看出總共偏離了多少。
+      為什麼要除以 E？因為期望值大的格子，偏差一點無所謂；
+      期望值小的格子，偏差一點影響就很大。除以 E 就是在做加權。
+    animation: "show_chi2_formula"
+    code: |
+      chi2 = sum((O - E)**2 / E for O, E in cells)
+    pause_after: 0.5
+
+  - id: "chi2_calculation"
+    narration: >
+      把四個格子代進去。
+      100 減 86.4 的平方除以 86.4，等於 2.14。
+      100 減 113.6 的平方除以 113.6，等於 1.63。
+      21 減 34.6 的平方除以 34.6，等於 5.34。
+      59 減 45.4 的平方除以 45.4，等於 4.07。
+      全部加起來，卡方統計量等於 13.18。這個數字大不大？
+      2 乘 2 表的自由度是 1，查表或用 Python 算，p 值小於 0.001。
+      非常顯著！淋浴暴露跟感染之間確實有關聯。
+    animation: "show_chi2_calculation"
+    code: |
+      from scipy.stats import chi2_contingency
+      table = [[100, 100], [21, 59]]
+      chi2, p, dof, expected = chi2_contingency(table)
+      # chi2 = 13.18, p < 0.001
+    pause_after: 0.5
+
+  - id: "p_value_interpretation"
+    narration: >
+      p 值到底是什麼意思？
+      p 值就是「如果 H0 是對的，你會看到這麼極端或更極端結果的機率」。
+      p 小於 0.05，代表在 H0 為真的世界裡，出現這種結果的機率不到 5%。
+      太不尋常了，所以我們拒絕 H0。
+      但千萬記住：p 值不是「H0 為真的機率」，
+      也不是「結果是隨機產生的機率」。
+      它只是在 H0 為真的前提下，數據有多不尋常的量度。
+    animation: "show_p_value"
+    pause_after: 0.5
+
+  - id: "fisher_exact"
+    narration: >
+      最後一個重要的事：什麼時候不能用卡方？
+      如果 2 乘 2 表裡面有任何一格的期望值小於 5，卡方近似就不準了。
+      這時候要改用 Fisher 精確檢定。
+      Fisher 不靠近似，直接算出精確的 p 值。
+      在 Python 裡只要把 chi2_contingency 換成 fisher_exact 就好。
+      經驗法則：樣本很小或事件很罕見的時候，優先用 Fisher。
+    animation: "show_fisher_exact"
+    code: |
+      from scipy.stats import fisher_exact
+      odds_ratio, p = fisher_exact([[5, 15], [2, 28]])
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      卡方檢定的流程總結！
+      第一：設定 H0，暴露和疾病獨立。
+      第二：算期望值，列總和乘行總和除全部總和。
+      第三：算卡方統計量，觀察減期望平方除以期望再加總。
+      第四：查 p 值，小於 0.05 就拒絕 H0。
+      期望值小於 5 就改用 Fisher 精確檢定。搞定！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：結核病接觸者調查
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      換個場景！來看卡方檢定在結核病接觸者調查裡怎麼用。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      假設一位開放性肺結核個案在辦公室工作，
+      疫調人員把接觸者分成兩組：密切接觸 30 人，一般接觸 50 人。
+      密切接觸組有 9 人潛伏感染陽性，一般接觸組有 5 人陽性。
+      密切接觸的感染率 30%，一般接觸只有 10%。看起來差很多對吧？
+      但別急著下結論，讓卡方來裁判。
+      用 chi2_contingency 算出來卡方等於 5.0，p 等於 0.025，小於 0.05！
+      結論：接觸強度跟潛伏感染之間確實有統計上顯著的關聯。
+      疫調報告就可以寫：密切接觸者的感染風險顯著高於一般接觸者。
+    animation: "show_extra_example"
+    code: |
+      # Close contact: 9 pos, 21 neg (n=30)
+      # Casual contact: 5 pos, 45 neg (n=50)
+      table = [[9, 21], [5, 45]]
+      chi2, p, dof, exp = chi2_contingency(table)
+      # chi2 = 5.0, p = 0.025
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      卡方檢定的三個超常見踩坑時刻！考試跟實務都會遇到。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：期望值小於 5 還硬用卡方。
+      卡方檢定靠的是大樣本近似，期望值太小的時候近似會失準。
+      就像你用放大鏡燒螞蟻，鏡片太小聚不了光，根本燒不起來。
+      解法很簡單：改用 Fisher 精確檢定。
+      在 scipy 裡面，函數名稱就叫 fisher_exact，比 chi2_contingency 還好記。
+      經驗法則：只要有一格期望值小於 5，就用 Fisher。穩穩的。
+    animation: "show_blindspot_expected_five"
+    error_code: "chi2_contingency([[3, 47], [1, 49]])"
+    correct_code: "fisher_exact([[3, 47], [1, 49]])"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：p 值很小就以為效果很大。
+      p 等於 0.001 只代表「統計上顯著」，不代表「臨床上重要」。
+      如果樣本有十萬人，即使風險比只有 1.02，p 值也可以小到 0.0001。
+      差異真實存在嗎？是的。差異大到值得在意嗎？不一定。
+      所以卡方檢定要搭配效果量一起看，比如風險比、勝算比和它們的信賴區間。
+      p 值管的是「有沒有」，效果量管的是「有多大」，兩個都要看。
+    animation: "show_blindspot_p_vs_effect"
+    error_code: "p=0.001 -> large effect!"
+    correct_code: "p=0.001 + RR=1.02 -> tiny effect"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：多重檢定問題。
+      假設你同時檢定 8 個暴露因子，每個都用 alpha 等於 0.05。
+      就算全部都沒有效果，光靠隨機也會有 1 減 0.95 的 8 次方，
+      大約 34% 的機率至少出現一個偽陽性！
+      這就像你同時買 8 張刮刮樂，中獎機率當然比買 1 張高。
+      解法：用 Bonferroni 校正，把 alpha 除以檢定次數。
+      8 個檢定的話，每個的顯著水準要降到 0.05 除以 8 等於 0.00625。
+      或者報告時誠實說明做了幾次檢定，讓讀者自己判斷。
+    animation: "show_blindspot_multiple_testing"
+    error_code: "8 tests at alpha=0.05 -> expect 0.4 false pos"
+    correct_code: "8 tests at alpha=0.05/8=0.00625 (Bonferroni)"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      卡方檢定搞定！你現在會算期望值、算卡方統計量、判斷 p 值，
+      也知道什麼時候要改用 Fisher 精確檢定了。
+      記住：卡方管的是「有沒有關聯」，RR 和 OR 管的是「關聯有多強」，
+      信賴區間管的是「估計有多精確」。三個搭配在一起，分析才完整。
+      恭喜你！第三章的核心統計工具全部學完了。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

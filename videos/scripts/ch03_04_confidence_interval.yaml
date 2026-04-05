@@ -1,0 +1,248 @@
+meta:
+  chapter: "03"
+  concept: "confidence_interval"
+  title: "95% 信賴區間——為什麼要先取 log 再 exp 回來？"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch03_04_confidence_interval"
+  scene_class: "Ch03ConfidenceIntervalScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：信賴區間與 log 轉換
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎回來！今天要聊的東西，是統計界的安全帶——信賴區間。
+      上一集我們算出了風險比跟勝算比，但光給一個數字，就像天氣預報只說「明天 25 度」，
+      卻不告訴你可能在 20 到 30 度之間波動。
+      信賴區間就是幫你加上那個波動範圍，讓你知道你的估計值到底有多靠譜。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "point_vs_interval"
+    narration: >
+      先來看我們的退伍軍人症資料。
+      淋浴暴露組的風險比 RR 等於 2.7，聽起來很嚇人對不對？
+      但如果信賴區間是 0.8 到 9.1，那就代表真實的 RR 可能小於 1，
+      也就是說淋浴搞不好根本不是危險因子！
+      反過來，如果信賴區間是 2.1 到 3.5，那就穩了，淋浴幾乎確定有風險。
+      所以啊，光看點估計值就下結論，就像只看一張照片就判斷一個人的個性，太草率了。
+    animation: "show_point_vs_interval"
+    code: |
+      rr = 2.7
+      ci_wide = (0.8, 9.1)   # not significant
+      ci_narrow = (2.1, 3.5) # significant
+    pause_after: 0.5
+
+  - id: "why_log"
+    narration: >
+      接下來要解釋一個很多人卡住的地方：為什麼算信賴區間要先取 log？
+      風險比和勝算比有個很彆扭的性質：它們的範圍是 0 到正無限大。
+      1 是分界線，大於 1 是危險因子，小於 1 是保護因子。
+      但問題來了！從 1 到 2 跟從 1 到 0.5，在流行病學上意義一樣大，
+      可是在數線上的距離完全不同。這就是所謂的不對稱性。
+      取 log 之後呢？log 1 等於 0，log 2 等於 0.693，log 0.5 等於負 0.693。
+      看！左右完全對稱了！這樣才能放心用加減 1.96 倍標準誤的方式來算信賴區間。
+    animation: "show_why_log"
+    pause_after: 0.5
+
+  - id: "three_step_overview"
+    narration: >
+      整個過程就三步，我叫它「log 轉換三部曲」。
+      第一步：把 RR 或 OR 取自然對數，搬到 log 的世界。
+      第二步：在 log 的世界裡，加減 1.96 乘以標準誤，算出上下界。
+      第三步：用 exp 把上下界轉回原本的尺度。
+      就像你要去日本買東西，先把台幣換成日幣，在日本花完之後，再把剩的日幣換回台幣。
+      中間那段計算必須在 log 世界裡完成，才是對的。
+    animation: "show_three_steps"
+    pause_after: 0.5
+
+  - id: "katz_rr_formula"
+    narration: >
+      先來看風險比 RR 的信賴區間，用的是 Katz 方法。
+      標準誤的公式長這樣：SE 等於根號底下，
+      1 減 a 除以 n1 全部除以 a，加上 1 減 c 除以 n0 全部除以 c。
+      其中 a 是暴露組的病例數，n1 是暴露組總人數，
+      c 是非暴露組的病例數，n0 是非暴露組總人數。
+      公式看起來嚇人，但其實就是在量「log RR 的不確定程度」。
+    animation: "show_katz_formula"
+    code: |
+      import numpy as np
+      se_ln_rr = np.sqrt((1 - a/n1)/a + (1 - c/n0)/c)
+    pause_after: 0.5
+
+  - id: "katz_rr_example"
+    narration: >
+      用我們的退伍軍人症資料來算看看。
+      淋浴暴露組 200 人裡面 100 人感染，非暴露組 80 人裡面 21 人感染。
+      RR 等於 100 除以 200，再除以 21 除以 80，算出來是 1.905。
+      取 log 得到 0.644，SE 算出來是 0.199。
+      下界：exp 括號 0.644 減 1.96 乘 0.199，等於 1.29。
+      上界：exp 括號 0.644 加 1.96 乘 0.199，等於 2.82。
+      信賴區間是 1.29 到 2.82，完全不包含 1，代表淋浴暴露確實有風險！
+    animation: "show_katz_example"
+    code: |
+      a, n1 = 100, 200
+      c, n0 = 21, 80
+      rr = (a/n1) / (c/n0)
+      ln_rr = np.log(rr)
+      se = np.sqrt((1 - a/n1)/a + (1 - c/n0)/c)
+      ci_low = np.exp(ln_rr - 1.96 * se)
+      ci_high = np.exp(ln_rr + 1.96 * se)
+    pause_after: 0.5
+
+  - id: "woolf_or_formula"
+    narration: >
+      勝算比 OR 的信賴區間用的是 Woolf 方法。
+      標準誤公式更簡單：SE 等於根號底下 1 除以 a 加 1 除以 b 加 1 除以 c 加 1 除以 d。
+      a b c d 就是 2 乘 2 表的四個格子。
+      這個公式的直覺是：每個格子的人數越少，不確定性越大，SE 就越大。
+      只要有一個格子的人數特別少，整個信賴區間就會變得很寬。
+    animation: "show_woolf_formula"
+    code: |
+      se_ln_or = np.sqrt(1/a + 1/b + 1/c + 1/d)
+    pause_after: 0.5
+
+  - id: "woolf_or_example"
+    narration: >
+      同樣用退伍軍人症的資料。
+      a 等於 100，b 等於 100，c 等於 21，d 等於 59。
+      OR 等於 100 乘 59 除以 100 乘 21，等於 2.81。
+      取 log 得到 1.033，SE 等於 0.277。
+      下界：exp 括號 1.033 減 1.96 乘 0.277，等於 1.63。
+      上界：exp 括號 1.033 加 1.96 乘 0.277，等於 4.84。
+      信賴區間 1.63 到 4.84，不包含 1，又一次確認淋浴是危險因子。
+    animation: "show_woolf_example"
+    code: |
+      a, b, c, d = 100, 100, 21, 59
+      odds_ratio = (a * d) / (b * c)
+      ln_or = np.log(odds_ratio)
+      se = np.sqrt(1/a + 1/b + 1/c + 1/d)
+      ci_low = np.exp(ln_or - 1.96 * se)
+      ci_high = np.exp(ln_or + 1.96 * se)
+    pause_after: 0.5
+
+  - id: "ci_interpretation"
+    narration: >
+      信賴區間怎麼解讀？記住一個黃金法則。
+      如果信賴區間不包含 1，代表在 95% 的信心水準下，這個關聯具有統計顯著性。
+      如果信賴區間跨過 1，就不能排除「其實沒有差異」的可能性。
+      另外，信賴區間的寬度也很重要。
+      窄的信賴區間代表估計精確，寬的代表不確定性很大。
+      就像用尺量東西，精密的尺跟粗糙的尺，量出來的可信度當然不同。
+    animation: "show_ci_interpretation"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      來複習一下信賴區間三部曲！
+      第一步：取 log，搬到對稱世界。
+      第二步：加減 1.96 乘 SE，算上下界。
+      第三步：exp 回來，回到原本的尺度。
+      Katz 算 RR，Woolf 算 OR，公式不同但邏輯一模一樣。
+      信賴區間不包含 1 就是顯著，包含 1 就不顯著。簡單明瞭！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：COVID-19 疫苗保護力
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      換個場景！來看信賴區間在 COVID-19 疫苗保護力上的應用。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_ve_concept"
+    narration: >
+      疫苗保護力 VE 的公式是 1 減掉風險比 RR。
+      如果打疫苗的人感染風險是沒打的 0.05 倍，VE 就是 95%，超級有效。
+      但 VE 等於 95% 到底有多可靠？這就要看 RR 的信賴區間了。
+      VE 的信賴區間其實就是把 RR 的信賴區間反過來算。
+      RR 的上界變成 VE 的下界，RR 的下界變成 VE 的上界。
+    animation: "show_ve_concept"
+    code: |
+      ve = 1 - rr
+      ve_ci_low = 1 - rr_ci_high
+      ve_ci_high = 1 - rr_ci_low
+    pause_after: 0.5
+
+  - id: "extra_ve_example"
+    narration: >
+      假設某 COVID-19 疫苗的臨床試驗結果：
+      接種組 2 萬人中 8 人感染，安慰劑組 2 萬人中 162 人感染。
+      RR 等於 8 除以 162，大約 0.049。VE 等於 1 減 0.049，約 95.1%。
+      用 Katz 方法算 RR 的 95% 信賴區間是 0.024 到 0.1。
+      所以 VE 的信賴區間是 1 減 0.1 到 1 減 0.024，也就是 90% 到 97.6%。
+      信賴區間的下界都有 90%，代表這支疫苗的保護力非常穩定。
+      這就是為什麼各國搶著核准——因為信賴區間告訴我們，這不是運氣好。
+    animation: "show_ve_example"
+    code: |
+      a, n1 = 8, 20000    # vaccinated
+      c, n0 = 162, 20000  # placebo
+      rr = (a/n1) / (c/n0)
+      ve = 1 - rr
+      # RR CI: [0.024, 0.100]
+      ve_ci = (1 - 0.100, 1 - 0.024)  # (0.900, 0.976)
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      信賴區間的三個經典誤解！這些坑連很多研究生都會踩，來一起避開。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：以為 95% 信賴區間的意思是「真實值有 95% 的機率在這個範圍內」。
+      錯！真實值是固定的，不是隨機的，它不會跑來跑去。
+      正確的解讀是：如果我們用同樣的方法重複抽樣 100 次，
+      大約有 95 次算出來的信賴區間會包含真實值。
+      是區間在變，不是真實值在變。
+      就像你射飛鏢，靶心不會動，是你的手在抖。95% 是你的命中率，不是靶心在那裡的機率。
+    animation: "show_blindspot_freq_interp"
+    error_code: "P(true value in CI) = 0.95"
+    correct_code: "P(CI covers true value) = 0.95"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：在 log 尺度上算完上下界，忘記用 exp 轉回來。
+      如果你的 RR 信賴區間出現負數，那百分之百是忘記 exp 了。
+      因為 RR 和 OR 的範圍是 0 到正無限大，不可能是負的。
+      看到負數就要馬上警覺：我是不是還在 log 世界裡？
+      記得最後一步一定要 exp 回來！
+    animation: "show_blindspot_forget_exp"
+    error_code: "ci = (ln_rr - 1.96*se, ln_rr + 1.96*se)"
+    correct_code: "ci = (np.exp(ln_rr - 1.96*se), np.exp(ln_rr + 1.96*se))"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：只看信賴區間有沒有包含 1，完全忽略區間的寬度。
+      假設兩個研究都說 RR 等於 3.0，信賴區間都不包含 1。
+      但研究 A 的信賴區間是 2.5 到 3.6，研究 B 是 1.1 到 8.2。
+      研究 A 精確得像雷射筆，研究 B 模糊得像手電筒。
+      雖然都「顯著」，但研究 B 的估計值你能信多少？
+      寬到可以停一台卡車的信賴區間，通常代表樣本太小，需要更多資料。
+    animation: "show_blindspot_ci_width"
+    error_code: "RR=3.0 CI(1.1, 8.2) -> significant!"
+    correct_code: "RR=3.0 CI(1.1, 8.2) -> significant but imprecise"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      信賴區間搞定！現在你知道為什麼要先 log 再 exp，
+      也知道怎麼用 Katz 和 Woolf 方法算 RR 和 OR 的信賴區間了。
+      記住：點估計值是主角，信賴區間是保鑣，兩個都要有才完整。
+      下一集我們要來學卡方檢定，看看觀察值和期望值怎麼在擂台上對決。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

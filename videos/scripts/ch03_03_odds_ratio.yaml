@@ -1,0 +1,220 @@
+meta:
+  chapter: "03"
+  concept: "odds_ratio"
+  title: "勝算比 OR——RR 的好兄弟，差在哪裡？"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch03_03_odds_ratio"
+  scene_class: "Ch03OddsRatioScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：勝算比 OR
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！上一集我們學了風險比 RR，今天要來認識它的好兄弟——勝算比 OR。
+      很多初學者搞不清楚 RR 跟 OR 的差別，覺得它們長得很像，算出來也差不多。
+      但其實它們的適用場景完全不同，搞混的話，審稿委員會毫不留情地退你的稿。
+      今天就來把這對兄弟的關係講清楚，讓你以後再也不會搞混。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "odds_vs_risk"
+    narration: >
+      要懂 OR，首先要分清楚「風險」跟「勝算」的差別。
+      風險就是機率，分母是全部的人。100 個人有 20 個生病，風險就是 20%。
+      勝算不一樣，分母是「沒生病的人」。20 個生病、80 個沒生病，勝算是 20 比 80，
+      也就是 0.25。
+      你可以想成賭博。風險是「中獎的機率」，勝算是「中獎次數跟沒中獎次數的比例」。
+      買刮刮樂，5 張中 1 張，風險是五分之一，勝算是 1 比 4。
+      數學上，odds 等於 p 除以 1 減 p。
+    animation: "show_odds_vs_risk"
+    code: |
+      risk = 20 / 100       # 0.20
+      odds = 20 / 80        # 0.25
+      # or equivalently:
+      odds = risk / (1 - risk)
+    pause_after: 0.5
+
+  - id: "or_formula"
+    narration: >
+      知道什麼是 odds 之後，OR 就很簡單了。
+      OR 就是暴露組的 odds 除以未暴露組的 odds。
+      還有一個更快的算法：a 乘 d 除以 b 乘 c，交叉相乘再相除。
+      這個公式超好記，就是 2×2 表的對角線相乘再相除。
+      左上乘右下，除以右上乘左下。對角線交叉，像打叉叉一樣。
+    animation: "show_or_formula"
+    code: |
+      # Method 1: odds ratio from odds
+      odds_exp = a / b
+      odds_unexp = c / d
+      or_val = odds_exp / odds_unexp
+
+      # Method 2: cross-product
+      or_val = (a * d) / (b * c)
+    pause_after: 0.5
+
+  - id: "legionella_calc"
+    narration: >
+      回到松柏護理之家。a 等於 83，b 等於 87，c 等於 38，d 等於 72。
+      OR 等於 83 乘 72 除以 87 乘 38，大約是 1.81。
+      上一集算的 RR 是 1.41，OR 是 1.81，差滿多的。
+      為什麼？因為退伍軍人症在這個護理之家的侵襲率高達 43%，不算罕見疾病。
+      等一下會告訴你，疾病越常見，OR 跟 RR 差距越大。
+    animation: "show_legionella_calc"
+    code: |
+      or_val = (83 * 72) / (87 * 38)
+      print(f"Odds Ratio = {or_val:.2f}")
+    output: |
+      Odds Ratio = 1.81
+    pause_after: 0.5
+
+  - id: "or_interpretation"
+    narration: >
+      OR 的解讀跟 RR 很像。OR 等於 1 代表沒有關聯。
+      OR 大於 1 代表暴露組的勝算比較高，可能是風險因子。
+      OR 小於 1 代表暴露是保護因子。
+      但要注意，OR 說的是「勝算的比值」，不是「風險的比值」。
+      所以嚴格來說，OR 等於 1.81 應該說「暴露組的生病勝算是未暴露組的 1.81 倍」，
+      而不是「風險是 1.81 倍」。雖然很多人混著說，但考試的時候要嚴謹。
+    animation: "show_or_interpretation"
+    pause_after: 0.5
+
+  - id: "rare_disease"
+    narration: >
+      重頭戲來了！什麼時候 OR 約等於 RR？
+      答案是：疾病很罕見的時候。
+      當發生率低於百分之十，odds 跟 risk 幾乎一樣，因為 1 減 p 約等於 1。
+      所以 OR 跟 RR 也幾乎相等。
+      這就是有名的「罕見疾病假設」。
+      但如果疾病很常見，像這次退伍軍人症侵襲率高達 43%，
+      OR 就會比 RR 誇大很多。記住：疾病越常見，OR 越會吹牛。
+    animation: "show_rare_disease"
+    code: |
+      # Rare disease (1%): OR ~ RR
+      # risk=0.01, odds=0.01/0.99=0.0101
+      # Common disease (40%): OR != RR
+      # risk=0.40, odds=0.40/0.60=0.667
+    pause_after: 0.5
+
+  - id: "when_to_use"
+    narration: >
+      那什麼時候一定要用 OR？
+      答案是：case-control 研究，也就是病例對照研究。
+      因為 case-control 是先挑病人和對照，再回頭問暴露史，
+      你無法從研究設計算出真正的侵襲率，所以不能算 RR。
+      這時候只能用 OR。
+      還有一個地方也會看到 OR：邏輯斯迴歸的係數取指數之後就是 OR。
+      所以 OR 在流行病學跟統計學裡都超常出現，一定要搞懂。
+    animation: "show_when_to_use"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      來做重點整理！
+      Odds 等於 p 除以 1 減 p，是生病對沒生病的比值。
+      OR 等於交叉相乘，a 乘 d 除以 b 乘 c。
+      疾病罕見時 OR 約等於 RR，疾病常見時 OR 會比 RR 大。
+      case-control 研究只能用 OR，不能用 RR。
+      邏輯斯迴歸的 exp 括號 beta 就是 OR。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：A 型肝炎病例對照研究
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看一個 A 型肝炎的 case-control 研究，感受 OR 的實戰威力。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_context"
+    narration: >
+      某社區爆發 A 型肝炎群聚，疫調人員找了 50 位確診病例和 100 位對照。
+      回頭調查發現，病例中有 35 位曾經吃過某攤生蠔，對照中只有 20 位吃過。
+      這是 case-control 設計，因為我們先找病人再問暴露，
+      沒有完整的分母，不能算侵襲率，更不能算 RR。
+      只能算 OR！
+    animation: "show_extra_context"
+    pause_after: 0.5
+
+  - id: "extra_calc"
+    narration: >
+      a 等於 35，有暴露的病例；b 等於 20，有暴露的對照。
+      c 等於 15，沒暴露的病例；d 等於 80，沒暴露的對照。
+      OR 等於 35 乘 80 除以 20 乘 15，等於 9.33。
+      勝算比高達 9.33！吃過生蠔的人，感染 A 肝的勝算是沒吃的 9.33 倍。
+      這個數字很大，關聯很強，那攤生蠔嫌疑非常大。
+      當然，還需要進一步的微生物學證據才能確認因果。
+    animation: "show_extra_calc"
+    code: |
+      a, b, c, d = 35, 20, 15, 80
+      or_hep = (a * d) / (b * c)
+      print(f"OR = {or_hep:.2f}")
+    output: |
+      OR = 9.33
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      初學者盲點時間！這三個錯，保證你周圍的人至少犯過一個。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個陷阱：搞混 odds 跟 probability。
+      很多人以為 odds 就是機率，其實不是。
+      機率的分母是「全部的人」，odds 的分母是「沒事件的人」。
+      100 人有 20 人生病，risk 是 0.2，odds 是 0.25，兩個不一樣！
+      當疾病罕見的時候兩者差不多，但疾病常見時差很多。
+      報告裡如果寫「勝算 20%」就不對了，odds 不是百分比，是一個比值。
+    animation: "show_blindspot_odds_prob"
+    error_code: "odds = sick / total"
+    correct_code: "odds = sick / (total - sick)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個陷阱：疾病很常見的時候，還把 OR 當 RR 來解讀。
+      如果侵襲率超過百分之十，OR 就會明顯大於 RR。
+      你報告寫「暴露組風險是未暴露組的 1.81 倍」，但實際 RR 只有 1.41。
+      審稿委員一看就知道你搞混了。
+      遇到常見疾病，要嘛強調你報的是 OR 而非 RR，
+      要嘛用其他方法直接估計 RR，比如 log-binomial regression。
+    animation: "show_blindspot_common_disease"
+    error_code: "print(f'Risk is {or_val:.1f}x higher')"
+    correct_code: "print(f'Odds is {or_val:.1f}x higher')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個陷阱：邏輯斯迴歸跑出來的 OR，直接說成 RR。
+      邏輯斯迴歸的 exp 括號 beta 是 OR，不是 RR！
+      很多人跑完迴歸就寫「風險增加了多少倍」，這是不對的。
+      應該寫「勝算增加了多少倍」。
+      如果你真的需要 RR，可以用 Poisson regression with robust variance，
+      或是 log-binomial regression。
+      偷懶把 OR 說成 RR，是流行病學論文最常見的審稿意見之一。
+    animation: "show_blindspot_logistic"
+    error_code: "rr = np.exp(model.params[1])  # wrong label"
+    correct_code: "or_val = np.exp(model.params[1])  # odds ratio"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      恭喜你！2×2 表、風險比 RR、勝算比 OR，描述性統計的三大神器你都學會了。
+      記住三個重點：odds 不等於 risk，OR 不等於 RR，case-control 只能用 OR。
+      搞清楚這三件事，你的疫調報告就不會被退件了。
+      下一集我們要進入群聚調查工作流，教你怎麼把這些工具組合起來，
+      完成一份完整的疫調分析。我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
