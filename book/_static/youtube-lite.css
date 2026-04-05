@@ -1,0 +1,104 @@
+/* Lite YouTube Embed — shows thumbnail, one click to play inline */
+.youtube-lite {
+  position: relative;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  cursor: pointer;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  margin-bottom: 0.5em;
+}
+
+.youtube-lite img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.15s ease;
+}
+
+.youtube-lite:hover img {
+  opacity: 0.85;
+}
+
+/* YouTube-style red play button */
+.youtube-lite::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 68px;
+  height: 48px;
+  background: rgba(255, 0, 0, 0.85);
+  border-radius: 14px;
+  pointer-events: none;
+  /* Play triangle via borders */
+  background-image: none;
+}
+
+.youtube-lite::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateX(2px);
+  z-index: 1;
+  border-style: solid;
+  border-width: 11px 0 11px 19px;
+  border-color: transparent transparent transparent #fff;
+  pointer-events: none;
+}
+
+.youtube-lite:hover::after {
+  background: rgba(255, 0, 0, 1);
+}
+
+/* Once activated, remove play button and pointer */
+.youtube-lite.yt-activated {
+  cursor: default;
+}
+
+.youtube-lite.yt-activated::after,
+.youtube-lite.yt-activated::before {
+  display: none;
+}
+
+.youtube-lite.yt-activated img {
+  display: none;
+}
+
+.youtube-lite iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Video card wrapper — replaces the old dropdown admonition */
+.video-card {
+  border: 1px solid #e8e5df;
+  border-radius: 10px;
+  padding: 0.75em;
+  margin-bottom: 1.2em;
+  background: #faf8f3;
+}
+
+.video-card .video-title {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5em;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.video-card .video-title::before {
+  content: "\25B6";  /* play symbol */
+  color: #d97757;
+  font-size: 0.85em;
+}
