@@ -35,55 +35,78 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# -- CJK font setup (避免中文標籤顯示為方框) --
+# ── CJK 字型設定：避免圖表中的中文顯示為方框 □□□ ──
+# matplotlib 預設不支援中文，需要指定字型候選清單
+# 系統會從左到右逐一嘗試，找到第一個可用的字型就停下
 plt.rcParams["font.sans-serif"] = [
     "Noto Sans CJK TC", "Noto Sans CJK SC", "Noto Sans CJK JP",
     "Noto Sans TC", "Microsoft JhengHei",
     "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS",
     "Heiti TC", "DejaVu Sans",
 ]
-plt.rcParams["axes.unicode_minus"] = False
-plt.style.use("ggplot")
-plt.rcParams["figure.dpi"] = 150
+plt.rcParams["axes.unicode_minus"] = False  # 修正負號顯示為方框的問題
+plt.style.use("ggplot")        # 使用 ggplot 風格（灰底白格線）
+plt.rcParams["figure.dpi"] = 150  # 提高輸出解析度，圖表更清晰
 
+# ── 讀取 CSV ──
 df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
+# df 現在是一個 DataFrame（類似 Excel 試算表）
+# 280 列（每位住民一列）× 32 欄（每個欄位一列）
 
-# 日期轉換
+# ── 日期欄位轉換 ──
+# CSV 裡的日期是字串（如 "2026-01-15"），必須轉成 datetime 物件才能計算時間差
 date_cols = [
     "facility_admission_date", "symptom_onset_date",
     "hospitalization_date", "death_date", "notification_date",
 ]
 for col in date_cols:
+    # errors="coerce"：遇到無法解析的值（如空白、亂碼）
+    # 不會報錯，而是轉成 NaT（Not a Time，等同日期版的 NaN）
     df[col] = pd.to_datetime(df[col], errors="coerce")
 
-# 衍生變項
+# ── 衍生新欄位 ──
+# 建立「是否感染」的 0/1 欄位
+# clinical_severity 只要不是 "not_ill"，就算感染（1），否則為 0
+# != 比較產生 True/False，astype(int) 將 True→1、False→0
 df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
+
+# 建立年齡組：pd.cut 把連續數值切成分類
+# bins=[59, 69, 79, 89, 100] 定義切點，區間是左開右閉：(59,69]、(69,79]...
 df["age_group"] = pd.cut(
     df["age"], bins=[59, 69, 79, 89, 100],
     labels=["60-69", "70-79", "80-89", "90+"],
 )
+
+# 計算每位住民的共病數量
 comorbidity_cols = [
     "comorbidity_chf", "comorbidity_dm",
     "comorbidity_cancer", "comorbidity_copd", "immunosuppressed",
 ]
+# 這些欄位都是 0/1，axis=1 代表「橫向加總」（對每一列加總）
+# 結果是每位住民有幾個共病
 df["n_comorbidities"] = df[comorbidity_cols].sum(axis=1)
 ```
 
 ## Step 2: 摘要指標
 
 ```python
-total = len(df)
+total = len(df)                          # 住民總數 = DataFrame 的列數
+
+# df["infected"] 是 0/1 欄位，.sum() 加總 = 感染人數（0 加多少都是 0，只有 1 才有貢獻）
 infected = df["infected"].sum()
-confirmed = (df["case_classification"] == "confirmed").sum()
-probable = (df["case_classification"] == "probable").sum()
-hospitalized = df["hospitalized"].sum()
-icu = df["icu_admission"].sum()
-deaths = (df["outcome"] == "dead").sum()
+
+# == 比較產生 True/False Series，再用 .sum() 計算 True 的數量（True = 1）
+confirmed  = (df["case_classification"] == "confirmed").sum()
+probable   = (df["case_classification"] == "probable").sum()
+hospitalized = df["hospitalized"].sum()  # hospitalized 也是 0/1 欄位
+icu          = df["icu_admission"].sum()
+deaths       = (df["outcome"] == "dead").sum()
 
 print("=" * 50)
 print("松柏護理之家退伍軍人症群聚 — SitRep")
 print("=" * 50)
 print(f"住民總數：{total}")
+# {infected/total:.1%}：除法得到小數，:.1% 自動×100 並加 %，保留 1 位小數
 print(f"感染人數：{infected}（侵襲率 {infected/total:.1%}）")
 print(f"  確診：{confirmed}　可能：{probable}")
 print(f"住院：{hospitalized}（住院率 {hospitalized/infected:.1%}）")
@@ -94,18 +117,30 @@ print(f"死亡：{deaths}（CFR {deaths/infected:.1%}）")
 ## Step 3: 人 — Person
 
 ```python
+# 用布林索引篩出感染者：df[條件] 只保留條件為 True 的列
 cases = df[df["infected"] == 1]
+# cases 是一個新的 DataFrame，只包含 121 位感染住民
 
 print("=== 人口學特徵（感染者）===")
 print(f"年齡中位數：{cases['age'].median():.0f} 歲"
       f"（範圍 {cases['age'].min()}-{cases['age'].max()}）")
+
+# .mean() 用在 True/False 上等於計算比例
+# (cases['sex'] == 'M') 產生 True/False，mean() 算 True 的比例
 print(f"男性比例：{(cases['sex'] == 'M').mean():.1%}")
+
 print(f"\n--- 年齡組分布 ---")
+# value_counts()：計算每個類別的出現次數（預設按次數降序排列）
+# sort_index()：改成按年齡組的字母/數字順序排列（60-69 → 70-79 → ...）
+# to_string()：強制印出全部內容，不因資料太多而省略中間幾行
 print(cases["age_group"].value_counts().sort_index().to_string())
+
 print(f"\n--- 共病分布 ---")
 for col in comorbidity_cols:
+    # 把欄位名稱的前綴 "comorbidity_" 去掉，再轉大寫，變成簡潔的標籤
+    # 例如："comorbidity_chf" → "chf" → "CHF"
     label = col.replace("comorbidity_", "").upper()
-    n = cases[col].sum()
+    n = cases[col].sum()  # 共病欄位是 0/1，sum() 得到有這個共病的人數
     print(f"  {label}: {n} ({n/len(cases):.1%})")
 ```
 
@@ -114,57 +149,93 @@ for col in comorbidity_cols:
 ```python
 import matplotlib.dates as mdates
 
+# groupby("symptom_onset_date")：以發病日期分組
+# .size()：計算每組的列數（= 當天的病例數），等同於 GROUP BY + COUNT(*)
+# .rename("cases")：把結果欄位命名為 "cases"，方便後續取用
 daily = cases.groupby("symptom_onset_date").size().rename("cases")
 
-# 補齊完整日期範圍（含爆發前 3 天背景期）
+# ── 補齊完整日期範圍（含爆發前 3 天作為「背景期」）──
+# 原始資料只有有病例的日期；若某天 0 例，就不會出現在 groupby 結果裡
+# reindex 可以「補齊」缺少的日期，並用 fill_value=0 填入 0
 date_range = pd.date_range(
-    daily.index.min() - pd.Timedelta(days=3),
-    daily.index.max() + pd.Timedelta(days=1),
-    freq="D",
+    daily.index.min() - pd.Timedelta(days=3),  # 往前延伸 3 天（顯示爆發前基線）
+    daily.index.max() + pd.Timedelta(days=1),  # 往後延伸 1 天（避免最後一天被截掉）
+    freq="D",                                   # freq="D" 表示每天一個點
 )
-daily = daily.reindex(date_range, fill_value=0)
+daily = daily.reindex(date_range, fill_value=0)  # 沒有病例的日期補 0
 
-fig, ax = plt.subplots(figsize=(10, 4))
+# ── 建立圖表 ──
+# plt.subplots() 同時回傳兩個物件：
+# fig = 整張畫布（canvas），控制整體大小、解析度、儲存
+# ax  = 繪圖區（axes），控制座標軸、標題、長條、折線等內容
+fig, ax = plt.subplots(figsize=(10, 4))  # 寬 10 英吋、高 4 英吋
+
 ax.bar(daily.index, daily.values, width=1.0,
        color="#2c7fb8", edgecolor="white", linewidth=0.5)
+# width=1.0 讓長條緊貼在一起（流行曲線的標準做法，無間隙）
+
 ax.set_title("松柏護理之家退伍軍人症流行曲線，依發病日，2026 年 1 月",
              fontsize=13, fontweight="bold")
 ax.set_xlabel("發病日期（Date of Symptom Onset）")
 ax.set_ylabel("病例數（Number of Cases）")
+
+# DateFormatter("%m/%d")：設定 x 軸日期顯示格式
+# %m = 月份（01–12），%d = 日期（01–31），結果如 "01/12"
 ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
+# DayLocator(interval=2)：每隔 2 天放一個刻度（避免標籤重疊）
 ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
+# 自動旋轉日期標籤 45 度，防止文字重疊
 fig.autofmt_xdate(rotation=45)
+
+# 在最左和最右各留半天（12 小時）的空白邊距，避免第一根和最後一根長條被截掉
 ax.set_xlim(daily.index.min() - pd.Timedelta(hours=12),
             daily.index.max() + pd.Timedelta(hours=12))
-ax.set_ylim(bottom=0)
+ax.set_ylim(bottom=0)  # y 軸從 0 開始
+# MaxNLocator(integer=True)：y 軸刻度只顯示整數（病例數不可能是 0.5 例）
 ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
 ax.grid(False)
+# 去掉上方和右方的外框線（視覺更簡潔，這是流行病學論文的標準樣式）
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
-plt.tight_layout()
+plt.tight_layout()  # 自動調整間距，防止標題或標籤被裁切
 plt.show()
 
 print(f"流行期間：{cases['symptom_onset_date'].min().date()} – {cases['symptom_onset_date'].max().date()}")
+# idxmax()：找到數值最大的那個「索引」（日期），而不是最大值本身
+# daily.max() 才是最大值（病例數）
 print(f"高峰日：{daily.idxmax().date()}（{daily.max()} 例）")
 ```
 
 ## Step 5: 地 — Place
 
 ```python
+# ── 以樓層 + 翼區雙層分組，一次算出所有指標 ──
+# .agg() 允許對不同欄位套用不同的聚合函式
+# 格式：新欄位名稱=("來源欄位", "聚合函式或 lambda")
 wing_stats = (
     df.groupby(["floor", "wing"])
     .agg(
+        # "size" 計算每組的總列數（= 該翼區的住民總數，含感染與未感染）
         residents=("case_id", "size"),
+        # "infected" 是 0/1 欄位，"sum" 就是感染人數
         infected=("infected", "sum"),
+        # lambda 用於自訂邏輯：在 outcome 欄位中，計算值為 "dead" 的個數
         deaths=("outcome", lambda x: (x == "dead").sum()),
     )
     .reset_index()
+    # reset_index() 把 groupby 的鍵（floor, wing）從「索引」
+    # 變回普通欄位，這樣後面才能用欄位名稱取值
 )
+
+# 計算侵襲率（Attack Rate）和致死率（CFR），乘 100 轉成百分比，保留 1 位小數
 wing_stats["AR%"] = (wing_stats["infected"] / wing_stats["residents"] * 100).round(1)
 wing_stats["CFR%"] = (wing_stats["deaths"] / wing_stats["infected"] * 100).round(1)
+# 把樓層（數字）和翼區（字母）拼成一個標籤，例如：1 + "A" → "1A"
+# astype(str) 先把整數轉成字串，才能和字母相加
 wing_stats["label"] = wing_stats["floor"].astype(str) + wing_stats["wing"]
 
 print("=== 各翼區疫情摘要 ===")
+# 選取需要顯示的欄位，to_string(index=False) 印出時不顯示左側的索引數字
 print(wing_stats[["label", "residents", "infected", "AR%", "deaths", "CFR%"]]
       .to_string(index=False))
 ```
@@ -172,20 +243,28 @@ print(wing_stats[["label", "residents", "infected", "AR%", "deaths", "CFR%"]]
 ## Step 6: 個案分類分層摘要
 
 ```python
+# 依個案分類（confirmed / probable / not_a_case）分組，計算各層的指標
+# 這裡不加 .reset_index()，讓 case_classification 保留為索引，
+# 印出時更直觀（分類名稱直接出現在最左欄）
 classification = (
     df.groupby("case_classification")
     .agg(
-        n=("case_id", "size"),
-        hospitalized=("hospitalized", "sum"),
-        icu=("icu_admission", "sum"),
-        deaths=("outcome", lambda x: (x == "dead").sum()),
+        n=("case_id", "size"),                              # 每類的人數
+        hospitalized=("hospitalized", "sum"),               # 住院人數（0/1 欄位加總）
+        icu=("icu_admission", "sum"),                       # ICU 人數
+        deaths=("outcome", lambda x: (x == "dead").sum()),  # 死亡人數
     )
 )
+
+# 計算住院率：住院人數 ÷ 該類別人數 × 100（轉成 %）
+# 注意：如果某分類的 n=0，這裡會出現 ZeroDivisionError；
+# 真實資料務必先確認各組都有至少 1 人才計算
 classification["hosp_rate"] = (
     classification["hospitalized"] / classification["n"] * 100
 ).round(1)
 
 print("=== 按個案分類分層 ===")
+# .to_string() 不帶參數時會保留索引（= case_classification 名稱），方便對照
 print(classification.to_string())
 ```
 
@@ -195,28 +274,40 @@ print(classification.to_string())
 
 ```python
 def generate_sitrep(csv_path):
-    """從 CSV 產出 SitRep 摘要字典。"""
+    """從 CSV 產出 SitRep 摘要字典。
+
+    每天只需重跑此函式並傳入最新的 CSV，即可自動更新所有指標。
+    回傳字典而非直接印出，是因為字典可以被後續的 Step 8（報告輸出）直接取用。
+    """
     df = pd.read_csv(csv_path)
+    # 只轉換計算上需要日期運算的欄位，減少不必要處理
     for col in ["symptom_onset_date", "hospitalization_date",
                 "death_date", "notification_date"]:
         df[col] = pd.to_datetime(df[col], errors="coerce")
     df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
 
     total = len(df)
+    # int() 將 numpy.int64 轉成 Python 原生 int
+    # 原因：pandas / numpy 的 .sum() 回傳的是 numpy 整數型別（numpy.int64）
+    # 如果直接放進字典再輸出成 JSON，會引發 JSON 序列化錯誤
+    # 養成習慣用 int() 包住，能避免一些難以預期的型別問題
     infected = int(df["infected"].sum())
     deaths = int((df["outcome"] == "dead").sum())
 
     return {
         "total_residents": total,
         "infected": infected,
+        # round(值, 小數位數)：四捨五入到指定位數
         "attack_rate": round(infected / total * 100, 1),
         "deaths": deaths,
+        # 防呆：若 infected == 0（尚無感染案例）就回傳 0，避免 ZeroDivisionError
         "cfr": round(deaths / infected * 100, 1) if infected else 0,
         "hospitalized": int(df["hospitalized"].sum()),
         "icu": int(df["icu_admission"].sum()),
     }
 
 sitrep = generate_sitrep("data/synthetic/legionella_outbreak.csv")
+# sitrep 是一個 Python 字典（dict），可以直接傳給 Step 8 的報告輸出函式
 print(sitrep)
 ```
 
@@ -238,16 +329,23 @@ import pathlib
 from io import BytesIO
 from datetime import datetime
 
-# 建立輸出資料夾（不會進 git）
+# exist_ok=True：若資料夾已存在，不會報錯（可以重複執行這行而不出問題）
 pathlib.Path("output").mkdir(exist_ok=True)
 
-# 重新產生流行曲線（Step 4 的 fig），存入記憶體緩衝區
-# 這樣 DOCX / PPTX / PDF 都能直接嵌入，不用寫暫存檔
+# ── BytesIO：把圖存進「記憶體裡的虛擬檔案」──
+# 一般 fig.savefig("epicurve.png") 會寫到硬碟；
+# BytesIO() 則是在記憶體中開一個「假的檔案」，行為和真實檔案物件完全一樣，
+# 但資料只存在 RAM，不佔硬碟空間，也不需要事後刪除。
+# 好處：DOCX / PPTX 的 add_picture() 都接受 BytesIO 物件，
+#       同一份圖可以多次使用（每次使用前記得 .seek(0) 重設讀取位置）。
 epicurve_buf = BytesIO()
 fig.savefig(epicurve_buf, format="png", dpi=150, bbox_inches="tight")
+# seek(0)：把讀取游標移回緩衝區的最開頭
+# 類比：把磁帶倒帶回起點，才能從頭播放
+# 如果不 seek(0) 直接讀，會從末尾開始讀，得到空資料
 epicurve_buf.seek(0)
 
-# 報告時間戳記
+# strftime 格式字串：%Y=四位年、%m=兩位月、%d=兩位日、%H=時（24h）、%M=分
 report_time = datetime.now().strftime("%Y-%m-%d %H:%M")
 ```
 
@@ -261,7 +359,11 @@ report_time = datetime.now().strftime("%Y-%m-%d %H:%M")
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-# 建立 2×2 子圖面板
+# make_subplots 建立 2×2 的子圖網格
+# specs 指定每個子圖的類型：
+#   "indicator" = 數字指標（大字顯示 KPI）
+#   "xy"        = 一般 x-y 座標圖（長條圖、折線圖等）
+# subplot_titles 對應每個格子的標題（左上、右上格子標題留空，由 Indicator 自帶）
 dashboard = make_subplots(
     rows=2, cols=2,
     specs=[
@@ -269,23 +371,26 @@ dashboard = make_subplots(
         [{"type": "xy"}, {"type": "xy"}],
     ],
     subplot_titles=("", "", "流行曲線（依發病日）", "各翼區侵襲率"),
-    vertical_spacing=0.15,
-    horizontal_spacing=0.1,
+    vertical_spacing=0.15,   # 上下子圖之間的間距（0–1，比例值）
+    horizontal_spacing=0.1,  # 左右子圖之間的間距
 )
 
-# ── 左上：感染人數 + 侵襲率 ──
+# ── 左上：感染人數 KPI 指標 ──
+# go.Indicator 是 Plotly 的「儀表板指標」圖形，專門顯示一個大數字 + 輔助資訊
+# mode="number+delta"：顯示數值 + 變化量（delta）
 dashboard.add_trace(
     go.Indicator(
         mode="number+delta",
         value=infected,
         title={"text": "感染人數（侵襲率）"},
+        # number.suffix 在數字後附加文字（括號裡的侵襲率）
         number={"suffix": f"  ({infected/total:.1%})"},
         delta={"reference": 0, "position": "bottom"},
     ),
-    row=1, col=1,
+    row=1, col=1,  # 放在第 1 列、第 1 欄（左上）
 )
 
-# ── 右上：死亡人數 + CFR ──
+# ── 右上：死亡人數 KPI 指標 ──
 dashboard.add_trace(
     go.Indicator(
         mode="number+delta",
@@ -294,29 +399,30 @@ dashboard.add_trace(
         number={"suffix": f"  ({deaths/infected:.1%})"},
         delta={"reference": 0, "position": "bottom"},
     ),
-    row=1, col=2,
+    row=1, col=2,  # 放在第 1 列、第 2 欄（右上）
 )
 
-# ── 左下：流行曲線 ──
+# ── 左下：流行曲線（直方式長條圖）──
 daily_cases = cases.groupby("symptom_onset_date").size()
 dashboard.add_trace(
     go.Bar(
-        x=daily_cases.index,
-        y=daily_cases.values,
-        marker_color="#D97757",
+        x=daily_cases.index,    # x 軸：發病日期
+        y=daily_cases.values,   # y 軸：每日病例數
+        marker_color="#D97757", # Anthropic Orange，視覺上與疾病相關
         name="每日病例數",
     ),
     row=2, col=1,
 )
 
-# ── 右下：各翼區侵襲率（水平長條圖）──
+# ── 右下：各翼區侵襲率（水平長條圖，方便比較各翼區）──
 dashboard.add_trace(
     go.Bar(
-        y=wing_stats["label"],
-        x=wing_stats["AR%"],
-        orientation="h",
+        y=wing_stats["label"],  # y 軸放翼區名稱（水平長條圖的類別軸）
+        x=wing_stats["AR%"],    # x 軸放侵襲率數值
+        orientation="h",        # "h" = horizontal（水平方向）
         marker_color="#6A9BCC",
         name="侵襲率 %",
+        # 在每根長條外側顯示數值標籤
         text=wing_stats["AR%"].apply(lambda v: f"{v:.1f}%"),
         textposition="outside",
     ),
@@ -326,8 +432,8 @@ dashboard.add_trace(
 dashboard.update_layout(
     title_text=f"松柏護理之家退伍軍人症 SitRep Dashboard（{report_time}）",
     height=600,
-    showlegend=False,
-    template="plotly_white",
+    showlegend=False,     # 隱藏圖例（各子圖標題已足夠說明）
+    template="plotly_white",  # 白底簡潔模板
 )
 dashboard.show()
 ```
@@ -337,12 +443,15 @@ dashboard.show()
 > **注意**：套件名稱是 `python-docx`，但匯入時寫 `from docx import ...`——這是很多新手搞混的地方。
 
 ```python
+# 注意：套件叫 python-docx（安裝時），但 import 名稱是 docx（沒有 python- 前綴）
 from docx import Document
-from docx.shared import Inches, Pt
+from docx.shared import Inches, Pt  # Inches/Pt：指定尺寸的輔助類別
 
+# Document() 建立一份新的空白 Word 文件
 doc = Document()
 
 # ── 標題與時間 ──
+# level=1 對應 Word 的「標題 1」（最大的標題）
 doc.add_heading("松柏護理之家退伍軍人症 SitRep", level=1)
 doc.add_paragraph(f"報告時間：{report_time}")
 doc.add_paragraph(
@@ -351,6 +460,8 @@ doc.add_paragraph(
 
 # ── 摘要指標表格 ──
 doc.add_heading("摘要指標", level=2)
+# add_table(rows=6, cols=2)：建立一個 6 行 2 列的表格
+# style="Light Grid Accent 1"：套用 Word 內建的表格樣式（淺色網格，第 1 強調色）
 table = doc.add_table(rows=6, cols=2, style="Light Grid Accent 1")
 metrics = [
     ("住民總數", str(total)),
@@ -360,23 +471,29 @@ metrics = [
     ("住院", f"{hospitalized}（住院率 {hospitalized/infected:.1%}）"),
     ("死亡", f"{deaths}（CFR {deaths/infected:.1%}）"),
 ]
+# enumerate() 同時取得索引 i 和值（label, value）
 for i, (label, value) in enumerate(metrics):
+    # table.rows[i] 取第 i 列，.cells[0] 取第 0 格（第一欄）
     table.rows[i].cells[0].text = label
     table.rows[i].cells[1].text = value
 
 # ── 嵌入流行曲線 ──
 doc.add_heading("流行曲線", level=2)
-epicurve_buf.seek(0)  # 重設讀取位置
+epicurve_buf.seek(0)  # 重設 BytesIO 讀取游標（每次讀取前都要 seek(0)）
+# width=Inches(6)：圖片寬度設定為 6 英吋（A4 紙寬約 8.27 英吋，去掉左右邊距後約 6 英吋）
 doc.add_picture(epicurve_buf, width=Inches(6))
 
-# ── 各翼區統計 ──
+# ── 各翼區統計（表頭 + 資料列）──
 doc.add_heading("各翼區疫情摘要", level=2)
+# rows=len(wing_stats) + 1：資料列數 + 1 行表頭
 wing_table = doc.add_table(
     rows=len(wing_stats) + 1, cols=5, style="Light Grid Accent 1"
 )
 headers = ["翼區", "住民數", "感染數", "侵襲率%", "CFR%"]
+# 填入第 0 列（表頭）
 for j, h in enumerate(headers):
     wing_table.rows[0].cells[j].text = h
+# 填入資料列（從第 1 列開始，i 是 wing_stats 的索引）
 for i, row in wing_stats.iterrows():
     wing_table.rows[i + 1].cells[0].text = str(row["label"])
     wing_table.rows[i + 1].cells[1].text = str(row["residents"])
@@ -392,30 +509,36 @@ print("✅ Word 報告已儲存：output/sitrep_report.docx")
 
 ```python
 from pptx import Presentation
-from pptx.util import Inches, Pt
+from pptx.util import Inches, Pt  # Inches/Pt：指定位置和大小的輔助類別
 
-prs = Presentation()
+prs = Presentation()  # 建立新的空白 PPTX（預設為 16:9 投影片）
 
 # ── 投影片 1：標題頁 ──
-slide1 = prs.slides.add_slide(prs.slide_layouts[0])  # 標題版面
+# slide_layouts[0] 是 PowerPoint 的「標題投影片」版面（含標題 + 副標題 placeholder）
+slide1 = prs.slides.add_slide(prs.slide_layouts[0])
 slide1.shapes.title.text = "松柏護理之家退伍軍人症 SitRep"
+# placeholders[1] 是副標題 placeholder（index 0 = 主標題，index 1 = 副標題）
 slide1.placeholders[1].text = f"報告時間：{report_time}"
 
-# ── 投影片 2：關鍵數據（使用空白版面 + 文字方塊）──
-slide2 = prs.slides.add_slide(prs.slide_layouts[5])  # 空白版面
+# ── 投影片 2：關鍵數據 ──
+# slide_layouts[5] 是「空白」版面，沒有任何 placeholder，
+# 完全靠我們用 add_textbox() 自行定位內容
+slide2 = prs.slides.add_slide(prs.slide_layouts[5])
+# add_textbox(left, top, width, height)：用 Inches 指定位置和大小
+# 左邊距 1 英吋，上邊距 0.5 英吋，寬 8 英吋，高 1 英吋
 txBox = slide2.shapes.add_textbox(
     Inches(1), Inches(0.5), Inches(8), Inches(1),
 )
 txBox.text_frame.text = "關鍵摘要指標"
-txBox.text_frame.paragraphs[0].font.size = Pt(28)
+txBox.text_frame.paragraphs[0].font.size = Pt(28)  # 28 pt 大標題
 txBox.text_frame.paragraphs[0].font.bold = True
 
-# 加入指標文字
+# 正文文字方塊（放在標題下方）
 body = slide2.shapes.add_textbox(
     Inches(1), Inches(1.8), Inches(8), Inches(4),
 )
 tf = body.text_frame
-tf.word_wrap = True
+tf.word_wrap = True  # 允許自動換行（防止長文字超出邊界）
 kpi_lines = [
     f"感染人數：{infected}（侵襲率 {infected/total:.1%}）",
     f"確診：{confirmed}　可能病例：{probable}",
@@ -423,10 +546,10 @@ kpi_lines = [
     f"死亡：{deaths}（CFR {deaths/infected:.1%}）",
 ]
 for line in kpi_lines:
-    p = tf.add_paragraph()
+    p = tf.add_paragraph()   # 每行文字加一個新段落
     p.text = line
-    p.font.size = Pt(20)
-    p.space_after = Pt(12)
+    p.font.size = Pt(20)     # 20 pt 正文字體
+    p.space_after = Pt(12)   # 段落後間距 12 pt（等同按一次 Enter）
 
 # ── 投影片 3：流行曲線 ──
 slide3 = prs.slides.add_slide(prs.slide_layouts[5])
@@ -437,7 +560,8 @@ txBox3.text_frame.text = "流行曲線（依發病日）"
 txBox3.text_frame.paragraphs[0].font.size = Pt(24)
 txBox3.text_frame.paragraphs[0].font.bold = True
 
-epicurve_buf.seek(0)
+epicurve_buf.seek(0)  # 重設 BytesIO 游標，才能再次讀取圖片資料
+# add_picture(image, left, top, width, height)：在指定位置插入圖片
 slide3.shapes.add_picture(epicurve_buf, Inches(0.5), Inches(1.3), Inches(9), Inches(5))
 
 # ── 投影片 4：各翼區侵襲率 ──
@@ -449,11 +573,14 @@ txBox4.text_frame.text = "各翼區疫情摘要"
 txBox4.text_frame.paragraphs[0].font.size = Pt(24)
 txBox4.text_frame.paragraphs[0].font.bold = True
 
-# 建立表格
-rows_n = len(wing_stats) + 1
+# add_table(rows, cols, left, top, width, height).table 取得表格物件
+# 整個呼叫鏈：add_table() 回傳 GraphicFrame，.table 才是可操作的 Table 物件
+rows_n = len(wing_stats) + 1  # 資料列 + 1 行表頭
 tbl = slide4.shapes.add_table(rows_n, 5, Inches(0.5), Inches(1.3), Inches(9), Inches(4)).table
+# 填入表頭（第 0 列）
 for j, h in enumerate(["翼區", "住民", "感染", "AR%", "CFR%"]):
     tbl.cell(0, j).text = h
+# 填入資料列（從第 1 列開始）
 for i, row in wing_stats.iterrows():
     tbl.cell(i + 1, 0).text = str(row["label"])
     tbl.cell(i + 1, 1).text = str(row["residents"])
@@ -471,7 +598,9 @@ print("✅ 簡報已儲存：output/sitrep_slides.pptx")
 import pathlib
 from fpdf import FPDF
 
-# ── CJK 字型偵測（跟 matplotlib 一樣，要找中文字型才能顯示中文）──
+# ── CJK 字型偵測（PDF 不像瀏覽器能自動 fallback，必須手動嵌入字型）──
+# fpdf2 預設只有英文字型（Helvetica 等），顯示中文需要嵌入 TTF/TTC 字型檔
+# 偵測邏輯：掃描系統字型目錄，找名稱包含 "CJK"、"WenQuanYi" 或 "wqy" 的字型檔
 cjk_font_path = None
 for font_dir in ["/usr/share/fonts", "/usr/local/share/fonts"]:
     for fp in sorted(pathlib.Path(font_dir).rglob("*")):
@@ -483,11 +612,14 @@ for font_dir in ["/usr/share/fonts", "/usr/local/share/fonts"]:
     if cjk_font_path:
         break
 
-pdf = FPDF()
-pdf.add_page()
+pdf = FPDF()        # 建立新 PDF（預設 A4 直式）
+pdf.add_page()      # 必須先 add_page() 才能開始寫入內容
 
-# 註冊中文字型（如果找到的話）
+# ── 字型設定 ──
 if cjk_font_path:
+    # add_font("別名", "樣式", "字型檔路徑")
+    # 別名可以自訂，後續用 set_font("CJK") 呼叫
+    # 注意：fpdf2 v2.5.1+ 不需要加 uni=True（已自動支援 Unicode）
     pdf.add_font("CJK", "", cjk_font_path)
     pdf.set_font("CJK", size=16)
 else:
@@ -495,12 +627,17 @@ else:
     print("⚠️ 未找到 CJK 字型，中文可能無法顯示。請安裝 fonts-noto-cjk")
 
 # ── 標題 ──
+# cell(width, height, text, ...) 是 fpdf2 最基本的內容單元
+# width=0 表示「延伸到右邊距」（自動填滿頁面寬度）
+# new_x="LMARGIN"：下一格從左邊距開始（回到左邊）
+# new_y="NEXT"：下一格移到下一行
+# align="C"：文字在格子內置中對齊
 pdf.cell(0, 12, text="松柏護理之家退伍軍人症 SitRep", new_x="LMARGIN", new_y="NEXT", align="C")
 pdf.set_font_size(10)
 pdf.cell(0, 8, text=f"報告時間：{report_time}", new_x="LMARGIN", new_y="NEXT", align="C")
-pdf.ln(8)
+pdf.ln(8)  # ln(n)：插入 n 個點的空白行（版面間距）
 
-# ── 摘要指標 ──
+# ── 摘要指標（逐行輸出）──
 pdf.set_font_size(13)
 pdf.cell(0, 10, text="摘要指標", new_x="LMARGIN", new_y="NEXT")
 pdf.set_font_size(10)
@@ -516,35 +653,39 @@ for line in kpi_lines:
 pdf.ln(5)
 
 # ── 嵌入流行曲線 ──
+# fpdf2 的 pdf.image() 只接受「檔案路徑」字串，不接受 BytesIO 物件
+# 解決方法：先把 BytesIO 的內容寫到一個暫存 PNG 檔，嵌入後立刻刪除
 pdf.set_font_size(13)
 pdf.cell(0, 10, text="流行曲線", new_x="LMARGIN", new_y="NEXT")
 epicurve_buf.seek(0)
 epicurve_tmp = pathlib.Path("output/epicurve_tmp.png")
-epicurve_tmp.write_bytes(epicurve_buf.read())
+epicurve_tmp.write_bytes(epicurve_buf.read())  # 把 BytesIO 資料寫入磁碟
+# pdf.w 是頁面寬度（約 210 mm），減 30 後留左右邊距各 15 mm
 pdf.image(str(epicurve_tmp), w=pdf.w - 30)
-epicurve_tmp.unlink()  # 刪除暫存檔
+epicurve_tmp.unlink()  # 嵌入完成後刪除暫存檔（清理環境）
 pdf.ln(5)
 
-# ── 各翼區統計表 ──
-pdf.add_page()
+# ── 各翼區統計表（手動繪製格線表格）──
+pdf.add_page()  # 新增第二頁放表格
 pdf.set_font_size(13)
 pdf.cell(0, 10, text="各翼區疫情摘要", new_x="LMARGIN", new_y="NEXT")
 pdf.set_font_size(9)
 
-# 表頭
+# col_widths 定義每欄的寬度（mm），總和應小於頁面有效寬度（約 190 mm）
 col_widths = [25, 25, 25, 30, 30]
 headers = ["翼區", "住民", "感染", "侵襲率%", "CFR%"]
+# 表頭列：border=1 繪製四邊框線
 for w, h in zip(col_widths, headers):
     pdf.cell(w, 8, text=h, border=1, align="C")
-pdf.ln()
+pdf.ln()  # 表頭填完後換行
 
-# 表格內容
+# 資料列：_ 表示我們不需要索引（只要值 row）
 for _, row in wing_stats.iterrows():
     vals = [str(row["label"]), str(row["residents"]), str(row["infected"]),
             str(row["AR%"]), str(row["CFR%"])]
     for w, v in zip(col_widths, vals):
         pdf.cell(w, 7, text=v, border=1, align="C")
-    pdf.ln()
+    pdf.ln()  # 每行資料填完後換行
 
 pdf.output("output/sitrep_report.pdf")
 print("✅ PDF 報告已儲存：output/sitrep_report.pdf")
