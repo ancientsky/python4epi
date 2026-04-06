@@ -121,75 +121,6 @@ $$\ln(OR) \pm 1.96 \times SE(\ln OR)$$
 
 ---
 
-## 教學影片
-
-本章包含 7 支教學影片，涵蓋所有核心概念。每支影片都有額外防疫範例和初學者盲點解說。
-
-```{raw} html
-<div class="video-card">
-  <div class="video-title">教學影片：2×2 列聯表——把疫調資料變成四格表</div>
-  <div class="youtube-lite" data-id="MrBUJ3iTyaw">
-    <img src="https://img.youtube.com/vi/MrBUJ3iTyaw/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
-</div>
-```
-
-```{raw} html
-<div class="video-card">
-  <div class="video-title">教學影片：風險比 RR——暴露到底有沒有增加風險？</div>
-  <div class="youtube-lite" data-id="wUOt40SNZvA">
-    <img src="https://img.youtube.com/vi/wUOt40SNZvA/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
-</div>
-```
-
-```{raw} html
-<div class="video-card">
-  <div class="video-title">教學影片：勝算比 OR——跟 RR 到底差在哪？</div>
-  <div class="youtube-lite" data-id="tOloIGqUFvs">
-    <img src="https://img.youtube.com/vi/tOloIGqUFvs/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
-</div>
-```
-
-```{raw} html
-<div class="video-card">
-  <div class="video-title">教學影片：95% 信賴區間——為什麼要先取 log 再 exp 回來？</div>
-  <div class="youtube-lite" data-id="Z_eYSHtyHxM">
-    <img src="https://img.youtube.com/vi/Z_eYSHtyHxM/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
-</div>
-```
-
-```{raw} html
-<div class="video-card">
-  <div class="video-title">教學影片：卡方檢定——觀察值 vs 期望值的擂台賽</div>
-  <div class="youtube-lite" data-id="qv3j0CSfHT0">
-    <img src="https://img.youtube.com/vi/qv3j0CSfHT0/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
-</div>
-```
-
-```{raw} html
-<div class="video-card">
-  <div class="video-title">教學影片：Fisher 精確檢定——小樣本的救星</div>
-  <div class="youtube-lite" data-id="x8n7wUWtfz0">
-    <img src="https://img.youtube.com/vi/x8n7wUWtfz0/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
-</div>
-```
-
-```{raw} html
-<div class="video-card">
-  <div class="video-title">教學影片：森林圖——一眼看穿誰是最大嫌疑犯</div>
-  <div class="youtube-lite" data-id="K8dMlS5lr3A">
-    <img src="https://img.youtube.com/vi/K8dMlS5lr3A/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
-</div>
-```
-
----
-
 ## Step 1: 資料準備
 
 ```python
@@ -206,6 +137,15 @@ df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
 
 print(f"全體：{len(df)} 人，感染：{df['infected'].sum()} 人")
 print(f"整體侵襲率：{df['infected'].mean():.1%}")
+```
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：2×2 列聯表——把疫調資料變成四格表</div>
+  <div class="youtube-lite" data-id="MrBUJ3iTyaw">
+    <img src="https://img.youtube.com/vi/MrBUJ3iTyaw/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
 ```
 
 ## Step 2: 建立 2×2 表（淋浴 × 感染）
@@ -243,6 +183,15 @@ print(f"\n暴露組（使用淋浴）侵襲率: {a/(a+b):.1%}")
 print(f"未暴露組（未使用淋浴）侵襲率: {c/(c+d):.1%}")
 ```
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：風險比 RR——暴露到底有沒有增加風險？</div>
+  <div class="youtube-lite" data-id="wUOt40SNZvA">
+    <img src="https://img.youtube.com/vi/wUOt40SNZvA/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ## Step 3: 計算 Risk Ratio（風險比）
 
 ```python
@@ -264,6 +213,15 @@ print(f"  RR = 1 → 無關聯 | RR > 1 → 暴露可能增加風險 | RR < 1 �
 :width: 100%
 ```
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：勝算比 OR——跟 RR 到底差在哪？</div>
+  <div class="youtube-lite" data-id="tOloIGqUFvs">
+    <img src="https://img.youtube.com/vi/tOloIGqUFvs/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ## Step 4: 計算 Odds Ratio（勝算比）
 
 ```python
@@ -273,6 +231,15 @@ print(f"  （相比 RR = {rr:.3f}）")
 print(f"\n本資料集侵襲率 = {df['infected'].mean():.1%}（非罕見疾病）")
 print(f"→ OR ({or_val:.3f}) 大於 RR ({rr:.3f})，這是預期的")
 print(f"→ 疾病罕見時 OR ≈ RR；侵襲率越高，OR 偏離 RR 越多")
+```
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：95% 信賴區間——為什麼要先取 log 再 exp 回來？</div>
+  <div class="youtube-lite" data-id="Z_eYSHtyHxM">
+    <img src="https://img.youtube.com/vi/Z_eYSHtyHxM/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
 ```
 
 ## Step 5: 95% 信賴區間（RR 和 OR）
@@ -314,6 +281,15 @@ print(f"OR = {or_val:.3f} (95% CI: {ci_or_lo:.3f} – {ci_or_hi:.3f})")
 
 > **解讀**：如果你把這個調查重複做 100 次，大約 95 次算出的 CI 會包含真正的 RR/OR。CI 不包含 1 = 在 α=0.05 下有統計顯著性，等同於 p < 0.05。
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：卡方檢定——觀察值 vs 期望值的擂台賽</div>
+  <div class="youtube-lite" data-id="qv3j0CSfHT0">
+    <img src="https://img.youtube.com/vi/qv3j0CSfHT0/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ## Step 6: 卡方檢定
 
 卡方檢定的核心邏輯：如果暴露和感染真的「無關」（H₀ 為真），每個格子應該觀察到多少人？實際數字離這個預期有多遠？
@@ -345,6 +321,15 @@ if min_expected >= 5:
     print(" → 滿足卡方檢定前提")
 else:
     print(" → < 5，建議改用 Fisher 精確檢定")
+```
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：Fisher 精確檢定——小樣本的救星</div>
+  <div class="youtube-lite" data-id="x8n7wUWtfz0">
+    <img src="https://img.youtube.com/vi/x8n7wUWtfz0/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
 ```
 
 ## Step 7: Fisher 精確檢定
@@ -452,6 +437,15 @@ display_df["95% CI"] = display_df.apply(
 )
 print("=== 多因子粗效應量彙整表 ===")
 print(display_df[["factor", "RR", "95% CI", "OR", "p-value"]].to_string(index=False))
+```
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：森林圖——一眼看穿誰是最大嫌疑犯</div>
+  <div class="youtube-lite" data-id="K8dMlS5lr3A">
+    <img src="https://img.youtube.com/vi/K8dMlS5lr3A/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
 ```
 
 ### 森林圖（Forest Plot）
