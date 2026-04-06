@@ -128,8 +128,8 @@ $$\ln(OR) \pm 1.96 \times SE(\ln OR)$$
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：2×2 列聯表——把疫調資料變成四格表</div>
-  <div class="youtube-lite" data-id="TODO_CH03_01">
-    <img src="https://img.youtube.com/vi/TODO_CH03_01/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="MrBUJ3iTyaw">
+    <img src="https://img.youtube.com/vi/MrBUJ3iTyaw/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -137,8 +137,8 @@ $$\ln(OR) \pm 1.96 \times SE(\ln OR)$$
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：風險比 RR——暴露到底有沒有增加風險？</div>
-  <div class="youtube-lite" data-id="TODO_CH03_02">
-    <img src="https://img.youtube.com/vi/TODO_CH03_02/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="wUOt40SNZvA">
+    <img src="https://img.youtube.com/vi/wUOt40SNZvA/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -146,8 +146,8 @@ $$\ln(OR) \pm 1.96 \times SE(\ln OR)$$
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：勝算比 OR——跟 RR 到底差在哪？</div>
-  <div class="youtube-lite" data-id="TODO_CH03_03">
-    <img src="https://img.youtube.com/vi/TODO_CH03_03/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="tOloIGqUFvs">
+    <img src="https://img.youtube.com/vi/tOloIGqUFvs/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -155,8 +155,8 @@ $$\ln(OR) \pm 1.96 \times SE(\ln OR)$$
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：95% 信賴區間——為什麼要先取 log 再 exp 回來？</div>
-  <div class="youtube-lite" data-id="TODO_CH03_04">
-    <img src="https://img.youtube.com/vi/TODO_CH03_04/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="Z_eYSHtyHxM">
+    <img src="https://img.youtube.com/vi/Z_eYSHtyHxM/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -164,8 +164,8 @@ $$\ln(OR) \pm 1.96 \times SE(\ln OR)$$
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：卡方檢定——觀察值 vs 期望值的擂台賽</div>
-  <div class="youtube-lite" data-id="TODO_CH03_05">
-    <img src="https://img.youtube.com/vi/TODO_CH03_05/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="qv3j0CSfHT0">
+    <img src="https://img.youtube.com/vi/qv3j0CSfHT0/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -173,8 +173,8 @@ $$\ln(OR) \pm 1.96 \times SE(\ln OR)$$
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Fisher 精確檢定——小樣本的救星</div>
-  <div class="youtube-lite" data-id="TODO_CH03_06">
-    <img src="https://img.youtube.com/vi/TODO_CH03_06/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="x8n7wUWtfz0">
+    <img src="https://img.youtube.com/vi/x8n7wUWtfz0/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -182,8 +182,8 @@ $$\ln(OR) \pm 1.96 \times SE(\ln OR)$$
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：森林圖——一眼看穿誰是最大嫌疑犯</div>
-  <div class="youtube-lite" data-id="TODO_CH03_07">
-    <img src="https://img.youtube.com/vi/TODO_CH03_07/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="K8dMlS5lr3A">
+    <img src="https://img.youtube.com/vi/K8dMlS5lr3A/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
