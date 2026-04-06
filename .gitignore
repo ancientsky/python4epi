@@ -12,5 +12,8 @@ book/_build/
 # Generated notebook outputs
 data/processed/
 
+# Report generation output (Ch04 Step 8)
+output/
+
 # Video generation output
 videos/output/
