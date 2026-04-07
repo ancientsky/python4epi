@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 620" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1A1A1A"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D97757"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6A9BCC"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="620" fill="#FAF8F3" rx="12"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">分層分析解讀流程圖——兩個問題，四種結論</text>
+
+  <!-- ===== Question 1: Confounding ===== -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="50" width="740" height="250" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="50" y="75" font-size="14" font-weight="bold" fill="#D97757">❶ 第一個問題：有沒有干擾作用？</text>
+  <text x="50" y="95" font-size="12" fill="#6B6B6B">比較「粗 RR」和「調整後 RR（MH 加權）」，看差多少</text>
+
+  <!-- 10% rule box -->
+  <rect x="50" y="110" width="700" height="36" rx="8" fill="#D97757" fill-opacity="0.08" stroke="#D97757" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="400" y="133" text-anchor="middle" font-size="13" fill="#D97757" font-weight="bold">判斷標準：|粗 RR − 調整 RR| ÷ 調整 RR ≥ 10%  →  有干擾作用</text>
+
+  <!-- Left: inflated -->
+  <g filter="url(#shadow)">
+    <rect x="50" y="160" width="330" height="125" rx="8" fill="#FFF" stroke="#D97757" stroke-width="1.5"/>
+  </g>
+  <rect x="50" y="160" width="330" height="28" rx="8" fill="#D97757" fill-opacity="0.15"/>
+  <text x="215" y="179" text-anchor="middle" font-size="13" font-weight="bold" fill="#D97757">粗 RR 明顯 > 調整 RR（差 ≥ 10%）</text>
+  <text x="65" y="203" font-size="12" fill="#1A1A1A" font-weight="bold">→ 干擾因子把效應「灌水」了</text>
+  <text x="65" y="223" font-size="11" fill="#6B6B6B">例：粗 RR = 2.5，調整 RR = 1.8</text>
+  <text x="65" y="240" font-size="11" fill="#6B6B6B">差距 (2.5−1.8)/1.8 = 39% ≥ 10%</text>
+  <text x="65" y="260" font-size="11" fill="#D97757">🍔 比喻：漢堡看起來很大（粗 RR），</text>
+  <text x="65" y="275" font-size="11" fill="#D97757">拿掉生菜才知道肉餅多厚（調整 RR）</text>
+
+  <!-- Right: suppressed -->
+  <g filter="url(#shadow)">
+    <rect x="420" y="160" width="330" height="125" rx="8" fill="#FFF" stroke="#6A9BCC" stroke-width="1.5"/>
+  </g>
+  <rect x="420" y="160" width="330" height="28" rx="8" fill="#6A9BCC" fill-opacity="0.15"/>
+  <text x="585" y="179" text-anchor="middle" font-size="13" font-weight="bold" fill="#6A9BCC">粗 RR 明顯 &lt; 調整 RR（差 ≥ 10%）</text>
+  <text x="435" y="203" font-size="12" fill="#1A1A1A" font-weight="bold">→ 干擾因子把效應「壓低」了</text>
+  <text x="435" y="223" font-size="11" fill="#6B6B6B">例：粗 RR = 1.2，調整 RR = 1.8</text>
+  <text x="435" y="240" font-size="11" fill="#6B6B6B">差距 (1.8−1.2)/1.8 = 33% ≥ 10%</text>
+  <text x="435" y="260" font-size="11" fill="#6A9BCC">🧊 比喻：冰塊壓住了溫度計（粗 RR 偏低），</text>
+  <text x="435" y="275" font-size="11" fill="#6A9BCC">拿掉冰塊才看到真正的溫度（調整 RR）</text>
+
+  <!-- ===== Question 2: Effect Modification ===== -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="320" width="740" height="280" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="50" y="345" font-size="14" font-weight="bold" fill="#788C5D">❷ 第二個問題：有沒有交互作用（效果修飾）？</text>
+  <text x="50" y="365" font-size="12" fill="#6B6B6B">比較「各層 RR」之間的差異——同一個暴露，在不同人群中效應一不一樣？</text>
+
+  <!-- Threshold box -->
+  <rect x="50" y="380" width="700" height="36" rx="8" fill="#788C5D" fill-opacity="0.08" stroke="#788C5D" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="400" y="403" text-anchor="middle" font-size="13" fill="#788C5D" font-weight="bold">判斷標準：各層 RR 的 95% 信賴區間是否大幅重疊？同質性 p 值 &gt; 0.05？</text>
+
+  <!-- Left: homogeneous -->
+  <g filter="url(#shadow)">
+    <rect x="50" y="430" width="330" height="155" rx="8" fill="#FFF" stroke="#788C5D" stroke-width="1.5"/>
+  </g>
+  <rect x="50" y="430" width="330" height="28" rx="8" fill="#788C5D" fill-opacity="0.15"/>
+  <text x="215" y="449" text-anchor="middle" font-size="13" font-weight="bold" fill="#788C5D">各層 RR 相近（CI 重疊、p &gt; 0.05）</text>
+  <text x="65" y="475" font-size="12" fill="#1A1A1A" font-weight="bold">→ 無交互作用 → MH 合併值可信</text>
+  <text x="65" y="498" font-size="11" fill="#6B6B6B">白話文：不管你是哪一組人，</text>
+  <text x="65" y="515" font-size="11" fill="#6B6B6B">淋浴對感染風險的影響都差不多。</text>
+  <text x="65" y="535" font-size="11" fill="#788C5D">☕ 比喻：三家分店的咖啡味道一致，</text>
+  <text x="65" y="550" font-size="11" fill="#788C5D">可以用一個「品牌平均評分」代表全部。</text>
+  <text x="65" y="573" font-size="12" fill="#788C5D" font-weight="bold">✅ 報告方式：報 RR_MH 一個數字即可</text>
+
+  <!-- Right: heterogeneous -->
+  <g filter="url(#shadow)">
+    <rect x="420" y="430" width="330" height="155" rx="8" fill="#FFF" stroke="#D94452" stroke-width="1.5"/>
+  </g>
+  <rect x="420" y="430" width="330" height="28" rx="8" fill="#D94452" fill-opacity="0.15"/>
+  <text x="585" y="449" text-anchor="middle" font-size="13" font-weight="bold" fill="#D94452">各層 RR 差異大（CI 不重疊、p ≤ 0.05）</text>
+  <text x="435" y="475" font-size="12" fill="#1A1A1A" font-weight="bold">→ 有交互作用 → 不該只報合併值</text>
+  <text x="435" y="498" font-size="11" fill="#6B6B6B">白話文：淋浴的影響因人而異——</text>
+  <text x="435" y="515" font-size="11" fill="#6B6B6B">對能走動的人影響大，對臥床的人影響小。</text>
+  <text x="435" y="535" font-size="11" fill="#D94452">🍜 比喻：三家分店辣度差超多，</text>
+  <text x="435" y="550" font-size="11" fill="#D94452">不能只給一個「平均辣度」，要分開評。</text>
+  <text x="435" y="573" font-size="12" fill="#D94452" font-weight="bold">⚠️ 報告方式：分層報告每組的 RR</text>
+
+</svg>
