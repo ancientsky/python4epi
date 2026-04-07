@@ -1,0 +1,199 @@
+meta:
+  chapter: "04"
+  concept: "sitrep_overview"
+  title: "SitRep 速成——兩小時交出疫情日報"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch04_01_sitrep_overview"
+  scene_class: "Ch04SitrepOverviewScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：SitRep 工作流全貌
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎回來。今天開始我們進入實戰模式。
+      你的長官一臉嚴肅地走過來：「兩小時內交出第一份疫情日報，SitRep。」
+      什麼是 SitRep？全稱是 Situation Report，疫情概況報告。
+      它是疫調現場最重要的溝通工具——每天一份，讓長官、同事、甚至其他單位
+      一眼掌握疫情的全貌。今天就來教你用 Python 自動化產出一份標準 SitRep。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "five_sections"
+    narration: >
+      一份標準 SitRep 至少包含五個區塊。
+      第一，摘要指標：截至目前的累計數字，侵襲率、致死率這些 KPI。
+      第二，人：年齡、性別、共病分布。
+      第三，時：流行曲線，看疫情是在升溫還是降溫。
+      第四，地：哪個區域最嚴重，侵襲率比較。
+      第五，行動建議：根據數據提出的初步判斷。
+      接下來幾支影片會一步步帶你完成每一個區塊。
+    animation: "show_five_sections"
+    pause_after: 0.5
+
+  - id: "data_prep"
+    narration: >
+      萬事起頭難，第一步永遠是讀取和整理資料。
+      用 pd.read_csv 讀取 line list，然後做三件事。
+      第一，把日期欄位從字串轉成 datetime，這樣才能計算天數差。
+      第二，建立 infected 這個 0 跟 1 的欄位，方便後續統計。
+      第三，用 pd.cut 把年齡切成組距，做年齡組分布。
+      聽起來很多？別擔心，每一步都是一行程式碼搞定。
+    animation: "show_data_prep"
+    code: |
+      df = pd.read_csv("legionella_outbreak.csv")
+      df["symptom_onset_date"] = pd.to_datetime(
+          df["symptom_onset_date"], errors="coerce"
+      )
+      df["infected"] = (
+          df["clinical_severity"] != "not_ill"
+      ).astype(int)
+    pause_after: 0.5
+
+  - id: "kpi_metrics"
+    narration: >
+      資料準備好了，馬上來算摘要指標。
+      感染人數就是 infected 欄位的 sum，因為它是 0 跟 1，加起來就是感染人數。
+      侵襲率等於感染人數除以住民總數。
+      致死率 CFR 等於死亡人數除以感染人數。
+      住院率、ICU 率也是同樣的邏輯。
+      注意 f-string 的格式化技巧：冒號一 f 百分號，自動幫你乘以一百再加百分號。
+      像魔術一樣，0.432 瞬間變成 43.2%。
+    animation: "show_kpi_metrics"
+    code: |
+      infected = df["infected"].sum()
+      total = len(df)
+      deaths = (df["outcome"] == "dead").sum()
+      print(f"Attack Rate: {infected/total:.1%}")
+      print(f"CFR: {deaths/infected:.1%}")
+    output: |
+      Attack Rate: 43.2%
+      CFR: 15.7%
+    pause_after: 0.5
+
+  - id: "workflow_diagram"
+    narration: >
+      讓我們把整個流程串起來看。
+      CSV 進來，經過資料清理，然後分成人、時、地三個描述性分析，
+      每一個都產出表格和圖表，最後彙整成一份結構化的 SitRep 字典。
+      這個字典就是你的資料層。長官要 Word？塞進 python-docx。
+      要 PPT？塞進 python-pptx。要 PDF？用 fpdf2。
+      一份資料，四種格式，全部自動產出。
+    animation: "show_workflow_diagram"
+    pause_after: 0.5
+
+  - id: "generate_sitrep"
+    narration: >
+      最核心的就是 generate_sitrep 這個函式。
+      給它一個 CSV 路徑，它就回傳一個字典，裡面有所有指標。
+      為什麼用函式？因為長官要你每天更新。
+      如果你的程式碼散落在 notebook 的各個 cell 裡，每次更新都要手動跑一遍。
+      但如果包成函式，一行呼叫就搞定。
+      而且可以放進排程，讓電腦自動幫你跑，這個我們後面會教。
+    animation: "show_generate_sitrep"
+    code: |
+      def generate_sitrep(csv_path):
+          df = pd.read_csv(csv_path)
+          # ... data cleaning ...
+          return {
+              "infected": infected,
+              "attack_rate": round(infected/total*100, 1),
+              "deaths": deaths,
+              "cfr": round(deaths/infected*100, 1),
+          }
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      快速複習！SitRep 的五大區塊：摘要指標、人、時、地、行動建議。
+      所有指標都從 line list 的 0 跟 1 欄位算出來。
+      把流程包成 generate_sitrep 函式，每天重跑一次就能更新。
+      接下來幾支影片會深入教你每個區塊的 Python 實作。
+      現在就開始動手吧！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：COVID-19 全球 SitRep
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看一個真實世界的 SitRep 範例。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_who_sitrep"
+    narration: >
+      COVID-19 期間，WHO 每天發布全球 SitRep。
+      裡面有什麼？全球累計確診數、新增確診數、按地區分層的統計表、
+      流行曲線、各國侵襲率比較。是不是跟我們學的五大區塊一模一樣？
+      唯一的差別是規模——WHO 的分母是全球八十億人。
+      但分析邏輯完全相同。你學會了松柏護理之家的 SitRep，
+      就等於學會了全球疫情報告的骨架。差別只是資料量大小而已。
+    animation: "show_extra_who_sitrep"
+    code: |
+      # WHO COVID-19 SitRep structure:
+      # 1. Key metrics (total, new, deaths)
+      # 2. Epi curve by region
+      # 3. Country-level attack rates
+      # Same logic, bigger dataset!
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      接下來是初學者最常犯的三個錯誤！每一個都可能讓你的報告被退件。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：忘記標資料截止時間。
+      SitRep 的數字每天都在變，如果不標明「資料截至幾月幾號幾點」，
+      讀的人根本不知道這份報告是新的還是舊的。
+      更慘的是，長官拿你昨天的報告跟今天的比較，發現數字不一樣，
+      還以為你算錯了。養成習慣，報告第一行就放時間戳記。
+    animation: "show_blindspot_timestamp"
+    error_code: 'print("Total cases:", infected)'
+    correct_code: 'print(f"As of {report_time}: {infected}")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：直接比較病例數，不算侵襲率。
+      A 翼有 30 個感染者，B 翼只有 10 個。所以 A 翼比較嚴重？
+      不一定！如果 A 翼有 200 位住民，B 翼只有 15 位，
+      那 B 翼的侵襲率反而高達 66%，比 A 翼的 15% 高很多。
+      絕對數字會騙人，侵襲率才是公平的比較基準。
+    animation: "show_blindspot_no_denominator"
+    error_code: "print(f'Wing A: {30} cases')"
+    correct_code: "print(f'Wing A AR: {30/200:.1%}')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：只放圖不放表。
+      流行曲線很漂亮，但長官要的是可以查核的數字。
+      「第三天有幾個？確診幾個？可能病例幾個？」
+      如果你的報告只有圖，長官每一個數字都要問你，效率超低。
+      圖表是給大方向的，表格是給查核的，兩者缺一不可。
+    animation: "show_blindspot_no_table"
+    error_code: "plt.show()  # only chart, no table"
+    correct_code: "plt.show(); print(df.to_string())"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      恭喜你掌握了 SitRep 的全貌！
+      下一集我們要深入教你「人」這個區塊——
+      怎麼用 Python 分析感染者的年齡、性別和共病分布。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

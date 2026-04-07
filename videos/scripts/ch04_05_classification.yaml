@@ -1,0 +1,177 @@
+meta:
+  chapter: "04"
+  concept: "classification"
+  title: "個案分類——確診、可能和非個案的分層統計"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch04_05_classification"
+  scene_class: "Ch04ClassificationScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：個案分類分層
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！今天來教 SitRep 裡一個很重要但容易被忽略的區塊——個案分類分層。
+      在疫調中，不是每個人都是「確診」。
+      有些人有症狀但還沒做檢驗，分類為「可能病例」。
+      有些人完全健康，分類為「非個案」。
+      長官會問：「確診裡面有多少住院？可能病例的致死率是多少？」
+      你必須按分類分層統計，才能回答這些問題。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "groupby_classification"
+    narration: >
+      跟前面的地點分層一樣，用 groupby 加 agg。
+      這次分組的 key 是 case_classification，
+      值有三種：confirmed、probable、not_a_case。
+      agg 裡面算四個指標：人數、住院數、ICU 數、死亡數。
+      注意這裡我們刻意不加 reset_index，
+      讓 case_classification 留在索引位置，印出來的表格更直觀。
+    animation: "show_groupby_classification"
+    code: |
+      classification = df.groupby(
+          "case_classification"
+      ).agg(
+          n=("case_id", "size"),
+          hospitalized=("hospitalized", "sum"),
+          icu=("icu_admission", "sum"),
+          deaths=("outcome",
+                  lambda x: (x=="dead").sum()),
+      )
+    pause_after: 0.5
+
+  - id: "hosp_rate"
+    narration: >
+      算住院率就是住院人數除以該分類的總人數，乘以一百。
+      round 一，保留一位小數。
+      把這一欄加回 classification 這個 DataFrame 裡，
+      印出來就是一張完整的分層摘要表。
+      to_string 不加參數，索引會直接顯示分類名稱。
+    animation: "show_hosp_rate"
+    code: |
+      classification["hosp_rate"] = (
+          classification["hospitalized"]
+          / classification["n"] * 100
+      ).round(1)
+      print(classification.to_string())
+    output: |
+      confirmed    91  82  19  17  90.1
+      not_a_case  159   0   0   0   0.0
+      probable     30  25   4   2  83.3
+    pause_after: 0.5
+
+  - id: "lambda_trick"
+    narration: >
+      來解釋一下 agg 裡面那個 lambda。
+      lambda x 冒號後面接一個運算式，x 代表該分組的整個 Series。
+      x 等於等於 dead 會產生 True 和 False，sum 加起來就是 True 的數量。
+      為什麼不直接用 sum？因為 outcome 欄位的值是字串 survived 和 dead，
+      不是 0 跟 1，所以需要先做比較再加總。
+      lambda 就是你的即席小函式，用完即丟。
+    animation: "show_lambda_trick"
+    code: |
+      # lambda breakdown:
+      # x = the "outcome" Series for each group
+      # (x == "dead") -> True/False Series
+      # .sum() -> count of True = death count
+      deaths=("outcome", lambda x: (x=="dead").sum())
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點整理！個案分類分層統計的關鍵：
+      第一，按 case_classification 做 groupby。
+      第二，agg 一次算完所有指標。
+      第三，lambda 處理非數值欄位的自訂聚合。
+      第四，有沒有 reset_index 取決於你想要怎麼印出來。
+      這張分層表是 SitRep 的精華，長官最愛問的數字都在這裡面。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：TB 個案分類
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看結核病的個案分類怎麼做。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tb"
+    narration: >
+      結核病的個案分類更複雜：確認病例要有痰液培養陽性，
+      臨床病例只有影像學異常加上症狀，疑似病例只有接觸史加上皮膚試驗陽性。
+      三種分類的治療策略完全不同。
+      你用同樣的 groupby 加 agg，就能算出每種分類的人數、
+      痰液轉陰率、治療完成率。邏輯完全一模一樣，
+      只是分組的 key 和指標不同。學一次，用一輩子。
+    animation: "show_extra_tb"
+    code: |
+      # TB case classification
+      tb.groupby("classification").agg(
+          n=("case_id", "size"),
+          smear_neg=("smear_result",
+                     lambda x: (x=="negative").sum()),
+          completed=("treatment_outcome",
+                     lambda x: (x=="completed").sum()),
+      )
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      盲點時間！做分類分層時，三個最常見的錯誤。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：把 not_a_case 也算進侵襲率的分子。
+      有些新手看到 infected 欄位是 1，就覺得他是感染者。
+      但如果你的 case_classification 是 not_a_case，
+      那他不應該被算進確診或可能病例裡。
+      一定要先確認個案定義，再做計算。
+    animation: "show_blindspot_definition"
+    error_code: "infected = df['infected'].sum()  # includes all"
+    correct_code: "confirmed = (df['case_classification']=='confirmed').sum()"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：lambda 裡面忘記加 .sum()。
+      只寫 x 等於等於 dead，回傳的是一整個 True False Series，
+      而不是一個數字。pandas 會報錯或者產出奇怪的結果。
+      記住 lambda 裡面一定要有 sum 或 mean 之類的聚合函式。
+    animation: "show_blindspot_lambda"
+    error_code: 'deaths=("outcome", lambda x: x=="dead")'
+    correct_code: 'deaths=("outcome", lambda x: (x=="dead").sum())'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：致死率的分母搞錯。
+      CFR 是 Case Fatality Rate，分母是「感染者人數」，不是「全體住民」。
+      如果你除以全體住民，算出來的就是「死亡率」而不是致死率，
+      數字會小很多，意義完全不同。
+      確診的 CFR 分母是確診人數，可能病例的 CFR 分母是可能病例數。
+    animation: "show_blindspot_cfr_denominator"
+    error_code: "cfr = deaths / total_residents"
+    correct_code: "cfr = deaths / confirmed_cases"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      讚！你現在會做個案分類分層統計了。
+      下一集是重頭戲——把所有步驟包成一個函式，
+      讓你的 SitRep 可以一鍵更新。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

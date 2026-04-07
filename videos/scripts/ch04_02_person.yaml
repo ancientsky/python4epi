@@ -1,0 +1,191 @@
+meta:
+  chapter: "04"
+  concept: "person"
+  title: "描述流行病學（人）——感染者的臉譜"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch04_02_person"
+  scene_class: "Ch04PersonScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：Person 描述性統計
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！今天來教你 SitRep 的第一個描述區塊——人，Person。
+      疫調的核心問題之一就是：「生病的人有什麼共同特徵？」
+      是某個年齡層特別容易中獎？男性還是女性比較多？
+      有慢性病的人是不是風險更高？
+      這些問題的答案都藏在 line list 的人口學欄位裡。
+      今天教你用 Python 把它們挖出來。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "filter_cases"
+    narration: >
+      第一步，先把感染者篩出來。
+      df 方括號裡面放條件，就是布林索引。
+      df["infected"] 等於 1 會產生一整欄的 True 和 False，
+      只有 True 的那幾列會被保留下來。
+      這是 pandas 最核心的篩選技巧，幾乎每次做分析都會用到。
+      篩出來的 cases 就是一個新的 DataFrame，只包含 121 位感染者。
+    animation: "show_filter_cases"
+    code: |
+      cases = df[df["infected"] == 1]
+      print(f"Total cases: {len(cases)}")
+    output: |
+      Total cases: 121
+    pause_after: 0.5
+
+  - id: "age_sex"
+    narration: >
+      有了 cases 這個子集，馬上來看年齡和性別。
+      median 中位數比 mean 平均值更適合描述年齡，因為不受極端值影響。
+      男性比例用一個小技巧：sex 等於 M 會產生 True 和 False，
+      然後用 mean 算出 True 的比例，就是男性的佔比。
+      這個 mean 用在布林值上的技巧超實用，一定要記起來。
+    animation: "show_age_sex"
+    code: |
+      print(f"Median age: {cases['age'].median():.0f}")
+      print(f"Range: {cases['age'].min()}-{cases['age'].max()}")
+      print(f"Male: {(cases['sex']=='M').mean():.1%}")
+    output: |
+      Median age: 79
+      Range: 60-99
+      Male: 52.1%
+    pause_after: 0.5
+
+  - id: "age_group"
+    narration: >
+      接下來看年齡組分布。
+      value_counts 計算每個類別出現幾次，但預設是按次數排列。
+      加上 sort_index，就會按年齡組的順序排列：60 到 69、70 到 79、依此類推。
+      to_string 是為了避免 pandas 在資料多的時候自動省略中間幾行。
+      這三個方法串在一起，就是做分類統計的萬用公式。
+    animation: "show_age_group"
+    code: |
+      print(cases["age_group"]
+            .value_counts()
+            .sort_index()
+            .to_string())
+    output: |
+      60-69    18
+      70-79    34
+      80-89    46
+      90+      23
+    pause_after: 0.5
+
+  - id: "comorbidity"
+    narration: >
+      最後看共病分布。
+      我們有五個共病欄位，都是 0 跟 1。
+      用一個 for 迴圈跑過每個欄位，sum 就是有這個共病的人數，
+      除以感染者總數就是比例。
+      字串的 replace 和 upper 是為了讓印出來的標籤更好看。
+      comorbidity 底線 chf 變成大寫的 CHF，簡潔俐落。
+    animation: "show_comorbidity"
+    code: |
+      for col in comorbidity_cols:
+          label = col.replace("comorbidity_", "").upper()
+          n = cases[col].sum()
+          print(f"  {label}: {n} ({n/len(cases):.1%})")
+    output: |
+        CHF: 28 (23.1%)
+        DM: 44 (36.4%)
+        CANCER: 19 (15.7%)
+        COPD: 22 (18.2%)
+        IMMUNOSUPPRESSED: 33 (27.3%)
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      快速複習！描述流行病學的「人」區塊要回答三個問題：
+      年齡分布用中位數和四分位距，不用平均值。
+      性別比例用 mean 在布林值上的技巧。
+      共病分布用 for 迴圈跑 0 跟 1 欄位的 sum。
+      這些數字寫進 SitRep，讓讀者一眼看出感染者的群體輪廓。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：登革熱年齡層分析
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看台灣登革熱疫情的年齡層分析。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue"
+    narration: >
+      2015 年台南登革熱大爆發，超過兩萬人確診。
+      分析發現 65 歲以上的長者致死率特別高，是年輕人的好幾倍。
+      這個發現促使衛生局優先在老人聚集的社區加強噴藥和衛教。
+      你看，只是做了一個簡單的年齡組分層統計，
+      就能改變整個防疫策略的優先順序。
+      這就是描述性流行病學的力量——用數字說話。
+    animation: "show_extra_dengue"
+    code: |
+      # 2015 Tainan dengue: age-stratified CFR
+      dengue.groupby("age_group").agg(
+          cases=("case_id", "size"),
+          deaths=("outcome", lambda x: (x=="dead").sum()),
+      )
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      盲點時間！做 Person 描述統計時，新手最常踩的三個地雷。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：用 mean 描述年齡。
+      年齡分布通常是偏態的，尤其在護理之家。
+      如果有一位 100 歲的人瑞，平均值會被拉高很多，但中位數不受影響。
+      流行病學的慣例是用中位數加上範圍或四分位距來描述年齡。
+      記住：偏態資料用 median，不用 mean。
+    animation: "show_blindspot_mean_age"
+    error_code: "print(f'Mean age: {cases.age.mean():.0f}')"
+    correct_code: "print(f'Median age: {cases.age.median():.0f}')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：分析全部 280 人而不是只分析感染者。
+      SitRep 的 Person 區塊描述的是「感染者」的特徵，不是「全體住民」。
+      如果你忘了先篩選 cases，算出來的年齡中位數、性別比例
+      就是全體住民的，不是感染者的，意義完全不同。
+      一定要先做布林索引篩選！
+    animation: "show_blindspot_no_filter"
+    error_code: "median_age = df['age'].median()"
+    correct_code: "cases = df[df['infected']==1]; cases['age'].median()"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：value_counts 忘記 sort_index。
+      value_counts 預設按出現次數降序排列，
+      80 到 89 歲可能排在第一個，60 到 69 歲排在最後面。
+      長官看到這種亂序的表格，一定會皺眉頭。
+      加上 sort_index，年齡組就會乖乖按順序排好。
+    animation: "show_blindspot_sort"
+    error_code: "cases['age_group'].value_counts()"
+    correct_code: "cases['age_group'].value_counts().sort_index()"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      搞定！你現在會用 Python 描述感染者的人口學特徵了。
+      下一集進入「時」——流行曲線，疫調報告裡最吸睛的那張圖。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

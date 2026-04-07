@@ -1,0 +1,208 @@
+meta:
+  chapter: "04"
+  concept: "time"
+  title: "流行曲線——用長條圖抓住疫情的脈搏"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch04_03_time"
+  scene_class: "Ch04TimeScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：Epi Curve
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！今天來畫流行病學裡最經典的圖——流行曲線，epidemic curve。
+      它是一張以「發病日期」為 x 軸、「病例數」為 y 軸的長條圖。
+      一張好的流行曲線，可以讓你一眼看出：
+      疫情什麼時候開始？什麼時候到高峰？現在是在上升還是下降？
+      它就像疫情的心電圖，有生命、有節奏。
+      今天就用 matplotlib 帶你畫出一張專業級的流行曲線。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "groupby_size"
+    narration: >
+      第一步，算出每一天的病例數。
+      用 groupby 以發病日期分組，再用 size 計算每組有幾列。
+      groupby 加 size 等同於 SQL 的 GROUP BY 加 COUNT。
+      注意我們用的是 size 而不是 count。
+      兩者的差別是：count 會排除 NaN，size 不會。
+      對於計算病例數，size 更適合，因為我們要的是「每天有幾筆」。
+    animation: "show_groupby_size"
+    code: |
+      daily = cases.groupby(
+          "symptom_onset_date"
+      ).size().rename("cases")
+      print(daily.head())
+    output: |
+      2026-01-12    3
+      2026-01-13    5
+      2026-01-14    8
+      2026-01-15   11
+      2026-01-16   14
+    pause_after: 0.5
+
+  - id: "reindex_fill"
+    narration: >
+      但這裡有一個陷阱：如果某一天沒有病例，groupby 的結果就不會有那一天。
+      例如 1 月 11 號沒人發病，結果就直接從 1 月 10 號跳到 1 月 12 號。
+      畫出來的長條圖就會有空洞，看起來很奇怪。
+      解法是用 reindex 加上一個完整的日期範圍，
+      fill_value 等於 0 會把缺少的日期補上零。
+      這樣圖表上每一天都有一根長條，即使是零也清清楚楚。
+    animation: "show_reindex_fill"
+    code: |
+      date_range = pd.date_range(
+          daily.index.min() - pd.Timedelta(days=3),
+          daily.index.max() + pd.Timedelta(days=1),
+          freq="D",
+      )
+      daily = daily.reindex(date_range, fill_value=0)
+    pause_after: 0.5
+
+  - id: "bar_chart"
+    narration: >
+      資料準備好了，來畫圖。
+      plt.subplots 同時建立畫布 fig 和繪圖區 ax。
+      fig 管整張圖的大小，ax 管裡面畫什麼。
+      ax.bar 畫長條圖，width 等於 1 讓長條緊貼在一起——
+      這是流行曲線的標準做法，不能有間隙。
+      因為每一天的病例數是連續的時間序列，空隙會造成誤解。
+    animation: "show_bar_chart"
+    code: |
+      fig, ax = plt.subplots(figsize=(10, 4))
+      ax.bar(daily.index, daily.values,
+             width=1.0, color="#2c7fb8",
+             edgecolor="white", linewidth=0.5)
+      ax.set_title("Epi Curve - Legionella")
+      plt.show()
+    pause_after: 0.5
+
+  - id: "date_formatting"
+    narration: >
+      日期軸的格式化是新手最頭痛的部分。
+      matplotlib 的 dates 模組有兩個好幫手：
+      DateFormatter 控制日期顯示格式，百分號 m 斜線百分號 d 就是月斜線日。
+      DayLocator 控制刻度間距，interval 等於 2 就是每隔兩天一個刻度。
+      最後用 autofmt_xdate 自動旋轉標籤 45 度，避免文字重疊。
+      這三行是畫時間序列圖的標配，背起來就對了。
+    animation: "show_date_formatting"
+    code: |
+      import matplotlib.dates as mdates
+      ax.xaxis.set_major_formatter(
+          mdates.DateFormatter("%m/%d"))
+      ax.xaxis.set_major_locator(
+          mdates.DayLocator(interval=2))
+      fig.autofmt_xdate(rotation=45)
+    pause_after: 0.5
+
+  - id: "peak_day"
+    narration: >
+      畫完圖，要回答長官最關心的問題：「高峰日是哪一天？」
+      idxmax 找到數值最大的那個索引，也就是病例數最多的那一天。
+      注意 idxmax 回傳的是索引值——也就是日期，不是數值。
+      數值要用 max 才能拿到。
+      兩個配合使用，就能精準報告：「高峰日是 1 月 19 號，當天 18 例。」
+    animation: "show_peak_day"
+    code: |
+      peak = daily.idxmax()
+      print(f"Peak: {peak.date()} ({daily.max()} cases)")
+    output: |
+      Peak: 2026-01-19 (18 cases)
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點整理！流行曲線的製作流程：
+      第一，groupby 加 size 算每天病例數。
+      第二，reindex 補齊空白日期。
+      第三，bar 畫長條圖，width 等於 1 無間隙。
+      第四，DateFormatter 和 DayLocator 格式化日期軸。
+      第五，idxmax 找高峰日。
+      五步搞定，一張專業級的流行曲線就完成了。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：腸病毒疫情
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看台灣腸病毒疫情的流行曲線。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_enterovirus"
+    narration: >
+      腸病毒每年夏天是台灣家長的噩夢。
+      如果你拿健保資料畫出全年的流行曲線，會看到一個超明顯的山丘：
+      大約五六月開始攀升，七八月到高峰，九月以後才慢慢下降。
+      這種季節性的流行曲線叫 propagated curve，代表人傳人的持續傳播。
+      跟我們松柏護理之家那種尖尖的 point source curve 很不一樣。
+      光是看曲線的形狀，就能推測傳播模式。厲害吧？
+    animation: "show_extra_enterovirus"
+    code: |
+      # Enterovirus: seasonal propagated curve
+      # Point-source: sharp peak, short duration
+      # Propagated: gradual rise, multiple peaks
+      ev_weekly = ev.resample("W").size()
+      ev_weekly.plot(kind="bar")
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      盲點時間！畫流行曲線時，新手最常犯的三個錯誤。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：長條之間有間隙。
+      如果你用預設的 bar 參數，長條之間會有空白。
+      這在流行曲線中是錯誤的，因為每一天是連續的，不應該有斷裂。
+      解法超簡單：width 設為 1.0。
+      一個參數的差別，專業度天差地遠。
+    animation: "show_blindspot_gap"
+    error_code: "ax.bar(x, y)  # default width=0.8"
+    correct_code: "ax.bar(x, y, width=1.0)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：沒有補齊空白日期。
+      如果 1 月 15 號沒有病例，圖表上就會跳過那一天。
+      讀者會以為 1 月 14 號旁邊那根長條是 1 月 15 號，
+      但其實是 1 月 16 號。整張圖的時間軸就歪掉了。
+      一定要用 reindex 補零！
+    animation: "show_blindspot_missing_dates"
+    error_code: "daily = cases.groupby('date').size()"
+    correct_code: "daily = daily.reindex(date_range, fill_value=0)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：用通報日期取代發病日期。
+      通報日期是衛生單位收到通報的時間，可能比發病晚好幾天。
+      用通報日期畫流行曲線，高峰會往右偏移，
+      你可能誤以為疫情還在上升，但其實早就過了高峰。
+      一定要用 symptom onset date 發病日期！
+    animation: "show_blindspot_wrong_date"
+    error_code: "cases.groupby('notification_date').size()"
+    correct_code: "cases.groupby('symptom_onset_date').size()"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      讚！你現在會畫一張專業的流行曲線了。
+      下一集來處理「地」——哪個翼區最嚴重，用數字比較各區的侵襲率。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
