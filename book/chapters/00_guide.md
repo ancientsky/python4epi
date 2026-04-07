@@ -822,7 +822,64 @@ uv run python notebooks/run_sitrep.py
 
 假設你整理好了一個 `weekly_report.py`，要讓它每週一早上 8 點自動執行、產出登革熱週報。
 
-#### Linux / macOS：用 `cron`
+#### macOS：用 launchd（推薦）
+
+**launchd** 是 macOS 的原生排程器，比 cron 更穩定，不會被 macOS 的安全機制擋住。建立一個 plist 檔 `~/Library/LaunchAgents/com.epi.weekly.plist`：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.epi.weekly</string>
+    <key>ProgramArguments</key>
+    <array>
+        <!-- 用 which uv 查你的 uv 絕對路徑 -->
+        <string>/Users/你的帳號/.local/bin/uv</string>
+        <string>run</string>
+        <string>python</string>
+        <string>/Users/你的帳號/projects/python4epi/weekly_report.py</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/Users/你的帳號/projects/python4epi</string>
+    <!-- 每週一（Weekday=1）早上 8:00 -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Weekday</key>
+        <integer>1</integer>
+        <key>Hour</key>
+        <integer>8</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/Users/你的帳號/projects/python4epi/output/weekly_stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/你的帳號/projects/python4epi/output/weekly_stderr.log</string>
+</dict>
+</plist>
+```
+
+```bash
+# 載入排程
+launchctl load ~/Library/LaunchAgents/com.epi.weekly.plist
+
+# 確認載入成功
+launchctl list | grep epi
+
+# 移除排程
+launchctl unload ~/Library/LaunchAgents/com.epi.weekly.plist
+```
+
+```{tip}
+完整的 launchd 教學（含每日 SitRep 排程範例），請見 Ch04 Step 9。
+```
+
+#### Linux / macOS：用 cron
+
+macOS 也可以用 cron，但在新版 macOS 上可能需要額外授予「完整磁碟取用權限」——**建議 macOS 使用者優先用上方的 launchd**。
 
 ```bash
 # 打開 cron 編輯器
@@ -853,6 +910,12 @@ crontab -e
    - 程式或指令碼：`cmd`
    - 新增引數：`/c cd /d C:\path\to\your\project && uv run python weekly_report.py`
 
+也可以用命令列 `schtasks` 一行搞定：
+
+```powershell
+schtasks /create /tn "Weekly_Report" /tr "cmd /c cd /d C:\path\to\your\project && uv run python weekly_report.py" /sc weekly /d MON /st 08:00
+```
+
 #### 排程腳本的建議
 
 | 建議 | 原因 |
@@ -860,6 +923,7 @@ crontab -e
 | 在腳本開頭寫好輸入/輸出路徑 | 排程時的工作目錄可能不是你預期的 |
 | 加上 `try/except` 錯誤處理 | 排程執行時你不在電腦前，要把錯誤訊息存起來 |
 | 把結果存成檔案，不要只 print | `print` 只會輸出到 log，存檔才看得到報表 |
+| macOS 優先用 launchd | launchd 是原生排程器，不會被安全機制擋住，日誌管理也更方便 |
 | 先手動跑一次確認沒問題 | 再設定排程，避免每週一都跑出錯誤 |
 
 ### 總結：流行病學家的工具選擇指南
@@ -872,7 +936,7 @@ crontab -e
   → 轉成 .py 腳本
 
 第三步：自動化 & 排程
-  → cron / 工作排程器 + .py 腳本
+  → launchd / cron / 工作排程器 + .py 腳本
 
 進階：想要更好的開發體驗
   → VS Code（同時支援 .ipynb 和 .py）

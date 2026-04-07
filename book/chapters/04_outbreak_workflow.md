@@ -702,13 +702,226 @@ print("✅ PDF 報告已儲存：output/sitrep_report.pdf")
 3. **忘記標註資料截止時間**：每份報告都要註明「資料截至 YYYY-MM-DD HH:MM」
 4. **侵襲率沒算分母**：直接比較病例數不公平，要除以各翼區住民數
 
-## 進階：可重跑腳本
+## Step 9: 排程自動更新
 
-```bash
-uv run python notebooks/run_sitrep.py
+長官的要求很明確：**每天早上九點，信箱裡要有最新的 SitRep。** 但每天手動打開 notebook、按 Run All、等它跑完再寄出……你大概第三天就會忘記。解決方案：讓電腦自動幫你跑。
+
+### 9a: 準備排程腳本
+
+Step 7 的 `generate_sitrep()` 和 Step 8 的報告輸出都是在 notebook 裡互動執行的。要排程自動化，需要把它們整合成一個獨立的 `.py` 腳本。以下是一個適合排程的範例腳本結構：
+
+```python
+#!/usr/bin/env python3
+"""每日 SitRep 自動產出腳本。
+
+用法（手動執行）：
+    uv run python notebooks/run_sitrep.py
+
+排程執行時，請用絕對路徑：
+    /Users/你的帳號/.local/bin/uv run python /Users/你的帳號/projects/python4epi/notebooks/run_sitrep.py
+"""
+import logging
+from pathlib import Path
+from datetime import datetime
+
+# ── 用 pathlib 算出專案根目錄的絕對路徑 ──
+# __file__ 是「這個腳本本身」的路徑
+# .resolve() 把相對路徑轉成絕對路徑（例如 ~/projects → /Users/xxx/projects）
+# .parent 往上一層：run_sitrep.py → notebooks/ → 專案根目錄
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+DATA_PATH = PROJECT_DIR / "data" / "synthetic" / "legionella_outbreak.csv"
+OUTPUT_DIR = PROJECT_DIR / "output"
+OUTPUT_DIR.mkdir(exist_ok=True)
+
+# ── 設定 logging（取代 print）──
+# 排程執行時你不在電腦前，print 的輸出會消失在虛空
+# logging 可以寫入檔案，事後回頭查看「昨天有沒有成功跑完」
+LOG_PATH = OUTPUT_DIR / "sitrep.log"
+logging.basicConfig(
+    filename=str(LOG_PATH),
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+)
+log = logging.getLogger(__name__)
+
+def main():
+    """主邏輯：讀取 CSV → 計算指標 → 產出報告。"""
+    log.info("開始產出 SitRep...")
+
+    # 這裡放 Steps 1–8 的核心邏輯
+    # sitrep = generate_sitrep(str(DATA_PATH))
+    # ... 產出 DOCX / PDF 等 ...
+
+    # 輸出檔名帶日期戳記，方便歸檔
+    today = datetime.now().strftime("%Y%m%d")
+    output_path = OUTPUT_DIR / f"sitrep_{today}.pdf"
+    log.info(f"報告已儲存：{output_path}")
+
+if __name__ == "__main__":
+    # try/except 包住主邏輯：萬一出錯，錯誤訊息會寫進 log 而非默默消失
+    try:
+        main()
+    except Exception:
+        log.exception("SitRep 產出失敗！")
+        raise  # 重新拋出例外，讓排程系統知道「這次執行失敗了」
 ```
 
-把整個 SitRep 流程存成 `.py` 腳本，每天更新 CSV 後重跑一次就能自動產出最新日報。
+```{tip}
+**從 notebook 轉成 `.py` 腳本的三種方法**，請見 {ref}`Ch00 開發者工具 <00_guide:把-.ipynb-轉成-.py：三種方法>`。本教材的 `notebooks/run_sitrep.py` 就是一個整理好的範例。
+```
+
+### 9b: macOS：launchd（推薦）
+
+macOS 的原生排程器叫 **launchd**（不是 cron）。雖然 macOS 也有 cron，但新版 macOS 對 cron 有安全限制，launchd 是官方推薦的做法。
+
+建立一個 plist 設定檔 `~/Library/LaunchAgents/com.epi.sitrep.plist`：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Label：這個排程任務的唯一識別名稱 -->
+    <key>Label</key>
+    <string>com.epi.sitrep</string>
+
+    <!-- ProgramArguments：要執行的指令（等同在終端機打的指令）-->
+    <!-- 每個「空白分隔的部分」是一個 <string>，不能全部寫在同一個裡面 -->
+    <key>ProgramArguments</key>
+    <array>
+        <!-- ⚠️ 必須用絕對路徑！用 which uv 查你的 uv 裝在哪裡 -->
+        <string>/Users/你的帳號/.local/bin/uv</string>
+        <string>run</string>
+        <string>python</string>
+        <string>/Users/你的帳號/projects/python4epi/notebooks/run_sitrep.py</string>
+    </array>
+
+    <!-- WorkingDirectory：執行時的工作目錄（等同先 cd 到這裡再跑） -->
+    <key>WorkingDirectory</key>
+    <string>/Users/你的帳號/projects/python4epi</string>
+
+    <!-- StartCalendarInterval：排程時間（每天早上 9:00） -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>9</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <!-- 日誌輸出路徑（stdout 和 stderr 分開存）-->
+    <key>StandardOutPath</key>
+    <string>/Users/你的帳號/projects/python4epi/output/launchd_stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/你的帳號/projects/python4epi/output/launchd_stderr.log</string>
+</dict>
+</plist>
+```
+
+設定完成後，執行以下三步：
+
+```bash
+# 1. 把 plist 複製到 LaunchAgents 目錄（如果你直接在那裡建檔就跳過這步）
+cp com.epi.sitrep.plist ~/Library/LaunchAgents/
+
+# 2. 載入排程（從下一個 09:00 開始自動執行）
+launchctl load ~/Library/LaunchAgents/com.epi.sitrep.plist
+
+# 3. 確認有載入成功（應該會看到 com.epi.sitrep）
+launchctl list | grep epi
+```
+
+如果要移除排程：
+
+```bash
+launchctl unload ~/Library/LaunchAgents/com.epi.sitrep.plist
+```
+
+### 9c: Linux：cron
+
+Linux 最常用的排程工具是 **cron**。用 `crontab -e` 打開編輯器，加入一行：
+
+```bash
+# 打開 cron 排程編輯器
+crontab -e
+
+# 加入以下這一行（每天早上 9 點執行）
+0 9 * * * cd /home/你的帳號/projects/python4epi && /home/你的帳號/.local/bin/uv run python notebooks/run_sitrep.py >> output/sitrep_cron.log 2>&1
+```
+
+五個欄位的意思：
+
+```
+0 9 * * *
+│ │ │ │ │
+│ │ │ │ └── 星期幾（* = 每天，0=週日，1=週一 ...）
+│ │ │ └──── 月份（* = 每月）
+│ │ └────── 日期（* = 每天）
+│ └──────── 小時（9 = 早上 9 點，24 小時制）
+└────────── 分鐘（0 = 整點）
+```
+
+```{warning}
+**cron 的 PATH 陷阱：** cron 執行時的環境變數跟你在終端機打指令時不同。`uv` 可能不在 cron 的 PATH 裡，導致 `command not found`。
+
+**解法一**：用 `uv` 的絕對路徑（先執行 `which uv` 查出來，例如 `/home/你的帳號/.local/bin/uv`）。
+
+**解法二**：在 crontab 最上方加入 PATH 設定：
+```bash
+# 在 crontab -e 的最上方加入這行
+PATH=/home/你的帳號/.local/bin:/usr/local/bin:/usr/bin:/bin
+```
+```
+
+### 9d: Windows 11：工作排程器
+
+Windows 有內建的「工作排程器」（Task Scheduler），可以用 GUI 或命令列設定。
+
+**GUI 方式（4 步）：**
+
+1. 按 `Win` 鍵搜尋「工作排程器」或「Task Scheduler」，打開它
+2. 右側點「**建立基本工作**」→ 名稱填 `SitRep 日報更新`
+3. 觸發程序：選「**每天**」→ 時間設 `09:00:00`
+4. 動作：選「**啟動程式**」→ 填入以下內容：
+   - 程式或指令碼：`cmd`
+   - 新增引數：`/c cd /d C:\Users\你的帳號\projects\python4epi && uv run python notebooks\run_sitrep.py`
+
+**命令列方式（一行搞定）：**
+
+```powershell
+schtasks /create /tn "SitRep_Daily" /tr "cmd /c cd /d C:\Users\你的帳號\projects\python4epi && uv run python notebooks\run_sitrep.py" /sc daily /st 09:00
+```
+
+各旗標的意思：
+
+| 旗標 | 說明 |
+|------|------|
+| `/create` | 建立新的排程任務 |
+| `/tn "SitRep_Daily"` | 任務名稱（Task Name） |
+| `/tr "..."` | 要執行的指令（Task Run） |
+| `/sc daily` | 排程頻率（Schedule）：每天 |
+| `/st 09:00` | 開始時間（Start Time）：早上 9 點 |
+
+如果要刪除排程：
+
+```powershell
+schtasks /delete /tn "SitRep_Daily" /f
+```
+
+### 排程常見問題
+
+| 問題 | 原因 | 解法 |
+|------|------|------|
+| `command not found: uv` | 排程環境的 PATH 跟終端機不同 | 用 `which uv`（Mac/Linux）或 `where uv`（Windows）找到絕對路徑 |
+| 找不到 CSV 檔案 | 工作目錄不是專案根目錄 | 腳本內用 `Path(__file__).resolve().parent` 算絕對路徑 |
+| 跑完但沒看到輸出 | 沒有 redirect stdout/stderr | cron: `>> log 2>&1`；launchd: 設定 `StandardOutPath` |
+| macOS 權限被擋 | 安全性限制 | 系統設定 → 隱私權與安全性 → 給「終端機」**完整磁碟取用權限** |
+| Windows 排程沒執行 | 電腦休眠了 | 工作排程器 → 條件 → 取消勾選「僅在電腦使用 AC 電源時」 |
+
+```{tip}
+**進階組合技：** 排程腳本寫好後，可以搭配 Ch13（可重現研究）的 Git 版本控制——每次排程執行後自動 commit 輸出結果，這樣不只有最新報告，還有完整的歷史紀錄可以回溯。
+```
 
 ## 練習本
 
