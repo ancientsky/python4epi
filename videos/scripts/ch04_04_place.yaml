@@ -1,0 +1,191 @@
+meta:
+  chapter: "04"
+  concept: "place"
+  title: "地點比較——哪個翼區最危險？"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch04_04_place"
+  scene_class: "Ch04PlaceScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：Place 描述統計
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！今天來做 SitRep 的第三個區塊——地，Place。
+      松柏護理之家有好幾個翼區，長官想知道：「哪個翼區最嚴重？」
+      直覺可能是看哪個翼區病例最多，但這樣不公平——
+      大翼區住民多，病例數自然多。
+      正確做法是算每個翼區的侵襲率，也就是感染比例。
+      今天教你用 groupby 加 agg 一行搞定地點比較。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "groupby_agg"
+    narration: >
+      groupby 加 agg 是 pandas 最強大的聚合工具。
+      我們用樓層和翼區做雙層分組，然後用 agg 同時算三個指標。
+      residents 等於 case_id 加 size，算每組有幾列，就是住民數。
+      infected 等於 infected 加 sum，因為它是 0 跟 1，加起來就是感染數。
+      deaths 用 lambda 函式，在 outcome 欄位裡數有幾個 dead。
+      三個指標，一行搞定。這就是 agg 的威力。
+    animation: "show_groupby_agg"
+    code: |
+      wing_stats = df.groupby(["floor", "wing"]).agg(
+          residents=("case_id", "size"),
+          infected=("infected", "sum"),
+          deaths=("outcome", lambda x: (x=="dead").sum()),
+      ).reset_index()
+    pause_after: 0.5
+
+  - id: "attack_rate_calc"
+    narration: >
+      有了感染數和住民數，侵襲率就是除法乘以一百。
+      round 一，保留一位小數。
+      致死率也是一樣的邏輯：死亡數除以感染數。
+      最後用 floor 加 wing 拼成標籤，例如一 A、一 B、二 A。
+      astype str 是因為 floor 是整數，要先轉成字串才能跟字母相加。
+    animation: "show_attack_rate_calc"
+    code: |
+      wing_stats["AR%"] = (
+          wing_stats["infected"] / wing_stats["residents"]
+          * 100
+      ).round(1)
+      wing_stats["label"] = (
+          wing_stats["floor"].astype(str) + wing_stats["wing"]
+      )
+    pause_after: 0.5
+
+  - id: "print_table"
+    narration: >
+      to_string 加 index 等於 False，印出來的表格不會有左邊那一欄索引數字。
+      這樣長官直接看到翼區名稱、住民數、感染數、侵襲率，清清楚楚。
+      記得 SitRep 一定要有數字表格，不能只有圖表。
+      表格是可以被查核的，圖表只是輔助理解。
+    animation: "show_print_table"
+    code: |
+      print(wing_stats[["label", "residents",
+                         "infected", "AR%"]]
+            .to_string(index=False))
+    output: |
+      label  residents  infected   AR%
+         1A         47        23  48.9
+         1B         46        19  41.3
+         2A         48        22  45.8
+         2B         45        16  35.6
+         3A         47        21  44.7
+         3B         47        20  42.6
+    pause_after: 0.5
+
+  - id: "reset_index"
+    narration: >
+      順帶一提，為什麼 agg 後面要接 reset_index？
+      groupby 之後，分組的 key 會變成索引，不是普通的欄位。
+      如果不 reset_index，你沒辦法用 wing_stats 方括號 floor 來取值。
+      reset_index 就是把索引「踢回去」變成普通欄位。
+      這是 groupby 系列操作的標配收尾動作。
+    animation: "show_reset_index"
+    code: |
+      # Without reset_index:
+      #   floor and wing are in the INDEX
+      # With reset_index:
+      #   floor and wing are regular COLUMNS
+      wing_stats = df.groupby(...).agg(...).reset_index()
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點整理！地點比較的四步流程：
+      第一，groupby 加 agg 雙層分組聚合。
+      第二，算侵襲率和致死率。
+      第三，reset_index 把分組鍵變回欄位。
+      第四，to_string 印出整齊的表格。
+      記住：永遠用侵襲率比較，不要用絕對病例數。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：COVID-19 各縣市比較
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看 COVID-19 各縣市的侵襲率比較。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid_county"
+    narration: >
+      2021 年台灣本土疫情爆發時，媒體天天報各縣市確診人數。
+      台北市每天幾百例，台東縣個位數。聽起來台北嚴重得多？
+      但如果算侵襲率——台北三百萬人裡面幾百例，
+      萬華地區的侵襲率可能反而比台北市整體的高很多。
+      所以疫情分析永遠要看比率，不能只看數字。
+      這就是我們剛剛學的 agg 加上侵襲率的真實應用。
+    animation: "show_extra_covid_county"
+    code: |
+      # COVID-19 Taiwan: county-level AR
+      county_stats = covid.groupby("county").agg(
+          pop=("pop", "first"),
+          cases=("case_id", "size"),
+      )
+      county_stats["AR_per_100k"] = (
+          county_stats["cases"] / county_stats["pop"] * 100000
+      )
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      盲點時間！做地點比較時，新手最容易栽的三個坑。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：忘了 reset_index。
+      groupby 之後直接算侵襲率，結果發現沒辦法用欄位名取值。
+      pandas 會丟出 KeyError，讓你一頭霧水。
+      養成習慣：groupby 加 agg 後面一定接 reset_index。
+    animation: "show_blindspot_reset"
+    error_code: "stats = df.groupby('wing').agg(...)"
+    correct_code: "stats = df.groupby('wing').agg(...).reset_index()"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：agg 裡面的 size 跟 count 搞混。
+      size 計算每組有幾列，不管有沒有 NaN。
+      count 只計算非 NaN 的值。
+      如果你的資料有遺漏值，count 會少算。
+      算住民數要用 size，算有填值的欄位用 count。
+    animation: "show_blindspot_size_count"
+    error_code: 'residents=("case_id", "count")  # skips NaN'
+    correct_code: 'residents=("case_id", "size")  # counts all rows'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：直接比較病例數。
+      這個我們開頭就說過了，但新手還是會犯。
+      A 翼 30 例、B 翼 10 例，不代表 A 翼更嚴重。
+      一定要除以分母，算出侵襲率才能公平比較。
+      沒有分母的數字，就像沒有刻度的溫度計，看不出高低。
+    animation: "show_blindspot_no_rate"
+    error_code: "print(f'Wing A: {30} cases')"
+    correct_code: "print(f'Wing A: {30/200:.1%} AR')"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      太好了！你已經學會人、時、地三大描述區塊了。
+      下一集我們要教你按個案分類分層摘要，
+      把確診、可能病例和非個案分開統計。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

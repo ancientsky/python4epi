@@ -1,0 +1,218 @@
+meta:
+  chapter: "04"
+  concept: "report_output"
+  title: "專業報告輸出——Dashboard、Word、PPT、PDF 一次搞定"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch04_07_report_output"
+  scene_class: "Ch04ReportOutputScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：四種報告格式
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！這是 SitRep 工作流的最終章。
+      前幾集你已經把分析結果存成一個字典了，但長官看不懂 Python 字典。
+      他要的是一份漂亮的報告。
+      今天教你用四種格式把字典包裝成專業輸出：
+      互動儀表板、Word 文件、PPT 簡報、PDF 正式報告。
+      一份資料，四種格式，全部自動產出。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "bytesio_concept"
+    narration: >
+      在開始之前，先認識一個神器——BytesIO。
+      你已經用 fig.savefig 把流行曲線存成 PNG 了，但存在硬碟很麻煩。
+      BytesIO 就像一個「記憶體裡的假檔案」，
+      行為跟真正的檔案完全一樣，但資料只存在 RAM 裡。
+      把圖存進 BytesIO，DOCX 和 PPTX 的 add_picture 都能直接吃。
+      用完不用刪，因為它不佔硬碟空間。
+      唯一要注意的是：每次讀取前要 seek 零，把游標倒回開頭。
+    animation: "show_bytesio_concept"
+    code: |
+      from io import BytesIO
+      buf = BytesIO()
+      fig.savefig(buf, format="png", dpi=150)
+      buf.seek(0)  # rewind before each read
+    pause_after: 0.5
+
+  - id: "plotly_dashboard"
+    narration: >
+      第一種格式：Plotly 互動儀表板。
+      make_subplots 建立 2 乘 2 的子圖面板。
+      specs 指定每個格子的類型：indicator 是大字顯示 KPI，xy 是一般圖表。
+      左上放感染人數和侵襲率，右上放死亡人數和 CFR。
+      左下是流行曲線，右下是各翼區的侵襲率水平長條圖。
+      在 Jupyter 裡是互動的，可以縮放和懸停檢視。
+      在 Jupyter Book 靜態網頁裡會自動變成截圖。
+    animation: "show_plotly_dashboard"
+    code: |
+      from plotly.subplots import make_subplots
+      dashboard = make_subplots(rows=2, cols=2,
+          specs=[[{"type":"indicator"},{"type":"indicator"}],
+                 [{"type":"xy"},{"type":"xy"}]])
+      dashboard.add_trace(go.Indicator(...), row=1, col=1)
+      dashboard.show()
+    pause_after: 0.5
+
+  - id: "docx_report"
+    narration: >
+      第二種格式：Word 文件。
+      注意一個超容易搞混的地方：安裝的時候打 pip install python-docx，
+      但 import 的時候是 from docx import Document，沒有 python 前綴。
+      Document 建立一份空白文件，add_heading 加標題，
+      add_table 加表格，add_picture 嵌入圖片。
+      圖片可以直接吃 BytesIO 物件，width 用 Inches 指定寬度。
+      最後 save 到 output 資料夾就完成了。
+    animation: "show_docx_report"
+    code: |
+      from docx import Document
+      from docx.shared import Inches
+      doc = Document()
+      doc.add_heading("SitRep", level=1)
+      doc.add_table(rows=6, cols=2)
+      buf.seek(0)
+      doc.add_picture(buf, width=Inches(6))
+      doc.save("output/sitrep.docx")
+    pause_after: 0.5
+
+  - id: "pptx_slides"
+    narration: >
+      第三種格式：PPT 簡報。
+      python-pptx 的邏輯是：先選版面 layout，再加內容。
+      slide_layouts 零號是標題頁，五號是空白頁。
+      空白頁上用 add_textbox 自由定位文字，add_picture 嵌入圖片。
+      位置和大小都用 Inches 指定。
+      四張投影片——標題、KPI、流行曲線、翼區表格——就是一份完整簡報。
+    animation: "show_pptx_slides"
+    code: |
+      from pptx import Presentation
+      from pptx.util import Inches, Pt
+      prs = Presentation()
+      slide = prs.slides.add_slide(prs.slide_layouts[5])
+      slide.shapes.add_textbox(Inches(1), Inches(0.5), ...)
+      buf.seek(0)
+      slide.shapes.add_picture(buf, Inches(0.5), ...)
+      prs.save("output/sitrep.pptx")
+    pause_after: 0.5
+
+  - id: "pdf_report"
+    narration: >
+      第四種格式：PDF 正式報告。
+      用 fpdf2，純 Python，不需要額外的系統套件。
+      但有一個大重點：fpdf2 預設不支援中文。
+      你必須手動找到 CJK 字型檔，用 add_font 嵌入進去。
+      CI 環境裝了 fonts-noto-cjk，所以掃描 /usr/share/fonts 就能找到。
+      另外 fpdf2 的 image 只吃檔案路徑，不吃 BytesIO。
+      解法是先存暫存檔，嵌入後再刪掉。雖然麻煩一點，但也就多兩行程式碼。
+    animation: "show_pdf_report"
+    code: |
+      from fpdf import FPDF
+      pdf = FPDF()
+      pdf.add_page()
+      pdf.add_font("CJK", "", font_path)
+      pdf.set_font("CJK", size=16)
+      pdf.cell(0, 12, text="SitRep", align="C",
+               new_x="LMARGIN", new_y="NEXT")
+      pdf.output("output/sitrep.pdf")
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點整理！四種報告格式各有適用場景：
+      Plotly 儀表板適合團隊即時討論。
+      Word 適合 email 給長官。
+      PPT 適合疫調會議簡報。
+      PDF 適合正式歸檔和列印。
+      BytesIO 是共用圖片的神器，但每次讀取前要 seek 零。
+      現在你的 SitRep 不只有數字，還有四種漂亮的包裝。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例：自動寄送疫調日報
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看一個進階應用。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_email"
+    narration: >
+      想像你把報告產出自動化之後，下一步就是自動寄送。
+      Python 的 smtplib 可以發送 email。
+      你可以把 DOCX 或 PDF 當作附件，
+      email 正文放摘要指標的文字版，
+      收件人填長官和相關同事的信箱。
+      搭配排程——你甚至不用打開電腦，每天九點長官就會收到最新報告。
+      這就是從手動到全自動的進化路徑。
+    animation: "show_extra_email"
+    code: |
+      import smtplib
+      from email.mime.multipart import MIMEMultipart
+      from email.mime.base import MIMEBase
+      # Attach output/sitrep.pdf
+      # Subject: SitRep 2026-01-20
+      # Recipient: supervisor@health.gov.tw
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      盲點時間！做報告輸出時，三個超級容易踩的坑。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：BytesIO 忘記 seek 零。
+      BytesIO 讀完之後，游標停在末尾。
+      如果你不 seek 零直接再讀一次，會拿到空資料。
+      結果就是 Word 裡面嵌入了一張白圖，PDF 裡面也是空白。
+      每次要讀 BytesIO 之前，一律 seek 零，養成肌肉記憶。
+    animation: "show_blindspot_seek"
+    error_code: "doc.add_picture(buf)  # cursor at end"
+    correct_code: "buf.seek(0); doc.add_picture(buf)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：import docx 寫成 import python_docx。
+      套件安裝名稱是 python-docx，但 import 名稱是 docx。
+      很多人想當然耳地寫 import python_docx，然後收到 ModuleNotFoundError。
+      類似的陷阱還有 python-pptx 的 import 是 pptx。
+      記住：安裝名和 import 名不一定一樣。
+    animation: "show_blindspot_import"
+    error_code: "import python_docx  # ModuleNotFoundError"
+    correct_code: "from docx import Document  # correct!"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：PDF 中文變成方框或亂碼。
+      fpdf2 預設只有英文字型。如果你沒有嵌入 CJK 字型，
+      中文字全部變成一堆方框——學名叫豆腐字。
+      解法是用 add_font 嵌入 Noto Sans CJK 或 WenQuanYi 字型。
+      如果在 Colab 或 CI 環境，記得先安裝 fonts-noto-cjk。
+    animation: "show_blindspot_cjk"
+    error_code: 'pdf.set_font("Helvetica")  # CJK = tofu'
+    correct_code: 'pdf.add_font("CJK", "", font_path)'
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      恭喜你完成了 SitRep 工作流的完整旅程！
+      從讀取 CSV 到產出四種格式的報告，每一步都用 Python 自動化。
+      最後一集，我們來教你怎麼設定排程，讓電腦每天自動跑這個流程。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
