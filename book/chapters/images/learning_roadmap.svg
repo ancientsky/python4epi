@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 580" font-family="system-ui, -apple-system, sans-serif">
   <defs>
-    <marker id="arrowDown" markerWidth="8" markerHeight="8" refX="4" refY="8" orient="auto">
-      <polygon points="0 0, 8 0, 4 8" fill="#6A9BCC"/>
+    <marker id="arrowDown" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6A9BCC"/>
     </marker>
-    <marker id="arrowRight" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#6B6B6B"/>
+    <marker id="arrowRight" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6B6B6B"/>
     </marker>
     <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
       <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
@@ -15,10 +15,8 @@
 
   <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">學習路線圖</text>
 
-  <!-- ===== Foundation Track (left) ===== -->
   <text x="200" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A9BCC">基礎必修（按順序）</text>
 
-  <!-- Ch 00 -->
   <g filter="url(#shadow)">
     <rect x="100" y="68" width="200" height="42" rx="10" fill="#6A9BCC"/>
     <text x="200" y="86" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 00 導讀與工具</text>
@@ -26,7 +24,6 @@
   </g>
   <line x1="200" y1="112" x2="200" y2="128" stroke="#6A9BCC" stroke-width="2.5" marker-end="url(#arrowDown)"/>
 
-  <!-- Ch 01 -->
   <g filter="url(#shadow)">
     <rect x="100" y="136" width="200" height="42" rx="10" fill="#6A9BCC"/>
     <text x="200" y="154" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 01 Python 基礎</text>
@@ -34,7 +31,6 @@
   </g>
   <line x1="200" y1="180" x2="200" y2="196" stroke="#6A9BCC" stroke-width="2.5" marker-end="url(#arrowDown)"/>
 
-  <!-- Ch 01b -->
   <g filter="url(#shadow)">
     <rect x="100" y="204" width="200" height="42" rx="10" fill="#6A9BCC" opacity="0.85"/>
     <text x="200" y="222" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 01b 開發者工具箱</text>
@@ -42,7 +38,6 @@
   </g>
   <line x1="200" y1="248" x2="200" y2="264" stroke="#6A9BCC" stroke-width="2.5" marker-end="url(#arrowDown)"/>
 
-  <!-- Ch 02 -->
   <g filter="url(#shadow)">
     <rect x="100" y="272" width="200" height="42" rx="10" fill="#6A9BCC"/>
     <text x="200" y="290" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 02 資料處理與視覺化</text>
@@ -50,7 +45,6 @@
   </g>
   <line x1="200" y1="316" x2="200" y2="332" stroke="#6A9BCC" stroke-width="2.5" marker-end="url(#arrowDown)"/>
 
-  <!-- Ch 03 -->
   <g filter="url(#shadow)">
     <rect x="100" y="340" width="200" height="42" rx="10" fill="#6A9BCC"/>
     <text x="200" y="358" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 03 2x2 表與推論統計</text>
@@ -58,26 +52,21 @@
   </g>
   <line x1="200" y1="384" x2="200" y2="400" stroke="#6A9BCC" stroke-width="2.5" marker-end="url(#arrowDown)"/>
 
-  <!-- Ch 04 -->
   <g filter="url(#shadow)">
     <rect x="100" y="408" width="200" height="42" rx="10" fill="#6A9BCC"/>
     <text x="200" y="426" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Ch 04 群聚調查工作流</text>
     <text x="200" y="443" text-anchor="middle" font-size="10" fill="#FFFFFF" opacity="0.8">串接完整分析流程</text>
   </g>
 
-  <!-- Foundation complete -->
   <g filter="url(#shadow)">
     <rect x="100" y="464" width="200" height="32" rx="8" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.5"/>
     <text x="200" y="485" text-anchor="middle" font-size="13" font-weight="bold" fill="#788C5D">基礎完成！</text>
   </g>
 
-  <!-- Arrow to elective -->
   <line x1="302" y1="430" x2="410" y2="430" stroke="#6B6B6B" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrowRight)"/>
 
-  <!-- ===== Elective Track (right) ===== -->
   <text x="580" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#D97757">進階選修（任選順序）</text>
 
-  <!-- Row 1 -->
   <g filter="url(#shadow)">
     <rect x="420" y="72" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
     <text x="492" y="90" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 05 分層分析</text>
@@ -89,7 +78,6 @@
     <text x="652" y="108" text-anchor="middle" font-size="9" fill="#6B6B6B">多變項 OR、模型建構</text>
   </g>
 
-  <!-- Row 2 -->
   <g filter="url(#shadow)">
     <rect x="420" y="128" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
     <text x="492" y="146" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 07 時間序列</text>
@@ -101,7 +89,6 @@
     <text x="652" y="164" text-anchor="middle" font-size="9" fill="#6B6B6B">地圖、熱點分析、GIS</text>
   </g>
 
-  <!-- Row 3 -->
   <g filter="url(#shadow)">
     <rect x="420" y="184" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
     <text x="492" y="202" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 09 存活分析</text>
@@ -113,7 +100,6 @@
     <text x="652" y="220" text-anchor="middle" font-size="9" fill="#6B6B6B">分類、預測、特徵工程</text>
   </g>
 
-  <!-- Row 4 -->
   <g filter="url(#shadow)">
     <rect x="420" y="240" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
     <text x="492" y="258" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 11 深度學習</text>
@@ -125,7 +111,6 @@
     <text x="652" y="276" text-anchor="middle" font-size="9" fill="#6B6B6B">DAG、反事實推論</text>
   </g>
 
-  <!-- Row 5 -->
   <g filter="url(#shadow)">
     <rect x="420" y="296" width="145" height="46" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
     <text x="492" y="314" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">Ch 13 可重現研究</text>
@@ -137,18 +122,15 @@
     <text x="652" y="332" text-anchor="middle" font-size="9" fill="#6B6B6B">完整疫調案例演練</text>
   </g>
 
-  <!-- Hint -->
   <rect x="420" y="355" width="305" height="35" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1" stroke-dasharray="4"/>
   <text x="572" y="377" text-anchor="middle" font-size="12" fill="#D97757">完成基礎後，依工作或研究需求任選！</text>
 
-  <!-- Resources section -->
   <rect x="420" y="405" width="305" height="90" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
   <text x="572" y="428" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">工具與練習</text>
   <text x="435" y="450" font-size="11" fill="#6B6B6B">Ch 15 附錄 — 常用參考資料</text>
   <text x="435" y="470" font-size="11" fill="#6B6B6B">Ch 16 作業區 — 每章練習題（14 組）</text>
   <text x="435" y="490" font-size="11" fill="#6B6B6B">Ch 17 解答區 — 完整解答（講師版）</text>
 
-  <!-- Bottom note -->
   <rect x="80" y="520" width="640" height="40" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1"/>
   <text x="400" y="540" text-anchor="middle" font-size="12" fill="#6B6B6B">建議按順序學完 Ch 00–04 基礎，之後可依興趣跳選 Ch 05–14 進階主題</text>
   <text x="400" y="555" text-anchor="middle" font-size="11" fill="#6B6B6B">所有章節都使用同一個退伍軍人症群聚資料集，故事一路串到底！</text>
