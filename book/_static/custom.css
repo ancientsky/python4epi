@@ -2,12 +2,19 @@
  * Epi With Python — custom theme
  * 覆寫 sphinx-book-theme 預設樣式，套用 Anthropic-inspired 暖白品牌色票
  * Colors mirror videos/src/base_scene.py + book/chapters/images/*.svg
+ *
+ * Architecture:
+ *   - :root defines the canonical brand palette (same in every mode)
+ *   - html[data-theme="light"] / html[data-theme="dark"] define theme-aware
+ *     variables (--epi-theme-*) so component rules below can stay mode-agnostic
+ *   - Unscoped html block remaps pydata-sphinx-theme's --pst-color-* accent
+ *     tokens (orange/blue/green) — these work in both modes
  * ============================================================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  /* Brand palette (keep in sync with CLAUDE.md 「Visual Style」) */
+  /* Canonical brand palette — keep in sync with CLAUDE.md 「Visual Style」 */
   --epi-bg-warm:       #FAF8F3;
   --epi-bg-card:       #FFFFFF;
   --epi-bg-card-alt:   #F5F3EE;
@@ -32,26 +39,78 @@
     "JetBrains Mono", "Fira Code", "SF Mono", Menlo, Consolas, monospace;
 }
 
-/* Re-map pydata-sphinx-theme tokens so the whole theme inherits our palette */
+/* -----------------------------------------------------------------------------
+ * Light mode theme variables
+ * ----------------------------------------------------------------------------- */
+html[data-theme="light"] {
+  --epi-theme-bg:              var(--epi-bg-warm);
+  --epi-theme-surface:         var(--epi-bg-card);
+  --epi-theme-surface-alt:     var(--epi-bg-card-alt);
+  --epi-theme-text:            var(--epi-text-primary);
+  --epi-theme-text-muted:      var(--epi-text-secondary);
+  --epi-theme-border:          var(--epi-border-light);
+  --epi-theme-inline-code-bg:  #F5F3EE;
+  --epi-theme-inline-code-fg:  #9D3B1F;
+  --epi-theme-table-head-bg:   rgba(106, 155, 204, 0.12);
+  --epi-theme-quote-text:      #3A3A3A;
+  --epi-theme-hover-tint:      rgba(217, 119, 87, 0.08);
+  --epi-theme-link-hover:      #B65A3D;
+
+  /* Pst remap: let sphinx-book-theme inherit our palette in light mode */
+  --pst-color-background:    var(--epi-bg-warm);
+  --pst-color-on-background: var(--epi-bg-warm);
+  --pst-color-surface:       var(--epi-bg-card);
+  --pst-color-on-surface:    var(--epi-text-primary);
+  --pst-color-text-base:     var(--epi-text-primary);
+  --pst-color-text-muted:    var(--epi-text-secondary);
+  --pst-color-border:        var(--epi-border-light);
+  --pst-color-target:        #FCE9DF;
+}
+
+/* -----------------------------------------------------------------------------
+ * Dark mode theme variables (warm dark tones that keep the brand feel)
+ * ----------------------------------------------------------------------------- */
+html[data-theme="dark"] {
+  --epi-theme-bg:              #1B1E22;
+  --epi-theme-surface:         #24282E;
+  --epi-theme-surface-alt:     #2D3139;
+  --epi-theme-text:            #EAE7E0;
+  --epi-theme-text-muted:      #A3A7AD;
+  --epi-theme-border:          #3A3F47;
+  --epi-theme-inline-code-bg:  #2D3139;
+  --epi-theme-inline-code-fg:  #F2A683;
+  --epi-theme-table-head-bg:   rgba(106, 155, 204, 0.20);
+  --epi-theme-quote-text:      #D8D4CC;
+  --epi-theme-hover-tint:      rgba(217, 119, 87, 0.18);
+  --epi-theme-link-hover:      #F2A683;
+
+  /* Pst remap: dark palette — the theme's own dark defaults are OK but we
+     override a few so borders/surfaces match our warm dark variant */
+  --pst-color-background:    #1B1E22;
+  --pst-color-on-background: #1B1E22;
+  --pst-color-surface:       #24282E;
+  --pst-color-on-surface:    #EAE7E0;
+  --pst-color-text-base:     #EAE7E0;
+  --pst-color-text-muted:    #A3A7AD;
+  --pst-color-border:        #3A3F47;
+  --pst-color-target:        #3D2518;
+}
+
+/* -----------------------------------------------------------------------------
+ * Theme-agnostic pst remaps (accent colors + fonts)
+ * These work equally well in light and dark mode, so no scoping needed.
+ * ----------------------------------------------------------------------------- */
 html {
-  --pst-color-primary:   var(--epi-accent-orange);
-  --pst-color-secondary: var(--epi-accent-blue);
-  --pst-color-success:   var(--epi-accent-green);
-  --pst-color-info:      var(--epi-accent-blue);
-  --pst-color-warning:   var(--epi-accent-orange);
-  --pst-color-danger:    var(--epi-error-red);
+  --pst-color-primary:           var(--epi-accent-orange);
+  --pst-color-secondary:         var(--epi-accent-blue);
+  --pst-color-success:           var(--epi-accent-green);
+  --pst-color-info:              var(--epi-accent-blue);
+  --pst-color-warning:           var(--epi-accent-orange);
+  --pst-color-danger:            var(--epi-error-red);
   --pst-color-link:              var(--epi-accent-orange);
-  --pst-color-link-hover:        #B65A3D;
-  --pst-color-background:        var(--epi-bg-warm);
-  --pst-color-on-background:     var(--epi-bg-warm);
-  --pst-color-surface:           var(--epi-bg-card);
-  --pst-color-on-surface:        var(--epi-text-primary);
-  --pst-color-text-base:         var(--epi-text-primary);
-  --pst-color-text-muted:        var(--epi-text-secondary);
-  --pst-color-border:            var(--epi-border-light);
+  --pst-color-link-hover:        var(--epi-theme-link-hover, #B65A3D);
   --pst-color-inline-code:       var(--epi-accent-orange);
   --pst-color-inline-code-links: var(--epi-accent-orange);
-  --pst-color-target:            #FCE9DF;
   --pst-font-family-base:        var(--epi-font-sans);
   --pst-font-family-heading:     var(--epi-font-serif);
   --pst-font-family-monospace:   var(--epi-font-mono);
@@ -60,11 +119,6 @@ html {
 /* =============================================================================
  * Body & typography
  * ============================================================================= */
-
-html, body {
-  background: var(--epi-bg-warm);
-  color: var(--epi-text-primary);
-}
 
 body {
   font-family: var(--epi-font-sans);
@@ -77,21 +131,10 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Cap the main article to a comfortable reading column (~820px) */
-.bd-main .bd-content .bd-article-container {
-  max-width: 880px;
-}
-.bd-article {
-  max-width: 820px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 /* Headings: elegant serif with subtle accent */
 h1, h2, h3, h4, h5, h6,
 .bd-article h1, .bd-article h2, .bd-article h3, .bd-article h4 {
   font-family: var(--epi-font-serif);
-  color: var(--epi-text-primary);
   font-weight: 700;
   letter-spacing: 0.005em;
   line-height: 1.35;
@@ -111,7 +154,7 @@ h1, h2, h3, h4, h5, h6,
   margin-top: 2.6rem;
   margin-bottom: 1.05rem;
   padding-bottom: 0.35rem;
-  border-bottom: 1px solid var(--epi-border-light);
+  border-bottom: 1px solid var(--epi-theme-border);
 }
 
 .bd-article h3 {
@@ -123,12 +166,7 @@ h1, h2, h3, h4, h5, h6,
 .bd-article h4 {
   font-size: 1.05rem;
   margin-top: 1.5rem;
-  color: var(--epi-text-secondary);
-}
-
-.bd-article p,
-.bd-article li {
-  color: var(--epi-text-primary);
+  color: var(--epi-theme-text-muted);
 }
 
 /* Paragraphs breathe a little more */
@@ -167,9 +205,9 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .bd-article a:hover {
-  color: #B65A3D;
+  color: var(--epi-theme-link-hover);
   text-decoration-style: solid;
-  background: rgba(217, 119, 87, 0.08);
+  background: var(--epi-theme-hover-tint);
   border-radius: 2px;
 }
 
@@ -182,7 +220,7 @@ code, kbd, samp, pre {
   font-feature-settings: "calt" 1;
 }
 
-/* Inline code on light background */
+/* Inline code: warm off-tone pill that switches with theme */
 .bd-article p code,
 .bd-article li code,
 .bd-article td code,
@@ -190,15 +228,15 @@ code, kbd, samp, pre {
 .bd-article h2 code,
 .bd-article h3 code,
 .bd-article h4 code {
-  background: var(--epi-bg-card-alt);
-  color: #9D3B1F;
-  border: 1px solid var(--epi-border-light);
+  background: var(--epi-theme-inline-code-bg);
+  color: var(--epi-theme-inline-code-fg);
+  border: 1px solid var(--epi-theme-border);
   padding: 0.08em 0.35em;
   border-radius: 4px;
   font-size: 0.92em;
 }
 
-/* Block code: dark theme aligned with Manim videos */
+/* Block code: dark theme aligned with Manim videos — stays dark in both modes */
 .bd-article div.highlight,
 .bd-article pre,
 .cell_output pre,
@@ -248,10 +286,10 @@ button.copybtn:hover {
 .bd-article table.docutils {
   border-collapse: separate;
   border-spacing: 0;
-  border: 1px solid var(--epi-border-light);
+  border: 1px solid var(--epi-theme-border);
   border-radius: 8px;
   overflow: hidden;
-  background: var(--epi-bg-card);
+  background: var(--epi-theme-surface);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   margin: 1.3rem 0;
   width: 100%;
@@ -259,13 +297,13 @@ button.copybtn:hover {
 
 .bd-article table thead,
 .bd-article table.docutils thead {
-  background: rgba(106, 155, 204, 0.12);
+  background: var(--epi-theme-table-head-bg);
 }
 
 .bd-article table thead th,
 .bd-article table.docutils thead th {
   font-family: var(--epi-font-serif);
-  color: var(--epi-text-primary);
+  color: var(--epi-theme-text);
   font-weight: 700;
   padding: 0.65rem 0.85rem;
   border-bottom: 2px solid var(--epi-accent-blue);
@@ -274,14 +312,14 @@ button.copybtn:hover {
 
 .bd-article table tbody tr:nth-child(even),
 .bd-article table.docutils tbody tr:nth-child(even) {
-  background: var(--epi-bg-card-alt);
+  background: var(--epi-theme-surface-alt);
 }
 
 .bd-article table tbody td,
 .bd-article table.docutils tbody td {
   padding: 0.55rem 0.85rem;
-  border-top: 1px solid var(--epi-border-light);
-  color: var(--epi-text-primary);
+  border-top: 1px solid var(--epi-theme-border);
+  color: var(--epi-theme-text);
 }
 
 /* Pandas DataFrame output tables inside notebooks */
@@ -289,7 +327,7 @@ button.copybtn:hover {
   font-size: 0.88em;
 }
 .cell_output table.dataframe thead th {
-  background: rgba(106, 155, 204, 0.12);
+  background: var(--epi-theme-table-head-bg);
   border-bottom: 2px solid var(--epi-accent-blue);
 }
 
@@ -299,8 +337,8 @@ button.copybtn:hover {
 
 .bd-article .admonition,
 .bd-article div.admonition {
-  background: var(--epi-bg-card);
-  border: 1px solid var(--epi-border-light);
+  background: var(--epi-theme-surface);
+  border: 1px solid var(--epi-theme-border);
   border-left: 4px solid var(--epi-accent-blue);
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
@@ -359,9 +397,9 @@ button.copybtn:hover {
   margin: 1.4rem 0;
   padding: 0.6rem 1.1rem;
   border-left: 4px solid var(--epi-accent-orange);
-  background: var(--epi-bg-card-alt);
+  background: var(--epi-theme-surface-alt);
   border-radius: 0 6px 6px 0;
-  color: #3A3A3A;
+  color: var(--epi-theme-quote-text);
   font-style: italic;
 }
 .bd-article blockquote p {
@@ -395,7 +433,7 @@ button.copybtn:hover {
 .bd-article figcaption,
 .bd-article .figure .caption {
   font-size: 0.9em;
-  color: var(--epi-text-secondary);
+  color: var(--epi-theme-text-muted);
   margin-top: 0.5rem;
   font-family: var(--epi-font-serif);
 }
@@ -405,14 +443,14 @@ button.copybtn:hover {
  * ============================================================================= */
 
 .bd-header {
-  background: var(--epi-bg-warm) !important;
-  border-bottom: 1px solid var(--epi-border-light);
+  background: var(--epi-theme-bg) !important;
+  border-bottom: 1px solid var(--epi-theme-border);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .bd-header .navbar-brand,
 .bd-header .navbar-brand:hover {
-  color: var(--epi-text-primary);
+  color: var(--epi-theme-text);
   font-family: var(--epi-font-serif);
   font-weight: 700;
 }
@@ -425,19 +463,19 @@ button.copybtn:hover {
 
 .bd-sidebar-primary,
 .bd-sidebar-secondary {
-  background: var(--epi-bg-warm);
-  border-right: 1px solid var(--epi-border-light);
+  background: var(--epi-theme-bg);
+  border-right: 1px solid var(--epi-theme-border);
 }
 
 .bd-sidebar-secondary {
   border-right: none;
-  border-left: 1px solid var(--epi-border-light);
+  border-left: 1px solid var(--epi-theme-border);
 }
 
 /* Sidebar TOC links */
 .bd-sidebar nav.bd-links .nav-link,
 .bd-sidebar-primary nav.bd-links a {
-  color: var(--epi-text-secondary);
+  color: var(--epi-theme-text-muted);
   transition: color 0.15s ease, background 0.15s ease;
   border-radius: 4px;
   padding: 0.25rem 0.55rem;
@@ -445,7 +483,7 @@ button.copybtn:hover {
 .bd-sidebar nav.bd-links .nav-link:hover,
 .bd-sidebar-primary nav.bd-links a:hover {
   color: var(--epi-accent-orange);
-  background: rgba(217, 119, 87, 0.08);
+  background: var(--epi-theme-hover-tint);
   text-decoration: none;
 }
 .bd-sidebar nav.bd-links .current > .nav-link,
@@ -453,7 +491,7 @@ button.copybtn:hover {
 .bd-sidebar-primary nav.bd-links a.current {
   color: var(--epi-accent-orange) !important;
   font-weight: 600;
-  background: rgba(217, 119, 87, 0.1);
+  background: var(--epi-theme-hover-tint);
 }
 
 /* In-page TOC (right sidebar) */
@@ -464,17 +502,17 @@ button.copybtn:hover {
 }
 
 /* =============================================================================
- * Buttons / header icons (GitHub, issues, etc.)
+ * Buttons / header icons (GitHub, issues, theme toggle, etc.)
  * ============================================================================= */
 
 .bd-header .btn,
 .bd-header button.btn {
-  color: var(--epi-text-secondary);
+  color: var(--epi-theme-text-muted);
 }
 .bd-header .btn:hover,
 .bd-header button.btn:hover {
   color: var(--epi-accent-orange);
-  background: rgba(217, 119, 87, 0.08);
+  background: var(--epi-theme-hover-tint);
 }
 
 /* =============================================================================
@@ -483,9 +521,9 @@ button.copybtn:hover {
 
 .bd-footer,
 .bd-footer-content {
-  background: var(--epi-bg-warm);
-  border-top: 1px solid var(--epi-border-light);
-  color: var(--epi-text-secondary);
+  background: var(--epi-theme-bg);
+  border-top: 1px solid var(--epi-theme-border);
+  color: var(--epi-theme-text-muted);
   font-size: 0.88em;
 }
 
@@ -494,8 +532,9 @@ button.copybtn:hover {
  * ============================================================================= */
 
 .bd-search input.form-control {
-  background: var(--epi-bg-card);
-  border: 1px solid var(--epi-border-light);
+  background: var(--epi-theme-surface);
+  color: var(--epi-theme-text);
+  border: 1px solid var(--epi-theme-border);
   border-radius: 6px;
   font-family: var(--epi-font-sans);
 }
@@ -509,10 +548,10 @@ button.copybtn:hover {
  * ============================================================================= */
 
 .prev-next-area a {
-  border: 1px solid var(--epi-border-light);
+  border: 1px solid var(--epi-theme-border);
   border-radius: 8px;
   padding: 0.7rem 1rem;
-  background: var(--epi-bg-card);
+  background: var(--epi-theme-surface);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 .prev-next-area a:hover {
@@ -521,7 +560,7 @@ button.copybtn:hover {
   text-decoration: none;
 }
 .prev-next-area a p.prev-next-title {
-  color: var(--epi-text-primary);
+  color: var(--epi-theme-text);
   font-family: var(--epi-font-serif);
   font-weight: 600;
 }
@@ -532,6 +571,31 @@ button.copybtn:hover {
 
 .bd-article h1:first-child {
   font-size: 2.4rem;
+}
+
+/* =============================================================================
+ * Responsive: hide the page-level "Contents" sidebar on medium screens
+ *
+ * sphinx-book-theme keeps the secondary (right) sidebar visible down to its
+ * ``lg`` breakpoint (~960px). On common laptop widths (1024–1280px) the
+ * three-column layout leaves very little room for the main article and the
+ * sidebar visually "blocks" the content. We raise the threshold so the
+ * Contents panel only appears on comfortably wide screens; below 1280px the
+ * main content gets the full column, and the in-page TOC is still accessible
+ * through each heading's anchor link and the sphinx-book-theme hamburger.
+ * ============================================================================= */
+
+@media (max-width: 1280px) {
+  .bd-sidebar-secondary,
+  .bd-main .bd-content .bd-article-container > .bd-sidebar-secondary,
+  div.bd-sidebar-secondary {
+    display: none !important;
+  }
+  /* Let the main article reclaim the freed space */
+  .bd-main .bd-content,
+  .bd-main .bd-content .bd-article-container {
+    max-width: 100% !important;
+  }
 }
 
 /* =============================================================================
