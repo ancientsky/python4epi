@@ -7,6 +7,18 @@ execute:
   timeout: 300
 sphinx:
   config:
+    html_baseurl: https://ancientsky.github.io/python4epi/
+    templates_path: ["_templates"]
+    html_theme_options:
+      show_navbar_depth: 2
+      show_toc_level: 2
+      home_page_in_toc: true
+      logo:
+        image_light: _static/logo.svg
+        image_dark: _static/logo.svg
+    # Note: Open Graph / Twitter Card meta tags are injected via the template
+    # override at ``book/_templates/layout.html`` (zero-dependency approach —
+    # no sphinxext-opengraph needed). Keep template copy in sync when updating.
     nb_execution_pre_code: |
       import os as _os
       import pathlib as _pathlib
@@ -69,11 +81,13 @@ repository:
   url: https://github.com/ancientsky/python4epi
   branch: main
 html:
+  favicon: _static/favicon.svg
   use_repository_button: true
   use_issues_button: true
   home_page_in_navbar: true
   extra_css:
     - _static/youtube-lite.css
+    - _static/custom.css
   extra_js:
     - _static/youtube-lite.js
 launch_buttons:
