@@ -32,8 +32,8 @@
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：SitRep 速成——兩小時交出疫情日報</div>
-  <div class="youtube-lite" data-id="TODO_SITREP_OVERVIEW">
-    <img src="https://img.youtube.com/vi/TODO_SITREP_OVERVIEW/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="p5wes20-Az8">
+    <img src="https://img.youtube.com/vi/p5wes20-Az8/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -126,8 +126,8 @@ print(f"死亡：{deaths}（CFR {deaths/infected:.1%}）")
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：描述流行病學（人）——感染者的臉譜</div>
-  <div class="youtube-lite" data-id="TODO_PERSON">
-    <img src="https://img.youtube.com/vi/TODO_PERSON/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="tmT3YVLy1EM">
+    <img src="https://img.youtube.com/vi/tmT3YVLy1EM/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -165,8 +165,8 @@ for col in comorbidity_cols:
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：流行曲線——用長條圖抓住疫情的脈搏</div>
-  <div class="youtube-lite" data-id="TODO_TIME">
-    <img src="https://img.youtube.com/vi/TODO_TIME/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="7eBDkfVqsQo">
+    <img src="https://img.youtube.com/vi/7eBDkfVqsQo/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -236,8 +236,8 @@ print(f"高峰日：{daily.idxmax().date()}（{daily.max()} 例）")
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：地點比較——哪個翼區最危險？</div>
-  <div class="youtube-lite" data-id="TODO_PLACE">
-    <img src="https://img.youtube.com/vi/TODO_PLACE/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="wWwHcMXMmG8">
+    <img src="https://img.youtube.com/vi/wWwHcMXMmG8/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -279,8 +279,8 @@ print(wing_stats[["label", "residents", "infected", "AR%", "deaths", "CFR%"]]
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：個案分類——確診、可能和非個案的分層統計</div>
-  <div class="youtube-lite" data-id="TODO_CLASSIFICATION">
-    <img src="https://img.youtube.com/vi/TODO_CLASSIFICATION/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="RZLn3o-svs0">
+    <img src="https://img.youtube.com/vi/RZLn3o-svs0/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -316,8 +316,8 @@ print(classification.to_string())
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：函式化——把 SitRep 包成一鍵更新</div>
-  <div class="youtube-lite" data-id="TODO_GENERATE_SITREP">
-    <img src="https://img.youtube.com/vi/TODO_GENERATE_SITREP/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="ztrZrHwrD2M">
+    <img src="https://img.youtube.com/vi/ztrZrHwrD2M/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -368,8 +368,8 @@ print(sitrep)
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：專業報告輸出——Dashboard、Word、PPT、PDF 一次搞定</div>
-  <div class="youtube-lite" data-id="TODO_REPORT_OUTPUT">
-    <img src="https://img.youtube.com/vi/TODO_REPORT_OUTPUT/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="eAs3K_Z7Hjk">
+    <img src="https://img.youtube.com/vi/eAs3K_Z7Hjk/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
