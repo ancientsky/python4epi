@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Epi With Python favicon">
+  <title>Epi With Python</title>
+  <!-- Warm-white rounded square base -->
+  <rect x="2" y="2" width="60" height="60" rx="12" ry="12"
+        fill="#FAF8F3" stroke="#E8E5DF" stroke-width="2"/>
+  <!-- Rod-shaped bacterium (nod to Legionella), rotated for energy -->
+  <g transform="rotate(-28 32 32)">
+    <rect x="10" y="26" width="44" height="14" rx="7" ry="7"
+          fill="#D97757"/>
+    <!-- Inner highlight stripe -->
+    <rect x="14" y="29" width="36" height="3" rx="1.5" ry="1.5"
+          fill="#F2B89E" opacity="0.55"/>
+    <!-- Blue accent dot (the "data point" inside) -->
+    <circle cx="22" cy="33" r="3" fill="#6A9BCC"/>
+    <!-- Green accent dot -->
+    <circle cx="42" cy="33" r="2.2" fill="#788C5D"/>
+  </g>
+</svg>
