@@ -350,7 +350,9 @@ button.copybtn:hover {
   color: var(--epi-accent-blue);
   font-family: var(--epi-font-serif);
   font-weight: 700;
-  padding-left: 0;
+  /* Keep left padding ≥ 2rem so the theme's absolutely-positioned icon
+     (placed at left: .5rem via ::after) doesn't overlap the title text. */
+  padding-left: 2rem;
 }
 .bd-article .admonition.note,
 .bd-article .admonition.seealso {
