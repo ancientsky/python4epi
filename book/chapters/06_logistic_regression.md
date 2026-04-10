@@ -1,4 +1,4 @@
-# 06 邏輯斯迴歸
+# 06 多變項分析：調整後風險比與邏輯斯迴歸
 
 ## 情境
 
@@ -6,65 +6,139 @@ Ch05 的分層分析告訴我們，功能狀態確實是淋浴使用的干擾因
 
 > 「同時考慮年齡、所有共病、功能狀態、樓層以後，淋浴使用**還是**顯著的危險因子嗎？」
 
-分層分析一次只能控制一個變項。要同時調整多個因子，需要**邏輯斯迴歸（logistic regression）**。
+分層分析一次只能控制一個變項。要**同時調整多個因子**，需要迴歸模型。
+
+> 🔑 **關鍵回顧**：Ch03 將本案定位為**回溯性世代研究**（retrospective cohort），效應測量用 **RR（風險比）**。Ch05 分層分析也算的是 **MH adjusted RR**。為了一路都用同一把尺，這章的主軸方法會是 **Modified Poisson regression**——直接算出 **adjusted RR**。我們也會用邏輯斯迴歸做對照，讓你看到同樣的資料算出 OR 會高估多少。
 
 ## 你將學到
 
-- 邏輯斯迴歸的原理與適用場景
-- Odds Ratio (OR) 與 Risk Ratio (RR) 的區別
-- 用 statsmodels 建立單變項和多變項模型
-- 比較 crude OR vs. adjusted OR
-- 模型診斷（AIC/BIC）與變項選擇
-- 結果呈現：標準的流行病學 Table 2 格式
+- Modified Poisson regression（Zou 2004）同時調整多個因子，算出 adjusted RR
+- 邏輯斯迴歸的原理——用白話文搞懂「機率→勝算→log(勝算)」三階梯
+- 在高侵襲率世代研究中，OR 如何高估效應（與 RR 的實際數值比較）
+- 比較 crude RR → MH adjusted RR (Ch05) → adjusted RR → adjusted OR
+- 標準流行病學 Table 2 格式呈現結果
+- 模型診斷（AIC）與變項選擇
 
 ## 核心概念
 
-### 從 RR 到 OR
+### 為什麼還要繼續談 RR？
 
-| 指標 | 公式 | 適用場景 |
-|------|------|---------|
-| RR（風險比） | P(disease\|exposed) / P(disease\|unexposed) | 世代研究 |
-| OR（勝算比） | odds(exposed) / odds(unexposed) | 病例對照、迴歸 |
+Ch03 已經解釋過：在世代研究中，我們能直接算出「風險」（risk = 得病人數 ÷ 總人數），所以效應測量應該用 **RR**。只有在病例對照研究（case-control）中，因為無法計算風險，才退而求其次用 **OR**。
 
-當疾病盛行率低時，OR ≈ RR。本資料集侵襲率 ~43%，OR 會比 RR 偏離較多。
+> ⚠️ 本案侵襲率高達 **43%**。Ch03 已經警告過：當疾病不罕見時，OR 會**系統性高估**效應。如果你對主管說「淋浴使用的 OR 是 3.5」，他會以為風險是 3.5 倍——但真正的風險比（RR）可能只有 2.0 倍。差很多！
 
-### 邏輯斯迴歸模型
+### 兩條多變項分析路線
 
-$$\log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots$$
+```{figure} images/multivariate_methods.svg
+:name: fig-multivariate-methods
+:alt: 三種控制干擾因子的方法比較：分層分析（Ch05）、Modified Poisson（Ch06 主軸）、邏輯斯迴歸（Ch06 對照）
+:width: 100%
 
-- $p$：感染機率
-- $\beta_i$：迴歸係數
-- $\text{OR}_i = e^{\beta_i}$：控制其他變項後，$x_i$ 每增加一單位的勝算比
+分層分析一次只能控制一個因子；Modified Poisson 和邏輯斯迴歸都能同時控制多個，但前者輸出 RR、後者輸出 OR。
+```
 
-### Crude OR vs. Adjusted OR
+| 方法 | 輸出 | 世代研究適用？ | 何時用？ |
+|------|------|--------------|---------|
+| 分層分析（Ch05） | MH adjusted RR | 適合，但一次只能控制 1 個因子 | 干擾因子少（1-2 個） |
+| **Modified Poisson**（本章主軸） | **adjusted RR** | **首選** | 世代研究 + 多個干擾因子 |
+| 邏輯斯迴歸（本章對照） | adjusted OR | 高侵襲率下高估 | 病例對照研究、罕見疾病 |
 
-- **Crude OR**：只放一個自變項 → 未調整
-- **Adjusted OR**：同時放多個自變項 → 控制了其他因子的效應
+### Modified Poisson：用 Poisson 的殼算 RR 的魂
+
+> 🎩 **借帽子比喻**：Poisson 迴歸本來是給「計數資料」用的（例如每天新增幾例）。但流行病學家 Zou（2004 年）發現了一個巧妙的把戲：把二元結果（0/1）丟進 Poisson 迴歸，再用 **robust sandwich variance** 修正標準誤差——得到的 coefficient 就正好是 **log(RR)**！就像跟朋友借了一頂帽子，尺寸不對但貼個修正貼紙就完美合頭了。
+
+為什麼能這樣做？三句話版：
+
+1. Poisson 迴歸模型化的是 **log(E[Y])**，當 Y 是 0/1 時，E[Y] = P(Y=1) = risk，所以 coefficient = **log(risk ratio)**
+2. 但 Poisson 模型假設 variance = mean，對二元資料來說這是錯的 → 標準誤差會偏掉
+3. **Robust (sandwich) SE** 不依賴分佈假設，直接從資料估算變異 → 修正了上面的偏差 → CI 和 p-value 都正確
+
+> 💡 為什麼不用 **log-binomial**（Binomial + log link）？理論上最「正確」，但實務上常常不收斂（convergence failure），特別是暴露和結果的關聯很強時。Modified Poisson 幾乎不會有收斂問題。
+>
+> 為什麼不用 **Cox regression**（proportional hazards）？Cox 需要「時間到事件」的資料，我們的資料是二元結果（感染/未感染），沒有隨訪時間差異。
+
+### 邏輯斯迴歸白話文
+
+雖然 Modified Poisson 是本案的首選，邏輯斯迴歸（logistic regression）仍然是全世界最常用的多變項分析方法之一。理解它的原理對流行病學家是必備素養。
+
+```{figure} images/logit_intuition.svg
+:name: fig-logit-intuition
+:alt: 邏輯斯迴歸的三階梯：機率（0-1）→ 勝算（0-∞）→ log(勝算)（-∞ 到 +∞）
+:width: 100%
+
+把機率「拉直」的三個步驟：被卡住的彈簧 → 天平 → 拉直的直線。
+```
+
+**第一階：機率（probability）**——被壓扁的彈簧
+
+感染機率 $p$ 被卡在 0 到 1 之間。線性迴歸的輸出可以是任意數字（$-\infty$ 到 $+\infty$），但機率不行——你不能說某人的感染機率是 -0.3 或 1.5。就像把彈簧塞進小盒子，越靠近邊界越擠，沒辦法直接做線性迴歸。
+
+**第二階：勝算（odds）**——天平
+
+$$\text{odds} = \frac{p}{1-p}$$
+
+> ⚖️ **天平比喻**：如果感染機率 $p = 0.70$，勝算 = $0.70 / 0.30 = 2.33$。意思是天平上「會感染」那邊比「不會感染」那邊重了 2.33 倍。勝算的範圍是 0 到 $+\infty$，右邊解放了，但左邊還是卡在 0。
+
+**第三階：log(勝算) = logit**——拉直的彈簧
+
+$$\text{logit}(p) = \log\left(\frac{p}{1-p}\right)$$
+
+取 log 之後，範圍變成 $-\infty$ 到 $+\infty$——兩邊都自由了！線性迴歸終於能正常工作。
+
+邏輯斯迴歸的模型就是：
+
+$$\text{logit}(p) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots$$
+
+**怎麼解讀 $\beta$？** 假設淋浴使用的 $\beta_1 = 0.50$：
+
+- $\text{OR} = e^{0.50} = 1.65$
+- 白話文：「控制其他因子後，使用淋浴的住民，感染的**勝算**是未使用者的 **1.65 倍**」
+- 注意：這是「**勝算**幾倍」，不是「**風險**幾倍」！在高侵襲率下兩者差距很大
 
 ---
 
 ## Step 1: 資料準備
 
 ```python
+# === Step 1: 載入資料 + 變項重新編碼 ===
+
 import pandas as pd
 import numpy as np
-import statsmodels.formula.api as smf
+import statsmodels.api as sm               # GLM (Modified Poisson)
+import statsmodels.formula.api as smf       # formula API (logistic)
+import matplotlib.pyplot as plt
+import warnings
 
+# --- 載入退伍軍人症群聚資料 ---
 df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
+
+# --- 建立二元結果變項 ---
+# clinical_severity != "not_ill" 代表有感染（包含 mild/moderate/severe）
 df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
 
-# smoking_history 是三分類（never/former/current），轉為二分類
+# --- smoking_history 三分類 → 二分類 ---
+# never / former / current → 只要不是 never 就算 ever_smoker
 df["ever_smoker"] = (df["smoking_history"] != "never").astype(int)
 
-# 功能狀態轉數值
-fs_map = {"bedridden": 0, "wheelchair": 1, "ambulatory": 2}
+# --- 功能狀態轉有序數值 ---
+# bedridden(臥床)=0 < assisted(需協助)=1 < independent(獨立行走)=2
+fs_map = {"bedridden": 0, "assisted": 1, "independent": 2}
 df["functional_score"] = df["functional_status"].map(fs_map)
+
+# --- 快速確認侵襲率 ---
+ar = df["infected"].mean()
+print(f"侵襲率 = {ar:.1%}（{df['infected'].sum()}/{len(df)}）")
+print(f"→ 侵襲率 {ar:.0%} 遠高於 10%，OR 會顯著高估效應，應以 RR 為主")
 ```
 
-## Step 2: 單變項 Crude OR 彙整
+## Step 2: 單變項分析——Crude RR 與 Crude OR 對照
 
 ```python
-import warnings
+# === Step 2: 單變項分析迴圈 ===
+# 同時跑 Modified Poisson（算 crude RR）和 logistic（算 crude OR），
+# 讓你看到同一個變項的 RR 和 OR 差多少。
+
+from epi_learning.metrics import risk_ratio  # Ch03 的 2×2 手算 RR
 
 factors = [
     "shower_use", "hydrotherapy_use", "ever_smoker",
@@ -74,26 +148,130 @@ factors = [
 ]
 
 crude_results = []
+
 for var in factors:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        model = smf.logit(f"infected ~ {var}", data=df).fit(disp=0, method="lbfgs")
 
-    if not model.mle_retvals["converged"]:
-        print(f"⚠ {var}: 模型未收斂（可能存在準完美分離），跳過")
-        continue
+        # --- (A) Modified Poisson → crude RR ---
+        try:
+            mod_p = smf.glm(
+                f"infected ~ {var}", data=df,
+                family=sm.families.Poisson(),   # 借 Poisson 的殼
+            ).fit(cov_type="HC0", disp=0)       # robust SE 修正
+            rr = np.exp(mod_p.params[var])       # exp(β) = RR
+            rr_ci = np.exp(mod_p.conf_int().loc[var])
+            rr_p = mod_p.pvalues[var]
+        except Exception:
+            continue
 
-    coef = model.params[var]
-    ci = model.conf_int().loc[var]
+        # --- (B) Logistic Regression → crude OR ---
+        try:
+            mod_l = smf.logit(
+                f"infected ~ {var}", data=df,
+            ).fit(disp=0, method="lbfgs")
+            if not mod_l.mle_retvals["converged"]:
+                print(f"⚠ {var}: logistic 未收斂，跳過")
+                continue
+            or_val = np.exp(mod_l.params[var])    # exp(β) = OR
+            or_ci = np.exp(mod_l.conf_int().loc[var])
+            or_p = mod_l.pvalues[var]
+        except Exception:
+            continue
+
+    # --- (C) 2×2 手算 RR 交叉驗證（僅二元變項） ---
+    hand_rr = ""
+    if df[var].dropna().isin([0, 1]).all():
+        a = ((df[var] == 1) & (df["infected"] == 1)).sum()
+        b = ((df[var] == 1) & (df["infected"] == 0)).sum()
+        c = ((df[var] == 0) & (df["infected"] == 1)).sum()
+        d = ((df[var] == 0) & (df["infected"] == 0)).sum()
+        hand_rr = f"{risk_ratio(a, a+b, c, c+d):.3f}"
+
     crude_results.append({
         "variable": var,
-        "crude_OR": round(np.exp(coef), 3),
-        "95% CI": f"{np.exp(ci[0]):.3f}–{np.exp(ci[1]):.3f}",
-        "p-value": round(model.pvalues[var], 4),
+        "crude_RR": round(rr, 3),
+        "RR 95% CI": f"{rr_ci[0]:.3f}–{rr_ci[1]:.3f}",
+        "crude_OR": round(or_val, 3),
+        "OR 95% CI": f"{or_ci[0]:.3f}–{or_ci[1]:.3f}",
+        "hand_RR": hand_rr,
     })
 
 crude_df = pd.DataFrame(crude_results)
+print("=== Crude RR vs Crude OR（單變項）===")
 print(crude_df.to_string(index=False))
+print()
+print("💡 注意：crude_OR 普遍大於 crude_RR，這就是高侵襲率下 OR 高估的效果")
+print("   hand_RR 欄是 Ch03 的 2×2 表手算結果，應與 crude_RR 幾乎一致")
+```
+
+## Step 3: 多變項 Modified Poisson——Adjusted RR
+
+```python
+# === Step 3: Modified Poisson — 同時調整所有因子 ===
+# 這是本章的主軸分析：用 Poisson GLM + robust SE 算出 adjusted RR。
+# coefficient = log(RR)，取 exp 就是 RR。
+
+formula = (
+    "infected ~ shower_use + hydrotherapy_use + age + "
+    "comorbidity_chf + comorbidity_dm + comorbidity_cancer + "
+    "comorbidity_copd + immunosuppressed + functional_score + "
+    "C(floor)"     # C(floor) = 把 floor 當成類別變項（dummy coding）
+)
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    model_poisson = smf.glm(
+        formula, data=df,
+        family=sm.families.Poisson(),   # Poisson 的殼
+    ).fit(cov_type="HC0")               # robust (sandwich) SE
+
+# --- 整理成 Table 2 格式 ---
+adj_rr_results = []
+for var in model_poisson.params.index:
+    if var == "Intercept":
+        continue
+    coef = model_poisson.params[var]
+    ci = model_poisson.conf_int().loc[var]
+    adj_rr_results.append({
+        "variable": var,
+        "adjusted_RR": round(np.exp(coef), 3),        # exp(β) = adjusted RR
+        "95% CI": f"{np.exp(ci[0]):.3f}–{np.exp(ci[1]):.3f}",
+        "p-value": round(model_poisson.pvalues[var], 4),
+    })
+
+adj_rr_df = pd.DataFrame(adj_rr_results)
+print("=== Adjusted RR（Modified Poisson, Table 2）===")
+print(adj_rr_df.to_string(index=False))
+```
+
+## Step 4: 多變項邏輯斯迴歸——Adjusted OR（對照組）
+
+```python
+# === Step 4: Logistic Regression — 同一公式，改用 logistic ===
+# 目的：讓你看到同樣的 covariates，OR 和 RR 差多少。
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    model_logit = smf.logit(formula, data=df).fit(disp=0, method="lbfgs")
+
+# --- 整理成 Table 2 格式 ---
+adj_or_results = []
+for var in model_logit.params.index:
+    if var == "Intercept":
+        continue
+    coef = model_logit.params[var]
+    ci = model_logit.conf_int().loc[var]
+    adj_or_results.append({
+        "variable": var,
+        "adjusted_OR": round(np.exp(coef), 3),         # exp(β) = adjusted OR
+        "95% CI": f"{np.exp(ci[0]):.3f}–{np.exp(ci[1]):.3f}",
+        "p-value": round(model_logit.pvalues[var], 4),
+    })
+
+adj_or_df = pd.DataFrame(adj_or_results)
+print("=== Adjusted OR（Logistic Regression, Table 2）===")
+print(adj_or_df.to_string(index=False))
 ```
 
 ```{admonition} 為什麼有些變數「模型未收斂」？
@@ -108,77 +286,135 @@ print(crude_df.to_string(index=False))
 4. 在教學場景中，先跳過該變數，在多變項模型中一起納入
 ```
 
-## Step 3: 多變項 Adjusted OR
+## Step 5: 三個效應測量並排比較
 
 ```python
-formula = (
-    "infected ~ shower_use + hydrotherapy_use + age + "
-    "comorbidity_chf + comorbidity_dm + comorbidity_cancer + "
-    "comorbidity_copd + immunosuppressed + functional_score + "
-    "C(floor)"
-)
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-    model_full = smf.logit(formula, data=df).fit(disp=0, method="lbfgs")
-print(model_full.summary2())
-```
+# === Step 5: Crude RR vs Adjusted RR vs Adjusted OR 並排比較 ===
+# 這是本章最重要的表格：一次看完三種效應測量的差異。
 
-## Step 4: Adjusted OR 表格（Table 2）
-
-```python
-adj_results = []
-for var in model_full.params.index:
-    if var == "Intercept":
-        continue
-    coef = model_full.params[var]
-    ci = model_full.conf_int().loc[var]
-    adj_results.append({
-        "variable": var,
-        "adjusted_OR": round(np.exp(coef), 3),
-        "95% CI": f"{np.exp(ci[0]):.3f}–{np.exp(ci[1]):.3f}",
-        "p-value": round(model_full.pvalues[var], 4),
-    })
-
-adj_df = pd.DataFrame(adj_results)
-print(adj_df.to_string(index=False))
-```
-
-## Step 5: Crude vs. Adjusted OR 比較
-
-```python
 key_vars = ["shower_use", "hydrotherapy_use", "age",
-            "comorbidity_chf", "immunosuppressed"]
+            "comorbidity_chf", "immunosuppressed", "functional_score"]
 
 comparison = []
 for var in key_vars:
-    crude_row = crude_df[crude_df["variable"] == var].iloc[0]
-    adj_row = adj_df[adj_df["variable"] == var]
-    if len(adj_row) == 0:
+    # 從 crude_df 取 crude RR
+    c_row = crude_df[crude_df["variable"] == var]
+    if len(c_row) == 0:
         continue
-    adj_row = adj_row.iloc[0]
+    c_rr = c_row.iloc[0]["crude_RR"]
+
+    # 從 adj_rr_df 取 adjusted RR
+    a_rr_row = adj_rr_df[adj_rr_df["variable"] == var]
+    if len(a_rr_row) == 0:
+        continue
+    a_rr = a_rr_row.iloc[0]["adjusted_RR"]
+
+    # 從 adj_or_df 取 adjusted OR
+    a_or_row = adj_or_df[adj_or_df["variable"] == var]
+    if len(a_or_row) == 0:
+        continue
+    a_or = a_or_row.iloc[0]["adjusted_OR"]
+
+    # 計算變化幅度
+    rr_change = ((a_rr - c_rr) / c_rr * 100) if c_rr != 0 else 0
+    or_vs_rr = ((a_or - a_rr) / a_rr * 100) if a_rr != 0 else 0
+
     comparison.append({
         "variable": var,
-        "crude_OR": crude_row["crude_OR"],
-        "adjusted_OR": adj_row["adjusted_OR"],
-        "change%": f"{((adj_row['adjusted_OR'] - crude_row['crude_OR']) / crude_row['crude_OR'] * 100):+.1f}%",
+        "crude_RR": c_rr,
+        "adj_RR": a_rr,           # Modified Poisson
+        "adj_OR": a_or,           # Logistic
+        "crude→adj RR": f"{rr_change:+.1f}%",    # 干擾效應
+        "adj RR→OR": f"{or_vs_rr:+.1f}%",        # OR 高估幅度
     })
 
-print(pd.DataFrame(comparison).to_string(index=False))
+comp_df = pd.DataFrame(comparison)
+print("=== Crude RR → Adjusted RR → Adjusted OR 比較 ===")
+print(comp_df.to_string(index=False))
+print()
+print("📊 解讀：")
+print("  • crude→adj RR 欄：控制干擾因子後 RR 的變化（與 Ch05 MH 結論比較）")
+print("  • adj RR→OR 欄：同一模型下 OR 比 RR 高估多少（侵襲率效應）")
 ```
 
-## Step 6: 模型診斷
+```{admonition} 何時 OR ≈ RR？
+:class: note
+
+只有當**疾病罕見**（盛行率 < 10%）時，$(1-p) \approx 1$，odds $\approx$ risk，OR $\approx$ RR。本案侵襲率 43%，OR 會系統性地**放大**效應。因此在世代研究中報告結果時，應該用 RR 而非 OR。
+
+如果你在讀別人的論文，看到他們用 logistic regression 分析**世代研究**且疾病不罕見，可以留意他們是否有用 Modified Poisson 或至少提到 OR ≠ RR 的問題。
+```
+
+## Step 6: Forest Plot（Adjusted RR）
 
 ```python
+# === Step 6: Forest Plot — 用圖表呈現 adjusted RR ===
+# 標準的流行病學 forest plot：點 = 點估計，橫線 = 95% CI，虛線 = RR=1（無效應）
+
+# 準備繪圖資料（排除 Intercept 和 floor dummy）
+plot_vars = [r for r in adj_rr_df["variable"] if not r.startswith("C(floor)")]
+plot_data = adj_rr_df[adj_rr_df["variable"].isin(plot_vars)].copy()
+
+# 從 CI 字串還原數值
+plot_data["ci_lo"] = plot_data["95% CI"].str.split("–").str[0].astype(float)
+plot_data["ci_hi"] = plot_data["95% CI"].str.split("–").str[1].astype(float)
+
+fig, ax = plt.subplots(figsize=(8, 5))
+
+y_pos = range(len(plot_data))
+ax.errorbar(
+    plot_data["adjusted_RR"], y_pos,
+    xerr=[plot_data["adjusted_RR"] - plot_data["ci_lo"],
+          plot_data["ci_hi"] - plot_data["adjusted_RR"]],
+    fmt="o", color="#D97757", ecolor="#6A9BCC",   # 品牌色
+    elinewidth=2, capsize=4, markersize=7,
+)
+ax.axvline(x=1, color="#6B6B6B", linestyle="--", linewidth=1, label="RR = 1（無效應）")
+ax.set_yticks(list(y_pos))
+ax.set_yticklabels(plot_data["variable"])
+ax.set_xlabel("Adjusted RR（95% CI）")
+ax.set_title("Forest Plot — Adjusted Risk Ratio（Modified Poisson）")
+ax.legend(loc="lower right", fontsize=9)
+ax.invert_yaxis()              # 第一個變項在最上面
+plt.tight_layout()
+plt.show()
+```
+
+## Step 7: 模型診斷
+
+```python
+# === Step 7: 模型診斷 — AIC 比較 ===
+# 用 AIC 比較「完整模型」和「精簡模型」，判斷是否放了太多變項。
+
+# --- 精簡模型：只保留顯著或理論上重要的變項 ---
 formula_reduced = (
     "infected ~ shower_use + hydrotherapy_use + age + "
     "immunosuppressed + functional_score"
 )
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
-    model_reduced = smf.logit(formula_reduced, data=df).fit(disp=0, method="lbfgs")
+    model_reduced = smf.glm(
+        formula_reduced, data=df,
+        family=sm.families.Poisson(),
+    ).fit(cov_type="HC0")
 
-print(f"完整模型 AIC = {model_full.aic:.1f}")
+print(f"完整模型 AIC = {model_poisson.aic:.1f}")
 print(f"精簡模型 AIC = {model_reduced.aic:.1f}")
+print()
+
+# --- 白話解讀 ---
+if model_reduced.aic < model_poisson.aic:
+    print("📉 精簡模型 AIC 較小 → 精簡模型在「解釋力 vs 複雜度」之間取得更好平衡")
+else:
+    print("📈 完整模型 AIC 較小 → 多放的變項確實有貢獻")
+```
+
+> 🍽️ **點菜比喻**：AIC 就像在餐廳點菜。菜太多（變項太多）→ 吃不完浪費錢（overfitting）。菜太少（變項太少）→ 餓肚子（underfitting）。AIC 幫你找到「剛好吃飽又不浪費」的平衡點。AIC 越小越好。
+
+```{admonition} AIC 只能比同一 family 的模型
+:class: warning
+
+Modified Poisson（Poisson family）和 Logistic Regression（Binomial family）的 AIC 不能直接比較，因為 likelihood 的計算基礎不同。所以上面只比較了兩個 Poisson 模型之間的 AIC。
 ```
 
 ---
@@ -187,22 +423,24 @@ print(f"精簡模型 AIC = {model_reduced.aic:.1f}")
 
 | 結果 | 意義 |
 |------|------|
-| Adjusted OR > 1 且 p < 0.05 | 控制其他因子後，仍為獨立危險因子 |
-| Crude OR ≫ Adjusted OR | 粗 OR 被干擾作用膨脹（與 Ch05 結論一致） |
-| Adjusted OR ≈ 1 | 控制後效應消失，原來的關聯可能是假的 |
+| Adjusted RR > 1 且 p < 0.05 | 控制其他因子後，仍為獨立危險因子 |
+| Crude RR ≫ Adjusted RR | 粗 RR 被干擾作用膨脹（與 Ch05 MH 結論一致） |
+| Adjusted RR ≈ 1 | 控制後效應消失，原來的關聯可能是假的 |
+| Adjusted OR > Adjusted RR | OR 高估效應（侵襲率高的必然結果） |
 | AIC 較小 | 模型在解釋力與複雜度間取得較好平衡 |
 
 ## 常見錯誤
 
-1. **OR 當 RR 用**：侵襲率高時 OR ≠ RR，要注意解讀
-2. **放太多變項**：280 筆資料放 15+ 變項 → 過度擬合
-3. **忽略多重共線性**：高度相關的變項不要同時放入
-4. **只看 p-value**：OR 的大小和 CI 寬度也很重要
-5. **自動選變項**：stepwise 不推薦 → 用流行病學知識選擇
+1. **在世代研究中只報 OR**：侵襲率高時 OR ≠ RR。應該用 Modified Poisson 算 RR，或至少同時報告兩者讓讀者知道差異
+2. **OR 當 RR 用**：對主管說「OR = 3.5 代表風險 3.5 倍」——在高侵襲率下是錯的。要明確區分「勝算幾倍」和「風險幾倍」
+3. **放太多變項**：280 筆資料放 15+ 變項 → 過度擬合。經驗法則：每個 predictor 至少需要 10-15 個 events
+4. **忽略多重共線性**：高度相關的變項不要同時放入（例如 functional_status 和 age 可能高度相關）
+5. **自動選變項**：stepwise 不推薦 → 用流行病學知識和 DAG 選擇
+6. **不報 CI**：只報 p-value 不夠。CI 告訴你效應的精確度和臨床意義
 
 ## 下一步
 
-邏輯斯迴歸回答了「哪些因子獨立影響感染風險」。但主管接著問：「下週還會有多少新個案？」→ Ch07 時間序列預測。
+多變項分析回答了「哪些因子獨立影響感染風險」。但主管接著問：「下週還會有多少新個案？」→ Ch07 時間序列預測。
 
 ## 練習本
 

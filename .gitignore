@@ -14,6 +14,8 @@ data/processed/
 
 # Report generation output (Ch04 Step 8)
 output/
+epi_curve_journal.pdf
+epi_curve_report.png
 
 # Video generation output
 videos/output/
