@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrowDown" markerWidth="10" markerHeight="10" refX="5" refY="10" orient="auto">
+      <path d="M 0 0 L 5 10 L 10 0" fill="none" stroke="#D97757" stroke-width="1.5"/>
+    </marker>
+    <marker id="arrowRight" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <path d="M 0 0 L 10 3.5 L 0 7" fill="#788C5D"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="520" fill="#FAF8F3" rx="12"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">邏輯斯迴歸的三階梯：機率 → 勝算 → log(勝算)</text>
+  <text x="400" y="52" text-anchor="middle" font-size="12" fill="#6B6B6B">為什麼要把機率「拉直」？因為線性迴歸需要 -∞ 到 +∞ 的空間</text>
+
+  <!-- ========== Level 1: Probability ========== -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="72" width="440" height="110" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <text x="60" y="96" font-size="14" font-weight="bold" fill="#6A9BCC">第一階：機率 Probability</text>
+  <text x="60" y="116" font-size="12" fill="#6B6B6B">範圍：0 到 1（被卡住了！）</text>
+
+  <!-- Scale bar -->
+  <rect x="60" y="132" width="400" height="12" rx="6" fill="#6A9BCC" fill-opacity="0.15" stroke="#6A9BCC" stroke-width="1"/>
+  <text x="60" y="160" font-size="10" fill="#6B6B6B">0</text>
+  <text x="256" y="160" text-anchor="middle" font-size="10" fill="#6B6B6B">0.5</text>
+  <text x="456" y="160" text-anchor="end" font-size="10" fill="#6B6B6B">1</text>
+  <!-- Example dot -->
+  <circle cx="340" cy="138" r="6" fill="#D97757"/>
+  <text x="340" y="174" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">p = 0.70</text>
+
+  <!-- Metaphor card -->
+  <g filter="url(#shadow)">
+    <rect x="510" y="72" width="260" height="110" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="530" y="96" font-size="12" font-weight="bold" fill="#D97757">比喻：被壓扁的彈簧</text>
+  <text x="530" y="118" font-size="11" fill="#6B6B6B">機率被卡在 [0, 1] 之間，</text>
+  <text x="530" y="136" font-size="11" fill="#6B6B6B">就像彈簧塞進小盒子——</text>
+  <text x="530" y="154" font-size="11" fill="#6B6B6B">越靠近邊界越擠，</text>
+  <text x="530" y="172" font-size="11" fill="#6B6B6B">線性迴歸沒辦法直接用。</text>
+
+  <!-- Arrow 1→2 -->
+  <line x1="260" y1="184" x2="260" y2="216" stroke="#D97757" stroke-width="2" marker-end="url(#arrowDown)"/>
+  <text x="280" y="206" font-size="11" font-weight="bold" fill="#D97757">odds = p / (1-p)</text>
+
+  <!-- ========== Level 2: Odds ========== -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="220" width="440" height="110" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <text x="60" y="244" font-size="14" font-weight="bold" fill="#D97757">第二階：勝算 Odds</text>
+  <text x="60" y="264" font-size="12" fill="#6B6B6B">範圍：0 到 +∞（右邊解放了，但左邊還是卡住）</text>
+
+  <!-- Scale bar -->
+  <rect x="60" y="280" width="400" height="12" rx="6" fill="#D97757" fill-opacity="0.12" stroke="#D97757" stroke-width="1"/>
+  <text x="60" y="308" font-size="10" fill="#6B6B6B">0</text>
+  <text x="160" y="308" text-anchor="middle" font-size="10" fill="#6B6B6B">1</text>
+  <text x="456" y="308" text-anchor="end" font-size="10" fill="#6B6B6B">+∞</text>
+  <!-- Example dot -->
+  <circle cx="224" cy="286" r="6" fill="#D97757"/>
+  <text x="224" y="322" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">odds = 2.33</text>
+
+  <!-- Metaphor card -->
+  <g filter="url(#shadow)">
+    <rect x="510" y="220" width="260" height="110" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="530" y="244" font-size="12" font-weight="bold" fill="#D97757">比喻：天平</text>
+  <text x="530" y="266" font-size="11" fill="#6B6B6B">odds = 2.33 代表天平傾斜：</text>
+  <text x="530" y="284" font-size="11" fill="#6B6B6B">「感染 vs 不感染 = 7:3」</text>
+  <text x="530" y="302" font-size="11" fill="#6B6B6B">感染那邊重了 2.33 倍。</text>
+  <text x="530" y="320" font-size="11" fill="#6B6B6B">0.70 / (1 - 0.70) = 2.33</text>
+
+  <!-- Arrow 2→3 -->
+  <line x1="260" y1="332" x2="260" y2="364" stroke="#D97757" stroke-width="2" marker-end="url(#arrowDown)"/>
+  <text x="280" y="354" font-size="11" font-weight="bold" fill="#D97757">logit = log(odds)</text>
+
+  <!-- ========== Level 3: Log-odds ========== -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="368" width="440" height="110" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="2"/>
+  </g>
+  <text x="60" y="392" font-size="14" font-weight="bold" fill="#788C5D">第三階：log(勝算) Logit</text>
+  <text x="60" y="412" font-size="12" fill="#6B6B6B">範圍：-∞ 到 +∞（兩邊都自由了！可以做迴歸）</text>
+
+  <!-- Scale bar -->
+  <rect x="60" y="428" width="400" height="12" rx="6" fill="#788C5D" fill-opacity="0.12" stroke="#788C5D" stroke-width="1"/>
+  <text x="60" y="456" font-size="10" fill="#6B6B6B">-∞</text>
+  <text x="260" y="456" text-anchor="middle" font-size="10" fill="#6B6B6B">0</text>
+  <text x="456" y="456" text-anchor="end" font-size="10" fill="#6B6B6B">+∞</text>
+  <!-- Example dot -->
+  <circle cx="314" cy="434" r="6" fill="#788C5D"/>
+  <text x="314" y="470" text-anchor="middle" font-size="11" font-weight="bold" fill="#788C5D">logit = 0.85</text>
+
+  <!-- Metaphor card + reverse transformation -->
+  <g filter="url(#shadow)">
+    <rect x="510" y="368" width="260" height="110" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="530" y="392" font-size="12" font-weight="bold" fill="#788C5D">還原：e^β → OR</text>
+  <text x="530" y="414" font-size="11" fill="#6B6B6B">迴歸算出 β = 0.85</text>
+  <text x="530" y="432" font-size="11" fill="#6B6B6B">→ OR = e^0.85 = 2.33</text>
+  <text x="530" y="450" font-size="11" fill="#6B6B6B">→ 「勝算變成 2.33 倍」</text>
+  <text x="530" y="470" font-size="11" fill="#D97757">若用 Modified Poisson：e^β → RR</text>
+
+  <!-- Bottom summary -->
+  <text x="400" y="508" text-anchor="middle" font-size="12" fill="#6B6B6B">log(ln(2.33)) = 0.85 → 取 log 把彈簧拉直，線性迴歸就能正常工作了</text>
+</svg>
