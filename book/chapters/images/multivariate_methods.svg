@@ -20,7 +20,6 @@
   <rect x="20" y="72" width="240" height="44" rx="10" fill="#6A9BCC" fill-opacity="0.15"/>
   <rect x="20" y="106" width="240" height="10" fill="#FFFFFF"/>
   <text x="140" y="98" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A9BCC">分層分析</text>
-  <text x="140" y="98" text-anchor="middle" font-size="14" font-weight="bold" fill="#005B82">分層分析</text>
   <text x="140" y="130" text-anchor="middle" font-size="11" fill="#6B6B6B">Ch05 Stratified Analysis</text>
 
   <text x="40" y="160" font-size="12" fill="#1A1A1A" font-weight="600">做法</text>
