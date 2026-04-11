@@ -205,6 +205,33 @@ print("💡 注意：crude_OR 普遍大於 crude_RR，這就是高侵襲率下 O
 print("   hand_RR 欄是 Ch03 的 2×2 表手算結果，應與 crude_RR 幾乎一致")
 ```
 
+### 讀懂公式語法
+
+statsmodels 的公式借用了 R 語言的 **formula 語法**，用一行字就能描述「用哪些變項來預測結果」：
+
+| 符號 | 意思 | 範例 |
+|------|------|------|
+| `~` | 「被⋯預測」 | `infected ~ age` → 用 age 預測 infected |
+| `+` | 「再加上」 | `~ age + sex` → 同時放 age 和 sex 進模型 |
+| `C()` | 「當成類別變項」 | `C(floor)` → 把 floor 拆成虛擬變項（dummy coding），每個樓層一個 0/1 指標 |
+
+白話文：`infected ~ shower_use + age + C(floor)` 就是說「用淋浴使用、年齡、樓層來預測感染」。模型會自動加上截距項（Intercept），不用額外寫。
+
+### 模型放哪些變項？——從 Ch03 和 Ch05 的結果出發
+
+多變項模型不是把所有欄位都丟進去，而是要有理由。回顧前面章節的發現，我們把模型變項分成四組：
+
+| 組別 | 變項 | 角色 | 納入理由 |
+|------|------|------|----------|
+| **暴露因子** | `shower_use`, `hydrotherapy_use` | 研究焦點 | Ch03 篩選出的顯著危險因子——我們最想回答的問題：「淋浴和水療是不是感染源？」 |
+| **宿主因子** | `age`, `immunosuppressed`, `functional_score` | 潛在干擾因子 | `age` = 流行病學常規必調整因子；`immunosuppressed` = Ch03 顯示 crude RR 最高的因子之一；`functional_score` = Ch05 已確認的干擾因子 |
+| **共病** | `comorbidity_chf`, `comorbidity_dm`, `comorbidity_cancer`, `comorbidity_copd` | 潛在干擾因子 | Ch03 篩選出的候選因子，放入完整模型看控制後暴露因子的 RR 是否改變 |
+| **場所** | `C(floor)` | 潛在干擾因子 | 不同樓層的水管系統或暴露機會可能不同，需要控制樓層差異 |
+
+```{tip}
+**為什麼不放 `ever_smoker`？** Ch03 的單變項篩選中，吸菸的 crude RR 接近 1 且未達統計顯著，加上它與多項共病高度相關（共線性），納入模型反而增加估計的不穩定性，因此不放進多變項模型。
+```
+
 ## Step 3: 多變項 Modified Poisson——Adjusted RR
 
 ```python
@@ -212,6 +239,12 @@ print("   hand_RR 欄是 Ch03 的 2×2 表手算結果，應與 crude_RR 幾乎�
 # 這是本章的主軸分析：用 Poisson GLM + robust SE 算出 adjusted RR。
 # coefficient = log(RR)，取 exp 就是 RR。
 
+# --- 公式說明 ---
+# infected ~ ：用右邊的變項預測「是否感染」
+# shower_use + hydrotherapy_use ：暴露因子（研究焦點）
+# age + immunosuppressed + functional_score ：宿主因子（潛在干擾）
+# comorbidity_chf/dm/cancer/copd ：共病（潛在干擾）
+# C(floor) ：樓層當類別變項（控制場所差異）
 formula = (
     "infected ~ shower_use + hydrotherapy_use + age + "
     "comorbidity_chf + comorbidity_dm + comorbidity_cancer + "
@@ -386,7 +419,10 @@ plt.show()
 # === Step 7: 模型診斷 — AIC 比較 ===
 # 用 AIC 比較「完整模型」和「精簡模型」，判斷是否放了太多變項。
 
-# --- 精簡模型：只保留顯著或理論上重要的變項 ---
+# --- 精簡模型 ---
+# 移除 Ch03 篩選中 crude RR 不顯著或效果量小的共病，以及樓層。
+# 保留：核心暴露因子（shower_use, hydrotherapy_use）
+#       + 理論上最重要的調整因子（age, immunosuppressed, functional_score）
 formula_reduced = (
     "infected ~ shower_use + hydrotherapy_use + age + "
     "immunosuppressed + functional_score"
