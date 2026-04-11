@@ -453,6 +453,77 @@ else:
 Modified Poisson（Poisson family）和 Logistic Regression（Binomial family）的 AIC 不能直接比較，因為 likelihood 的計算基礎不同。所以上面只比較了兩個 Poisson 模型之間的 AIC。
 ```
 
+### 變項怎麼選？三種策略比較
+
+上面我們只比了「完整 vs 精簡」兩個模型。但實務上，到底要放哪些變項進模型？有三種常見策略：
+
+| 策略 | 做法 | 優點 | 缺點 |
+|------|------|------|------|
+| **Forward（往前加）** | 從空模型開始，每次加入一個讓 AIC 下降最多的變項 | 簡單直覺 | 容易漏掉聯合效應；加入順序影響結果 |
+| **Backward（往後刪）** | 從完整模型開始，每次移除一個對 AIC 影響最小的變項 | 能看到所有變項的聯合效應 | 需要夠多樣本才能放所有變項 |
+| **Change-in-estimate（效應改變法）** | 逐一移除候選干擾因子，看暴露因子的 RR 是否改變 ≥ 10% | **流行病學金標準**——以「是否干擾暴露效應」為判斷依據 | 需要先定義「暴露因子」 |
+
+```{tip}
+**流行病學推薦用 change-in-estimate**，而不是 stepwise（自動選變項）。原因很簡單：我們做多變項分析的目的是**正確估計暴露因子的效應**，不是做預測。一個變項即使 p-value 不顯著，只要它是干擾因子（移除後讓 RR 改變 ≥ 10%），就應該留在模型裡。
+
+Stepwise 以 p-value 為標準，可能會移除「不顯著但確實在干擾的變項」，導致暴露因子的 RR 被扭曲。
+```
+
+下面用 Python 實作 **change-in-estimate 法**，看哪些候選干擾因子真正影響了 shower_use 和 hydrotherapy_use 的 RR：
+
+```python
+# === Step 7b: Change-in-Estimate 變項選擇 ===
+# 流行病學標準做法：逐一移除候選干擾因子，
+# 看暴露因子（shower_use, hydrotherapy_use）的 adjusted RR 改變多少。
+# 改變 ≥ 10% → 該變項是干擾因子，必須留在模型裡。
+
+# --- 完整模型的暴露因子 RR（基準值）---
+full_rr = {
+    var: np.exp(model_poisson.params[var])
+    for var in ["shower_use", "hydrotherapy_use"]
+}
+print("完整模型的暴露因子 RR（基準）：")
+for var, rr in full_rr.items():
+    print(f"  {var}: {rr:.3f}")
+print()
+
+# --- 候選干擾因子：逐一移除測試 ---
+confounders = [
+    "age", "comorbidity_chf", "comorbidity_dm", "comorbidity_cancer",
+    "comorbidity_copd", "immunosuppressed", "functional_score", "C(floor)",
+]
+
+cie_results = []
+for drop_var in confounders:
+    # 建立移除一個變項的公式
+    keep = [c for c in confounders if c != drop_var]
+    formula_test = "infected ~ shower_use + hydrotherapy_use + " + " + ".join(keep)
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        m = smf.glm(formula_test, data=df, family=sm.families.Poisson()).fit(
+            cov_type="HC0", disp=0
+        )
+
+    for exposure in ["shower_use", "hydrotherapy_use"]:
+        rr_without = np.exp(m.params[exposure])
+        pct_change = (rr_without - full_rr[exposure]) / full_rr[exposure] * 100
+        cie_results.append({
+            "移除的變項": drop_var,
+            "暴露因子": exposure,
+            "移除後 RR": round(rr_without, 3),
+            "RR 改變%": f"{pct_change:+.1f}%",
+            "是否干擾": "✓ 干擾" if abs(pct_change) >= 10 else "",
+        })
+
+cie_df = pd.DataFrame(cie_results)
+print("=== Change-in-Estimate 分析 ===")
+print("（移除某變項後，暴露因子的 RR 改變 ≥ 10% → 該變項是干擾因子）\n")
+print(cie_df.to_string(index=False))
+```
+
+> 📋 **怎麼用這張表？** 看「RR 改變%」欄位。如果移除某個變項後，shower_use 或 hydrotherapy_use 的 RR 改變了 10% 以上，就表示那個變項是干擾因子，必須留在模型裡——即使它自己的 p-value 不顯著。
+
 ---
 
 ## 解讀重點
