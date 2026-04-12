@@ -74,6 +74,14 @@ on:
           - adjusted_rr_table2
           - forest_plot_adjusted
           - change_in_estimate
+          - ts_basics
+          - rolling_baseline
+          - lag_features
+          - poisson_lag
+          - negative_binomial
+          - logistic_threshold
+          - arima_sarima
+          - ts_model_comparison
       quality:
         description: "Render quality"
         required: false
@@ -153,7 +161,7 @@ jobs:
           TITLE="Tutorial Videos $(date +%Y-%m-%d)"
 
           # Build release notes
-          NOTES="## Tutorial Videos (Ch00–06 導讀與工具 / 開發者工具箱 / Python 基礎 / 資料處理與視覺化 / 2×2 表與推論統計 / 群聚調查工作流 / 分層分析與干擾因子 / 多變項分析)\n\n"
+          NOTES="## Tutorial Videos (Ch00–07 導讀與工具 / 開發者工具箱 / Python 基礎 / 資料處理與視覺化 / 2×2 表與推論統計 / 群聚調查工作流 / 分層分析與干擾因子 / 多變項分析 / 時間序列與預測)\n\n"
           NOTES+="Generated with Manim + edge-tts + ffmpeg.\n\n"
           NOTES+="| # | Video | Size |\n"
           NOTES+="|---|-------|------|\n"

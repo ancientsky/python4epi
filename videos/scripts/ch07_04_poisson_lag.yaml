@@ -1,0 +1,156 @@
+meta:
+  chapter: "07"
+  concept: "poisson_lag"
+  title: "Poisson regression + lag：IRR 解讀每日病例"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch07_04_poisson_lag"
+  scene_class: "Ch07PoissonLagScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      你還記得 Ch06 的 Modified Poisson 嗎？
+      在 Ch07，Poisson 終於走回「原本的家」——計數資料。
+      每日病例數是 0、1、2、3、4，天生就是計數，正是 Poisson 最擅長的場景。
+      這一集我們把 Ch07 的 lag features 餵給 Poisson regression，
+      不只能預測，還能解讀「昨天多 1 人，今天多幾 %」。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_poisson_here"
+    narration: >
+      為什麼這裡用 Poisson 而不是線性迴歸？
+      因為病例數永遠非負整數，線性迴歸會預測出負數。
+      Poisson 的 log link 保證預測值永遠非負。
+      而且 Poisson 的係數有漂亮的解讀：
+      exp(β) 叫 incidence rate ratio（IRR），
+      白話「自變項每升 1 單位，發生率變幾倍」。
+      這次跟 Ch06 的 adjusted RR 是不同概念但同一個數學殼。
+    animation: "show_why_poisson_here"
+    pause_after: 0.5
+
+  - id: "code_demo"
+    narration: >
+      程式碼超簡單。
+      公式：cases 波浪號 lag_1 加 lag_2 加 day_idx。
+      白話：「用昨天、前天、時間趨勢來預測今天」。
+      family 傳 Poisson、fit 不用 HC0（這裡不是 Modified Poisson，是原汁原味）。
+      記得兩個指標：MAE 看預測準度、AIC 看模型複雜度。
+    animation: "show_code_demo"
+    code: |
+      import statsmodels.api as sm
+      import statsmodels.formula.api as smf
+
+      model = smf.glm(
+          "cases ~ lag_1 + lag_2 + day_idx",
+          data=ts_model,
+          family=sm.families.Poisson(),
+      ).fit()
+      pred = model.predict(ts_model)
+      mae = mean_absolute_error(ts_model["cases"], pred)
+      print(f"Poisson+lag: MAE={mae:.3f}, AIC={model.aic:.2f}")
+    pause_after: 0.5
+
+  - id: "irr_interpretation"
+    narration: >
+      IRR 怎麼解讀？
+      舉例：lag_1 的 IRR 等於 1.15。
+      意思：「昨天每多 1 個病例，今天的預期發生率會多 15%」。
+      如果 IRR 等於 0.95，就是「少 5%」。
+      exp(β) 等於 1 就是沒影響、大於 1 增加、小於 1 減少。
+      這是跟 Ch06 一樣的 exp(beta) 還原法，只是詞彙變成 IRR。
+    animation: "show_irr_interpretation"
+    code: |
+      coef_table = pd.DataFrame({
+          "coef (log)": model.params,
+          "IRR": np.exp(model.params),
+      }).round(3)
+      print(coef_table)
+    pause_after: 0.5
+
+  - id: "vs_rolling"
+    narration: >
+      Poisson + lag 比 rolling mean 強在哪？
+      一、有信賴區間——你可以給範圍，不只是點估計。
+      二、可解釋性——能講「昨天影響今天 15%」這種話。
+      三、能放其他變項——比如樓層、星期幾、前一週通報量。
+      代價：需要至少 10 天資料（避免樣本太少）。
+      護理之家 17 天剛好夠用。
+    animation: "show_vs_rolling"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Poisson + lag 三件事。
+      一、公式：cases 波浪 lag_1 加 lag_2 加 day_idx。
+      二、family 傳 Poisson、fit 不用 HC0。
+      三、IRR = exp(beta)，「每多 1 單位，發生率變幾倍」。
+      下一集挑戰 Poisson 的極限：過度離散問題。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：急診每小時通報！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_ed"
+    narration: >
+      急診症候群監測系統 syndromic surveillance 常跑每小時通報。
+      用 Poisson regression 加 lag_1（上一小時）、
+      lag_24（昨天同一小時）、lag_168（上週同一小時），
+      預測下一小時的發燒通報量。
+      如果實際值高於 95% CI 上限 → 警報觸發。
+      這種系統就是用 Poisson + lag 在做的，
+      比 rolling mean 多了「機率對比警戒線」的彈性。
+    animation: "show_extra_ed"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Poisson + lag 三大坑！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：把 IRR 當 RR 報告。
+      IRR 和 Ch06 的 RR 數學殼一樣，但詞彙在時間序列語境不一樣。
+      RR 比的是兩組人的風險，IRR 比的是「單位變化一的發生率變化」。
+      場合對了、詞彙對了，別混用。
+    animation: "show_blindspot_irr_as_rr"
+    error_code: "print(f'RR = {np.exp(beta):.2f}')"
+    correct_code: "print(f'IRR = {np.exp(beta):.2f}')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：不看 dispersion 就下結論。
+      Poisson 假設 variance = mean，但疫調資料 variance 常大於 mean，
+      這叫過度離散。不檢查就用 Poisson，CI 會太窄、看起來超顯著但其實是假象。
+      每次跑 Poisson 前先算 dispersion ratio。
+    animation: "show_blindspot_no_dispersion"
+    error_code: "fit Poisson without checking dispersion"
+    correct_code: "disp = var(y) / mean(y); if disp > 1.5: use NB"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：預測時忘記 Poisson 輸出是連續值。
+      predict 出來是 4.7 這種小數，不是整數。
+      取整要注意用哪種取整——round、ceil、floor 結果差一人。
+      公衛實務通常用 round，但別忘了講清楚用了哪一個。
+    animation: "show_blindspot_round"
+    error_code: "int(pred)  # floor: 4.7 -> 4"
+    correct_code: "round(pred)  # standard: 4.7 -> 5"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Poisson 搞定了！下一集我們處理 Poisson 撐不住的場景——
+      當變異遠大於平均（過度離散），
+      Negative Binomial 是救星。下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

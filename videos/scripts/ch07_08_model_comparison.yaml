@@ -1,0 +1,159 @@
+meta:
+  chapter: "07"
+  concept: "ts_model_comparison"
+  title: "六模型大比拼：誰適合什麼情境？"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch07_08_model_comparison"
+  scene_class: "Ch07ModelComparisonScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Ch07 最後一集！
+      我們已經學了六個時間序列預測模型：
+      rolling mean、Poisson+lag、Negative Binomial、
+      Logistic threshold、ARIMA、SARIMA。
+      每個都有自己的優缺點和適用場景。
+      這一集我們把六個模型擺上擂台，
+      一張表比較 MAE、資料需求、是否捕捉週期、是否給 CI，
+      讓你以後遇到新資料 5 秒鐘選對工具。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "comparison_table"
+    narration: >
+      比較表六欄。
+      模型名稱、資料集、MAE、最少資料需求、能否捕捉週期、信賴區間。
+      Rolling mean：5 天夠、不捕捉週期、無 CI。
+      Poisson 和 NB + lag：10 天、部分週期、有 CI。
+      Logistic：10 天、只做二元、機率 CI。
+      ARIMA：30 天、弱週期、有 CI。
+      SARIMA：60 天、強週期、有 CI。
+      一張表涵蓋所有情境。
+    animation: "show_comparison_table"
+    pause_after: 0.5
+
+  - id: "decision_tree"
+    narration: >
+      決策樹口訣——四個問題決定模型。
+      資料只有 1-2 週？ → Rolling mean 或 Poisson + lag。
+      有過度離散（variance 遠大於 mean）？ → Negative Binomial。
+      要預測「是/否警報」？ → Logistic threshold。
+      中長期（>30 天）、沒週期？ → ARIMA。
+      有明顯週期（週、月、年）？ → SARIMA。
+      四題答完，模型就定了。
+    animation: "show_decision_tree"
+    pause_after: 0.5
+
+  - id: "mae_aic_rules"
+    narration: >
+      MAE 和 AIC 怎麼解讀？
+      MAE 越小越好，代表平均預測誤差越小。
+      AIC 越小越好，懲罰過度配適。
+      但別單看——永遠跟 baseline 比較。
+      rule of thumb：你的模型 MAE 要比 rolling mean 小至少 10%
+      才算有實質改進。
+      AIC 差 10 以上才算有意義的差異。
+    animation: "show_mae_aic_rules"
+    pause_after: 0.5
+
+  - id: "complexity_vs_data"
+    narration: >
+      複雜度和資料量的黃金法則。
+      資料少 → 用簡單模型。
+      資料多 → 可以考慮複雜模型。
+      原因：複雜模型的參數多，短資料會過度配適。
+      Ch07 護理之家 17 天 + 121 人，SARIMA 根本跑不動。
+      合成 90 天資料才能讓 SARIMA 發揮威力。
+      不要為了炫技上 SARIMA，對的工具用在對的場合。
+    animation: "show_complexity_vs_data"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Ch07 畢業大總結。
+      一、短資料 → Rolling mean、Poisson+lag。
+      二、過度離散 → Negative Binomial。
+      三、是否警報 → Logistic threshold。
+      四、中長期 → ARIMA。
+      五、有週期 → SARIMA。
+      五條口訣終身受用。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：COVID 即時預測比賽！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid_forecast"
+    narration: >
+      2020 年美國 CDC 辦了 COVID-19 Forecast Hub 大比賽，
+      邀請全世界研究團隊每週預測未來 1-4 週確診數。
+      參賽模型涵蓋：ARIMA、SARIMA、Exponential smoothing、
+      機器學習 LSTM、深度學習 Transformer、
+      還有混合 ensemble 方法。
+      結果：短期 1 週預測，傳統 ARIMA + SARIMA 成績穩居前段。
+      長期 4 週預測，ensemble 混合模型勝出。
+      公衛界的教訓：別迷信深度學習，
+      該簡單時就簡單，該混合時就混合。
+    animation: "show_extra_covid_forecast"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      模型選擇三大盲點！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：新聞看到 LSTM 就想用。
+      機器學習/深度學習時間序列需要上千筆以上資料。
+      Ch07 的資料量用 LSTM 絕對過度配適。
+      統計模型（ARIMA、SARIMA）在資料少時反而更好。
+      不要以為複雜就是強。
+    animation: "show_blindspot_ml_hype"
+    error_code: "model = LSTM(hidden=128).fit(daily_17days)"
+    correct_code: "model = Poisson_with_lag.fit(daily_17days)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：只看 MAE 選模型。
+      MAE 最小的模型未必最好。
+      還要看：有沒有 CI、是否可解讀、計算成本、是否捕捉週期。
+      公衛實務常常「MAE 稍差但可解讀」勝出，
+      因為決策者需要講理由，不是只看數字。
+      多維度評估才是專業做法。
+    animation: "show_blindspot_only_mae"
+    error_code: "select_model(min_mae_only=True)"
+    correct_code: "select_model(mae, ci, interp, cost, cycle)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：模型選完就不檢討。
+      疫情變化快，上週最佳的模型下週可能失準。
+      正確流程：每週 retrain、每月重新比較六個模型。
+      監測系統的生命力在於持續調整，不是上線後擺爛。
+      這就是「即時監測」和「一次分析」的差別。
+    animation: "show_blindspot_no_retrain"
+    error_code: "# deploy once and forget"
+    correct_code: "# retrain weekly, re-evaluate monthly"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你完成 Ch07 時間序列與預測全系列！
+      從基本概念、Rolling mean baseline、Lag features、
+      Poisson、Negative Binomial、Logistic threshold、
+      ARIMA、SARIMA 到六模型比拼，
+      你已經掌握公衛監測最重要的預測工具箱。
+      下一章 Ch08 我們轉戰「空間流病」，
+      看看怎麼用 Python 畫出精美的疾病地圖！
+      我們下一章見！
+    animation: "show_outro"
+    pause_after: 1.0

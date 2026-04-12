@@ -1,0 +1,144 @@
+meta:
+  chapter: "07"
+  concept: "ts_basics"
+  title: "時間序列基本概念：asfreq、自相關、平穩性"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch07_01_ts_basics"
+  scene_class: "Ch07TsBasicsScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨！歡迎來到 Chapter 7，時間序列與預測。
+      這一章我們要回答長官在疫調會議上丟的兩個問題：
+      「下禮拜還會有幾人發病？醫院要準備幾張床？」
+      「明天會不會又是高峰日，要不要提前啟動警報？」
+      在衝進程式之前，這一集我們先搞懂三個時間序列的核心概念：
+      asfreq 補齊日期、自相關、平穩性。
+      這三個詞聽起來很炫，其實背後道理超直覺。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "what_is_ts"
+    narration: >
+      時間序列是什麼？一句話：按時間排列的觀測值。
+      每日病例數、每小時急診人次、每週通報數，通通是時間序列。
+      跟普通資料最大的差別：相鄰的點高度相關！
+      今天 10 人、昨天可能也差不多、明天不會差太多。
+      這個「相鄰點相關」的特性，就是時間序列分析的主旋律。
+    animation: "show_what_is_ts"
+    pause_after: 0.5
+
+  - id: "asfreq_gap"
+    narration: >
+      第一個坑：資料有斷日。
+      護理之家某一天剛好沒人發病，groupby 之後那天整列不見。
+      時間序列不連續，rolling、ARIMA 通通會失真。
+      解法：asfreq D 加上 fill_value 等於 0。
+      把所有日期補齊，沒病例的那天填 0。
+      一行程式碼，避免所有下游分析崩壞。
+    animation: "show_asfreq_gap"
+    code: |
+      # 補齊無發病的日期，確保連續
+      daily = cases.groupby("symptom_onset_date").size()
+      daily = daily.asfreq("D", fill_value=0)
+      daily.name = "cases"
+    pause_after: 0.5
+
+  - id: "autocorrelation"
+    narration: >
+      第二個概念：自相關 autocorrelation。
+      白話：今天的值跟昨天、前天的值有多像。
+      傳染病很容易自相關——因為昨天很多人發病，
+      代表社區有傳染，今天就會更多人。
+      自相關的英文關鍵字：auto（自己）+ correlation（相關）。
+      有自相關，lag features 就會有用；沒有自相關，硬加 lag 只會浪費參數。
+    animation: "show_autocorrelation"
+    pause_after: 0.5
+
+  - id: "stationarity"
+    narration: >
+      第三個概念：平穩性 stationarity。
+      平穩代表「均值與變異不隨時間漂移」。
+      想像一條河，水位每天起起伏伏，但平均值穩定——這叫平穩。
+      ARIMA 要求序列平穩。如果序列整體在往上漲（趨勢），就要做差分讓它平穩。
+      差分就是「今天減昨天」，把絕對值變成「變化量」。
+      這就是 ARIMA 的 I 代表的意思：Integrated，差分次數。
+    animation: "show_stationarity"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三個概念打包收起來。
+      一、asfreq 補齊日期，確保連續。
+      二、自相關是時間序列的主旋律。
+      三、平穩性是 ARIMA 的前提條件。
+      這三個概念懂了，Ch07 剩下的六種模型都會輕鬆上手。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：COVID-19 每日確診！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid"
+    narration: >
+      台灣 COVID-19 每日確診是經典時間序列。
+      2022 年 Omicron 爆發，從 3 月每天 300 例，
+      一路漲到 5 月每天 9 萬例。
+      這條序列有超強自相關（今天的數字幾乎就是昨天的 1.1 倍）、
+      有明顯趨勢（一直漲）、有週效應（週末通報少）。
+      所以 Omicron 預測必須做差分（趨勢）+ 季節調整（週效應）。
+      這就是 SARIMA 的應用場景。
+    animation: "show_extra_covid"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      三個初學者最容易忽略的地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：資料沒補齊直接分析。
+      缺了三天沒發病的日子，rolling mean 窗口就錯位。
+      asfreq D fill_value 0 是時間序列的標配儀式，每次都要做。
+    animation: "show_blindspot_no_asfreq"
+    error_code: "daily = cases.groupby('date').size()"
+    correct_code: "daily = cases.groupby('date').size().asfreq('D', fill_value=0)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：把日期欄當字串排序。
+      排出來 2025-12-28 會跑到 2026-01-05 前面嗎？
+      如果日期是字串會很危險。
+      解法：永遠用 pd.to_datetime 轉成 datetime 再當 index。
+    animation: "show_blindspot_string_date"
+    error_code: "df.sort_values('date')  # date is str"
+    correct_code: "df['date'] = pd.to_datetime(df['date']); df.sort_values('date')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：不檢查平穩性就套 ARIMA。
+      結果 d 值亂選，預測飛上天。
+      養成習慣：任何 ARIMA 前先跑一次 adfuller test。
+      p 值小於 0.05 代表平穩、d 可以用 0；大於 0.05 就要差分。
+    animation: "show_blindspot_no_adf"
+    error_code: "ARIMA(series, order=(1, 0, 1)).fit()"
+    correct_code: "adfuller(series); # check p-value first"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      三個概念打通了！
+      下一集我們進入 Ch07 第一個實際模型：
+      rolling mean baseline，以及 shift(1) 為什麼是救命符。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
