@@ -1,0 +1,171 @@
+meta:
+  chapter: "06"
+  concept: "adjusted_rr_table2"
+  title: "多變項 adjusted RR：打造漂亮的 Table 2"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch06_06_adjusted_rr_table2"
+  scene_class: "Ch06AdjustedRrTable2Scene"
+
+segments:
+  - id: "intro"
+    narration: >
+      這一集是 Ch06 的高潮：一個公式，同時調整一打變項，
+      跑出 adjusted RR 加 95% CI，排版成論文標準的 Table 2。
+      從此以後你寫論文、交報告，永遠有一張體面的桌子擺出來。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_multivariate"
+    narration: >
+      為什麼要從單變項升級到多變項？
+      因為流病世界沒有單純的暴露——age、sex、共病、樓層都可能干擾。
+      Ch05 的分層分析一次只能控制一個變項，超過三個會分到樣本不夠。
+      多變項迴歸一次控制十個都不是問題，只要樣本夠大。
+      這就是 Ch06 的升級價值。
+    animation: "show_why_multivariate"
+    pause_after: 0.5
+
+  - id: "full_formula"
+    narration: >
+      完整公式長這樣。
+      infected 波浪號 shower_use 加 hydrotherapy_use 加 age
+      加 immunosuppressed 加 functional_score
+      加 comorbidity_chf 加 dm 加 cancer 加 copd
+      加 C 括號 floor。
+      一口氣十個變項。
+      不用怕長——Python 會幫你處理，你只要會解讀結果。
+    animation: "show_full_formula"
+    code: |
+      formula = (
+          "infected ~ shower_use + hydrotherapy_use + age "
+          "+ immunosuppressed + functional_score "
+          "+ comorbidity_chf + comorbidity_dm "
+          "+ comorbidity_cancer + comorbidity_copd "
+          "+ C(floor)"
+      )
+      model = smf.glm(formula, data=df,
+                      family=sm.families.Poisson()).fit(cov_type="HC0")
+    pause_after: 0.5
+
+  - id: "table2_build"
+    narration: >
+      Table 2 的組成要素。
+      變項名稱、adjusted RR、95% CI 下界、CI 上界、p 值。
+      程式碼就是把 params exp 起來、conf_int 整組 exp 起來、pvalues 接上去，
+      再用 pandas 的 apply format 變成 "2.34 (1.20, 4.56)" 這種字串。
+      花 20 行程式碼，一張論文等級的 Table 2 就出現了。
+    animation: "show_table2_build"
+    code: |
+      table2 = pd.DataFrame({
+          "variable": model.params.index,
+          "aRR": np.exp(model.params).round(2),
+          "CI_lo": np.exp(model.conf_int()[0]).round(2),
+          "CI_hi": np.exp(model.conf_int()[1]).round(2),
+          "p": model.pvalues.round(3),
+      })
+      table2["aRR (95% CI)"] = table2.apply(
+          lambda r: f"{r['aRR']} ({r['CI_lo']}, {r['CI_hi']})", axis=1)
+    pause_after: 0.5
+
+  - id: "interpret_table2"
+    narration: >
+      解讀重點。
+      Intercept 永遠先跳過——它只是 baseline，沒有臨床意義。
+      找你關心的變項：shower_use 的 aRR 是 2.8（1.5, 5.2），p 值 0.001。
+      意思：控制所有其他因子之後，淋浴使用者感染風險是沒使用者的 2.8 倍，
+      CI 不跨過 1，統計顯著。
+      這就是「淋浴是否為傳染源」的直接答案。
+    animation: "show_interpret_table2"
+    pause_after: 0.5
+
+  - id: "compare_three"
+    narration: >
+      整合回顧：三個效應測量的比較。
+      Ch03 crude RR：沒控制任何變項，可能被干擾。
+      Ch05 MH adjusted RR：控制 1 個變項（如樓層）。
+      Ch06 adjusted RR（Modified Poisson）：同時控制一打變項。
+      同一筆資料，三個不同的效應估計，哪個最值得信？
+      最後一個——因為它最接近「排除所有已知干擾因子後的真實效應」。
+    animation: "show_compare_three"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Table 2 四步驟黃金流程。
+      一、寫出完整公式（所有候選調整因子）。
+      二、跑 Modified Poisson + HC0。
+      三、params、conf_int 取 exp、pvalues 組成表。
+      四、Intercept 跳過、focus 在暴露因子的 aRR。
+      Ch06 的核心產出，就是這張 Table 2。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：AIDS 抗病毒藥研究！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_art"
+    narration: >
+      經典 ART 抗病毒藥研究：有沒有吃藥，死亡率差多少？
+      單變項 crude RR 0.3，看起來效果超好。
+      但病人自己選擇，吃藥的人可能本來病況較輕。
+      控制 CD4、viral load、年齡、性別、共病等 8 個變項後，
+      adjusted RR 升到 0.55。
+      效果還是顯著，但沒有原本那麼誇張。
+      這就是為什麼觀察性研究必須做多變項調整——
+      誠實地把干擾拿掉，才是真正的效應。
+    animation: "show_extra_art"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Table 2 三個常見地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：Intercept 的 exp 當 RR 寫在表裡。
+      Intercept 的 exp 是「所有變項都為 0 時的平均發生率」，不是 RR。
+      Table 2 應該刪掉 Intercept row，或者用 loc 過濾掉。
+      Peer review 最愛抓這個錯誤。
+    animation: "show_blindspot_keep_intercept"
+    error_code: "table2.to_csv('table2.csv')  # keeps Intercept"
+    correct_code: "table2.loc[1:].to_csv('table2.csv')  # drop intercept"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：丟太多變項進去造成 overfit。
+      280 人的資料，放 30 個變項。
+      結果很多變項的 SE 爆炸、CI 橫跨整個宇宙。
+      rule of thumb：每個變項至少要 10 個 case（EPV 10）。
+      我們有 121 個 case，放 12 個變項上限。超過就要精簡或先做變項篩選。
+    animation: "show_blindspot_overfit"
+    error_code: "formula = 'y ~ ' + ' + '.join(30_variables)"
+    correct_code: "formula = 'y ~ ' + ' + '.join(selected_by_cie_or_prior)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：類別變項的 reference 搞錯。
+      比如 floor 1 樓是 reference，但你想用 3 樓當 reference（因為人最多）。
+      statsmodels 預設用「字母或數字最小」當 ref。
+      要改變請在 C 括號裡加 Treatment 括號 reference 值。
+      清楚的 reference 讓表容易讀。
+    animation: "show_blindspot_wrong_ref"
+    error_code: "C(floor)"
+    correct_code: "C(floor, Treatment(reference=3))"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Table 2 大功告成！
+      下一集我們把這張表變成一張更直觀的圖——
+      adjusted RR 森林圖！一眼看穿哪些因子是真的危險。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

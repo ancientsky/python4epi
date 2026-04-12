@@ -1,0 +1,172 @@
+meta:
+  chapter: "06"
+  concept: "change_in_estimate"
+  title: "10% 法則：change-in-estimate 挑變項"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch06_08_change_in_estimate"
+  scene_class: "Ch06ChangeInEstimateScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Ch06 最後一集！
+      我們已經會跑多變項了，但候選變項有十幾個，放全部會 overfit、
+      拿掉太多又會殘留干擾。到底該選哪些？
+      今天介紹流病界最實用的變項篩選方法：change-in-estimate，
+      簡稱 CIE，搭配 10% 法則，誠實又科學地決定模型變項組合。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "what_is_cie"
+    narration: >
+      CIE 的概念超直覺。
+      先跑一個「只有暴露因子」的簡單模型，記下 RR。
+      然後一次加一個候選調整因子進去，看暴露的 RR 變多少。
+      如果變動 10% 以上，代表這個因子是干擾因子，要留下。
+      變動小於 10%，代表它對暴露沒影響，可以不留。
+      這叫 10% 法則。
+    animation: "show_what_is_cie"
+    pause_after: 0.5
+
+  - id: "why_10_percent"
+    narration: >
+      為什麼選 10%？
+      因為這是流病學界經驗累積的經驗值：
+      10% 以下通常代表隨機波動、與暴露無關。
+      超過 10% 就值得注意——這個變項確實改變了效應估計。
+      不是神聖數字，但是公認夠保守、夠實用的門檻。
+    animation: "show_why_10_percent"
+    pause_after: 0.5
+
+  - id: "code_demo"
+    narration: >
+      來看程式碼。
+      先跑最小模型：infected 波浪號 shower_use，拿到 RR_min。
+      for loop 跑候選變項：每次加一個進公式、跑 Modified Poisson、拿 RR_adj。
+      計算 CIE = (RR_min - RR_adj) / RR_adj * 100（% 變化）。
+      超過 10 的就留下，組成 final_vars list。
+    animation: "show_code_demo"
+    code: |
+      base = smf.glm("infected ~ shower_use", data=df,
+                     family=sm.families.Poisson()).fit(cov_type="HC0")
+      rr_min = np.exp(base.params["shower_use"])
+
+      keepers = []
+      for cand in candidates:
+          m = smf.glm(f"infected ~ shower_use + {cand}", data=df,
+                      family=sm.families.Poisson()).fit(cov_type="HC0")
+          rr_adj = np.exp(m.params["shower_use"])
+          cie = abs(rr_min - rr_adj) / rr_adj * 100
+          if cie > 10:
+              keepers.append(cand)
+    pause_after: 0.5
+
+  - id: "final_model"
+    narration: >
+      最後組成精簡模型。
+      infected 波浪號 shower_use 加 join keepers（比如 age 加 immunosuppressed 加 functional_score）。
+      比起一開始放 15 個變項的大模型，現在只剩下真正會影響的 3 到 5 個。
+      模型變乾淨、CI 變窄、解讀更清晰。
+      這就是科學性變項選擇的價值。
+    animation: "show_final_model"
+    pause_after: 0.5
+
+  - id: "aic_complement"
+    narration: >
+      CIE 10% 法則是首選，但可以再用 AIC 輔助。
+      AIC 全名 Akaike Information Criterion，越小代表模型越好。
+      用「點菜」比喻：點太多浪費（複雜度懲罰）、太少不夠吃（擬合不足），
+      AIC 在兩端之間找甜蜜點。
+      實務流程：CIE 選出候選 → AIC 微調要不要加某個邊緣變項。
+    animation: "show_aic_complement"
+    code: |
+      full_model = smf.glm("infected ~ shower_use + age + "
+                           "immunosuppressed + functional_score",
+                           ...).fit(cov_type="HC0")
+      reduced_model = smf.glm("infected ~ shower_use + age "
+                              "+ immunosuppressed",
+                              ...).fit(cov_type="HC0")
+      print(full_model.aic, reduced_model.aic)
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      CIE 三步驟。
+      一、跑最小模型，記下暴露 RR。
+      二、for loop 每加一個候選變項，算變動百分比。
+      三、大於 10% 的留下、組合精簡模型。
+      搭配 AIC 輔助就是完整的變項選擇流程。
+      比起直接把所有變項都丟進去，這是更負責任的做法。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：肺結核接觸追蹤！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tb"
+    narration: >
+      肺結核接觸者追蹤研究：家戶接觸跟感染風險。
+      crude RR 3.5，候選調整因子有 15 個。
+      CIE 跑完發現：BCG 疫苗、HIV、營養狀態三個變項 CIE > 10%，
+      年齡、性別、社經地位這些變化小於 5%。
+      精簡模型只留三個調整因子，adjusted RR 還是 2.8，結論穩健。
+      這才是可以發 Lancet 的嚴謹分析流程。
+    animation: "show_extra_tb"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      CIE 三個最常犯的地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：分母用錯。
+      CIE 公式是「變動絕對值 / 調整後 RR」，不是 / 原始 RR。
+      用原始 RR 當分母會低估變化幅度、漏掉真干擾因子。
+      定義要背對。
+    animation: "show_blindspot_denom"
+    error_code: "cie = abs(rr_min - rr_adj) / rr_min * 100"
+    correct_code: "cie = abs(rr_min - rr_adj) / rr_adj * 100"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：只靠 p 值選變項。
+      有些人看「單變項 p < 0.05 才放」，結果把真正干擾因子漏掉。
+      因為干擾因子不一定跟結果顯著，但它會改變暴露的 RR。
+      CIE 的重點是「變項會不會改 RR」，不是「變項自己顯不顯著」。
+      記住：CIE > p-value 導向。
+    animation: "show_blindspot_p_only"
+    error_code: "if model.pvalues[var] < 0.05: keep.append(var)"
+    correct_code: "if cie_percent(var) > 10: keep.append(var)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：候選變項要從 DAG 先挑過。
+      CIE 不是萬能的——如果丟 collider 進去檢定，CIE 可能超過 10%，
+      但你根本不應該控制 collider（反而引入偏差）。
+      做 CIE 前先畫 DAG 釐清路徑，只把 confounder 候選拿來跑 CIE。
+      這樣才是完整的因果推論流程。
+    animation: "show_blindspot_collider"
+    error_code: "candidates = all_available_vars"
+    correct_code: "candidates = confounders_from_dag_analysis"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜！你完成了 Ch06 多變項分析全集！
+      從 RR vs OR、logit 三階梯、Modified Poisson、公式語法、
+      單變項 loop、多變項 Table 2、森林圖、到 CIE 選變項，
+      你已經掌握流病多變項分析的完整工具箱。
+      下一章 Ch07 我們轉戰「時間序列與預測」，
+      看看怎麼用 Python 預測明天會有幾個案例！
+      我們下一章見！
+    animation: "show_outro"
+    pause_after: 1.0

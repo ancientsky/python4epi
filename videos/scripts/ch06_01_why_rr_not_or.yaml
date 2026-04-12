@@ -1,0 +1,150 @@
+meta:
+  chapter: "06"
+  concept: "why_rr_not_or"
+  title: "為什麼世代研究要用 RR 不用 OR"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch06_01_why_rr_not_or"
+  scene_class: "Ch06WhyRrNotOrScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨！歡迎來到第六章，多變項分析。
+      在我們衝去寫程式之前，先問一個非常根本的問題：
+      我們的護理之家侵襲率 43%，這種世代研究到底該報告 RR 還是 OR？
+      你大概學過 OR 大概等於 RR，但那有一個很關鍵的前提。
+      今天這集手把手帶你搞懂，為什麼不看清楚這件事，分析結果就會被你自己誤導。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "rr_vs_or_definition"
+    narration: >
+      先複習一下這兩個名詞的本質。
+      RR 風險比：暴露組感染率除以未暴露組感染率，問的是「機率幾倍」。
+      OR 勝算比：暴露組勝算除以未暴露組勝算，問的是「勝算幾倍」。
+      勝算是機率除以一減機率。
+      當疾病罕見時，兩個幾乎一樣；但當疾病常見時，OR 會比 RR 大很多。
+      關鍵字就是「罕見」，這也是這集要解開的關鍵。
+    animation: "show_definition"
+    pause_after: 0.5
+
+  - id: "rare_disease_assumption"
+    narration: >
+      教科書的黃金法則：當侵襲率低於 10%，
+      (1 減 p) 大約等於 1，所以 odds 大約等於 risk，OR 大約等於 RR。
+      侵襲率越低，兩者差距越小。
+      侵襲率 1% 的時候，OR 和 RR 幾乎一樣。
+      侵襲率 10%，開始有感差異。
+      侵襲率 43% 像我們這個疫情，OR 會比 RR 大 1.5 到 3 倍，視效應大小而定。
+    animation: "show_rare_assumption"
+    pause_after: 0.5
+
+  - id: "numerical_example"
+    narration: >
+      來看真實數字。
+      假設暴露組感染率 0.6，未暴露組 0.3。
+      RR 等於 0.6 除以 0.3，剛好 2 倍。
+      OR 等於 0.6 乘以 0.7 除以 0.4 乘以 0.3，算出來 3.5。
+      同一份資料，RR 是 2，OR 是 3.5。
+      如果你跟主管說 OR 3.5 以為風險 3.5 倍，就差了 75%。
+      這不是小差，是策略錯誤的差距。
+    animation: "show_numerical"
+    code: |
+      p_exposed = 0.60     # 60% attack rate in exposed
+      p_unexposed = 0.30   # 30% attack rate in unexposed
+      rr = p_exposed / p_unexposed
+      odds_e = p_exposed / (1 - p_exposed)
+      odds_u = p_unexposed / (1 - p_unexposed)
+      or_val = odds_e / odds_u
+      print(f"RR = {rr:.2f}, OR = {or_val:.2f}")
+    output: |
+      RR = 2.00, OR = 3.50
+    pause_after: 0.5
+
+  - id: "three_routes"
+    narration: >
+      在多變項分析的世界裡，有三條路線可以走。
+      分層分析：Ch05 教的，一次只能控制一個因子，輸出 MH adjusted RR。
+      Modified Poisson：這章的主角，一次調整所有因子，輸出 adjusted RR。
+      邏輯斯迴歸：全世界最常用，但在世代研究算出來是 adjusted OR，高侵襲率會高估。
+      選哪條？世代研究首選 Modified Poisson，才能保持 RR 一以貫之。
+    animation: "show_three_routes"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      快速複習。
+      RR 答「風險幾倍」，OR 答「勝算幾倍」，兩者只有在罕見疾病時才近似。
+      我們的侵襲率 43%，OR 會系統性高估效應。
+      世代研究首選 Modified Poisson regression 算 adjusted RR。
+      這就是為什麼 Ch06 的主軸不是 logistic，而是 Modified Poisson。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看一個血淋淋的真實世界誤用案例。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_hrt"
+    narration: >
+      婦女荷爾蒙替代療法 HRT 跟心臟病的研究。
+      1990 年代的觀察研究用 OR 報告「HRT 降低心臟病風險 40%」。
+      媒體大肆報導，醫師大量處方。
+      2002 年 WHI 隨機對照試驗揭曉結果：HRT 反而增加心臟病風險。
+      其中一個原因就是觀察研究的疾病盛行率不低，OR 跟 RR 差很多，
+      再加上 healthy user bias，結論全反了。
+      這告訴我們：選錯效應測量不是學術問題，是公共衛生災難。
+    animation: "show_extra_hrt"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      接下來三個初學者最常踩的地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：把 OR 當 RR 解讀。
+      OR 等於 3.5 不代表風險 3.5 倍，代表勝算 3.5 倍。
+      報告給長官或病人時，用錯字就是誤導。
+      養成習慣：看到 OR 就明確寫「勝算幾倍」，不能偷換成風險。
+    animation: "show_blindspot_misinterpret"
+    error_code: "print(f'Risk is {or_val}x higher')"
+    correct_code: "print(f'Odds is {or_val}x higher')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：世代研究卻用 logistic regression 當唯一工具。
+      大部分 Python 教科書教多變項都只教 logistic，很少教 Modified Poisson。
+      但如果你的資料是世代追蹤、而且疾病不罕見，這時候應該改用 GLM Poisson 家族。
+      選對工具，結果才準確。
+    animation: "show_blindspot_logistic_only"
+    error_code: "smf.logit('infected ~ ...', data=df).fit()"
+    correct_code: "smf.glm('infected ~ ...', family=sm.families.Poisson()).fit(cov_type='HC0')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：看到 OR 很大就興奮。
+      「我的研究 OR 等於 5！」先別急著開香檳。
+      先確認侵襲率多少。如果是 50% 的常見疾病，OR 5 對應的 RR 可能只有 2 到 3。
+      效應沒有你想的那麼大。先看侵襲率，再看效應量，才是誠實的分析態度。
+    animation: "show_blindspot_big_or"
+    error_code: "print(f'Huge effect: OR={or_val}!')"
+    correct_code: "print(f'OR={or_val}, attack_rate={ar:.0%}, check RR'"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你搞懂了 RR 和 OR 的差別！
+      下一集我們來拆解邏輯斯迴歸的核心：
+      機率、勝算、logit 三階梯到底在幹嘛？
+      雖然我們主軸用 Modified Poisson，但 logistic 全世界都在用，必須會讀。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

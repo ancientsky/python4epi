@@ -1,0 +1,162 @@
+meta:
+  chapter: "06"
+  concept: "logit_intuition"
+  title: "邏輯斯迴歸三階梯：機率、勝算、logit"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch06_02_logit_intuition"
+  scene_class: "Ch06LogitIntuitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨！上一集我們說世代研究首選 Modified Poisson，
+      但 logistic 全世界還是都在用，你一定要會讀、會解讀。
+      這一集我們就來把邏輯斯迴歸最神秘的地方——那個「logit」到底在幹嘛——完全打開給你看。
+      一句話劇透：機率、勝算、logit 就是同一件事的三個樣子。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_not_linear"
+    narration: >
+      先問個問題，預測「有沒有感染」這種 0 跟 1 的結果，
+      為什麼不能用普通線性迴歸？
+      因為線性迴歸會跑出負的機率、會跑出大於 1 的機率，根本不合理。
+      所以數學家就發明了一條繞路：
+      先把機率換成勝算，再把勝算取 log，變成一條可以從負無限大到正無限大的直線。
+      這條直線才可以拿去跟 age、sex、floor 做線性組合。
+    animation: "show_why_not_linear"
+    pause_after: 0.5
+
+  - id: "step1_probability"
+    narration: >
+      第一階：機率 p。
+      p 的範圍是 0 到 1，像卡住的彈簧，兩端硬邦邦。
+      p 等於 0.7 就代表 70% 感染。
+      這是我們真正想知道的數字。
+    animation: "show_step1_probability"
+    pause_after: 0.5
+
+  - id: "step2_odds"
+    narration: >
+      第二階：勝算 odds 等於 p 除以一減 p。
+      這是天平：感染的重量除以沒感染的重量。
+      p 等於 0.7，odds 等於 0.7 除以 0.3，等於 2.33。
+      意思是「感染比沒感染多 2.33 倍重」。
+      odds 的範圍是 0 到無限大，左邊被卡住，右邊自由。
+    animation: "show_step2_odds"
+    code: |
+      p = 0.7
+      odds = p / (1 - p)
+      print(f"odds = {odds:.2f}")
+    output: |
+      odds = 2.33
+    pause_after: 0.5
+
+  - id: "step3_logit"
+    narration: >
+      第三階：logit 等於 log 的 odds。
+      把天平的彈簧拉直！
+      p 等於 0.7，logit 等於 log 2.33，等於 0.85。
+      logit 的範圍是負無限大到正無限大，完全自由。
+      這條直線，才是 logistic regression 真正在預測的東西。
+    animation: "show_step3_logit"
+    code: |
+      import numpy as np
+      p = 0.7
+      logit = np.log(p / (1 - p))
+      print(f"logit = {logit:.2f}")
+    output: |
+      logit = 0.85
+    pause_after: 0.5
+
+  - id: "beta_interpretation"
+    narration: >
+      現在我們可以解讀係數 β 了。
+      假設 shower_use 的 β 等於 1.2。
+      意思是：淋浴使用者的 logit 比沒使用者高 1.2。
+      還原回 OR 只要取 e 的 1.2 次方，等於 3.32。
+      解讀：淋浴使用者的感染勝算是沒使用者的 3.32 倍。
+      記住三個字：exp、beta、OR，鐵三角一氣呵成。
+    animation: "show_beta_interpretation"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      快速複習。
+      第一階機率 p，被卡 0 到 1。
+      第二階 odds，自由 0 到無限大。
+      第三階 logit，完全自由負無限大到正無限大。
+      三階梯走完，邏輯斯迴歸就是一條普通的線性方程式。
+      這也是為什麼 AI、ML 的 binary classifier 都是用 logistic——它好算、好收斂、結果好解讀。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      來個血淋淋的實際案例！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid"
+    narration: >
+      COVID-19 疫苗研究常用 logistic regression。
+      研究問：接種疫苗會不會降低住院機率？
+      模型算出 β 等於負 2.1，exp 負 2.1 等於 0.12，對應的 OR 是 0.12。
+      解讀：接種者的住院勝算只有未接種者的 12%，也就是降低 88%。
+      注意：疫苗研究的疾病罕見，OR 約等於 RR，所以可以直接說「降低風險 88%」。
+      但這個捷徑只在罕見時成立——這也是上一集講的大重點。
+    animation: "show_extra_covid"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      三個初學者常踩的 logit 地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：直接報告 beta。
+      比如說「shower_use 的 β 是 1.2，所以影響很大」。
+      β 本身是 log odds，不是人看得懂的單位。
+      正確：報告 exp beta 當作 OR。
+      養成習慣：打開 summary 馬上 np.exp 下去。
+    animation: "show_blindspot_beta_raw"
+    error_code: "print(f'effect = {beta:.2f}')"
+    correct_code: "print(f'OR = {np.exp(beta):.2f}')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：logit 當機率解讀。
+      「logit 等於 0.85，所以感染機率 85%！」
+      錯錯錯！logit 等於 0.85 對應的機率是 0.7，不是 0.85。
+      要還原機率得用 1 除以 1 加 e 的負 logit 次方——sigmoid 函數。
+      Python 就是 scipy.special.expit。
+    animation: "show_blindspot_logit_as_prob"
+    error_code: "prob = logit_value  # wrong!"
+    correct_code: "prob = 1 / (1 + np.exp(-logit_value))"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：p 接近 0 或 1 時取 log 爆掉。
+      p 等於 0 算 logit 會跑出負無限大。
+      實務上模型會報 convergence warning。
+      正確做法：檢查是不是有完全分離的資料，或者加點 regularization。
+      這種時候不是 logit 的錯，是資料太極端，需要改用 Firth 或 Bayesian。
+    animation: "show_blindspot_extreme_p"
+    error_code: "logit = np.log(p / (1 - p))  # p=0 or 1"
+    correct_code: "p = np.clip(p, 1e-6, 1 - 1e-6); logit = np.log(p/(1-p))"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜！你已經看懂 logit 到底在幹嘛了。
+      下一集我們來看 Modified Poisson，
+      為什麼借 Poisson 的殼就可以算出 RR？
+      聽起來像魔術，其實是嚴謹的數學。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

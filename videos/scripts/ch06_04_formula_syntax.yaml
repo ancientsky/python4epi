@@ -1,0 +1,144 @@
+meta:
+  chapter: "06"
+  concept: "formula_syntax"
+  title: "statsmodels 公式語法：波浪、加號、C() 完全解析"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch06_04_formula_syntax"
+  scene_class: "Ch06FormulaSyntaxScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      打開 Ch06 notebook 一看，滿滿的波浪號、加號、C 括號，像咒語一樣。
+      別怕！這些符號是從 R 語言借來的「公式語法」，每一個都有明確意思。
+      這集我們把三個最重要的符號全部拆解，以後你看到任何 statsmodels 公式都會讀。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "tilde_symbol"
+    narration: >
+      第一個符號：波浪號。
+      它的意思是「被什麼預測」。
+      左邊是結果變項 Y，右邊是預測變項 X。
+      infected 波浪號 age，就是「用 age 預測 infected」。
+      不是等號！不是等於！是「被」。
+    animation: "show_tilde"
+    pause_after: 0.5
+
+  - id: "plus_symbol"
+    narration: >
+      第二個符號：加號。
+      它不是數學的加法，而是「同時納入模型」。
+      age 加 sex 加 floor 就是「age、sex、floor 三個變項一起放進去」。
+      不會算 age + sex 的值，而是「各自給一個係數 β」。
+      白話：「朋友都帶進來一起談」。
+    animation: "show_plus"
+    pause_after: 0.5
+
+  - id: "c_symbol"
+    narration: >
+      第三個符號：大寫 C 加括號。
+      意思是「請把它當成類別變項處理」。
+      比如 floor 如果是 1、2、3、4 樓，沒加 C 會被當連續變項（有大小關係）。
+      加了 C 括號 floor 之後，statsmodels 會自動幫你拆成 dummy variables：
+      2 樓、3 樓、4 樓各一個 0 或 1 的欄位，1 樓當基準組。
+      這叫 one-hot 編碼，是類別變項的標準做法。
+    animation: "show_c_symbol"
+    code: |
+      # floor 是 1, 2, 3, 4
+      # 不加 C 會被當連續：floor=2 假設「影響是 floor=1 的兩倍」
+      smf.glm("infected ~ floor", ...)
+      # 加 C 才對：拆成 3 個 dummy
+      smf.glm("infected ~ C(floor)", ...)
+    pause_after: 0.5
+
+  - id: "full_example"
+    narration: >
+      來組合一個完整的公式。
+      infected 波浪號 shower_use 加 age 加 C 括號 floor。
+      翻譯成白話：「用淋浴使用、年齡、樓層（當類別）來預測感染」。
+      statsmodels 會自動幫你處理：age 當連續、shower_use 當 0 或 1、floor 拆成三個 dummy。
+      一行公式搞定所有事。
+    animation: "show_full_example"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三符號懶人包。
+      波浪號等於「被預測」。
+      加號等於「同時納入」。
+      C 括號等於「當類別」。
+      除了這三個，還有 *（交互作用）、:（純交互不含主效應）、-1（去掉截距），進階再學。
+      今天三個最重要的先記起來。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      另一個常見公式情境：流感住院研究！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_flu"
+    narration: >
+      流感住院研究要調整年齡層、性別、疫苗狀態。
+      公式長這樣：hospitalized 波浪號 vaccinated 加 C 括號 age_group 加 sex。
+      注意 age_group 本來是字串 "0-18"、"19-64"、"65+"，
+      statsmodels 看到 C 括號會自動 one-hot。
+      如果 age 是純數字（比如 65、72、80），那看情境決定要不要加 C：
+      當連續（線性假設）或分組（靈活但耗自由度）。
+      實務上流病最愛分組 + C，因為生理變化有轉折點。
+    animation: "show_extra_flu"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      三個初學者最容易搞混的公式語法！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：用 = 當 ~。
+      Python 的等號是賦值運算子，不是公式語法。
+      寫錯會直接 SyntaxError。
+      記住：statsmodels 公式是一個字串，裡面用波浪號。
+    animation: "show_blindspot_equals"
+    error_code: "smf.glm('infected = age', ...)"
+    correct_code: "smf.glm('infected ~ age', ...)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：類別變項忘記 C。
+      比如 floor 是 1、2、3、4，忘記 C 就被當連續。
+      結果會跑出一個 beta 和 RR，而不是三個 dummy 的 beta。
+      意思完全不一樣：前者是「每上一層樓感染率多幾倍」，後者是「比 1 樓多幾倍」。
+      永遠自問一次：這個變項是連續嗎？不是就加 C。
+    animation: "show_blindspot_no_c"
+    error_code: "smf.glm('infected ~ floor', ...)"
+    correct_code: "smf.glm('infected ~ C(floor)', ...)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：+ 拿來算數值。
+      寫 age + age_squared，以為會算 age 的平方。
+      錯！statsmodels 會把這當「age 加上一個叫 age_squared 的欄位」。
+      正確做法是寫 I 括號 age 二次方，或者先在 DataFrame 裡新增欄位。
+      I 括號就是「把裡面當普通算式」的意思。
+    animation: "show_blindspot_plus_math"
+    error_code: "smf.glm('y ~ age + age**2', ...)"
+    correct_code: "smf.glm('y ~ age + I(age**2)', ...)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜！你已經破解 statsmodels 公式語法。
+      下一集我們把 Modified Poisson 跟 logit 一起跑 for loop，
+      一次看單變項 crude RR 和 crude OR 對照，
+      讓你一眼看穿「43% 侵襲率 OR 高估多少」。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

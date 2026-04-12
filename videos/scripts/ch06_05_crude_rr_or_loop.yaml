@@ -1,0 +1,151 @@
+meta:
+  chapter: "06"
+  concept: "crude_rr_or_loop"
+  title: "單變項 crude RR vs OR：for loop 一次比完"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch06_05_crude_rr_or_loop"
+  scene_class: "Ch06CrudeRrOrLoopScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      多變項分析第一步是什麼？先做「單變項篩選」——
+      每個變項單獨跑一次，看 crude RR 和 crude OR 各是多少。
+      這一集我們用 for loop 一次跑完十個候選變項，
+      而且同時跑 Modified Poisson 和 logistic，把兩個結果並排比較。
+      當你看到 OR 比 RR 大多少的時候，會對上一集講的 43% 高估有更深刻的體會。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_loop"
+    narration: >
+      為什麼要用 for loop？
+      因為流病研究至少有十幾個候選變項——年齡、性別、樓層、共病、暴露…
+      手動一個一個打會打到天亮。
+      一個 for loop 跑完、一張 DataFrame 收集，所有結果對齊好。
+      這就是 Python 取代 SAS SPSS 的優勢。
+    animation: "show_why_loop"
+    pause_after: 0.5
+
+  - id: "code_demo"
+    narration: >
+      看程式碼結構。
+      vars 裡放要跑的變項名稱 list。
+      for loop 裡面用 f-string 組公式：infected 波浪號 加上當前變項。
+      跑 Modified Poisson：family Poisson 加 HC0，取 exp 拿 RR。
+      跑 logistic：smf.logit，取 exp 拿 OR。
+      最後 append 到一個 list，再變成 DataFrame。
+    animation: "show_code_demo"
+    code: |
+      results = []
+      for var in ["shower_use", "age", "immunosuppressed",
+                  "comorbidity_chf", "C(floor)"]:
+          pois = smf.glm(f"infected ~ {var}", data=df,
+                         family=sm.families.Poisson()).fit(cov_type="HC0")
+          logit = smf.logit(f"infected ~ {var}", data=df).fit(disp=0)
+          results.append({
+              "var": var,
+              "crude_RR": np.exp(pois.params.iloc[1]),
+              "crude_OR": np.exp(logit.params.iloc[1]),
+          })
+      pd.DataFrame(results)
+    pause_after: 0.5
+
+  - id: "interpret_output"
+    narration: >
+      輸出是一張對照表。
+      shower_use：crude RR 3.2，crude OR 8.5。
+      RR 講的是「感染機率 3.2 倍」。
+      OR 是「感染勝算 8.5 倍」。
+      同一個暴露、同一份資料、結論完全不同。
+      這就是 43% 侵襲率下 OR 的高估實錄。
+      報告給長官看 3.2 才是「風險 3.2 倍」，不是 8.5。
+    animation: "show_interpret_output"
+    pause_after: 0.5
+
+  - id: "ci_pvalue"
+    narration: >
+      當然光看 RR 不夠，還要 95% CI 和 p 值。
+      CI 用 conf_int 整組取 exp。
+      p 值直接看 pvalues，不用 exp。
+      一個完整的 row 應該包括：變項、crude RR、95% CI、p 值、再來是 OR 對照。
+      這樣 Table 1 一次交出去。
+    animation: "show_ci_pvalue"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      四步驟收斂。
+      第一、列出候選變項清單。
+      第二、for loop 跑 Modified Poisson 拿 crude RR。
+      第三、同一個 loop 跑 logit 拿 crude OR 做對照。
+      第四、append 到 DataFrame，排版成 Table 1。
+      這就是 Ch06 的標配入門，下一集我們進入多變項 adjusted RR。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：COVID 長者住院風險！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid"
+    narration: >
+      COVID-19 住院風險研究，候選變項：年齡、慢性病、疫苗、BMI、抽菸。
+      for loop 跑完發現：
+      疫苗 crude RR 0.4、crude OR 0.35，都差不多——因為住院率只有 5%，OR 近似 RR。
+      但 65 歲以上 crude RR 4.5、crude OR 12——老人族群住院率高，OR 開始高估。
+      這個 pattern 告訴你：侵襲率高的族群最需要用 RR 報告，別用 OR。
+    animation: "show_extra_covid"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      三個 for loop 裡最常犯的坑！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：只跑 logit 不跑 Poisson。
+      大部分教科書 code 都只示範 logit。
+      你跑出來全是 OR，主管要 RR 你沒得交。
+      養成習慣：兩個都跑，雙保險。
+    animation: "show_blindspot_only_logit"
+    error_code: "for var in vars: smf.logit(f'y~{var}', df).fit()"
+    correct_code: "for var in vars: run_both_poisson_and_logit(var, df)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：for loop 裡忘記 HC0。
+      複製貼上常常漏掉 cov_type HC0。
+      結果跑出來是普通 Poisson，不是 Modified。
+      debug 的時候先看你的 fit 括號裡有沒有 HC0 這五個字。
+    animation: "show_blindspot_no_hc0_loop"
+    error_code: "smf.glm(...).fit()"
+    correct_code: "smf.glm(...).fit(cov_type='HC0')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：取 params iloc 0 當 RR。
+      params 的第 0 個是截距 intercept，第 1 個才是你要的變項。
+      取錯位置整張表全部爛掉。
+      iloc 1 要記得，或者用 params.loc 直接用變項名稱取。
+    animation: "show_blindspot_wrong_index"
+    error_code: "rr = np.exp(model.params.iloc[0])"
+    correct_code: "rr = np.exp(model.params.iloc[1])"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜！單變項篩選完成。
+      下一集進入真正的重頭戲：多變項 adjusted RR，
+      一個公式同時調整十個共變項，
+      一張漂亮的 Table 2 交給老闆。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
