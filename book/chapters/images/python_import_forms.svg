@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="480" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">import 三種寫法 —— 借工具箱的三種方式</text>
+  <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">每種寫法借來的「長相」不一樣 → 使用時要用對應的名字呼叫</text>
+
+  <!-- Form 1: import module -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="72" width="250" height="310" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="20" y="72" width="250" height="36" rx="10" fill="#6A9BCC" fill-opacity="0.15"/>
+  <text x="145" y="96" text-anchor="middle" font-size="13" font-weight="bold" fill="#6A9BCC">① import 整個工具箱</text>
+
+  <rect x="35" y="122" width="220" height="44" rx="4" fill="#2B2B2B"/>
+  <text x="45" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#6A9BCC">import</text>
+  <text x="95" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">statistics</text>
+  <text x="45" y="158" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">statistics.mean(ages)</text>
+
+  <text x="145" y="190" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">🧰 整箱搬回來</text>
+  <text x="35" y="212" font-size="10" fill="#6B6B6B">• 用的時候要加完整前綴</text>
+  <text x="35" y="228" font-size="10" fill="#6B6B6B">• 不會跟別的變數撞名</text>
+  <text x="35" y="244" font-size="10" fill="#6B6B6B">• 寫起來比較長</text>
+
+  <rect x="35" y="260" width="220" height="48" rx="4" fill="#F5F3EE"/>
+  <text x="45" y="278" font-size="10" fill="#1A1A1A" font-weight="bold">✅ 適合：</text>
+  <text x="45" y="294" font-size="10" fill="#6B6B6B">偶爾用、名字可能撞名</text>
+
+  <rect x="35" y="320" width="220" height="48" rx="4" fill="#FFF5F0"/>
+  <text x="45" y="338" font-size="10" fill="#D94452" font-weight="bold">⚠ 常見錯誤：</text>
+  <text x="45" y="354" font-size="10" fill="#6B6B6B">忘了加 statistics. 前綴</text>
+
+  <!-- Form 2: from ... import -->
+  <g filter="url(#shadow)">
+    <rect x="280" y="72" width="240" height="310" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="2"/>
+  </g>
+  <rect x="280" y="72" width="240" height="36" rx="10" fill="#788C5D" fill-opacity="0.15"/>
+  <text x="400" y="96" text-anchor="middle" font-size="13" font-weight="bold" fill="#788C5D">② 只借一個工具</text>
+
+  <rect x="295" y="122" width="210" height="44" rx="4" fill="#2B2B2B"/>
+  <text x="305" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#788C5D">from</text>
+  <text x="338" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">statistics</text>
+  <text x="410" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#788C5D">import</text>
+  <text x="458" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">mean</text>
+  <text x="305" y="158" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">mean(ages)</text>
+
+  <text x="400" y="190" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">🔧 只挑一個拿出來</text>
+  <text x="295" y="212" font-size="10" fill="#6B6B6B">• 呼叫時不用前綴</text>
+  <text x="295" y="228" font-size="10" fill="#6B6B6B">• 寫起來較短</text>
+  <text x="295" y="244" font-size="10" fill="#6B6B6B">• 可能跟別的變數撞名</text>
+
+  <rect x="295" y="260" width="210" height="48" rx="4" fill="#F5F3EE"/>
+  <text x="305" y="278" font-size="10" fill="#1A1A1A" font-weight="bold">✅ 適合：</text>
+  <text x="305" y="294" font-size="10" fill="#6B6B6B">只用 1~2 個工具，且名字不撞名</text>
+
+  <rect x="295" y="320" width="210" height="48" rx="4" fill="#FFF5F0"/>
+  <text x="305" y="338" font-size="10" fill="#D94452" font-weight="bold">⚠ 常見錯誤：</text>
+  <text x="305" y="354" font-size="10" fill="#6B6B6B">還加 statistics. 前綴 → NameError</text>
+
+  <!-- Form 3: import as alias -->
+  <g filter="url(#shadow)">
+    <rect x="530" y="72" width="250" height="310" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="530" y="72" width="250" height="36" rx="10" fill="#D97757" fill-opacity="0.15"/>
+  <text x="655" y="96" text-anchor="middle" font-size="13" font-weight="bold" fill="#D97757">③ 取別名 as（最常見）</text>
+
+  <rect x="545" y="122" width="220" height="44" rx="4" fill="#2B2B2B"/>
+  <text x="555" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">import</text>
+  <text x="603" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">pandas</text>
+  <text x="652" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">as</text>
+  <text x="672" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">pd</text>
+  <text x="555" y="158" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">pd.read_csv("...")</text>
+
+  <text x="655" y="190" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">🏷 工具箱貼上短標籤</text>
+  <text x="545" y="212" font-size="10" fill="#6B6B6B">• 縮寫 → 寫起來快</text>
+  <text x="545" y="228" font-size="10" fill="#6B6B6B">• 有前綴不怕撞名</text>
+  <text x="545" y="244" font-size="10" fill="#6B6B6B">• 社群約定：pd, np, plt, sns</text>
+
+  <rect x="545" y="260" width="220" height="48" rx="4" fill="#F5F3EE"/>
+  <text x="555" y="278" font-size="10" fill="#1A1A1A" font-weight="bold">✅ 適合：</text>
+  <text x="555" y="294" font-size="10" fill="#6B6B6B">大型套件、全章節都會用</text>
+
+  <rect x="545" y="320" width="220" height="48" rx="4" fill="#FFF5F0"/>
+  <text x="555" y="338" font-size="10" fill="#D94452" font-weight="bold">⚠ 常見錯誤：</text>
+  <text x="555" y="354" font-size="10" fill="#6B6B6B">自己亂取別名（不遵守社群慣例）</text>
+
+  <!-- Bottom: conventions table -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="400" width="740" height="65" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="50" y="424" font-size="12" font-weight="bold" fill="#1A1A1A">社群約定俗成的別名 Conventional aliases（請照用）</text>
+  <text x="50" y="446" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">pandas → pd</text>
+  <text x="190" y="446" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">numpy → np</text>
+  <text x="325" y="446" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">matplotlib.pyplot → plt</text>
+  <text x="540" y="446" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">seaborn → sns</text>
+  <text x="50" y="460" font-size="10" fill="#6B6B6B">💡 慣例：import 語句永遠放在檔案最上面，一眼就知道這份程式借了哪些工具</text>
+</svg>
