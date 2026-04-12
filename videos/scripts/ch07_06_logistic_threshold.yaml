@@ -1,0 +1,162 @@
+meta:
+  chapter: "07"
+  concept: "logistic_threshold"
+  title: "Logistic regression：明天會不會是高峰日？"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch07_06_logistic_threshold"
+  scene_class: "Ch07LogisticThresholdScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      換個角度想預測。
+      長官問的第二題：「明天會不會是高峰日，要不要啟動警報？」
+      這不是「幾人」的連續問題，是「要不要」的是/否問題。
+      這一集我們用 Logistic regression 搭配 lag features，
+      做二元預測——輸出是「明天超過警戒線的機率」。
+      這才是公衛警報系統真正要的輸出。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "continuous_vs_binary"
+    narration: >
+      連續 vs 二元的思維差異。
+      連續預測：「明天有 7.3 人發病」——但長官聽不懂 7.3。
+      二元預測：「明天超過警戒線的機率 72%」——長官立刻能決策。
+      行動派的決策者要的是「要不要啟動」，不是精確數字。
+      Logistic 的輸出正好是機率，配合門檻立刻變成 yes/no。
+    animation: "show_continuous_vs_binary"
+    pause_after: 0.5
+
+  - id: "define_threshold"
+    narration: >
+      怎麼定義「高峰日」？
+      常見做法：取過去資料的第 75 百分位當門檻。
+      意思：歷史上有 25% 的天數超過這個數字，
+      超過就算「比較忙」的日子。
+      實務上也可以用 Shewhart、CUSUM 等統計品管方法定門檻，
+      但 quantile 0.75 是簡單快速的起點。
+    animation: "show_define_threshold"
+    code: |
+      threshold = ts_model["cases"].quantile(0.75)
+      ts_model["high_day"] = (ts_model["cases"] > threshold).astype(int)
+      print(f"門檻（75th percentile）= {threshold:.0f} 人")
+    pause_after: 0.5
+
+  - id: "logit_code"
+    narration: >
+      Logistic 程式碼。
+      公式：high_day 波浪號 lag_1 加 lag_2。
+      只用前一兩天預測「明天會不會超過門檻」。
+      smf.logit、fit disp=0 關掉輸出雜訊。
+      predict 出來就是機率，大於 0.5 視為「預測高峰日」。
+    animation: "show_logit_code"
+    code: |
+      model = smf.logit(
+          "high_day ~ lag_1 + lag_2",
+          data=ts_model,
+      ).fit(disp=False)
+      prob = model.predict(ts_model)
+      pred_binary = (prob > 0.5).astype(int)
+      acc = (pred_binary == ts_model["high_day"]).mean()
+    pause_after: 0.5
+
+  - id: "evaluate_accuracy"
+    narration: >
+      二元預測用 accuracy 評估——預測對的比例。
+      但 accuracy 有陷阱：如果高峰日只佔 25%，你全部預測 0，accuracy 就 75%！
+      更嚴謹應該看 sensitivity、specificity、ROC 曲線。
+      初學者 accuracy 先打底，進階再上 AUC。
+    animation: "show_evaluate_accuracy"
+    pause_after: 0.5
+
+  - id: "action_threshold"
+    narration: >
+      機率大於 0.5 才啟動警報，太保守！
+      公衛的邏輯：「寧可多演練，不要漏警報」。
+      實務上通常把門檻降到 0.3 或 0.2——
+      機率 30% 就啟動應變層級。
+      代價：假警報變多。
+      但公衛系統的本質就是「高 sensitivity 換低 specificity」。
+      這是價值判斷，不是統計技術問題。
+    animation: "show_action_threshold"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Logistic 警報三件事。
+      一、定門檻（quantile 0.75 起跳）、造 high_day 二元欄。
+      二、logit 配 lag_1、lag_2 預測。
+      三、機率門檻 0.2-0.5 視風險胃納決定。
+      這比「預測幾人」更貼近決策實務。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：流感季前警報系統！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_flu_alert"
+    narration: >
+      CDC 每年流感季都有「閾值警報系統」。
+      把過去 5 年同一週的類流感通報率算出基準，
+      當週高於 baseline 兩倍 SD 就警報。
+      這是樸素版，沒用 logistic。
+      現代版用 Logistic regression 加入氣溫、學校是否開學、
+      上週通報量等 lag 特徵，機率門檻 0.3。
+      結果：2018 年南韓流感早期偵測提前 2 週，救了很多老人。
+      這就是 Logistic threshold 模型的實戰價值。
+    animation: "show_extra_flu_alert"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Logistic threshold 三大盲點！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：只看 accuracy 不看 sensitivity。
+      警報系統漏掉真高峰（low sensitivity）是最嚴重的錯。
+      Accuracy 80% 聽起來不錯，但如果所有真高峰你都漏掉呢？
+      公衛場景永遠先問：「我的漏警率是多少？」
+    animation: "show_blindspot_only_accuracy"
+    error_code: "print(f'accuracy = {acc:.2f}')"
+    correct_code: "print(f'sensitivity = {tp/(tp+fn):.2f}')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：機率門檻永遠用 0.5。
+      0.5 是數學預設，不是公衛預設。
+      公衛警報通常調低到 0.2-0.3。
+      寧可多演練，不要漏警報。
+      門檻要跟風險管理、成本效益一起討論，不是 copy paste。
+    animation: "show_blindspot_default_threshold"
+    error_code: "pred = (prob > 0.5).astype(int)"
+    correct_code: "pred = (prob > 0.3).astype(int)  # public health"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：門檻用整份資料的 quantile 計算。
+      這等於用未來資料定義過去的「高峰」——data leakage。
+      正確：用訓練集前半段的 quantile，測試集套用。
+      時間序列的門檻、標準化，都要小心這個陷阱。
+    animation: "show_blindspot_leaky_threshold"
+    error_code: "threshold = ts_model['cases'].quantile(0.75)"
+    correct_code: "threshold = train_cases.quantile(0.75)  # train only"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Part A 短期 outbreak 預測完結！
+      下一集 Part B 升級到長期監測，
+      挑戰時間序列的最經典武器：ARIMA 和 SARIMA。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

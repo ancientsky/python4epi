@@ -1,0 +1,147 @@
+meta:
+  chapter: "07"
+  concept: "rolling_baseline"
+  title: "Rolling mean baseline 與 shift(1) 救命符"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch07_02_rolling_baseline"
+  scene_class: "Ch07RollingBaselineScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      預測第一步永遠從最笨的方法開始——rolling mean 滾動平均。
+      為什麼笨？因為它只是「過去幾天的平均」，連公式都不用想。
+      但這個笨方法是所有複雜模型的 baseline——
+      如果你花一週訓練 SARIMA 結果 MAE 還比 rolling mean 差，
+      那就是白做功。這一集我們把 rolling mean 的細節講透。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "rolling_concept"
+    narration: >
+      rolling mean 概念超直覺。
+      window 等於 7 就是「過去 7 天的平均」。
+      每往前走一天，window 跟著滑，像一個會移動的平均視窗。
+      pandas 一行：daily.rolling(window=7).mean()。
+      輸出就是每天對應的過去 7 天平均。
+    animation: "show_rolling_concept"
+    pause_after: 0.5
+
+  - id: "why_shift"
+    narration: >
+      但這裡有個超大陷阱：data leakage 資料洩漏。
+      rolling(7).mean() 的結果在第 t 天包含「第 t 天自己」的值。
+      你用包含今天的平均來預測今天？那根本不是預測，是作弊。
+      解法：加一個 shift(1)，把結果整欄往後推一格。
+      這樣第 t 天的預測，就只用到前 7 天（不含今天）的值。
+      這一個 shift(1)，就是時間序列預測的救命符。
+    animation: "show_why_shift"
+    code: |
+      # 錯誤：用到今天預測今天
+      pred = daily.rolling(7).mean()
+
+      # 正確：shift(1) 讓「昨天之前」預測「今天」
+      pred = daily.rolling(7).mean().shift(1)
+    pause_after: 0.5
+
+  - id: "window_selection"
+    narration: >
+      window 要選多大？
+      太小（window 2）= 跟著每日噪音跳動、預測不穩。
+      太大（window 14）= 反應太慢、遇到轉折會慢半拍。
+      實務做法：for loop 跑 window 3、5、7、10，比較 MAE。
+      選 MAE 最小的 window。
+      Ch07 的資料上，window 3 通常最佳。
+    animation: "show_window_selection"
+    code: |
+      for w in [3, 5, 7, 10]:
+          pred = daily.rolling(w).mean().shift(1).dropna()
+          actual = daily.loc[pred.index]
+          mae = mean_absolute_error(actual, pred)
+          print(f"window={w}: MAE={mae:.3f}")
+    pause_after: 0.5
+
+  - id: "pros_cons"
+    narration: >
+      Rolling mean 優缺點。
+      優點三個：簡單、第一天就能用、完全不用假設資料分布。
+      缺點三個：不會預測轉折、沒有信賴區間、無法放其他變項（如樓層、星期幾）。
+      所以它當 baseline 剛剛好，但真要做好預測，就要升級到 Poisson、ARIMA 這些。
+    animation: "show_pros_cons"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點三條。
+      一、rolling window mean 就是「過去幾天平均」。
+      二、一定要加 shift(1)，否則是作弊預測。
+      三、window 用 MAE for loop 挑最佳。
+      這是 Ch07 所有模型的 baseline 起點。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：Google Flu Trends 曾經犯過的錯！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_gft"
+    narration: >
+      Google Flu Trends 曾經紅極一時。
+      2013 年卻出大糗，預測流感峰值高估了兩倍。
+      原因之一就是模型在訓練時吃到了「未來資料」——data leakage。
+      後來 Science 期刊檢討指出：
+      時間序列的驗證必須嚴格用「過去資料」預測「未來」，
+      絕對不能用未來資料去「校正」過去。
+      shift(1) 在統計教科書是小事，在 Google 卻是經典教訓。
+    animation: "show_extra_gft"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      rolling mean 三大盲點！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：忘記 shift(1)。
+      MAE 看起來漂亮得不像話，0.1 0.2。
+      上線後完全崩，因為實務沒有「今天的資料」可以用。
+      養成習慣：只要要做預測，永遠 shift(1)。
+    animation: "show_blindspot_no_shift"
+    error_code: "pred = daily.rolling(7).mean()"
+    correct_code: "pred = daily.rolling(7).mean().shift(1)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：直接報 MAE 不比 baseline。
+      「我的模型 MAE 1.8，還不錯吧？」
+      如果 rolling mean 的 MAE 1.5 呢？那你訓練半天反而更差。
+      永遠要有 baseline 對照，才能說你的模型有進步。
+    animation: "show_blindspot_no_baseline"
+    error_code: "print(f'my model MAE = {mae:.2f}')"
+    correct_code: "print(f'my MAE={mae:.2f} vs baseline {mae_roll:.2f}')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：min_periods=1 讓 window 漸進成型。
+      這樣前 6 天會用越來越少的平均，數字意義不一致。
+      純預測評估應該 dropna 掉前 w 天，不要硬湊早期資料。
+      視覺化可以用 min_periods=1（好看），評估 MAE 要 dropna（乾淨）。
+    animation: "show_blindspot_min_periods"
+    error_code: "daily.rolling(7, min_periods=1).mean()  # for MAE"
+    correct_code: "daily.rolling(7).mean().shift(1).dropna()  # for MAE"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      下一集我們把時間序列變成迴歸模型能吃的表格——
+      這招叫 lag features，是把 ARIMA 的邏輯搬到 regression 的橋樑。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

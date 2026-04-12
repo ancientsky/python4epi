@@ -1,0 +1,154 @@
+meta:
+  chapter: "07"
+  concept: "negative_binomial"
+  title: "Negative Binomial：過度離散的救星"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch07_05_negative_binomial"
+  scene_class: "Ch07NegativeBinomialScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Poisson 有個致命假設：variance 等於 mean。
+      但疫調資料不乖——一旦有群聚感染，變異會爆炸式增長，
+      遠大於平均值。這叫過度離散 overdispersion。
+      這一集我們學習 Poisson 的「升級版」——Negative Binomial，
+      多一個參數 alpha 專門吸收「多出來的」變異。
+      看完你就知道什麼時候該升級。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "dispersion_explained"
+    narration: >
+      過度離散白話版。
+      Poisson 假設資料「穩定地散開」——平均 5 人，變異也 5。
+      但現實：今天 2 人、明天 0 人、後天突然 15 人——變異可能 30！
+      variance 遠大於 mean 就是過度離散。
+      原因：群聚感染、outbreak、通報延遲……公衛資料天生就會過度離散。
+    animation: "show_dispersion_explained"
+    pause_after: 0.5
+
+  - id: "check_dispersion"
+    narration: >
+      先檢查 dispersion ratio 再決定用哪個模型。
+      dispersion 等於 variance 除以 mean。
+      小於 1.5：用 Poisson 沒問題。
+      大於 1.5：過度離散，要升級 Negative Binomial。
+      大於 3：很嚴重，可能還要考慮 zero-inflated 或 hurdle models。
+      這 1.5 是經驗值，不是神聖數字。
+    animation: "show_check_dispersion"
+    code: |
+      disp = ts_model["cases"].var() / ts_model["cases"].mean()
+      print(f"dispersion = {disp:.2f}")
+      # >1.5 → Negative Binomial
+    pause_after: 0.5
+
+  - id: "nb_code"
+    narration: >
+      Negative Binomial 程式碼跟 Poisson 長得很像。
+      公式完全一樣：cases 波浪 lag_1 加 lag_2 加 day_idx。
+      family 從 Poisson 換成 NegativeBinomial，傳一個 alpha 參數。
+      alpha 就是「吸收多餘變異」的旋鈕。
+      預設 1.0 當作起點，之後可以用 model.fit() 的估計值調整。
+    animation: "show_nb_code"
+    code: |
+      model_nb = smf.glm(
+          "cases ~ lag_1 + lag_2 + day_idx",
+          data=ts_model,
+          family=sm.families.NegativeBinomial(alpha=1.0),
+      ).fit()
+      pred_nb = model_nb.predict(ts_model)
+      mae_nb = mean_absolute_error(ts_model["cases"], pred_nb)
+    pause_after: 0.5
+
+  - id: "compare_mae_aic"
+    narration: >
+      比較 Poisson 和 NB 的方法。
+      一、MAE：看點估計準不準。
+      二、AIC：看整體 fit，越小越好。
+      三、CI 寬度：NB 的 CI 通常比 Poisson 寬——因為它誠實承認不確定性大。
+      如果你的 NB AIC 比 Poisson 低很多（差超過 10），
+      一定要換 NB。
+    animation: "show_compare_mae_aic"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三步驟黃金流程。
+      一、算 dispersion 等於 variance 除以 mean。
+      二、大於 1.5 → 用 NegativeBinomial family。
+      三、比 AIC 決定最終採用哪個。
+      一句話：別偷懶預設 Poisson，每次都先看 dispersion。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：登革熱每週通報！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue"
+    narration: >
+      台灣登革熱每週通報是典型過度離散資料。
+      某些里可能連續 10 週 0 例，突然某週爆 30 例。
+      variance 可以高達 mean 的 10 倍！
+      早年 CDC 用 Poisson 預測警戒線，結果 CI 太窄，
+      假警報頻繁、值班人員疲勞。
+      後來改用 Negative Binomial，CI 合理放寬，
+      假警報降低 60%、真警報同樣抓得到。
+      這就是過度離散對公衛系統的真實意義。
+    animation: "show_extra_dengue"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      NB 三大盲點！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：預設用 Poisson 不檢查。
+      不檢查 dispersion 就用 Poisson，CI 太窄看起來超顯著。
+      審稿人一眼看穿你沒做過度離散檢查。
+      一行 variance 除以 mean，幾秒鐘就搞定。
+    animation: "show_blindspot_no_check"
+    error_code: "smf.glm(..., family=Poisson()).fit()"
+    correct_code: "if var/mean > 1.5: family=NegativeBinomial()"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：alpha 亂設 0.01 或 100。
+      alpha 太小幾乎等於 Poisson，失去升級意義。
+      alpha 太大會讓 fit 崩壞。
+      保守做法：從 alpha 1.0 起跳，用 AIC 調整。
+      或者用 dispersion 估計：alpha 約等於 dispersion 減 1。
+    animation: "show_blindspot_wrong_alpha"
+    error_code: "NegativeBinomial(alpha=0.01)"
+    correct_code: "NegativeBinomial(alpha=1.0)  # or estimated"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：NB 還是不夠，資料零太多。
+      如果資料有大量 0（比如 70% 天都是 0），
+      連 NB 也預測不準。
+      這時候要升級到 zero-inflated 或 hurdle models。
+      白話：「先預測今天有沒有；有的話再預測幾人」。
+      學有餘力再碰。
+    animation: "show_blindspot_zero_inflated"
+    error_code: "NegativeBinomial()  # 70% zeros"
+    correct_code: "sm.ZeroInflatedNegativeBinomialP()  # advanced"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      連續數字預測告一段落！
+      下一集換個問題：不預測「幾人」，而是預測「明天是不是高峰日」——
+      是/否的警報訊號。這是 Logistic regression 的舞台。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

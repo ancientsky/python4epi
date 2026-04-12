@@ -1,0 +1,193 @@
+meta:
+  chapter: "07"
+  concept: "arima_sarima"
+  title: "ARIMA vs SARIMA：經典武器 + 週期性捕捉"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch07_07_arima_sarima"
+  scene_class: "Ch07ArimaSarimaScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      這一集挑戰 Ch07 的最終武器：ARIMA 和它的升級版 SARIMA。
+      ARIMA 是時間序列分析的經典，被使用超過 50 年。
+      名字很嚇人，但拆開看就是三個英文字母：AR、I、MA。
+      SARIMA 就是再加一組「季節性」參數。
+      看完這集你會覺得：「原來不過如此」。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "three_letters"
+    narration: >
+      ARIMA 三個字母。
+      AR 是 AutoRegressive，自迴歸——「看過去 p 天的自己」。
+      I 是 Integrated，差分——「做 d 次差分讓序列平穩」。
+      MA 是 Moving Average，移動平均——但不是滾動平均！
+      是「看過去 q 次的預測誤差」來修正預測。
+      ARIMA(p, d, q) 就是這三個旋鈕的組合。
+    animation: "show_three_letters"
+    pause_after: 0.5
+
+  - id: "why_not_outbreak"
+    narration: >
+      為什麼護理之家 17 天不用 ARIMA？
+      ARIMA 需要至少 30 天，SARIMA 至少要 2 個完整週期（14 天以上）。
+      17 天的 outbreak 硬套 ARIMA 會過度配適，預測飛。
+      這一集我們改用合成 90 天的「類流感每日通報」資料，
+      才能公平示範 ARIMA 和 SARIMA 的威力。
+      短序列請回去用 rolling mean 或 Poisson。
+    animation: "show_why_not_outbreak"
+    pause_after: 0.5
+
+  - id: "synth_data"
+    narration: >
+      合成資料四部曲。
+      trend：每天平均從 3 慢慢升到 7。
+      seasonal：每 7 天正弦波動 ±3。
+      noise：random normal 0 平均、SD 1.2。
+      三個加總、取整、負數歸零 → 90 天序列。
+      這是學習 SARIMA 的完美教材——
+      有趨勢、有週期、有噪音，三樣齊全。
+    animation: "show_synth_data"
+    code: |
+      rng = np.random.default_rng(42)
+      n_days = 90
+      trend = np.linspace(3, 7, n_days)
+      seasonal = 3 * np.sin(2 * np.pi * np.arange(n_days) / 7)
+      noise = rng.normal(0, 1.2, n_days)
+      synth = np.maximum(0, (trend + seasonal + noise).round()).astype(int)
+    pause_after: 0.5
+
+  - id: "adf_test"
+    narration: >
+      ARIMA 前必做：ADF 平穩性檢定。
+      Augmented Dickey-Fuller test。
+      H0：序列不平穩（有單位根）。
+      p < 0.05 拒絕 H0 → 平穩，d = 0 可以用。
+      p > 0.05 → 不平穩，做一次差分（d = 1）再檢。
+      python 一行：adfuller(series)。
+    animation: "show_adf_test"
+    code: |
+      from statsmodels.tsa.stattools import adfuller
+      adf_stat, p_value, *_ = adfuller(synth)
+      print(f"ADF p-value = {p_value:.3f}")
+      # p < 0.05 → stationary, d can be 0
+    pause_after: 0.5
+
+  - id: "arima_fit"
+    narration: >
+      ARIMA 程式碼一行。
+      ARIMA(train, order=(1, 1, 1)).fit()。
+      (p=1, d=1, q=1) 是起手式，適合多數資料。
+      forecast steps=7 預測未來 7 天。
+      切記：訓練集/測試集要切好，用最後 7 天評估。
+    animation: "show_arima_fit"
+    code: |
+      from statsmodels.tsa.arima.model import ARIMA
+      train, test = synth.iloc[:-7], synth.iloc[-7:]
+      model = ARIMA(train, order=(1, 1, 1)).fit()
+      forecast = model.forecast(steps=7)
+      mae_arima = mean_absolute_error(test.values, forecast.values)
+    pause_after: 0.5
+
+  - id: "sarima_fit"
+    narration: >
+      SARIMA 比 ARIMA 多一組 seasonal_order。
+      (P, D, Q, s)：季節版的 AR、I、MA 加週期長度 s。
+      s = 7 就是週期 7 天。
+      月度資料 s = 12（每年 12 個月）、季度 s = 4。
+      用 SARIMAX 類別擬合，fit disp=False 關掉訓練過程雜訊。
+    animation: "show_sarima_fit"
+    code: |
+      from statsmodels.tsa.statespace.sarimax import SARIMAX
+      model = SARIMAX(
+          train,
+          order=(1, 1, 1),
+          seasonal_order=(1, 1, 1, 7),
+      ).fit(disp=False)
+      forecast = model.forecast(steps=7)
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      ARIMA/SARIMA 完整 SOP。
+      一、資料夠長（30+ 天）。
+      二、跑 ADF 看要不要差分。
+      三、ARIMA(1,1,1) 起手，不行再調。
+      四、有明顯週期 → 升級 SARIMA，加 seasonal_order。
+      五、切 train/test 算 MAE。
+      有這五步就足以應付大部分監測預測。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：Box-Jenkins 方法論 1970！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_bj"
+    narration: >
+      ARIMA 的完整稱呼：Box-Jenkins ARIMA。
+      1970 年 George Box 和 Gwilym Jenkins 的經典著作
+      《Time Series Analysis》系統化這套方法。
+      50 多年過去，金融、氣象、公衛都還在用。
+      2009 年 H1N1 大流行期間，美國 CDC 用 ARIMA 模型
+      提前 3 週預測就醫率的高峰時間，
+      幫助疫苗配送、醫護排班。
+      這就是數學方法論在公衛史上的經典時刻。
+    animation: "show_extra_bj"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      ARIMA/SARIMA 三大地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：資料太短硬上 ARIMA。
+      17 天的 outbreak 跑 SARIMA，參數比樣本多。
+      結果：MAE 看起來超好（過度配適），上線立刻崩。
+      SOP：資料少 30 天就別碰 ARIMA，用 Poisson + lag 就好。
+    animation: "show_blindspot_short_data"
+    error_code: "ARIMA(daily_17days, order=(2,1,2)).fit()"
+    correct_code: "# for <30 days, use Poisson+lag or rolling mean"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：SARIMA 無腦開季節性。
+      沒有明顯週期的資料強加 seasonal_order，
+      參數多、CI 炸、預測不穩。
+      先檢查 ACF 圖是否在 s 倍數出現峰值，有才用 SARIMA。
+      Ch07 的 outbreak 資料沒週期 → SARIMA 就是浪費。
+    animation: "show_blindspot_force_sarima"
+    error_code: "SARIMAX(series, seasonal_order=(1,1,1,7))"
+    correct_code: "# check ACF peaks first; use ARIMA if no seasonality"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：p、d、q 亂猜。
+      「ARIMA(5, 3, 5) 一定比 (1, 1, 1) 好吧？」
+      錯！階數高代表參數多，容易過度配適。
+      正解：看 ACF、PACF 圖選初始值，
+      或者用 pmdarima 的 auto_arima 自動選。
+      別隨手敲大數字。
+    animation: "show_blindspot_random_order"
+    error_code: "ARIMA(train, order=(5, 3, 5))"
+    correct_code: "auto_arima(train, seasonal=False).fit()"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      六個模型全部登場！
+      下一集也是 Ch07 最後一集，
+      我們把六個模型擺上擂台大比拼，
+      一張表看出誰是王者、誰適合什麼情境。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
