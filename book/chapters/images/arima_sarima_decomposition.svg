@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="540" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">ARIMA / SARIMA 拆解 —— 三個字母 + 一個季節</text>
+  <text x="400" y="52" text-anchor="middle" font-size="12" fill="#6B6B6B">把時間序列想成「趨勢 + 週期 + 隨機」三層 → ARIMA 只管趨勢；SARIMA 多管週期</text>
+
+  <!-- Top card: decomposition -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="72" width="740" height="180" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="50" y="94" font-size="13" font-weight="bold" fill="#1A1A1A">時間序列分解 Decomposition：任何序列都可拆成三層</text>
+
+  <!-- Raw series -->
+  <text x="50" y="118" font-size="11" font-weight="bold" fill="#1A1A1A">原始 Raw</text>
+  <polyline points="130,130 150,122 170,134 190,115 210,128 230,110 250,125 270,108 290,120 310,102 330,118 350,100 370,112 390,95 410,108 430,92 450,105 470,88 490,100 510,85 530,98 550,82 570,95 590,78 610,92 630,75 650,88 670,72" fill="none" stroke="#1A1A1A" stroke-width="1.5"/>
+  <line x1="125" y1="140" x2="680" y2="140" stroke="#E8E5DF" stroke-width="0.5"/>
+
+  <!-- Trend -->
+  <text x="50" y="168" font-size="11" font-weight="bold" fill="#D97757">趨勢 Trend</text>
+  <line x1="130" y1="175" x2="670" y2="150" stroke="#D97757" stroke-width="2"/>
+  <text x="690" y="168" font-size="10" fill="#6B6B6B">↗ 長期方向</text>
+
+  <!-- Seasonal -->
+  <text x="50" y="200" font-size="11" font-weight="bold" fill="#6A9BCC">週期 Seasonal</text>
+  <path d="M 130 200 Q 150 190, 170 200 T 210 200 T 250 200 T 290 200 T 330 200 T 370 200 T 410 200 T 450 200 T 490 200 T 530 200 T 570 200 T 610 200 T 650 200 T 670 200" fill="none" stroke="#6A9BCC" stroke-width="1.5"/>
+  <text x="690" y="203" font-size="10" fill="#6B6B6B">～ 重複的週</text>
+
+  <!-- Residual -->
+  <text x="50" y="232" font-size="11" font-weight="bold" fill="#788C5D">殘差 Residual</text>
+  <g stroke="#788C5D" stroke-width="1" fill="none">
+    <line x1="135" y1="232" x2="135" y2="228"/>
+    <line x1="145" y1="232" x2="145" y2="236"/>
+    <line x1="155" y1="232" x2="155" y2="225"/>
+    <line x1="165" y1="232" x2="165" y2="238"/>
+    <line x1="175" y1="232" x2="175" y2="230"/>
+    <line x1="185" y1="232" x2="185" y2="234"/>
+    <line x1="195" y1="232" x2="195" y2="226"/>
+    <line x1="205" y1="232" x2="205" y2="236"/>
+    <line x1="215" y1="232" x2="215" y2="228"/>
+    <line x1="225" y1="232" x2="225" y2="235"/>
+    <line x1="235" y1="232" x2="235" y2="227"/>
+    <line x1="245" y1="232" x2="245" y2="237"/>
+    <line x1="255" y1="232" x2="255" y2="229"/>
+    <line x1="265" y1="232" x2="265" y2="235"/>
+    <line x1="275" y1="232" x2="275" y2="226"/>
+    <line x1="285" y1="232" x2="285" y2="236"/>
+    <line x1="295" y1="232" x2="295" y2="230"/>
+    <line x1="305" y1="232" x2="305" y2="234"/>
+    <line x1="315" y1="232" x2="315" y2="228"/>
+    <line x1="325" y1="232" x2="325" y2="237"/>
+    <line x1="335" y1="232" x2="335" y2="227"/>
+    <line x1="345" y1="232" x2="345" y2="236"/>
+    <line x1="355" y1="232" x2="355" y2="229"/>
+    <line x1="365" y1="232" x2="365" y2="235"/>
+    <line x1="375" y1="232" x2="375" y2="226"/>
+    <line x1="385" y1="232" x2="385" y2="237"/>
+    <line x1="395" y1="232" x2="395" y2="230"/>
+    <line x1="405" y1="232" x2="405" y2="234"/>
+    <line x1="415" y1="232" x2="415" y2="228"/>
+    <line x1="425" y1="232" x2="425" y2="236"/>
+    <line x1="435" y1="232" x2="435" y2="227"/>
+    <line x1="445" y1="232" x2="445" y2="235"/>
+    <line x1="455" y1="232" x2="455" y2="230"/>
+    <line x1="465" y1="232" x2="465" y2="236"/>
+    <line x1="475" y1="232" x2="475" y2="228"/>
+    <line x1="485" y1="232" x2="485" y2="237"/>
+    <line x1="495" y1="232" x2="495" y2="229"/>
+    <line x1="505" y1="232" x2="505" y2="234"/>
+    <line x1="515" y1="232" x2="515" y2="227"/>
+    <line x1="525" y1="232" x2="525" y2="236"/>
+    <line x1="535" y1="232" x2="535" y2="230"/>
+    <line x1="545" y1="232" x2="545" y2="235"/>
+    <line x1="555" y1="232" x2="555" y2="226"/>
+    <line x1="565" y1="232" x2="565" y2="237"/>
+    <line x1="575" y1="232" x2="575" y2="228"/>
+    <line x1="585" y1="232" x2="585" y2="236"/>
+    <line x1="595" y1="232" x2="595" y2="230"/>
+    <line x1="605" y1="232" x2="605" y2="234"/>
+    <line x1="615" y1="232" x2="615" y2="227"/>
+    <line x1="625" y1="232" x2="625" y2="235"/>
+    <line x1="635" y1="232" x2="635" y2="229"/>
+    <line x1="645" y1="232" x2="645" y2="236"/>
+    <line x1="655" y1="232" x2="655" y2="228"/>
+    <line x1="665" y1="232" x2="665" y2="235"/>
+  </g>
+  <text x="690" y="235" font-size="10" fill="#6B6B6B">⚡ 隨機噪音</text>
+
+  <!-- ARIMA breakdown -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="268" width="365" height="245" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="30" y="268" width="365" height="36" rx="10" fill="#6A9BCC" fill-opacity="0.15"/>
+  <text x="212" y="292" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A9BCC">ARIMA (p, d, q)</text>
+
+  <!-- AR block -->
+  <rect x="50" y="320" width="100" height="75" rx="6" fill="#6A9BCC" fill-opacity="0.12" stroke="#6A9BCC" stroke-width="1.5"/>
+  <text x="100" y="340" text-anchor="middle" font-size="13" font-weight="bold" fill="#6A9BCC">AR(p)</text>
+  <text x="100" y="358" text-anchor="middle" font-size="10" fill="#1A1A1A">自迴歸</text>
+  <text x="100" y="373" text-anchor="middle" font-size="9" fill="#6B6B6B">看過去 p 天</text>
+  <text x="100" y="386" text-anchor="middle" font-size="9" fill="#6B6B6B">的自己</text>
+
+  <text x="162" y="363" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">+</text>
+
+  <!-- I block -->
+  <rect x="175" y="320" width="100" height="75" rx="6" fill="#D97757" fill-opacity="0.12" stroke="#D97757" stroke-width="1.5"/>
+  <text x="225" y="340" text-anchor="middle" font-size="13" font-weight="bold" fill="#D97757">I(d)</text>
+  <text x="225" y="358" text-anchor="middle" font-size="10" fill="#1A1A1A">差分</text>
+  <text x="225" y="373" text-anchor="middle" font-size="9" fill="#6B6B6B">抓「變化量」</text>
+  <text x="225" y="386" text-anchor="middle" font-size="9" fill="#6B6B6B">讓序列平穩</text>
+
+  <text x="287" y="363" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">+</text>
+
+  <!-- MA block -->
+  <rect x="300" y="320" width="75" height="75" rx="6" fill="#788C5D" fill-opacity="0.12" stroke="#788C5D" stroke-width="1.5"/>
+  <text x="337" y="340" text-anchor="middle" font-size="13" font-weight="bold" fill="#788C5D">MA(q)</text>
+  <text x="337" y="358" text-anchor="middle" font-size="10" fill="#1A1A1A">移動平均</text>
+  <text x="337" y="373" text-anchor="middle" font-size="9" fill="#6B6B6B">看過去 q 次</text>
+  <text x="337" y="386" text-anchor="middle" font-size="9" fill="#6B6B6B">的預測誤差</text>
+
+  <rect x="50" y="410" width="325" height="85" rx="6" fill="#F5F3EE"/>
+  <text x="212" y="428" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">範例：ARIMA(1, 1, 1)</text>
+  <text x="65" y="447" font-size="10" fill="#6B6B6B">• p=1：用昨天預測今天</text>
+  <text x="65" y="463" font-size="10" fill="#6B6B6B">• d=1：對序列做一次差分</text>
+  <text x="65" y="479" font-size="10" fill="#6B6B6B">• q=1：考慮昨天的預測誤差</text>
+
+  <!-- SARIMA breakdown -->
+  <g filter="url(#shadow)">
+    <rect x="405" y="268" width="365" height="245" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="405" y="268" width="365" height="36" rx="10" fill="#D97757" fill-opacity="0.15"/>
+  <text x="587" y="292" text-anchor="middle" font-size="14" font-weight="bold" fill="#D97757">SARIMA (p,d,q) × (P,D,Q,s)</text>
+
+  <!-- ARIMA part -->
+  <rect x="425" y="320" width="155" height="75" rx="6" fill="#6A9BCC" fill-opacity="0.08" stroke="#6A9BCC" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <text x="502" y="340" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">ARIMA(p, d, q)</text>
+  <text x="502" y="358" text-anchor="middle" font-size="10" fill="#1A1A1A">同上 — 抓非季節部分</text>
+  <text x="502" y="376" text-anchor="middle" font-size="9" fill="#6B6B6B">趨勢 + 短期自相關</text>
+  <text x="502" y="390" text-anchor="middle" font-size="9" fill="#6B6B6B">（趨勢 + 變化 + 誤差）</text>
+
+  <text x="592" y="363" text-anchor="middle" font-size="20" font-weight="bold" fill="#D97757">×</text>
+
+  <!-- Seasonal part -->
+  <rect x="605" y="320" width="145" height="75" rx="6" fill="#D97757" fill-opacity="0.15" stroke="#D97757" stroke-width="2"/>
+  <text x="677" y="340" text-anchor="middle" font-size="12" font-weight="bold" fill="#D97757">(P, D, Q, s)</text>
+  <text x="677" y="358" text-anchor="middle" font-size="10" fill="#1A1A1A">季節部分 Seasonal</text>
+  <text x="677" y="375" text-anchor="middle" font-size="9" fill="#6B6B6B">s=7 → 週循環</text>
+  <text x="677" y="388" text-anchor="middle" font-size="9" fill="#6B6B6B">s=12 → 月循環</text>
+
+  <rect x="425" y="410" width="325" height="85" rx="6" fill="#F5F3EE"/>
+  <text x="587" y="428" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">範例：SARIMA(1,1,1)(1,1,1,7)</text>
+  <text x="440" y="447" font-size="10" fill="#6B6B6B">• 前三個：短期趨勢（同 ARIMA）</text>
+  <text x="440" y="463" font-size="10" fill="#6B6B6B">• 後三個：7 天週期上的 AR/I/MA</text>
+  <text x="440" y="479" font-size="10" fill="#D97757" font-weight="bold">• s=7 → 明確抓「每週循環」</text>
+
+  <!-- Bottom hint -->
+  <text x="400" y="528" text-anchor="middle" font-size="11" fill="#6B6B6B">關鍵：有明顯<tspan fill="#D97757" font-weight="bold">週/月/季節</tspan>循環 → 用 SARIMA；只有趨勢沒循環 → ARIMA 即可</text>
+</svg>

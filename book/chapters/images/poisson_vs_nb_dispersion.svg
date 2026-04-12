@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="480" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">Poisson vs. Negative Binomial —— 過度離散怎麼辦？</text>
+  <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">當資料的變異 (variance) 比平均 (mean) 大很多 → 用 NB 取代 Poisson</text>
+
+  <!-- LEFT: Poisson -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="72" width="365" height="290" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="30" y="72" width="365" height="36" rx="10" fill="#6A9BCC" fill-opacity="0.15"/>
+  <text x="212" y="96" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A9BCC">Poisson Distribution</text>
+
+  <!-- Poisson histogram: narrower -->
+  <g transform="translate(60, 130)">
+    <!-- bars for Poisson(10) -->
+    <rect x="0" y="180" width="22" height="10" fill="#6A9BCC" opacity="0.8"/>
+    <rect x="24" y="165" width="22" height="25" fill="#6A9BCC" opacity="0.8"/>
+    <rect x="48" y="135" width="22" height="55" fill="#6A9BCC" opacity="0.8"/>
+    <rect x="72" y="95" width="22" height="95" fill="#6A9BCC" opacity="0.8"/>
+    <rect x="96" y="60" width="22" height="130" fill="#6A9BCC" opacity="0.8"/>
+    <rect x="120" y="40" width="22" height="150" fill="#6A9BCC" opacity="0.8"/>
+    <rect x="144" y="50" width="22" height="140" fill="#6A9BCC" opacity="0.8"/>
+    <rect x="168" y="75" width="22" height="115" fill="#6A9BCC" opacity="0.8"/>
+    <rect x="192" y="115" width="22" height="75" fill="#6A9BCC" opacity="0.8"/>
+    <rect x="216" y="155" width="22" height="35" fill="#6A9BCC" opacity="0.8"/>
+    <rect x="240" y="175" width="22" height="15" fill="#6A9BCC" opacity="0.8"/>
+    <rect x="264" y="185" width="22" height="5" fill="#6A9BCC" opacity="0.8"/>
+
+    <!-- mean line -->
+    <line x1="130" y1="30" x2="130" y2="195" stroke="#D97757" stroke-width="2" stroke-dasharray="5,3"/>
+    <text x="130" y="24" text-anchor="middle" font-size="10" fill="#D97757" font-weight="bold">mean=10</text>
+
+    <!-- variance spread markers -->
+    <line x1="80" y1="200" x2="180" y2="200" stroke="#788C5D" stroke-width="2"/>
+    <line x1="80" y1="196" x2="80" y2="204" stroke="#788C5D" stroke-width="2"/>
+    <line x1="180" y1="196" x2="180" y2="204" stroke="#788C5D" stroke-width="2"/>
+    <text x="130" y="218" text-anchor="middle" font-size="10" fill="#788C5D" font-weight="bold">var=10 (≈ mean)</text>
+
+    <line x1="0" y1="195" x2="290" y2="195" stroke="#1A1A1A" stroke-width="1"/>
+  </g>
+
+  <rect x="50" y="290" width="325" height="60" rx="6" fill="#F5F3EE"/>
+  <text x="212" y="310" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">假設：variance = mean</text>
+  <text x="212" y="328" text-anchor="middle" font-size="11" fill="#6B6B6B">"整齊的計數" —— 圖形窄而集中</text>
+  <text x="212" y="344" text-anchor="middle" font-size="10" fill="#6B6B6B">適合：事件獨立、均勻發生的計數資料</text>
+
+  <!-- RIGHT: Negative Binomial -->
+  <g filter="url(#shadow)">
+    <rect x="405" y="72" width="365" height="290" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="405" y="72" width="365" height="36" rx="10" fill="#D97757" fill-opacity="0.15"/>
+  <text x="587" y="96" text-anchor="middle" font-size="14" font-weight="bold" fill="#D97757">Negative Binomial</text>
+
+  <!-- NB histogram: wider spread -->
+  <g transform="translate(435, 130)">
+    <rect x="0" y="140" width="22" height="50" fill="#D97757" opacity="0.8"/>
+    <rect x="24" y="115" width="22" height="75" fill="#D97757" opacity="0.8"/>
+    <rect x="48" y="95" width="22" height="95" fill="#D97757" opacity="0.8"/>
+    <rect x="72" y="80" width="22" height="110" fill="#D97757" opacity="0.8"/>
+    <rect x="96" y="70" width="22" height="120" fill="#D97757" opacity="0.8"/>
+    <rect x="120" y="65" width="22" height="125" fill="#D97757" opacity="0.8"/>
+    <rect x="144" y="68" width="22" height="122" fill="#D97757" opacity="0.8"/>
+    <rect x="168" y="75" width="22" height="115" fill="#D97757" opacity="0.8"/>
+    <rect x="192" y="85" width="22" height="105" fill="#D97757" opacity="0.8"/>
+    <rect x="216" y="100" width="22" height="90" fill="#D97757" opacity="0.8"/>
+    <rect x="240" y="120" width="22" height="70" fill="#D97757" opacity="0.8"/>
+    <rect x="264" y="140" width="22" height="50" fill="#D97757" opacity="0.8"/>
+
+    <!-- mean line -->
+    <line x1="130" y1="30" x2="130" y2="195" stroke="#D97757" stroke-width="2" stroke-dasharray="5,3"/>
+    <text x="130" y="24" text-anchor="middle" font-size="10" fill="#D97757" font-weight="bold">mean=10</text>
+
+    <!-- wider variance -->
+    <line x1="30" y1="200" x2="230" y2="200" stroke="#D94452" stroke-width="2"/>
+    <line x1="30" y1="196" x2="30" y2="204" stroke="#D94452" stroke-width="2"/>
+    <line x1="230" y1="196" x2="230" y2="204" stroke="#D94452" stroke-width="2"/>
+    <text x="130" y="218" text-anchor="middle" font-size="10" fill="#D94452" font-weight="bold">var=25 (&gt;&gt; mean)</text>
+
+    <line x1="0" y1="195" x2="290" y2="195" stroke="#1A1A1A" stroke-width="1"/>
+  </g>
+
+  <rect x="425" y="290" width="325" height="60" rx="6" fill="#F5F3EE"/>
+  <text x="587" y="310" text-anchor="middle" font-size="12" font-weight="bold" fill="#D97757">允許：variance &gt; mean（overdispersion）</text>
+  <text x="587" y="328" text-anchor="middle" font-size="11" fill="#6B6B6B">"有群聚、波動大的計數" —— 圖形寬而分散</text>
+  <text x="587" y="344" text-anchor="middle" font-size="10" fill="#6B6B6B">適合：群聚感染、通報數、突發疫情</text>
+
+  <!-- Bottom: decision rule -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="380" width="740" height="80" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="400" y="403" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">如何判斷？── Dispersion Ratio</text>
+  <text x="400" y="425" text-anchor="middle" font-size="12" font-family="Menlo, Monaco, monospace" fill="#1A1A1A">dispersion = variance / mean</text>
+  <text x="150" y="450" font-size="11" fill="#788C5D" font-weight="bold">≈ 1.0 → 用 Poisson</text>
+  <text x="400" y="450" text-anchor="middle" font-size="11" fill="#D97757" font-weight="bold">1.0 – 1.5 → 邊緣、可用 Poisson</text>
+  <text x="650" y="450" text-anchor="end" font-size="11" fill="#D94452" font-weight="bold">&gt; 1.5 → 改用 NB</text>
+</svg>

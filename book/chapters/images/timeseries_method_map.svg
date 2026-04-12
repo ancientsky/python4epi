@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">時間序列預測方法地圖 Time Series Method Map</text>
+  <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">依資料量和需求，選擇最合適的模型 (simple → complex)</text>
+
+  <!-- Axis arrow -->
+  <line x1="60" y1="100" x2="740" y2="100" stroke="#1A1A1A" stroke-width="2" marker-end="url(#arrow-end)"/>
+  <defs>
+    <marker id="arrow-end" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1A1A1A"/>
+    </marker>
+  </defs>
+  <text x="60" y="88" font-size="11" fill="#6B6B6B">簡單 simple</text>
+  <text x="720" y="88" text-anchor="end" font-size="11" fill="#6B6B6B">複雜 complex</text>
+  <text x="400" y="125" text-anchor="middle" font-size="11" fill="#6B6B6B">需要的資料量與模型複雜度</text>
+
+  <!-- 6 method cards arranged in 2 rows × 3 cols -->
+
+  <!-- Row 1: simple methods -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="150" width="240" height="160" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="2"/>
+  </g>
+  <rect x="30" y="150" width="240" height="36" rx="10" fill="#788C5D" fill-opacity="0.12"/>
+  <text x="150" y="174" text-anchor="middle" font-size="14" font-weight="bold" fill="#788C5D">① Rolling Mean</text>
+  <text x="45" y="205" font-size="11" fill="#1A1A1A" font-weight="bold">滾動平均（Baseline）</text>
+  <text x="45" y="223" font-size="11" fill="#6B6B6B">最少需要 <tspan font-weight="bold" fill="#1A1A1A">5 天</tspan></text>
+  <text x="45" y="241" font-size="11" fill="#6B6B6B">週期性：✗  信賴區間：✗</text>
+  <text x="45" y="265" font-size="10" fill="#6B6B6B">優：簡單、直覺、快</text>
+  <text x="45" y="282" font-size="10" fill="#6B6B6B">缺：反應慢、不會預測轉折</text>
+  <text x="45" y="299" font-size="10" fill="#D97757" font-weight="bold">→ 疫調現場快速估算</text>
+
+  <g filter="url(#shadow)">
+    <rect x="280" y="150" width="240" height="160" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="280" y="150" width="240" height="36" rx="10" fill="#6A9BCC" fill-opacity="0.12"/>
+  <text x="400" y="174" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A9BCC">② Poisson + Lag</text>
+  <text x="295" y="205" font-size="11" fill="#1A1A1A" font-weight="bold">卜瓦松迴歸（計數資料）</text>
+  <text x="295" y="223" font-size="11" fill="#6B6B6B">最少需要 <tspan font-weight="bold" fill="#1A1A1A">10 天</tspan></text>
+  <text x="295" y="241" font-size="11" fill="#6B6B6B">週期性：部分  信賴區間：✓</text>
+  <text x="295" y="265" font-size="10" fill="#6B6B6B">優：能放解釋變項 (lag, 趨勢)</text>
+  <text x="295" y="282" font-size="10" fill="#6B6B6B">缺：假設 variance = mean</text>
+  <text x="295" y="299" font-size="10" fill="#D97757" font-weight="bold">→ 每日病例數預測</text>
+
+  <g filter="url(#shadow)">
+    <rect x="530" y="150" width="240" height="160" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="530" y="150" width="240" height="36" rx="10" fill="#D97757" fill-opacity="0.12"/>
+  <text x="650" y="174" text-anchor="middle" font-size="14" font-weight="bold" fill="#D97757">③ Negative Binomial</text>
+  <text x="545" y="205" font-size="11" fill="#1A1A1A" font-weight="bold">負二項迴歸（過度離散）</text>
+  <text x="545" y="223" font-size="11" fill="#6B6B6B">最少需要 <tspan font-weight="bold" fill="#1A1A1A">10 天</tspan></text>
+  <text x="545" y="241" font-size="11" fill="#6B6B6B">週期性：部分  信賴區間：✓</text>
+  <text x="545" y="265" font-size="10" fill="#6B6B6B">優：允許 variance &gt; mean</text>
+  <text x="545" y="282" font-size="10" fill="#6B6B6B">缺：多一個 α 參數</text>
+  <text x="545" y="299" font-size="10" fill="#D97757" font-weight="bold">→ 群聚中過度離散資料</text>
+
+  <!-- Row 2: advanced methods -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="330" width="240" height="160" rx="10" fill="#FFFFFF" stroke="#D94452" stroke-width="2"/>
+  </g>
+  <rect x="30" y="330" width="240" height="36" rx="10" fill="#D94452" fill-opacity="0.12"/>
+  <text x="150" y="354" text-anchor="middle" font-size="14" font-weight="bold" fill="#D94452">④ Logistic Regression</text>
+  <text x="45" y="385" font-size="11" fill="#1A1A1A" font-weight="bold">邏輯斯迴歸（二元警報）</text>
+  <text x="45" y="403" font-size="11" fill="#6B6B6B">最少需要 <tspan font-weight="bold" fill="#1A1A1A">10 天</tspan></text>
+  <text x="45" y="421" font-size="11" fill="#6B6B6B">輸出：是/否  機率：✓</text>
+  <text x="45" y="445" font-size="10" fill="#6B6B6B">優：適合閾值警報</text>
+  <text x="45" y="462" font-size="10" fill="#6B6B6B">缺：不預測實際人數</text>
+  <text x="45" y="479" font-size="10" fill="#D97757" font-weight="bold">→ 早期預警系統</text>
+
+  <g filter="url(#shadow)">
+    <rect x="280" y="330" width="240" height="160" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="280" y="330" width="240" height="36" rx="10" fill="#6A9BCC" fill-opacity="0.12"/>
+  <text x="400" y="354" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A9BCC">⑤ ARIMA</text>
+  <text x="295" y="385" font-size="11" fill="#1A1A1A" font-weight="bold">自迴歸整合移動平均</text>
+  <text x="295" y="403" font-size="11" fill="#6B6B6B">最少需要 <tspan font-weight="bold" fill="#1A1A1A">30 天</tspan></text>
+  <text x="295" y="421" font-size="11" fill="#6B6B6B">週期性：弱  信賴區間：✓</text>
+  <text x="295" y="445" font-size="10" fill="#6B6B6B">優：捕捉趨勢 + 自相關</text>
+  <text x="295" y="462" font-size="10" fill="#6B6B6B">缺：需要平穩、調三個階數</text>
+  <text x="295" y="479" font-size="10" fill="#D97757" font-weight="bold">→ 中長期監測預測</text>
+
+  <g filter="url(#shadow)">
+    <rect x="530" y="330" width="240" height="160" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="530" y="330" width="240" height="36" rx="10" fill="#D97757" fill-opacity="0.12"/>
+  <text x="650" y="354" text-anchor="middle" font-size="14" font-weight="bold" fill="#D97757">⑥ SARIMA</text>
+  <text x="545" y="385" font-size="11" fill="#1A1A1A" font-weight="bold">季節性 ARIMA</text>
+  <text x="545" y="403" font-size="11" fill="#6B6B6B">最少需要 <tspan font-weight="bold" fill="#1A1A1A">60 天 (2 週期+)</tspan></text>
+  <text x="545" y="421" font-size="11" fill="#6B6B6B">週期性：✓✓  信賴區間：✓</text>
+  <text x="545" y="445" font-size="10" fill="#6B6B6B">優：捕捉每週/每年規律</text>
+  <text x="545" y="462" font-size="10" fill="#6B6B6B">缺：參數多、計算久</text>
+  <text x="545" y="479" font-size="10" fill="#D97757" font-weight="bold">→ 類流感每週監測</text>
+</svg>

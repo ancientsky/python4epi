@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6A9BCC"/>
+    </marker>
+    <marker id="arr-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D97757"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="440" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">Lag Features 怎麼做？—— 把「昨天、前天」變成特徵</text>
+  <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">`df.shift(1)` 把整欄向下移一格，讓「昨天的 cases」出現在「今天那列」</text>
+
+  <g filter="url(#shadow)">
+    <rect x="30" y="72" width="740" height="310" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+
+  <!-- LEFT: original -->
+  <text x="130" y="100" text-anchor="middle" font-size="13" font-weight="bold" fill="#6A9BCC">原始序列 Original</text>
+  <rect x="50" y="112" width="160" height="30" fill="#6A9BCC" fill-opacity="0.15"/>
+  <text x="85" y="132" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1A1A">date</text>
+  <text x="170" y="132" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1A1A">cases</text>
+
+  <g font-size="11" font-family="Menlo, Monaco, monospace" fill="#1A1A1A">
+    <rect x="50" y="142" width="160" height="28" fill="#FAF8F3"/>
+    <text x="85" y="161" text-anchor="middle">Jan-12</text>
+    <text x="170" y="161" text-anchor="middle">5</text>
+
+    <rect x="50" y="170" width="160" height="28" fill="#FFFFFF"/>
+    <text x="85" y="189" text-anchor="middle">Jan-13</text>
+    <text x="170" y="189" text-anchor="middle">8</text>
+
+    <rect x="50" y="198" width="160" height="28" fill="#FAF8F3"/>
+    <text x="85" y="217" text-anchor="middle">Jan-14</text>
+    <text x="170" y="217" text-anchor="middle">12</text>
+
+    <rect x="50" y="226" width="160" height="28" fill="#FFFFFF"/>
+    <text x="85" y="245" text-anchor="middle">Jan-15</text>
+    <text x="170" y="245" text-anchor="middle">10</text>
+
+    <rect x="50" y="254" width="160" height="28" fill="#FAF8F3"/>
+    <text x="85" y="273" text-anchor="middle">Jan-16</text>
+    <text x="170" y="273" text-anchor="middle">14</text>
+  </g>
+
+  <!-- Transform arrow -->
+  <text x="280" y="155" text-anchor="middle" font-size="12" font-family="Menlo, Monaco, monospace" fill="#D97757" font-weight="bold">shift(1)</text>
+  <line x1="230" y1="180" x2="340" y2="180" stroke="#D97757" stroke-width="2" marker-end="url(#arr-orange)"/>
+  <text x="280" y="200" text-anchor="middle" font-size="11" fill="#6B6B6B">整欄往下推一格</text>
+
+  <!-- RIGHT: with lag features -->
+  <text x="570" y="100" text-anchor="middle" font-size="13" font-weight="bold" fill="#D97757">加入 lag 特徵 With Lags</text>
+  <rect x="360" y="112" width="400" height="30" fill="#D97757" fill-opacity="0.12"/>
+  <text x="395" y="132" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1A1A">date</text>
+  <text x="475" y="132" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1A1A">cases</text>
+  <text x="575" y="132" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">lag_1</text>
+  <text x="675" y="132" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">lag_2</text>
+
+  <g font-size="11" font-family="Menlo, Monaco, monospace" fill="#1A1A1A">
+    <rect x="360" y="142" width="400" height="28" fill="#D94452" fill-opacity="0.08"/>
+    <text x="395" y="161" text-anchor="middle">Jan-12</text>
+    <text x="475" y="161" text-anchor="middle">5</text>
+    <text x="575" y="161" text-anchor="middle" fill="#D94452" font-weight="bold">NaN</text>
+    <text x="675" y="161" text-anchor="middle" fill="#D94452" font-weight="bold">NaN</text>
+
+    <rect x="360" y="170" width="400" height="28" fill="#D94452" fill-opacity="0.08"/>
+    <text x="395" y="189" text-anchor="middle">Jan-13</text>
+    <text x="475" y="189" text-anchor="middle">8</text>
+    <text x="575" y="189" text-anchor="middle" fill="#6A9BCC" font-weight="bold">5</text>
+    <text x="675" y="189" text-anchor="middle" fill="#D94452" font-weight="bold">NaN</text>
+
+    <rect x="360" y="198" width="400" height="28" fill="#FAF8F3"/>
+    <text x="395" y="217" text-anchor="middle">Jan-14</text>
+    <text x="475" y="217" text-anchor="middle">12</text>
+    <text x="575" y="217" text-anchor="middle" fill="#6A9BCC" font-weight="bold">8</text>
+    <text x="675" y="217" text-anchor="middle" fill="#788C5D" font-weight="bold">5</text>
+
+    <rect x="360" y="226" width="400" height="28" fill="#FFFFFF"/>
+    <text x="395" y="245" text-anchor="middle">Jan-15</text>
+    <text x="475" y="245" text-anchor="middle">10</text>
+    <text x="575" y="245" text-anchor="middle" fill="#6A9BCC" font-weight="bold">12</text>
+    <text x="675" y="245" text-anchor="middle" fill="#788C5D" font-weight="bold">8</text>
+
+    <rect x="360" y="254" width="400" height="28" fill="#FAF8F3"/>
+    <text x="395" y="273" text-anchor="middle">Jan-16</text>
+    <text x="475" y="273" text-anchor="middle">14</text>
+    <text x="575" y="273" text-anchor="middle" fill="#6A9BCC" font-weight="bold">10</text>
+    <text x="675" y="273" text-anchor="middle" fill="#788C5D" font-weight="bold">12</text>
+  </g>
+
+  <!-- Arrow showing shift -->
+  <path d="M 500 165 Q 530 180 555 185" fill="none" stroke="#6A9BCC" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#arr-blue)"/>
+  <text x="525" y="175" font-size="9" fill="#6A9BCC">昨天的值</text>
+
+  <!-- Bottom explanation -->
+  <rect x="50" y="300" width="710" height="65" rx="6" fill="#F5F3EE"/>
+  <text x="65" y="322" font-size="12" font-weight="bold" fill="#1A1A1A">為什麼要加 lag？</text>
+  <text x="65" y="340" font-size="11" fill="#6B6B6B">① 感染是傳染的 → 今天的病例數與昨天高度相關（自相關 autocorrelation）</text>
+  <text x="65" y="357" font-size="11" fill="#6B6B6B">② 迴歸模型把「昨天的數字」當特徵，就能預測今天 → 再預測明天</text>
+
+  <text x="400" y="412" text-anchor="middle" font-size="11" fill="#D94452" font-weight="bold">⚠ 前兩天因為沒有「前兩天」可以參考 → 值是 NaN → 要 <tspan font-family="Menlo, Monaco, monospace">dropna()</tspan> 掉掉它們</text>
+</svg>
