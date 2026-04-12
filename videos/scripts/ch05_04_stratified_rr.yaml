@@ -1,0 +1,195 @@
+meta:
+  chapter: "05"
+  concept: "stratified_rr"
+  title: "分層分析——每一層都算一次 RR"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch05_04_stratified_rr"
+  scene_class: "Ch05StratifiedRrScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨！前幾集我們驗證了功能狀態是真正的干擾因子。
+      今天要進入分層分析的核心實作——
+      把 280 位住民按功能狀態分成三層，每一層內部各算一次 RR。
+      這個技巧叫 stratified analysis，
+      它的精神是：把干擾因子「鎖住」在每一層內部，
+      這樣層內的暴露效應就不會被干擾。手把手教你怎麼寫 for loop 分層。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "crude_rr_recap"
+    narration: >
+      先算一個「粗 RR」當基準線。
+      用 crosstab 做 2x2 表，取出 a b c d 四格。
+      a 是有淋浴有感染，b 是有淋浴沒感染，
+      c 是沒淋浴有感染，d 是沒淋浴沒感染。
+      粗 RR 等於暴露組感染率除以未暴露組感染率。
+      這個值還沒控制任何干擾，等一下要拿它跟調整後 RR 比。
+    animation: "show_crude_rr"
+    code: |
+      ct = pd.crosstab(df["shower_use"], df["infected"])
+      a, b = int(ct.loc[1,1]), int(ct.loc[1,0])
+      c, d = int(ct.loc[0,1]), int(ct.loc[0,0])
+      crude_rr = (a/(a+b)) / (c/(c+d))
+      print(f"Crude RR = {crude_rr:.3f}")
+    output: |
+      Crude RR = 2.450
+    pause_after: 0.5
+
+  - id: "for_loop_template"
+    narration: >
+      分層分析的骨架是一個 for 迴圈。
+      先拿到功能狀態的所有獨特值：ambulatory、wheelchair、bedridden。
+      建一個空 list 收集每層結果。
+      迴圈裡面對每個層篩資料、做 2x2 表、算 RR、算信賴區間。
+      最後把所有層結果組成 DataFrame。
+      這是經典的 split apply combine 模式。
+    animation: "show_loop_template"
+    code: |
+      strata = sorted(df["functional_status"].unique())
+      results = []
+      for s in strata:
+          sub = df[df["functional_status"] == s]
+          # ... calculate RR for this stratum ...
+          results.append({...})
+      results_df = pd.DataFrame(results)
+    pause_after: 0.5
+
+  - id: "stratum_rr_calc"
+    narration: >
+      在每一層內部，一樣用 crosstab 做 2x2 表。
+      先用 if 判斷 shape，如果這層只有單一暴露組，2x2 表會變成 2x1，
+      直接 continue 跳過這層，避免 KeyError。
+      然後取出 a_s b_s c_s d_s，算層 RR。
+      人數少的層結果不穩定，這就是為什麼我們要算信賴區間。
+    animation: "show_stratum_calc"
+    code: |
+      ct_s = pd.crosstab(sub["shower_use"], sub["infected"])
+      if ct_s.shape != (2, 2):
+          continue
+      a_s = int(ct_s.loc[1,1])
+      b_s = int(ct_s.loc[1,0])
+      c_s = int(ct_s.loc[0,1])
+      d_s = int(ct_s.loc[0,0])
+      rr_s = (a_s/(a_s+b_s)) / (c_s/(c_s+d_s))
+    pause_after: 0.5
+
+  - id: "log_ci"
+    narration: >
+      RR 的信賴區間不能直接用 RR 加減標準誤，因為 RR 的分布不對稱。
+      正確做法是先對 RR 取 log 變成常態分布，在 log 空間算信賴區間，
+      再用 exp 轉回來。
+      標準誤的公式是四個倒數相加取根號：一除以 a、減一除以 a 加 b、
+      加一除以 c、減一除以 c 加 d。
+      別背公式，copy paste 就好。
+    animation: "show_log_ci"
+    code: |
+      import numpy as np
+      ln_rr = np.log(rr_s)
+      se = np.sqrt(1/a_s - 1/(a_s+b_s)
+                 + 1/c_s - 1/(c_s+d_s))
+      ci_lo = np.exp(ln_rr - 1.96 * se)
+      ci_hi = np.exp(ln_rr + 1.96 * se)
+    pause_after: 0.5
+
+  - id: "results_output"
+    narration: >
+      把三層的結果印出來比對。
+      假設 ambulatory 的 RR 是 1.5，wheelchair 是 1.3，bedridden 是 1.2。
+      對照粗 RR 的 2.45，你會發現：
+      每一層的 RR 都比粗 RR 小。
+      這代表粗 RR 確實被干擾作用膨脹了，
+      控制功能狀態後，淋浴的真正效應沒那麼大。
+    animation: "show_results_output"
+    output: |
+      ambulatory   RR=1.50 (CI 1.10-2.04) n=120
+      wheelchair   RR=1.30 (CI 0.85-1.98) n=80
+      bedridden    RR=1.20 (CI 0.60-2.40) n=80
+      Crude RR = 2.45
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      快速複習。分層分析四步驟：
+      第一，先算粗 RR 當基準。
+      第二，按干擾因子分層用 for loop。
+      第三，每層算 RR 和 log based 信賴區間。
+      第四，比較各層 RR 跟粗 RR，看看是不是有被膨脹。
+      下一支影片會把這些數字視覺化成森林圖。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看一個真實世界的大型分層分析。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_h1n1"
+    narration: >
+      H1N1 新型流感爆發期間，研究人員想知道疫苗效力。
+      但疫苗保護力會因為醫院層級而不同——
+      醫學中心的病人較重症，地區醫院的較輕症。
+      研究者按醫院層級分層，
+      醫學中心、區域醫院、地區醫院三層各算一次 RR。
+      結果發現三層 RR 差不多，可以合併報告。
+      跟我們的 for loop 完全一樣，只是換了分層變項。
+    animation: "show_extra_h1n1"
+    code: |
+      # H1N1 vaccine effectiveness by hospital level
+      for level in ['MC', 'Regional', 'Local']:
+          sub = df[df["hospital_level"] == level]
+          # ... same stratified RR calculation ...
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      接下來三個 for loop 分層最常出事的地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：沒檢查 2x2 表的形狀就直接取值。
+      某些層可能只有暴露組或只有對照組，crosstab 只會給你 2x1 的表。
+      你用 loc 去取 0 或 1 的時候會噴 KeyError。
+      解法：先 if 判斷 shape 等於 2 2，否則 continue 跳過這層。
+    animation: "show_blindspot_shape"
+    error_code: "a = ct_s.loc[1,1]  # KeyError if missing"
+    correct_code: "if ct_s.shape != (2,2): continue"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：分層太細，每層只剩幾個人。
+      例如按年齡切成一歲一組，每組只有 3 到 5 個人。
+      算出來的 RR 信賴區間超寬，幾乎沒有統計意義。
+      經驗法則：每層至少 10 到 20 人。
+      需要時用 pd.cut 把年齡切成組距，不要每一歲一層。
+    animation: "show_blindspot_too_fine"
+    error_code: "strata = df['age'].unique()  # 60+ levels"
+    correct_code: "strata = pd.cut(df['age'], bins=[59,69,79,89,120])"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：某格出現 0 的時候硬算 log。
+      如果 a 或 c 是 0，log 會變負無限大，程式直接崩潰。
+      這時候要用 Haldane 校正，分母分子都加 0.5，
+      讓計算可以進行但不改變整體趨勢。
+      或是直接跳過那一層，然後在報告裡註明。
+    animation: "show_blindspot_zero_cell"
+    error_code: "ln_rr = np.log(0/(a+b) / c/(c+d))  # -inf"
+    correct_code: "a, b, c, d = [x + 0.5 for x in (a,b,c,d)]"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你學會了分層分析的 for loop！
+      下一集用 matplotlib 畫森林圖，
+      讓三層的 RR 和信賴區間一眼就看得出差異。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

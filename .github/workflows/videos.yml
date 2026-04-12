@@ -58,6 +58,14 @@ on:
           - generate_sitrep
           - report_output
           - pii_protection
+          - confounder_concept
+          - dag
+          - verify_criteria
+          - stratified_rr
+          - stratified_forest_plot
+          - mantel_haenszel
+          - effect_modification
+          - case_control_mh
       quality:
         description: "Render quality"
         required: false
@@ -137,7 +145,7 @@ jobs:
           TITLE="Tutorial Videos $(date +%Y-%m-%d)"
 
           # Build release notes
-          NOTES="## Tutorial Videos (Ch00–04 導讀與工具 / 開發者工具箱 / Python 基礎 / 資料處理與視覺化 / 2×2 表與推論統計 / 群聚調查工作流)\n\n"
+          NOTES="## Tutorial Videos (Ch00–05 導讀與工具 / 開發者工具箱 / Python 基礎 / 資料處理與視覺化 / 2×2 表與推論統計 / 群聚調查工作流 / 分層分析與干擾因子)\n\n"
           NOTES+="Generated with Manim + edge-tts + ffmpeg.\n\n"
           NOTES+="| # | Video | Size |\n"
           NOTES+="|---|-------|------|\n"

@@ -1,0 +1,171 @@
+meta:
+  chapter: "05"
+  concept: "verify_criteria"
+  title: "驗證三要件——pd.crosstab 實戰"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch05_03_verify_criteria"
+  scene_class: "Ch05VerifyCriteriaScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨！前兩集我們講了干擾因子的三要件和 DAG。
+      今天要把理論落地成程式碼，
+      用 pandas 的 crosstab 函式，手把手驗證功能狀態是不是真正的干擾因子。
+      教科書上說三要件，到底怎麼用 Python 驗？看完這集就會了。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "data_prep"
+    narration: >
+      第一步先讀資料。
+      用 pd.read_csv 讀取退伍軍人桿菌資料集。
+      建立一個 infected 欄位，只要 clinical severity 不是 not ill 就算感染。
+      用 astype int 把 True False 轉成 1 和 0，方便後續統計。
+      資料乾淨，才能做乾淨的分析。
+    animation: "show_data_prep"
+    code: |
+      import pandas as pd
+      df = pd.read_csv("legionella_outbreak.csv")
+      df["infected"] = (
+          df["clinical_severity"] != "not_ill"
+      ).astype(int)
+    pause_after: 0.5
+
+  - id: "criterion_1"
+    narration: >
+      驗證條件一：功能狀態跟淋浴使用有沒有關聯。
+      用 pd.crosstab，把 functional status 當列，shower use 當欄。
+      加上 normalize 等於 index 這個參數，
+      意思是每一列內部做百分比，讓你看「每個功能狀態組裡淋浴比例」。
+      如果三個功能狀態組的淋浴比例差很多，條件一就成立。
+    animation: "show_criterion_1"
+    code: |
+      print(pd.crosstab(
+          df["functional_status"],
+          df["shower_use"],
+          normalize="index",
+      ).round(3))
+    output: |
+      shower_use               0      1
+      functional_status
+      ambulatory           0.100  0.900
+      bedridden            0.950  0.050
+      wheelchair           0.300  0.700
+    pause_after: 0.5
+
+  - id: "criterion_2"
+    narration: >
+      驗證條件二：功能狀態跟感染有沒有關聯。
+      一樣用 crosstab，這次欄位換成 infected。
+      看三個功能狀態組的感染比例是不是差很多。
+      結果一看就知道：能走動的人感染比例高，臥床的人感染比例低。
+      功能狀態明顯跟結果相關，條件二成立。
+    animation: "show_criterion_2"
+    code: |
+      print(pd.crosstab(
+          df["functional_status"],
+          df["infected"],
+          normalize="index",
+      ).round(3))
+    output: |
+      infected                 0      1
+      functional_status
+      ambulatory           0.450  0.550
+      bedridden            0.850  0.150
+      wheelchair           0.620  0.380
+    pause_after: 0.5
+
+  - id: "criterion_3"
+    narration: >
+      條件三用邏輯判斷，不用程式碼。
+      問自己：功能狀態是淋浴到感染路徑上的中間步驟嗎？
+      不是！沒有人因為先洗澡才變成能走動的，因果方向不對。
+      功能狀態是先天或長期狀態，淋浴是當下行為。
+      三個條件都成立，確認功能狀態是干擾因子，可以進行分層分析。
+    animation: "show_criterion_3"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      快速複習。驗證三要件的 Python 流程：
+      條件一，crosstab 看功能狀態跟暴露的關聯。
+      條件二，crosstab 看功能狀態跟結果的關聯。
+      條件三，用因果方向和時間順序判斷，不是程式碼能決定的。
+      三條都通過，才能進入下一步分層分析。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看 COVID-19 疫苗的實際驗證案例。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_vaccine"
+    narration: >
+      COVID-19 疫苗效力研究常常出現年齡這個干擾因子。
+      驗證條件一：年齡跟疫苗接種率相關嗎？相關，老人優先接種。
+      驗證條件二：年齡跟重症住院率相關嗎？相關，老人風險高。
+      驗證條件三：年齡是中間變項嗎？不是，沒打疫苗不會讓你變老。
+      三條都通過，年齡必須分層或調整。
+      這就是為什麼 CDC 報告的疫苗效力永遠都是按年齡分層的原因。
+    animation: "show_extra_vaccine"
+    code: |
+      # COVID-19 vaccine effectiveness
+      pd.crosstab(df["age_group"], df["vaccinated"],
+                  normalize="index")
+      pd.crosstab(df["age_group"], df["severe"],
+                  normalize="index")
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      接下來三個初學者最容易犯的驗證錯誤！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：只看絕對數字不看比例。
+      有 100 個能走動的人用淋浴，只有 5 個臥床的人用淋浴——
+      這不代表功能狀態相關，因為能走動的人本來就多！
+      一定要用 normalize 等於 index 看比例，
+      才看得出各組的相對差異。
+    animation: "show_blindspot_absolute"
+    error_code: "pd.crosstab(df['fs'], df['shower'])"
+    correct_code: "pd.crosstab(df['fs'], df['shower'], normalize='index')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：純粹目測，不做統計檢定。
+      交叉表看起來差 10%，到底是真的差異還是抽樣誤差？
+      用 chi-square 檢定算個 p 值，才有客觀依據。
+      從 scipy.stats 引入 chi2 contingency，丟進交叉表，
+      回傳第二個值就是 p value。
+    animation: "show_blindspot_no_test"
+    error_code: "if 'looks different': confound = True"
+    correct_code: "chi2, p, *_ = chi2_contingency(ct); ok = p < 0.05"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：忽略小樣本儲存格。
+      如果某一格人數少於五，chi-square 的 p 值會不穩定。
+      這時候要改用 Fisher exact test。
+      養成習慣，看到小儲存格就換方法，不要硬算。
+    animation: "show_blindspot_small_cell"
+    error_code: "chi2_contingency(ct)  # cell n=2"
+    correct_code: "fisher_exact(ct)  # small cell safe"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你學會了用 pandas 驗證干擾因子！
+      下一集我們正式進入分層分析的核心：
+      用 for loop 按功能狀態分層，每一層各自算 RR 和信賴區間。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

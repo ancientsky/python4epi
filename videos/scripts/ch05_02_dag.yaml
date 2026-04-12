@@ -1,0 +1,126 @@
+meta:
+  chapter: "05"
+  concept: "dag"
+  title: "DAG 有向無環圖——畫一張因果地圖"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch05_02_dag"
+  scene_class: "Ch05DagScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨！上一集我們學會了干擾因子的三要件。
+      但流行病學的世界經常不只一個變項。
+      怎麼一次看清楚誰影響誰？答案是 DAG，Directed Acyclic Graph，
+      中文叫做有向無環圖。聽起來很學術，其實就是一張因果地圖。
+      今天手把手帶你畫一張 DAG，讓干擾因子無所遁形。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "dag_basics"
+    narration: >
+      DAG 有三個規則。
+      第一，節點代表變項，可以是暴露、結果、干擾因子、中間變項。
+      第二，箭頭代表因果方向，從原因指向結果。
+      第三，不能有環，也就是不能回到自己，這也是名字裡「無環」的意思。
+      如果 A 指向 B，B 不能又指回 A，因為那不符合時間因果。
+    animation: "show_dag_basics"
+    pause_after: 0.5
+
+  - id: "front_vs_back_door"
+    narration: >
+      DAG 上有兩種路徑要特別注意。
+      前門路徑：從暴露直接指向結果，這是你想研究的真正效應。
+      後門路徑：從一個共同原因分別指向暴露和結果，形成一條繞後面的假路徑。
+      後門路徑就是干擾的來源。如果你不把它堵住，效應量就會被污染。
+      堵住後門的方法，就是控制後門路徑上的干擾因子。
+    animation: "show_front_back_door"
+    pause_after: 0.5
+
+  - id: "legionella_dag"
+    narration: >
+      來畫我們的退伍軍人桿菌 DAG。
+      三個節點：淋浴使用是暴露，感染是結果，功能狀態是干擾因子。
+      箭頭一：淋浴使用指向感染，這是前門。
+      箭頭二：功能狀態指向淋浴使用。
+      箭頭三：功能狀態指向感染。
+      功能狀態同時影響暴露和結果，形成後門路徑。
+      要得到乾淨的淋浴效應，就必須控制功能狀態。
+    animation: "show_legionella_dag"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      快速複習。DAG 的三個元素：節點、有向箭頭、不能有環。
+      前門是你想研究的直接效應，後門是干擾路徑。
+      在分層分析或迴歸之前，先畫一張 DAG，
+      你就會知道哪些變項要控制、哪些變項絕對不能控制。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看一個真實世界的 DAG 例子。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_smoking"
+    narration: >
+      吸菸跟肺癌的關聯，是 DAG 最經典的案例。
+      吸菸指向肺癌，這是前門。
+      但有一個陷阱：黃手指。
+      吸菸指向黃手指，肺癌也跟黃手指有關。
+      有人說「那控制黃手指不就好了」？大錯特錯！
+      黃手指不是共因，是吸菸的結果之一，叫做碰撞器 collider。
+      控制碰撞器會製造假關聯，反而讓結果更偏。
+      DAG 的價值就在這裡：它告訴你什麼能控制、什麼不能控制。
+    animation: "show_extra_smoking"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      接下來三個新手畫 DAG 最常踩的地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：時間順序亂畫。
+      把後發生的事當作原因，違反了因果的基本邏輯。
+      畫 DAG 之前一定要先想清楚時間順序：
+      哪個變項先發生？哪個後發生？箭頭一定要從先指向後。
+    animation: "show_blindspot_time"
+    error_code: "dag.edge('infection', 'shower_use')"
+    correct_code: "dag.edge('shower_use', 'infection')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：忘記畫沒測量到的變項。
+      真實世界裡，總有一些重要變項你沒量到，例如遺傳、免疫力。
+      就算沒測量，也要在 DAG 上用虛線或 U 標註出來，
+      提醒自己這是潛在的殘餘干擾。裝作沒有不會讓它消失。
+    animation: "show_blindspot_unmeasured"
+    error_code: "dag.nodes = ['E', 'D', 'age']"
+    correct_code: "dag.nodes = ['E', 'D', 'age', 'U_genetics']"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：把統計相關當作因果箭頭。
+      DAG 的箭頭代表因果方向，不是相關係數。
+      兩個變項相關，可能是因果，可能是共因，可能是巧合。
+      畫 DAG 前請先做領域功課，看文獻、問專家、回歸生物學和社會學常識。
+    animation: "show_blindspot_correlation"
+    error_code: "if corr > 0.5: dag.add_edge(A, B)"
+    correct_code: "if domain_knowledge_says_cause: dag.add_edge(A, B)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你學會了 DAG 的基本功！
+      下一集我們回到程式碼，用 pd.crosstab 驗證干擾三要件，
+      把紙上的 DAG 變成數據上的證據。我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

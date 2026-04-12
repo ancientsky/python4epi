@@ -1,0 +1,175 @@
+meta:
+  chapter: "05"
+  concept: "mantel_haenszel"
+  title: "Mantel-Haenszel 加權——公平的學期成績"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch05_06_mantel_haenszel"
+  scene_class: "Ch05MantelHaenszelScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨！我們已經算出三層各自的 RR，也畫了森林圖。
+      但長官通常只想看一個數字：到底調整後 RR 是多少？
+      怎麼把三層 RR 合併成一個？
+      不能直接平均——因為三層人數不一樣。
+      這時候就要用 Mantel-Haenszel 加權法。
+      今天手把手帶你實作這個經典技巧，十行程式碼就搞定。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "mh_intuition"
+    narration: >
+      MH 加權的精神用一個比喻：學期成績。
+      小考只佔 20%、期末考佔 40%、報告佔 40%。
+      各項權重不同，怎麼算總分？
+      把各項分數乘以權重加總，再除以總權重。
+      MH 法一模一樣：
+      每一層的貢獻乘以這層的「權重」，
+      權重由這層的樣本大小和四格表結構決定。
+      人多的層貢獻大，人少的層貢獻小。
+    animation: "show_mh_intuition"
+    pause_after: 0.5
+
+  - id: "mh_formula"
+    narration: >
+      MH 公式看起來嚇人，其實很單純。
+      分子是 a 乘以 c 加 d，除以該層總人數 N，全部層加總。
+      分母是 c 乘以 a 加 b，除以該層總人數 N，全部層加總。
+      你不用背公式，只要知道：
+      每一層都有貢獻分子和分母，最後相除就是加權 RR。
+    animation: "show_mh_formula"
+    pause_after: 0.5
+
+  - id: "mh_code"
+    narration: >
+      Python 實作非常直接。
+      用兩個 accumulator 變數：numerator 跟 denominator，初始化為 0。
+      for 迴圈跑遍每一層 results_df。
+      每一層算出 n_i，然後把貢獻加到兩個累加變數上。
+      迴圈跑完，rr_mh 等於 numerator 除以 denominator。
+      這就是你的調整後 RR。
+    animation: "show_mh_code"
+    code: |
+      numerator, denominator = 0, 0
+      for _, row in results_df.iterrows():
+          a, b, c, d = row[["a","b","c","d"]]
+          n = a + b + c + d
+          numerator += a * (c + d) / n
+          denominator += c * (a + b) / n
+      rr_mh = numerator / denominator
+      print(f"MH adjusted RR = {rr_mh:.3f}")
+    output: |
+      MH adjusted RR = 1.380
+    pause_after: 0.5
+
+  - id: "ten_percent_rule"
+    narration: >
+      拿到調整後 RR，怎麼判斷有沒有干擾？
+      用 10% 法則。
+      變化幅度等於粗 RR 減調整 RR 的絕對值，除以調整 RR，乘以 100%。
+      如果變化大於等於 10%，代表干擾確實存在，應該報告調整後 RR。
+      如果小於 10%，干擾作用不明顯，粗 RR 其實就夠用了。
+      我們這個例子：粗 RR 2.45 調整後 1.38，變化 77%，干擾巨大。
+    animation: "show_ten_percent_rule"
+    code: |
+      change = abs(crude_rr - rr_mh) / rr_mh * 100
+      print(f"Change: {change:.1f}%")
+      if change >= 10:
+          print("Confounding present!")
+          if crude_rr > rr_mh:
+              print("Direction: inflated")
+    output: |
+      Change: 77.5%
+      Confounding present!
+      Direction: inflated
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      快速複習。Mantel-Haenszel 四步驟：
+      第一，for loop 跑過每一層。
+      第二，累加 a 乘以 c 加 d 除以 N 當分子。
+      第三，累加 c 乘以 a 加 b 除以 N 當分母。
+      第四，分子除以分母得到調整後 RR。
+      然後用 10% 法則判斷干擾幅度。
+      恭喜，你已經會做最經典的干擾控制了。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看一個經典的 Simpson 悖論案例。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_simpson"
+    narration: >
+      加州大學柏克萊分校 1973 年的錄取歧視案件。
+      表面上男生錄取率 44%、女生只有 35%，看起來女生被歧視。
+      但按科系分層後，每個科系女生的錄取率都跟男生一樣或更高。
+      為什麼整體看起來歧視？
+      因為女生多申請錄取率低的文科，男生多申請錄取率高的理工。
+      「申請科系」就是干擾因子。
+      MH 加權後的總錄取率比率接近 1，歧視其實沒有。
+      這就是 Simpson 悖論，分層分析救了大學一條名聲。
+    animation: "show_extra_simpson"
+    code: |
+      # Berkeley admission paradox
+      # Crude: Male 44% vs Female 35%
+      # Stratified by department: Female >= Male
+      # MH adjusted RR ~ 1.0
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      接下來三個 MH 最常出錯的地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：把各層 RR 直接算術平均。
+      例如三層 RR 是 1.5、1.3、1.2，直接平均成 1.33。
+      錯！這沒有考慮各層人數。
+      如果第三層只有 10 人、第一層有 200 人，
+      兩層的影響力完全不一樣。
+      一定要用 MH 加權，不能偷懶平均。
+    animation: "show_blindspot_simple_avg"
+    error_code: "rr_adj = results_df['RR'].mean()"
+    correct_code: "rr_mh = mh_numerator / mh_denominator"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：10% 法則分母用錯。
+      有人寫成除以粗 RR，那就不對了。
+      標準做法是除以調整後 RR，因為調整後 RR 是「真值」的較佳估計。
+      記住公式：絕對值的粗 RR 減調整 RR，除以調整 RR。
+    animation: "show_blindspot_denominator"
+    error_code: "change = abs(crude - adj) / crude * 100"
+    correct_code: "change = abs(crude - adj) / adj * 100"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：有交互作用還硬報 MH 值。
+      如果各層 RR 差異非常大，例如 1.2 和 4.5，
+      MH 把它們加權平均成 2.8，這個數字其實沒有人符合。
+      對 RR 是 1.2 的人，2.8 高估；對 4.5 的人，2.8 低估。
+      這時候應該分層報告，不要報 MH 值。
+      判斷方法是同質性檢定，我們下集會講。
+    animation: "show_blindspot_interaction"
+    error_code: "print(f'Adjusted RR = {rr_mh}')"
+    correct_code: "if homogeneity_ok: print(rr_mh); else: print(per_stratum)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你掌握了 Mantel-Haenszel 加權！
+      下一集要講一個經常被搞混的概念：
+      交互作用跟干擾作用到底差在哪裡，什麼時候該分層報告？
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
