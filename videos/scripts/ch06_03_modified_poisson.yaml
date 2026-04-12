@@ -1,0 +1,160 @@
+meta:
+  chapter: "06"
+  concept: "modified_poisson"
+  title: "Modified Poisson：借帽子算 RR 的魔法"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch06_03_modified_poisson"
+  scene_class: "Ch06ModifiedPoissonScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      這一集我們要拆解 Ch06 的主角：Modified Poisson regression。
+      這是一個流病界公認的黃金做法——
+      世代研究要算 adjusted RR，又有一堆共變項要調整，就用它。
+      它的操作超簡單，但背後的邏輯很漂亮，聽完你會覺得：「原來數學家這麼會借東西」。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_not_other"
+    narration: >
+      先看其他候選人為什麼不夠好。
+      log-binomial：理論上對、實務常不收斂。
+      Cox：需要時間變項，世代研究如果只有「最後感染沒」沒辦法用。
+      邏輯斯：算出來是 OR，高侵襲率會高估。
+      於是 Zou 在 2004 年《美國流行病學期刊》提出：借 Poisson 家族 + robust SE 修正。
+      從此變成全世界流病的標配。
+    animation: "show_why_not_other"
+    pause_after: 0.5
+
+  - id: "poisson_original"
+    narration: >
+      先回憶 Poisson 原本是幹嘛的。
+      Poisson 是算「單位時間發生幾次」的分布，比如說一天來幾個急診病人。
+      它假設 E 值等於變異數，而且出來的 exp beta 是發生率比——incidence rate ratio。
+      重點來了：對「0 或 1」的感染資料，exp beta 正好就是 RR。
+      所以我們借 Poisson 的連結函數 log，套在感染資料上。
+    animation: "show_poisson_original"
+    pause_after: 0.5
+
+  - id: "borrow_hat_metaphor"
+    narration: >
+      但是直接借有一個問題。
+      Poisson 假設 E 值等於變異數，感染資料是 binomial，變異數比較小。
+      結果：standard error 算太大，信賴區間吹脹。
+      解法：戴「修正貼紙」——robust sandwich SE，用 HC0 覆蓋掉 Poisson 原本的 SE。
+      這就是「modified」的來源。
+      白話比喻：借別人的帽子戴，頭圍不合就墊衛生紙填滿。
+    animation: "show_borrow_hat"
+    pause_after: 0.5
+
+  - id: "code_demo"
+    narration: >
+      來看程式碼，超級簡短。
+      statsmodels.formula.api 的 smf.glm，
+      公式寫 infected 波浪號 shower_use 加上其他變項。
+      family 傳 sm.families.Poisson。
+      關鍵：fit 的時候傳 cov_type 等於 HC0。
+      沒有這個 HC0，就不是 modified，SE 會錯。
+    animation: "show_code_demo"
+    code: |
+      import statsmodels.api as sm
+      import statsmodels.formula.api as smf
+
+      model = smf.glm(
+          "infected ~ shower_use + age + C(floor)",
+          data=df,
+          family=sm.families.Poisson(),
+      ).fit(cov_type="HC0")   # ← 修正貼紙
+      rr = np.exp(model.params)
+      ci = np.exp(model.conf_int())
+    pause_after: 0.5
+
+  - id: "exp_and_ci"
+    narration: >
+      輸出解讀三招。
+      第一招：params 取 exp 還原 RR。
+      第二招：conf_int 整組取 exp 還原 RR 的 95% CI。
+      第三招：p 值直接看 pvalues，不用取 exp。
+      三招一組，包成 Table 2 就能交出去。
+    animation: "show_exp_and_ci"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      重點總結三件事。
+      一、Modified Poisson 世代研究首選，直接算 adjusted RR。
+      二、關鍵是 family Poisson 加 cov_type HC0，缺一不可。
+      三、結果記得 exp 還原才叫 RR。
+      記住這三件事，你就能取代大部分的 logistic 在世代研究中的角色。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：登革熱世代研究！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue"
+    narration: >
+      2015 年台南登革熱大爆發，侵襲率在某些里高達 20%。
+      研究問：家裡有積水容器，感染風險多幾倍？
+      如果用 logistic 算出 OR 等於 3.5。
+      但 20% 的侵襲率已經不罕見，OR 會高估。
+      改用 Modified Poisson 算出 adjusted RR 等於 2.3。
+      兩個數字差 50%，一個是「宣導孕婦要擔心」、一個是「其實還好」，決策完全不同。
+      這就是為什麼高侵襲率情境，一定要用 Modified Poisson。
+    animation: "show_extra_dengue"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      三個常見實作地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：忘記加 cov_type HC0。
+      沒加就是普通 Poisson，SE 太大，CI 超寬，結果看起來都不顯著。
+      會被審稿人發現你根本沒做 Zou 2004 的修正。
+      養成習慣：fit 括號一定要寫 cov_type。
+    animation: "show_blindspot_no_hc0"
+    error_code: "model.fit()"
+    correct_code: "model.fit(cov_type='HC0')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：params 直接當 RR 報告。
+      params 是 log RR，不是 RR。
+      必須 np.exp 還原。
+      報告前自己多看一眼：「這個數字有沒有取 exp？」
+    animation: "show_blindspot_no_exp"
+    error_code: "rr = model.params"
+    correct_code: "rr = np.exp(model.params)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：family 寫錯。
+      比如用 Binomial 或 Gaussian。
+      Binomial 配 log link 就是 log-binomial，跟 Modified Poisson 不一樣，而且常不收斂。
+      Modified Poisson 的完整咒語：family Poisson 加 HC0。
+      一字不差，記起來。
+    animation: "show_blindspot_wrong_family"
+    error_code: "family=sm.families.Binomial()"
+    correct_code: "family=sm.families.Poisson()"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜！你已經學會流病界最強的 adjusted RR 武器。
+      下一集我們來解鎖 statsmodels 的公式語法——
+      波浪號、加號、C 括號，到底在說什麼？
+      手把手讓你讀懂每個符號。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

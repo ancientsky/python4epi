@@ -1,0 +1,153 @@
+meta:
+  chapter: "06"
+  concept: "forest_plot_adjusted"
+  title: "Adjusted RR 森林圖：一眼看穿真正危險因子"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch06_07_forest_plot_adjusted"
+  scene_class: "Ch06ForestPlotAdjustedScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Table 2 交出去了，但老闆瞄一眼數字，抓不到重點。
+      這時候你掏出一張 forest plot——森林圖！
+      一眼看穿：哪個因子點在 1 的右邊（危險）、哪個點在左邊（保護），
+      哪個橫線細（CI 窄，估得準）、哪個橫線粗（CI 寬，估不準）。
+      Ch05 我們畫過 crude RR 的，這集我們畫 adjusted RR 的——
+      真正有調整過的數字。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "what_to_plot"
+    narration: >
+      森林圖畫什麼？
+      Y 軸：每個變項一列，由上而下排。
+      X 軸：RR 的 log 尺度（關鍵！）。
+      每個變項一個黑點 + 一條橫線：點是 aRR，橫線是 95% CI。
+      最重要：中間畫一條 RR 等於 1 的虛線。
+      點在左 = 保護、右 = 危險、壓到 1 = 不顯著。
+    animation: "show_what_to_plot"
+    pause_after: 0.5
+
+  - id: "why_log_x"
+    narration: >
+      為什麼 X 軸要用 log 尺度？
+      因為 RR 的效應是乘法的：RR 等於 0.5 跟 2 是「同樣強度」的效應，
+      但方向相反。
+      普通線性軸會把 0.5 壓到貼近 1，2 拉得老遠，看起來超不對稱。
+      log 尺度讓 0.5 和 2 離 1 的距離一樣。
+      養成習慣：流病 forest plot 一定要用 xscale log。
+    animation: "show_why_log_x"
+    pause_after: 0.5
+
+  - id: "code_demo"
+    narration: >
+      matplotlib 程式碼骨架。
+      第一步：從 table2 抽 variable、aRR、CI。
+      第二步：errorbar 畫點加橫線（xerr 是 CI 減 aRR）。
+      第三步：axvline 畫 x 等於 1 的虛線。
+      第四步：xscale log。
+      第五步：title、xlabel、yticks。
+      大功告成。
+    animation: "show_code_demo"
+    code: |
+      fig, ax = plt.subplots(figsize=(8, 6))
+      ax.errorbar(
+          table2["aRR"], range(len(table2)),
+          xerr=[table2["aRR"] - table2["CI_lo"],
+                table2["CI_hi"] - table2["aRR"]],
+          fmt="o", color="#D97757", ecolor="#6A9BCC",
+      )
+      ax.axvline(1.0, ls="--", color="gray")
+      ax.set_xscale("log")
+      ax.set_yticks(range(len(table2)))
+      ax.set_yticklabels(table2["variable"])
+      ax.set_xlabel("Adjusted RR (log scale)")
+    pause_after: 0.5
+
+  - id: "interpret_plot"
+    narration: >
+      看圖三招。
+      一、找壓到 1 虛線的——統計不顯著，可以暫時放一邊。
+      二、找完全右邊的、橫線不碰 1 的——顯著的危險因子，要介入。
+      三、找完全左邊的、橫線不碰 1 的——顯著的保護因子，可以推廣。
+      一張圖，優先順序一清二楚。
+    animation: "show_interpret_plot"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      森林圖五件事。
+      一、Y 軸變項、X 軸 RR log 尺度。
+      二、點是 aRR、橫線是 95% CI。
+      三、虛線畫在 RR 等於 1。
+      四、品牌色票：點深色、CI 線淺色。
+      五、解讀：壓 1 不顯著、遠離 1 效果強、橫線細估得準。
+      這就是流病最受歡迎的視覺化。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：Meta-analysis 的 forest plot！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_meta"
+    narration: >
+      流病最常看到 forest plot 的地方是 Meta-analysis（合併多個研究）。
+      每一列是「一個研究」，而不是「一個變項」。
+      最下面一列是加權合併效應（菱形呈現）。
+      統計工具不一樣（random-effects model），但圖的讀法完全一致：
+      看點離 1 多遠、看 CI 多寬、看菱形有沒有壓到 1。
+      舉一反三，所有效應量的圖都能用這招讀。
+    animation: "show_extra_meta"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Forest plot 三個常見地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：忘記 log 軸。
+      預設線性軸會讓 RR 0.5 跟 2 看起來超不對稱，解讀就失真。
+      記住：永遠 xscale log！
+    animation: "show_blindspot_no_log"
+    error_code: "ax.set_xscale('linear')"
+    correct_code: "ax.set_xscale('log')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：把 intercept 一起畫進去。
+      Intercept 的 exp 不是 RR，跟其他變項不在同一個尺度上，
+      畫進去會讓全圖爆 x 軸。
+      畫圖前先 drop intercept 那一列。
+    animation: "show_blindspot_intercept"
+    error_code: "plot_forest(table2)  # includes Intercept"
+    correct_code: "plot_forest(table2.loc[1:])  # drop intercept"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：不畫 x 等於 1 的虛線。
+      沒有這條虛線，讀者要自己對照 x 軸刻度，很累。
+      一條 axvline，讀者 1 秒鐘就分辨「顯著 vs 不顯著」。
+      小小一條虛線，體貼度爆表。
+    animation: "show_blindspot_no_vline"
+    error_code: "# no reference line drawn"
+    correct_code: "ax.axvline(1.0, ls='--', color='gray')"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      森林圖大功告成！
+      下一集 Ch06 最後一集：change in estimate，
+      10% 法則怎麼挑對的調整變項、避免多變項模型超載。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
