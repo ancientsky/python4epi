@@ -45,6 +45,8 @@ cfr = 19 / 121
 
 ## 核心概念
 
+- **Variable（變數）**：貼了標籤的盒子，用來儲存一個值，之後用名字取回。
+- **Data type（資料型別）**：整數 `int`、浮點數 `float`、字串 `str`、布林 `bool`——決定這個值能做什麼運算。
 - **Case definition（病例定義）**：先定義誰算個案，再計算指標。
 - **Line list**：每列一位個案、每欄一個變數（本教材使用 280 位住民 × 32 欄位的 Legionella 群聚資料）。
 - **Attack rate（侵襲率）**：`cases / population`——本群聚中為 121 / 280 = 43.2%。
@@ -60,6 +62,14 @@ cfr = 19 / 121
 ## Python 基礎練習（一步一步）
 
 ### 1) 數值變數——先把數字存起來
+
+```{figure} images/python_variables.svg
+:name: fig-python-variables
+:alt: 變數 (variable) 是貼了標籤的盒子，以及 int / float / str / bool 四種基本資料型別
+:width: 100%
+
+**變數 (Variable)** 是貼了標籤的盒子；`=` 是「把右邊的值放進左邊的盒子」。四種基本資料型別：`int`（整數 integer）、`float`（浮點數 float）、`str`（字串 string）、`bool`（布林 boolean）。
+```
 
 ```{raw} html
 <div class="video-card">
@@ -109,6 +119,14 @@ print(f"住院率: {hosp_rate:.2%}")
 ```
 
 ### 3) 字典——把同一主題的資料放一起
+
+```{figure} images/python_list_vs_dict.svg
+:name: fig-python-list-vs-dict
+:alt: 列表 (list) 和字典 (dict) 的比較——列表靠索引取值，字典靠 key 取值
+:width: 100%
+
+**列表 (List)** 是一排格子櫃，靠 index（索引、從 0 開始）取值；**字典 (Dict)** 是貼標籤的收納盒，靠 key（鍵）取值。下方先教字典，再教列表。
+```
 
 ```{raw} html
 <div class="video-card">
@@ -161,6 +179,14 @@ print(f"感染人數最多的翼區：{floor_wing_names[max_index]}（{max_cases
 
 ### 5) 條件判斷——把指標轉成行動訊號
 
+```{figure} images/python_if_else_flow.svg
+:name: fig-python-if-else
+:alt: if / elif / else 流程圖——CFR 經過多個條件判斷，走到對應的應變層級
+:width: 100%
+
+**條件判斷 (Conditional statement)** 讓資料依條件走不同路徑。`if`（如果）→ `elif`（否則如果）→ `else`（其他）。`>`、`<`、`==`、`!=` 是**比較運算子 (comparison operator)**，會回傳 `True` 或 `False`。
+```
+
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：條件判斷</div>
@@ -182,6 +208,14 @@ else:
 ```
 
 ### 6) 函式——把計算邏輯包成可重用的工具
+
+```{figure} images/python_function_machine.svg
+:name: fig-python-function
+:alt: 函式 (function) 是自動計算機——輸入參數、經過函式本體、回傳輸出
+:width: 100%
+
+**函式 (Function)** 就像自動計算機：輸入 **參數 (parameters)** → 經過 **函式本體 (body)** → `return` **輸出 (output)**。一次定義、多次呼叫 (reusability)，改公式只改一個地方，不怕改漏。
+```
 
 ```{raw} html
 <div class="video-card">
