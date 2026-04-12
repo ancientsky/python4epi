@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D97757"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="560" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">Method Chaining —— pandas 的「流水線接龍」</text>
+  <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">每個 `.` 都是一個加工站，表格在站之間「形狀會變」——這就是 pandas 指令怎麼接起來的秘密</text>
+
+  <!-- Pipeline factory metaphor -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="72" width="740" height="230" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="400" y="96" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">把這一串程式碼想像成工廠流水線</text>
+
+  <!-- Code at top -->
+  <rect x="60" y="110" width="680" height="56" rx="6" fill="#2B2B2B"/>
+  <text x="75" y="130" font-size="12" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">result = (df</text>
+  <text x="75" y="148" font-size="12" font-family="Menlo, Monaco, monospace" fill="#D97757">    .query(</text>
+  <text x="140" y="148" font-size="12" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">"infected == 1"</text>
+  <text x="255" y="148" font-size="12" font-family="Menlo, Monaco, monospace" fill="#D97757">)</text>
+  <text x="268" y="148" font-size="12" font-family="Menlo, Monaco, monospace" fill="#6A9BCC">.groupby(</text>
+  <text x="340" y="148" font-size="12" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">"floor"</text>
+  <text x="390" y="148" font-size="12" font-family="Menlo, Monaco, monospace" fill="#6A9BCC">)</text>
+  <text x="400" y="148" font-size="12" font-family="Menlo, Monaco, monospace" fill="#788C5D">.size()</text>
+  <text x="455" y="148" font-size="12" font-family="Menlo, Monaco, monospace" fill="#D94452">.reset_index(name="n")</text>
+  <text x="75" y="166" font-size="12" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">)</text>
+
+  <!-- Pipeline stations -->
+  <!-- Station 1: input df -->
+  <rect x="60" y="185" width="110" height="90" rx="6" fill="#F5F3EE" stroke="#6B6B6B" stroke-width="1.5"/>
+  <text x="115" y="204" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">df (原始)</text>
+  <text x="115" y="222" text-anchor="middle" font-size="10" fill="#6B6B6B">DataFrame</text>
+  <rect x="75" y="230" width="80" height="14" fill="#FFFFFF" stroke="#6B6B6B"/>
+  <rect x="75" y="244" width="80" height="14" fill="#FFFFFF" stroke="#6B6B6B"/>
+  <rect x="75" y="258" width="80" height="14" fill="#FFFFFF" stroke="#6B6B6B"/>
+  <text x="115" y="291" text-anchor="middle" font-size="10" fill="#6B6B6B">280 × 32</text>
+
+  <line x1="170" y1="230" x2="195" y2="230" stroke="#D97757" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Station 2: .query() -->
+  <rect x="200" y="185" width="120" height="90" rx="6" fill="#D97757" fill-opacity="0.1" stroke="#D97757" stroke-width="1.5"/>
+  <text x="260" y="204" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">.query()</text>
+  <text x="260" y="222" text-anchor="middle" font-size="9" fill="#6B6B6B">篩出感染者</text>
+  <rect x="215" y="230" width="90" height="14" fill="#FFFFFF" stroke="#D97757"/>
+  <rect x="215" y="244" width="90" height="14" fill="#FFFFFF" stroke="#D97757"/>
+  <text x="260" y="291" text-anchor="middle" font-size="10" fill="#6B6B6B">121 × 32</text>
+
+  <line x1="320" y1="230" x2="345" y2="230" stroke="#D97757" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Station 3: .groupby() -->
+  <rect x="350" y="185" width="120" height="90" rx="6" fill="#6A9BCC" fill-opacity="0.1" stroke="#6A9BCC" stroke-width="1.5"/>
+  <text x="410" y="204" text-anchor="middle" font-size="11" font-weight="bold" fill="#6A9BCC">.groupby()</text>
+  <text x="410" y="222" text-anchor="middle" font-size="9" fill="#6B6B6B">依樓層分堆</text>
+  <rect x="365" y="230" width="30" height="28" fill="#FFFFFF" stroke="#6A9BCC"/>
+  <rect x="400" y="230" width="30" height="28" fill="#FFFFFF" stroke="#6A9BCC"/>
+  <rect x="435" y="230" width="30" height="28" fill="#FFFFFF" stroke="#6A9BCC"/>
+  <text x="380" y="248" text-anchor="middle" font-size="9" fill="#6B6B6B">1F</text>
+  <text x="415" y="248" text-anchor="middle" font-size="9" fill="#6B6B6B">2F</text>
+  <text x="450" y="248" text-anchor="middle" font-size="9" fill="#6B6B6B">3F</text>
+  <text x="410" y="291" text-anchor="middle" font-size="10" fill="#6B6B6B">GroupBy 物件</text>
+
+  <line x1="470" y1="230" x2="495" y2="230" stroke="#D97757" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Station 4: .size() -->
+  <rect x="500" y="185" width="120" height="90" rx="6" fill="#788C5D" fill-opacity="0.1" stroke="#788C5D" stroke-width="1.5"/>
+  <text x="560" y="204" text-anchor="middle" font-size="11" font-weight="bold" fill="#788C5D">.size()</text>
+  <text x="560" y="222" text-anchor="middle" font-size="9" fill="#6B6B6B">數每堆幾人</text>
+  <rect x="525" y="230" width="70" height="14" fill="#FFFFFF" stroke="#788C5D"/>
+  <text x="560" y="240" text-anchor="middle" font-size="9" fill="#6B6B6B">1F  45</text>
+  <rect x="525" y="244" width="70" height="14" fill="#FFFFFF" stroke="#788C5D"/>
+  <text x="560" y="254" text-anchor="middle" font-size="9" fill="#6B6B6B">2F  38</text>
+  <text x="560" y="291" text-anchor="middle" font-size="10" fill="#6B6B6B">Series (3,)</text>
+
+  <line x1="620" y1="230" x2="645" y2="230" stroke="#D97757" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Station 5: .reset_index() -->
+  <rect x="650" y="185" width="110" height="90" rx="6" fill="#D94452" fill-opacity="0.1" stroke="#D94452" stroke-width="1.5"/>
+  <text x="705" y="204" text-anchor="middle" font-size="11" font-weight="bold" fill="#D94452">.reset_index</text>
+  <text x="705" y="222" text-anchor="middle" font-size="9" fill="#6B6B6B">變回整齊表格</text>
+  <rect x="665" y="230" width="80" height="14" fill="#FFFFFF" stroke="#D94452"/>
+  <rect x="665" y="244" width="80" height="14" fill="#FFFFFF" stroke="#D94452"/>
+  <text x="705" y="291" text-anchor="middle" font-size="10" fill="#6B6B6B">3 × 2 (floor, n)</text>
+
+  <!-- Key rules -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="320" width="365" height="220" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="212" y="344" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">🔑 三條規則讓你不迷路</text>
+
+  <rect x="50" y="356" width="325" height="50" rx="6" fill="#F5F3EE"/>
+  <text x="60" y="374" font-size="11" font-weight="bold" fill="#D97757">① 每個 `.` 接一個動作</text>
+  <text x="60" y="390" font-size="10" fill="#6B6B6B">df.query(...).groupby(...).size()</text>
+  <text x="60" y="402" font-size="10" fill="#6B6B6B">= 「篩選 → 分組 → 計數」三步</text>
+
+  <rect x="50" y="414" width="325" height="50" rx="6" fill="#F5F3EE"/>
+  <text x="60" y="432" font-size="11" font-weight="bold" fill="#6A9BCC">② 用 ( ) 包起來 + 每行一個動作</text>
+  <text x="60" y="448" font-size="10" fill="#6B6B6B">result = (</text>
+  <text x="60" y="460" font-size="10" fill="#6B6B6B">    df.query(...).groupby(...)  ← 換行較易讀</text>
+
+  <rect x="50" y="472" width="325" height="58" rx="6" fill="#F5F3EE"/>
+  <text x="60" y="490" font-size="11" font-weight="bold" fill="#788C5D">③ 記住：輸出形狀會變</text>
+  <text x="60" y="506" font-size="10" fill="#6B6B6B">DataFrame → Series → DataFrame</text>
+  <text x="60" y="520" font-size="10" fill="#6B6B6B">遇到錯誤時先 print 前一步的 type()</text>
+
+  <!-- Traditional vs chain comparison -->
+  <g filter="url(#shadow)">
+    <rect x="405" y="320" width="365" height="220" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="587" y="344" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">傳統寫法 vs 鏈式寫法</text>
+
+  <text x="425" y="366" font-size="11" font-weight="bold" fill="#6B6B6B">😵 傳統寫法（很多暫時變數）</text>
+  <rect x="425" y="372" width="325" height="70" rx="4" fill="#2B2B2B"/>
+  <text x="435" y="388" font-size="10" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">a = df[df["infected"] == 1]</text>
+  <text x="435" y="404" font-size="10" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">b = a.groupby("floor")</text>
+  <text x="435" y="420" font-size="10" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">c = b.size()</text>
+  <text x="435" y="436" font-size="10" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">result = c.reset_index(name="n")</text>
+
+  <text x="425" y="466" font-size="11" font-weight="bold" fill="#D97757">😎 鏈式寫法（一氣呵成）</text>
+  <rect x="425" y="472" width="325" height="58" rx="4" fill="#2B2B2B"/>
+  <text x="435" y="488" font-size="10" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">result = (df</text>
+  <text x="435" y="502" font-size="10" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">    .query("infected == 1")</text>
+  <text x="435" y="516" font-size="10" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">    .groupby("floor").size()</text>
+  <text x="435" y="526" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">    .reset_index(name="n"))</text>
+</svg>

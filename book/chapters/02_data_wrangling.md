@@ -60,6 +60,14 @@ ages = df["age"]        # 280 位住民的年齡，就是一個 Series
 | 欄位數量 | 看最上面的字母 | `df.shape[1]` |
 | 資料筆數 | 看最左邊的數字 | `df.shape[0]` 或 `len(df)` |
 
+```{figure} images/pandas_dataframe_anatomy.svg
+:name: pandas-dataframe-anatomy
+:alt: DataFrame 解剖圖：列與欄的結構、Series 與 DataFrame 的差別、四種取值方法
+:width: 100%
+
+DataFrame 解剖圖：一張表格由列（row）和欄（column）組成，取一欄得到 Series（1D），取多欄仍是 DataFrame（2D）。記住四種取值語法 `df["col"]`、`df.iloc[0]`、`df.loc[0, "col"]`、`df[condition]` 就能解 80% 的問題。
+```
+
 ## 視覺化套件選擇
 
 | 套件 | 適合場景 | 特色 |
@@ -239,6 +247,14 @@ df["n_comorbidities"] = df[comorbidity_cols].sum(axis=1)
 > | `axis=1` | → 往右 | 對每個**列**做運算（跨欄加總） | 每個學生的總分 |
 >
 > 這裡我們要算每位住民有幾種共病，所以是「橫向（axis=1）」加總那 5 個 0/1 欄位。
+
+```{figure} images/pandas_axis_0_vs_1.svg
+:name: pandas-axis-0-vs-1
+:alt: axis=0 vs axis=1：垂直箭頭代表 axis=0（每欄一個結果），水平箭頭代表 axis=1（每列一個結果）
+:width: 100%
+
+`axis=0` 的箭頭方向是 ↓（由上往下），得到「每個欄位」一個結果（例如每科平均）；`axis=1` 的箭頭方向是 →（由左往右），得到「每一列」一個結果（例如每人共病數）。口訣：「axis=N 表示結果形狀中 axis=N 這個維度被壓扁」。
+```
 
 #### 4c) 感染旗標 — 布林運算 + `astype(int)`
 
@@ -499,6 +515,14 @@ print(df["risk_level"].value_counts())
 
 傳統寫法把每一步拆開，中間產生很多暫時變數。**Method chaining**（方法鏈）把多步操作串成一條流水線，可讀性更高：
 
+```{figure} images/pandas_method_chaining.svg
+:name: pandas-method-chaining
+:alt: Method chaining 流水線：每個 `.` 代表一個加工站，表格在站之間形狀會變
+:width: 100%
+
+Method chaining = 工廠流水線。每個 `.` 是一個加工站（`.query()` 篩選、`.groupby()` 分堆、`.size()` 計數、`.reset_index()` 還原），資料在站之間會改變形狀（DataFrame → GroupBy 物件 → Series → DataFrame）。看不懂時，先 `print(type(...))` 確認每步的輸出類型。
+```
+
 ```python
 # 傳統寫法（很多暫時變數）
 cases = df[df["infected"] == 1]
@@ -665,6 +689,14 @@ plt.show()                    # 顯示圖表
 ```
 
 > 💡 **為什麼用 `fig, ax`？** 因為之後你需要在同一張畫布上畫多個子圖（如上下兩張流行曲線比較），只有 `fig, ax` 寫法能做到。現在先習慣這個模式，以後會感謝自己。
+
+```{figure} images/matplotlib_fig_ax_anatomy.svg
+:name: matplotlib-fig-ax
+:alt: matplotlib 解剖圖：Figure 是外層畫布，Axes 是真正畫圖的畫板，各元件對應的函式
+:width: 100%
+
+**fig (Figure) = 整張畫布**（藍色虛線外框）；**ax (Axes) = 畫板**（橘色實線內框，含座標軸、格線、標題）。記住公式：把 `plt.bar` 換成 `ax.bar`、把 `plt.title/xlabel/ylabel` 換成 `ax.set_title/set_xlabel/set_ylabel`（多一個 `set_`）就對了。
+```
 
 ### 三套繪圖工具的差異
 
