@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="560" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">括號地圖 Brackets Guide —— ( )  [ ]  { }  " " 各自何時用？</text>
+  <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">Python 初學者最容易搞混的四種括號——用錯一個，程式就壞掉</text>
+
+  <!-- Parenthesis ( ) -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="72" width="365" height="205" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="30" y="72" width="365" height="36" rx="10" fill="#D97757" fill-opacity="0.15"/>
+  <text x="212" y="96" text-anchor="middle" font-size="15" font-weight="bold" fill="#D97757">( ) 小括號 Parentheses</text>
+
+  <text x="50" y="128" font-size="11" font-weight="bold" fill="#1A1A1A">① 呼叫函式（call function）</text>
+  <rect x="50" y="134" width="325" height="22" rx="3" fill="#2B2B2B"/>
+  <text x="60" y="150" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">print(</text>
+  <text x="110" y="150" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">"hello"</text>
+  <text x="168" y="150" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">)</text>
+  <text x="200" y="150" font-size="11" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">← 執行函式</text>
+
+  <text x="50" y="178" font-size="11" font-weight="bold" fill="#1A1A1A">② 數學運算分組</text>
+  <rect x="50" y="184" width="325" height="22" rx="3" fill="#2B2B2B"/>
+  <text x="60" y="200" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">(19 + 5) / 121</text>
+  <text x="200" y="200" font-size="11" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">← 先算括號內</text>
+
+  <text x="50" y="228" font-size="11" font-weight="bold" fill="#1A1A1A">③ tuple（不可變序列）</text>
+  <rect x="50" y="234" width="325" height="22" rx="3" fill="#2B2B2B"/>
+  <text x="60" y="250" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">point = (24.15, 120.67)</text>
+
+  <text x="50" y="270" font-size="10" fill="#D97757" font-weight="bold">記憶口訣：動詞 → 小括號（呼叫、計算、執行）</text>
+
+  <!-- Square brackets [ ] -->
+  <g filter="url(#shadow)">
+    <rect x="405" y="72" width="365" height="205" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="405" y="72" width="365" height="36" rx="10" fill="#6A9BCC" fill-opacity="0.15"/>
+  <text x="587" y="96" text-anchor="middle" font-size="15" font-weight="bold" fill="#6A9BCC">[ ] 中括號 Square Brackets</text>
+
+  <text x="425" y="128" font-size="11" font-weight="bold" fill="#1A1A1A">① 建立列表（list）</text>
+  <rect x="425" y="134" width="325" height="22" rx="3" fill="#2B2B2B"/>
+  <text x="435" y="150" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">wings = ["1A", "1B", "2A"]</text>
+
+  <text x="425" y="178" font-size="11" font-weight="bold" fill="#1A1A1A">② 取索引 / 取 key</text>
+  <rect x="425" y="184" width="325" height="22" rx="3" fill="#2B2B2B"/>
+  <text x="435" y="200" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">wings[0]</text>
+  <text x="500" y="200" font-size="11" font-family="Menlo, Monaco, monospace" fill="#6B6B6B"># "1A"（第 1 個）</text>
+
+  <text x="425" y="228" font-size="11" font-weight="bold" fill="#1A1A1A">③ 字典取值 / DataFrame 欄位</text>
+  <rect x="425" y="234" width="325" height="22" rx="3" fill="#2B2B2B"/>
+  <text x="435" y="250" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">outbreak[</text>
+  <text x="515" y="250" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">"deaths"</text>
+  <text x="575" y="250" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">]</text>
+  <text x="605" y="250" font-size="11" font-family="Menlo, Monaco, monospace" fill="#6B6B6B"># 19</text>
+
+  <text x="425" y="270" font-size="10" fill="#6A9BCC" font-weight="bold">記憶口訣：名詞 → 中括號（取東西、建列表）</text>
+
+  <!-- Curly braces { } -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="290" width="365" height="205" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="2"/>
+  </g>
+  <rect x="30" y="290" width="365" height="36" rx="10" fill="#788C5D" fill-opacity="0.15"/>
+  <text x="212" y="314" text-anchor="middle" font-size="15" font-weight="bold" fill="#788C5D">{ } 大括號 Curly Braces</text>
+
+  <text x="50" y="346" font-size="11" font-weight="bold" fill="#1A1A1A">① 建立字典（dict）key: value</text>
+  <rect x="50" y="352" width="325" height="22" rx="3" fill="#2B2B2B"/>
+  <text x="60" y="368" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">{"deaths": 19, "cases": 121}</text>
+
+  <text x="50" y="396" font-size="11" font-weight="bold" fill="#1A1A1A">② 建立集合（set）</text>
+  <rect x="50" y="402" width="325" height="22" rx="3" fill="#2B2B2B"/>
+  <text x="60" y="418" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">{"1A", "1B", "2A"}</text>
+  <text x="230" y="418" font-size="11" font-family="Menlo, Monaco, monospace" fill="#6B6B6B"># 無重複</text>
+
+  <text x="50" y="446" font-size="11" font-weight="bold" fill="#1A1A1A">③ f-string 變數插入</text>
+  <rect x="50" y="452" width="325" height="22" rx="3" fill="#2B2B2B"/>
+  <text x="60" y="468" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">f"CFR: </text>
+  <text x="118" y="468" font-size="11" font-family="Menlo, Monaco, monospace" fill="#788C5D" font-weight="bold">{cfr:.2%}</text>
+  <text x="178" y="468" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">"</text>
+
+  <text x="50" y="488" font-size="10" fill="#788C5D" font-weight="bold">記憶口訣：一對一（key:value、f-string 變數）</text>
+
+  <!-- Quotes " " -->
+  <g filter="url(#shadow)">
+    <rect x="405" y="290" width="365" height="205" rx="10" fill="#FFFFFF" stroke="#D94452" stroke-width="2"/>
+  </g>
+  <rect x="405" y="290" width="365" height="36" rx="10" fill="#D94452" fill-opacity="0.12"/>
+  <text x="587" y="314" text-anchor="middle" font-size="15" font-weight="bold" fill="#D94452">" " 引號 Quotes</text>
+
+  <text x="425" y="346" font-size="11" font-weight="bold" fill="#1A1A1A">① 建立字串（文字資料）</text>
+  <rect x="425" y="352" width="325" height="22" rx="3" fill="#2B2B2B"/>
+  <text x="435" y="368" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">"Legionella pneumophila"</text>
+
+  <text x="425" y="396" font-size="11" font-weight="bold" fill="#1A1A1A">② 單引號 / 雙引號等價</text>
+  <rect x="425" y="402" width="325" height="22" rx="3" fill="#2B2B2B"/>
+  <text x="435" y="418" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">'confirmed'</text>
+  <text x="525" y="418" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">==</text>
+  <text x="555" y="418" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">"confirmed"</text>
+
+  <text x="425" y="446" font-size="11" font-weight="bold" fill="#1A1A1A">③ 三引號 = 多行字串</text>
+  <rect x="425" y="452" width="325" height="22" rx="3" fill="#2B2B2B"/>
+  <text x="435" y="468" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">"""多行說明文件"""</text>
+
+  <text x="425" y="488" font-size="10" fill="#D94452" font-weight="bold">記憶口訣：有引號 = 文字；沒引號 = 變數名或數字</text>
+
+  <!-- Bottom quick reference -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="510" width="740" height="42" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="50" y="535" font-size="11" font-weight="bold" fill="#1A1A1A">⚡ 最常見錯誤：</text>
+  <text x="160" y="535" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D94452">outbreak("deaths")</text>
+  <text x="320" y="535" font-size="11" fill="#6B6B6B">（用錯括號）應該是</text>
+  <text x="445" y="535" font-size="11" font-family="Menlo, Monaco, monospace" fill="#788C5D">outbreak["deaths"]</text>
+  <text x="600" y="535" font-size="11" fill="#6B6B6B">取值要用 [ ]</text>
+</svg>

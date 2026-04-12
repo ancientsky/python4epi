@@ -106,6 +106,14 @@ for cases in floor_cases:       # 第一層
 
 Ch01 裡所有計算都用 Python 內建功能。但真正做疫調分析時，你需要「借用」別人寫好的強大工具——這就是 `import`。
 
+```{figure} images/python_import_forms.svg
+:name: fig-python-import-forms
+:alt: import 三種寫法 —— import module、from module import name、import module as alias
+:width: 100%
+
+**import 三種寫法**：① `import statistics` 整箱搬回來，用時要加前綴；② `from statistics import mean` 只挑一個工具，呼叫時不用前綴；③ `import pandas as pd` 取別名（社群約定俗成：`pd`, `np`, `plt`, `sns`）。
+```
+
 **三種 import 寫法：**
 
 ```python
@@ -135,12 +143,21 @@ import seaborn as sns         # sns 取自 Samuel Norman Seaborn（影集人物�
 
 **疫調示範：用 `statistics` 模組分析個案年齡**
 
+```{figure} images/python_dot_notation.svg
+:name: fig-python-dot-notation
+:alt: 點記法 (dot notation) —— statistics.mean(ages) 拆解為「工具箱.工具(輸入值)」
+:width: 100%
+
+**點記法 (Dot notation)**：`statistics.mean(ages)` 念作「statistics 工具箱**的** mean 功能，傳入 ages」。`.` 是「的」的意思——先指定來源（模組或物件），再取出裡面的功能。字串物件會 `.strip()`、`.split()`；DataFrame 會 `.groupby()`、`.head()`——**都是同一個規則**。
+```
+
 ```python
 import statistics
 
 # 10 位感染者的年齡
 ages = [72, 68, 81, 75, 90, 66, 78, 85, 73, 69]
 
+# 點記法：statistics「的」mean 功能，傳入 ages
 print(f"平均年齡: {statistics.mean(ages):.1f}")      # 75.7
 print(f"中位數:   {statistics.median(ages):.1f}")     # 73.5
 print(f"標準差:   {statistics.stdev(ages):.1f}")      # 7.8
@@ -204,6 +221,29 @@ if not (cfr < 0.05):
     print("致死率不算低，需持續監測")
 ```
 
+### 3b) 括號地圖——`( )` `[ ]` `{ }` `" "` 各自何時用？
+
+新手最容易搞混的就是「哪種情況要用哪種括號」。用錯一個，程式就壞掉。
+
+```{figure} images/python_brackets_guide.svg
+:name: fig-python-brackets
+:alt: Python 四種括號的用途地圖 —— 小括號 ( ) 、中括號 [ ] 、大括號 { } 、引號 " "
+:width: 100%
+
+**括號地圖**：`( )` 小括號 = 動詞（呼叫函式、計算、tuple）；`[ ]` 中括號 = 名詞（列表、取索引、取字典值）；`{ }` 大括號 = 一對一（字典 key:value、集合、f-string 變數）；`" "` 引號 = 文字字串。
+```
+
+**四種括號的記憶口訣：**
+
+| 符號 | 主要用途 | 範例 |
+|------|----------|------|
+| `( )` | **動作**——呼叫函式、分組運算、tuple | `print("hi")`、`(a + b) * 2`、`(24.15, 120.67)` |
+| `[ ]` | **取東西**——建立列表、取索引、取字典值 | `["1A", "1B"]`、`wings[0]`、`outbreak["deaths"]` |
+| `{ }` | **一對一**——字典 key:value、集合、f-string 變數 | `{"deaths": 19}`、`{"1A", "1B"}`、`f"CFR: {cfr:.2%}"` |
+| `" "` | **文字**——字串資料（單雙引號等價） | `"confirmed"`、`'Legionella'`、`"""多行文件"""` |
+
+> ⚡ **最常見錯誤**：`outbreak("deaths")` ← 用成小括號。取字典值要用中括號 `outbreak["deaths"]`。小括號是「呼叫」、中括號才是「取」。
+
 ---
 
 ## Part 2：Debug 生存技能
@@ -221,6 +261,14 @@ if not (cfr < 0.05):
 ```
 
 看到滿螢幕的紅字別慌。Python 的錯誤訊息其實很貼心——**從最後一行往上讀**就好。
+
+```{figure} images/python_traceback_reading.svg
+:name: fig-python-traceback
+:alt: 讀懂 Python traceback —— 由下往上讀，最後一行是錯誤類型，中間是執行路徑
+:width: 100%
+
+**讀 traceback 的 SOP**：① 先看**最後一行**（錯誤類型 + 訊息，如 `TypeError: ...`）；② 回頭找**你自己檔名**的那一行行號（例如 `File "outbreak.py", line 15`），去該行看程式碼；③ 對照右側速查表（`NameError`、`TypeError`、`KeyError`、`IndexError`、`IndentationError`）。
+```
 
 **閱讀 traceback 的口訣：看最後一行 → 看錯誤類型 → 看行號**
 
