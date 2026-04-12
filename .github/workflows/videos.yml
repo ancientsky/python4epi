@@ -57,6 +57,7 @@ on:
           - classification
           - generate_sitrep
           - report_output
+          - pii_protection
       quality:
         description: "Render quality"
         required: false

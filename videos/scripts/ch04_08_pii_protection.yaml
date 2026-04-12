@@ -1,0 +1,279 @@
+meta:
+  chapter: "04"
+  concept: "pii_protection"
+  title: "個資保護——拿到 Line List 的第一件事"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch04_08_pii_protection"
+  scene_class: "Ch04PiiProtectionScene"
+
+segments:
+  # ========================================
+  # [A] 主線教學：PII 去識別化五大技巧
+  # ========================================
+  - id: "intro"
+    narration: >
+      嗨！歡迎回來。在我們衝去做流行曲線、侵襲率之前，
+      今天要先聊一個常常被忽略、但是超級重要的主題：
+      個資保護，Personal Identifiable Information，簡稱 PII。
+      想像一下，衛生局剛剛把一份 line list 丟到你信箱，裡面有姓名、身分證、電話、地址。
+      你心想：太好了，馬上開始分析！但是慢著——資料一進到你的電腦，
+      從那一秒開始，個資保護的責任就在你身上了。
+      今天就手把手教你用 Python 五招去識別化，保護住民，也保護自己。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_it_matters"
+    narration: >
+      為什麼要這麼小心？來看一個經典的研究。
+      美國學者 Sweeney 在 2002 年發現，
+      光是郵遞區號、生日和性別這三個欄位，
+      就足以重新識別全美國百分之八十七的人。
+      你沒聽錯，百分之八十七。
+      這代表什麼？就算你把姓名、身分證都拿掉，
+      只要留下這幾個看似無害的欄位，
+      有心人還是能拼出這個病例是誰。
+      所以「去識別化」不是只有把名字刪掉這麼簡單。
+    animation: "show_sweeney"
+    pause_after: 0.5
+
+  - id: "three_categories"
+    narration: >
+      PII 可以分成三類。
+      第一，直接識別資料：姓名、身分證、電話、地址、病歷號。
+      這種資料一看就知道是誰，要最優先處理。
+      第二，準識別資料：年齡、性別、出生日期、郵遞區號、工作單位。
+      單獨看沒事，合在一起就能拼出人。
+      第三，敏感屬性：HIV 狀態、精神科診斷、基因資訊、收入。
+      就算無法識別個人，洩漏出去也會造成傷害。
+      三種都要保護，但方法不一樣。
+    animation: "show_three_categories"
+    pause_after: 0.5
+
+  - id: "technique_1_suppression"
+    narration: >
+      第一招，Suppression——直接刪除。
+      這是最簡單也最徹底的方法。
+      用 pandas 的 drop 函式，把姓名、身分證、電話、地址這幾欄直接丟掉。
+      加上 errors 等於 ignore 這個參數，就算欄位不存在也不會報錯，
+      讓你的程式碼在不同資料集之間可以重複使用。
+      記得，能刪就刪，不要留。分析用不到的個資，就是不要留。
+    animation: "show_suppression"
+    code: |
+      pii_columns = [
+          "name", "national_id",
+          "phone", "address",
+      ]
+      df_safe = df.drop(
+          columns=pii_columns,
+          errors="ignore",
+      )
+    pause_after: 0.5
+
+  - id: "technique_2_pseudonymization"
+    narration: >
+      第二招，Pseudonymization——假名化。
+      有時候你需要一個「追蹤號碼」來串資料，但又不能用真的身分證。
+      怎麼辦？產生一組假名 ID。
+      這裡用 list comprehension，配合 zfill 補零，
+      把一到 N 轉成 CASE underscore 001、CASE underscore 002 這種格式。
+      注意，這組新 ID 和真實身分的對照表，要分開存在鎖起來的地方，
+      不能跟去識別化後的資料放在一起。
+    animation: "show_pseudonymization"
+    code: |
+      df_safe["case_id"] = [
+          "CASE_" + str(i).zfill(3)
+          for i in range(1, len(df_safe)+1)
+      ]
+    pause_after: 0.5
+
+  - id: "technique_3_hashing"
+    narration: >
+      第三招，Hashing——雜湊。
+      如果你要把兩份資料用同一個人串起來，但又不想留原始身分證，
+      就用 SHA 二五六雜湊。
+      重點來了：一定要加 salt，也就是鹽巴。
+      為什麼？因為台灣身分證號只有十碼，
+      如果直接雜湊，攻擊者可以把所有可能的身分證號都雜湊一遍，
+      做成一本對照字典，你的雜湊值就破功了，這叫彩虹表攻擊。
+      加了 salt，就像在湯裡加鹽，每個機構的雜湊值都不一樣，字典就失效了。
+      而且 salt 要從環境變數讀取，絕對不要寫死在程式碼裡。
+    animation: "show_hashing"
+    code: |
+      import hashlib, os
+      SALT = os.environ["PII_SALT"]
+      def hash_id(raw_id):
+          combined = (SALT + str(raw_id)).encode()
+          h = hashlib.sha256(combined).hexdigest()
+          return "H_" + h[:12]
+    pause_after: 0.5
+
+  - id: "technique_4_generalization"
+    narration: >
+      第四招，Generalization——泛化。
+      還記得 Sweeney 研究嗎？精確的生日很危險，那就別用精確的。
+      用 pd.cut 把年齡切成十歲一組：六十到六十九、七十到七十九。
+      這樣就算有人知道受害者是七十五歲的張阿嬤，
+      也對應不到某一筆資料，因為她會藏在一整組七十幾歲的人當中。
+      日期也一樣，用流行週，不用精確日期。地址也是，只留翼區，不留房號。
+      泛化的好處是：統計意義還在，但識別能力大幅下降。
+    animation: "show_generalization"
+    code: |
+      df_safe["age_group"] = pd.cut(
+          df["age"],
+          bins=[59, 69, 79, 89, 120],
+          labels=["60-69","70-79","80-89","90+"],
+      )
+      df_safe["epi_week"] = (
+          df["symptom_onset_date"].dt.isocalendar().week
+      )
+    pause_after: 0.5
+
+  - id: "technique_5_masking"
+    narration: >
+      第五招，Masking——遮罩。
+      有時候你必須保留一些原始資訊的格式，像是聯絡電話的區碼，方便後續勾稽。
+      那就用遮罩。
+      寫一個函式，把電話拆成三段，前面保留，中間後面用星號蓋掉。
+      顯示成 零九一二 星星星 星星星，讓人看得出是台灣手機格式，
+      但看不出完整號碼。身分證也一樣，只保留前兩碼。
+      Masking 的精神是：留下形式，藏起內容。
+    animation: "show_masking"
+    code: |
+      def mask_phone(phone):
+          parts = str(phone).split("-")
+          if len(parts) == 3:
+              return f"{parts[0]}-***-***"
+          return "***"
+    pause_after: 0.5
+
+  - id: "k_anonymity"
+    narration: >
+      五招學完，怎麼知道做得夠不夠？用 k-anonymity 自我檢查。
+      意思是：任何一組準識別欄位組合，至少要對應到 k 筆資料。
+      把年齡組、性別、翼區這三欄抓出來，groupby 一下，看每一組有幾個人。
+      如果有任何一組人數小於五，代表有人可能因為太獨特而被識別出來。
+      這時候就要再泛化，或是把那幾筆整筆刪掉。
+      業界常用的門檻是 k 等於五、十、甚至二十，越敏感的資料，k 值越大。
+    animation: "show_k_anonymity"
+    code: |
+      quasi_ids = ["age_group", "sex", "wing"]
+      sizes = (
+          df_safe.groupby(quasi_ids, observed=True)
+                 .size()
+      )
+      risky = sizes[sizes < 5]
+      print(f"Risky groups: {len(risky)}")
+    output: |
+      Risky groups: 2
+    pause_after: 0.5
+
+  - id: "three_tier_workflow"
+    narration: >
+      在實務上，我們推薦三層資料夾結構。
+      第一層，raw 底線 restricted：原始資料只有你和主管能看，加密儲存，加入 gitignore。
+      第二層，scripts 斜線 deidentify.py：一支獨立的 Python 腳本，負責做這五招去識別化。
+      第三層，deidentified：處理完的乾淨資料，才可以被 notebook 讀取、分享、上傳 Colab。
+      絕對絕對不要在 notebook 裡直接讀取原始檔案，
+      因為 notebook 會儲存中間結果，一不小心就把個資寫進 .ipynb 檔裡了。
+    animation: "show_workflow"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      快速複習！五招去識別化：
+      Suppression 直接刪，Pseudonymization 換假名，Hashing 加鹽雜湊，
+      Generalization 泛化組距，Masking 遮罩保留格式。
+      做完用 k-anonymity 檢查有沒有漏網之魚。
+      用三層資料夾把原始資料、去識別腳本、乾淨資料徹底隔離。
+      這五招記起來，一輩子受用。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] 額外防疫範例
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看一個真實世界的個資保護案例。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid_trace"
+    narration: >
+      COVID-19 期間，台灣推出實聯制，全民掃 QR Code 登記去過哪裡。
+      疾管署怎麼做個資保護？
+      第一，電話在資料庫裡只存 SHA 雜湊值，不存原碼。
+      第二，保存期限最長二十八天，時間一到自動清除。
+      第三，只有在疫調需要時，經主管核可才能解鎖。
+      第四，解鎖後只能比對特定時段特定場所，不能整份撈出來。
+      把今天學的五招對照過去：Hashing、Suppression、存取控制——全部到齊。
+      個資保護不是一個函式，是一整套流程和制度。
+    animation: "show_extra_covid"
+    code: |
+      # Taiwan 1922 SMS contact tracing
+      # Phone -> SHA256(phone + salt)
+      # Auto-purge after 28 days
+      # Access: outbreak investigation only
+    pause_after: 0.5
+
+  # ========================================
+  # [C] 初學者盲點
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      接下來是初學者最常犯的三個錯誤！每一個都可能害住民隱私曝光。
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：以為刪掉姓名就安全了。
+      這就是 Sweeney 教授打臉大家的那件事。
+      留下精確的生日、郵遞區號、性別，看起來很無辜對吧？
+      但百分之八十七的人可以被重新識別。
+      正確做法是：姓名當然刪，生日要泛化成年齡組，地址只留翼區或行政區。
+      準識別欄位比你想的危險太多了。
+    animation: "show_blindspot_quasi_id"
+    error_code: "df.drop(columns=['name'])"
+    correct_code: "df.drop(columns=['name','dob','zip'])"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：雜湊不加 salt。
+      很多初學者以為「我 SHA 二五六 了，很安全吧」。
+      錯！台灣身分證只有十個字，所有可能的組合一台筆電幾小時就可以全部雜湊一遍。
+      這就是彩虹表攻擊。加一個 salt，也就是加一串只有你知道的鹽巴字串，
+      讓攻擊者的字典全部失效。而且記得，salt 從環境變數讀，不要寫死在程式碼。
+    animation: "show_blindspot_no_salt"
+    error_code: "hashlib.sha256(id.encode()).hexdigest()"
+    correct_code: "hashlib.sha256((SALT+id).encode()).hexdigest()"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：把原始 CSV commit 進 git。
+      這是最恐怖的，因為 git 的歷史會保留這個檔案，
+      就算你下一個 commit 把它刪掉，它還是在歷史裡。
+      一旦推上公開的 GitHub，全世界都看得到。
+      解法：建立 .gitignore，把 raw 底線 restricted 資料夾整個排除。
+      還有，絕對不要在 Colab 或 Jupyter 直接貼出原始資料的前幾列，
+      因為 notebook 會記下來。
+    animation: "show_blindspot_git"
+    error_code: "git add data/line_list_raw.csv"
+    correct_code: "echo 'data/raw_restricted/' >> .gitignore"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] 結尾
+  # ========================================
+  - id: "outro"
+    narration: >
+      恭喜你掌握了個資保護的基本功！
+      記住一句話：資料不是你的，是住民託付給你的。
+      保護個資不是一次性的動作，是每天做分析的預設動作。
+      下一集我們回到 SitRep 的主線，開始產出第一份疫情日報。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
