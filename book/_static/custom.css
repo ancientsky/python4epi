@@ -278,6 +278,32 @@ button.copybtn:hover {
   opacity: 1;
 }
 
+/* Copy button tooltip (tippy.js): ensure readable contrast on dark code blocks. */
+.tippy-box {
+  background-color: #1A1A1A !important;
+  color: #FAF8F3 !important;
+  font-family: var(--epi-font-sans);
+  font-size: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 2px 4px;
+}
+.tippy-box .tippy-content {
+  color: #FAF8F3 !important;
+}
+.tippy-box[data-placement^="left"] > .tippy-arrow::before {
+  border-left-color: #1A1A1A !important;
+}
+.tippy-box[data-placement^="right"] > .tippy-arrow::before {
+  border-right-color: #1A1A1A !important;
+}
+.tippy-box[data-placement^="top"] > .tippy-arrow::before {
+  border-top-color: #1A1A1A !important;
+}
+.tippy-box[data-placement^="bottom"] > .tippy-arrow::before {
+  border-bottom-color: #1A1A1A !important;
+}
+
 /* =============================================================================
  * Tables
  * ============================================================================= */
