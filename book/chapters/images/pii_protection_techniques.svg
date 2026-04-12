@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrow-right" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D97757"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="600" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">個資保護流程 —— 從 Raw Line List 到可分析的去識別化資料</text>
+  <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">拿到 line list 的第一件事不是分析——是把 PII（Personally Identifiable Information）先處理掉</text>
+
+  <!-- Left: Raw line list with PII -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="72" width="235" height="260" rx="10" fill="#FFFFFF" stroke="#D94452" stroke-width="2"/>
+  </g>
+  <rect x="20" y="72" width="235" height="36" rx="10" fill="#D94452" fill-opacity="0.15"/>
+  <text x="137" y="96" text-anchor="middle" font-size="12" font-weight="bold" fill="#D94452">⚠ 原始 Line List（含 PII）</text>
+
+  <!-- Table with PII highlighted -->
+  <rect x="35" y="120" width="205" height="18" fill="#E8E5DF"/>
+  <text x="45" y="133" font-size="9" font-weight="bold" fill="#1A1A1A">id</text>
+  <text x="70" y="133" font-size="9" font-weight="bold" fill="#D94452">姓名</text>
+  <text x="105" y="133" font-size="9" font-weight="bold" fill="#D94452">身分證</text>
+  <text x="155" y="133" font-size="9" font-weight="bold" fill="#D94452">電話</text>
+  <text x="205" y="133" font-size="9" font-weight="bold" fill="#1A1A1A">age</text>
+
+  <rect x="35" y="138" width="205" height="16" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="45" y="150" font-size="9" fill="#1A1A1A">001</text>
+  <text x="70" y="150" font-size="9" fill="#D94452">王大明</text>
+  <text x="105" y="150" font-size="9" fill="#D94452">A12345****</text>
+  <text x="155" y="150" font-size="9" fill="#D94452">0912-345-678</text>
+  <text x="205" y="150" font-size="9" fill="#1A1A1A">72</text>
+
+  <rect x="35" y="154" width="205" height="16" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="45" y="166" font-size="9" fill="#1A1A1A">002</text>
+  <text x="70" y="166" font-size="9" fill="#D94452">李美華</text>
+  <text x="105" y="166" font-size="9" fill="#D94452">B98765****</text>
+  <text x="155" y="166" font-size="9" fill="#D94452">0928-111-222</text>
+  <text x="205" y="166" font-size="9" fill="#1A1A1A">85</text>
+
+  <rect x="35" y="170" width="205" height="16" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="45" y="182" font-size="9" fill="#1A1A1A">003</text>
+  <text x="70" y="182" font-size="9" fill="#D94452">陳志強</text>
+  <text x="105" y="182" font-size="9" fill="#D94452">A23456****</text>
+  <text x="155" y="182" font-size="9" fill="#D94452">0933-555-888</text>
+  <text x="205" y="182" font-size="9" fill="#1A1A1A">68</text>
+
+  <!-- PII categories -->
+  <rect x="35" y="200" width="205" height="42" rx="4" fill="#D94452" fill-opacity="0.08"/>
+  <text x="45" y="216" font-size="10" font-weight="bold" fill="#D94452">🔴 直接識別符 Direct ID</text>
+  <text x="45" y="230" font-size="9" fill="#6B6B6B">姓名、身分證、病歷號、</text>
+  <text x="45" y="240" font-size="9" fill="#6B6B6B">電話、住址、email</text>
+
+  <rect x="35" y="248" width="205" height="42" rx="4" fill="#D97757" fill-opacity="0.08"/>
+  <text x="45" y="264" font-size="10" font-weight="bold" fill="#D97757">🟠 準識別符 Quasi-ID</text>
+  <text x="45" y="278" font-size="9" fill="#6B6B6B">年齡 + 性別 + 郵遞區號 +</text>
+  <text x="45" y="288" font-size="9" fill="#6B6B6B">就醫日期 → 組合可識別</text>
+
+  <rect x="35" y="296" width="205" height="30" rx="4" fill="#788C5D" fill-opacity="0.08"/>
+  <text x="45" y="312" font-size="10" font-weight="bold" fill="#788C5D">🟢 敏感屬性 Sensitive</text>
+  <text x="45" y="322" font-size="9" fill="#6B6B6B">HIV、精神疾病、基因資料</text>
+
+  <!-- Middle: arrow + techniques -->
+  <line x1="270" y1="200" x2="305" y2="200" stroke="#D97757" stroke-width="3" marker-end="url(#arrow-right)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="280" y="72" width="240" height="260" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="280" y="72" width="240" height="36" rx="10" fill="#6A9BCC" fill-opacity="0.15"/>
+  <text x="400" y="96" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">🛡 五種去識別化技巧</text>
+
+  <!-- Technique 1: Suppression -->
+  <rect x="292" y="118" width="216" height="36" rx="4" fill="#F5F3EE"/>
+  <text x="300" y="132" font-size="10" font-weight="bold" fill="#1A1A1A">① Suppression 移除</text>
+  <text x="300" y="147" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">df.drop(columns=[...])</text>
+
+  <!-- Technique 2: Pseudonymization -->
+  <rect x="292" y="158" width="216" height="36" rx="4" fill="#F5F3EE"/>
+  <text x="300" y="172" font-size="10" font-weight="bold" fill="#1A1A1A">② Pseudonymization 假名化</text>
+  <text x="300" y="187" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">王大明 → CASE_001</text>
+
+  <!-- Technique 3: Hashing -->
+  <rect x="292" y="198" width="216" height="36" rx="4" fill="#F5F3EE"/>
+  <text x="300" y="212" font-size="10" font-weight="bold" fill="#1A1A1A">③ Hashing 雜湊（單向）</text>
+  <text x="300" y="227" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">sha256(id + salt)</text>
+
+  <!-- Technique 4: Generalization -->
+  <rect x="292" y="238" width="216" height="36" rx="4" fill="#F5F3EE"/>
+  <text x="300" y="252" font-size="10" font-weight="bold" fill="#1A1A1A">④ Generalization 泛化</text>
+  <text x="300" y="267" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">age 72 → age_group "70-79"</text>
+
+  <!-- Technique 5: Masking -->
+  <rect x="292" y="278" width="216" height="40" rx="4" fill="#F5F3EE"/>
+  <text x="300" y="294" font-size="10" font-weight="bold" fill="#1A1A1A">⑤ Masking 遮罩</text>
+  <text x="300" y="309" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">0912-345-678 → 0912-***-***</text>
+
+  <!-- Arrow to right -->
+  <line x1="530" y1="200" x2="565" y2="200" stroke="#D97757" stroke-width="3" marker-end="url(#arrow-right)"/>
+
+  <!-- Right: de-identified -->
+  <g filter="url(#shadow)">
+    <rect x="540" y="72" width="240" height="260" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="2"/>
+  </g>
+  <rect x="540" y="72" width="240" height="36" rx="10" fill="#788C5D" fill-opacity="0.15"/>
+  <text x="660" y="96" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">✓ 去識別化 Analysis DataFrame</text>
+
+  <rect x="555" y="120" width="210" height="18" fill="#E8E5DF"/>
+  <text x="565" y="133" font-size="9" font-weight="bold" fill="#1A1A1A">case_id</text>
+  <text x="615" y="133" font-size="9" font-weight="bold" fill="#1A1A1A">age_grp</text>
+  <text x="665" y="133" font-size="9" font-weight="bold" fill="#1A1A1A">sex</text>
+  <text x="705" y="133" font-size="9" font-weight="bold" fill="#1A1A1A">floor</text>
+
+  <rect x="555" y="138" width="210" height="16" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="565" y="150" font-size="9" fill="#788C5D">CASE_001</text>
+  <text x="615" y="150" font-size="9" fill="#1A1A1A">70-79</text>
+  <text x="665" y="150" font-size="9" fill="#1A1A1A">M</text>
+  <text x="705" y="150" font-size="9" fill="#1A1A1A">1</text>
+
+  <rect x="555" y="154" width="210" height="16" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="565" y="166" font-size="9" fill="#788C5D">CASE_002</text>
+  <text x="615" y="166" font-size="9" fill="#1A1A1A">80-89</text>
+  <text x="665" y="166" font-size="9" fill="#1A1A1A">F</text>
+  <text x="705" y="166" font-size="9" fill="#1A1A1A">2</text>
+
+  <rect x="555" y="170" width="210" height="16" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="565" y="182" font-size="9" fill="#788C5D">CASE_003</text>
+  <text x="615" y="182" font-size="9" fill="#1A1A1A">60-69</text>
+  <text x="665" y="182" font-size="9" fill="#1A1A1A">M</text>
+  <text x="705" y="182" font-size="9" fill="#1A1A1A">3</text>
+
+  <!-- Checklist -->
+  <rect x="555" y="200" width="210" height="126" rx="4" fill="#788C5D" fill-opacity="0.08"/>
+  <text x="565" y="218" font-size="10" font-weight="bold" fill="#788C5D">已完成的保護：</text>
+  <text x="565" y="234" font-size="9" fill="#1A1A1A">✓ 姓名/身分證/電話 → 移除</text>
+  <text x="565" y="248" font-size="9" fill="#1A1A1A">✓ 原始 id → 雜湊成 CASE_id</text>
+  <text x="565" y="262" font-size="9" fill="#1A1A1A">✓ 具體年齡 → 年齡組</text>
+  <text x="565" y="276" font-size="9" fill="#1A1A1A">✓ 房號 → 翼區/樓層</text>
+  <text x="565" y="290" font-size="9" fill="#1A1A1A">✓ 具體日期 → 流行病學週</text>
+  <text x="565" y="310" font-size="10" font-weight="bold" fill="#788C5D">可以上傳 GitHub / 發表 ✓</text>
+
+  <!-- Bottom: k-anonymity + legal notice -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="348" width="380" height="232" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="40" y="372" font-size="13" font-weight="bold" fill="#1A1A1A">💡 k-anonymity —— 一個人至少要「混在 k 個人裡」</text>
+
+  <text x="40" y="394" font-size="11" fill="#1A1A1A">定義：把任一組合（如年齡組 × 性別 × 樓層）</text>
+  <text x="40" y="410" font-size="11" fill="#1A1A1A">塞進資料表時，至少要有 <tspan font-weight="bold" fill="#D97757">k 筆</tspan> 人符合同樣條件。</text>
+
+  <rect x="40" y="422" width="340" height="55" rx="4" fill="#F5F3EE"/>
+  <text x="50" y="438" font-size="10" font-weight="bold" fill="#6A9BCC">k=5 的意思：</text>
+  <text x="50" y="454" font-size="10" fill="#6B6B6B">「70-79 歲 + 女性 + 1A 翼」這組條件下，</text>
+  <text x="50" y="468" font-size="10" fill="#6B6B6B">至少要有 5 位住民，否則就能被推測出是誰。</text>
+
+  <text x="40" y="496" font-size="11" font-weight="bold" fill="#D94452">⚠ 實務建議：k ≥ 5；敏感族群 k ≥ 10；公開資料 k ≥ 20</text>
+
+  <rect x="40" y="506" width="340" height="62" rx="4" fill="#D94452" fill-opacity="0.08"/>
+  <text x="50" y="524" font-size="10" font-weight="bold" fill="#D94452">若某組 n &lt; k，兩種處理：</text>
+  <text x="50" y="540" font-size="10" fill="#6B6B6B">① 合併群組（70-79 + 80-89 → 70+）</text>
+  <text x="50" y="556" font-size="10" fill="#6B6B6B">② 壓制該列（suppression）</text>
+
+  <!-- Bottom right: legal + workflow -->
+  <g filter="url(#shadow)">
+    <rect x="420" y="348" width="360" height="232" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="440" y="372" font-size="13" font-weight="bold" fill="#1A1A1A">📋 實務工作流 Workflow</text>
+
+  <!-- Step boxes -->
+  <rect x="440" y="384" width="320" height="36" rx="4" fill="#D94452" fill-opacity="0.08"/>
+  <text x="450" y="400" font-size="10" font-weight="bold" fill="#D94452">① 原始 line list（存在加密硬碟/受限目錄）</text>
+  <text x="450" y="414" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">data/raw/line_list_RESTRICTED.csv</text>
+
+  <rect x="440" y="425" width="320" height="36" rx="4" fill="#6A9BCC" fill-opacity="0.08"/>
+  <text x="450" y="441" font-size="10" font-weight="bold" fill="#6A9BCC">② 去識別化腳本（執行後輸出乾淨檔案）</text>
+  <text x="450" y="455" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">scripts/deidentify.py</text>
+
+  <rect x="440" y="466" width="320" height="36" rx="4" fill="#788C5D" fill-opacity="0.08"/>
+  <text x="450" y="482" font-size="10" font-weight="bold" fill="#788C5D">③ 去識別化資料（可進 git、可分享）</text>
+  <text x="450" y="496" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">data/deidentified/line_list.csv</text>
+
+  <!-- Legal reference -->
+  <rect x="440" y="510" width="320" height="60" rx="4" fill="#F5F3EE"/>
+  <text x="450" y="528" font-size="10" font-weight="bold" fill="#1A1A1A">📚 法規依據（台灣）：</text>
+  <text x="450" y="544" font-size="9" fill="#6B6B6B">• 個人資料保護法（個資法）第 6、20 條</text>
+  <text x="450" y="558" font-size="9" fill="#6B6B6B">• 傳染病防治法 第 10 條（保密義務）</text>
+</svg>

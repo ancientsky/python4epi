@@ -11,6 +11,7 @@
 ## 你將學到
 
 - 從 raw line list 到 SitRep 的完整自動化流程
+- **個資保護（PII protection）**：去識別化技巧、k-anonymity、實務工作流
 - 描述性流行病學三要素：**人、時、地**
 - 關鍵指標計算：侵襲率、CFR、住院率、ICU 率
 - 按個案分類（確診/可能/非個案）分層摘要
@@ -94,6 +95,230 @@ comorbidity_cols = [
 # 這些欄位都是 0/1，axis=1 代表「橫向加總」（對每一列加總）
 # 結果是每位住民有幾個共病
 df["n_comorbidities"] = df[comorbidity_cols].sum(axis=1)
+```
+
+## Step 1.5: 個資保護 —— 拿到 Line List 的第一件事
+
+實際疫調中，從醫院或長照機構拿到的 line list 往往含有**個人可識別資料（Personally Identifiable Information, PII）**：姓名、身分證字號、電話、住址、病歷號⋯⋯。在進行任何分析、上傳 git、傳給同事之前，**第一件事**就是把 PII 處理掉。這一節示範怎麼用 Python 做。
+
+> 📌 **為什麼本教材的 `legionella_outbreak.csv` 沒有 PII？** 因為它是**合成資料（synthetic data）**，一開始就沒有真實姓名、身分證等欄位——這是教學資料集的標準做法。但你在現場拿到的 raw line list 通常不是這樣，所以要學會下面這些技術。
+
+```{figure} images/pii_protection_techniques.svg
+:name: pii-protection-techniques
+:alt: 個資保護流程圖：左邊原始 line list 含 PII，中間五種去識別化技巧，右邊去識別化後的乾淨資料
+:width: 100%
+
+拿到 line list → 先區分「直接識別符 / 準識別符 / 敏感屬性」→ 用五種技巧去識別化 → 才開始分析。右下角是實務上的三段式工作流（raw → deidentify.py → deidentified）。
+```
+
+### PII 的三種類型
+
+| 類別 | 範例 | 處理原則 |
+|------|------|---------|
+| **直接識別符（Direct identifiers）** | 姓名、身分證、病歷號、電話、住址、email、照片 | 一律**移除或替換** |
+| **準識別符（Quasi-identifiers）** | 年齡、性別、郵遞區號、職業、就醫日期、房號 | 個別看無害，**組合起來**可能識別 → 泛化 |
+| **敏感屬性（Sensitive attributes）** | HIV、精神疾病、基因、性取向 | 需特別保護、考慮 k-anonymity |
+
+> ⚠️ **準識別符的陷阱**：Sweeney (2000) 的經典研究顯示，**{ 5 碼郵遞區號 + 出生日期 + 性別 }** 就能唯一識別全美 87% 的人口。年齡 + 性別 + 樓層這樣的組合在護理之家也一樣危險——小群體很容易反推出是誰。
+
+### 五種去識別化技巧（含 Python 實作）
+
+假設原始 line list 有這些欄位：`name`、`national_id`、`phone`、`address`、`room_number`、`age`、`symptom_onset_date`。
+
+#### ① Suppression 移除 —— 最徹底的方式
+
+```python
+# 直接刪除不需要的識別欄位
+pii_columns = ["name", "national_id", "phone", "address"]
+df_safe = df.drop(columns=pii_columns, errors="ignore")
+# errors="ignore"：如果某欄位不存在不報錯（防禦性寫法）
+```
+
+> 💡 **原則**：分析用不到的 PII 欄位，**直接刪除**就對了。能不留就不留。
+
+#### ② Pseudonymization 假名化 —— 用代號取代真名
+
+```python
+# 把原始 ID 替換成序號 CASE_001, CASE_002...
+df_safe = df_safe.reset_index(drop=True)
+df_safe["case_id"] = ["CASE_" + str(i).zfill(3) for i in range(1, len(df_safe) + 1)]
+
+# 建立「對照表」另存在加密位置（只有授權人員能還原）
+mapping = pd.DataFrame({
+    "original_id": df["national_id"],
+    "case_id": df_safe["case_id"],
+})
+# mapping.to_csv("data/restricted/id_mapping.csv", index=False)  # 存在加密硬碟
+```
+
+> ⚠️ **假名化 ≠ 匿名化**：對照表存在 = 理論上可還原，所以對照表必須**嚴格保密**（另一台加密硬碟、加密壓縮檔、存取權限控管）。
+
+#### ③ Hashing 雜湊 —— 單向不可還原
+
+```python
+import hashlib
+
+# 加鹽（salt）雜湊：避免攻擊者用彩虹表（rainbow table）破解
+SALT = "松柏護理之家2026"  # 實務上從環境變數 os.environ["PII_SALT"] 讀取，不寫在程式碼裡
+
+def hash_id(raw_id: str, salt: str = SALT) -> str:
+    """將原始 ID 加鹽後做 SHA-256 雜湊，取前 12 碼當作 case_id。"""
+    combined = (salt + str(raw_id)).encode("utf-8")
+    return "H_" + hashlib.sha256(combined).hexdigest()[:12]
+
+df_safe["hashed_id"] = df["national_id"].apply(hash_id)
+# A123456789 → "H_4f8a9c2e1b3d"（固定對應，但無法反推原始 ID）
+```
+
+> 💡 **為什麼要加鹽（salt）？** 如果直接雜湊身分證，攻擊者用所有可能的身分證字號逐一雜湊比對就能破解。加一段秘密字串（salt）後，他必須先拿到 salt 才能反推，難度大增。
+
+#### ④ Generalization 泛化 —— 把精確值變成區間
+
+```python
+# 年齡：具體數字 → 年齡組（已在 Step 1 做了）
+df_safe["age_group"] = pd.cut(df["age"], bins=[59, 69, 79, 89, 120],
+                               labels=["60-69", "70-79", "80-89", "90+"])
+
+# 日期：具體日期 → 流行病學週（損失資訊但保護隱私）
+df_safe["epi_week"] = df["symptom_onset_date"].dt.isocalendar().week
+
+# 房號：具體 1A-101 → 只保留翼區 1A
+df_safe["wing"] = df["room_number"].str.split("-").str[0]
+
+# 之後可以刪掉原始精確欄位
+df_safe = df_safe.drop(columns=["age", "symptom_onset_date", "room_number"],
+                        errors="ignore")
+```
+
+#### ⑤ Masking 遮罩 —— 保留格式、隱藏內容
+
+```python
+def mask_phone(phone: str) -> str:
+    """把電話 0912-345-678 → 0912-***-***（保留前 4 碼的電信業者前綴）"""
+    if pd.isna(phone):
+        return phone
+    parts = str(phone).split("-")
+    if len(parts) == 3:
+        return f"{parts[0]}-***-***"
+    return "***"
+
+df_safe["phone_masked"] = df["phone"].apply(mask_phone)
+```
+
+> 💡 什麼時候用 masking 而不是直接刪除？當你要**展示例子**給長官看、或需要格式驗證時，遮罩能保留欄位的「樣子」又不外洩真實值。
+
+### k-anonymity：每個人至少要「混在 k 個人裡」
+
+即使刪掉直接識別符，準識別符的組合還是可能暴露個人身分。**k-anonymity** 是業界常用的量化標準：
+
+> 定義：對於資料表中**任何一筆**紀錄，用「準識別符欄位的組合」去查詢，都要至少有 **k 筆**紀錄符合同樣條件。
+
+```python
+# 檢查 (age_group, sex, wing) 這組準識別符的 k-anonymity
+quasi_ids = ["age_group", "sex", "wing"]
+group_sizes = df_safe.groupby(quasi_ids, observed=True).size()
+
+print("各組合的人數分布：")
+print(group_sizes.describe())
+print(f"\n最小組的人數（k 值）：{group_sizes.min()}")
+
+# 找出「高風險」的小組（k < 5）
+risky = group_sizes[group_sizes < 5]
+print(f"\n⚠ 不足 k=5 的組合數：{len(risky)}")
+if len(risky) > 0:
+    print(risky)
+```
+
+**經驗法則**：
+
+| 使用情境 | 建議 k 值 |
+|---------|----------|
+| 內部分析、封閉使用 | k ≥ 3 |
+| 跨單位分享 | k ≥ 5 |
+| 敏感族群（兒童、精神疾病等） | k ≥ 10 |
+| 公開發表 / 開放資料 | k ≥ 20 |
+
+若某組 n &lt; k，兩種處理方式：
+1. **合併群組**（例如把 90+ 併入 80-89 變成 80+）
+2. **壓制（suppression）** 該筆紀錄不輸出
+
+### 實務工作流：分離 Raw / Deidentified
+
+```
+專案結構
+├── data/
+│   ├── raw/               ← 只有授權人員能進（加密、權限控管）
+│   │   └── line_list_RESTRICTED.csv   ← 原始 PII 資料，.gitignore
+│   └── deidentified/      ← 可以進 git、可以分享
+│       └── line_list.csv  ← 去識別化後的版本
+├── scripts/
+│   └── deidentify.py      ← 執行一次，從 raw 產生 deidentified
+└── .gitignore             ← 必須包含 data/raw/
+```
+
+把 PII 保護程式碼**獨立成腳本**（`deidentify.py`），而不是寫在分析 notebook 裡——這樣：
+
+- 分析 notebook 只讀去識別化後的檔案 → 不會意外把 PII commit 到 git
+- 去識別化邏輯集中管理 → 方便稽核、方便修改
+- 新資料進來時重跑一次腳本即可
+
+```python
+# scripts/deidentify.py 的骨架
+from pathlib import Path
+import pandas as pd
+import hashlib, os
+
+RAW = Path("data/raw/line_list_RESTRICTED.csv")
+OUT = Path("data/deidentified/line_list.csv")
+SALT = os.environ["PII_SALT"]  # 從環境變數讀，絕不寫在程式碼裡
+
+def main() -> None:
+    df = pd.read_csv(RAW)
+    df = df.drop(columns=["name", "national_id", "phone", "address"])
+    df["case_id"] = ["CASE_" + str(i).zfill(4) for i in range(1, len(df) + 1)]
+    df["age_group"] = pd.cut(df["age"], bins=[59, 69, 79, 89, 120],
+                              labels=["60-69", "70-79", "80-89", "90+"])
+    df = df.drop(columns=["age"])
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(OUT, index=False)
+    print(f"✓ 已輸出 {len(df)} 筆去識別化資料 → {OUT}")
+
+if __name__ == "__main__":
+    main()
+```
+
+```{warning}
+**絕對不要 commit 的東西：**
+
+- ❌ 原始 line list（含 PII）
+- ❌ ID 對照表（mapping.csv）
+- ❌ 雜湊用的 salt（寫在 `.env`，`.gitignore` 要排除）
+- ❌ 含 PII 的 Jupyter Notebook 執行結果（`nbstripout` 可自動清除輸出）
+
+**必須加入 `.gitignore` 的規則：**
+​```
+data/raw/
+data/restricted/
+.env
+*.key
+​```
+```
+
+```{admonition} 台灣法規與國際標準
+:class: tip, dropdown
+
+**台灣（Taiwan）：**
+- **個人資料保護法（個資法）**：第 6 條（特種個資，含醫療、基因、性生活、健檢、犯罪前科）、第 20 條（特定目的外利用）
+- **傳染病防治法**：第 10 條（疫情調查人員保密義務）、第 11 條（個案資料僅供疫情分析與防治使用）
+- **人體研究法**：使用病患資料做研究前須經 **IRB（人體試驗委員會）**審查
+
+**國際標準：**
+- **HIPAA Safe Harbor（美國）**：列出 18 項必須移除的識別符（18 identifiers）
+- **GDPR（歐盟）**：pseudonymization 定義於 Art. 4(5)，k-anonymity 是常用做法
+
+**關鍵文獻：**
+- Sweeney L. *k-anonymity: A model for protecting privacy*. IJUFKS 2002;10(5):557-570.
+- El Emam K, et al. *A systematic review of re-identification attacks on health data*. PLoS ONE 2011;6(12):e28071.
 ```
 
 ## Step 2: 摘要指標

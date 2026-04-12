@@ -62,7 +62,7 @@
 
   <!-- Arrows pointing to parts -->
   <text x="50" y="460" font-size="10" fill="#D97757" font-weight="bold">🔸 ax.set_title("每日新增病例")</text>
-  <text x="50" y="478" font-size="10" fill="#D97757" font-weight="bold">🔸 ax.bar(...) &nbsp;&nbsp; 藍色長條</text>
+  <text x="50" y="478" font-size="10" fill="#D97757" font-weight="bold">🔸 ax.bar(...) &#160;&#160; 藍色長條</text>
   <text x="260" y="460" font-size="10" fill="#D97757" font-weight="bold">🔸 ax.set_ylabel("病例數")</text>
   <text x="260" y="478" font-size="10" fill="#D97757" font-weight="bold">🔸 ax.set_xlabel("發病日期")</text>
 
