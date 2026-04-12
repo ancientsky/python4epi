@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D97757"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="420" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">變數 Variables —— 貼了標籤的盒子</text>
+  <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">`=` 不是數學等號，而是「把右邊的值放到左邊的盒子裡」(assignment)</text>
+
+  <!-- Top card: assignment animation -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="72" width="740" height="130" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+
+  <text x="60" y="100" font-size="14" font-family="Menlo, Monaco, monospace" fill="#1A1A1A">
+    <tspan fill="#D97757" font-weight="bold">total_residents</tspan>
+    <tspan fill="#6B6B6B"> = </tspan>
+    <tspan fill="#788C5D" font-weight="bold">280</tspan>
+  </text>
+  <text x="60" y="120" font-size="11" fill="#6B6B6B">變數名稱 variable name   指定運算子 =   值 value</text>
+
+  <!-- Box illustration -->
+  <rect x="90" y="140" width="170" height="50" rx="6" fill="#FFF" stroke="#D97757" stroke-width="2"/>
+  <text x="100" y="136" font-size="11" fill="#D97757" font-weight="bold">標籤 label</text>
+  <text x="175" y="160" text-anchor="middle" font-size="12" fill="#1A1A1A" font-weight="bold">total_residents</text>
+  <text x="175" y="180" text-anchor="middle" font-size="16" fill="#788C5D" font-weight="bold">280</text>
+
+  <line x1="290" y1="165" x2="360" y2="165" stroke="#D97757" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="325" y="155" text-anchor="middle" font-size="11" fill="#6B6B6B">放進去 assign</text>
+
+  <rect x="380" y="140" width="360" height="50" rx="6" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1"/>
+  <text x="560" y="160" text-anchor="middle" font-size="11" fill="#6B6B6B">白話文：把數字 280 存到名叫 total_residents 的盒子</text>
+  <text x="560" y="178" text-anchor="middle" font-size="11" fill="#6B6B6B">之後就能用這個名字取出這個值</text>
+
+  <!-- Bottom card: data types -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="220" width="740" height="180" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="400" y="246" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">四種基本資料型別 Data Types</text>
+
+  <!-- int -->
+  <rect x="60" y="266" width="150" height="110" rx="8" fill="#FAF8F3" stroke="#6A9BCC" stroke-width="1.5"/>
+  <text x="135" y="288" text-anchor="middle" font-size="13" font-weight="bold" fill="#6A9BCC">int（整數）</text>
+  <text x="135" y="308" text-anchor="middle" font-size="11" fill="#6B6B6B">整數 integer</text>
+  <text x="135" y="335" text-anchor="middle" font-size="13" font-family="Menlo, Monaco, monospace" fill="#1A1A1A">infected = 121</text>
+  <text x="135" y="358" text-anchor="middle" font-size="10" fill="#6B6B6B">人數、次數</text>
+
+  <!-- float -->
+  <rect x="225" y="266" width="150" height="110" rx="8" fill="#FAF8F3" stroke="#D97757" stroke-width="1.5"/>
+  <text x="300" y="288" text-anchor="middle" font-size="13" font-weight="bold" fill="#D97757">float（浮點數）</text>
+  <text x="300" y="308" text-anchor="middle" font-size="11" fill="#6B6B6B">小數 decimal</text>
+  <text x="300" y="335" text-anchor="middle" font-size="13" font-family="Menlo, Monaco, monospace" fill="#1A1A1A">cfr = 0.157</text>
+  <text x="300" y="358" text-anchor="middle" font-size="10" fill="#6B6B6B">比率、百分比</text>
+
+  <!-- str -->
+  <rect x="390" y="266" width="150" height="110" rx="8" fill="#FAF8F3" stroke="#788C5D" stroke-width="1.5"/>
+  <text x="465" y="288" text-anchor="middle" font-size="13" font-weight="bold" fill="#788C5D">str（字串）</text>
+  <text x="465" y="308" text-anchor="middle" font-size="11" fill="#6B6B6B">文字 string</text>
+  <text x="465" y="335" text-anchor="middle" font-size="12" font-family="Menlo, Monaco, monospace" fill="#1A1A1A">sex = "female"</text>
+  <text x="465" y="358" text-anchor="middle" font-size="10" fill="#6B6B6B">文字要加引號 " "</text>
+
+  <!-- bool -->
+  <rect x="555" y="266" width="185" height="110" rx="8" fill="#FAF8F3" stroke="#D94452" stroke-width="1.5"/>
+  <text x="647" y="288" text-anchor="middle" font-size="13" font-weight="bold" fill="#D94452">bool（布林）</text>
+  <text x="647" y="308" text-anchor="middle" font-size="11" fill="#6B6B6B">真／假 boolean</text>
+  <text x="647" y="335" text-anchor="middle" font-size="12" font-family="Menlo, Monaco, monospace" fill="#1A1A1A">hospitalized = True</text>
+  <text x="647" y="358" text-anchor="middle" font-size="10" fill="#6B6B6B">只有 True / False</text>
+</svg>
