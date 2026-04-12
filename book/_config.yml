@@ -1,5 +1,6 @@
 title: Epi With Python
-author: Epi With Python Contributors
+author: Epi With Python | Python for Epidemiologists
+copyright: "2026, Epi With Python | Python for Epidemiologists. Licensed under the MIT License"
 language: zh
 only_build_toc_files: true
 execute:
