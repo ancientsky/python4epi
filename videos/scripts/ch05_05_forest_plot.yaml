@@ -1,0 +1,172 @@
+meta:
+  chapter: "05"
+  concept: "stratified_forest_plot"
+  title: "森林圖——一眼看穿各層 RR"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch05_05_forest_plot"
+  scene_class: "Ch05ForestPlotScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨！上一集我們用 for loop 算出三層的 RR 和信賴區間。
+      但看一堆數字不直觀，怎麼讓長官一眼看出每層差異？
+      答案是森林圖，forest plot。
+      它把每一層的 RR 當作一個點，信賴區間畫成水平的誤差棒，
+      再加上 RR 等於 1 的參考線。
+      今天手把手教你用 matplotlib 畫一張會說話的森林圖。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "forest_concept"
+    narration: >
+      森林圖為什麼叫森林？
+      因為每一層就像一棵樹，
+      點是樹的軀幹，誤差棒是樹枝。
+      三層畫出來就像一小片森林，整體趨勢一目了然。
+      你會立刻看出哪幾層是有效應的，哪幾層信賴區間跨過 1 沒統計顯著。
+      圖勝千言。
+    animation: "show_forest_concept"
+    pause_after: 0.5
+
+  - id: "errorbar_code"
+    narration: >
+      核心是 matplotlib 的 errorbar 函式。
+      x 值是 RR，y 值是層的位置。
+      xerr 參數放左右誤差，必須是兩個 list 組成的 list：
+      左邊誤差等於 RR 減 CI 下限，右邊誤差等於 CI 上限減 RR。
+      fmt 等於 o 畫出圓點，capsize 讓誤差棒尾端有小帽子，比較好看。
+    animation: "show_errorbar_code"
+    code: |
+      fig, ax = plt.subplots(figsize=(8, 4))
+      y_pos = range(len(results_df))
+      ax.errorbar(
+          results_df["RR"], y_pos,
+          xerr=[results_df["RR"] - results_df["CI_lower"],
+                results_df["CI_upper"] - results_df["RR"]],
+          fmt="o", color="#2c7fb8", capsize=4,
+      )
+    pause_after: 0.5
+
+  - id: "reference_lines"
+    narration: >
+      加兩條參考線讓圖更有意義。
+      第一條，axvline x 等於 1，這是 RR 等於 1 的虛線。
+      任何誤差棒跨過這條線，就代表 95% 信賴區間包含 1，沒有統計顯著。
+      第二條，axvline x 等於 crude RR，用紅色點線畫粗 RR 基準。
+      這樣你一眼就能比較各層調整後 RR 跟粗 RR 的差距。
+    animation: "show_reference_lines"
+    code: |
+      ax.axvline(x=1, color="gray",
+                 linestyle="--", alpha=0.5)
+      ax.axvline(x=crude_rr, color="red",
+                 linestyle=":", alpha=0.7,
+                 label=f"Crude RR={crude_rr:.2f}")
+      ax.legend()
+    pause_after: 0.5
+
+  - id: "axis_labels"
+    narration: >
+      最後把座標軸標題加上去。
+      set yticks 設定 y 軸刻度位置，
+      set yticklabels 放上層的名字：ambulatory、wheelchair、bedridden。
+      set xlabel 寫 Risk Ratio。
+      set title 放一個有資訊的標題，註明分層變項是什麼。
+      tight layout 自動調整邊距，避免標籤被切掉。
+    animation: "show_axis_labels"
+    code: |
+      ax.set_yticks(y_pos)
+      ax.set_yticklabels(results_df["stratum"])
+      ax.set_xlabel("Risk Ratio (RR)")
+      ax.set_title(
+          "分層分析森林圖：淋浴 → 感染"
+      )
+      plt.tight_layout()
+      plt.show()
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      快速複習。森林圖五大元素：
+      第一，errorbar 畫點和誤差棒。
+      第二，RR 等於 1 的參考線。
+      第三，粗 RR 的參考線作為對照。
+      第四，y 軸標上每層名字。
+      第五，有資訊的標題。
+      這張圖畫好，長官五秒鐘就看懂你的分析結果。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看真實世界最有名的森林圖類型。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_meta_analysis"
+    narration: >
+      Meta-analysis 是森林圖的經典應用場域。
+      收集十幾篇研究，每篇研究當作一層。
+      每篇研究的 RR 或 OR 是一棵樹，
+      最下面用菱形畫出所有研究加權合併後的總效應。
+      這種圖在 COVID 疫苗效力、口罩效果、mRNA 療效的研究都到處都是。
+      學會畫一層，就會畫十層，原理完全一樣。
+    animation: "show_extra_meta"
+    code: |
+      # Meta-analysis forest plot
+      studies = ["Study A", "Study B", "Study C",
+                 "Study D", "Pooled (MH)"]
+      # Same errorbar + axvline pattern
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      接下來三個畫森林圖最常見的錯誤！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：忘記畫 RR 等於 1 的參考線。
+      觀眾看到一堆誤差棒，完全無法判斷哪些有統計顯著。
+      加一條 axvline x 等於 1，圖的閱讀門檻馬上降低。
+      這條線是森林圖的靈魂，絕對不能省。
+    animation: "show_blindspot_no_ref"
+    error_code: "ax.errorbar(rr, y, xerr=ci); plt.show()"
+    correct_code: "ax.axvline(x=1, linestyle='--'); plt.show()"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：x 軸用線性刻度。
+      RR 等於 0.5 和 RR 等於 2 應該是對稱的，都代表「效應一倍」。
+      但線性刻度上，0.5 擠在左邊一小格，2 卻佔了右邊一大片。
+      視覺上會誤導人。
+      正確做法是 set xscale log，
+      讓 0.5 跟 2 在對數尺度上等距，視覺才公平。
+    animation: "show_blindspot_linear"
+    error_code: "ax.set_xscale('linear')"
+    correct_code: "ax.set_xscale('log')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：沒標人數。
+      森林圖上看三根誤差棒，你怎麼知道哪一層是 200 個人、哪一層是 20 個人？
+      資訊缺一塊。
+      在 y 軸標籤上補人數，或是讓點的大小跟 sqrt(n) 成比例。
+      讀圖的人就能判斷哪一層結果比較可靠。
+    animation: "show_blindspot_no_n"
+    error_code: "ax.set_yticklabels(['Group A', 'Group B'])"
+    correct_code: "ax.set_yticklabels(['Group A (n=200)', 'Group B (n=20)'])"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你畫出會說話的森林圖！
+      下一集我們學 Mantel-Haenszel 加權，
+      把三層的 RR 合併成一個調整後的總效應。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

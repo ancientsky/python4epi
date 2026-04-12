@@ -1,0 +1,179 @@
+meta:
+  chapter: "05"
+  concept: "case_control_mh"
+  title: "病例對照版 MH——換個公式，邏輯一樣"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch05_08_case_control_mh"
+  scene_class: "Ch05CaseControlMhScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨！我們整章都在做世代研究，算 RR。
+      但真實疫調常常用病例對照研究 case-control，算 OR。
+      好消息：分層分析的整個邏輯完全一樣。
+      驗三要件、分層、MH 合併，套路都不變。
+      唯一差別是公式換了一下，RR 變 OR。
+      這集教你病例對照版的 Mantel-Haenszel，讓你兩種研究設計都會做。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "study_design_diff"
+    narration: >
+      先搞清楚兩種研究設計的差異。
+      世代研究：從暴露追蹤到結果，可以算侵襲率，得到 RR。
+      病例對照：從結果回溯暴露，只能算勝算比，得到 OR。
+      為什麼？因為你是刻意挑病例和對照的，不是追蹤全體，
+      侵襲率的分母就失真了。
+      能算的就剩下 OR，暴露勝算比。
+    animation: "show_design_diff"
+    pause_after: 0.5
+
+  - id: "or_recap"
+    narration: >
+      OR 的公式：a 乘以 d，除以 b 乘以 c。
+      白話是：暴露組的病例勝算，除以對照組的病例勝算。
+      a 和 d 在對角線上，b 和 c 也在對角線上。
+      就像兩條對角線相除。
+      每一層分別算層 OR，跟分層 RR 的邏輯完全一樣。
+    animation: "show_or_recap"
+    code: |
+      # Crude OR
+      a = ct.loc[1, 1]  # exposed cases
+      b = ct.loc[1, 0]  # exposed controls
+      c = ct.loc[0, 1]  # unexposed cases
+      d = ct.loc[0, 0]  # unexposed controls
+      crude_or = (a * d) / (b * c)
+    pause_after: 0.5
+
+  - id: "mh_or_formula"
+    narration: >
+      MH 合併 OR 的公式比 RR 版還簡單。
+      分子：a 乘以 d 除以層總人數 N，所有層加總。
+      分母：b 乘以 c 除以層總人數 N，所有層加總。
+      對比 RR 版的分子是 a 乘以 c 加 d，兩者不同。
+      但整體結構一樣：累加分子、累加分母、最後相除。
+    animation: "show_mh_or_formula"
+    pause_after: 0.5
+
+  - id: "mh_or_code"
+    narration: >
+      Python 實作幾乎跟 RR 版長一樣。
+      兩個 accumulator，for loop 跑每一層，
+      分子 accumulator 累加 a 乘以 d 除以 n，
+      分母 accumulator 累加 b 乘以 c 除以 n。
+      最後相除得到調整後 OR。
+      十行程式碼搞定病例對照研究的干擾控制。
+    animation: "show_mh_or_code"
+    code: |
+      num_or, den_or = 0, 0
+      for _, row in results_df.iterrows():
+          a, b, c, d = row[["a","b","c","d"]]
+          n = a + b + c + d
+          num_or += (a * d) / n
+          den_or += (b * c) / n
+      or_mh = num_or / den_or
+      print(f"MH adjusted OR = {or_mh:.3f}")
+    output: |
+      MH adjusted OR = 1.820
+    pause_after: 0.5
+
+  - id: "or_vs_rr_bias"
+    narration: >
+      最後一個重要觀念：什麼時候 OR 會高估 RR？
+      經驗法則：侵襲率越高，OR 高估 RR 越嚴重。
+      侵襲率低於 10%，OR 大約等於 RR，可以互換。
+      侵襲率 43% 像我們這個疫情，OR 會明顯高估 RR。
+      Ch06 會教你 Modified Poisson regression，
+      就算在高侵襲率情境也能算出正確的 adjusted RR。
+    animation: "show_or_bias"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      快速複習。世代研究用 MH RR，病例對照用 MH OR。
+      整個分層邏輯完全一樣，只是效應測量換了。
+      分子分母的累加公式稍有差異，但模式相同。
+      低侵襲率時 OR 約等於 RR，高侵襲率時 OR 會高估。
+      這些細節搞懂了，你就能靈活運用分層分析。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看一個台灣經典的病例對照疫調。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_enterovirus"
+    narration: >
+      1998 年台灣腸病毒 71 型大流行。
+      流行病學家用病例對照研究找風險因子。
+      病例 100 個重症幼兒，對照 300 個同年齡健康幼兒。
+      回溯問：有沒有上幼兒園、有沒有接觸過患者、家裡有沒有生病兒童。
+      算出粗 OR 跟調整後 OR，
+      調整家裡兄弟姊妹數量和托育環境之後，
+      確定「接觸過患者」才是最強的獨立風險因子。
+      跟我們今天的程式碼完全一樣的套路。
+    animation: "show_extra_enterovirus"
+    code: |
+      # Taiwan EV71 1998 case-control
+      # Crude OR (contact): 8.5
+      # MH adjusted (daycare, siblings): 5.2
+      # Still significant after adjustment
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      接下來三個病例對照分析最常出的錯！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：病例對照研究卻硬算 RR。
+      沒有全體追蹤人數，你算出來的「侵襲率」是假的。
+      你挑了 100 個病例 300 個對照，並不代表全世界病例對照比例是 1 比 3。
+      硬算 RR 會得到完全錯誤的風險估計。
+      病例對照研究只能算 OR，這是鐵律。
+    animation: "show_blindspot_wrong_metric"
+    error_code: "rr = (a/(a+b)) / (c/(c+d))  # case-control!"
+    correct_code: "or_val = (a * d) / (b * c)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：侵襲率很高還宣稱 OR 等於 RR。
+      許多教科書說 OR 約等於 RR，但有但書：只在罕見疾病成立。
+      我們護理之家 43% 侵襲率，OR 會比 RR 高很多。
+      報告時要註明研究類型，
+      不要讓讀者誤以為 OR 可以當 RR 解讀。
+    animation: "show_blindspot_rare_disease"
+    error_code: "print(f'OR approx RR = {or_val:.2f}')"
+    correct_code: "print(f'OR = {or_val:.2f} (attack rate 43%)')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：控制組選不對。
+      控制組應該來自「如果發病就會進入病例池」的同一群人。
+      隨便挑醫院另一科的病人當控制，這些人本來健康狀況就不同，
+      會引入 selection bias。
+      MH 調整再厲害也救不了選樣偏差。
+      控制組選好，分析才有意義。
+    animation: "show_blindspot_control_select"
+    error_code: "controls = hospital_other_ward_patients"
+    correct_code: "controls = same_source_population_healthy"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你完成了整個第五章的分層分析之旅！
+      從干擾因子三要件、DAG、驗證、for loop 分層、森林圖、
+      到 MH 加權、交互作用、病例對照延伸——
+      你已經擁有疫調現場最強的單變項干擾控制工具組。
+      下一章我們進入多變項迴歸，一次調整一打變數。
+      我們下章見！
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,159 @@
+meta:
+  chapter: "05"
+  concept: "effect_modification"
+  title: "交互作用——暴露的影響因人而異"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "-10%"
+  scene_module: "scenes.ch05_07_effect_modification"
+  scene_class: "Ch05EffectModificationScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨！今天要聊一個學生最常搞混的觀念：
+      交互作用 effect modification，跟干擾作用差在哪裡？
+      簡單講，干擾是個假象，控制後會消失。
+      交互作用是真實的現象，是「暴露對不同群體效應不一樣」。
+      搞混這兩個會讓你的結論整個歪掉。
+      今天用麻辣鍋的故事，把這件事講清楚。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "hotpot_metaphor"
+    narration: >
+      來一個情境。你想研究「吃麻辣鍋會不會拉肚子」。
+      把 100 個人分成兩組：胃好的和胃不好的。
+      胃好的人：吃麻辣鍋的 RR 是 1.2。
+      胃不好的人：吃麻辣鍋的 RR 是 4.5。
+      差這麼多？這不是干擾，是交互作用！
+      麻辣鍋的影響因胃的狀況而不同。
+      這時候你絕對不能只報一個合併 RR，
+      必須分開說：胃好的人還好，胃不好的人千萬別吃。
+    animation: "show_hotpot_metaphor"
+    pause_after: 0.5
+
+  - id: "confounding_vs_interaction"
+    narration: >
+      干擾跟交互作用的差別可以用一張表講清楚。
+      干擾作用：各層 RR 彼此接近，粗 RR 跟調整 RR 差很多。
+      交互作用：各層 RR 彼此差很多，不是誰膨脹誰的問題。
+      干擾要報調整後值，交互作用要分層報告。
+      兩者可以同時存在，也可以只有其中一個。
+      診斷對了，才能報告對。
+    animation: "show_comparison_table"
+    pause_after: 0.5
+
+  - id: "homogeneity_test"
+    narration: >
+      怎麼判斷有沒有交互作用？做同質性檢定。
+      簡化版：看各層 RR 的最大值減最小值。
+      如果差距大於 0.5，就有可能存在效果修飾。
+      嚴謹版：用 Breslow Day test，或看各層信賴區間有沒有重疊。
+      也可以用迴歸模型加交互作用項，看係數是否顯著。
+    animation: "show_homogeneity_test"
+    code: |
+      rr_values = results_df["RR"].values
+      rr_range = rr_values.max() - rr_values.min()
+      print(f"RR range: {rr_range:.3f}")
+      if rr_range > 0.5:
+          print("Possible effect modification")
+          print("Report stratum-specific RRs")
+      else:
+          print("Homogeneous, MH pooling OK")
+    pause_after: 0.5
+
+  - id: "when_to_report_stratified"
+    narration: >
+      有交互作用的時候，報告要長這樣。
+      先寫一句總結：「淋浴的影響因功能狀態而異」。
+      然後分層列出：
+      ambulatory 的 RR 是 1.5，wheelchair 是 1.3，bedridden 是 1.2。
+      絕對不要再寫一個合併 RR 2.8 在旁邊，
+      那會誤導長官以為「所有人都是 2.8」。
+      分層報告才是誠實的做法。
+    animation: "show_report_format"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      快速複習。干擾作用 vs 交互作用：
+      干擾是假象，各層 RR 接近，粗跟調整差很多，報告調整後 RR。
+      交互作用是真實，各層 RR 差很大，分層報告。
+      用同質性檢定或 RR 範圍判斷。
+      一句話記住：干擾合併報，交互分層報。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      場景切換！來看一個 COVID 疫苗的交互作用案例。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_vaccine"
+    narration: >
+      COVID-19 疫苗效力研究中，免疫低下族群是典型的 effect modification。
+      免疫正常者：疫苗效力 90%，保護力好。
+      免疫低下者：疫苗效力只有 50%，保護力打對折。
+      如果只報合併效力 85%，免疫低下者會誤以為自己也被保護了。
+      正確做法是分別報告兩群人的效力，
+      讓免疫低下者知道還需要額外預防措施。
+      這就是為什麼 CDC 永遠分層報告疫苗效力。
+    animation: "show_extra_vaccine"
+    code: |
+      # COVID-19 vaccine effectiveness
+      # Immunocompetent: VE = 90%
+      # Immunocompromised: VE = 50%
+      # Report separately, not pooled 85%!
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      接下來三個交互作用最常見的誤判！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個坑：把交互作用當成干擾。
+      看到各層 RR 差很多，以為是某個變項沒控制好，
+      於是再加更多變項調整。
+      錯！各層 RR 本來就應該不一樣，這是真實現象，不是偏差。
+      調整不會消除它，只會抹掉真實資訊。
+    animation: "show_blindspot_confuse"
+    error_code: "model.adjust_for(['age', 'sex', 'more_vars'])"
+    correct_code: "report_stratified_results(by='effect_modifier')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個坑：看到 CI 重疊就說沒差異。
+      信賴區間重疊不等於差異不顯著。
+      這在小樣本特別明顯：兩層 RR 1.5 和 3.0，CI 可能因為人少而重疊。
+      比較好的做法是做正式的交互作用檢定，
+      或在迴歸裡加交互作用項看係數。
+    animation: "show_blindspot_ci_overlap"
+    error_code: "if ci_overlap: no_interaction = True"
+    correct_code: "run_interaction_test_in_regression_model()"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個坑：沒分層直接報平均。
+      懶惰的分析師拿到資料直接 groupby mean，沒有想過要不要分層。
+      如果真的有交互作用，平均值藏起了重要的次族群訊息。
+      養成習慣：拿到資料先按關鍵變項畫分層圖，
+      看看各組趨勢是不是一致。不一致就分層報告。
+    animation: "show_blindspot_no_strat"
+    error_code: "df.groupby('exposure')['outcome'].mean()"
+    correct_code: "df.groupby(['exposure','modifier'])['outcome'].mean()"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜你分清楚了干擾跟交互作用！
+      下一集最後一集，我們把分層分析延伸到病例對照研究，
+      看看怎麼算 MH 調整後的 OR。
+      我們下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
