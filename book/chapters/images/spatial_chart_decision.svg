@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 460" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6B6B6B"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="460" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">空間視覺化決策指引 —— 要用哪種圖？</text>
+  <text x="400" y="50" text-anchor="middle" font-size="11" fill="#6B6B6B">根據資料結構和分析目的，選擇最適合的空間圖表</text>
+
+  <!-- Root question -->
+  <g filter="url(#shadow)">
+    <rect x="270" y="68" width="260" height="44" rx="10" fill="#1A1A1A"/>
+  </g>
+  <text x="400" y="88" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">我的資料長什麼樣子？</text>
+  <text x="400" y="104" text-anchor="middle" font-size="10" fill="#F5F3EE">空間分析的第一個問題</text>
+
+  <!-- Branch arrows from root -->
+  <line x1="310" y1="112" x2="140" y2="162" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="370" y1="112" x2="280" y2="162" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="430" y1="112" x2="520" y2="162" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="490" y1="112" x2="660" y2="162" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Branch labels -->
+  <text x="205" y="145" text-anchor="middle" font-size="9" fill="#6B6B6B">兩個分類變數</text>
+  <text x="310" y="145" text-anchor="middle" font-size="9" fill="#6B6B6B">有 x/y 座標</text>
+  <text x="488" y="145" text-anchor="middle" font-size="9" fill="#6B6B6B">有行政區邊界</text>
+  <text x="596" y="145" text-anchor="middle" font-size="9" fill="#6B6B6B">需要看時間趨勢</text>
+
+  <!-- Card 1: Heatmap -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="165" width="170" height="160" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="40" y="165" width="170" height="32" rx="10" fill="#D97757" fill-opacity="0.15"/>
+  <text x="125" y="186" text-anchor="middle" font-size="12" font-weight="bold" fill="#D97757">熱力圖 Heatmap</text>
+  <text x="125" y="213" text-anchor="middle" font-size="10" font-weight="bold" fill="#1A1A1A">適用：</text>
+  <text x="125" y="228" text-anchor="middle" font-size="10" fill="#1A1A1A">分組是兩個類別</text>
+  <text x="125" y="243" text-anchor="middle" font-size="10" fill="#1A1A1A">（如 floor × wing）</text>
+  <text x="125" y="264" text-anchor="middle" font-size="10" font-weight="bold" fill="#788C5D">✓ 優點：</text>
+  <text x="125" y="278" text-anchor="middle" font-size="10" fill="#6B6B6B">快速看出高低差異</text>
+  <text x="125" y="295" text-anchor="middle" font-size="10" font-weight="bold" fill="#D94452">✗ 限制：</text>
+  <text x="125" y="309" text-anchor="middle" font-size="10" fill="#6B6B6B">需要規則格狀資料</text>
+
+  <!-- Card 2: Spot Map -->
+  <g filter="url(#shadow)">
+    <rect x="225" y="165" width="170" height="160" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="225" y="165" width="170" height="32" rx="10" fill="#6A9BCC" fill-opacity="0.15"/>
+  <text x="310" y="186" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">Spot Map</text>
+  <text x="310" y="213" text-anchor="middle" font-size="10" font-weight="bold" fill="#1A1A1A">適用：</text>
+  <text x="310" y="228" text-anchor="middle" font-size="10" fill="#1A1A1A">每筆有位置座標</text>
+  <text x="310" y="243" text-anchor="middle" font-size="10" fill="#1A1A1A">（如 room → x, y）</text>
+  <text x="310" y="264" text-anchor="middle" font-size="10" font-weight="bold" fill="#788C5D">✓ 優點：</text>
+  <text x="310" y="278" text-anchor="middle" font-size="10" fill="#6B6B6B">看出點位群聚</text>
+  <text x="310" y="295" text-anchor="middle" font-size="10" font-weight="bold" fill="#D94452">✗ 限制：</text>
+  <text x="310" y="309" text-anchor="middle" font-size="10" fill="#6B6B6B">需要知道座標位置</text>
+
+  <!-- Card 3: Choropleth -->
+  <g filter="url(#shadow)">
+    <rect x="410" y="165" width="170" height="160" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="2"/>
+  </g>
+  <rect x="410" y="165" width="170" height="32" rx="10" fill="#788C5D" fill-opacity="0.15"/>
+  <text x="495" y="186" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">Choropleth</text>
+  <text x="495" y="213" text-anchor="middle" font-size="10" font-weight="bold" fill="#1A1A1A">適用：</text>
+  <text x="495" y="228" text-anchor="middle" font-size="10" fill="#1A1A1A">有地理邊界檔案</text>
+  <text x="495" y="243" text-anchor="middle" font-size="10" fill="#1A1A1A">（GeoJSON/SHP）</text>
+  <text x="495" y="264" text-anchor="middle" font-size="10" font-weight="bold" fill="#788C5D">✓ 優點：</text>
+  <text x="495" y="278" text-anchor="middle" font-size="10" fill="#6B6B6B">呈現行政區分布</text>
+  <text x="495" y="295" text-anchor="middle" font-size="10" font-weight="bold" fill="#D94452">✗ 限制：</text>
+  <text x="495" y="309" text-anchor="middle" font-size="10" fill="#6B6B6B">需要 ID 完全匹配</text>
+
+  <!-- Card 4: Animated -->
+  <g filter="url(#shadow)">
+    <rect x="595" y="165" width="170" height="160" rx="10" fill="#FFFFFF" stroke="#D94452" stroke-width="2"/>
+  </g>
+  <rect x="595" y="165" width="170" height="32" rx="10" fill="#D94452" fill-opacity="0.15"/>
+  <text x="680" y="186" text-anchor="middle" font-size="12" font-weight="bold" fill="#D94452">動態地圖</text>
+  <text x="680" y="213" text-anchor="middle" font-size="10" font-weight="bold" fill="#1A1A1A">適用：</text>
+  <text x="680" y="228" text-anchor="middle" font-size="10" fill="#1A1A1A">多年份 / 時間序列</text>
+  <text x="680" y="243" text-anchor="middle" font-size="10" fill="#1A1A1A">空間資料</text>
+  <text x="680" y="264" text-anchor="middle" font-size="10" font-weight="bold" fill="#788C5D">✓ 優點：</text>
+  <text x="680" y="278" text-anchor="middle" font-size="10" fill="#6B6B6B">展現時空傳播路徑</text>
+  <text x="680" y="295" text-anchor="middle" font-size="10" font-weight="bold" fill="#D94452">✗ 限制：</text>
+  <text x="680" y="309" text-anchor="middle" font-size="10" fill="#6B6B6B">需 FuncAnimation</text>
+
+  <!-- Bottom: Legionella example row -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="345" width="740" height="96" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1"/>
+  </g>
+  <text x="400" y="364" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1A1A">松柏護理之家案例 — 該選哪種？</text>
+
+  <rect x="50" y="374" width="160" height="56" rx="6" fill="#D97757" fill-opacity="0.1"/>
+  <text x="130" y="392" text-anchor="middle" font-size="10" font-weight="bold" fill="#D97757">Floor × Wing 侵襲率</text>
+  <text x="130" y="408" text-anchor="middle" font-size="9" fill="#1A1A1A">→ 用熱力圖</text>
+  <text x="130" y="422" text-anchor="middle" font-size="9" fill="#6B6B6B">兩個類別變數 ✓</text>
+
+  <rect x="225" y="374" width="160" height="56" rx="6" fill="#6A9BCC" fill-opacity="0.1"/>
+  <text x="305" y="392" text-anchor="middle" font-size="10" font-weight="bold" fill="#6A9BCC">每間房的侵襲率</text>
+  <text x="305" y="408" text-anchor="middle" font-size="9" fill="#1A1A1A">→ 用 Spot Map</text>
+  <text x="305" y="422" text-anchor="middle" font-size="9" fill="#6B6B6B">room → 座標可推算 ✓</text>
+
+  <rect x="400" y="374" width="160" height="56" rx="6" fill="#788C5D" fill-opacity="0.1"/>
+  <text x="480" y="392" text-anchor="middle" font-size="10" font-weight="bold" fill="#788C5D">社區層級延伸</text>
+  <text x="480" y="408" text-anchor="middle" font-size="9" fill="#1A1A1A">→ 用 Choropleth</text>
+  <text x="480" y="422" text-anchor="middle" font-size="9" fill="#6B6B6B">有 GeoJSON 邊界 ✓</text>
+
+  <rect x="575" y="374" width="180" height="56" rx="6" fill="#D94452" fill-opacity="0.1"/>
+  <text x="665" y="392" text-anchor="middle" font-size="10" font-weight="bold" fill="#D94452">各縣市退伍軍人病趨勢</text>
+  <text x="665" y="408" text-anchor="middle" font-size="9" fill="#1A1A1A">→ 用動態地圖</text>
+  <text x="665" y="422" text-anchor="middle" font-size="9" fill="#6B6B6B">逐年資料 + 縣市邊界 ✓</text>
+</svg>
