@@ -252,68 +252,79 @@ print(shower_by_wing)
 
 ---
 
-## Part 2：Choropleth 地圖概念（`08_spatial_choropleth.ipynb`）
+## Part 2：Choropleth 地圖（`08_spatial_choropleth.ipynb`）
 
-雖然本案是護理之家內部分析，但 choropleth 是社區層級疫調的核心技能。
-我們保留用 `admin_areas.geojson` 示範 GeoJSON choropleth 的做法。
+Choropleth（分級著色地圖）是社區層級疫調的核心技能。本 notebook 使用**真實政府開放資料**：
+- **地圖邊界**：[國土測繪中心縣市界線 SHP (TWD97 EPSG:3824)](https://maps.nlsc.gov.tw)
+- **疫情資料**：[疾管署退伍軍人病地區年齡性別統計表（2003–）](https://od.cdc.gov.tw)
 
-### 概念：分級著色地圖
+### 台/臺 正規化
+
+製作 Choropleth 最容易踩的坑之一：**台/臺字形不一致**。
+
+| 縣市 | 台（俗字）| 臺（正體，政府公文用字）|
+|---|---|---|
+| 北部 | 台北市 | **臺北市** |
+| 中部 | 台中市 | **臺中市** |
+| 南部 | 台南市 | **臺南市** |
+| 東部 | 台東縣 | **臺東縣** |
+
+其他縣市（新北、桃園、高雄、嘉義…）**沒有台/臺差異**。
 
 ```python
-import json
-import plotly.express as px
-
-# 讀取行政區邊界
-with open("data/synthetic/admin_areas.geojson", "r", encoding="utf-8") as f:
-    geojson = json.load(f)
-
-# 地區病例率
-pop = pd.read_csv("data/synthetic/location_population.csv")
-cases_by_loc = pd.read_csv("data/synthetic/line_list.csv") \
-    .groupby("location").size().rename("cases").reset_index()
-rate = pop.merge(cases_by_loc, on="location", how="left").fillna({"cases": 0})
-rate["incidence_per_100k"] = rate["cases"] / rate["population"] * 100000
-
-# Choropleth
-fig = px.choropleth(
-    rate, geojson=geojson,
-    locations="location",
-    featureidkey="properties.location",
-    color="incidence_per_100k",
-    color_continuous_scale="Reds",
-    title="Incidence per 100k by Location",
-)
-fig.update_geos(fitbounds="locations", visible=False)
-fig.show()
+TAI_NORMALIZE = {
+    "台北市": "臺北市",  "台中市": "臺中市",
+    "台南市": "臺南市",  "台東縣": "臺東縣",
+    # 2010 年改制：台北縣 → 新北市，台中縣/市 → 臺中市 …
+    "臺北縣": "新北市",  "台北縣": "新北市",
+    "臺中縣": "臺中市",  "高雄縣": "高雄市",
+    "桃園縣": "桃園市",
+}
+def normalize_county(name):
+    return TAI_NORMALIZE.get(str(name).strip(), str(name).strip())
 ```
 
-> **逐行拆解**
->
-> | 參數 | 意思 |
-> |---|---|
-> | `locations="location"` | 資料表中用哪個欄位對應地圖區域 |
-> | `featureidkey="properties.location"` | GeoJSON 中每個 feature 的 ID 路徑（`properties` 物件下的 `location` 欄位）|
-> | `color="incidence_per_100k"` | 用哪個欄位決定顏色深淺 |
-> | `fitbounds="locations"` | 自動縮放地圖到資料範圍（不然會顯示全球地圖）|
->
-> **最常見的 bug：ID 不匹配**
-> 資料表的 `location` 值和 GeoJSON 的 `properties.location` 值必須**完全一致**（包括大小寫、空格、全半角）。
-> 不匹配的區域不會報錯，只是地圖上那塊沒有顏色。
+JOIN 前必須對 SHP 和 CDC CSV **雙邊都套用**這個函數，否則地圖上會出現大量空白。
 
-### Debug Checklist
-
-1. `locations` 欄位是否與 GeoJSON `featureidkey` 值完全一致
-2. 資料表是否有重複或空值的區域代碼
-3. CRS（座標系統）是否一致
-4. 每個區域是否都有對應的病例率
-5. 是否有 outlier 讓色帶幾乎看不出差異（可改用對數尺度）
+### 工作流程
 
 ```python
-# 快速檢查 ID 一致性
-geo_ids  = {f["properties"]["location"].strip() for f in geojson["features"]}
-data_ids = set(rate["location"].astype(str).str.strip())
-print("Only in data:",    sorted(data_ids - geo_ids))
-print("Only in geojson:", sorted(geo_ids - data_ids))
+# 1. 下載 SHP（ZIP）→ 解壓縮 → geopandas.read_file()
+gdf = gpd.read_file(shp_path).to_crs(epsg=4326)
+
+# 2. 自動偵測縣市名稱欄位（NLSC SHP 欄位名稱依版本而異）
+# 3. 下載 CDC CSV → 偵測欄位 → 台/臺 正規化
+
+# 4. ID 比對（最重要的 debug 步驟）
+shp_counties  = set(gdf[county_col].apply(normalize_county))
+data_counties = set(df["county"].unique())
+print("只在 SHP：", sorted(shp_counties - data_counties))  # 地圖空白
+print("只在資料：", sorted(data_counties - shp_counties))   # 不顯示
+
+# 5. 按年度彙總 + 人口標準化 → 每十萬人發生率
+annual = df.groupby(["year","county"])["cases"].sum().reset_index()
+annual["rate_per_100k"] = annual["cases"] / annual["county"].map(COUNTY_POP) * 100_000
+
+# 6. 靜態 Choropleth（最新年度）
+gdf_merged = gdf.merge(latest, left_on="county_norm", right_on="county", how="left")
+gdf_merged.plot(column="rate_per_100k", cmap="Reds", legend=True, ax=ax)
+
+# 7. 動態 Choropleth（年度動畫 → GIF）
+anim = FuncAnimation(fig, update_func, frames=years, interval=800)
+anim.save("animation.gif", writer="pillow", fps=1, dpi=80)
+```
+
+> **為什麼用 GeoPandas + matplotlib 而不是 Plotly？**
+> SHP 格式需要 `geopandas.read_file()` 讀取，而 GeoPandas 本身就能直接用 `.plot()` 畫 choropleth。
+> 動畫（`FuncAnimation`）也需要 matplotlib。Plotly 適合 GeoJSON + 互動式地圖；GeoPandas 適合 SHP + 靜態/動畫圖。
+
+### 每十萬人發生率 vs 絕對病例數
+
+人口多的縣市（如臺北市 253 萬人）絕對病例數自然多，但不代表風險比人口少的縣市高。
+比較縣市時**一定要用每十萬人發生率**：
+
+```
+發生率（/10萬）= 確定病例數 / 縣市人口 × 100,000
 ```
 
 ---
