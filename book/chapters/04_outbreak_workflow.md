@@ -103,6 +103,15 @@ df["n_comorbidities"] = df[comorbidity_cols].sum(axis=1)
 
 > 📌 **為什麼本教材的 `legionella_outbreak.csv` 沒有 PII？** 因為它是**合成資料（synthetic data）**，一開始就沒有真實姓名、身分證等欄位——這是教學資料集的標準做法。但你在現場拿到的 raw line list 通常不是這樣，所以要學會下面這些技術。
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：個資保護——拿到 Line List 的第一件事</div>
+  <div class="youtube-lite" data-id="LLF1T-EtnqU">
+    <img src="https://img.youtube.com/vi/LLF1T-EtnqU/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ```{figure} images/pii_protection_techniques.svg
 :name: pii-protection-techniques
 :alt: 個資保護流程圖：左邊原始 line list 含 PII，中間五種去識別化技巧，右邊去識別化後的乾淨資料
