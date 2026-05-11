@@ -35,6 +35,15 @@
 
 > 🧪 **記憶口訣**：干擾因子像「雙面間諜」——它同時混在暴露組和結果組裡，讓你誤以為暴露和結果有關係（或關係被誇大/壓縮）。三個條件缺一不可，少驗一個就可能「冤枉好人」或「放走嫌犯」。
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：干擾因子的三要件——誰才算共犯</div>
+  <div class="youtube-lite" data-id="2ZF6K8ylvtI">
+    <img src="https://img.youtube.com/vi/2ZF6K8ylvtI/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ### 如何發現潛在的干擾因子？
 
 故事開頭是「資深疫調人員」憑經驗提出功能狀態可能是干擾因子。但不可能每次都靠資深人員——有沒有更系統性的方法？其實有好幾條路可以走：
@@ -68,6 +77,15 @@ DAG 示意圖：功能狀態（C）同時影響淋浴使用（暴露）和感染
 - **後門路徑**（干擾路徑）：淋浴使用 ← 功能狀態 → 感染
 
 後門路徑就像考試時隔壁同學偷看你的答案——他的分數（結果）看起來跟你（暴露）有關，但其實是因為「坐你旁邊」（干擾因子）這個共同原因。分層分析就是把「坐旁邊的」和「沒坐旁邊的」分開看，消除這個虛假關聯。
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：DAG 有向無環圖——畫一張因果地圖</div>
+  <div class="youtube-lite" data-id="87jXOHHNCog">
+    <img src="https://img.youtube.com/vi/87jXOHHNCog/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
 
 ### 分層分析的邏輯
 
@@ -122,6 +140,15 @@ print(f"粗 RR (shower_use → infected) = {crude_rr:.3f}")
 
 在分層之前，先驗證「功能狀態」是不是真的符合干擾因子的三個條件。少驗一個就可能白做工：
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：驗證三要件——pd.crosstab 實戰</div>
+  <div class="youtube-lite" data-id="gPq3SstS3JE">
+    <img src="https://img.youtube.com/vi/gPq3SstS3JE/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ```python
 # --- 條件 1：功能狀態與淋浴使用有關聯嗎？ ---
 # normalize="index" 讓每列加總 = 1，看比例
@@ -142,6 +169,15 @@ print(pd.crosstab(df["functional_status"], df["infected"],
 ## Step 4: 分層分析
 
 > 這是整章的核心步驟——把資料按功能狀態（ambulatory、wheelchair、bedridden）分成三層，每一層內分別算 RR 和 95% 信賴區間。
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：分層分析——每一層都算一次 RR</div>
+  <div class="youtube-lite" data-id="8yhHobtu_BU">
+    <img src="https://img.youtube.com/vi/8yhHobtu_BU/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
 
 ```python
 # --- 按 functional_status 分層，各層計算 RR + 95% CI ---
@@ -195,6 +231,15 @@ print(f"\n  粗 RR = {crude_rr:.3f}")
 
 森林圖（forest plot）把每一層的 RR 和信賴區間畫在同一張圖上，一眼就能看出各層的效應大小和精確度：
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：森林圖——一眼看穿各層 RR</div>
+  <div class="youtube-lite" data-id="NhMpRmZgN10">
+    <img src="https://img.youtube.com/vi/NhMpRmZgN10/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ```python
 import matplotlib.pyplot as plt
 
@@ -234,6 +279,15 @@ plt.show()
 
 ## Step 6: Mantel-Haenszel 加權 RR
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：Mantel-Haenszel 加權——公平的學期成績</div>
+  <div class="youtube-lite" data-id="Fj3d4Jr0kQM">
+    <img src="https://img.youtube.com/vi/Fj3d4Jr0kQM/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ```python
 # --- Mantel-Haenszel 加權合併 ---
 # 原理：人數多的層權重大，人數少的層權重小
@@ -268,6 +322,15 @@ else:
 ## Step 7: 同質性檢定——有沒有交互作用？
 
 > 🍜 **麻辣鍋比喻**：你調查「吃麻辣鍋會不會拉肚子」，把人分成「胃好的」和「胃不好的」兩組。如果胃好的人 RR=1.2，胃不好的人 RR=4.5——這不是干擾，而是**交互作用**（effect modification）：麻辣鍋的影響「因人而異」。這時候你不能只報一個合併的 RR，必須分開說：「胃好的人影響不大，胃不好的人要小心。」
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：交互作用——暴露的影響因人而異</div>
+  <div class="youtube-lite" data-id="I82KCu2kM_0">
+    <img src="https://img.youtube.com/vi/I82KCu2kM_0/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
 
 ```python
 # --- 同質性檢定（simplified Breslow-Day）---
@@ -356,6 +419,15 @@ for floor in sorted(df["floor"].unique()):
 > 🏥 **情境**：假設感染人數太多，你沒辦法追蹤全部住民，只能挑 121 位感染者（病例）和 159 位未感染者（對照），然後回頭問他們有沒有用過淋浴。這時候你算不出侵襲率（因為你是刻意挑人、不是追蹤全體），所以**不能算 RR，只能算 OR（勝算比）**。
 
 好消息：**分層分析的邏輯完全一樣**——一樣驗三要件、一樣按干擾因子分層、一樣用 Mantel-Haenszel 合併。唯一的差異是：
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：病例對照版 MH——換個公式，邏輯一樣</div>
+  <div class="youtube-lite" data-id="9441-KkyGqM">
+    <img src="https://img.youtube.com/vi/9441-KkyGqM/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
 
 | | 世代研究（本章） | 病例對照研究 |
 |---|---|---|
