@@ -37,6 +37,15 @@
 | **AIC** | Akaike Information Criterion，愈小愈好，懲罰過度配適 |
 | **Data leakage** | 用到未來資訊做預測 → 結果不可靠（一定要 `shift(1)`） |
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：時間序列基本概念——asfreq、自相關、平穩性</div>
+  <div class="youtube-lite" data-id="VYo8QnHEi74">
+    <img src="https://img.youtube.com/vi/VYo8QnHEi74/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ## 方法總覽
 
 ```{figure} images/timeseries_method_map.svg
@@ -104,6 +113,15 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 
 ### Step 3: Baseline —— Rolling mean 預測
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：Rolling mean baseline 與 shift(1) 救命符</div>
+  <div class="youtube-lite" data-id="8VP3e7FSKPQ">
+    <img src="https://img.youtube.com/vi/8VP3e7FSKPQ/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ```python
 # 用前 w 天的平均預測「下一天」，shift(1) 避免 data leakage
 mae_by_window = {}
@@ -129,6 +147,15 @@ Rolling mean 的優點：**簡單、直覺、在第一天就能用**。缺點：
 **Lag features**：`df["lag_1"] = df["cases"].shift(1)` 把整欄往下推一格，讓「昨天的 cases」出現在「今天那一列」。再配合 `lag_2`、`lag_3`，就能把時間序列**變成一般迴歸能吃的表格**。
 ```
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：Lag features——把時間序列變成迴歸資料</div>
+  <div class="youtube-lite" data-id="1DTX1bomJ4E">
+    <img src="https://img.youtube.com/vi/1DTX1bomJ4E/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ```python
 ts = daily.to_frame("cases").reset_index(names="date")
 ts["day_idx"] = range(len(ts))       # 天數編號（趨勢）
@@ -146,6 +173,15 @@ print(f"可用列數：{len(ts_model)}")
 ### Step 5: Poisson regression + lag
 
 計數資料（每日人數是 0, 1, 2, ...）天生適合 **Poisson** 分布。我們用 `statsmodels` 的 GLM 把 lag 特徵 + 趨勢項放進去：
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：Poisson regression + lag——IRR 解讀每日病例</div>
+  <div class="youtube-lite" data-id="zYXleAV-l2U">
+    <img src="https://img.youtube.com/vi/zYXleAV-l2U/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
 
 ```python
 import statsmodels.api as sm
@@ -182,6 +218,15 @@ print(coef_table.round(3))
 **Poisson 的大前提**：`variance = mean`。但疫調資料常常不乖——一旦發生群聚感染，變異會遠大於平均（**overdispersion**）。此時應改用 **Negative Binomial**，它多一個參數 α 專門吸收「多出來的」變異。
 ```
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：Negative Binomial——過度離散的救星</div>
+  <div class="youtube-lite" data-id="5ZzrjUBGN8c">
+    <img src="https://img.youtube.com/vi/5ZzrjUBGN8c/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ```python
 # 先檢查 dispersion ratio
 disp = ts_model["cases"].var() / ts_model["cases"].mean()
@@ -203,6 +248,15 @@ print(f"\nNegative Binomial + lag:  MAE={mae_nb:.3f},  AIC={model_nb.aic:.2f}")
 ### Step 7: Logistic regression —— 「明天會不會是高峰日？」
 
 長官問的第二個問題是**是/否警報**，不是連續數字。做法：把每天的病例數**二值化**（超過某個門檻 → 1，否則 → 0），再用 logistic regression 預測機率。
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：Logistic regression——明天會不會是高峰日？</div>
+  <div class="youtube-lite" data-id="xzOQKhFM9js">
+    <img src="https://img.youtube.com/vi/xzOQKhFM9js/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
 
 ```python
 # 把 75th percentile 當「高峰日」門檻
@@ -256,6 +310,15 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 :width: 100%
 
 **ARIMA 三個字母**：**AR(p)** 看過去 p 天的自己；**I(d)** 做 d 次差分讓序列平穩；**MA(q)** 看過去 q 次的預測誤差。**SARIMA** 額外加一組 (P, D, Q, s) 專門抓週期 s。
+```
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：ARIMA vs SARIMA——經典武器 + 週期性捕捉</div>
+  <div class="youtube-lite" data-id="u6Tl3toQGZc">
+    <img src="https://img.youtube.com/vi/u6Tl3toQGZc/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
 ```
 
 ```python
@@ -314,6 +377,15 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 ---
 
 ## Step 11: 模型大比拼
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：六模型大比拼——誰適合什麼情境？</div>
+  <div class="youtube-lite" data-id="u9gxSIb57a0">
+    <img src="https://img.youtube.com/vi/u9gxSIb57a0/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
 
 ```python
 comparison = pd.DataFrame([
