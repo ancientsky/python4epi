@@ -27,6 +27,15 @@ Ch03 已經解釋過：在世代研究中，我們能直接算出「風險」（
 
 > ⚠️ 本案侵襲率高達 **43%**。Ch03 已經警告過：當疾病不罕見時，OR 會**系統性高估**效應。如果你對主管說「淋浴使用的 OR 是 3.5」，他會以為風險是 3.5 倍——但真正的風險比（RR）可能只有 2.0 倍。差很多！
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：為什麼要用 RR 而不是 OR？</div>
+  <div class="youtube-lite" data-id="PrbPC5cAyxM">
+    <img src="https://img.youtube.com/vi/PrbPC5cAyxM/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ### 兩條多變項分析路線
 
 ```{figure} images/multivariate_methods.svg
@@ -57,9 +66,27 @@ Ch03 已經解釋過：在世代研究中，我們能直接算出「風險」（
 >
 > 為什麼不用 **Cox regression**（proportional hazards）？Cox 需要「時間到事件」的資料，我們的資料是二元結果（感染/未感染），沒有隨訪時間差異。
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：Modified Poisson——借帽子算 RR 的魔法</div>
+  <div class="youtube-lite" data-id="A_KHcLHITN0">
+    <img src="https://img.youtube.com/vi/A_KHcLHITN0/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ### 邏輯斯迴歸白話文
 
 雖然 Modified Poisson 是本案的首選，邏輯斯迴歸（logistic regression）仍然是全世界最常用的多變項分析方法之一。理解它的原理對流行病學家是必備素養。
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：邏輯斯迴歸三階梯——機率→勝算→logit</div>
+  <div class="youtube-lite" data-id="o-bRxWzK_xo">
+    <img src="https://img.youtube.com/vi/o-bRxWzK_xo/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
 
 ```{figure} images/logit_intuition.svg
 :name: fig-logit-intuition
@@ -132,6 +159,15 @@ print(f"→ 侵襲率 {ar:.0%} 遠高於 10%，OR 會顯著高估效應，應以
 ```
 
 ## Step 2: 單變項分析——Crude RR 與 Crude OR 對照
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：單變項 crude RR vs OR——for loop 一次比完</div>
+  <div class="youtube-lite" data-id="LBf3HvGOLAA">
+    <img src="https://img.youtube.com/vi/LBf3HvGOLAA/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
 
 ```python
 # === Step 2: 單變項分析迴圈 ===
@@ -207,6 +243,15 @@ print("   hand_RR 欄是 Ch03 的 2×2 表手算結果，應與 crude_RR 幾乎�
 
 ### 讀懂公式語法
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：statsmodels formula 語法速懂</div>
+  <div class="youtube-lite" data-id="G-cJPHaz7ag">
+    <img src="https://img.youtube.com/vi/G-cJPHaz7ag/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 statsmodels 的公式借用了 R 語言的 **formula 語法**，用一行字就能描述「用哪些變項來預測結果」：
 
 | 符號 | 意思 | 範例 |
@@ -233,6 +278,15 @@ statsmodels 的公式借用了 R 語言的 **formula 語法**，用一行字就�
 ```
 
 ## Step 3: 多變項 Modified Poisson——Adjusted RR
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：多變項 adjusted RR——打造漂亮的 Table 2</div>
+  <div class="youtube-lite" data-id="XIfx82VxVaA">
+    <img src="https://img.youtube.com/vi/XIfx82VxVaA/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
 
 ```python
 # === Step 3: Modified Poisson — 同時調整所有因子 ===
@@ -380,6 +434,15 @@ print("  • adj RR→OR 欄：同一模型下 OR 比 RR 高估多少（侵襲�
 
 ## Step 6: Forest Plot（Adjusted RR）
 
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：Adjusted RR 森林圖——一眼看穿真正危險因子</div>
+  <div class="youtube-lite" data-id="7GgpIOKr_CY">
+    <img src="https://img.youtube.com/vi/7GgpIOKr_CY/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
+
 ```python
 # === Step 6: Forest Plot — 用圖表呈現 adjusted RR ===
 # 標準的流行病學 forest plot：點 = 點估計，橫線 = 95% CI，虛線 = RR=1（無效應）
@@ -470,6 +533,15 @@ Stepwise 以 p-value 為標準，可能會移除「不顯著但確實在干擾�
 ```
 
 下面用 Python 實作 **change-in-estimate 法**，看哪些候選干擾因子真正影響了 shower_use 和 hydrotherapy_use 的 RR：
+
+```{raw} html
+<div class="video-card">
+  <div class="video-title">教學影片：10% 法則——change-in-estimate 挑變項</div>
+  <div class="youtube-lite" data-id="OQLEUHJQv7s">
+    <img src="https://img.youtube.com/vi/OQLEUHJQv7s/hqdefault.jpg" loading="lazy" alt="教學影片">
+  </div>
+</div>
+```
 
 ```python
 # === Step 7b: Change-in-Estimate 變項選擇 ===
