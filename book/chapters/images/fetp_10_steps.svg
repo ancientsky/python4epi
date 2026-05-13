@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 560" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6B6B6B"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="860" height="560" fill="#FAF8F3" rx="12"/>
+
+  <!-- Title -->
+  <text x="430" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">FETP 疫情調查 10 步驟：Python 能幫你做哪些？</text>
+  <text x="430" y="52" text-anchor="middle" font-size="12" fill="#6B6B6B">Taiwan CDC FETP 2.0 標準框架 ── 橘色步驟由 Python 強化，灰色步驟為現場人為判斷</text>
+
+  <!-- ── Column headers ── -->
+  <!-- Left column: Steps 1-5 -->
+  <!-- Right column: Steps 6-10 -->
+
+  <!-- Steps boxes: width=360, height=42, gap=8 -->
+  <!-- Left col: x=20, Right col: x=460 -->
+
+  <!-- STEP 1 – 行前準備 (human) -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="68" width="380" height="42" rx="8" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <rect x="20" y="68" width="42" height="42" rx="8" fill="#6B6B6B" fill-opacity="0.25"/>
+  <text x="41" y="94" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B6B6B">1</text>
+  <text x="75" y="87" font-size="13" font-weight="bold" fill="#1A1A1A">行前準備</text>
+  <text x="75" y="103" font-size="11" fill="#6B6B6B">團隊組成、文獻回顧、物資清點、確認合作夥伴</text>
+  <text x="392" y="94" text-anchor="end" font-size="10" fill="#6B6B6B">人為判斷</text>
+
+  <!-- Arrow -->
+  <line x1="210" y1="110" x2="210" y2="120" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 2 – 確定有疫情 (human + data) -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="122" width="380" height="42" rx="8" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <rect x="20" y="122" width="42" height="42" rx="8" fill="#6B6B6B" fill-opacity="0.25"/>
+  <text x="41" y="148" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B6B6B">2</text>
+  <text x="75" y="141" font-size="13" font-weight="bold" fill="#1A1A1A">確定有疫情</text>
+  <text x="75" y="157" font-size="11" fill="#6B6B6B">baseline 比較、群突發定義（散發 / 群聚 / 流行）</text>
+  <text x="392" y="148" text-anchor="end" font-size="10" fill="#6B6B6B">監測資料</text>
+
+  <line x1="210" y1="164" x2="210" y2="174" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 3 – 確定診斷 (human) -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="176" width="380" height="42" rx="8" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <rect x="20" y="176" width="42" height="42" rx="8" fill="#6B6B6B" fill-opacity="0.25"/>
+  <text x="41" y="202" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B6B6B">3</text>
+  <text x="75" y="195" font-size="13" font-weight="bold" fill="#1A1A1A">確定診斷</text>
+  <text x="75" y="211" font-size="11" fill="#6B6B6B">臨床 + 實驗室確認；潛伏期 / 潛藏期 / 可傳染期概念</text>
+  <text x="392" y="202" text-anchor="end" font-size="10" fill="#6B6B6B">臨床 + 實驗室</text>
+
+  <line x1="210" y1="218" x2="210" y2="228" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 4 – 病例定義 (human) -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="230" width="380" height="42" rx="8" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <rect x="20" y="230" width="42" height="42" rx="8" fill="#6B6B6B" fill-opacity="0.25"/>
+  <text x="41" y="256" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B6B6B">4</text>
+  <text x="75" y="249" font-size="13" font-weight="bold" fill="#1A1A1A">訂定病例定義＋系統性尋找病例</text>
+  <text x="75" y="265" font-size="11" fill="#6B6B6B">確診 / 可能 / 疑似；敏感度 vs. 特異度權衡</text>
+  <text x="392" y="256" text-anchor="end" font-size="10" fill="#6B6B6B">人為判斷</text>
+
+  <line x1="210" y1="272" x2="210" y2="282" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 5 – 描述性流病 (PYTHON ✓) -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="284" width="380" height="42" rx="8" fill="#D97757" fill-opacity="0.12" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="20" y="284" width="42" height="42" rx="8" fill="#D97757" fill-opacity="0.35"/>
+  <text x="41" y="310" text-anchor="middle" font-size="14" font-weight="bold" fill="#D97757">5</text>
+  <text x="75" y="303" font-size="13" font-weight="bold" fill="#D97757">描述性流行病學（人、時、地）</text>
+  <text x="75" y="319" font-size="11" fill="#6B6B6B">line list 造冊、流行曲線、GIS 分布圖、摘要指標</text>
+  <text x="392" y="310" text-anchor="end" font-size="11" font-weight="bold" fill="#D97757">🐍 Python ✓</text>
+
+  <!-- Right column connector line -->
+  <line x1="440" y1="345" x2="460" y2="345" stroke="#6B6B6B" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- STEP 6 – 建立假說 (human) -->
+  <g filter="url(#shadow)">
+    <rect x="460" y="68" width="380" height="42" rx="8" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <rect x="460" y="68" width="42" height="42" rx="8" fill="#6B6B6B" fill-opacity="0.25"/>
+  <text x="481" y="94" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B6B6B">6</text>
+  <text x="515" y="87" font-size="13" font-weight="bold" fill="#1A1A1A">建立假說</text>
+  <text x="515" y="103" font-size="11" fill="#6B6B6B">病原特性、訪談、描述性流病離群值</text>
+  <text x="832" y="94" text-anchor="end" font-size="10" fill="#6B6B6B">人為判斷</text>
+
+  <line x1="650" y1="110" x2="650" y2="120" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 7 – 評估假說 (PYTHON ✓) -->
+  <g filter="url(#shadow)">
+    <rect x="460" y="122" width="380" height="42" rx="8" fill="#D97757" fill-opacity="0.12" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="460" y="122" width="42" height="42" rx="8" fill="#D97757" fill-opacity="0.35"/>
+  <text x="481" y="148" text-anchor="middle" font-size="14" font-weight="bold" fill="#D97757">7</text>
+  <text x="515" y="141" font-size="13" font-weight="bold" fill="#D97757">評估假說</text>
+  <text x="515" y="157" font-size="11" fill="#6B6B6B">分析性流病（世代 / 病例對照）、traceback / trace-forward</text>
+  <text x="832" y="148" text-anchor="end" font-size="11" font-weight="bold" fill="#D97757">🐍 Python ✓</text>
+
+  <line x1="650" y1="164" x2="650" y2="174" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 8 – 重新評估假說 (human) -->
+  <g filter="url(#shadow)">
+    <rect x="460" y="176" width="380" height="42" rx="8" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <rect x="460" y="176" width="42" height="42" rx="8" fill="#6B6B6B" fill-opacity="0.25"/>
+  <text x="481" y="202" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B6B6B">8</text>
+  <text x="515" y="195" font-size="13" font-weight="bold" fill="#1A1A1A">必要時，重新評估假說</text>
+  <text x="515" y="211" font-size="11" fill="#6B6B6B">若新資訊不符合原假說，修改病例定義或假說</text>
+  <text x="832" y="202" text-anchor="end" font-size="10" fill="#6B6B6B">反覆迭代</text>
+
+  <line x1="650" y1="218" x2="650" y2="228" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 9 – 控制措施 (human) -->
+  <g filter="url(#shadow)">
+    <rect x="460" y="230" width="380" height="42" rx="8" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <rect x="460" y="230" width="42" height="42" rx="8" fill="#6B6B6B" fill-opacity="0.25"/>
+  <text x="481" y="256" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B6B6B">9</text>
+  <text x="515" y="249" font-size="13" font-weight="bold" fill="#1A1A1A">實施控制和預防措施</text>
+  <text x="515" y="265" font-size="11" fill="#6B6B6B">移除傳染源、阻斷傳染鏈、保護易感宿主</text>
+  <text x="832" y="256" text-anchor="end" font-size="10" fill="#6B6B6B">人為判斷</text>
+
+  <line x1="650" y1="272" x2="650" y2="282" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 10 – 溝通結果 (PYTHON partial) -->
+  <g filter="url(#shadow)">
+    <rect x="460" y="284" width="380" height="42" rx="8" fill="#6A9BCC" fill-opacity="0.12" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="460" y="284" width="42" height="42" rx="8" fill="#6A9BCC" fill-opacity="0.35"/>
+  <text x="481" y="310" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A9BCC">10</text>
+  <text x="515" y="303" font-size="13" font-weight="bold" fill="#6A9BCC">溝通結果</text>
+  <text x="515" y="319" font-size="11" fill="#6B6B6B">口頭 + 書面報告；SitRep；利害關係人溝通</text>
+  <text x="832" y="310" text-anchor="end" font-size="11" font-weight="bold" fill="#6A9BCC">🐍 Python △</text>
+
+  <!-- Note: steps can be done simultaneously -->
+  <text x="430" y="348" text-anchor="middle" font-size="11" fill="#6B6B6B" font-style="italic">⚠️ 各步驟可同時進行或調整順序；但每個步驟都不能省略</text>
+
+  <!-- Legend -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="365" width="820" height="72" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1"/>
+  </g>
+  <text x="36" y="386" font-size="12" font-weight="bold" fill="#1A1A1A">圖例</text>
+
+  <rect x="36" y="396" width="18" height="18" rx="4" fill="#D97757" fill-opacity="0.35" stroke="#D97757" stroke-width="2"/>
+  <text x="60" y="410" font-size="11" fill="#1A1A1A">Python 強化（Step 5, 7）：SitRep 自動化、迴歸分析、圖表產出</text>
+
+  <rect x="36" y="420" width="18" height="18" rx="4" fill="#6A9BCC" fill-opacity="0.35" stroke="#6A9BCC" stroke-width="2"/>
+  <text x="60" y="434" font-size="11" fill="#1A1A1A">Python 部分支援（Step 10）：自動化報告格式、視覺化</text>
+
+  <rect x="480" y="396" width="18" height="18" rx="4" fill="#6B6B6B" fill-opacity="0.25" stroke="#E8E5DF" stroke-width="1"/>
+  <text x="504" y="410" font-size="11" fill="#1A1A1A">人為判斷（Step 1, 2, 3, 4, 6, 8, 9）：現場調查、訪談、專業判斷</text>
+
+  <!-- Chapters map -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="448" width="820" height="95" rx="10" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1"/>
+  </g>
+  <text x="36" y="468" font-size="12" font-weight="bold" fill="#1A1A1A">本教材各章對應的疫調步驟</text>
+  <text x="36" y="487" font-size="11" fill="#1A1A1A">Ch04（本章）  Step 1–4, 9, 10：行前準備、病例定義、傳染鏈介入、SitRep 產出（Step 5 為主軸）</text>
+  <text x="36" y="503" font-size="11" fill="#1A1A1A">Ch03           Step 7：2×2 表、RR、OR、描述性統計（奠定假說評估基礎）</text>
+  <text x="36" y="519" font-size="11" fill="#1A1A1A">Ch05           Step 7：分層分析、Mantel-Haenszel 調整 RR（干擾因子控制）</text>
+  <text x="36" y="535" font-size="11" fill="#1A1A1A">Ch06           Step 7：Modified Poisson + 邏輯斯迴歸（多變項假說評估）</text>
+  <text x="420" y="487" font-size="11" fill="#1A1A1A">Ch07  Step 7（時序）：時間序列、ARIMA/SARIMA 預測</text>
+  <text x="420" y="503" font-size="11" fill="#1A1A1A">Ch08  Step 5（地）：空間分析、choropleth、spot map</text>
+  <text x="420" y="519" font-size="11" fill="#1A1A1A">Ch14  Step 5, 7, 10：整合實戰案例（完整疫調報告）</text>
+</svg>

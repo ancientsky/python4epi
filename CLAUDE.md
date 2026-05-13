@@ -204,8 +204,31 @@ All Chinese epidemiological terms must follow **Taiwan (ROC) standard usage**. K
 | Confounder / Confounding variable | 干擾因子 / 干擾因素 | 交絡因子、混淆變項 |
 | Adjust for confounding | 校正干擾 / 調整干擾因子 | 控制交絡 |
 | Stratified analysis | 分層分析 | — |
-| Hazard ratio (HR) | 風險比 | 危險比 |
+| Hazard ratio (HR) | 風險比（存活分析語境） | 危險比 |
 | Kaplan-Meier | Kaplan-Meier 估計式 | — |
+| Outbreak（超過預期的群聚） | 群突發 | — |
+| Sporadic case | 散發病例 | — |
+| Epidemic | 流行 | — |
+| Pandemic | 大流行 | — |
+| Incubation period | 潛伏期 | — |
+| Latent period | 潛藏期 | 潛伏期（兩者不同，潛藏期 = 從暴露到具傳染性） |
+| Infectious period | 可傳染期 | — |
+| Serial interval / Generation interval | 世代間隔 / 發病世代間隔 | — |
+| Reservoir | 傳染窩 | 宿主（宿主另有其義） |
+| Chain of infection | 傳染鏈 | — |
+| Susceptible host | 易感宿主 | — |
+| Vector-borne transmission | 媒介傳播 | — |
+| Vehicle-borne transmission | 媒介物傳播 | — |
+| Traceback (epidemiological) | 向後回溯 | — |
+| Trace-forward | 向前追溯 | — |
+| Isolation | 隔離 | — |
+| Quarantine | 檢疫 | — |
+| Post-exposure prophylaxis (PEP) | 暴露後預防 | — |
+| Infection control | 感染管制 | 感染控制 |
+| Confirmed case | 確診病例 | — |
+| Probable case | 可能病例 | — |
+| Suspect case | 疑似病例 | — |
+| Line list | 造冊 / line list | — |
 
 **Note:** Python variable names and function names remain in English (e.g., `attack_rate`, `case_fatality_rate`)—only Chinese prose uses the translated terms above.
 
