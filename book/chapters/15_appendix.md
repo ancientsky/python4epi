@@ -46,7 +46,7 @@
 | Kaplan-Meier estimator | Kaplan-Meier 估計式 | 非參數存活函數估計法 |
 | Log-rank test | Log-rank 檢定 | 比較兩組存活曲線的統計檢定 |
 | Cox proportional hazards | Cox 等比例風險模型 | 半參數存活迴歸模型 |
-| Hazard ratio (HR) | 風險比 / 危險比 | Cox 模型中暴露的效應量 |
+| Hazard ratio (HR) | 風險比（存活分析） | Cox 模型中暴露的效應量；與 RR 同譯，語境為存活分析時使用 |
 | Censoring | 設限 / 截斷 | 觀察結束時事件尚未發生 |
 | Time-to-event | 事件時間 | 從起始到事件發生的時間 |
 
