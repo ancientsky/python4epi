@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 560" font-family="system-ui, -apple-system, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 580" font-family="system-ui, -apple-system, sans-serif">
   <defs>
     <filter id="shadow">
       <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
@@ -9,7 +9,7 @@
   </defs>
 
   <!-- Background -->
-  <rect width="860" height="560" fill="#FAF8F3" rx="12"/>
+  <rect width="860" height="580" fill="#FAF8F3" rx="12"/>
 
   <!-- Title -->
   <text x="430" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">FETP 疫情調查 10 步驟：Python 能幫你做哪些？</text>
@@ -162,14 +162,14 @@
 
   <!-- Chapters map -->
   <g filter="url(#shadow)">
-    <rect x="20" y="448" width="820" height="95" rx="10" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1"/>
+    <rect x="20" y="448" width="820" height="120" rx="10" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1"/>
   </g>
   <text x="36" y="468" font-size="12" font-weight="bold" fill="#1A1A1A">本教材各章對應的疫調步驟</text>
-  <text x="36" y="487" font-size="11" fill="#1A1A1A">Ch04（本章）  Step 1–4, 9, 10：行前準備、病例定義、傳染鏈介入、SitRep 產出（Step 5 為主軸）</text>
-  <text x="36" y="503" font-size="11" fill="#1A1A1A">Ch03           Step 7：2×2 表、RR、OR、描述性統計（奠定假說評估基礎）</text>
-  <text x="36" y="519" font-size="11" fill="#1A1A1A">Ch05           Step 7：分層分析、Mantel-Haenszel 調整 RR（干擾因子控制）</text>
-  <text x="36" y="535" font-size="11" fill="#1A1A1A">Ch06           Step 7：Modified Poisson + 邏輯斯迴歸（多變項假說評估）</text>
-  <text x="420" y="487" font-size="11" fill="#1A1A1A">Ch07  Step 7（時序）：時間序列、ARIMA/SARIMA 預測</text>
-  <text x="420" y="503" font-size="11" fill="#1A1A1A">Ch08  Step 5（地）：空間分析、choropleth、spot map</text>
-  <text x="420" y="519" font-size="11" fill="#1A1A1A">Ch14  Step 5, 7, 10：整合實戰案例（完整疫調報告）</text>
+  <text x="36" y="487" font-size="11" fill="#1A1A1A">Ch04（本章）  Step 1–5, 9, 10：行前準備、病例定義、SitRep 自動化、傳染鏈介入</text>
+  <text x="36" y="503" font-size="11" fill="#1A1A1A">Ch03  Step 7：2×2 表、RR、OR、描述性統計</text>
+  <text x="36" y="519" font-size="11" fill="#1A1A1A">Ch05  Step 7：分層分析、Mantel-Haenszel 調整 RR</text>
+  <text x="36" y="535" font-size="11" fill="#1A1A1A">Ch06  Step 7：Modified Poisson + 邏輯斯迴歸</text>
+  <text x="440" y="487" font-size="11" fill="#1A1A1A">Ch07  Step 7（時序）：時間序列、ARIMA/SARIMA 預測</text>
+  <text x="440" y="503" font-size="11" fill="#1A1A1A">Ch08  Step 5（地）：空間分析、choropleth、spot map</text>
+  <text x="440" y="519" font-size="11" fill="#1A1A1A">Ch14  Step 5, 7, 10：整合實戰案例（完整疫調報告）</text>
 </svg>
