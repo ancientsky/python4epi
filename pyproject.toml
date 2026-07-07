@@ -33,7 +33,11 @@ dev = [
   "mypy>=1.15.0",
 ]
 video = [
-  "manim>=0.18.0",
+  # Pin to the 0.20.x line: the code targets the v0.20.1 Code() API
+  # (background_config/paragraph_config/formatter_style) and the ErrorVsCorrect
+  # workaround for the 0.20.x _gen_chars() crash; the old pre-0.20 API and a
+  # future 0.21+ would break CodePanel. See CLAUDE.md "Manim v0.20.1 API".
+  "manim>=0.20.1,<0.21",
   "edge-tts>=6.1.0",
   "pyyaml>=6.0",
 ]

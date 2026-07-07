@@ -10,7 +10,7 @@ Animated tutorial videos for each chapter's core Python concepts, using
 uv sync --group video
 sudo apt install ffmpeg fonts-noto-cjk   # system deps (Linux)
 
-# Build all Chapter 01 videos
+# Build all videos (currently 72, covering ch00–ch07)
 uv run python videos/build.py --all
 
 # Build one concept only
@@ -19,9 +19,18 @@ uv run python videos/build.py --concept variables
 # Low-quality preview (fast render)
 uv run python videos/build.py --concept variables --quality l
 
+# Reuse existing audio regardless of narration changes (offline / animation-only
+# iteration). Without this flag, TTS is content-hash cached: a segment is only
+# re-synthesized when its narration text (or voice/rate) actually changes.
+uv run python videos/build.py --all --skip-tts
+
 # Preview Manim scene without audio (development)
 uv run manim render -ql videos/scenes/ch01_01_variables.py Ch01VariablesScene
 ```
+
+`--all` isolates failures: one video that fails (TTS hiccup, a render error)
+is logged and skipped, the rest keep building, and a success/failure summary
+prints at the end (non-zero exit if any failed).
 
 ## Pipeline
 
@@ -67,16 +76,26 @@ Every video follows:
 2. **Extra epi example** — same concept in a different public health context
 3. **Beginner blind spots** — 3 common mistakes with NG/OK comparison
 
-## Chapter 01 Videos
+## Coverage
 
-| # | Concept | File |
-|---|---------|------|
-| 1 | 數值變數 | `ch01_01_variables` |
-| 2 | 計算指標 | `ch01_02_arithmetic` |
-| 3 | 字典 | `ch01_03_dictionaries` |
-| 4 | 列表 | `ch01_04_lists` |
-| 5 | 條件判斷 | `ch01_05_conditionals` |
-| 6 | 函式 | `ch01_06_functions` |
+72 videos currently exist, one YAML script paired 1:1 with a Manim scene, spanning
+chapters 00–07 (chapters 08–17 do not have videos yet):
+
+| Chapter | Videos |
+|---------|--------|
+| ch00 (導讀與工具) | 6 |
+| ch01 (Python 基礎) | 6 |
+| ch01b (開發者工具箱) | 8 |
+| ch02 (資料處理與視覺化) | 13 |
+| ch03 (描述統計與 2×2 表) | 7 |
+| ch04 (群聚調查工作流) | 8 |
+| ch05 (分層分析與干擾因子) | 8 |
+| ch06 (邏輯斯迴歸) | 8 |
+| ch07 (時間序列與預測) | 8 |
+
+Scripts and scenes are paired by the `scene_module`/`scene_class` fields inside
+each YAML's `meta:` block, not by filename — so a script's basename and its
+scene file need not match exactly.
 
 ## Adding Videos for New Chapters
 

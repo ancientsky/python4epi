@@ -8,6 +8,7 @@ via ffprobe so Manim animations can be timed to match.
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import logging
 import pathlib
 import subprocess
@@ -18,6 +19,22 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_VOICE = "zh-TW-HsiaoChenNeural"
 DEFAULT_RATE = "-10%"
+
+
+def _content_hash(text: str, voice: str, rate: str) -> str:
+    """Stable hash of the inputs that determine a segment's audio.
+
+    Used to invalidate the TTS cache when narration text (or voice/rate)
+    changes — keying only on the segment id/filename would silently reuse
+    stale audio after an edit.
+    """
+    payload = "|".join((text, voice, rate)).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def _hash_path(output_path: pathlib.Path) -> pathlib.Path:
+    """Sidecar file that records the content hash of an audio segment."""
+    return output_path.with_name(output_path.name + ".sha256")
 
 
 # ---------------------------------------------------------------------------
@@ -62,9 +79,13 @@ def generate_segment_audio(
     voice: str = DEFAULT_VOICE,
     rate: str = DEFAULT_RATE,
     *,
-    use_cache: bool = True,
+    force_cache: bool = False,
 ) -> float:
     """Generate audio for one narration segment and return its duration.
+
+    Caching is content-aware: an existing audio file is reused only when its
+    recorded content hash matches the current ``text``/``voice``/``rate``. If
+    the narration changed, the stale audio is regenerated automatically.
 
     Parameters
     ----------
@@ -76,20 +97,32 @@ def generate_segment_audio(
         edge-tts voice identifier.
     rate : str
         Speaking rate adjustment (e.g., ``"-10%"`` for slower).
-    use_cache : bool
-        If *True* and *output_path* already exists, skip regeneration.
+    force_cache : bool
+        If *True*, reuse any existing audio file regardless of its content
+        hash (offline / animation-only iteration). A missing file is still
+        generated.
 
     Returns
     -------
     float
         Duration of the generated audio in seconds.
     """
-    if use_cache and output_path.exists():
-        logger.info("Cache hit: %s", output_path.name)
-        return get_audio_duration(output_path)
+    want_hash = _content_hash(text, voice, rate)
+    hash_path = _hash_path(output_path)
+
+    if output_path.exists():
+        if force_cache:
+            logger.info("Cache hit (forced): %s", output_path.name)
+            return get_audio_duration(output_path)
+        cached_hash = hash_path.read_text().strip() if hash_path.exists() else None
+        if cached_hash == want_hash:
+            logger.info("Cache hit: %s", output_path.name)
+            return get_audio_duration(output_path)
+        logger.info("Narration changed, regenerating: %s", output_path.name)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     asyncio.run(_generate_one(text, output_path, voice=voice, rate=rate))
+    hash_path.write_text(want_hash)
     duration = get_audio_duration(output_path)
     logger.info("Generated %s (%.1fs)", output_path.name, duration)
     return duration
@@ -100,6 +133,8 @@ def generate_all_segments(
     output_dir: pathlib.Path,
     voice: str = DEFAULT_VOICE,
     rate: str = DEFAULT_RATE,
+    *,
+    force_cache: bool = False,
 ) -> list[dict]:
     """Generate TTS audio for all segments.
 
@@ -114,6 +149,9 @@ def generate_all_segments(
         edge-tts voice identifier.
     rate : str
         Speaking rate adjustment.
+    force_cache : bool
+        Forwarded to :func:`generate_segment_audio` — reuse existing audio
+        regardless of content hash.
 
     Returns
     -------
@@ -130,6 +168,7 @@ def generate_all_segments(
             audio_path,
             voice=voice,
             rate=rate,
+            force_cache=force_cache,
         )
         enriched.append({**seg, "audio_path": audio_path, "audio_duration": duration})
     return enriched

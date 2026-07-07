@@ -5,6 +5,10 @@ on:
   push:
     branches: [main]
 
+# Least privilege: CI only reads the repo (tests + book build), never writes.
+permissions:
+  contents: read
+
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
