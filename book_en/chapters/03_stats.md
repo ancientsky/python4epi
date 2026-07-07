@@ -2,7 +2,7 @@
 
 ## Scenario
 
-The outbreak team investigating the Legionnaires' disease cluster at Songbo Nursing Home has already finished cleaning and visualizing the data (Ch02). Now your supervisor asks: **"Do people who use the shower facilities have a higher risk of infection? Is there any statistical evidence for that?"**
+The outbreak team investigating the Legionnaires' disease cluster at Songbai Nursing Home has already finished cleaning and visualizing the data (Ch02). Now your supervisor asks: **"Do people who use the shower facilities have a higher risk of infection? Is there any statistical evidence for that?"**
 
 You're about to answer "the shower group has a higher attack rate," when a senior outbreak investigator cuts in:
 
@@ -218,8 +218,8 @@ df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
 # clinical_severity == "not_ill" means no symptoms and not infected; everything else counts as infected
 df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
 
-print(f"全體：{len(df)} 人，感染：{df['infected'].sum()} 人")
-print(f"整體侵襲率：{df['infected'].mean():.1%}")
+print(f"Total: {len(df)} people, infected: {df['infected'].sum()} people")
+print(f"Overall attack rate: {df['infected'].mean():.1%}")
 ```
 
 ```{raw} html
@@ -246,24 +246,24 @@ We already have 280 residents and an `infected` column. Now we'll organize it in
 # margins=True automatically adds a subtotal row and a subtotal column
 ct_shower = pd.crosstab(
     df["shower_use"], df["infected"],
-    margins=True, margins_name="合計",
+    margins=True, margins_name="Total",
 )
 # Rename for readability (the raw 0/1 values aren't intuitive)
-ct_shower.index = ["未使用淋浴", "使用淋浴", "合計"]
-ct_shower.columns = ["未感染", "感染", "合計"]
+ct_shower.index = ["No shower", "Shower", "Total"]
+ct_shower.columns = ["Not infected", "Infected", "Total"]
 print(ct_shower)
 
 # ── Extract the four cells of the 2×2 table (see the diagram above) ──
 # crosstab's row order follows the sort order of the raw values (0 before 1)
 # After renaming, we extract by the renamed labels so we don't have to remember which is 0 and which is 1
-a = int(ct_shower.loc["使用淋浴", "感染"])        # a = exposed + infected
-b = int(ct_shower.loc["使用淋浴", "未感染"])      # b = exposed + not infected
-c = int(ct_shower.loc["未使用淋浴", "感染"])      # c = unexposed + infected
-d = int(ct_shower.loc["未使用淋浴", "未感染"])    # d = unexposed + not infected
+a = int(ct_shower.loc["Shower", "Infected"])        # a = exposed + infected
+b = int(ct_shower.loc["Shower", "Not infected"])      # b = exposed + not infected
+c = int(ct_shower.loc["No shower", "Infected"])      # c = unexposed + infected
+d = int(ct_shower.loc["No shower", "Not infected"])    # d = unexposed + not infected
 
 # Compute the attack rate for each group separately
-print(f"\n暴露組（使用淋浴）侵襲率: {a/(a+b):.1%}")
-print(f"未暴露組（未使用淋浴）侵襲率: {c/(c+d):.1%}")
+print(f"\nExposed group (Shower) attack rate: {a/(a+b):.1%}")
+print(f"Unexposed group (No shower) attack rate: {c/(c+d):.1%}")
 ```
 
 ```{raw} html
@@ -279,9 +279,9 @@ print(f"未暴露組（未使用淋浴）侵襲率: {c/(c+d):.1%}")
 
 ```python
 rr = risk_ratio(a, a + b, c, c + d)
-print(f"淋浴使用 → 感染的 RR = {rr:.3f}")
-print(f"  解讀：使用淋浴者的感染風險是未使用者的 {rr:.1f} 倍")
-print(f"  RR = 1 → 無關聯 | RR > 1 → 暴露可能增加風險 | RR < 1 → 可能是保護因子")
+print(f"Shower use → infection RR = {rr:.3f}")
+print(f"  Interpretation: shower users' infection risk is {rr:.1f}x that of non-users")
+print(f"  RR = 1 → no association | RR > 1 → exposure may increase risk | RR < 1 → may be protective")
 ```
 
 > **Note**: RR > 1 indicates an "association," not "causation." There may be confounders—Ch05 will deal with that.
@@ -309,14 +309,14 @@ You've just computed the RR, but papers and reports often show the OR too. What'
 
 ```python
 or_val = odds_ratio(a, b, c, d)
-print(f"淋浴使用 → 感染的 OR = {or_val:.3f}")
-print(f"  （相比 RR = {rr:.3f}）")
-print(f"\n本資料集侵襲率 = {df['infected'].mean():.1%}（非罕見疾病）")
-print(f"→ OR ({or_val:.3f}) 大於 RR ({rr:.3f})，這是預期的")
-print(f"→ 疾病罕見時 OR ≈ RR；侵襲率越高，OR 偏離 RR 越多")
-print(f"\n⚠️ 本案侵襲率 ~43%，不能拿 OR 來說「風險是幾倍」！")
-print(f"   正確寫法：「淋浴使用者的感染風險是未使用者的 {rr:.1f} 倍（RR）」")
-print(f"   錯誤寫法：「淋浴使用者的感染風險是未使用者的 {or_val:.1f} 倍（OR）」← 高估了！")
+print(f"Shower use → infection OR = {or_val:.3f}")
+print(f"  (compared with RR = {rr:.3f})")
+print(f"\nThis dataset's attack rate = {df['infected'].mean():.1%} (not a rare disease)")
+print(f"→ OR ({or_val:.3f}) is greater than RR ({rr:.3f}), which is expected")
+print(f"→ When disease is rare, OR ≈ RR; the higher the attack rate, the more OR deviates from RR")
+print(f"\n⚠️ This case's attack rate ~43%, so don't use OR to say 'how many times the risk'!")
+print(f"   Correct wording: 'shower users' infection risk is {rr:.1f}x that of non-users (RR)'")
+print(f"   Wrong wording: 'shower users' infection risk is {or_val:.1f}x that of non-users (OR)' ← overestimated!")
 ```
 
 > **Choosing between RR and OR**: this is a cohort study (all 280 people included), so report the effect measure as the **RR**. We compute the OR as well because: (1) it's practice for understanding the difference between the two, and (2) it prepares us for Ch06's logistic regression (whose native output = OR).
@@ -362,7 +362,7 @@ se_ln_or = np.sqrt(1/a + 1/b + 1/c + 1/d)
 ci_or_lo = np.exp(ln_or - 1.96 * se_ln_or)
 ci_or_hi = np.exp(ln_or + 1.96 * se_ln_or)
 
-print("=== 95% 信賴區間比較 ===")
+print("=== 95% Confidence Interval Comparison ===")
 print(f"RR = {rr:.3f} (95% CI: {ci_rr_lo:.3f} – {ci_rr_hi:.3f})")
 print(f"OR = {or_val:.3f} (95% CI: {ci_or_lo:.3f} – {ci_or_hi:.3f})")
 ```
@@ -389,26 +389,26 @@ The core logic of the chi-square test: if exposure and infection really were "un
 ```
 
 ```python
-# H₀: 淋浴使用與感染互相獨立（無關聯）
+# H₀: shower use and infection are independent (no association)
 contingency = [[a, b], [c, d]]
 chi2, p, dof, expected = chi2_contingency(contingency)
 
-print(f"卡方統計量 = {chi2:.3f}")
-print(f"自由度 = {dof}")
+print(f"Chi-square statistic = {chi2:.3f}")
+print(f"Degrees of freedom = {dof}")
 print(f"p-value = {p:.4f}")
-print(f"\n期望值表（H₀ 為真時的預期次數）：")
+print(f"\nExpected-value table (expected counts when H₀ is true):")
 print(pd.DataFrame(
     expected.round(1),
-    index=["使用淋浴", "未使用淋浴"],
-    columns=["感染", "未感染"],
+    index=["Shower", "No shower"],
+    columns=["Infected", "Not infected"],
 ))
 
 min_expected = expected.min()
-print(f"\n最小期望值 = {min_expected:.1f}", end="")
+print(f"\nMinimum expected value = {min_expected:.1f}", end="")
 if min_expected >= 5:
-    print(" → 滿足卡方檢定前提")
+    print(" → meets the chi-square test assumption")
 else:
-    print(" → < 5，建議改用 Fisher 精確檢定")
+    print(" → < 5, recommend using Fisher's exact test instead")
 ```
 
 ```{raw} html
@@ -424,11 +424,11 @@ else:
 
 ```python
 oddsr_fisher, p_fisher = fisher_exact(contingency)
-print(f"Fisher 精確檢定:")
+print(f"Fisher's exact test:")
 print(f"  OR = {oddsr_fisher:.3f}")
 print(f"  p-value = {p_fisher:.4f}")
-print(f"\n卡方檢定 p = {p:.4f} vs Fisher p = {p_fisher:.4f}")
-print("（此例樣本夠大，兩種檢定結果相近；小樣本時差異會更明顯）")
+print(f"\nChi-square test p = {p:.4f} vs Fisher p = {p_fisher:.4f}")
+print("(This example's sample is large enough that the two tests agree closely; the difference is more pronounced with small samples)")
 ```
 
 > Fisher's exact test doesn't rely on a large-sample approximation, making it more reliable when expected values are < 5 or the total sample size is < 30.
@@ -460,10 +460,10 @@ se_or2 = np.sqrt(1/a2 + 1/b2 + 1/c2 + 1/d2)
 ci_or2_lo = np.exp(ln_or2 - 1.96 * se_or2)
 ci_or2_hi = np.exp(ln_or2 + 1.96 * se_or2)
 
-print("水療使用 → 感染")
+print("Hydrotherapy use → infection")
 print(f"  RR = {rr2:.3f} (95% CI: {ci_rr2_lo:.3f} – {ci_rr2_hi:.3f})")
 print(f"  OR = {or2:.3f} (95% CI: {ci_or2_lo:.3f} – {ci_or2_hi:.3f})")
-print(f"  卡方 p-value = {p2:.4f}")
+print(f"  chi-square p-value = {p2:.4f}")
 ```
 
 ## Step 9: A Multi-Factor Crude Effect-Measure Summary Table + Forest Plot
@@ -523,7 +523,7 @@ display_df = rr_table.copy()
 display_df["95% CI"] = display_df.apply(
     lambda r: f"{r['CI_lower']:.3f}–{r['CI_upper']:.3f}", axis=1
 )
-print("=== 多因子粗效應量彙整表 ===")
+print("=== Multi-Factor Crude Effect-Measure Summary Table ===")
 print(display_df[["factor", "RR", "95% CI", "OR", "p-value"]].to_string(index=False))
 ```
 
@@ -587,11 +587,11 @@ ax.errorbar(
           rr_sorted["CI_upper"] - rr_sorted["RR"]],
     fmt="o", color="#D97757", ecolor="#6B6B6B", capsize=4, markersize=7,
 )
-ax.axvline(x=1, color="#6B6B6B", linestyle="--", alpha=0.7, label="RR = 1（無效果）")
+ax.axvline(x=1, color="#6B6B6B", linestyle="--", alpha=0.7, label="RR = 1 (no effect)")
 ax.set_yticks(list(y_pos))
 ax.set_yticklabels(rr_sorted["factor"])
 ax.set_xlabel("Risk Ratio (95% CI)")
-ax.set_title("各因子粗風險比（Forest Plot）")
+ax.set_title("Crude Risk Ratio by Factor (Forest Plot)")
 ax.legend(loc="lower right")
 ax.invert_yaxis()
 plt.tight_layout()

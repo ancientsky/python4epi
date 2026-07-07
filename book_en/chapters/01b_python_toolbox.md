@@ -63,15 +63,15 @@ In most programming languages, indentation just makes your code "look nice." But
 # ✅ Correct: the code under if is indented 4 spaces
 cfr = 19 / 121
 if cfr > 0.15:
-    print("致死率偏高，建議升級應變層級")
-    print("請通知指揮中心")
+    print("CFR is high; recommend escalating the response level")
+    print("Please notify the command center")
 ```
 
 ```python
 # ❌ Wrong: forgetting to indent → IndentationError
 cfr = 19 / 121
 if cfr > 0.15:
-print("致死率偏高")  # IndentationError: expected an indented block
+print("CFR is high")  # IndentationError: expected an indented block
 ```
 
 **Three indentation rules:**
@@ -89,7 +89,7 @@ print("致死率偏高")  # IndentationError: expected an indented block
 floor_cases = [15, 10, 24, 25, 20, 27]
 for cases in floor_cases:       # first level
     if cases > 20:              # second level (indent 4 more spaces)
-        print(f"{cases} 人感染，需要重點關注")
+        print(f"{cases} infected, needs close attention")
 ```
 
 ### 2) import—borrowing other people's tools
@@ -158,9 +158,9 @@ import statistics
 ages = [72, 68, 81, 75, 90, 66, 78, 85, 73, 69]
 
 # dot notation: the mean feature "of" statistics, passed ages
-print(f"平均年齡: {statistics.mean(ages):.1f}")      # 75.7
-print(f"中位數:   {statistics.median(ages):.1f}")     # 73.5
-print(f"標準差:   {statistics.stdev(ages):.1f}")      # 7.8
+print(f"Mean age: {statistics.mean(ages):.1f}")      # 75.7
+print(f"Median:   {statistics.median(ages):.1f}")     # 73.5
+print(f"Std dev:  {statistics.stdev(ages):.1f}")      # 7.8
 ```
 
 ### 3) Types and conversion—numbers, text, booleans
@@ -199,7 +199,7 @@ total_str = "280"
 infected = int(infected_str)
 total = int(total_str)
 attack_rate = infected / total
-print(f"侵襲率: {attack_rate:.2%}")  # 侵襲率: 43.21%
+print(f"Attack rate: {attack_rate:.2%}")  # Attack rate: 43.21%
 ```
 
 **Booleans:** `True` and `False` are Python's logical values. Comparison operations produce booleans.
@@ -214,11 +214,11 @@ high_cfr = cfr > 0.10
 many_cases = 121 > 100
 
 if high_cfr and many_cases:
-    print("高致死率 + 大量感染：建議升級應變層級")
+    print("High CFR + many infections: recommend escalating the response level")
 
 # not inverts
 if not (cfr < 0.05):
-    print("致死率不算低，需持續監測")
+    print("CFR is not low; continued surveillance needed")
 ```
 
 ### 3b) Bracket map—when do you use each of `( )` `[ ]` `{ }` `" "`?
@@ -360,8 +360,8 @@ for val in ages_raw:
     except ValueError:
         skipped += 1
 
-print(f"成功轉換 {len(ages)} 筆，跳過 {skipped} 筆")  # 成功轉換 4 筆，跳過 2 筆
-print(f"平均年齡: {sum(ages) / len(ages):.1f}")          # 平均年齡: 70.2
+print(f"Converted {len(ages)} successfully, skipped {skipped}")  # Converted 4 successfully, skipped 2
+print(f"Mean age: {sum(ages) / len(ages):.1f}")          # Mean age: 70.2
 ```
 
 **When should you use try/except?**
@@ -419,11 +419,11 @@ print("serogroup" in pathogen)             # True
 # print the new cases for days 1 through 5
 daily_cases = [3, 7, 12, 8, 15]
 for i in range(len(daily_cases)):
-    print(f"Day {i+1}: {daily_cases[i]} 例")
+    print(f"Day {i+1}: {daily_cases[i]} cases")
 
 # enumerate(): get the index and value at once (more Pythonic)
 for i, cases in enumerate(daily_cases, start=1):
-    print(f"Day {i}: {cases} 例")
+    print(f"Day {i}: {cases} cases")
 ```
 
 **The `in` membership check—used heavily in Ch02:**
@@ -433,12 +433,12 @@ for i, cases in enumerate(daily_cases, start=1):
 high_risk_floors = [2, 3]
 patient_floor = 3
 if patient_floor in high_risk_floors:
-    print("此個案位於高風險樓層")
+    print("This case is on a high-risk floor")
 
 # check whether a dictionary has a given key
 outbreak = {"pathogen": "Legionella", "cases": 121}
 if "deaths" not in outbreak:
-    print("字典中沒有死亡人數資料")
+    print("The dictionary has no death-count data")
 ```
 
 ### 7) Advanced uv—managing Python versions and packages
