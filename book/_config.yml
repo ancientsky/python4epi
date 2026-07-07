@@ -10,10 +10,23 @@ sphinx:
   config:
     html_baseurl: https://ancientsky.github.io/python4epi/
     templates_path: ["_templates"]
+    # Force the document language so pages render <html lang="zh-Hant"> and the
+    # theme UI localizes. (The top-level ``language:`` key above is not reliably
+    # propagated by jupyter-book, so we set it here too.)
+    language: zh_Hant
+    # Explicit per-build language flag consumed by _templates/layout.html to
+    # emit the correct OG/Twitter locale + copy. book_en/ sets epi_lang: en.
+    html_context:
+      epi_lang: zh
     html_theme_options:
       show_navbar_depth: 2
       show_toc_level: 2
       home_page_in_toc: true
+      # Add a 繁中/EN language switcher to the top-right header button cluster,
+      # after the default download/fullscreen/repo buttons. The switcher target
+      # is computed client-side by _static/lang-switch.js (toggles the /en/
+      # path prefix). The same option is set in book_en/_config.yml.
+      article_header_end: article-header-buttons.html, lang-switch.html
       # Use Monokai pygments style in BOTH modes so block code (which is
       # rendered on the dark #2B2B2B background in both light and dark mode —
       # see book/_static/custom.css) stays legible. Default light style uses
@@ -97,5 +110,10 @@ html:
     - _static/custom.css
   extra_js:
     - _static/youtube-lite.js
+    - _static/lang-switch.js
 launch_buttons:
   notebook_interface: jupyterlab
+  # Show an "Open in Colab" launch target on every notebook page. Combined with
+  # the repository url/branch above, Jupyter Book builds a Colab link per
+  # notebook so learners can run the code without any local setup.
+  colab_url: https://colab.research.google.com

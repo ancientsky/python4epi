@@ -267,6 +267,23 @@ PR descriptions should include scope summary, validation output, and screenshots
 - When creating new notebooks, always include the standard Colab setup cell after the title markdown cell
 - All chapters share a single dataset (`legionella_outbreak.csv`) for narrative continuity; standalone copies of all notebooks are kept in sync under `notebooks/`
 
+## Bilingual Editions (繁中 / English)
+
+The site is built in two languages, deployed to four URLs by `.github/workflows/pages.yml`:
+
+| Edition | Source | Deploy path |
+|---------|--------|-------------|
+| 中文 學生版 | `book/` + `_toc_student.yml` | `/` |
+| 中文 教師版 | `book/` + `_toc_instructor.yml` | `/instructor/` |
+| English student | `book_en/` + `_toc_student.yml` | `/en/` |
+| English instructor | `book_en/` + `_toc_instructor.yml` | `/en/instructor/` |
+
+- **`book_en/` mirrors `book/` exactly** (same relative file structure) so the language switcher only has to toggle the `/en/` path prefix. It **shares** `_static`, `_templates`, and `chapters/images` with `book/` via symlinks — do not duplicate CSS/JS/templates/images; edit them once under `book/`.
+- **`book_en/` content is English**: chapter prose, notebook markdown cells, code comments, and user-facing display strings (`print`, plot labels, DataFrame display labels) are translated; Python code, identifiers, dataset column names, and the Colab setup cell stay identical to `book/`. The `book/` (zh) tree is the source of truth for structure — when adding/renaming a chapter, mirror it in `book_en/` and both TOC sets.
+- **Language switcher**: `book/_static/lang-switch.js` derives the deploy base from its own script URL and toggles `/en/`, mapping each page to its counterpart (falls back to the other tree's home page if the counterpart 404s). `book/_templates/lang-switch.html` renders the header button, registered via `html_theme_options.article_header_end` in both `_config.yml` files.
+- **Per-build language flag**: each `_config.yml` sets `sphinx.config.html_context.epi_lang` (`zh` / `en`) and `sphinx.config.language` (`zh_Hant` / `en`). `book/_templates/layout.html` branches on `epi_lang` for OG/Twitter locale + copy and emits `hreflang` alternates. (jupyter-book does not reliably propagate the top-level `language:` key, hence setting it under `sphinx.config` too.)
+- The five-act narrative is encoded as MyST `parts:` in every TOC (captions translated per language).
+
 ## Tutorial Video Generation (Manim + TTS + FFMPEG)
 
 The project includes a video generation system under `videos/` that produces animated tutorial videos for each chapter's core concepts. All chapters use the same visual style and pipeline.

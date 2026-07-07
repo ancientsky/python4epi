@@ -1,0 +1,101 @@
+title: Epi With Python
+author: Epi With Python | Python for Epidemiologists
+copyright: "2026, Epi With Python | Python for Epidemiologists. Licensed under the MIT License"
+language: en
+only_build_toc_files: true
+execute:
+  execute_notebooks: force
+  timeout: 300
+sphinx:
+  config:
+    html_baseurl: https://ancientsky.github.io/python4epi/en/
+    templates_path: ["_templates"]
+    language: en
+    # Explicit per-build language flag consumed by _templates/layout.html
+    # (shared with book/ via the symlinked _templates dir).
+    html_context:
+      epi_lang: en
+    html_theme_options:
+      show_navbar_depth: 2
+      show_toc_level: 2
+      home_page_in_toc: true
+      # 繁中/EN language switcher — same component as the zh build. The switcher
+      # target is computed client-side by _static/lang-switch.js (toggles /en/).
+      article_header_end: article-header-buttons.html, lang-switch.html
+      pygments_light_style: monokai
+      pygments_dark_style: monokai
+      logo:
+        image_light: _static/logo.svg
+        image_dark: _static/logo-dark.svg
+    # OG / Twitter Card meta tags are injected via the shared template override
+    # at _templates/layout.html (symlinked to book/_templates), which branches
+    # on html_context.epi_lang to emit English copy + en_US locale.
+    nb_execution_pre_code: |
+      import os as _os
+      import pathlib as _pathlib
+      # Ensure CWD is the project root (where data/ directory lives).
+      _cwd = _pathlib.Path.cwd()
+      for _ in range(5):
+          if (_cwd / "data" / "synthetic").is_dir():
+              _os.chdir(_cwd)
+              break
+          _cwd = _cwd.parent
+      del _cwd, _os
+      import matplotlib.pyplot as plt
+      import matplotlib.font_manager as _fm
+      import pathlib as _pathlib
+      # Register CJK font files (harmless for the English build; a few figures
+      # may still carry bilingual labels shared with the zh tree).
+      for _font_dir in map(_pathlib.Path, ["/usr/share/fonts", "/usr/local/share/fonts"]):
+          if _font_dir.exists():
+              for _fp in sorted(_font_dir.rglob("*")):
+                  if _fp.suffix.lower() in {".ttf", ".ttc", ".otf"} and (
+                      "CJK" in _fp.name or "WenQuanYi" in _fp.name or "wqy" in _fp.name
+                  ):
+                      try:
+                          _fm.fontManager.addfont(str(_fp))
+                      except Exception:
+                          pass
+      _discovered = []
+      for _entry in _fm.fontManager.ttflist:
+          _nlower = _entry.name.lower()
+          if any(_kw in _nlower for _kw in ("cjk", "wenquanyi", "wqy")):
+              if _entry.name not in _discovered:
+                  _discovered.append(_entry.name)
+      _preferred = ["Noto Sans CJK TC", "Noto Sans CJK SC", "Noto Sans CJK JP",
+                     "Noto Sans CJK KR", "Noto Sans CJK HK", "Noto Sans TC",
+                     "Microsoft JhengHei", "WenQuanYi Zen Hei", "SimHei",
+                     "Arial Unicode MS", "Heiti TC"]
+      _cjk_fonts = list(_discovered)
+      for _n in _preferred:
+          if _n not in _cjk_fonts:
+              _cjk_fonts.append(_n)
+      plt.rcParams["font.sans-serif"] = _cjk_fonts + [
+          f for f in plt.rcParams.get("font.sans-serif", []) if f not in _cjk_fonts]
+      plt.rcParams["axes.unicode_minus"] = False
+      plt.style.use("ggplot")
+      plt.rcParams["figure.dpi"] = 150
+      try:
+          import plotly.io as _pio
+          _pio.renderers.default = "notebook"
+          del _pio
+      except ImportError:
+          pass
+      del _cjk_fonts, _fm, _pathlib, _discovered, _preferred
+repository:
+  url: https://github.com/ancientsky/python4epi
+  branch: main
+html:
+  favicon: _static/favicon.svg
+  use_repository_button: true
+  use_issues_button: true
+  home_page_in_navbar: true
+  extra_css:
+    - _static/youtube-lite.css
+    - _static/custom.css
+  extra_js:
+    - _static/youtube-lite.js
+    - _static/lang-switch.js
+launch_buttons:
+  notebook_interface: jupyterlab
+  colab_url: https://colab.research.google.com

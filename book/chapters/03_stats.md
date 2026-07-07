@@ -575,6 +575,7 @@ plt.rcParams["font.sans-serif"] = [
     "Heiti TC", "DejaVu Sans",
 ]
 plt.rcParams["axes.unicode_minus"] = False
+```
 
 ```python
 fig, ax = plt.subplots(figsize=(8, 5))

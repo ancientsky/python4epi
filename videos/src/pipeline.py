@@ -79,6 +79,7 @@ def build_video(
         audio_dir,
         voice=voice,
         rate=rate,
+        force_cache=skip_tts,
     )
 
     # ------------------------------------------------------------------
@@ -136,7 +137,7 @@ def _concat_audio(segments: list[dict], output: pathlib.Path) -> None:
                 subprocess.run(
                     [
                         "ffmpeg", "-y",
-                        "-f", "lavfi", "-i", f"anullsrc=r=24000:cl=mono",
+                        "-f", "lavfi", "-i", "anullsrc=r=24000:cl=mono",
                         "-t", str(pause),
                         "-c:a", "libmp3lame",
                         str(silence_path),
@@ -147,18 +148,24 @@ def _concat_audio(segments: list[dict], output: pathlib.Path) -> None:
                 f.write(f"file '{silence_path}'\n")
         concat_list = f.name
 
-    subprocess.run(
-        [
-            "ffmpeg", "-y",
-            "-f", "concat", "-safe", "0",
-            "-i", concat_list,
-            "-c", "copy",
-            str(output),
-        ],
-        capture_output=True,
-        check=True,
-    )
-    os.unlink(concat_list)
+    # Always clean up the temp concat list, even if ffmpeg fails.
+    try:
+        subprocess.run(
+            [
+                "ffmpeg", "-y",
+                "-f", "concat", "-safe", "0",
+                "-i", concat_list,
+                "-c", "copy",
+                str(output),
+            ],
+            capture_output=True,
+            check=True,
+        )
+    finally:
+        try:
+            os.unlink(concat_list)
+        except OSError:
+            pass
 
 
 def _write_timing(segments: list[dict], path: pathlib.Path) -> None:
@@ -200,8 +207,9 @@ def _render_manim(
     env = {**os.environ, "EPI_VIDEO_TIMING": str(timing_path), "PYTHONPATH": pythonpath}
 
     module_path = module.replace(".", "/") + ".py"
-    # Resolve relative to project root (videos/)
-    scene_file = pathlib.Path("videos") / module_path
+    # Resolve against the project root (not the current working directory) so
+    # the build works regardless of where it is invoked from.
+    scene_file = pathlib.Path(project_root) / "videos" / module_path
 
     subprocess.run(
         [

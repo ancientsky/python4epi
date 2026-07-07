@@ -877,7 +877,7 @@ dev = [
 ]
 video = [
     { name = "edge-tts", specifier = ">=6.1.0" },
-    { name = "manim", specifier = ">=0.18.0" },
+    { name = "manim", specifier = ">=0.20.1,<0.21" },
     { name = "pyyaml", specifier = ">=6.0" },
 ]
 

@@ -11,31 +11,64 @@
 
 {%- block extrahead -%}
   {{ super() }}
+  {#- Language-aware SEO / social metadata. The English build (book_en/, with
+      ``language: en``) shares this template via the symlinked _templates dir, so
+      copy is branched on the sphinx ``language`` config. -#}
+  {#- ``epi_lang`` is an explicit html_context flag set per build in each
+      _config.yml (book/ = zh, book_en/ = en). We do NOT rely on the theme's
+      ``language`` variable because jupyter-book does not reliably propagate the
+      config language into the template context. -#}
+  {%- set _is_en = (epi_lang is defined and epi_lang == 'en') -%}
+  {%- set _base = "https://ancientsky.github.io/python4epi/" -%}
+  {%- set _site_root = _base + ("en/" if _is_en else "") -%}
+  {%- set _og_image = _base + "_static/og-image.png" -%}
+  {%- if _is_en -%}
+    {%- set _desc = "Epi With Python — learn epidemiology with Python, from the basics to ML/DL, following a single Legionnaires' disease outbreak investigation across 18 chapters." -%}
+    {%- set _title = "Epi With Python — Learn Epidemiology with Python" -%}
+    {%- set _social_desc = "One Legionnaires' disease outbreak, 18 Python chapters, from first notification to the final report." -%}
+    {%- set _keywords = "Epidemiology, Python, Jupyter, public health, outbreak investigation, Legionella, machine learning, data science" -%}
+    {%- set _locale = "en_US" -%}
+    {%- set _alt_locale = "zh_TW" -%}
+  {%- else -%}
+    {%- set _desc = "Epi With Python — 用 Python 學流行病學，從零基礎到 ML/DL，18 章跟著一場退伍軍人症疫調走完整個分析流程。" -%}
+    {%- set _title = "Epi With Python — 用 Python 學流行病學" -%}
+    {%- set _social_desc = "一場退伍軍人症疫調，18 章 Python 課程，從接獲通報到結案報告。" -%}
+    {%- set _keywords = "Epidemiology, Python, Jupyter, 流行病學, 公共衛生, 疫情調查, Legionella, 機器學習, 資料科學" -%}
+    {%- set _locale = "zh_TW" -%}
+    {%- set _alt_locale = "en_US" -%}
+  {%- endif -%}
+
   {#- Core SEO -#}
-  <meta name="description" content="Epi With Python — 用 Python 學流行病學，從零基礎到 ML/DL，18 章跟著一場退伍軍人症疫調走完整個分析流程。" />
-  <meta name="keywords" content="Epidemiology, Python, Jupyter, 流行病學, 公共衛生, 疫情調查, Legionella, 機器學習, 資料科學, 機器學習" />
+  <meta name="description" content="{{ _desc }}" />
+  <meta name="keywords" content="{{ _keywords }}" />
   <meta name="author" content="Epi With Python | Python for Epidemiologists" />
 
   {#- Open Graph -#}
   <meta property="og:site_name" content="Epi With Python" />
   <meta property="og:type" content="website" />
-  <meta property="og:locale" content="zh_TW" />
-  <meta property="og:title" content="Epi With Python — 用 Python 學流行病學" />
-  <meta property="og:description" content="一場退伍軍人症疫調，18 章 Python 課程，從接獲通報到結案報告。" />
-  <meta property="og:url" content="https://ancientsky.github.io/python4epi/" />
-  <meta property="og:image" content="https://ancientsky.github.io/python4epi/_static/og-image.png" />
-  <meta property="og:image:secure_url" content="https://ancientsky.github.io/python4epi/_static/og-image.png" />
+  <meta property="og:locale" content="{{ _locale }}" />
+  <meta property="og:locale:alternate" content="{{ _alt_locale }}" />
+  <meta property="og:title" content="{{ _title }}" />
+  <meta property="og:description" content="{{ _social_desc }}" />
+  <meta property="og:url" content="{{ _site_root }}" />
+  <meta property="og:image" content="{{ _og_image }}" />
+  <meta property="og:image:secure_url" content="{{ _og_image }}" />
   <meta property="og:image:type" content="image/png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Epi With Python — 用 Python 學流行病學" />
+  <meta property="og:image:alt" content="{{ _title }}" />
 
   {#- Twitter Card -#}
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Epi With Python — 用 Python 學流行病學" />
-  <meta name="twitter:description" content="一場退伍軍人症疫調，18 章 Python 課程，從接獲通報到結案報告。" />
-  <meta name="twitter:image" content="https://ancientsky.github.io/python4epi/_static/og-image.png" />
-  <meta name="twitter:image:alt" content="Epi With Python — 用 Python 學流行病學" />
+  <meta name="twitter:title" content="{{ _title }}" />
+  <meta name="twitter:description" content="{{ _social_desc }}" />
+  <meta name="twitter:image" content="{{ _og_image }}" />
+  <meta name="twitter:image:alt" content="{{ _title }}" />
+
+  {#- hreflang alternates for the two language trees -#}
+  <link rel="alternate" hreflang="zh-Hant" href="{{ _base }}" />
+  <link rel="alternate" hreflang="en" href="{{ _base }}en/" />
+  <link rel="alternate" hreflang="x-default" href="{{ _base }}" />
 
   {#- Preconnect to Google Fonts (custom.css @imports them) -#}
   <link rel="preconnect" href="https://fonts.googleapis.com" />

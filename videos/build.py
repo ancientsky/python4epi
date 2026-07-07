@@ -85,22 +85,42 @@ def main() -> None:
     else:
         scripts = [args.script]
 
+    succeeded: list[str] = []
+    failed: list[tuple[str, str]] = []
     for script_path in scripts:
         if not script_path.exists():
             logging.error("Script not found: %s", script_path)
-            sys.exit(1)
+            failed.append((script_path.name, "script not found"))
+            continue
         print(f"\n{'='*60}")
         print(f"  Building: {script_path.name}")
         print(f"{'='*60}")
-        result = build_video(
-            script_path,
-            OUTPUT_DIR,
-            quality=args.quality,
-            skip_tts=args.skip_tts,
-        )
+        try:
+            result = build_video(
+                script_path,
+                OUTPUT_DIR,
+                quality=args.quality,
+                skip_tts=args.skip_tts,
+            )
+        except Exception as exc:  # noqa: BLE001 — isolate one failure per video
+            logging.error("FAILED %s: %s", script_path.name, exc)
+            failed.append((script_path.name, str(exc)))
+            continue
         print(f"  → {result}\n")
+        succeeded.append(script_path.name)
 
-    print("All videos built successfully!")
+    # Summary — one failing video must not silently abort the whole batch.
+    print(f"\n{'='*60}")
+    print(f"  Build summary: {len(succeeded)} succeeded, {len(failed)} failed")
+    print(f"{'='*60}")
+    for name in succeeded:
+        print(f"  ✓ {name}")
+    for name, reason in failed:
+        print(f"  ✗ {name}  ({reason})")
+
+    if failed:
+        sys.exit(1)
+    print("\nAll videos built successfully!")
 
 
 if __name__ == "__main__":
