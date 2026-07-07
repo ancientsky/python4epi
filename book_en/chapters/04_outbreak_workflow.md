@@ -1353,7 +1353,7 @@ if __name__ == "__main__":
 ```
 
 ```{tip}
-**Three ways to turn a notebook into a `.py` script** are covered in {ref}`Ch00 Developer Tools <00_guide:把-.ipynb-轉成-.py：三種方法>`. This course's `notebooks/run_sitrep.py` is a tidied-up example.
+**Three ways to turn a notebook into a `.py` script** are covered in {doc}`Ch00 Developer Tools <00_guide>`. This course's `notebooks/run_sitrep.py` is a tidied-up example.
 ```
 
 ### 9b: macOS: launchd (recommended)
