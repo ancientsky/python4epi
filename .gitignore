@@ -13,8 +13,16 @@ book/_build/
 data/processed/
 data/external/
 
-# Local per-language data symlink for notebook execution (CI recreates it)
+# Local data symlinks for notebook execution (CI recreates them per build)
 book_en/data
+book_en/chapters/data
+book_en/chapters/exercises/data
+book_en/chapters/notebooks/data
+book_en/chapters/solutions/data
+book/chapters/data
+book/chapters/exercises/data
+book/chapters/notebooks/data
+book/chapters/solutions/data
 
 # Report generation output (Ch04 Step 8)
 output/
