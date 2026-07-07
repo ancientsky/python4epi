@@ -1,62 +1,62 @@
-# 14 實戰案例：退伍軍人症疫調報告
+# 14 Case Study: A Legionnaires' Disease Outbreak Investigation Report
 
-## 你將學到
+## What You'll Learn
 
-- 如何從接到通報到完成結案報告，走完一次完整疫調流程
-- 如何整合前 13 章學到的所有技能
-- 如何產出「可行動」的分析結論
+- How to walk through a complete outbreak investigation, from receiving the notification to finishing the final report
+- How to integrate every skill from the previous 13 chapters
+- How to produce "actionable" analytic conclusions
 
-## 情境故事
+## The Scenario
 
-一切從那通電話開始。
+It all started with that phone call.
 
-> 2026 年 1 月中旬，你接到松柏護理之家的通報：近日多名住民出現肺炎症狀。
-> 你帶著筆電趕到現場，開始進行流行病學調查。
-> 現在，調查結束了——是時候把所有分析整合成一份正式的 **疫情調查報告**。
+> In mid-January 2026, you receive a notification from Songbai Nursing Home: several residents have recently developed pneumonia symptoms.
+> You grab your laptop, rush to the site, and begin an epidemiological investigation.
+> Now the investigation is over — it's time to pull all of your analyses together into a formal **outbreak investigation report**.
 
-這一章就是最終考驗：用 Python 產出一份從頭到尾的疫調報告。
+This chapter is the final challenge: use Python to produce a complete, end-to-end outbreak investigation report.
 
-## 報告架構
+## Report Structure
 
-一份標準的群聚調查報告包含以下段落：
+A standard outbreak investigation report contains the following sections:
 
-| 段落 | 對應章節 | 核心技能 |
+| Section | Related Chapter | Core Skills |
 |------|---------|---------|
-| 1. 背景與通報 | Ch00, Ch04 | 個案定義、通報流程 |
-| 2. 方法 | Ch02 | 資料收集、line list 清理 |
-| 3. 描述性流行病學 | Ch02, Ch03, Ch04 | 人時地分布、流行曲線、侵襲率 |
-| 4. 分析性流行病學 | Ch03, Ch05, Ch06 | 2×2 表、分層分析、邏輯斯迴歸 |
-| 5. 時間空間分析 | Ch07, Ch08 | 時間序列、空間分布 |
-| 6. 進階分析 | Ch09, Ch10 | 存活分析、預測模型 |
-| 7. 討論與建議 | — | 感染源研判、介入措施 |
-| 8. 結論 | — | 行動建議 |
+| 1. Background & Notification | Ch00, Ch04 | Case definition, notification workflow |
+| 2. Methods | Ch02 | Data collection, line list cleaning |
+| 3. Descriptive Epidemiology | Ch02, Ch03, Ch04 | Person/time/place distribution, epidemic curve, attack rate |
+| 4. Analytic Epidemiology | Ch03, Ch05, Ch06 | 2×2 tables, stratified analysis, logistic regression |
+| 5. Time & Space Analysis | Ch07, Ch08 | Time series, spatial distribution |
+| 6. Advanced Analysis | Ch09, Ch10 | Survival analysis, prediction models |
+| 7. Discussion & Recommendations | — | Source identification, intervention measures |
+| 8. Conclusion | — | Action recommendations |
 
-## 主要發現摘要
+## Summary of Key Findings
 
-在 notebook 中，你將產出以下關鍵數字：
+In the notebook, you'll produce the following key numbers:
 
-- **280** 位住民，**121** 人感染（侵襲率 **43.2%**）
-- **19** 人死亡（致死率 **15.7%**）
-- 發病高峰：**2026-01-19 至 01-22**
-- 高風險區域：**2F-A**（54.5%）、**3F-B**（57.4%）
-- 主要危險因子：**淋浴使用**（adjusted OR > 1）
-- 結論：淋浴系統為最可能的感染源
+- **280** residents, **121** infected (attack rate **43.2%**)
+- **19** deaths (case fatality rate **15.7%**)
+- Peak of onset: **2026-01-19 to 01-22**
+- High-risk zones: **2F-A** (54.5%), **3F-B** (57.4%)
+- Main risk factor: **shower use** (adjusted OR > 1)
+- Conclusion: the shower system is the most likely source of infection
 
-## 練習題
+## Exercises
 
-- 作業版：[`14_case_study_exercise.ipynb`](exercises/14_case_study_exercise.ipynb)
-- 解答版（講師）：[`14_case_study_solution.ipynb`](solutions/14_case_study_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/14_case_study_solution.ipynb>)
+- Exercise version: [`14_case_study_exercise.ipynb`](exercises/14_case_study_exercise.ipynb)
+- Solution version (instructor): [`14_case_study_solution.ipynb`](solutions/14_case_study_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/14_case_study_solution.ipynb>)
 
-## 常見誤用
+## Common Pitfalls
 
-| 錯誤 | 正確做法 |
+| Mistake | Correct Approach |
 |------|----------|
-| 只列數字，不給脈絡 | 每個數字都附上比較基準（如全國 CFR） |
-| 圖表太多，缺乏重點 | 挑 3–5 張關鍵圖表，每張都有明確結論 |
-| 分析做完就結束 | 一定要有「行動建議」段落 |
-| 報告格式不一致 | 使用標準疫調報告格式 |
+| Listing numbers with no context | Give every number a comparison baseline (e.g., national CFR) |
+| Too many charts, no focus | Pick 3–5 key charts, each with a clear conclusion |
+| Stopping once the analysis is done | Always include an "action recommendations" section |
+| Inconsistent report formatting | Use a standard outbreak investigation report format |
 
-## 下一步
+## Next Step
 
-恭喜！完成這章代表你已經具備用 Python 進行疫情調查的完整能力。
-附錄（Ch15）收錄進階術語與參考資源。
+Congratulations! Finishing this chapter means you now have the full ability to conduct an outbreak investigation with Python.
+The appendix (Ch15) collects advanced terminology and reference resources.

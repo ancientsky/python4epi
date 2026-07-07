@@ -1,95 +1,160 @@
-# Epi With Python — 用 Python 學流行病學
+# Epi With Python — Learning Epidemiology with Python
 
-## 一通電話，一場調查
+## One Phone Call, One Investigation
 
-> 週五下午四點，你接到衛生局的電話：
+> It's four o'clock on a Friday afternoon, and you get a call from the health department:
 >
-> 「松柏護理之家有多名住民出現肺炎症狀，疑似退伍軍人症群聚，請盡速前往調查。」
+> "Pine & Cypress Nursing Home has multiple residents showing signs of pneumonia — a suspected Legionnaires' disease cluster. Please get there as soon as you can to investigate."
 >
-> 你帶著筆電趕到現場。280 位住民、3 層樓、2 翼區——面對這些數字，你打開了 Python⋯⋯
+> You grab your laptop and rush to the scene. 280 residents, 3 floors, 2 wings — facing all these numbers, you open up Python…
 
-這本書的每一章都是這場調查的一個環節。你將從零開始，用 Python 一步步完成一場完整的疫情調查。
+Every chapter in this book is one piece of that investigation. Starting from scratch, you'll use Python to carry out a complete outbreak investigation, step by step.
 
-## 故事線
+```{button-ref} chapters/00_guide
+:ref-type: doc
+:color: primary
+:expand:
+:class: sd-fs-5 sd-font-weight-bold
 
-```
-【第一幕：接獲通報】
-  Ch00  導讀 — 週五下午四點，你接到電話⋯⋯
-  Ch01  Python 基礎 — 先學會算侵襲率和致死率
-  Ch02  資料處理與視覺化 — 拿到 280 筆 line list，開始整理
-
-【第二幕：從描述到推論】
-  Ch03  暴露與疾病的關聯 — 淋浴是不是危險因子？用統計來檢定
-  Ch04  群聚調查工作流 — 產出第一份 SitRep 給長官
-
-【第三幕：深入分析】
-  Ch05  分層分析與干擾因子 — 臥床老人不淋浴也不生病，真的嗎？
-  Ch06  邏輯斯迴歸 — 同時調整年齡、共病，算出 adjusted OR
-  Ch07  時間序列與預測 — 預測未來還會有多少新個案？
-  Ch08  空間流病 — 哪個樓層翼區最危險？
-
-【第四幕：進階建模】
-  Ch09  存活分析 — 發病到死亡的時間，哪些因子影響存活？
-  Ch10  機器學習 — 用全部特徵預測感染與重症
-  Ch11  深度學習 — PyTorch 能做得更好嗎？
-  Ch12  因果推論 — 淋浴暴露的因果效應，DAG 怎麼畫？
-
-【第五幕：收尾與實戰】
-  Ch13  可重現研究 — 讓同事能一鍵重現你的分析
-  Ch14  實戰案例 — 從接到通報到結案報告，完整走一遍
+Turn to Ch00 and pick up the phone →
 ```
 
-## 資料集
+## The Data Behind This Investigation
 
-全書使用同一份合成資料集：**松柏護理之家退伍軍人症群聚事件**
+The whole book uses a single synthetic dataset: **the Pine & Cypress Nursing Home Legionnaires' disease cluster**
 
-| 項目 | 數值 |
-|------|------|
-| 住民總數 | 280 人 |
-| 感染人數 | 121 人（侵襲率 43.2%） |
-| 死亡人數 | 19 人（致死率 15.7%） |
-| 資料欄位 | 32 欄（人口學、共病、暴露、臨床、結果） |
-| 發病期間 | 2026-01-12 至 2026-01-28 |
-| 場域 | 3 層樓 × 2 翼區（A/B） |
+::::{grid} 2 2 3 3
+:gutter: 3
 
-## 適合誰
+:::{grid-item-card} 280
+:text-align: center
+Total residents
+:::
 
-- **零基礎學員**：從 Python 語法開始，逐步進入流行病學分析
-- **公衛研究生**：學習用程式取代 Excel 做疫調分析
-- **現職流行病學家**：從傳統工具轉型 Python 工作流
-- **對傳染病有興趣的人**：透過真實感的案例學習分析思維
+:::{grid-item-card} 121
+:text-align: center
+Infected (attack rate 43.2%)
+:::
 
-## 如何使用
+:::{grid-item-card} 19
+:text-align: center
+Deaths (case fatality rate 15.7%)
+:::
 
-### 線上閱讀
+:::{grid-item-card} 32
+:text-align: center
+Data columns (demographics / comorbidities / exposures / clinical / outcomes)
+:::
 
-本書提供兩個版本：
+:::{grid-item-card} 3 × 2
+:text-align: center
+3 floors × 2 wings (A/B)
+:::
 
-| 版本 | 內容 | 網址 |
-|------|------|------|
-| **學生版** | 課文 + 作業（不含解答） | [ancientsky.github.io/python4epi/](https://ancientsky.github.io/python4epi/) |
-| **教師版** | 課文 + 作業 + 解答 | [ancientsky.github.io/python4epi/instructor/](https://ancientsky.github.io/python4epi/instructor/) |
+:::{grid-item-card} 17 days
+:text-align: center
+Onset period 2026-01-12 to 01-28
+:::
 
-### 本機環境
+::::
+
+## The Storyline: A Five-Act Investigation
+
+::::{grid} 1 1 2 3
+:gutter: 3
+
+:::{grid-item-card} 🎬 Act I — The Call
+**Ch00–02**
+^^^
+Orientation, Python basics, data wrangling and visualization. You pick up the phone, set up your tools, and read in the 280-record line list to start cleaning it up.
+:::
+
+:::{grid-item-card} 🔬 Act II — From Description to Inference
+**Ch03–04**
+^^^
+2×2 tables, risk ratios, and the chi-square test — is showering a risk factor? You produce your first SitRep for the boss.
+:::
+
+:::{grid-item-card} 🕵️ Act III — Digging Deeper
+**Ch05–08**
+^^^
+Stratified analysis and confounders, logistic regression, time-series forecasting, spatial epidemiology — where is the highest risk? And why?
+:::
+
+:::{grid-item-card} 🧠 Act IV — Advanced Modeling
+**Ch09–12**
+^^^
+Survival analysis, machine learning, deep learning, causal inference — from predicting severe cases to pinning down the causal effect of shower exposure.
+:::
+
+:::{grid-item-card} 📋 Act V — Wrap-Up & Real Cases
+**Ch13–14**
+^^^
+Reproducible research and a complete outbreak report — let colleagues reproduce your entire analysis with one click, from the first notification to the final report.
+:::
+
+:::{grid-item-card} 📚 Appendix & Exercises
+**Ch15–17**
+^^^
+Glossary, dataset column dictionary, package quick reference, plus 14 sets of exercises and solutions.
+:::
+
+::::
+
+## Who It's For
+
+- **Complete beginners**: start from Python syntax and move step by step into epidemiological analysis
+- **Public health graduate students**: learn to replace Excel with code for outbreak analysis
+- **Practicing epidemiologists**: transition from traditional tools to a Python workflow
+- **Anyone curious about infectious diseases**: learn analytical thinking through a realistic case
+
+## How to Use This Book
+
+### Read Online: Two Editions
+
+::::{grid} 1 1 2 2
+:gutter: 3
+
+:::{grid-item-card} 🎓 Student edition
+Lessons + exercises (no solutions)
++++
+```{button-link} https://ancientsky.github.io/python4epi/
+:color: primary
+:expand:
+Open the student edition
+```
+:::
+
+:::{grid-item-card} 👩‍🏫 Instructor edition
+Lessons + exercises + solutions
++++
+```{button-link} https://ancientsky.github.io/python4epi/instructor/
+:color: secondary
+:expand:
+Open the instructor edition
+```
+:::
+
+::::
+
+Every notebook page has an **Open in Colab** button in the top-right corner, or you can run it locally:
 
 ```bash
 uv sync && uv run jupyter lab
 ```
 
-### Google Colab
+On Google Colab there's nothing to install — every notebook has a setup cell at the top that automatically detects Colab.
 
-每個 notebook 頂部都有自動偵測 Colab 的 setup cell，不需安裝任何東西。
+### Suggested Learning Path
 
-### 建議學習順序
+Go through the chapters in order — each chapter's results lead naturally into the next chapter's questions. That's the rhythm of a real outbreak investigation.
 
-按章節順序走——每一章的分析結果會引出下一章的問題。這就是真實疫調的節奏。
+## Language and Terminology
 
-## 語言與術語
+- The main text is written in **Traditional Chinese**, with technical terms kept in English; you can switch to the **English** edition from the top-right corner
+- Epidemiological terms follow **Taiwan standard translations** (e.g., 侵襲率, 致死率, 信賴區間)
+- For the full glossary, see {doc}`Ch15 Appendix <chapters/15_appendix>`
 
-- 內文以**繁體中文**撰寫，技術名詞保留英文
-- 流行病學術語採用**台灣標準譯名**（例如：侵襲率、致死率、信賴區間）
-- 完整術語對照表見 Ch15 附錄
+## Let's Get Started
 
-## 開始吧
-
-翻到 Ch00，接起那通電話。
+Turn to Ch00 and pick up the phone.

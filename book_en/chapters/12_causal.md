@@ -1,30 +1,30 @@
-# 12 因果推論與政策評估：淋浴真的「導致」感染嗎？
+# 12 Causal Inference and Policy Evaluation: Does Showering Really "Cause" Infection?
 
-## 你將學到
+## What You Will Learn
 
-- 用 **DAG（有向無環圖）** 視覺化因果關係
-- 區分 **因果效應** 與 **統計關聯**
-- 辨識 **干擾路徑、中介變項、碰撞因子**
-- 計算 **歸因風險（AR）** 與 **族群歸因風險（PAR）**
-- 用 **Difference-in-Differences (DiD)** 評估介入效果
+- Visualize causal relationships with a **DAG (directed acyclic graph)**
+- Distinguish **causal effects** from **statistical associations**
+- Identify **confounding paths, mediators, and colliders**
+- Calculate **attributable risk (AR)** and **population attributable risk (PAR)**
+- Evaluate intervention effects with **difference-in-differences (DiD)**
 
-## 情境故事
+## The Story So Far
 
-到這一章，你已經用了描述統計、分層分析、迴歸、ML、DL，全都指向「淋浴暴露與感染有關」。
+By this chapter, you have already used descriptive statistics, stratified analysis, regression, ML, and DL—all pointing to "shower exposure is associated with infection."
 
-但長官問了最根本的問題：
-> 「淋浴真的『導致』感染嗎？還是只是統計上的巧合？」
-> 「如果我們消毒水系統，真的會減少感染嗎？」
+But the director asked the most fundamental question of all:
+> "Does showering really *cause* infection? Or is it just a statistical coincidence?"
+> "If we disinfect the water system, will infections really go down?"
 
-這就是 **因果推論** 要回答的問題。
+These are the questions **causal inference** aims to answer.
 
 ---
 
-## Part 1：DAG — 因果關係的視覺化
+## Part 1: DAG — Visualizing Causal Relationships
 
-### 什麼是 DAG？
+### What Is a DAG?
 
-**有向無環圖（Directed Acyclic Graph）** 用箭頭表示因果方向：
+A **directed acyclic graph (DAG)** uses arrows to represent the direction of causation:
 
 ```
 floor_wing → water_contamination → shower_aerosol → infection
@@ -32,78 +32,78 @@ functional_status → shower_use → infection
 age → comorbidities → severity → death
 ```
 
-### 辨識因果結構
+### Identifying Causal Structures
 
-| 結構 | 說明 | 本案範例 |
+| Structure | Description | Example in This Case |
 |------|------|---------|
-| **干擾因子（Confounder）** | 同時影響暴露和結果 | `functional_status` → `shower_use` 和 `infection` |
-| **中介變項（Mediator）** | 在暴露和結果之間的路徑上 | `shower_aerosol` 在 `water_contamination` → `infection` 之間 |
-| **碰撞因子（Collider）** | 同時被暴露和結果影響 | `hospitalized` ← `severity` 和 `infection` |
+| **Confounder** | Affects both the exposure and the outcome | `functional_status` → `shower_use` and `infection` |
+| **Mediator** | Sits on the path between exposure and outcome | `shower_aerosol` between `water_contamination` → `infection` |
+| **Collider** | Affected by both the exposure and the outcome | `hospitalized` ← `severity` and `infection` |
 
-> **碰撞因子陷阱**：如果你只分析「住院的人」，就是對碰撞因子做條件化，會產生假性關聯。
+> **The collider trap**: If you only analyze "people who were hospitalized," you are conditioning on a collider, which creates a spurious association.
 
 ---
 
-## Part 2：歸因風險
+## Part 2: Attributable Risk
 
 ### Attributable Risk (AR)
 
 ```python
-# 暴露組侵襲率 - 非暴露組侵襲率
+# Attack rate in exposed group - attack rate in unexposed group
 AR = risk_exposed - risk_unexposed
 ```
 
 ### Population Attributable Risk (PAR)
 
 ```python
-# 如果所有人都不淋浴，可以減少多少感染？
+# If no one showered, how many infections could be prevented?
 PAR = risk_total - risk_unexposed
 PAR_pct = PAR / risk_total * 100
 ```
 
 ---
 
-## Part 3：Difference-in-Differences (DiD)
+## Part 3: Difference-in-Differences (DiD)
 
-### 情境
+### The Scenario
 
-1 月 25 日，護理之家對 2-3 樓 B 翼（高侵襲率區域）實施水系統緊急消毒。
-1 樓作為對照組（不同水源系統）。
+On January 25, the nursing home carried out emergency disinfection of the water system for Wing B on floors 2–3 (the high-attack-rate area).
+Floor 1 serves as the control group (a different water supply system).
 
 ```python
 import statsmodels.formula.api as smf
 
-# treated = 2-3F B翼, control = 1F
-# post = 1月25日之後
+# treated = Wing B on floors 2-3, control = floor 1
+# post = after January 25
 model = smf.ols("daily_cases ~ treated + post + treated:post", data=panel).fit()
 ```
 
-`treated:post` 係數就是 DiD 效果估計——在平行趨勢假設下，代表介入的因果效應。
+The `treated:post` coefficient is the DiD effect estimate—under the parallel trends assumption, it represents the causal effect of the intervention.
 
-### 平行趨勢假設
+### The Parallel Trends Assumption
 
-DiD 的核心假設：如果沒有介入，兩組的趨勢會一樣。
+The core assumption of DiD: absent the intervention, the two groups would have followed the same trend.
 
-- **如何檢驗**：看介入前的趨勢是否平行
-- **如果不平行**：DiD 估計就不可信
+- **How to check it**: look at whether the pre-intervention trends are parallel
+- **If they are not parallel**: the DiD estimate is not trustworthy
 
 ---
 
-## 練習題
+## Exercises
 
-- 作業版：[`12_causal_exercise.ipynb`](exercises/12_causal_exercise.ipynb)
-- 解答版（講師）：[`12_causal_solution.ipynb`](solutions/12_causal_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/12_causal_solution.ipynb>)
+- Exercise version: [`12_causal_exercise.ipynb`](exercises/12_causal_exercise.ipynb)
+- Solution version (instructor): [`12_causal_solution.ipynb`](solutions/12_causal_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/12_causal_solution.ipynb>)
 
-## 常見誤用
+## Common Pitfalls
 
-| 錯誤 | 正確做法 |
+| Mistake | The Right Approach |
 |------|---------|
-| 統計顯著 = 因果 | 關聯不等於因果，需要 DAG 分析 |
-| 沒檢查平行趨勢就做 DiD | 先畫介入前趨勢圖 |
-| 對碰撞因子做條件化 | 用 DAG 辨識不該控制的變項 |
-| AR 解釋為「消除暴露就能避免」 | AR 假設因果關係成立，且無其他路徑 |
+| Statistical significance = causation | Association is not causation; you need DAG analysis |
+| Running DiD without checking parallel trends | Plot the pre-intervention trends first |
+| Conditioning on a collider | Use a DAG to identify variables you should NOT control for |
+| Interpreting AR as "removing the exposure will prevent it" | AR assumes the causal relationship holds and there are no other pathways |
 
-## 下一步
+## Next Steps
 
-因果推論幫我們釐清「什麼導致什麼」。
-下一章（Ch13），我們確保所有分析都是 **可重現的** → 可重現研究。
+Causal inference helps us clarify "what causes what."
+In the next chapter (Ch13), we make sure all of our analyses are **reproducible** → reproducible research.

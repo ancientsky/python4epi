@@ -1,52 +1,52 @@
-# 16 作業專區
+# 16 Exercises
 
-這裡收錄各章的作業版 notebook（不含解答）。所有作業使用同一份資料集：
-**松柏護理之家退伍軍人症群聚事件**（`data/synthetic/legionella_outbreak.csv`，280 筆 × 32 欄）。
+This section collects the exercise notebooks for each chapter (without solutions). All exercises use the same dataset:
+**the Pine & Cypress Nursing Home Legionnaires' disease cluster** (`data/synthetic/legionella_outbreak.csv`, 280 rows × 32 columns).
 
-## 使用方式
+## How to Use
 
-1. 先閱讀主章節概念與範例 notebook。
-2. 打開本章對應的作業 notebook。
-3. 完成所有 `TODO` 標記的程式碼區塊。
-4. 完成後再對照 Ch17 解答區的參考解答。
+1. First read the main chapter's concepts and example notebook.
+2. Open the exercise notebook for that chapter.
+3. Complete all the code blocks marked with `TODO`.
+4. When you're done, compare your work against the reference solutions in Ch17.
 
-```{admonition} 解答在哪裡？
+```{admonition} Where are the solutions?
 :class: tip
 
-解答版 notebook 收錄在 [Ch17 解答專區](17_solutions.md)，僅在**教師版**提供。
+The solution notebooks are in [Ch17 Solutions](17_solutions.md), available only in the **instructor edition**.
 
-- **學生版**（本站）：`https://ancientsky.github.io/python4epi/`
-- **教師版**（含解答）：`https://ancientsky.github.io/python4epi/instructor/`
+- **Student edition** (this site): `https://ancientsky.github.io/python4epi/`
+- **Instructor edition** (with solutions): `https://ancientsky.github.io/python4epi/instructor/`
 ```
 
-> **提示**：每份作業都有 3 道題目，第 3 題為挑戰題。
+> **Tip**: Each exercise set has 3 questions, and the 3rd is a challenge question.
 
-## 作業清單
+## Exercise List
 
-| 章 | 主題 | 練習重點 | 作業 |
+| Ch | Topic | Practice focus | Exercise |
 |----|------|---------|------|
-| 01 | Python 基礎 | 用群聚數字練習變數、dict、函數 | [作業](exercises/01_fundamentals_exercise.ipynb) |
-| 02 | 資料處理與視覺化 | 讀取 line list、日期轉換、流行曲線 | [作業](exercises/02_data_wrangling_exercise.ipynb) |
-| 03 | 描述性統計與 2×2 表 | 淋浴暴露 2×2 表、RR、卡方檢定 | [作業](exercises/03_stats_exercise.ipynb) |
-| 04 | 群聚調查工作流 | 完整 SitRep 產出流程 | [作業](exercises/04_outbreak_workflow_exercise.ipynb) |
-| 05 | 分層分析與干擾因子 | functional_status 分層、MH 檢定 | [作業](exercises/05_stratified_exercise.ipynb) |
-| 06 | 邏輯斯迴歸 | crude vs adjusted OR、模型比較 | [作業](exercises/06_logistic_regression_exercise.ipynb) |
-| 07 | 時間序列與預測 | 移動平均、MAE、住院時間序列 | [作業](exercises/07_time_series_exercise.ipynb) |
-| 08 | 空間流病 | CFR 空間分布、淋浴 × 空間交叉 | [作業](exercises/08_spatial_exercise.ipynb) |
-| 09 | 存活分析 | KM 曲線、Log-rank、Cox 迴歸 | [作業](exercises/09_survival_exercise.ipynb) |
-| 10 | 機器學習 | class_weight、特徵重要性、ROC | [作業](exercises/10_ml_exercise.ipynb) |
-| 11 | 深度學習 | PyTorch 架構設計、Dropout 效果 | [作業](exercises/11_dl_exercise.ipynb) |
-| 12 | 因果推論 | AR/PAR 計算、DiD 日期敏感度 | [作業](exercises/12_causal_exercise.ipynb) |
-| 13 | 可重現研究 | 摘要 dict、檢查清單、版本記錄 | [作業](exercises/13_reproducibility_exercise.ipynb) |
-| 14 | 實戰案例 | 疫情摘要、RR 篩查、迷你 SitRep | [作業](exercises/14_case_study_exercise.ipynb) |
+| 01 | Python basics | Practice variables, dicts, and functions with the cluster numbers | [Exercise](exercises/01_fundamentals_exercise.ipynb) |
+| 02 | Data wrangling and visualization | Read the line list, convert dates, build the epi curve | [Exercise](exercises/02_data_wrangling_exercise.ipynb) |
+| 03 | Descriptive statistics and 2×2 tables | Shower-exposure 2×2 table, RR, chi-square test | [Exercise](exercises/03_stats_exercise.ipynb) |
+| 04 | Outbreak investigation workflow | Complete SitRep production pipeline | [Exercise](exercises/04_outbreak_workflow_exercise.ipynb) |
+| 05 | Stratified analysis and confounders | Stratify by functional_status, Mantel-Haenszel test | [Exercise](exercises/05_stratified_exercise.ipynb) |
+| 06 | Logistic regression | Crude vs. adjusted OR, model comparison | [Exercise](exercises/06_logistic_regression_exercise.ipynb) |
+| 07 | Time series and forecasting | Moving average, MAE, hospitalization time series | [Exercise](exercises/07_time_series_exercise.ipynb) |
+| 08 | Spatial epidemiology | Spatial distribution of CFR, shower × space cross-tabulation | [Exercise](exercises/08_spatial_exercise.ipynb) |
+| 09 | Survival analysis | KM curve, log-rank, Cox regression | [Exercise](exercises/09_survival_exercise.ipynb) |
+| 10 | Machine learning | class_weight, feature importance, ROC | [Exercise](exercises/10_ml_exercise.ipynb) |
+| 11 | Deep learning | PyTorch architecture design, effect of dropout | [Exercise](exercises/11_dl_exercise.ipynb) |
+| 12 | Causal inference | AR/PAR calculation, DiD date sensitivity | [Exercise](exercises/12_causal_exercise.ipynb) |
+| 13 | Reproducible research | Summary dict, checklist, version log | [Exercise](exercises/13_reproducibility_exercise.ipynb) |
+| 14 | Real-world case study | Outbreak summary, RR screening, mini SitRep | [Exercise](exercises/14_case_study_exercise.ipynb) |
 
-## 常見問題
+## FAQ
 
-**Q: 可以用不同的方法解題嗎？**
-A: 當然可以。解答只是參考，能得到正確結果的方法都是好方法。
+**Q: Can I solve the problems a different way?**
+A: Absolutely. The solutions are just a reference — any method that gets the right result is a good method.
 
-**Q: 挑戰題太難怎麼辦？**
-A: 先完成前兩題，挑戰題可以看完解答後再練習。重點是理解分析邏輯。
+**Q: What if the challenge question is too hard?**
+A: Finish the first two questions first; you can come back to the challenge question after reviewing the solution. The point is to understand the analytical logic.
 
-**Q: 資料集在哪裡？**
-A: 所有 notebook 都從 `data/synthetic/legionella_outbreak.csv` 讀取，確保在專案根目錄執行即可。
+**Q: Where is the dataset?**
+A: Every notebook reads from `data/synthetic/legionella_outbreak.csv`, so just make sure you run it from the project root directory.

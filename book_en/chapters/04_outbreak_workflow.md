@@ -1,264 +1,267 @@
-# 04 群聚調查工作流：從 Line List 到 SitRep
+# 04 Outbreak Investigation Workflow: From Line List to SitRep
 
-## 情境
+## The scenario
 
-松柏護理之家退伍軍人症群聚事件爆發後第三天下午，你的長官說：
+Three days into the Legionnaires' disease cluster at Songbai Nursing Home, one afternoon your supervisor says:
 
-> 「兩小時內交出第一份疫情日報（SitRep），內容要包含：多少人感染、哪裡最嚴重、致死率多少、流行曲線長什麼樣。之後每天早上九點前更新。」
+> "Get me the first daily situation report (SitRep) within two hours. It needs to cover: how many people are infected, where it's worst, what the case fatality rate is, and what the epidemic curve looks like. After that, update it every morning before 9 a.m."
 
-你手上有一份 280 筆 × 32 欄的 line list CSV。這一章教你如何用 Python **自動化**產出一份結構化的 SitRep，而且每天只要重跑一次腳本就能更新。
+You have a line list CSV with 280 rows × 32 columns in hand. This chapter teaches you how to use Python to **automate** the production of a structured SitRep — one that you can update each day just by rerunning a single script.
 
-## 你將學到
+## What you'll learn
 
-- 從 raw line list 到 SitRep 的完整自動化流程
-- **個資保護（PII protection）**：去識別化技巧、k-anonymity、實務工作流
-- 描述性流行病學三要素：**人、時、地**
-- 關鍵指標計算：侵襲率、CFR、住院率、ICU 率
-- 按個案分類（確診/可能/非個案）分層摘要
-- 輸出結構化報告（含表格 + 圖表）
-- 把分析流程做成可重跑腳本
+- The full automated pipeline from raw line list to SitRep
+- **PII protection**: de-identification techniques, k-anonymity, and the practical workflow
+- The three pillars of descriptive epidemiology: **person, time, place**
+- Key metric calculations: attack rate, CFR, hospitalization rate, ICU rate
+- Stratified summaries by case classification (confirmed / probable / not-a-case)
+- Producing a structured report (tables + charts)
+- Turning the analysis into a rerunnable script
 
-## FETP 疫情調查 10 步驟：本章在框架中的位置
+## The FETP 10-step outbreak investigation: where this chapter fits
 
-疫情調查有一套國際通用、台灣疾管署 FETP 2.0 訓練採用的 **10 步驟系統框架**。本章以第 5 步驟（描述性流行病學）為主軸，同時涵蓋步驟 1、3、4、9、10 的核心概念。
+Outbreak investigation follows an internationally recognized **10-step systematic framework**, the one used by Taiwan CDC's FETP 2.0 training. This chapter centers on Step 5 (descriptive epidemiology) while also touching on the core concepts of Steps 1, 3, 4, 9, and 10.
 
 ```{figure} images/fetp_10_steps.svg
 :name: fig-fetp-10-steps
-:alt: FETP 疫情調查 10 步驟框架，標示哪些步驟由 Python 強化
+:alt: The FETP 10-step outbreak investigation framework, highlighting which steps are enhanced by Python
 :width: 100%
 
-FETP 疫情調查 10 步驟全景。橘色步驟（5、7）為 Python 能高度自動化的部分；藍色（10）為部分支援；灰色步驟（1、2、3、4、6、8、9）需要現場人為判斷，無法完全由程式替代。**各步驟可同時進行或調整順序，但都不能省略。**
+An overview of the FETP 10-step outbreak investigation. The orange steps (5, 7) are the parts Python can automate heavily; blue (10) is partially supported; the gray steps (1, 2, 3, 4, 6, 8, 9) require on-site human judgment and cannot be fully replaced by code. **The steps can run in parallel or be reordered, but none of them can be skipped.**
 ```
 
-## SitRep 的基本架構
+## The basic structure of a SitRep
 
-一份標準的疫情日報至少包含：
+A standard daily situation report contains at least:
 
-1. **摘要指標**：截至目前的累計數字
-2. **人**（Person）：年齡、性別、共病分布
-3. **時**（Time）：流行曲線、新增趨勢
-4. **地**（Place）：按地點的侵襲率比較
-5. **行動建議**：根據數據的初步判斷
+1. **Summary metrics**: the cumulative numbers to date
+2. **Person**: distribution by age, sex, comorbidities
+3. **Time**: the epidemic curve and incidence trend
+4. **Place**: attack rates compared across locations
+5. **Recommended actions**: an initial read based on the data
 
 ---
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：SitRep 速成——兩小時交出疫情日報</div>
+  <div class="video-title">Tutorial video: SitRep crash course — deliver a situation report in two hours</div>
   <div class="youtube-lite" data-id="p5wes20-Az8">
-    <img src="https://img.youtube.com/vi/p5wes20-Az8/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/p5wes20-Az8/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
-## FETP Step 1：行前準備（出發前要做的事）
+## FETP Step 1: Preparation (what to do before you set out)
 
-在打開任何 CSV 之前，現場調查組應先完成三件事：
+Before opening any CSV, the field investigation team should complete three things:
 
-### 團隊組成
+### Team composition
 
-| 角色 | 職責 | 本次群聚（退伍軍人症）|
+| Role | Responsibilities | This cluster (Legionnaires' disease) |
 |------|------|----------------------|
-| 流行病學家 | 設計調查方案、分析資料 | 主責疫調 |
-| 實驗室人員 | 採樣、菌株比對 | 痰液 / 水樣 PCR + 培養 |
-| 感染管制師 | 院內感染評估、隔離措施 | 評估護理之家動線 |
-| 環境衛生人員 | 採樣冷卻水塔、淋浴設備 | 水塔加氯、設備停用 |
-| 地方衛生機關 | 協調資源、法規通報 | 衛生局疫調、CDC 通報 |
+| Epidemiologist | Design the investigation, analyze the data | Lead investigator |
+| Laboratory staff | Collect samples, match strains | Sputum / water sample PCR + culture |
+| Infection control practitioner | Assess nosocomial infection, isolation measures | Evaluate the nursing home's movement flow |
+| Environmental health staff | Sample cooling towers and shower equipment | Chlorinate towers, shut down equipment |
+| Local health authority | Coordinate resources, statutory notification | Local health bureau investigation, CDC notification |
 
-> 退伍軍人症（*Legionella pneumophila*）不會人傳人，因此**不需要**接觸者隔離人員。若為諾羅病毒等糞口傳播病原，則需增派接觸者追蹤人員。
+> Legionnaires' disease (*Legionella pneumophila*) does not spread person-to-person, so you do **not** need contact-isolation staff. For a fecal-oral pathogen such as norovirus, you would need to add contact-tracing personnel.
 
-### 物資清單
+### Supplies checklist
 
-出發前確認以下物資就位：
+Before setting out, confirm the following supplies are ready:
 
-- **採樣**：無菌水樣容器、痰液採集管、環境棉棒、冷藏運送盒
-- **個人防護**：N95 口罩、手套、隔離衣（依病原調整）
-- **調查工具**：標準化問卷（紙本＋電子備份）、平板電腦、加密 USB
-- **通訊**：地方衛生局聯絡人名單、實驗室緊急聯絡電話
+- **Sampling**: sterile water containers, sputum collection tubes, environmental swabs, refrigerated transport boxes
+- **Personal protection**: N95 masks, gloves, isolation gowns (adjust to the pathogen)
+- **Investigation tools**: standardized questionnaires (paper + electronic backup), tablets, encrypted USB drives
+- **Communications**: local health bureau contact list, laboratory emergency phone numbers
 
-### 文獻準備
+### Literature preparation
 
-調查前應閱讀：
-1. 該病原的基本特性（潛伏期、傳染途徑、高危族群）
-2. 近期類似群聚的調查報告（找環境來源線索）
-3. 本機構過去的疫情紀錄（確認是否為反覆暴露）
+Before the investigation, you should read up on:
+1. The basic characteristics of the pathogen (incubation period, transmission route, high-risk groups)
+2. Investigation reports of recent similar clusters (for clues to the environmental source)
+3. The facility's past outbreak records (to check whether this is repeated exposure)
 
-```{admonition} 退伍軍人症背景知識速查
+```{admonition} Quick reference: Legionnaires' disease background
 :class: note
-- 病原體：*Legionella pneumophila* 血清型 1（最常見，占 >80%）
-- 傳染途徑：吸入含菌氣溶膠（冷卻水塔、淋浴、水療池）
-- 不傳人：無症狀傳播疑慮，**不需要**設立隔離病房
-- 高危族群：65 歲以上、免疫抑制、慢性肺病、吸菸者
-- 致死率：社區型約 5–10%；機構型/重症可達 20–30%
+- Pathogen: *Legionella pneumophila* serogroup 1 (the most common, >80% of cases)
+- Transmission route: inhalation of contaminated aerosols (cooling towers, showers, hydrotherapy pools)
+- Not person-to-person: no concern for asymptomatic transmission; **no need** to set up isolation wards
+- High-risk groups: age 65+, immunosuppressed, chronic lung disease, smokers
+- Case fatality rate: community-acquired about 5–10%; institutional/severe cases can reach 20–30%
 ```
 
 ---
 
-## Step 1: 讀取與資料準備
+## Step 1: Read in and prepare the data
 
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# ── CJK 字型設定：避免圖表中的中文顯示為方框 □□□ ──
-# matplotlib 預設不支援中文，需要指定字型候選清單
-# 系統會從左到右逐一嘗試，找到第一個可用的字型就停下
+# ── CJK font setup: avoid Chinese labels rendering as boxes □□□ ──
+# matplotlib doesn't support CJK by default, so we give it a candidate font list
+# It tries them left to right and stops at the first one available
 plt.rcParams["font.sans-serif"] = [
     "Noto Sans CJK TC", "Noto Sans CJK SC", "Noto Sans CJK JP",
     "Noto Sans TC", "Microsoft JhengHei",
     "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS",
     "Heiti TC", "DejaVu Sans",
 ]
-plt.rcParams["axes.unicode_minus"] = False  # 修正負號顯示為方框的問題
-plt.style.use("ggplot")        # 使用 ggplot 風格（灰底白格線）
-plt.rcParams["figure.dpi"] = 150  # 提高輸出解析度，圖表更清晰
+plt.rcParams["axes.unicode_minus"] = False  # fix the minus sign showing as a box
+plt.style.use("ggplot")        # use the ggplot style (gray background, white gridlines)
+plt.rcParams["figure.dpi"] = 150  # raise the output resolution for sharper charts
 
-# ── 讀取 CSV ──
+# ── Read the CSV ──
 df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
-# df 現在是一個 DataFrame（類似 Excel 試算表）
-# 280 列（每位住民一列）× 32 欄（每個欄位一列）
+# df is now a DataFrame (like an Excel spreadsheet)
+# 280 rows (one per resident) × 32 columns (one per field)
 
-# ── 日期欄位轉換 ──
-# CSV 裡的日期是字串（如 "2026-01-15"），必須轉成 datetime 物件才能計算時間差
+# ── Convert date columns ──
+# Dates in the CSV are strings (e.g. "2026-01-15"); we must turn them into
+# datetime objects before we can compute time differences
 date_cols = [
     "facility_admission_date", "symptom_onset_date",
     "hospitalization_date", "death_date", "notification_date",
 ]
 for col in date_cols:
-    # errors="coerce"：遇到無法解析的值（如空白、亂碼）
-    # 不會報錯，而是轉成 NaT（Not a Time，等同日期版的 NaN）
+    # errors="coerce": on an unparseable value (blank, garbage) don't raise;
+    # instead convert to NaT (Not a Time, the date-world equivalent of NaN)
     df[col] = pd.to_datetime(df[col], errors="coerce")
 
-# ── 衍生新欄位 ──
-# 建立「是否感染」的 0/1 欄位
-# clinical_severity 只要不是 "not_ill"，就算感染（1），否則為 0
-# != 比較產生 True/False，astype(int) 將 True→1、False→0
+# ── Derive new columns ──
+# Build a 0/1 "infected" column
+# Anyone whose clinical_severity is not "not_ill" counts as infected (1), else 0
+# The != comparison produces True/False, and astype(int) maps True→1, False→0
 df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
 
-# 建立年齡組：pd.cut 把連續數值切成分類
-# bins=[59, 69, 79, 89, 100] 定義切點，區間是左開右閉：(59,69]、(69,79]...
+# Build age groups: pd.cut slices a continuous variable into categories
+# bins=[59, 69, 79, 89, 100] defines the cut points; intervals are left-open,
+# right-closed: (59,69], (69,79]...
 df["age_group"] = pd.cut(
     df["age"], bins=[59, 69, 79, 89, 100],
     labels=["60-69", "70-79", "80-89", "90+"],
 )
 
-# 計算每位住民的共病數量
+# Count each resident's number of comorbidities
 comorbidity_cols = [
     "comorbidity_chf", "comorbidity_dm",
     "comorbidity_cancer", "comorbidity_copd", "immunosuppressed",
 ]
-# 這些欄位都是 0/1，axis=1 代表「橫向加總」（對每一列加總）
-# 結果是每位住民有幾個共病
+# These columns are all 0/1; axis=1 means "sum across the row" (per resident)
+# The result is how many comorbidities each resident has
 df["n_comorbidities"] = df[comorbidity_cols].sum(axis=1)
 ```
 
-## Step 1.5: 個資保護 —— 拿到 Line List 的第一件事
+## Step 1.5: PII protection — the first thing to do when you get a line list
 
-實際疫調中，從醫院或長照機構拿到的 line list 往往含有**個人可識別資料（Personally Identifiable Information, PII）**：姓名、身分證字號、電話、住址、病歷號⋯⋯。在進行任何分析、上傳 git、傳給同事之前，**第一件事**就是把 PII 處理掉。這一節示範怎麼用 Python 做。
+In a real investigation, the line list you receive from a hospital or long-term care facility often contains **personally identifiable information (PII)**: names, national ID numbers, phone numbers, addresses, medical record numbers… Before you do any analysis, push it to git, or send it to a colleague, the **very first thing** is to deal with the PII. This section shows how to do that in Python.
 
-> 📌 **為什麼本教材的 `legionella_outbreak.csv` 沒有 PII？** 因為它是**合成資料（synthetic data）**，一開始就沒有真實姓名、身分證等欄位——這是教學資料集的標準做法。但你在現場拿到的 raw line list 通常不是這樣，所以要學會下面這些技術。
+> 📌 **Why doesn't this course's `legionella_outbreak.csv` have any PII?** Because it's **synthetic data** — from the start it has no real names, ID numbers, or other identifiers, which is standard practice for a teaching dataset. But the raw line list you get in the field usually isn't like that, so you need to learn the techniques below.
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：個資保護——拿到 Line List 的第一件事</div>
+  <div class="video-title">Tutorial video: PII protection — the first thing to do when you get a line list</div>
   <div class="youtube-lite" data-id="LLF1T-EtnqU">
-    <img src="https://img.youtube.com/vi/LLF1T-EtnqU/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/LLF1T-EtnqU/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
 ```{figure} images/pii_protection_techniques.svg
 :name: pii-protection-techniques
-:alt: 個資保護流程圖：左邊原始 line list 含 PII，中間五種去識別化技巧，右邊去識別化後的乾淨資料
+:alt: PII protection flowchart: raw line list with PII on the left, five de-identification techniques in the middle, clean de-identified data on the right
 :width: 100%
 
-拿到 line list → 先區分「直接識別符 / 準識別符 / 敏感屬性」→ 用五種技巧去識別化 → 才開始分析。右下角是實務上的三段式工作流（raw → deidentify.py → deidentified）。
+Get the line list → first distinguish "direct identifiers / quasi-identifiers / sensitive attributes" → de-identify with five techniques → only then start analyzing. The bottom-right shows the practical three-stage workflow (raw → deidentify.py → deidentified).
 ```
 
-### PII 的三種類型
+### The three types of PII
 
-| 類別 | 範例 | 處理原則 |
+| Category | Examples | Handling principle |
 |------|------|---------|
-| **直接識別符（Direct identifiers）** | 姓名、身分證、病歷號、電話、住址、email、照片 | 一律**移除或替換** |
-| **準識別符（Quasi-identifiers）** | 年齡、性別、郵遞區號、職業、就醫日期、房號 | 個別看無害，**組合起來**可能識別 → 泛化 |
-| **敏感屬性（Sensitive attributes）** | HIV、精神疾病、基因、性取向 | 需特別保護、考慮 k-anonymity |
+| **Direct identifiers** | Name, national ID, medical record number, phone, address, email, photo | Always **remove or replace** |
+| **Quasi-identifiers** | Age, sex, ZIP code, occupation, date of care, room number | Harmless alone, but **in combination** can identify → generalize |
+| **Sensitive attributes** | HIV, mental illness, genetics, sexual orientation | Need special protection; consider k-anonymity |
 
-> ⚠️ **準識別符的陷阱**：Sweeney (2000) 的經典研究顯示，**{ 5 碼郵遞區號 + 出生日期 + 性別 }** 就能唯一識別全美 87% 的人口。年齡 + 性別 + 樓層這樣的組合在護理之家也一樣危險——小群體很容易反推出是誰。
+> ⚠️ **The quasi-identifier trap**: Sweeney's (2000) classic study showed that **{ 5-digit ZIP + date of birth + sex }** uniquely identifies 87% of the U.S. population. A combination like age + sex + floor is just as dangerous in a nursing home — in a small group it's easy to work out who's who.
 
-### 五種去識別化技巧（含 Python 實作）
+### Five de-identification techniques (with Python)
 
-假設原始 line list 有這些欄位：`name`、`national_id`、`phone`、`address`、`room_number`、`age`、`symptom_onset_date`。
+Suppose the raw line list has these columns: `name`, `national_id`, `phone`, `address`, `room_number`, `age`, `symptom_onset_date`.
 
-#### ① Suppression 移除 —— 最徹底的方式
+#### ① Suppression — the most thorough approach
 
 ```python
-# 直接刪除不需要的識別欄位
+# Simply delete the identifier columns you don't need
 pii_columns = ["name", "national_id", "phone", "address"]
 df_safe = df.drop(columns=pii_columns, errors="ignore")
-# errors="ignore"：如果某欄位不存在不報錯（防禦性寫法）
+# errors="ignore": don't raise if a column doesn't exist (defensive coding)
 ```
 
-> 💡 **原則**：分析用不到的 PII 欄位，**直接刪除**就對了。能不留就不留。
+> 💡 **Principle**: any PII column your analysis doesn't use, just **delete it**. If you don't need to keep it, don't.
 
-#### ② Pseudonymization 假名化 —— 用代號取代真名
+#### ② Pseudonymization — replace real names with codes
 
 ```python
-# 把原始 ID 替換成序號 CASE_001, CASE_002...
+# Replace the original IDs with sequential codes CASE_001, CASE_002...
 df_safe = df_safe.reset_index(drop=True)
 df_safe["case_id"] = ["CASE_" + str(i).zfill(3) for i in range(1, len(df_safe) + 1)]
 
-# 建立「對照表」另存在加密位置（只有授權人員能還原）
+# Build a "crosswalk table" stored separately in an encrypted location
+# (only authorized staff can re-identify)
 mapping = pd.DataFrame({
     "original_id": df["national_id"],
     "case_id": df_safe["case_id"],
 })
-# mapping.to_csv("data/restricted/id_mapping.csv", index=False)  # 存在加密硬碟
+# mapping.to_csv("data/restricted/id_mapping.csv", index=False)  # store on an encrypted drive
 ```
 
-> ⚠️ **假名化 ≠ 匿名化**：對照表存在 = 理論上可還原，所以對照表必須**嚴格保密**（另一台加密硬碟、加密壓縮檔、存取權限控管）。
+> ⚠️ **Pseudonymization ≠ anonymization**: as long as the crosswalk exists, re-identification is theoretically possible, so the crosswalk must be kept **strictly confidential** (a separate encrypted drive, an encrypted archive, tight access controls).
 
-#### ③ Hashing 雜湊 —— 單向不可還原
+#### ③ Hashing — one-way and irreversible
 
 ```python
 import hashlib
 
-# 加鹽（salt）雜湊：避免攻擊者用彩虹表（rainbow table）破解
-SALT = "松柏護理之家2026"  # 實務上從環境變數 os.environ["PII_SALT"] 讀取，不寫在程式碼裡
+# Salted hashing: prevents an attacker from cracking it with a rainbow table
+SALT = "SongbaiNursingHome2026"  # in practice read from an env var os.environ["PII_SALT"], never hard-coded
 
 def hash_id(raw_id: str, salt: str = SALT) -> str:
-    """將原始 ID 加鹽後做 SHA-256 雜湊，取前 12 碼當作 case_id。"""
+    """Salt the raw ID, SHA-256 hash it, and take the first 12 chars as case_id."""
     combined = (salt + str(raw_id)).encode("utf-8")
     return "H_" + hashlib.sha256(combined).hexdigest()[:12]
 
 df_safe["hashed_id"] = df["national_id"].apply(hash_id)
-# A123456789 → "H_4f8a9c2e1b3d"（固定對應，但無法反推原始 ID）
+# A123456789 → "H_4f8a9c2e1b3d" (a fixed mapping, but you can't reverse it to the original ID)
 ```
 
-> 💡 **為什麼要加鹽（salt）？** 如果直接雜湊身分證，攻擊者用所有可能的身分證字號逐一雜湊比對就能破解。加一段秘密字串（salt）後，他必須先拿到 salt 才能反推，難度大增。
+> 💡 **Why add a salt?** If you hash the national ID directly, an attacker can crack it by hashing every possible ID number and comparing. Adding a secret string (salt) means they must obtain the salt first before they can reverse it — which makes it far harder.
 
-#### ④ Generalization 泛化 —— 把精確值變成區間
+#### ④ Generalization — turn exact values into ranges
 
 ```python
-# 年齡：具體數字 → 年齡組（已在 Step 1 做了）
+# Age: exact number → age group (already done in Step 1)
 df_safe["age_group"] = pd.cut(df["age"], bins=[59, 69, 79, 89, 120],
                                labels=["60-69", "70-79", "80-89", "90+"])
 
-# 日期：具體日期 → 流行病學週（損失資訊但保護隱私）
+# Date: exact date → epidemiological week (loses information but protects privacy)
 df_safe["epi_week"] = df["symptom_onset_date"].dt.isocalendar().week
 
-# 房號：具體 1A-101 → 只保留翼區 1A
+# Room number: exact 1A-101 → keep only the wing 1A
 df_safe["wing"] = df["room_number"].str.split("-").str[0]
 
-# 之後可以刪掉原始精確欄位
+# You can then drop the original exact columns
 df_safe = df_safe.drop(columns=["age", "symptom_onset_date", "room_number"],
                         errors="ignore")
 ```
 
-#### ⑤ Masking 遮罩 —— 保留格式、隱藏內容
+#### ⑤ Masking — keep the format, hide the content
 
 ```python
 def mask_phone(phone: str) -> str:
-    """把電話 0912-345-678 → 0912-***-***（保留前 4 碼的電信業者前綴）"""
+    """Turn phone 0912-345-678 → 0912-***-*** (keep the first 4-digit carrier prefix)"""
     if pd.isna(phone):
         return phone
     parts = str(phone).split("-")
@@ -269,72 +272,72 @@ def mask_phone(phone: str) -> str:
 df_safe["phone_masked"] = df["phone"].apply(mask_phone)
 ```
 
-> 💡 什麼時候用 masking 而不是直接刪除？當你要**展示例子**給長官看、或需要格式驗證時，遮罩能保留欄位的「樣子」又不外洩真實值。
+> 💡 When would you mask instead of just deleting? When you need to **show an example** to your supervisor, or need to validate the format — masking keeps the "shape" of the field without leaking the real value.
 
-### k-anonymity：每個人至少要「混在 k 個人裡」
+### k-anonymity: everyone must "blend into at least k people"
 
-即使刪掉直接識別符，準識別符的組合還是可能暴露個人身分。**k-anonymity** 是業界常用的量化標準：
+Even after removing direct identifiers, combinations of quasi-identifiers can still expose someone's identity. **k-anonymity** is a widely used quantitative standard:
 
-> 定義：對於資料表中**任何一筆**紀錄，用「準識別符欄位的組合」去查詢，都要至少有 **k 筆**紀錄符合同樣條件。
+> Definition: for **any** record in the table, querying by the "combination of quasi-identifier columns" must return at least **k** records matching the same conditions.
 
 ```python
-# 檢查 (age_group, sex, wing) 這組準識別符的 k-anonymity
+# Check the k-anonymity of the (age_group, sex, wing) quasi-identifier set
 quasi_ids = ["age_group", "sex", "wing"]
 group_sizes = df_safe.groupby(quasi_ids, observed=True).size()
 
-print("各組合的人數分布：")
+print("Distribution of group sizes:")
 print(group_sizes.describe())
-print(f"\n最小組的人數（k 值）：{group_sizes.min()}")
+print(f"\nSize of the smallest group (the k value): {group_sizes.min()}")
 
-# 找出「高風險」的小組（k < 5）
+# Find the "high-risk" small groups (k < 5)
 risky = group_sizes[group_sizes < 5]
-print(f"\n⚠ 不足 k=5 的組合數：{len(risky)}")
+print(f"\n⚠ Number of combinations below k=5: {len(risky)}")
 if len(risky) > 0:
     print(risky)
 ```
 
-**經驗法則**：
+**Rules of thumb**:
 
-| 使用情境 | 建議 k 值 |
+| Use case | Suggested k |
 |---------|----------|
-| 內部分析、封閉使用 | k ≥ 3 |
-| 跨單位分享 | k ≥ 5 |
-| 敏感族群（兒童、精神疾病等） | k ≥ 10 |
-| 公開發表 / 開放資料 | k ≥ 20 |
+| Internal analysis, closed use | k ≥ 3 |
+| Sharing across units | k ≥ 5 |
+| Sensitive populations (children, mental illness, etc.) | k ≥ 10 |
+| Public release / open data | k ≥ 20 |
 
-若某組 n &lt; k，兩種處理方式：
-1. **合併群組**（例如把 90+ 併入 80-89 變成 80+）
-2. **壓制（suppression）** 該筆紀錄不輸出
+If a group has n &lt; k, there are two ways to handle it:
+1. **Merge groups** (e.g. fold 90+ into 80-89 to make 80+)
+2. **Suppress** — don't output that record
 
-### 實務工作流：分離 Raw / Deidentified
+### The practical workflow: separate raw from de-identified
 
 ```
-專案結構
+Project structure
 ├── data/
-│   ├── raw/               ← 只有授權人員能進（加密、權限控管）
-│   │   └── line_list_RESTRICTED.csv   ← 原始 PII 資料，.gitignore
-│   └── deidentified/      ← 可以進 git、可以分享
-│       └── line_list.csv  ← 去識別化後的版本
+│   ├── raw/               ← only authorized staff enter (encrypted, access-controlled)
+│   │   └── line_list_RESTRICTED.csv   ← original PII data, .gitignore
+│   └── deidentified/      ← safe to commit to git and share
+│       └── line_list.csv  ← the de-identified version
 ├── scripts/
-│   └── deidentify.py      ← 執行一次，從 raw 產生 deidentified
-└── .gitignore             ← 必須包含 data/raw/
+│   └── deidentify.py      ← run once to produce deidentified from raw
+└── .gitignore             ← must include data/raw/
 ```
 
-把 PII 保護程式碼**獨立成腳本**（`deidentify.py`），而不是寫在分析 notebook 裡——這樣：
+Put the PII-protection code in a **standalone script** (`deidentify.py`) rather than writing it inside the analysis notebook — this way:
 
-- 分析 notebook 只讀去識別化後的檔案 → 不會意外把 PII commit 到 git
-- 去識別化邏輯集中管理 → 方便稽核、方便修改
-- 新資料進來時重跑一次腳本即可
+- The analysis notebook only reads the de-identified file → you never accidentally commit PII to git
+- The de-identification logic is centralized → easier to audit and modify
+- When new data arrives, you just rerun the script
 
 ```python
-# scripts/deidentify.py 的骨架
+# Skeleton of scripts/deidentify.py
 from pathlib import Path
 import pandas as pd
 import hashlib, os
 
 RAW = Path("data/raw/line_list_RESTRICTED.csv")
 OUT = Path("data/deidentified/line_list.csv")
-SALT = os.environ["PII_SALT"]  # 從環境變數讀，絕不寫在程式碼裡
+SALT = os.environ["PII_SALT"]  # read from an env var, never hard-code it
 
 def main() -> None:
     df = pd.read_csv(RAW)
@@ -345,21 +348,21 @@ def main() -> None:
     df = df.drop(columns=["age"])
     OUT.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(OUT, index=False)
-    print(f"✓ 已輸出 {len(df)} 筆去識別化資料 → {OUT}")
+    print(f"✓ Wrote {len(df)} de-identified records → {OUT}")
 
 if __name__ == "__main__":
     main()
 ```
 
 ```{warning}
-**絕對不要 commit 的東西：**
+**Things you must NEVER commit:**
 
-- ❌ 原始 line list（含 PII）
-- ❌ ID 對照表（mapping.csv）
-- ❌ 雜湊用的 salt（寫在 `.env`，`.gitignore` 要排除）
-- ❌ 含 PII 的 Jupyter Notebook 執行結果（`nbstripout` 可自動清除輸出）
+- ❌ The original line list (with PII)
+- ❌ The ID crosswalk table (mapping.csv)
+- ❌ The salt used for hashing (put it in `.env`; exclude it in `.gitignore`)
+- ❌ Jupyter Notebook outputs that contain PII (`nbstripout` can strip outputs automatically)
 
-**必須加入 `.gitignore` 的規則：**
+**Rules that MUST go in `.gitignore`:**
 ​```
 data/raw/
 data/restricted/
@@ -368,501 +371,504 @@ data/restricted/
 ​```
 ```
 
-```{admonition} 台灣法規與國際標準
+```{admonition} Taiwan regulations and international standards
 :class: tip, dropdown
 
-**台灣（Taiwan）：**
-- **個人資料保護法（個資法）**：第 6 條（特種個資，含醫療、基因、性生活、健檢、犯罪前科）、第 20 條（特定目的外利用）
-- **傳染病防治法**：第 10 條（疫情調查人員保密義務）、第 11 條（個案資料僅供疫情分析與防治使用）
-- **人體研究法**：使用病患資料做研究前須經 **IRB（人體試驗委員會）**審查
+**Taiwan:**
+- **Personal Data Protection Act (PDPA)**: Article 6 (special personal data, including medical, genetic, sex life, health checkups, criminal record) and Article 20 (use beyond the specified purpose)
+- **Communicable Disease Control Act**: Article 10 (confidentiality obligation of investigation personnel), Article 11 (case data used only for outbreak analysis and control)
+- **Human Subjects Research Act**: research using patient data requires **IRB (Institutional Review Board)** review
 
-**國際標準：**
-- **HIPAA Safe Harbor（美國）**：列出 18 項必須移除的識別符（18 identifiers）
-- **GDPR（歐盟）**：pseudonymization 定義於 Art. 4(5)，k-anonymity 是常用做法
+**International standards:**
+- **HIPAA Safe Harbor (U.S.)**: lists 18 identifiers that must be removed
+- **GDPR (EU)**: pseudonymization is defined in Art. 4(5); k-anonymity is a common practice
 
-**關鍵文獻：**
+**Key references:**
 - Sweeney L. *k-anonymity: A model for protecting privacy*. IJUFKS 2002;10(5):557-570.
 - El Emam K, et al. *A systematic review of re-identification attacks on health data*. PLoS ONE 2011;6(12):e28071.
 ```
 
-## FETP Step 3：確定診斷——四個期間概念不能混淆
+## FETP Step 3: Confirm the diagnosis — four time-period concepts you must not confuse
 
-在開始計算侵襲率之前，先釐清與退伍軍人症相關的四個時間概念。這四個概念直接影響**回溯期間設定**（traceback window）和 Ch07 時間序列模型的 lag 選擇。
+Before you start computing attack rates, get clear on the four time concepts related to Legionnaires' disease. These four concepts directly affect how you set the **traceback window** and how you choose the lag in the Ch07 time-series model.
 
 ```{figure} images/incubation_periods.svg
 :name: fig-incubation-periods-ch04
-:alt: 潛伏期、潛藏期、可傳染期、世代間隔四個概念示意圖
+:alt: Diagram of four concepts: incubation period, latent period, infectious period, serial interval
 :width: 100%
 
-傳染病四大期間概念。**潛藏期短於潛伏期**時，病人在出現症狀前就已具傳染性（presymptomatic transmission），此時檢疫隔離的判斷依據是潛伏期最大值，而非發病日。
+The four key time-period concepts in infectious disease. When the **latent period is shorter than the incubation period**, the patient is already infectious before symptoms appear (presymptomatic transmission); in that case the basis for quarantine is the maximum incubation period, not the onset date.
 ```
 
-| 概念 | 定義 | 退伍軍人症實例 | 疫調意義 |
+| Concept | Definition | Legionnaires' example | Investigation meaning |
 |------|------|----------------|----------|
-| **潛伏期**（incubation period） | 暴露 → 出現症狀 | 2–10 天（通常 5–6 天） | 向後回溯暴露窗口 = 最晚發病日往前推 10 天 |
-| **潛藏期**（latent period） | 暴露 → 開始具傳染性 | ≈ 潛伏期（人傳人極罕見） | 決定症狀前傳播風險 |
-| **可傳染期**（infectious period） | 開始具傳染性 → 失去傳染性 | 散發（non-communicable），不適用 | 退伍軍人症無人傳人，故可傳染期不影響接觸者追蹤 |
-| **世代間隔**（serial interval） | 指標個案發病 → 續發個案發病 | 不適用（人傳人罕見） | 若有人傳人群聚，此值用於推算 R₀ |
+| **Incubation period** | Exposure → symptom onset | 2–10 days (usually 5–6) | Traceback exposure window = latest onset date minus 10 days |
+| **Latent period** | Exposure → becoming infectious | ≈ incubation period (person-to-person is extremely rare) | Determines the risk of presymptomatic transmission |
+| **Infectious period** | Becoming infectious → losing infectiousness | Sporadic (non-communicable), not applicable | Legionnaires' is not person-to-person, so the infectious period doesn't affect contact tracing |
+| **Serial interval** | Index case onset → secondary case onset | Not applicable (person-to-person is rare) | If there is a person-to-person cluster, this value is used to estimate R₀ |
 
-> **對本次群聚調查的意義**：
-> - 最早發病日為 2026-01-12；最晚為 2026-01-28。
-> - 回溯暴露期間（traceback window）= 2026-01-02 至 2026-01-28（最晚發病日往前推 10 天）。
-> - 在這段期間內使用過**冷卻水塔、淋浴間、水療池**的住民，即為高度懷疑暴露對象。
-> - Ch07 建立時間序列預測模型時，lag 設定預設取潛伏期中位數 5–6 天。
+> **What this means for this cluster investigation:**
+> - The earliest onset date is 2026-01-12; the latest is 2026-01-28.
+> - Traceback exposure window = 2026-01-02 to 2026-01-28 (latest onset date minus 10 days).
+> - Residents who used the **cooling tower, showers, or hydrotherapy pool** during this window are the strongly suspected exposed cases.
+> - When Ch07 builds the time-series forecasting model, the lag defaults to the median incubation period of 5–6 days.
 
 ```{seealso}
-完整期間概念對照表（含圖解與四種病原實例）：→ {ref}`appendix-f-incubation`
+Full comparison table of time-period concepts (with diagrams and examples across four pathogens): → {ref}`appendix-f-incubation`
 ```
 
 ---
 
-## Step 2: 摘要指標
+## Step 2: Summary metrics
 
 ```python
-total = len(df)                          # 住民總數 = DataFrame 的列數
+total = len(df)                          # total residents = number of rows in the DataFrame
 
-# df["infected"] 是 0/1 欄位，.sum() 加總 = 感染人數（0 加多少都是 0，只有 1 才有貢獻）
+# df["infected"] is a 0/1 column; .sum() adds them up = number infected
+# (adding any number of 0s stays 0; only the 1s contribute)
 infected = df["infected"].sum()
 
-# == 比較產生 True/False Series，再用 .sum() 計算 True 的數量（True = 1）
+# == produces a True/False Series, and .sum() counts the Trues (True = 1)
 confirmed  = (df["case_classification"] == "confirmed").sum()
 probable   = (df["case_classification"] == "probable").sum()
-hospitalized = df["hospitalized"].sum()  # hospitalized 也是 0/1 欄位
+hospitalized = df["hospitalized"].sum()  # hospitalized is also a 0/1 column
 icu          = df["icu_admission"].sum()
 deaths       = (df["outcome"] == "dead").sum()
 
 print("=" * 50)
-print("松柏護理之家退伍軍人症群聚 — SitRep")
+print("Songbai Nursing Home Legionnaires' Disease Cluster — SitRep")
 print("=" * 50)
-print(f"住民總數：{total}")
-# {infected/total:.1%}：除法得到小數，:.1% 自動×100 並加 %，保留 1 位小數
-print(f"感染人數：{infected}（侵襲率 {infected/total:.1%}）")
-print(f"  確診：{confirmed}　可能：{probable}")
-print(f"住院：{hospitalized}（住院率 {hospitalized/infected:.1%}）")
-print(f"ICU：{icu}（ICU 率 {icu/hospitalized:.1%}）")
-print(f"死亡：{deaths}（CFR {deaths/infected:.1%}）")
+print(f"Total residents: {total}")
+# {infected/total:.1%}: division gives a decimal; :.1% auto-multiplies by 100,
+# adds %, and keeps 1 decimal place
+print(f"Infected: {infected} (attack rate {infected/total:.1%})")
+print(f"  Confirmed: {confirmed}   Probable: {probable}")
+print(f"Hospitalized: {hospitalized} (hospitalization rate {hospitalized/infected:.1%})")
+print(f"ICU: {icu} (ICU rate {icu/hospitalized:.1%})")
+print(f"Deaths: {deaths} (CFR {deaths/infected:.1%})")
 ```
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：描述流行病學（人）——感染者的臉譜</div>
+  <div class="video-title">Tutorial video: Descriptive epidemiology (Person) — the profile of the infected</div>
   <div class="youtube-lite" data-id="tmT3YVLy1EM">
-    <img src="https://img.youtube.com/vi/tmT3YVLy1EM/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/tmT3YVLy1EM/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
-## Step 3: 人 — Person
+## Step 3: Person
 
 ```python
-# 用布林索引篩出感染者：df[條件] 只保留條件為 True 的列
+# Use boolean indexing to filter the infected: df[condition] keeps only rows where condition is True
 cases = df[df["infected"] == 1]
-# cases 是一個新的 DataFrame，只包含 121 位感染住民
+# cases is a new DataFrame containing only the 121 infected residents
 
-print("=== 人口學特徵（感染者）===")
-print(f"年齡中位數：{cases['age'].median():.0f} 歲"
-      f"（範圍 {cases['age'].min()}-{cases['age'].max()}）")
+print("=== Demographic characteristics (infected) ===")
+print(f"Median age: {cases['age'].median():.0f} years"
+      f" (range {cases['age'].min()}-{cases['age'].max()})")
 
-# .mean() 用在 True/False 上等於計算比例
-# (cases['sex'] == 'M') 產生 True/False，mean() 算 True 的比例
-print(f"男性比例：{(cases['sex'] == 'M').mean():.1%}")
+# .mean() on True/False is equivalent to computing a proportion
+# (cases['sex'] == 'M') produces True/False; mean() gives the proportion of Trues
+print(f"Proportion male: {(cases['sex'] == 'M').mean():.1%}")
 
-print(f"\n--- 年齡組分布 ---")
-# value_counts()：計算每個類別的出現次數（預設按次數降序排列）
-# sort_index()：改成按年齡組的字母/數字順序排列（60-69 → 70-79 → ...）
-# to_string()：強制印出全部內容，不因資料太多而省略中間幾行
+print(f"\n--- Age group distribution ---")
+# value_counts(): count occurrences of each category (by default sorted descending by count)
+# sort_index(): sort by age group order instead (60-69 → 70-79 → ...)
+# to_string(): force-print the whole thing without truncating middle rows
 print(cases["age_group"].value_counts().sort_index().to_string())
 
-print(f"\n--- 共病分布 ---")
+print(f"\n--- Comorbidity distribution ---")
 for col in comorbidity_cols:
-    # 把欄位名稱的前綴 "comorbidity_" 去掉，再轉大寫，變成簡潔的標籤
-    # 例如："comorbidity_chf" → "chf" → "CHF"
+    # Strip the "comorbidity_" prefix from the column name and uppercase it into a tidy label
+    # e.g. "comorbidity_chf" → "chf" → "CHF"
     label = col.replace("comorbidity_", "").upper()
-    n = cases[col].sum()  # 共病欄位是 0/1，sum() 得到有這個共病的人數
+    n = cases[col].sum()  # comorbidity columns are 0/1; sum() gives the count with that comorbidity
     print(f"  {label}: {n} ({n/len(cases):.1%})")
 ```
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：流行曲線——用長條圖抓住疫情的脈搏</div>
+  <div class="video-title">Tutorial video: The epidemic curve — feeling the outbreak's pulse with a bar chart</div>
   <div class="youtube-lite" data-id="7eBDkfVqsQo">
-    <img src="https://img.youtube.com/vi/7eBDkfVqsQo/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/7eBDkfVqsQo/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
-## Step 4: 時 — Time
+## Step 4: Time
 
 ```python
 import matplotlib.dates as mdates
 
-# groupby("symptom_onset_date")：以發病日期分組
-# .size()：計算每組的列數（= 當天的病例數），等同於 GROUP BY + COUNT(*)
-# .rename("cases")：把結果欄位命名為 "cases"，方便後續取用
+# groupby("symptom_onset_date"): group by onset date
+# .size(): count the rows in each group (= cases that day), like GROUP BY + COUNT(*)
+# .rename("cases"): name the result column "cases" for easier reference later
 daily = cases.groupby("symptom_onset_date").size().rename("cases")
 
-# ── 補齊完整日期範圍（含爆發前 3 天作為「背景期」）──
-# 原始資料只有有病例的日期；若某天 0 例，就不會出現在 groupby 結果裡
-# reindex 可以「補齊」缺少的日期，並用 fill_value=0 填入 0
+# ── Fill in the full date range (including 3 days before the outbreak as a "baseline period") ──
+# The raw data only has dates that had cases; a day with 0 cases won't appear in the groupby result
+# reindex can "fill in" the missing dates, using fill_value=0
 date_range = pd.date_range(
-    daily.index.min() - pd.Timedelta(days=3),  # 往前延伸 3 天（顯示爆發前基線）
-    daily.index.max() + pd.Timedelta(days=1),  # 往後延伸 1 天（避免最後一天被截掉）
-    freq="D",                                   # freq="D" 表示每天一個點
+    daily.index.min() - pd.Timedelta(days=3),  # extend 3 days earlier (show the pre-outbreak baseline)
+    daily.index.max() + pd.Timedelta(days=1),  # extend 1 day later (so the last day isn't clipped)
+    freq="D",                                   # freq="D" means one point per day
 )
-daily = daily.reindex(date_range, fill_value=0)  # 沒有病例的日期補 0
+daily = daily.reindex(date_range, fill_value=0)  # fill days with no cases as 0
 
-# ── 建立圖表 ──
-# plt.subplots() 同時回傳兩個物件：
-# fig = 整張畫布（canvas），控制整體大小、解析度、儲存
-# ax  = 繪圖區（axes），控制座標軸、標題、長條、折線等內容
-fig, ax = plt.subplots(figsize=(10, 4))  # 寬 10 英吋、高 4 英吋
+# ── Build the chart ──
+# plt.subplots() returns two objects at once:
+# fig = the whole canvas (controls overall size, resolution, saving)
+# ax  = the plotting area (controls axes, title, bars, lines, etc.)
+fig, ax = plt.subplots(figsize=(10, 4))  # 10 inches wide, 4 inches tall
 
 ax.bar(daily.index, daily.values, width=1.0,
        color="#2c7fb8", edgecolor="white", linewidth=0.5)
-# width=1.0 讓長條緊貼在一起（流行曲線的標準做法，無間隙）
+# width=1.0 makes the bars touch (standard for an epidemic curve, no gaps)
 
-ax.set_title("松柏護理之家退伍軍人症流行曲線，依發病日，2026 年 1 月",
+ax.set_title("Songbai Nursing Home Legionnaires' Disease Epidemic Curve, by Onset Date, January 2026",
              fontsize=13, fontweight="bold")
-ax.set_xlabel("發病日期（Date of Symptom Onset）")
-ax.set_ylabel("病例數（Number of Cases）")
+ax.set_xlabel("Date of Symptom Onset")
+ax.set_ylabel("Number of Cases")
 
-# DateFormatter("%m/%d")：設定 x 軸日期顯示格式
-# %m = 月份（01–12），%d = 日期（01–31），結果如 "01/12"
+# DateFormatter("%m/%d"): set the x-axis date display format
+# %m = month (01–12), %d = day (01–31), giving e.g. "01/12"
 ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
-# DayLocator(interval=2)：每隔 2 天放一個刻度（避免標籤重疊）
+# DayLocator(interval=2): place a tick every 2 days (avoid overlapping labels)
 ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
-# 自動旋轉日期標籤 45 度，防止文字重疊
+# auto-rotate the date labels 45 degrees to prevent overlap
 fig.autofmt_xdate(rotation=45)
 
-# 在最左和最右各留半天（12 小時）的空白邊距，避免第一根和最後一根長條被截掉
+# Leave a half-day (12-hour) margin on the far left and right so the first and last bars aren't clipped
 ax.set_xlim(daily.index.min() - pd.Timedelta(hours=12),
             daily.index.max() + pd.Timedelta(hours=12))
-ax.set_ylim(bottom=0)  # y 軸從 0 開始
-# MaxNLocator(integer=True)：y 軸刻度只顯示整數（病例數不可能是 0.5 例）
+ax.set_ylim(bottom=0)  # y-axis starts at 0
+# MaxNLocator(integer=True): show only integer ticks on the y-axis (you can't have 0.5 cases)
 ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
 ax.grid(False)
-# 去掉上方和右方的外框線（視覺更簡潔，這是流行病學論文的標準樣式）
+# Remove the top and right spines (cleaner look, standard for epidemiology papers)
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
-plt.tight_layout()  # 自動調整間距，防止標題或標籤被裁切
+plt.tight_layout()  # auto-adjust spacing so the title and labels aren't cut off
 plt.show()
 
-print(f"流行期間：{cases['symptom_onset_date'].min().date()} – {cases['symptom_onset_date'].max().date()}")
-# idxmax()：找到數值最大的那個「索引」（日期），而不是最大值本身
-# daily.max() 才是最大值（病例數）
-print(f"高峰日：{daily.idxmax().date()}（{daily.max()} 例）")
+print(f"Outbreak period: {cases['symptom_onset_date'].min().date()} – {cases['symptom_onset_date'].max().date()}")
+# idxmax(): find the "index" (date) of the maximum value, not the max value itself
+# daily.max() is the maximum value (the case count)
+print(f"Peak day: {daily.idxmax().date()} ({daily.max()} cases)")
 ```
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：地點比較——哪個翼區最危險？</div>
+  <div class="video-title">Tutorial video: Comparing places — which wing is the most dangerous?</div>
   <div class="youtube-lite" data-id="wWwHcMXMmG8">
-    <img src="https://img.youtube.com/vi/wWwHcMXMmG8/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/wWwHcMXMmG8/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
-## Step 5: 地 — Place
+## Step 5: Place
 
 ```python
-# ── 以樓層 + 翼區雙層分組，一次算出所有指標 ──
-# .agg() 允許對不同欄位套用不同的聚合函式
-# 格式：新欄位名稱=("來源欄位", "聚合函式或 lambda")
+# ── Group by floor + wing, computing all metrics at once ──
+# .agg() lets you apply different aggregation functions to different columns
+# Format: new_column_name=("source_column", "aggregation function or lambda")
 wing_stats = (
     df.groupby(["floor", "wing"])
     .agg(
-        # "size" 計算每組的總列數（= 該翼區的住民總數，含感染與未感染）
+        # "size" counts the total rows in each group (= total residents of that wing, infected and not)
         residents=("case_id", "size"),
-        # "infected" 是 0/1 欄位，"sum" 就是感染人數
+        # "infected" is a 0/1 column, so "sum" gives the number infected
         infected=("infected", "sum"),
-        # lambda 用於自訂邏輯：在 outcome 欄位中，計算值為 "dead" 的個數
+        # lambda for custom logic: count the values equal to "dead" in the outcome column
         deaths=("outcome", lambda x: (x == "dead").sum()),
     )
     .reset_index()
-    # reset_index() 把 groupby 的鍵（floor, wing）從「索引」
-    # 變回普通欄位，這樣後面才能用欄位名稱取值
+    # reset_index() turns the groupby keys (floor, wing) from the "index"
+    # back into ordinary columns, so we can reference them by name below
 )
 
-# 計算侵襲率（Attack Rate）和致死率（CFR），乘 100 轉成百分比，保留 1 位小數
+# Compute attack rate and CFR, multiply by 100 to make percentages, round to 1 decimal
 wing_stats["AR%"] = (wing_stats["infected"] / wing_stats["residents"] * 100).round(1)
 wing_stats["CFR%"] = (wing_stats["deaths"] / wing_stats["infected"] * 100).round(1)
-# 把樓層（數字）和翼區（字母）拼成一個標籤，例如：1 + "A" → "1A"
-# astype(str) 先把整數轉成字串，才能和字母相加
+# Join the floor (number) and wing (letter) into one label, e.g. 1 + "A" → "1A"
+# astype(str) first converts the integer to a string so it can be concatenated with the letter
 wing_stats["label"] = wing_stats["floor"].astype(str) + wing_stats["wing"]
 
-print("=== 各翼區疫情摘要 ===")
-# 選取需要顯示的欄位，to_string(index=False) 印出時不顯示左側的索引數字
+print("=== Outbreak summary by wing ===")
+# Select the columns to display; to_string(index=False) prints without the left-side index numbers
 print(wing_stats[["label", "residents", "infected", "AR%", "deaths", "CFR%"]]
       .to_string(index=False))
 ```
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：個案分類——確診、可能和非個案的分層統計</div>
+  <div class="video-title">Tutorial video: Case classification — stratified stats for confirmed, probable, and not-a-case</div>
   <div class="youtube-lite" data-id="RZLn3o-svs0">
-    <img src="https://img.youtube.com/vi/RZLn3o-svs0/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/RZLn3o-svs0/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
-## FETP Step 4：病例定義——精確度與偵測率的取捨
+## FETP Step 4: Case definition — the trade-off between precision and detection
 
-### 為什麼需要三層病例定義？
+### Why do we need a three-tier case definition?
 
-疫情初期資訊不足，過窄的病例定義會**漏掉真正的病例**（低敏感度）；過寬的定義則會**納入非病例**（低特異度），導致侵襲率虛高、資源誤配。因此實務上將病例分為三層：
+Early in an outbreak, information is scarce. A case definition that's too narrow will **miss real cases** (low sensitivity); one that's too broad will **include non-cases** (low specificity), inflating the attack rate and misallocating resources. So in practice, cases are split into three tiers:
 
-| 層級 | 判斷標準 | 本次群聚（退伍軍人症）| 敏感度 | 特異度 |
+| Tier | Criteria | This cluster (Legionnaires') | Sensitivity | Specificity |
 |------|----------|----------------------|--------|--------|
-| **確診**（confirmed） | 實驗室確認（PCR / 培養 / 尿抗原）| 實驗室陽性 | 低 | 高 |
-| **可能**（probable） | 臨床症狀 + 流行病學關聯 | 發燒 + 肺炎影像 + 同樓層暴露 | 中 | 中 |
-| **疑似**（suspect） | 僅有部分臨床症狀 | 發燒 + 咳嗽，但無影像或實驗室結果 | 高 | 低 |
+| **Confirmed** | Laboratory confirmation (PCR / culture / urinary antigen) | Lab-positive | Low | High |
+| **Probable** | Clinical symptoms + epidemiological link | Fever + pneumonia imaging + same-floor exposure | Medium | Medium |
+| **Suspect** | Only partial clinical symptoms | Fever + cough, but no imaging or lab result | High | Low |
 
-> **實務建議**：
-> - **疫情初期**：用較寬鬆的「疑似」定義廣撒網，避免漏掉早期病例。
-> - **分析階段**：以「確診＋可能」計算侵襲率（如本章 `case_classification != "not_a_case"`）。
-> - **公開報告**：明確說明使用哪一層定義，避免數字被斷章取義比較。
+> **Practical advice:**
+> - **Early in the outbreak**: use a looser "suspect" definition to cast a wide net and avoid missing early cases.
+> - **Analysis stage**: compute the attack rate using "confirmed + probable" (as in this chapter's `case_classification != "not_a_case"`).
+> - **Public reporting**: state clearly which tier's definition you used, so the numbers aren't compared out of context.
 
-### 病例定義的精化過程：以諾羅病毒為例
+### Refining the case definition: a norovirus example
 
-以下是一個**從寬到窄**精化病例定義的典型過程，說明如何利用敏感度與特異度的取捨：
+Here's a typical **broad-to-narrow** refinement of a case definition, illustrating how to leverage the sensitivity–specificity trade-off:
 
 ```
-初始定義（廣）：
-  「出現腸胃道症狀者」
-  → 敏感度高，但同期腸胃炎個案多，特異度低
+Initial definition (broad):
+  "Anyone with gastrointestinal symptoms"
+  → high sensitivity, but with many concurrent gastroenteritis cases, low specificity
 
-加入時間條件：
-  「2 月 14 日至 2 月 16 日，出現腸胃道症狀者」
-  → 縮小範圍，排除背景腸胃炎
+Add a time condition:
+  "Anyone with GI symptoms from Feb 14 to Feb 16"
+  → narrows the scope, excludes background gastroenteritis
 
-加入症狀強度：
-  「24 小時內嘔吐 ≥ 2 次或腹瀉 ≥ 3 次」
-  → 進一步排除輕症，提升確診率
+Add symptom intensity:
+  "Vomiting ≥ 2 times or diarrhea ≥ 3 times within 24 hours"
+  → further excludes mild cases, raising the confirmation rate
 
-加入暴露條件（最終定義）：
-  「上述症狀者＋2 月 13 日曾參加婚宴」
-  → 確診與可能病例定義完整
+Add an exposure condition (final definition):
+  "The above symptoms + attended the Feb 13 wedding banquet"
+  → confirmed and probable case definitions are now complete
 ```
 
-### 本次群聚的病例定義
+### The case definition for this cluster
 
-本教材採用的病例定義（已內建於資料集）：
+The case definition used in this course (built into the dataset):
 
-| 欄位 | 判斷邏輯 |
+| Column | Logic |
 |------|----------|
-| `lab_confirmed = True` | 確診：尿液抗原或培養陽性 |
-| `case_classification = "confirmed"` | 確診個案 |
-| `case_classification = "probable"` | 臨床符合 + 流行病學關聯 |
-| `case_classification = "not_a_case"` | 排除：無症狀且實驗室陰性 |
-| `infected = 1` | 確診＋可能之合計（分析主要依據）|
+| `lab_confirmed = True` | Confirmed: urinary antigen or culture positive |
+| `case_classification = "confirmed"` | Confirmed case |
+| `case_classification = "probable"` | Clinically compatible + epidemiological link |
+| `case_classification = "not_a_case"` | Excluded: asymptomatic and lab-negative |
+| `infected = 1` | Confirmed + probable combined (the main basis for analysis) |
 
 ```{seealso}
-確診 / 可能 / 疑似病例的標準定義與台灣法定傳染病分類：→ {ref}`appendix-a-glossary`
+Standard definitions of confirmed / probable / suspect cases and Taiwan's notifiable disease classification: → {ref}`appendix-a-glossary`
 ```
 
 ---
 
-## Step 6: 個案分類分層摘要
+## Step 6: Stratified summary by case classification
 
 ```python
-# 依個案分類（confirmed / probable / not_a_case）分組，計算各層的指標
-# 這裡不加 .reset_index()，讓 case_classification 保留為索引，
-# 印出時更直觀（分類名稱直接出現在最左欄）
+# Group by case classification (confirmed / probable / not_a_case) and compute per-tier metrics
+# We don't add .reset_index() here, so case_classification stays as the index,
+# making the printout more intuitive (the classification name appears in the leftmost column)
 classification = (
     df.groupby("case_classification")
     .agg(
-        n=("case_id", "size"),                              # 每類的人數
-        hospitalized=("hospitalized", "sum"),               # 住院人數（0/1 欄位加總）
-        icu=("icu_admission", "sum"),                       # ICU 人數
-        deaths=("outcome", lambda x: (x == "dead").sum()),  # 死亡人數
+        n=("case_id", "size"),                              # count per tier
+        hospitalized=("hospitalized", "sum"),               # hospitalized count (sum of 0/1 column)
+        icu=("icu_admission", "sum"),                       # ICU count
+        deaths=("outcome", lambda x: (x == "dead").sum()),  # death count
     )
 )
 
-# 計算住院率：住院人數 ÷ 該類別人數 × 100（轉成 %）
-# 注意：如果某分類的 n=0，這裡會出現 ZeroDivisionError；
-# 真實資料務必先確認各組都有至少 1 人才計算
+# Compute hospitalization rate: hospitalized ÷ tier count × 100 (as a %)
+# Note: if a tier has n=0, this raises ZeroDivisionError;
+# with real data, always confirm each group has at least 1 person before computing
 classification["hosp_rate"] = (
     classification["hospitalized"] / classification["n"] * 100
 ).round(1)
 
-print("=== 按個案分類分層 ===")
-# .to_string() 不帶參數時會保留索引（= case_classification 名稱），方便對照
+print("=== Stratified by case classification ===")
+# .to_string() with no arguments keeps the index (= case_classification names) for easy reference
 print(classification.to_string())
 ```
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：函式化——把 SitRep 包成一鍵更新</div>
+  <div class="video-title">Tutorial video: Functionization — wrapping the SitRep into a one-click update</div>
   <div class="youtube-lite" data-id="ztrZrHwrD2M">
-    <img src="https://img.youtube.com/vi/ztrZrHwrD2M/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/ztrZrHwrD2M/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
-## Step 7: 輸出結構化 SitRep
+## Step 7: Output a structured SitRep
 
-把以上所有步驟包成一個函式，每天重跑即可更新：
+Wrap all of the above steps into a single function, and just rerun it each day to update:
 
 ```python
 def generate_sitrep(csv_path):
-    """從 CSV 產出 SitRep 摘要字典。
+    """Produce a SitRep summary dictionary from a CSV.
 
-    每天只需重跑此函式並傳入最新的 CSV，即可自動更新所有指標。
-    回傳字典而非直接印出，是因為字典可以被後續的 Step 8（報告輸出）直接取用。
+    Each day, just rerun this function with the latest CSV to auto-update every metric.
+    It returns a dict rather than printing directly, because a dict can be consumed
+    directly by the later Step 8 (report output).
     """
     df = pd.read_csv(csv_path)
-    # 只轉換計算上需要日期運算的欄位，減少不必要處理
+    # Only convert the columns that actually need date arithmetic, to cut unnecessary work
     for col in ["symptom_onset_date", "hospitalization_date",
                 "death_date", "notification_date"]:
         df[col] = pd.to_datetime(df[col], errors="coerce")
     df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
 
     total = len(df)
-    # int() 將 numpy.int64 轉成 Python 原生 int
-    # 原因：pandas / numpy 的 .sum() 回傳的是 numpy 整數型別（numpy.int64）
-    # 如果直接放進字典再輸出成 JSON，會引發 JSON 序列化錯誤
-    # 養成習慣用 int() 包住，能避免一些難以預期的型別問題
+    # int() converts numpy.int64 to a native Python int
+    # Why: pandas / numpy .sum() returns a numpy integer type (numpy.int64)
+    # Putting that straight into a dict and serializing to JSON raises a JSON serialization error
+    # Getting into the habit of wrapping with int() avoids some hard-to-predict type issues
     infected = int(df["infected"].sum())
     deaths = int((df["outcome"] == "dead").sum())
 
     return {
         "total_residents": total,
         "infected": infected,
-        # round(值, 小數位數)：四捨五入到指定位數
+        # round(value, decimals): round to the given number of decimal places
         "attack_rate": round(infected / total * 100, 1),
         "deaths": deaths,
-        # 防呆：若 infected == 0（尚無感染案例）就回傳 0，避免 ZeroDivisionError
+        # guard: if infected == 0 (no cases yet), return 0 to avoid ZeroDivisionError
         "cfr": round(deaths / infected * 100, 1) if infected else 0,
         "hospitalized": int(df["hospitalized"].sum()),
         "icu": int(df["icu_admission"].sum()),
     }
 
 sitrep = generate_sitrep("data/synthetic/legionella_outbreak.csv")
-# sitrep 是一個 Python 字典（dict），可以直接傳給 Step 8 的報告輸出函式
+# sitrep is a Python dict, ready to hand to the report-output function in Step 8
 print(sitrep)
 ```
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：專業報告輸出——Dashboard、Word、PPT、PDF 一次搞定</div>
+  <div class="video-title">Tutorial video: Professional report output — dashboard, Word, PPT, and PDF all at once</div>
   <div class="youtube-lite" data-id="eAs3K_Z7Hjk">
-    <img src="https://img.youtube.com/vi/eAs3K_Z7Hjk/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/eAs3K_Z7Hjk/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
-## Step 8: 產出專業報告
+## Step 8: Produce a professional report
 
-`generate_sitrep()` 回傳的字典就是你的**資料層**。但長官看不懂 Python dict——他要的是一份漂亮的報告。這一步教你用四種格式把分析結果包裝成專業輸出：
+The dictionary returned by `generate_sitrep()` is your **data layer**. But your supervisor doesn't read Python dicts — they want a polished report. This step shows how to package the analysis into four professional output formats:
 
-| 格式 | 適合場景 | Python 套件 |
+| Format | Best for | Python package |
 |------|---------|------------|
-| 互動儀表板 | 即時檢視、團隊內部討論 | plotly（已安裝） |
-| Word 文件 (.docx) | 交給主管、email 附件 | python-docx |
-| 簡報投影片 (.pptx) | 疫調會議簡報 | python-pptx |
-| PDF 報告 | 正式歸檔、列印 | fpdf2 |
+| Interactive dashboard | Real-time viewing, internal team discussion | plotly (already installed) |
+| Word document (.docx) | Handing to a manager, email attachment | python-docx |
+| Presentation slides (.pptx) | Investigation meeting presentations | python-pptx |
+| PDF report | Formal filing, printing | fpdf2 |
 
-### 共用前置：儲存圖表與建立輸出資料夾
+### Shared setup: save the chart and create the output folder
 
 ```python
 import pathlib
 from io import BytesIO
 from datetime import datetime
 
-# exist_ok=True：若資料夾已存在，不會報錯（可以重複執行這行而不出問題）
+# exist_ok=True: don't raise if the folder already exists (you can rerun this line safely)
 pathlib.Path("output").mkdir(exist_ok=True)
 
-# ── BytesIO：把圖存進「記憶體裡的虛擬檔案」──
-# 一般 fig.savefig("epicurve.png") 會寫到硬碟；
-# BytesIO() 則是在記憶體中開一個「假的檔案」，行為和真實檔案物件完全一樣，
-# 但資料只存在 RAM，不佔硬碟空間，也不需要事後刪除。
-# 好處：DOCX / PPTX 的 add_picture() 都接受 BytesIO 物件，
-#       同一份圖可以多次使用（每次使用前記得 .seek(0) 重設讀取位置）。
+# ── BytesIO: save the figure into an "in-memory virtual file" ──
+# Normally fig.savefig("epicurve.png") writes to disk;
+# BytesIO() opens a "fake file" in memory that behaves exactly like a real file object,
+# but the data lives only in RAM — no disk space used, nothing to clean up afterward.
+# Bonus: DOCX / PPTX add_picture() both accept BytesIO objects,
+#        and the same figure can be reused (just remember to .seek(0) before each use).
 epicurve_buf = BytesIO()
 fig.savefig(epicurve_buf, format="png", dpi=150, bbox_inches="tight")
-# seek(0)：把讀取游標移回緩衝區的最開頭
-# 類比：把磁帶倒帶回起點，才能從頭播放
-# 如果不 seek(0) 直接讀，會從末尾開始讀，得到空資料
+# seek(0): move the read cursor back to the very start of the buffer
+# Analogy: rewind a tape to the beginning so you can play it from the top
+# If you read without seek(0), you'd read from the end and get empty data
 epicurve_buf.seek(0)
 
-# strftime 格式字串：%Y=四位年、%m=兩位月、%d=兩位日、%H=時（24h）、%M=分
+# strftime format string: %Y=4-digit year, %m=2-digit month, %d=2-digit day, %H=hour (24h), %M=minute
 report_time = datetime.now().strftime("%Y-%m-%d %H:%M")
 ```
 
-### 8a: 互動式儀表板（Plotly Dashboard）
+### 8a: Interactive dashboard (Plotly Dashboard)
 
 ```{note}
-在 JupyterLab / Google Colab 中，以下圖表是**互動的**（可縮放、懸停檢視數值）。在 Jupyter Book 靜態網頁中，你看到的是自動產生的靜態截圖。
+In JupyterLab / Google Colab, the chart below is **interactive** (you can zoom and hover to inspect values). In the static Jupyter Book web page, what you see is an auto-generated static screenshot.
 ```
 
 ```python
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-# make_subplots 建立 2×2 的子圖網格
-# specs 指定每個子圖的類型：
-#   "indicator" = 數字指標（大字顯示 KPI）
-#   "xy"        = 一般 x-y 座標圖（長條圖、折線圖等）
-# subplot_titles 對應每個格子的標題（左上、右上格子標題留空，由 Indicator 自帶）
+# make_subplots builds a 2×2 grid of subplots
+# specs sets each subplot's type:
+#   "indicator" = a numeric indicator (large-font KPI display)
+#   "xy"        = an ordinary x-y plot (bar chart, line chart, etc.)
+# subplot_titles map to each cell (top-left and top-right titles are left blank; the Indicators carry their own)
 dashboard = make_subplots(
     rows=2, cols=2,
     specs=[
         [{"type": "indicator"}, {"type": "indicator"}],
         [{"type": "xy"}, {"type": "xy"}],
     ],
-    subplot_titles=("", "", "流行曲線（依發病日）", "各翼區侵襲率"),
-    vertical_spacing=0.15,   # 上下子圖之間的間距（0–1，比例值）
-    horizontal_spacing=0.1,  # 左右子圖之間的間距
+    subplot_titles=("", "", "Epidemic curve (by onset date)", "Attack rate by wing"),
+    vertical_spacing=0.15,   # vertical gap between top and bottom subplots (0–1, a ratio)
+    horizontal_spacing=0.1,  # horizontal gap between left and right subplots
 )
 
-# ── 左上：感染人數 KPI 指標 ──
-# go.Indicator 是 Plotly 的「儀表板指標」圖形，專門顯示一個大數字 + 輔助資訊
-# mode="number+delta"：顯示數值 + 變化量（delta）
+# ── Top-left: infected-count KPI indicator ──
+# go.Indicator is Plotly's "dashboard indicator" shape, made to show one big number + supporting info
+# mode="number+delta": show the value + a change amount (delta)
 dashboard.add_trace(
     go.Indicator(
         mode="number+delta",
         value=infected,
-        title={"text": "感染人數（侵襲率）"},
-        # number.suffix 在數字後附加文字（括號裡的侵襲率）
+        title={"text": "Infected (attack rate)"},
+        # number.suffix appends text after the number (the attack rate in parentheses)
         number={"suffix": f"  ({infected/total:.1%})"},
         delta={"reference": 0, "position": "bottom"},
     ),
-    row=1, col=1,  # 放在第 1 列、第 1 欄（左上）
+    row=1, col=1,  # place in row 1, column 1 (top-left)
 )
 
-# ── 右上：死亡人數 KPI 指標 ──
+# ── Top-right: death-count KPI indicator ──
 dashboard.add_trace(
     go.Indicator(
         mode="number+delta",
         value=deaths,
-        title={"text": "死亡人數（CFR）"},
+        title={"text": "Deaths (CFR)"},
         number={"suffix": f"  ({deaths/infected:.1%})"},
         delta={"reference": 0, "position": "bottom"},
     ),
-    row=1, col=2,  # 放在第 1 列、第 2 欄（右上）
+    row=1, col=2,  # place in row 1, column 2 (top-right)
 )
 
-# ── 左下：流行曲線（直方式長條圖）──
+# ── Bottom-left: epidemic curve (histogram-style bar chart) ──
 daily_cases = cases.groupby("symptom_onset_date").size()
 dashboard.add_trace(
     go.Bar(
-        x=daily_cases.index,    # x 軸：發病日期
-        y=daily_cases.values,   # y 軸：每日病例數
-        marker_color="#D97757", # Anthropic Orange，視覺上與疾病相關
-        name="每日病例數",
+        x=daily_cases.index,    # x-axis: onset date
+        y=daily_cases.values,   # y-axis: daily case count
+        marker_color="#D97757", # Anthropic Orange, visually tied to disease
+        name="Daily cases",
     ),
     row=2, col=1,
 )
 
-# ── 右下：各翼區侵襲率（水平長條圖，方便比較各翼區）──
+# ── Bottom-right: attack rate by wing (horizontal bar chart, easy to compare wings) ──
 dashboard.add_trace(
     go.Bar(
-        y=wing_stats["label"],  # y 軸放翼區名稱（水平長條圖的類別軸）
-        x=wing_stats["AR%"],    # x 軸放侵襲率數值
-        orientation="h",        # "h" = horizontal（水平方向）
+        y=wing_stats["label"],  # y-axis holds wing names (the category axis of a horizontal bar chart)
+        x=wing_stats["AR%"],    # x-axis holds attack-rate values
+        orientation="h",        # "h" = horizontal
         marker_color="#6A9BCC",
-        name="侵襲率 %",
-        # 在每根長條外側顯示數值標籤
+        name="Attack rate %",
+        # show a value label just outside each bar
         text=wing_stats["AR%"].apply(lambda v: f"{v:.1f}%"),
         textposition="outside",
     ),
@@ -870,70 +876,70 @@ dashboard.add_trace(
 )
 
 dashboard.update_layout(
-    title_text=f"松柏護理之家退伍軍人症 SitRep Dashboard（{report_time}）",
+    title_text=f"Songbai Nursing Home Legionnaires' SitRep Dashboard ({report_time})",
     height=600,
-    showlegend=False,     # 隱藏圖例（各子圖標題已足夠說明）
-    template="plotly_white",  # 白底簡潔模板
+    showlegend=False,     # hide the legend (the subplot titles are explanation enough)
+    template="plotly_white",  # clean white-background template
 )
 dashboard.show()
 ```
 
-### 8b: Word 文件（DOCX）
+### 8b: Word document (DOCX)
 
-> **注意**：套件名稱是 `python-docx`，但匯入時寫 `from docx import ...`——這是很多新手搞混的地方。
+> **Note**: the package is named `python-docx`, but you import it as `from docx import ...` — a common source of confusion for beginners.
 
 ```python
-# 注意：套件叫 python-docx（安裝時），但 import 名稱是 docx（沒有 python- 前綴）
+# Note: the package is called python-docx (when installing), but the import name is docx (no python- prefix)
 from docx import Document
-from docx.shared import Inches, Pt  # Inches/Pt：指定尺寸的輔助類別
+from docx.shared import Inches, Pt  # Inches/Pt: helper classes for specifying sizes
 
-# Document() 建立一份新的空白 Word 文件
+# Document() creates a new blank Word document
 doc = Document()
 
-# ── 標題與時間 ──
-# level=1 對應 Word 的「標題 1」（最大的標題）
-doc.add_heading("松柏護理之家退伍軍人症 SitRep", level=1)
-doc.add_paragraph(f"報告時間：{report_time}")
+# ── Title and time ──
+# level=1 maps to Word's "Heading 1" (the largest heading)
+doc.add_heading("Songbai Nursing Home Legionnaires' SitRep", level=1)
+doc.add_paragraph(f"Report time: {report_time}")
 doc.add_paragraph(
-    f"資料來源：legionella_outbreak.csv（{total} 筆住民資料）"
+    f"Data source: legionella_outbreak.csv ({total} resident records)"
 )
 
-# ── 摘要指標表格 ──
-doc.add_heading("摘要指標", level=2)
-# add_table(rows=6, cols=2)：建立一個 6 行 2 列的表格
-# style="Light Grid Accent 1"：套用 Word 內建的表格樣式（淺色網格，第 1 強調色）
+# ── Summary metrics table ──
+doc.add_heading("Summary metrics", level=2)
+# add_table(rows=6, cols=2): create a 6-row, 2-column table
+# style="Light Grid Accent 1": apply Word's built-in table style (light grid, accent color 1)
 table = doc.add_table(rows=6, cols=2, style="Light Grid Accent 1")
 metrics = [
-    ("住民總數", str(total)),
-    ("感染人數", f"{infected}（侵襲率 {infected/total:.1%}）"),
-    ("確診", str(confirmed)),
-    ("可能病例", str(probable)),
-    ("住院", f"{hospitalized}（住院率 {hospitalized/infected:.1%}）"),
-    ("死亡", f"{deaths}（CFR {deaths/infected:.1%}）"),
+    ("Total residents", str(total)),
+    ("Infected", f"{infected} (attack rate {infected/total:.1%})"),
+    ("Confirmed", str(confirmed)),
+    ("Probable", str(probable)),
+    ("Hospitalized", f"{hospitalized} (hospitalization rate {hospitalized/infected:.1%})"),
+    ("Deaths", f"{deaths} (CFR {deaths/infected:.1%})"),
 ]
-# enumerate() 同時取得索引 i 和值（label, value）
+# enumerate() gives both the index i and the value (label, value)
 for i, (label, value) in enumerate(metrics):
-    # table.rows[i] 取第 i 列，.cells[0] 取第 0 格（第一欄）
+    # table.rows[i] gets row i, .cells[0] gets cell 0 (the first column)
     table.rows[i].cells[0].text = label
     table.rows[i].cells[1].text = value
 
-# ── 嵌入流行曲線 ──
-doc.add_heading("流行曲線", level=2)
-epicurve_buf.seek(0)  # 重設 BytesIO 讀取游標（每次讀取前都要 seek(0)）
-# width=Inches(6)：圖片寬度設定為 6 英吋（A4 紙寬約 8.27 英吋，去掉左右邊距後約 6 英吋）
+# ── Embed the epidemic curve ──
+doc.add_heading("Epidemic curve", level=2)
+epicurve_buf.seek(0)  # reset the BytesIO read cursor (always seek(0) before each read)
+# width=Inches(6): set the image width to 6 inches (A4 is ~8.27 inches wide; ~6 after margins)
 doc.add_picture(epicurve_buf, width=Inches(6))
 
-# ── 各翼區統計（表頭 + 資料列）──
-doc.add_heading("各翼區疫情摘要", level=2)
-# rows=len(wing_stats) + 1：資料列數 + 1 行表頭
+# ── Per-wing stats (header + data rows) ──
+doc.add_heading("Outbreak summary by wing", level=2)
+# rows=len(wing_stats) + 1: number of data rows + 1 header row
 wing_table = doc.add_table(
     rows=len(wing_stats) + 1, cols=5, style="Light Grid Accent 1"
 )
-headers = ["翼區", "住民數", "感染數", "侵襲率%", "CFR%"]
-# 填入第 0 列（表頭）
+headers = ["Wing", "Residents", "Infected", "AR%", "CFR%"]
+# fill in row 0 (the header)
 for j, h in enumerate(headers):
     wing_table.rows[0].cells[j].text = h
-# 填入資料列（從第 1 列開始，i 是 wing_stats 的索引）
+# fill in the data rows (starting from row 1; i is the wing_stats index)
 for i, row in wing_stats.iterrows():
     wing_table.rows[i + 1].cells[0].text = str(row["label"])
     wing_table.rows[i + 1].cells[1].text = str(row["residents"])
@@ -942,85 +948,85 @@ for i, row in wing_stats.iterrows():
     wing_table.rows[i + 1].cells[4].text = str(row["CFR%"])
 
 doc.save("output/sitrep_report.docx")
-print("✅ Word 報告已儲存：output/sitrep_report.docx")
+print("✅ Word report saved: output/sitrep_report.docx")
 ```
 
-### 8c: 簡報投影片（PPTX）
+### 8c: Presentation slides (PPTX)
 
 ```python
 from pptx import Presentation
-from pptx.util import Inches, Pt  # Inches/Pt：指定位置和大小的輔助類別
+from pptx.util import Inches, Pt  # Inches/Pt: helper classes for specifying position and size
 
-prs = Presentation()  # 建立新的空白 PPTX（預設為 16:9 投影片）
+prs = Presentation()  # create a new blank PPTX (defaults to 16:9 slides)
 
-# ── 投影片 1：標題頁 ──
-# slide_layouts[0] 是 PowerPoint 的「標題投影片」版面（含標題 + 副標題 placeholder）
+# ── Slide 1: title page ──
+# slide_layouts[0] is PowerPoint's "Title Slide" layout (title + subtitle placeholders)
 slide1 = prs.slides.add_slide(prs.slide_layouts[0])
-slide1.shapes.title.text = "松柏護理之家退伍軍人症 SitRep"
-# placeholders[1] 是副標題 placeholder（index 0 = 主標題，index 1 = 副標題）
-slide1.placeholders[1].text = f"報告時間：{report_time}"
+slide1.shapes.title.text = "Songbai Nursing Home Legionnaires' SitRep"
+# placeholders[1] is the subtitle placeholder (index 0 = main title, index 1 = subtitle)
+slide1.placeholders[1].text = f"Report time: {report_time}"
 
-# ── 投影片 2：關鍵數據 ──
-# slide_layouts[5] 是「空白」版面，沒有任何 placeholder，
-# 完全靠我們用 add_textbox() 自行定位內容
+# ── Slide 2: key figures ──
+# slide_layouts[5] is the "Blank" layout with no placeholders;
+# we position everything ourselves with add_textbox()
 slide2 = prs.slides.add_slide(prs.slide_layouts[5])
-# add_textbox(left, top, width, height)：用 Inches 指定位置和大小
-# 左邊距 1 英吋，上邊距 0.5 英吋，寬 8 英吋，高 1 英吋
+# add_textbox(left, top, width, height): specify position and size with Inches
+# left margin 1 inch, top margin 0.5 inch, width 8 inches, height 1 inch
 txBox = slide2.shapes.add_textbox(
     Inches(1), Inches(0.5), Inches(8), Inches(1),
 )
-txBox.text_frame.text = "關鍵摘要指標"
-txBox.text_frame.paragraphs[0].font.size = Pt(28)  # 28 pt 大標題
+txBox.text_frame.text = "Key summary metrics"
+txBox.text_frame.paragraphs[0].font.size = Pt(28)  # 28 pt heading
 txBox.text_frame.paragraphs[0].font.bold = True
 
-# 正文文字方塊（放在標題下方）
+# Body text box (placed below the heading)
 body = slide2.shapes.add_textbox(
     Inches(1), Inches(1.8), Inches(8), Inches(4),
 )
 tf = body.text_frame
-tf.word_wrap = True  # 允許自動換行（防止長文字超出邊界）
+tf.word_wrap = True  # allow word wrapping (prevents long text from overflowing)
 kpi_lines = [
-    f"感染人數：{infected}（侵襲率 {infected/total:.1%}）",
-    f"確診：{confirmed}　可能病例：{probable}",
-    f"住院：{hospitalized}　ICU：{icu}",
-    f"死亡：{deaths}（CFR {deaths/infected:.1%}）",
+    f"Infected: {infected} (attack rate {infected/total:.1%})",
+    f"Confirmed: {confirmed}   Probable: {probable}",
+    f"Hospitalized: {hospitalized}   ICU: {icu}",
+    f"Deaths: {deaths} (CFR {deaths/infected:.1%})",
 ]
 for line in kpi_lines:
-    p = tf.add_paragraph()   # 每行文字加一個新段落
+    p = tf.add_paragraph()   # add a new paragraph per line
     p.text = line
-    p.font.size = Pt(20)     # 20 pt 正文字體
-    p.space_after = Pt(12)   # 段落後間距 12 pt（等同按一次 Enter）
+    p.font.size = Pt(20)     # 20 pt body text
+    p.space_after = Pt(12)   # 12 pt space after the paragraph (like pressing Enter once)
 
-# ── 投影片 3：流行曲線 ──
+# ── Slide 3: epidemic curve ──
 slide3 = prs.slides.add_slide(prs.slide_layouts[5])
 txBox3 = slide3.shapes.add_textbox(
     Inches(1), Inches(0.3), Inches(8), Inches(0.8),
 )
-txBox3.text_frame.text = "流行曲線（依發病日）"
+txBox3.text_frame.text = "Epidemic curve (by onset date)"
 txBox3.text_frame.paragraphs[0].font.size = Pt(24)
 txBox3.text_frame.paragraphs[0].font.bold = True
 
-epicurve_buf.seek(0)  # 重設 BytesIO 游標，才能再次讀取圖片資料
-# add_picture(image, left, top, width, height)：在指定位置插入圖片
+epicurve_buf.seek(0)  # reset the BytesIO cursor to read the image data again
+# add_picture(image, left, top, width, height): insert the image at a set position
 slide3.shapes.add_picture(epicurve_buf, Inches(0.5), Inches(1.3), Inches(9), Inches(5))
 
-# ── 投影片 4：各翼區侵襲率 ──
+# ── Slide 4: attack rate by wing ──
 slide4 = prs.slides.add_slide(prs.slide_layouts[5])
 txBox4 = slide4.shapes.add_textbox(
     Inches(1), Inches(0.3), Inches(8), Inches(0.8),
 )
-txBox4.text_frame.text = "各翼區疫情摘要"
+txBox4.text_frame.text = "Outbreak summary by wing"
 txBox4.text_frame.paragraphs[0].font.size = Pt(24)
 txBox4.text_frame.paragraphs[0].font.bold = True
 
-# add_table(rows, cols, left, top, width, height).table 取得表格物件
-# 整個呼叫鏈：add_table() 回傳 GraphicFrame，.table 才是可操作的 Table 物件
-rows_n = len(wing_stats) + 1  # 資料列 + 1 行表頭
+# add_table(rows, cols, left, top, width, height).table gets the table object
+# The full call chain: add_table() returns a GraphicFrame; .table is the operable Table object
+rows_n = len(wing_stats) + 1  # data rows + 1 header row
 tbl = slide4.shapes.add_table(rows_n, 5, Inches(0.5), Inches(1.3), Inches(9), Inches(4)).table
-# 填入表頭（第 0 列）
-for j, h in enumerate(["翼區", "住民", "感染", "AR%", "CFR%"]):
+# fill in the header (row 0)
+for j, h in enumerate(["Wing", "Residents", "Infected", "AR%", "CFR%"]):
     tbl.cell(0, j).text = h
-# 填入資料列（從第 1 列開始）
+# fill in the data rows (starting from row 1)
 for i, row in wing_stats.iterrows():
     tbl.cell(i + 1, 0).text = str(row["label"])
     tbl.cell(i + 1, 1).text = str(row["residents"])
@@ -1029,18 +1035,18 @@ for i, row in wing_stats.iterrows():
     tbl.cell(i + 1, 4).text = str(row["CFR%"])
 
 prs.save("output/sitrep_slides.pptx")
-print("✅ 簡報已儲存：output/sitrep_slides.pptx")
+print("✅ Slides saved: output/sitrep_slides.pptx")
 ```
 
-### 8d: PDF 正式報告（fpdf2）
+### 8d: Formal PDF report (fpdf2)
 
 ```python
 import pathlib
 from fpdf import FPDF
 
-# ── CJK 字型偵測（PDF 不像瀏覽器能自動 fallback，必須手動嵌入字型）──
-# fpdf2 預設只有英文字型（Helvetica 等），顯示中文需要嵌入 TTF/TTC 字型檔
-# 偵測邏輯：掃描系統字型目錄，找名稱包含 "CJK"、"WenQuanYi" 或 "wqy" 的字型檔
+# ── CJK font detection (unlike a browser, a PDF can't auto-fallback; you must embed the font) ──
+# By default fpdf2 only has Latin fonts (Helvetica, etc.); showing CJK needs an embedded TTF/TTC font
+# Detection logic: scan the system font directories for a font file whose name contains "CJK", "WenQuanYi", or "wqy"
 cjk_font_path = None
 for font_dir in ["/usr/share/fonts", "/usr/local/share/fonts"]:
     for fp in sorted(pathlib.Path(font_dir).rglob("*")):
@@ -1052,270 +1058,270 @@ for font_dir in ["/usr/share/fonts", "/usr/local/share/fonts"]:
     if cjk_font_path:
         break
 
-pdf = FPDF()        # 建立新 PDF（預設 A4 直式）
-pdf.add_page()      # 必須先 add_page() 才能開始寫入內容
+pdf = FPDF()        # create a new PDF (defaults to A4 portrait)
+pdf.add_page()      # you must add_page() first before you can write any content
 
-# ── 字型設定 ──
+# ── Font setup ──
 if cjk_font_path:
-    # add_font("別名", "樣式", "字型檔路徑")
-    # 別名可以自訂，後續用 set_font("CJK") 呼叫
-    # 注意：fpdf2 v2.5.1+ 不需要加 uni=True（已自動支援 Unicode）
+    # add_font("alias", "style", "font file path")
+    # the alias is up to you; call it later with set_font("CJK")
+    # Note: fpdf2 v2.5.1+ doesn't need uni=True (Unicode is supported automatically)
     pdf.add_font("CJK", "", cjk_font_path)
     pdf.set_font("CJK", size=16)
 else:
     pdf.set_font("Helvetica", size=16)
-    print("⚠️ 未找到 CJK 字型，中文可能無法顯示。請安裝 fonts-noto-cjk")
+    print("⚠️ No CJK font found; Chinese may not display. Please install fonts-noto-cjk")
 
-# ── 標題 ──
-# cell(width, height, text, ...) 是 fpdf2 最基本的內容單元
-# width=0 表示「延伸到右邊距」（自動填滿頁面寬度）
-# new_x="LMARGIN"：下一格從左邊距開始（回到左邊）
-# new_y="NEXT"：下一格移到下一行
-# align="C"：文字在格子內置中對齊
-pdf.cell(0, 12, text="松柏護理之家退伍軍人症 SitRep", new_x="LMARGIN", new_y="NEXT", align="C")
+# ── Title ──
+# cell(width, height, text, ...) is fpdf2's most basic content unit
+# width=0 means "extend to the right margin" (auto-fill the page width)
+# new_x="LMARGIN": the next cell starts at the left margin (back to the left)
+# new_y="NEXT": the next cell moves to the next line
+# align="C": center the text within the cell
+pdf.cell(0, 12, text="Songbai Nursing Home Legionnaires' SitRep", new_x="LMARGIN", new_y="NEXT", align="C")
 pdf.set_font_size(10)
-pdf.cell(0, 8, text=f"報告時間：{report_time}", new_x="LMARGIN", new_y="NEXT", align="C")
-pdf.ln(8)  # ln(n)：插入 n 個點的空白行（版面間距）
+pdf.cell(0, 8, text=f"Report time: {report_time}", new_x="LMARGIN", new_y="NEXT", align="C")
+pdf.ln(8)  # ln(n): insert n points of blank line (layout spacing)
 
-# ── 摘要指標（逐行輸出）──
+# ── Summary metrics (line by line) ──
 pdf.set_font_size(13)
-pdf.cell(0, 10, text="摘要指標", new_x="LMARGIN", new_y="NEXT")
+pdf.cell(0, 10, text="Summary metrics", new_x="LMARGIN", new_y="NEXT")
 pdf.set_font_size(10)
 kpi_lines = [
-    f"住民總數：{total}",
-    f"感染人數：{infected}（侵襲率 {infected/total:.1%}）",
-    f"確診：{confirmed}　可能病例：{probable}",
-    f"住院：{hospitalized}（住院率 {hospitalized/infected:.1%}）",
-    f"死亡：{deaths}（CFR {deaths/infected:.1%}）",
+    f"Total residents: {total}",
+    f"Infected: {infected} (attack rate {infected/total:.1%})",
+    f"Confirmed: {confirmed}   Probable: {probable}",
+    f"Hospitalized: {hospitalized} (hospitalization rate {hospitalized/infected:.1%})",
+    f"Deaths: {deaths} (CFR {deaths/infected:.1%})",
 ]
 for line in kpi_lines:
     pdf.cell(0, 7, text=line, new_x="LMARGIN", new_y="NEXT")
 pdf.ln(5)
 
-# ── 嵌入流行曲線 ──
-# fpdf2 的 pdf.image() 只接受「檔案路徑」字串，不接受 BytesIO 物件
-# 解決方法：先把 BytesIO 的內容寫到一個暫存 PNG 檔，嵌入後立刻刪除
+# ── Embed the epidemic curve ──
+# fpdf2's pdf.image() only accepts a "file path" string, not a BytesIO object
+# Workaround: write the BytesIO contents to a temporary PNG, embed it, then delete it
 pdf.set_font_size(13)
-pdf.cell(0, 10, text="流行曲線", new_x="LMARGIN", new_y="NEXT")
+pdf.cell(0, 10, text="Epidemic curve", new_x="LMARGIN", new_y="NEXT")
 epicurve_buf.seek(0)
 epicurve_tmp = pathlib.Path("output/epicurve_tmp.png")
-epicurve_tmp.write_bytes(epicurve_buf.read())  # 把 BytesIO 資料寫入磁碟
-# pdf.w 是頁面寬度（約 210 mm），減 30 後留左右邊距各 15 mm
+epicurve_tmp.write_bytes(epicurve_buf.read())  # write the BytesIO data to disk
+# pdf.w is the page width (~210 mm); subtracting 30 leaves 15 mm margins on each side
 pdf.image(str(epicurve_tmp), w=pdf.w - 30)
-epicurve_tmp.unlink()  # 嵌入完成後刪除暫存檔（清理環境）
+epicurve_tmp.unlink()  # delete the temp file after embedding (clean up)
 pdf.ln(5)
 
-# ── 各翼區統計表（手動繪製格線表格）──
-pdf.add_page()  # 新增第二頁放表格
+# ── Per-wing stats table (manually drawn gridded table) ──
+pdf.add_page()  # add a second page for the table
 pdf.set_font_size(13)
-pdf.cell(0, 10, text="各翼區疫情摘要", new_x="LMARGIN", new_y="NEXT")
+pdf.cell(0, 10, text="Outbreak summary by wing", new_x="LMARGIN", new_y="NEXT")
 pdf.set_font_size(9)
 
-# col_widths 定義每欄的寬度（mm），總和應小於頁面有效寬度（約 190 mm）
+# col_widths defines each column's width (mm); the total should be less than the effective page width (~190 mm)
 col_widths = [25, 25, 25, 30, 30]
-headers = ["翼區", "住民", "感染", "侵襲率%", "CFR%"]
-# 表頭列：border=1 繪製四邊框線
+headers = ["Wing", "Residents", "Infected", "AR%", "CFR%"]
+# header row: border=1 draws all four borders
 for w, h in zip(col_widths, headers):
     pdf.cell(w, 8, text=h, border=1, align="C")
-pdf.ln()  # 表頭填完後換行
+pdf.ln()  # line break after the header
 
-# 資料列：_ 表示我們不需要索引（只要值 row）
+# data rows: _ means we don't need the index (just the value, row)
 for _, row in wing_stats.iterrows():
     vals = [str(row["label"]), str(row["residents"]), str(row["infected"]),
             str(row["AR%"]), str(row["CFR%"])]
     for w, v in zip(col_widths, vals):
         pdf.cell(w, 7, text=v, border=1, align="C")
-    pdf.ln()  # 每行資料填完後換行
+    pdf.ln()  # line break after each data row
 
 pdf.output("output/sitrep_report.pdf")
-print("✅ PDF 報告已儲存：output/sitrep_report.pdf")
+print("✅ PDF report saved: output/sitrep_report.pdf")
 ```
 
-> **小結**：四種格式各有適用場景。互動儀表板適合團隊內部即時檢視，DOCX 適合 email 給長官，PPTX 適合疫調會議簡報，PDF 適合正式歸檔。在實務中，你可以把這些程式碼整合進 `run_sitrep.py`，每天更新 CSV 後重跑一次，就能同時產出四種格式的最新報告。
+> **In summary**: the four formats each suit a different scenario. An interactive dashboard is good for real-time internal review, DOCX for emailing to a supervisor, PPTX for presenting at an investigation meeting, and PDF for formal filing. In practice, you can fold this code into `run_sitrep.py` and, after updating the CSV each day, rerun it once to produce the latest report in all four formats at the same time.
 
 ---
 
-## FETP Step 6：建立假說——從描述性分析到原因推論
+## FETP Step 6: Form hypotheses — from descriptive analysis to causal inference
 
-完成人時地描述（Steps 3–5）並輸出 SitRep 後，下一步是**提出可檢驗的假說**：誰是傳染源？什麼是傳播途徑？
+Once you've described person, time, and place (Steps 3–5) and produced the SitRep, the next step is to **propose testable hypotheses**: who is the source? what is the transmission route?
 
-### 假說生成的三條路徑
+### Three routes to generating hypotheses
 
 ```
-路徑一：已知病原特性
-  已確認為退伍軍人症 → 已知傳播途徑為氣溶膠
-  → 假說：「設施內某冷卻水源受 Legionella 污染」
-  → 可能來源：冷卻水塔、淋浴設備、水療池、加濕器
+Route 1: known pathogen characteristics
+  Confirmed as Legionnaires' → transmission route is known to be aerosol
+  → Hypothesis: "some water source in the facility is contaminated with Legionella"
+  → Possible sources: cooling tower, shower equipment, hydrotherapy pool, humidifier
 
-路徑二：描述性流行病學線索
-  流行曲線呈點源模式（集中在 3–5 天內）→ 單一暴露來源
-  地圖顯示 A 翼侵襲率顯著高於 B/C 翼 → 空間聚集性
-  → 假說：「A 翼某設施為點源」
+Route 2: descriptive-epidemiology clues
+  The epidemic curve shows a point-source pattern (concentrated within 3–5 days) → a single exposure source
+  The map shows Wing A's attack rate is notably higher than B/C → spatial clustering
+  → Hypothesis: "some facility in Wing A is the point source"
 
-路徑三：個案訪談 + 離群值分析
-  未感染的住民（對照）與感染者（病例）的生活習慣差異
-  某位 90 歲住民，免疫狀態正常但未感染 → 詢問：「不使用淋浴，改用沐浴床」
-  → 假說精化：「淋浴氣溶膠為主要暴露途徑，而非單純喝水」
+Route 3: case interviews + outlier analysis
+  Differences in habits between uninfected residents (controls) and infected residents (cases)
+  A 90-year-old resident, immune-competent but uninfected → asked: "doesn't use the shower, uses a bathing bed instead"
+  → Refined hypothesis: "shower aerosol is the main exposure route, not merely drinking water"
 ```
 
-### 本次群聚的初步假說清單
+### Initial hypothesis list for this cluster
 
-| 假說編號 | 假說內容 | 支持的線索 |
+| Hypothesis # | Content | Supporting clues |
 |----------|----------|-----------|
-| H1 | 冷卻水塔受污染，氣溶膠擴散至 A 翼窗口 | A 翼侵襲率高、冷卻水塔位置在 A 翼側 |
-| H2 | A 翼淋浴設備積水受污染 | 淋浴使用者侵襲率高於未使用者（待驗證）|
-| H3 | 水療池（Hydrotherapy）為來源 | 使用水療的住民發病率高（待驗證）|
+| H1 | The cooling tower is contaminated; aerosol spreads to Wing A windows | High attack rate in Wing A; the cooling tower sits on the Wing A side |
+| H2 | Standing water in Wing A's shower equipment is contaminated | Higher attack rate among shower users than non-users (to be verified) |
+| H3 | The hydrotherapy pool is the source | Higher incidence among residents who used hydrotherapy (to be verified) |
 
-> **注意**：假說應在採樣 / 分析結果出來**之前**就明確寫下。事後「配合」資料修改假說，會使研究設計失效（見 FETP Step 7 分析）。
+> **Note**: hypotheses should be written down explicitly **before** the sampling / analysis results come in. Modifying a hypothesis afterward to "fit" the data invalidates the study design (see the FETP Step 7 analysis).
 
 ---
 
-## FETP Step 7：評估假說——向後回溯與向前追溯
+## FETP Step 7: Evaluate hypotheses — traceback and trace-forward
 
-建立假說後，需要用**分析性流行病學**和**環境採樣**來驗證。
+After forming hypotheses, you validate them with **analytic epidemiology** and **environmental sampling**.
 
-### 向後回溯（Traceback）——找傳染源
+### Traceback — find the source
 
-**概念**：從病例的發病日往回推，找出哪個暴露點最可能是源頭。
+**Concept**: from the case onset dates, work backward to find which exposure point is most likely the source.
 
 ```
-回溯期間 = 最大潛伏期
-退伍軍人症最大潛伏期 = 10 天
+Traceback window = maximum incubation period
+Legionnaires' maximum incubation period = 10 days
 
-本次群聚：
-  最早發病日 = 2026-01-12
-  最晚發病日 = 2026-01-28
+This cluster:
+  Earliest onset date = 2026-01-12
+  Latest onset date = 2026-01-28
   
-  → 回溯窗口 = 2026-01-02 至 2026-01-28
-  → 在此期間，檢查所有可能的氣溶膠暴露點（水塔、淋浴、水療池）
+  → Traceback window = 2026-01-02 to 2026-01-28
+  → During this window, check every possible aerosol exposure point (towers, showers, hydrotherapy pool)
 ```
 
-**環境採樣重點**：
-- 採集冷卻水塔、淋浴蓮蓬頭、水療池、熱水器的水樣
-- 目標：確認環境中的 *Legionella* 菌種與住民菌株是否相符（血清型比對）
-- 採樣時間：越早越好，但消毒措施（加氯）應先採樣再啟動
+**Environmental sampling priorities**:
+- Collect water samples from the cooling tower, shower heads, hydrotherapy pool, and water heater
+- Goal: confirm whether the *Legionella* species in the environment matches the residents' strain (serogroup comparison)
+- Sampling timing: as early as possible, but disinfection (chlorination) should only start after sampling
 
-**統計方法**（詳見 Ch05 / Ch06）：
+**Statistical methods** (see Ch05 / Ch06):
 
-| 分析方法 | 假說類型 | 本次應用 |
+| Analysis method | Hypothesis type | Application here |
 |----------|----------|----------|
-| 病例對照研究 + 勝算比 | 回顧式暴露比較 | 比較感染者 vs 未感染者的淋浴 / 水療使用率 |
-| 世代研究 + 風險比 | 已知暴露，追蹤是否發病 | 若能辨識「使用 A 翼淋浴」vs「未使用」的住民 |
-| 分層分析（Mantel-Haenszel）| 干擾因子校正 | 校正年齡 / 免疫狀態後的暴露效應 |
+| Case-control study + odds ratio | Retrospective exposure comparison | Compare shower / hydrotherapy use rates between infected and uninfected |
+| Cohort study + risk ratio | Known exposure, follow up for onset | If you can identify residents who "used Wing A showers" vs "did not" |
+| Stratified analysis (Mantel-Haenszel) | Adjust for confounders | The exposure effect after adjusting for age / immune status |
 
-### 向前追溯（Trace-forward）——評估擴散風險
+### Trace-forward — assess the risk of spread
 
-**概念**：從病例的可傳染期往後推，追蹤可能的續發病例。
+**Concept**: from a case's infectious period, work forward to track possible secondary cases.
 
 ```
-退伍軍人症：人傳人極罕見 → 通常不需要 trace-forward
-  ✗ 不需要為每個病例建立接觸者清單
-  ✗ 不需要設立接觸者健康監測窗口
+Legionnaires': person-to-person is extremely rare → trace-forward is usually unnecessary
+  ✗ No need to build a contact list for each case
+  ✗ No need to set up a contact health-monitoring window
 
-若病原為 COVID-19 / 流感 / 諾羅病毒（有人傳人）：
-  向前追溯期 = 可傳染期（例：COVID-19 感染後 2–14 天）
-  → 需列出密切接觸者名單 + 設定健康監測窗口
+If the pathogen were COVID-19 / influenza / norovirus (person-to-person):
+  Trace-forward period = infectious period (e.g. 2–14 days after COVID-19 infection)
+  → You'd need to list close contacts + set a health-monitoring window
 ```
 
-> **退伍軍人症的調查策略**：集中資源在 **traceback**（環境採樣 + 分析性研究），無需建立接觸者追蹤系統。
+> **Investigation strategy for Legionnaires'**: concentrate resources on **traceback** (environmental sampling + analytic studies); there's no need to build a contact-tracing system.
 
 ```{seealso}
-Mantel-Haenszel 分層分析與勝算比計算的 Python 實作 → {doc}`05_stratified`
+Python implementation of Mantel-Haenszel stratified analysis and odds-ratio calculation → {doc}`05_stratified`
 
-邏輯斯迴歸多變量分析（校正多個干擾因子）→ {doc}`06_logistic_regression`
+Multivariable logistic regression (adjusting for multiple confounders) → {doc}`06_logistic_regression`
 ```
 
 ---
 
-## FETP Step 9：傳染鏈介入——移除源、阻斷鏈、保護宿主
+## FETP Step 9: Break the chain of infection — remove the source, break the chain, protect the host
 
-有了假說與分析結果後，控制措施不能等。疫情調查的最終目的是**中斷傳播**，而非只寫一份漂亮報告。
+Once you have hypotheses and analysis results, control measures can't wait. The ultimate goal of an outbreak investigation is to **interrupt transmission**, not just write a pretty report.
 
-### 傳染鏈三大介入點
+### The three intervention points in the chain of infection
 
-依 {ref}`appendix-g-chain-of-infection` 的傳染鏈六要素框架，介入點分為三類：
+Following the six-element chain-of-infection framework in {ref}`appendix-g-chain-of-infection`, intervention points fall into three categories:
 
-| 介入類型 | 策略 | 退伍軍人症應用 |
+| Intervention type | Strategy | Application to Legionnaires' |
 |----------|------|----------------|
-| **移除傳染源** | 消滅或隔離病原體 | 冷卻水塔立即加氯消毒（≥2 ppm 餘氯）、排空積水 |
-| **阻斷傳播途徑** | 切斷氣溶膠產生 | 停用可疑淋浴間、暫停水療池服務、安裝高溫 60°C 熱水循環 |
-| **保護易感宿主** | 降低宿主感受性 | 將免疫抑制住民（癌症 / 器官移植）移至未受影響翼區、給予預防性抗生素評估 |
+| **Remove the source** | Eliminate or isolate the pathogen | Immediately chlorinate the cooling tower (≥2 ppm residual chlorine), drain standing water |
+| **Break the transmission route** | Cut off aerosol generation | Shut down suspect showers, suspend hydrotherapy pool service, install 60°C hot-water circulation |
+| **Protect susceptible hosts** | Reduce host susceptibility | Move immunosuppressed residents (cancer / organ transplant) to an unaffected wing, assess prophylactic antibiotics |
 
-### 退伍軍人症具體處置步驟
+### Concrete steps for Legionnaires'
 
 ```
-即時措施（發現群聚後 24 小時內）：
-  1. 停用可疑水源（淋浴間封閉、水療池停用）
-  2. 通報地方衛生局 + CDC（退伍軍人症為第三類法定傳染病）
-  3. 對症狀病例啟動抗生素治療（azithromycin 或 levofloxacin）
+Immediate measures (within 24 hours of detecting the cluster):
+  1. Shut down suspect water sources (close showers, suspend hydrotherapy pool)
+  2. Notify the local health bureau + CDC (Legionnaires' is a Category 3 notifiable disease)
+  3. Start antibiotic treatment for symptomatic cases (azithromycin or levofloxacin)
 
-短期措施（48–72 小時）：
-  4. 環境採樣（水塔、管線）送驗
-  5. 冷卻水塔加氯衝擊消毒
-  6. 實施整體管線熱力消毒（熱水 ≥60°C 沖洗）
+Short-term measures (48–72 hours):
+  4. Send environmental samples (towers, pipes) for testing
+  5. Shock-chlorinate the cooling tower
+  6. Perform thermal disinfection of the whole plumbing system (flush with hot water ≥60°C)
 
-長期措施（群聚解除後）：
-  7. 建立定期水質監測計畫（每季採樣）
-  8. 制定機構版 Water Management Program（WMP）
-  9. 培訓感染管制人員辨識早期症狀
+Long-term measures (after the cluster is resolved):
+  7. Establish a regular water-quality monitoring program (quarterly sampling)
+  8. Develop a facility Water Management Program (WMP)
+  9. Train infection-control staff to recognize early symptoms
 ```
 
-### 措施時序與疫調的平行推進
+### Sequencing measures alongside the investigation
 
-```{admonition} 重要提醒
+```{admonition} Important reminder
 :class: warning
-控制措施（加氯消毒）應**立即啟動**，無需等待疫調完成。但環境採樣**必須在消毒前進行**，否則後續無法進行水樣與病例菌株的比對。
+Control measures (chlorination) should be **started immediately** — no need to wait for the investigation to finish. But environmental sampling **must be done before disinfection**, or you won't be able to compare the water samples with the case strains afterward.
 
-正確順序：採樣 → 消毒 → 持續監測
+Correct order: sample → disinfect → keep monitoring
 ```
 
 ```{seealso}
-傳染鏈六要素完整圖解與隔離 vs 檢疫定義 → {ref}`appendix-g-chain-of-infection`
+A full diagram of the six-element chain of infection and the isolation vs quarantine definitions → {ref}`appendix-g-chain-of-infection`
 ```
 
 ---
 
-## 常見錯誤
+## Common mistakes
 
-1. **每天改定義**：個案定義（case definition）一旦確定就不要改，否則趨勢不可比
-2. **只放圖不放表**：SitRep 必須有可查核的數字表格
-3. **忘記標註資料截止時間**：每份報告都要註明「資料截至 YYYY-MM-DD HH:MM」
-4. **侵襲率沒算分母**：直接比較病例數不公平，要除以各翼區住民數
+1. **Changing the definition every day**: once the case definition is set, don't change it, or the trend won't be comparable
+2. **Charts only, no tables**: a SitRep must have auditable tables of numbers
+3. **Forgetting to note the data cutoff time**: every report must state "data as of YYYY-MM-DD HH:MM"
+4. **Attack rate without a denominator**: comparing raw case counts isn't fair; divide by each wing's resident count
 
-## Step 9: 排程自動更新
+## Step 9: Schedule automatic updates
 
-長官的要求很明確：**每天早上九點，信箱裡要有最新的 SitRep。** 但每天手動打開 notebook、按 Run All、等它跑完再寄出……你大概第三天就會忘記。解決方案：讓電腦自動幫你跑。
+Your supervisor's request is clear: **every morning at 9 a.m., there should be an up-to-date SitRep in the inbox.** But manually opening the notebook every day, clicking Run All, waiting for it to finish, then emailing it out… you'll probably forget by day three. The solution: let the computer run it for you.
 
-### 9a: 準備排程腳本
+### 9a: Prepare the scheduling script
 
-Step 7 的 `generate_sitrep()` 和 Step 8 的報告輸出都是在 notebook 裡互動執行的。要排程自動化，需要把它們整合成一個獨立的 `.py` 腳本。以下是一個適合排程的範例腳本結構：
+Step 7's `generate_sitrep()` and Step 8's report output are run interactively inside the notebook. To automate them on a schedule, you need to consolidate them into a standalone `.py` script. Here's an example script structure suited to scheduling:
 
 ```python
 #!/usr/bin/env python3
-"""每日 SitRep 自動產出腳本。
+"""Daily SitRep automatic generation script.
 
-用法（手動執行）：
+Usage (manual run):
     uv run python notebooks/run_sitrep.py
 
-排程執行時，請用絕對路徑：
-    /Users/你的帳號/.local/bin/uv run python /Users/你的帳號/projects/python4epi/notebooks/run_sitrep.py
+When run on a schedule, use absolute paths:
+    /Users/yourname/.local/bin/uv run python /Users/yourname/projects/python4epi/notebooks/run_sitrep.py
 """
 import logging
 from pathlib import Path
 from datetime import datetime
 
-# ── 用 pathlib 算出專案根目錄的絕對路徑 ──
-# __file__ 是「這個腳本本身」的路徑
-# .resolve() 把相對路徑轉成絕對路徑（例如 ~/projects → /Users/xxx/projects）
-# .parent 往上一層：run_sitrep.py → notebooks/ → 專案根目錄
+# ── Use pathlib to compute the absolute path of the project root ──
+# __file__ is the path of "this script itself"
+# .resolve() turns a relative path into an absolute one (e.g. ~/projects → /Users/xxx/projects)
+# .parent goes up one level: run_sitrep.py → notebooks/ → project root
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 DATA_PATH = PROJECT_DIR / "data" / "synthetic" / "legionella_outbreak.csv"
 OUTPUT_DIR = PROJECT_DIR / "output"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-# ── 設定 logging（取代 print）──
-# 排程執行時你不在電腦前，print 的輸出會消失在虛空
-# logging 可以寫入檔案，事後回頭查看「昨天有沒有成功跑完」
+# ── Set up logging (instead of print) ──
+# When it runs on a schedule you're not at the computer, so print output vanishes into the void
+# logging can write to a file, so you can go back later and check "did yesterday's run finish?"
 LOG_PATH = OUTPUT_DIR / "sitrep.log"
 logging.basicConfig(
     filename=str(LOG_PATH),
@@ -1325,36 +1331,36 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 def main():
-    """主邏輯：讀取 CSV → 計算指標 → 產出報告。"""
-    log.info("開始產出 SitRep...")
+    """Main logic: read the CSV → compute metrics → produce the report."""
+    log.info("Starting SitRep generation...")
 
-    # 這裡放 Steps 1–8 的核心邏輯
+    # Put the core logic of Steps 1–8 here
     # sitrep = generate_sitrep(str(DATA_PATH))
-    # ... 產出 DOCX / PDF 等 ...
+    # ... produce DOCX / PDF, etc. ...
 
-    # 輸出檔名帶日期戳記，方便歸檔
+    # Timestamp the output filename for easy filing
     today = datetime.now().strftime("%Y%m%d")
     output_path = OUTPUT_DIR / f"sitrep_{today}.pdf"
-    log.info(f"報告已儲存：{output_path}")
+    log.info(f"Report saved: {output_path}")
 
 if __name__ == "__main__":
-    # try/except 包住主邏輯：萬一出錯，錯誤訊息會寫進 log 而非默默消失
+    # Wrap the main logic in try/except: if it fails, the error is written to the log instead of vanishing silently
     try:
         main()
     except Exception:
-        log.exception("SitRep 產出失敗！")
-        raise  # 重新拋出例外，讓排程系統知道「這次執行失敗了」
+        log.exception("SitRep generation failed!")
+        raise  # re-raise the exception so the scheduler knows "this run failed"
 ```
 
 ```{tip}
-**從 notebook 轉成 `.py` 腳本的三種方法**，請見 {ref}`Ch00 開發者工具 <00_guide:把-.ipynb-轉成-.py：三種方法>`。本教材的 `notebooks/run_sitrep.py` 就是一個整理好的範例。
+**Three ways to turn a notebook into a `.py` script** are covered in {ref}`Ch00 Developer Tools <00_guide:把-.ipynb-轉成-.py：三種方法>`. This course's `notebooks/run_sitrep.py` is a tidied-up example.
 ```
 
-### 9b: macOS：launchd（推薦）
+### 9b: macOS: launchd (recommended)
 
-macOS 的原生排程器叫 **launchd**（不是 cron）。雖然 macOS 也有 cron，但新版 macOS 對 cron 有安全限制，launchd 是官方推薦的做法。
+macOS's native scheduler is **launchd** (not cron). macOS does have cron, but recent versions impose security restrictions on it, and launchd is the officially recommended approach.
 
-建立一個 plist 設定檔 `~/Library/LaunchAgents/com.epi.sitrep.plist`：
+Create a plist config file `~/Library/LaunchAgents/com.epi.sitrep.plist`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1362,26 +1368,26 @@ macOS 的原生排程器叫 **launchd**（不是 cron）。雖然 macOS 也有 c
   "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <!-- Label：這個排程任務的唯一識別名稱 -->
+    <!-- Label: the unique identifier name for this scheduled task -->
     <key>Label</key>
     <string>com.epi.sitrep</string>
 
-    <!-- ProgramArguments：要執行的指令（等同在終端機打的指令）-->
-    <!-- 每個「空白分隔的部分」是一個 <string>，不能全部寫在同一個裡面 -->
+    <!-- ProgramArguments: the command to run (same as what you'd type in the terminal) -->
+    <!-- Each "space-separated part" is one <string>; you can't put them all in one -->
     <key>ProgramArguments</key>
     <array>
-        <!-- ⚠️ 必須用絕對路徑！用 which uv 查你的 uv 裝在哪裡 -->
-        <string>/Users/你的帳號/.local/bin/uv</string>
+        <!-- ⚠️ Must use absolute paths! Use `which uv` to find where your uv lives -->
+        <string>/Users/yourname/.local/bin/uv</string>
         <string>run</string>
         <string>python</string>
-        <string>/Users/你的帳號/projects/python4epi/notebooks/run_sitrep.py</string>
+        <string>/Users/yourname/projects/python4epi/notebooks/run_sitrep.py</string>
     </array>
 
-    <!-- WorkingDirectory：執行時的工作目錄（等同先 cd 到這裡再跑） -->
+    <!-- WorkingDirectory: the working directory at run time (like cd-ing here first) -->
     <key>WorkingDirectory</key>
-    <string>/Users/你的帳號/projects/python4epi</string>
+    <string>/Users/yourname/projects/python4epi</string>
 
-    <!-- StartCalendarInterval：排程時間（每天早上 9:00） -->
+    <!-- StartCalendarInterval: the schedule time (every day at 9:00 a.m.) -->
     <key>StartCalendarInterval</key>
     <dict>
         <key>Hour</key>
@@ -1390,121 +1396,121 @@ macOS 的原生排程器叫 **launchd**（不是 cron）。雖然 macOS 也有 c
         <integer>0</integer>
     </dict>
 
-    <!-- 日誌輸出路徑（stdout 和 stderr 分開存）-->
+    <!-- Log output paths (stdout and stderr stored separately) -->
     <key>StandardOutPath</key>
-    <string>/Users/你的帳號/projects/python4epi/output/launchd_stdout.log</string>
+    <string>/Users/yourname/projects/python4epi/output/launchd_stdout.log</string>
     <key>StandardErrorPath</key>
-    <string>/Users/你的帳號/projects/python4epi/output/launchd_stderr.log</string>
+    <string>/Users/yourname/projects/python4epi/output/launchd_stderr.log</string>
 </dict>
 </plist>
 ```
 
-設定完成後，執行以下三步：
+Once set up, run these three steps:
 
 ```bash
-# 1. 把 plist 複製到 LaunchAgents 目錄（如果你直接在那裡建檔就跳過這步）
+# 1. Copy the plist into the LaunchAgents directory (skip if you created it there directly)
 cp com.epi.sitrep.plist ~/Library/LaunchAgents/
 
-# 2. 載入排程（從下一個 09:00 開始自動執行）
+# 2. Load the schedule (it will run automatically starting from the next 09:00)
 launchctl load ~/Library/LaunchAgents/com.epi.sitrep.plist
 
-# 3. 確認有載入成功（應該會看到 com.epi.sitrep）
+# 3. Confirm it loaded successfully (you should see com.epi.sitrep)
 launchctl list | grep epi
 ```
 
-如果要移除排程：
+To remove the schedule:
 
 ```bash
 launchctl unload ~/Library/LaunchAgents/com.epi.sitrep.plist
 ```
 
-### 9c: Linux：cron
+### 9c: Linux: cron
 
-Linux 最常用的排程工具是 **cron**。用 `crontab -e` 打開編輯器，加入一行：
+The most common scheduling tool on Linux is **cron**. Open the editor with `crontab -e` and add a line:
 
 ```bash
-# 打開 cron 排程編輯器
+# Open the cron schedule editor
 crontab -e
 
-# 加入以下這一行（每天早上 9 點執行）
-0 9 * * * cd /home/你的帳號/projects/python4epi && /home/你的帳號/.local/bin/uv run python notebooks/run_sitrep.py >> output/sitrep_cron.log 2>&1
+# Add the following line (runs every day at 9 a.m.)
+0 9 * * * cd /home/yourname/projects/python4epi && /home/yourname/.local/bin/uv run python notebooks/run_sitrep.py >> output/sitrep_cron.log 2>&1
 ```
 
-五個欄位的意思：
+What the five fields mean:
 
 ```
 0 9 * * *
 │ │ │ │ │
-│ │ │ │ └── 星期幾（* = 每天，0=週日，1=週一 ...）
-│ │ │ └──── 月份（* = 每月）
-│ │ └────── 日期（* = 每天）
-│ └──────── 小時（9 = 早上 9 點，24 小時制）
-└────────── 分鐘（0 = 整點）
+│ │ │ │ └── day of week (* = every day, 0=Sunday, 1=Monday ...)
+│ │ │ └──── month (* = every month)
+│ │ └────── day of month (* = every day)
+│ └──────── hour (9 = 9 a.m., 24-hour clock)
+└────────── minute (0 = on the hour)
 ```
 
 ```{warning}
-**cron 的 PATH 陷阱：** cron 執行時的環境變數跟你在終端機打指令時不同。`uv` 可能不在 cron 的 PATH 裡，導致 `command not found`。
+**The cron PATH trap:** cron's environment variables differ from those in your terminal. `uv` may not be on cron's PATH, causing `command not found`.
 
-**解法一**：用 `uv` 的絕對路徑（先執行 `which uv` 查出來，例如 `/home/你的帳號/.local/bin/uv`）。
+**Fix 1**: use `uv`'s absolute path (find it first with `which uv`, e.g. `/home/yourname/.local/bin/uv`).
 
-**解法二**：在 crontab 最上方加入 PATH 設定：
+**Fix 2**: add a PATH setting at the top of the crontab:
 ```bash
-# 在 crontab -e 的最上方加入這行
-PATH=/home/你的帳號/.local/bin:/usr/local/bin:/usr/bin:/bin
+# Add this line at the very top of crontab -e
+PATH=/home/yourname/.local/bin:/usr/local/bin:/usr/bin:/bin
 ```
 ```
 
-### 9d: Windows 11：工作排程器
+### 9d: Windows 11: Task Scheduler
 
-Windows 有內建的「工作排程器」（Task Scheduler），可以用 GUI 或命令列設定。
+Windows has a built-in "Task Scheduler" that you can configure via the GUI or the command line.
 
-**GUI 方式（4 步）：**
+**GUI method (4 steps):**
 
-1. 按 `Win` 鍵搜尋「工作排程器」或「Task Scheduler」，打開它
-2. 右側點「**建立基本工作**」→ 名稱填 `SitRep 日報更新`
-3. 觸發程序：選「**每天**」→ 時間設 `09:00:00`
-4. 動作：選「**啟動程式**」→ 填入以下內容：
-   - 程式或指令碼：`cmd`
-   - 新增引數：`/c cd /d C:\Users\你的帳號\projects\python4epi && uv run python notebooks\run_sitrep.py`
+1. Press `Win` and search for "Task Scheduler", then open it
+2. On the right, click "**Create Basic Task**" → name it `SitRep daily update`
+3. Trigger: choose "**Daily**" → set the time to `09:00:00`
+4. Action: choose "**Start a program**" → fill in the following:
+   - Program/script: `cmd`
+   - Add arguments: `/c cd /d C:\Users\yourname\projects\python4epi && uv run python notebooks\run_sitrep.py`
 
-**命令列方式（一行搞定）：**
+**Command-line method (one line):**
 
 ```powershell
-schtasks /create /tn "SitRep_Daily" /tr "cmd /c cd /d C:\Users\你的帳號\projects\python4epi && uv run python notebooks\run_sitrep.py" /sc daily /st 09:00
+schtasks /create /tn "SitRep_Daily" /tr "cmd /c cd /d C:\Users\yourname\projects\python4epi && uv run python notebooks\run_sitrep.py" /sc daily /st 09:00
 ```
 
-各旗標的意思：
+What each flag means:
 
-| 旗標 | 說明 |
+| Flag | Description |
 |------|------|
-| `/create` | 建立新的排程任務 |
-| `/tn "SitRep_Daily"` | 任務名稱（Task Name） |
-| `/tr "..."` | 要執行的指令（Task Run） |
-| `/sc daily` | 排程頻率（Schedule）：每天 |
-| `/st 09:00` | 開始時間（Start Time）：早上 9 點 |
+| `/create` | Create a new scheduled task |
+| `/tn "SitRep_Daily"` | Task Name |
+| `/tr "..."` | The command to run (Task Run) |
+| `/sc daily` | Schedule frequency: daily |
+| `/st 09:00` | Start Time: 9 a.m. |
 
-如果要刪除排程：
+To delete the schedule:
 
 ```powershell
 schtasks /delete /tn "SitRep_Daily" /f
 ```
 
-### 排程常見問題
+### Common scheduling problems
 
-| 問題 | 原因 | 解法 |
+| Problem | Cause | Fix |
 |------|------|------|
-| `command not found: uv` | 排程環境的 PATH 跟終端機不同 | 用 `which uv`（Mac/Linux）或 `where uv`（Windows）找到絕對路徑 |
-| 找不到 CSV 檔案 | 工作目錄不是專案根目錄 | 腳本內用 `Path(__file__).resolve().parent` 算絕對路徑 |
-| 跑完但沒看到輸出 | 沒有 redirect stdout/stderr | cron: `>> log 2>&1`；launchd: 設定 `StandardOutPath` |
-| macOS 權限被擋 | 安全性限制 | 系統設定 → 隱私權與安全性 → 給「終端機」**完整磁碟取用權限** |
-| Windows 排程沒執行 | 電腦休眠了 | 工作排程器 → 條件 → 取消勾選「僅在電腦使用 AC 電源時」 |
+| `command not found: uv` | The scheduler's PATH differs from the terminal's | Use `which uv` (Mac/Linux) or `where uv` (Windows) to find the absolute path |
+| Can't find the CSV file | The working directory isn't the project root | Compute an absolute path in the script with `Path(__file__).resolve().parent` |
+| Runs but no output appears | stdout/stderr not redirected | cron: `>> log 2>&1`; launchd: set `StandardOutPath` |
+| macOS blocks permissions | Security restriction | System Settings → Privacy & Security → grant "Terminal" **Full Disk Access** |
+| Windows task doesn't run | The computer was asleep | Task Scheduler → Conditions → uncheck "Start the task only if the computer is on AC power" |
 
 ```{tip}
-**進階組合技：** 排程腳本寫好後，可以搭配 Ch13（可重現研究）的 Git 版本控制——每次排程執行後自動 commit 輸出結果，這樣不只有最新報告，還有完整的歷史紀錄可以回溯。
+**Advanced combo:** once the scheduling script is ready, pair it with the Git version control from Ch13 (Reproducible Research) — auto-commit the output after each scheduled run, so you don't just have the latest report but a full history you can go back through.
 ```
 
-## 練習本
+## Practice notebooks
 
-- 課堂筆記：{ref}`04_outbreak_workflow.ipynb`
-- 作業版：[`04_outbreak_workflow_exercise.ipynb`](exercises/04_outbreak_workflow_exercise.ipynb)
-- 解答版（教師版）：[`04_outbreak_workflow_solution.ipynb`](solutions/04_outbreak_workflow_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/04_outbreak_workflow_solution.ipynb>)
+- Class notes: {ref}`04_outbreak_workflow.ipynb`
+- Exercise version: [`04_outbreak_workflow_exercise.ipynb`](exercises/04_outbreak_workflow_exercise.ipynb)
+- Solution version (instructor): [`04_outbreak_workflow_solution.ipynb`](solutions/04_outbreak_workflow_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/04_outbreak_workflow_solution.ipynb>)

@@ -1,232 +1,232 @@
-# 15 附錄
+# 15 Appendix
 
-## A. 流行病學術語字典（中英對照）
+## A. Epidemiology Glossary (English–Chinese)
 
-### 一般流行病學
+### General epidemiology
 
-| 英文 | 台灣譯名 | 說明 |
+| English | Taiwan translation | Description |
 |------|---------|------|
-| Attack rate (AR) | 侵襲率 | 特定期間內新發病例數 / 暴露人口 |
-| Case fatality rate (CFR) | 致死率 | 死亡數 / 感染者數 |
-| Risk ratio (RR) | 風險比 | 暴露組侵襲率 / 非暴露組侵襲率 |
-| Odds ratio (OR) | 勝算比 | 暴露組感染勝算 / 非暴露組感染勝算 |
-| Confidence interval (CI) | 信賴區間 | 參數估計的不確定性範圍 |
-| Incidence rate | 發生率 | 單位人時的新發病例數 |
-| Prevalence | 盛行率 | 特定時間點的現有病例比例 |
-| Epidemic curve | 流行曲線 | 依發病日繪製的病例時間分布圖 |
-| Outbreak / cluster | 群聚 | 特定時間地點的異常病例聚集 |
-| Surveillance | 監測 | 系統性收集與分析健康資料 |
-| Case notification | 通報 | 向衛生主管機關報告病例 |
-| Epidemiological investigation | 疫調 / 流行病學調查 | 針對群聚事件的系統性調查 |
-| Basic reproduction number (R₀) | 基本再生數 | 完全易感人群中一個病例平均傳染人數 |
-| Sensitivity | 敏感度 | 真正陽性率（檢驗指標） |
-| Specificity | 特異度 | 真正陰性率（檢驗指標） |
-| Exposure | 暴露 | 接觸危險因子 |
-| Confounding | 干擾作用 | 第三變項同時影響暴露與結果 |
-| Stratified analysis | 分層分析 | 按潛在干擾因子分組後分別分析 |
-| Attributable risk (AR) | 歸因風險 | 暴露組風險 − 非暴露組風險 |
-| Population attributable risk (PAR) | 族群歸因風險 | 族群中可歸因於暴露的風險比例 |
+| Attack rate (AR) | 侵襲率 | New cases during a defined period / exposed population |
+| Case fatality rate (CFR) | 致死率 | Deaths / infected persons |
+| Risk ratio (RR) | 風險比 | Attack rate in the exposed / attack rate in the unexposed |
+| Odds ratio (OR) | 勝算比 | Odds of infection in the exposed / odds of infection in the unexposed |
+| Confidence interval (CI) | 信賴區間 | Range of uncertainty around a parameter estimate |
+| Incidence rate | 發生率 | New cases per unit of person-time |
+| Prevalence | 盛行率 | Proportion of existing cases at a point in time |
+| Epidemic curve | 流行曲線 | Time distribution of cases plotted by date of onset |
+| Outbreak / cluster | 群聚 | An unusual aggregation of cases at a specific time and place |
+| Surveillance | 監測 | Systematic collection and analysis of health data |
+| Case notification | 通報 | Reporting a case to the health authorities |
+| Epidemiological investigation | 疫調 / 流行病學調查 | Systematic investigation of a cluster event |
+| Basic reproduction number (R₀) | 基本再生數 | Average number of people one case infects in a fully susceptible population |
+| Sensitivity | 敏感度 | True positive rate (test metric) |
+| Specificity | 特異度 | True negative rate (test metric) |
+| Exposure | 暴露 | Contact with a risk factor |
+| Confounding | 干擾作用 | A third variable that affects both the exposure and the outcome |
+| Stratified analysis | 分層分析 | Analyzing separately within groups defined by a potential confounder |
+| Attributable risk (AR) | 歸因風險 | Risk in the exposed − risk in the unexposed |
+| Population attributable risk (PAR) | 族群歸因風險 | The proportion of population risk attributable to the exposure |
 
-### 退伍軍人症相關
+### Legionnaires' disease
 
-| 英文 | 中文 | 說明 |
+| English | Chinese | Description |
 |------|------|------|
-| Legionnaires' disease | 退伍軍人症 | 退伍軍人桿菌引起的嚴重肺炎 |
-| *Legionella pneumophila* | 退伍軍人桿菌 / 嗜肺性退伍軍人桿菌 | 病原體 |
-| Pontiac fever | 乓乒克熱 | 退伍軍人桿菌引起的較輕微自限性疾病 |
-| Cooling tower | 冷卻水塔 | 常見的退伍軍人桿菌滋生處 |
-| Biofilm | 生物膜 | 微生物附著在管壁形成的薄膜 |
-| Water system disinfection | 水系統消毒 | 加熱（>70°C）或加氯消毒 |
-| Urinary antigen test | 尿液抗原檢測 | 退伍軍人症快速診斷工具 |
+| Legionnaires' disease | 退伍軍人症 | Severe pneumonia caused by *Legionella* bacteria |
+| *Legionella pneumophila* | 退伍軍人桿菌 / 嗜肺性退伍軍人桿菌 | The pathogen |
+| Pontiac fever | 龐提亞克熱 | A milder, self-limiting illness caused by *Legionella* |
+| Cooling tower | 冷卻水塔 | A common site where *Legionella* proliferates |
+| Biofilm | 生物膜 | A film of microorganisms attached to pipe walls |
+| Water system disinfection | 水系統消毒 | Heating (>70°C) or chlorination |
+| Urinary antigen test | 尿液抗原檢測 | A rapid diagnostic tool for Legionnaires' disease |
 
-### 存活分析
+### Survival analysis
 
-| 英文 | 中文 | 說明 |
+| English | Chinese | Description |
 |------|------|------|
-| Kaplan-Meier estimator | Kaplan-Meier 估計式 | 非參數存活函數估計法 |
-| Log-rank test | Log-rank 檢定 | 比較兩組存活曲線的統計檢定 |
-| Cox proportional hazards | Cox 等比例風險模型 | 半參數存活迴歸模型 |
-| Hazard ratio (HR) | 風險比（存活分析） | Cox 模型中暴露的效應量；與 RR 同譯，語境為存活分析時使用 |
-| Censoring | 設限 / 截斷 | 觀察結束時事件尚未發生 |
-| Time-to-event | 事件時間 | 從起始到事件發生的時間 |
+| Kaplan-Meier estimator | Kaplan-Meier 估計式 | Non-parametric method for estimating the survival function |
+| Log-rank test | Log-rank 檢定 | Statistical test comparing survival curves between two groups |
+| Cox proportional hazards | Cox 等比例風險模型 | Semi-parametric survival regression model |
+| Hazard ratio (HR) | 風險比（存活分析） | The effect size of an exposure in a Cox model; shares the Chinese term with RR, used in the survival-analysis context |
+| Censoring | 設限 / 截斷 | The event has not yet occurred when observation ends |
+| Time-to-event | 事件時間 | Time from origin to the occurrence of the event |
 
 ---
 
-## B. 松柏護理之家資料集欄位對照表
+## B. Pine & Cypress Nursing Home Dataset Column Dictionary
 
-檔案：`data/synthetic/legionella_outbreak.csv`（280 列 × 32 欄）
+File: `data/synthetic/legionella_outbreak.csv` (280 rows × 32 columns)
 
-### 人口學與住房
+### Demographics and housing
 
-| 欄位 | 型態 | 值域 | 說明 |
+| Column | Type | Range | Description |
 |------|------|------|------|
-| `case_id` | str | R001–R280 | 住民編號 |
-| `age` | int | 60–98 | 年齡 |
-| `sex` | str | M / F | 性別 |
-| `floor` | int | 1 / 2 / 3 | 樓層 |
-| `wing` | str | A / B | 翼區 |
-| `room` | str | 1A-01 等 | 房號 |
-| `bed` | int | 1 / 2 | 床號 |
-| `facility_admission_date` | date | — | 入住日期 |
+| `case_id` | str | R001–R280 | Resident ID |
+| `age` | int | 60–98 | Age |
+| `sex` | str | M / F | Sex |
+| `floor` | int | 1 / 2 / 3 | Floor |
+| `wing` | str | A / B | Wing |
+| `room` | str | e.g. 1A-01 | Room number |
+| `bed` | int | 1 / 2 | Bed number |
+| `facility_admission_date` | date | — | Date admitted to the facility |
 
-### 共病與健康狀態
+### Comorbidities and health status
 
-| 欄位 | 型態 | 值域 | 說明 |
+| Column | Type | Range | Description |
 |------|------|------|------|
-| `comorbidity_chf` | int | 0 / 1 | 心衰竭 |
-| `comorbidity_dm` | int | 0 / 1 | 糖尿病 |
-| `comorbidity_cancer` | int | 0 / 1 | 癌症 |
-| `comorbidity_copd` | int | 0 / 1 | 慢性阻塞性肺病 |
-| `immunosuppressed` | int | 0 / 1 | 免疫低下 |
-| `smoking_history` | str | never / former / current | 吸菸史 |
-| `functional_status` | str | independent / assisted / bedridden | 日常活動功能 |
+| `comorbidity_chf` | int | 0 / 1 | Congestive heart failure |
+| `comorbidity_dm` | int | 0 / 1 | Diabetes mellitus |
+| `comorbidity_cancer` | int | 0 / 1 | Cancer |
+| `comorbidity_copd` | int | 0 / 1 | Chronic obstructive pulmonary disease |
+| `immunosuppressed` | int | 0 / 1 | Immunosuppressed |
+| `smoking_history` | str | never / former / current | Smoking history |
+| `functional_status` | str | independent / assisted / bedridden | Ability to perform daily activities |
 
-### 暴露因子
+### Exposure factors
 
-| 欄位 | 型態 | 值域 | 說明 |
+| Column | Type | Range | Description |
 |------|------|------|------|
-| `shower_use` | int | 0 / 1 | 是否使用淋浴 |
-| `hydrotherapy_use` | int | 0 / 1 | 是否使用水療池 |
+| `shower_use` | int | 0 / 1 | Whether the resident used the shower |
+| `hydrotherapy_use` | int | 0 / 1 | Whether the resident used the hydrotherapy pool |
 
-### 臨床與結果
+### Clinical and outcomes
 
-| 欄位 | 型態 | 值域 | 說明 |
+| Column | Type | Range | Description |
 |------|------|------|------|
-| `clinical_severity` | str | not_ill / asymptomatic / mild / moderate / severe | 臨床嚴重度 |
-| `symptom_onset_date` | date | — | 發病日期（未感染者為空） |
-| `fever` | int | 0 / 1 | 發燒 |
-| `cough` | int | 0 / 1 | 咳嗽 |
-| `dyspnea` | int | 0 / 1 | 呼吸困難 |
-| `confusion` | int | 0 / 1 | 意識混亂 |
-| `diarrhea` | int | 0 / 1 | 腹瀉 |
-| `lab_confirmed` | int | 0 / 1 | 實驗室確認 |
-| `case_classification` | str | not_a_case / probable / confirmed | 個案分類 |
-| `hospitalized` | int | 0 / 1 | 是否住院 |
-| `hospitalization_date` | date | — | 住院日期 |
-| `icu_admission` | int | 0 / 1 | 是否入 ICU |
-| `outcome` | str | survived / dead | 結果 |
-| `death_date` | date | — | 死亡日期（存活者為空） |
-| `notification_date` | date | — | 通報日期 |
+| `clinical_severity` | str | not_ill / asymptomatic / mild / moderate / severe | Clinical severity |
+| `symptom_onset_date` | date | — | Symptom onset date (blank for those not infected) |
+| `fever` | int | 0 / 1 | Fever |
+| `cough` | int | 0 / 1 | Cough |
+| `dyspnea` | int | 0 / 1 | Shortness of breath |
+| `confusion` | int | 0 / 1 | Confusion |
+| `diarrhea` | int | 0 / 1 | Diarrhea |
+| `lab_confirmed` | int | 0 / 1 | Laboratory-confirmed |
+| `case_classification` | str | not_a_case / probable / confirmed | Case classification |
+| `hospitalized` | int | 0 / 1 | Whether hospitalized |
+| `hospitalization_date` | date | — | Hospitalization date |
+| `icu_admission` | int | 0 / 1 | Whether admitted to the ICU |
+| `outcome` | str | survived / dead | Outcome |
+| `death_date` | date | — | Date of death (blank for survivors) |
+| `notification_date` | date | — | Notification date |
 
 ---
 
-## C. 套件速查
+## C. Package Quick Reference
 
-### 核心套件
+### Core packages
 
-| 套件 | 用途 | 章節 |
+| Package | Purpose | Chapters |
 |------|------|------|
-| `pandas` | 資料處理 | 全書 |
-| `numpy` | 數值計算 | 全書 |
-| `matplotlib` | 基礎繪圖 | Ch02+ |
-| `seaborn` | 統計圖表 | Ch03+ |
-| `scipy.stats` | 卡方檢定、統計檢定 | Ch03, Ch05 |
-| `statsmodels` | 邏輯斯迴歸、OLS | Ch06, Ch12 |
-| `plotly` | 互動式圖表、choropleth | Ch08 |
+| `pandas` | Data manipulation | Whole book |
+| `numpy` | Numerical computing | Whole book |
+| `matplotlib` | Basic plotting | Ch02+ |
+| `seaborn` | Statistical charts | Ch03+ |
+| `scipy.stats` | Chi-square and other statistical tests | Ch03, Ch05 |
+| `statsmodels` | Logistic regression, OLS | Ch06, Ch12 |
+| `plotly` | Interactive charts, choropleths | Ch08 |
 
-### 進階套件
+### Advanced packages
 
-| 套件 | 用途 | 章節 |
+| Package | Purpose | Chapters |
 |------|------|------|
-| `lifelines` | Kaplan-Meier、Cox PH 存活分析 | Ch09 |
-| `scikit-learn` | 機器學習 Pipeline、RF、交叉驗證 | Ch10 |
-| `torch` | PyTorch 深度學習 | Ch11 |
+| `lifelines` | Kaplan-Meier, Cox PH survival analysis | Ch09 |
+| `scikit-learn` | ML pipelines, RF, cross-validation | Ch10 |
+| `torch` | PyTorch deep learning | Ch11 |
 
-### 常用指令
+### Common commands
 
 ```bash
-# 環境管理
-uv sync                         # 安裝所有相依套件
-uv run pytest                   # 執行測試
-uv run jupyter lab              # 啟動 Jupyter Lab
+# Environment management
+uv sync                         # Install all dependencies
+uv run pytest                   # Run tests
+uv run jupyter lab              # Start Jupyter Lab
 
-# 書籍建置
-uv run jupyter-book build book/ # 建置 Jupyter Book
+# Building the book
+uv run jupyter-book build book/ # Build the Jupyter Book
 
-# 版本控制
-git status                      # 查看變更
-git add <file>                  # 加入暫存
-git commit -m "message"         # 提交
+# Version control
+git status                      # View changes
+git add <file>                  # Stage changes
+git commit -m "message"         # Commit
 ```
 
 ---
 
-## D. 常見錯誤排查
+## D. Troubleshooting Common Errors
 
-| 問題 | 可能原因 | 解法 |
+| Problem | Likely cause | Fix |
 |------|---------|------|
-| `ModuleNotFoundError` | 套件未安裝 | `uv sync` |
-| `FileNotFoundError: legionella_outbreak.csv` | 工作目錄不對 | 確認在專案根目錄執行 |
-| `KeyError: 'column_name'` | 欄位名稱打錯 | `df.columns` 查看正確名稱 |
-| Notebook kernel 重啟後變數消失 | Kernel 狀態重置 | 從頭重新執行所有 cell |
-| `SettingWithCopyWarning` | 在 slice 上賦值 | 使用 `.copy()` 或 `.loc` |
-| 日期欄位無法計算 | 未轉換為 datetime | `pd.to_datetime(df["col"])` |
-| 中文字型顯示為方框 | matplotlib 缺中文字型 | 見下方 [E. 中文圖表顯示排錯](#e-中文圖表顯示排錯matplotlib--plotly) |
-| Plotly 圖表在 Jupyter Book 中空白 | 渲染器設定不對 | 見下方 [E. 中文圖表顯示排錯](#e-中文圖表顯示排錯matplotlib--plotly) |
+| `ModuleNotFoundError` | Package not installed | `uv sync` |
+| `FileNotFoundError: legionella_outbreak.csv` | Wrong working directory | Make sure you run from the project root |
+| `KeyError: 'column_name'` | Misspelled column name | Check the correct names with `df.columns` |
+| Variables disappear after the notebook kernel restarts | Kernel state was reset | Re-run all cells from the top |
+| `SettingWithCopyWarning` | Assigning to a slice | Use `.copy()` or `.loc` |
+| Date columns can't be computed | Not converted to datetime | `pd.to_datetime(df["col"])` |
+| Chinese characters show as boxes | matplotlib is missing a CJK font | See [E. Chinese chart display troubleshooting](#e-chinese-chart-display-troubleshooting-matplotlib--plotly) below |
+| Plotly charts are blank in Jupyter Book | Wrong renderer setting | See [E. Chinese chart display troubleshooting](#e-chinese-chart-display-troubleshooting-matplotlib--plotly) below |
 
 ---
 
-## E. 中文圖表顯示排錯（matplotlib & Plotly）
+## E. Chinese Chart Display Troubleshooting (matplotlib & Plotly)
 
-在使用繁體中文標籤時，matplotlib 和 Plotly 各有不同的陷阱。這一節記錄本教材在 CI/CD 及本機環境實際踩過的坑，以及解法。
+When using Traditional Chinese labels, matplotlib and Plotly each have their own traps. This section records the pitfalls this book actually ran into across CI/CD and local environments, along with the fixes.
 
-### E-1. Matplotlib：中文顯示為方框 □□□
+### E-1. Matplotlib: Chinese shows as boxes □□□
 
-#### 症狀
+#### Symptom
 
-圖表的中文標題、軸標籤全部顯示為空白方框，並伴隨大量 UserWarning：
+The chart's Chinese titles and axis labels all show as empty boxes, accompanied by a flood of UserWarnings:
 
 ```
 UserWarning: Glyph 30332 (\N{CJK UNIFIED IDEOGRAPH-767C}) missing from font(s) DejaVu Sans.
 ```
 
-這表示 matplotlib 找不到任何能顯示 CJK 字元的字型，退回到預設的 DejaVu Sans（不含中文字符）。
+This means matplotlib can't find any font capable of displaying CJK characters, and falls back to the default DejaVu Sans (which has no Chinese glyphs).
 
-#### 根本原因：`.ttc` 字型集合的 face 0 陷阱
+#### Root cause: the `.ttc` font collection's face-0 trap
 
-這是一個**非常容易被忽略的陷阱**。在 Linux CI 環境（如 GitHub Actions）安裝 `fonts-noto-cjk` 後，系統會取得 `NotoSansCJK-Regular.ttc`——這是一個 **TrueType Collection**（`.ttc`），單一檔案裡面包含多個字型變體：
+This is a **very easy trap to overlook**. On a Linux CI environment (such as GitHub Actions), after installing `fonts-noto-cjk` the system gets `NotoSansCJK-Regular.ttc` — this is a **TrueType Collection** (`.ttc`), a single file containing multiple font variants:
 
-| Face 索引 | 字型名稱 | 語言 |
+| Face index | Font name | Language |
 |-----------|---------|------|
-| 0 | Noto Sans CJK JP | 日文（預設） |
-| 1 | Noto Sans CJK KR | 韓文 |
-| 2 | Noto Sans CJK SC | 簡體中文 |
-| 3 | Noto Sans CJK TC | 繁體中文 |
-| 4 | Noto Sans CJK HK | 香港繁體 |
+| 0 | Noto Sans CJK JP | Japanese (default) |
+| 1 | Noto Sans CJK KR | Korean |
+| 2 | Noto Sans CJK SC | Simplified Chinese |
+| 3 | Noto Sans CJK TC | Traditional Chinese |
+| 4 | Noto Sans CJK HK | Hong Kong Traditional |
 
-**問題在於：** matplotlib 的 `fontManager.addfont()` 在處理 `.ttc` 檔案時，**只會註冊 face 0**（即日文變體 "Noto Sans CJK JP"）。如果你的 `font.sans-serif` 候選清單只寫了 `"Noto Sans CJK TC"`，matplotlib 永遠找不到它——因為 TC 根本沒被註冊。
+**The problem:** when matplotlib's `fontManager.addfont()` processes a `.ttc` file, it **only registers face 0** (the Japanese variant, "Noto Sans CJK JP"). If your `font.sans-serif` candidate list only contains `"Noto Sans CJK TC"`, matplotlib will never find it — because TC was never registered.
 
 ```
-你寫的候選清單             matplotlib 認識的字型
+The list you wrote          Fonts matplotlib knows about
 ─────────────────         ──────────────────
-"Noto Sans CJK TC" ──✗    "Noto Sans CJK JP" ← 只有 face 0 被註冊
+"Noto Sans CJK TC" ──✗    "Noto Sans CJK JP" ← only face 0 is registered
 "Noto Sans TC"     ──✗
-"WenQuanYi Zen Hei"──✗    （CI 沒裝這個套件）
+"WenQuanYi Zen Hei"──✗    (CI didn't install this package)
 "SimHei"           ──✗
                    ↓
-              全部 miss → 退回 DejaVu Sans → □□□
+              all miss → fall back to DejaVu Sans → □□□
 ```
 
-#### 解法
+#### Fixes
 
-**方法 1（最簡單）：把所有 Noto Sans CJK 變體都列入候選**
+**Method 1 (simplest): list every Noto Sans CJK variant as a candidate**
 
-不管 face 0 是哪個語言，只要把 JP、KR、SC、TC、HK 全部列進去，一定能中一個：
+No matter which language face 0 is, if you list JP, KR, SC, TC, and HK all together, one of them is bound to match:
 
 ```python
 import matplotlib.pyplot as plt
 
 plt.rcParams["font.sans-serif"] = [
-    "Noto Sans CJK TC",    # 繁體中文（理想選擇）
-    "Noto Sans CJK SC",    # 簡體中文（CJK 字符通用）
-    "Noto Sans CJK JP",    # 日文（face 0，一定被註冊）
+    "Noto Sans CJK TC",    # Traditional Chinese (ideal choice)
+    "Noto Sans CJK SC",    # Simplified Chinese (CJK characters are shared)
+    "Noto Sans CJK JP",    # Japanese (face 0, always registered)
     "Noto Sans TC",
-    "Microsoft JhengHei",  # Windows 微軟正黑體
-    "WenQuanYi Zen Hei",   # Linux 文泉驛
+    "Microsoft JhengHei",  # Windows Microsoft JhengHei
+    "WenQuanYi Zen Hei",   # Linux WenQuanYi
     "SimHei",
     "Arial Unicode MS",    # macOS
     "Heiti TC",            # macOS
-    "DejaVu Sans",         # 最終退路（無中文）
+    "DejaVu Sans",         # last resort (no Chinese)
 ]
 plt.rcParams["axes.unicode_minus"] = False
 plt.style.use("ggplot")
@@ -234,19 +234,19 @@ plt.rcParams["figure.dpi"] = 150
 ```
 
 ```{note}
-所有 Noto Sans CJK 變體都涵蓋完整的 CJK Unified Ideographs 字集，差別只在少數字符的字形偏好（例如「直」在日文字形和繁中字形略有不同）。用於圖表標籤完全夠用。
+All Noto Sans CJK variants cover the complete set of CJK Unified Ideographs; they differ only in the glyph-shape preferences of a few characters (for example, "直" looks slightly different in the Japanese and Traditional Chinese glyph forms). For chart labels this is more than sufficient.
 ```
 
-**方法 2（更穩健）：動態偵測已註冊的字型名稱**
+**Method 2 (more robust): dynamically detect the registered font names**
 
-在 `addfont()` 之後，掃描 `fontManager.ttflist` 找出實際註冊了哪些 CJK 字型，並優先使用：
+After `addfont()`, scan `fontManager.ttflist` to find which CJK fonts were actually registered, and prefer those:
 
 ```python
 import pathlib
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
-# 1) 掃描並註冊系統 CJK 字型
+# 1) Scan for and register system CJK fonts
 for font_dir in map(pathlib.Path, ["/usr/share/fonts", "/usr/local/share/fonts"]):
     if font_dir.exists():
         for fp in sorted(font_dir.rglob("*")):
@@ -258,14 +258,14 @@ for font_dir in map(pathlib.Path, ["/usr/share/fonts", "/usr/local/share/fonts"]
                 except Exception:
                     pass
 
-# 2) 動態偵測實際註冊的 CJK 字型名稱
+# 2) Dynamically detect the names of the CJK fonts actually registered
 discovered = []
 for entry in fm.fontManager.ttflist:
     if any(kw in entry.name.lower() for kw in ("cjk", "wenquanyi", "wqy")):
         if entry.name not in discovered:
             discovered.append(entry.name)
 
-# 3) 已偵測到的字型優先，再接靜態候選清單
+# 3) Prefer the detected fonts, then append the static candidate list
 preferred = [
     "Noto Sans CJK TC", "Noto Sans CJK SC", "Noto Sans CJK JP",
     "Noto Sans TC", "Microsoft JhengHei", "WenQuanYi Zen Hei",
@@ -280,11 +280,11 @@ plt.rcParams["font.sans-serif"] = candidates + ["DejaVu Sans"]
 plt.rcParams["axes.unicode_minus"] = False
 ```
 
-本教材的 `epi_learning.viz.configure_chinese_font()` 即採用方法 2。
+This book's `epi_learning.viz.configure_chinese_font()` uses Method 2.
 
-**方法 3：CI 安裝字型 + 清除快取**
+**Method 3: install fonts in CI + clear the cache**
 
-在 GitHub Actions 等 CI 環境，需要在安裝字型後清除 matplotlib 的字型快取：
+In CI environments such as GitHub Actions, you need to clear matplotlib's font cache after installing the fonts:
 
 ```yaml
 # .github/workflows/ci.yml
@@ -292,162 +292,162 @@ plt.rcParams["axes.unicode_minus"] = False
   run: |
     sudo apt-get update
     sudo apt-get install -y fonts-noto-cjk
-    rm -rf ~/.cache/matplotlib    # 清除快取，強制重建字型索引
+    rm -rf ~/.cache/matplotlib    # Clear the cache to force rebuilding the font index
 ```
 
 ```{warning}
-即使安裝了 `fonts-noto-cjk` 並清除快取，仍然必須搭配方法 1 或方法 2 才有效——因為 `.ttc` 的 face 0 陷阱依然存在。
+Even after installing `fonts-noto-cjk` and clearing the cache, you still have to combine it with Method 1 or Method 2 for it to work — because the `.ttc` face-0 trap is still there.
 ```
 
-#### 各平台預設 CJK 字型
+#### Default CJK fonts by platform
 
-| 作業系統 | 安裝方式 | 可用字型名稱 |
+| Operating system | Installation | Available font name |
 |---------|---------|-------------|
-| Ubuntu / Debian | `sudo apt install fonts-noto-cjk` | Noto Sans CJK JP（face 0） |
+| Ubuntu / Debian | `sudo apt install fonts-noto-cjk` | Noto Sans CJK JP (face 0) |
 | Ubuntu / Debian | `sudo apt install fonts-wqy-zenhei` | WenQuanYi Zen Hei |
-| macOS | 內建 | Heiti TC, Arial Unicode MS |
-| Windows | 內建 | Microsoft JhengHei（微軟正黑體） |
-| Google Colab | 預裝 | Noto Sans CJK JP |
+| macOS | Built in | Heiti TC, Arial Unicode MS |
+| Windows | Built in | Microsoft JhengHei |
+| Google Colab | Preinstalled | Noto Sans CJK JP |
 
-### E-2. Plotly：Jupyter Book 建置時圖表空白
+### E-2. Plotly: charts are blank when Jupyter Book builds
 
-#### 症狀
+#### Symptom
 
-Plotly 互動圖在 Jupyter Lab 中正常顯示，但透過 `jupyter-book build` 產生的靜態 HTML 卻只有空白。
+An interactive Plotly chart renders fine in Jupyter Lab, but the static HTML produced by `jupyter-book build` is just blank.
 
-#### 根本原因
+#### Root cause
 
-Jupyter Book 使用無頭方式（headless）執行 notebook，Plotly 的預設渲染器（`plotly_mimetype`）在此環境下無法產出 HTML 輸出。
+Jupyter Book executes notebooks in headless mode, and Plotly's default renderer (`plotly_mimetype`) can't produce HTML output in this environment.
 
-#### 解法
+#### Fix
 
-在 notebook 中（或透過 `_config.yml` 的 `nb_execution_pre_code`）設定：
+Set the following in your notebook (or via `_config.yml`'s `nb_execution_pre_code`):
 
 ```python
 import plotly.io as pio
 pio.renderers.default = "notebook"
 ```
 
-`"notebook"` 渲染器會將圖表輸出為完整的 HTML + JS，可以嵌入靜態頁面。
+The `"notebook"` renderer outputs the chart as complete HTML + JS, which can be embedded in a static page.
 
 ```{tip}
-本教材已在 `book/_config.yml` 的 `nb_execution_pre_code` 中全域設定 `pio.renderers.default = "notebook"`，所有 notebook 不需再個別設定。但如果你在自己的專案中遇到同樣問題，只要在建置腳本中加上面那兩行即可。
+This book already sets `pio.renderers.default = "notebook"` globally in `book/_config.yml`'s `nb_execution_pre_code`, so no notebook needs to set it individually. But if you run into the same problem in your own project, just add those two lines to your build script.
 ```
 
-### E-3. 快速自檢清單
+### E-3. Quick self-check list
 
-當你的 Python 圖表出現中文問題時，依序檢查：
+When your Python charts have Chinese-display problems, check in this order:
 
-| # | 檢查項目 | 指令 / 方法 |
+| # | Check item | Command / method |
 |---|---------|-------------|
-| 1 | 系統是否有 CJK 字型？ | `fc-list :lang=zh`（Linux / macOS） |
-| 2 | matplotlib 認識哪些 CJK 字型？ | `[f.name for f in fm.fontManager.ttflist if "cjk" in f.name.lower()]` |
-| 3 | `font.sans-serif` 候選清單是否包含步驟 2 找到的名稱？ | `plt.rcParams["font.sans-serif"]` |
-| 4 | matplotlib 實際用哪個字型渲染？ | `fm.findfont(fm.FontProperties(family=["Noto Sans CJK JP"]))` |
-| 5 | Plotly 渲染器是否設為 `"notebook"`？ | `pio.renderers.default` |
+| 1 | Does the system have a CJK font? | `fc-list :lang=zh` (Linux / macOS) |
+| 2 | Which CJK fonts does matplotlib know about? | `[f.name for f in fm.fontManager.ttflist if "cjk" in f.name.lower()]` |
+| 3 | Does the `font.sans-serif` candidate list include the names found in step 2? | `plt.rcParams["font.sans-serif"]` |
+| 4 | Which font does matplotlib actually render with? | `fm.findfont(fm.FontProperties(family=["Noto Sans CJK JP"]))` |
+| 5 | Is the Plotly renderer set to `"notebook"`? | `pio.renderers.default` |
 
 ---
 
-## F. 傳染病期間概念對照
+## F. Infectious Disease Time Period Concepts
 
-疫情調查時常常需要決定「隔離多久」「檢疫幾天」「暴露窗口是何時」，這些決策都建立在正確區分以下四個期間概念之上。
+Outbreak investigations often require deciding "how long to isolate," "how many days to quarantine," and "when the exposure window was." All of these decisions rest on correctly distinguishing the following four time-period concepts.
 
 ```{figure} images/incubation_periods.svg
 :name: fig-incubation-periods
-:alt: 傳染病期間概念對照：潛伏期、潛藏期、可傳染期、世代間隔的時間軸比較
+:alt: Comparison of infectious disease time periods: a timeline comparing the incubation period, latent period, infectious period, and serial interval
 :width: 100%
 
-四個期間概念的時間軸對照。注意：**潛藏期短於潛伏期**時，代表感染者在出現症狀**之前**就已具有傳染性（無症狀傳播），此時以症狀為基礎的隔離措施就會有漏洞，需要預防性隔離。
+Timeline comparison of the four time-period concepts. Note: when the **latent period is shorter than the incubation period**, it means the infected person is already infectious **before** symptoms appear (asymptomatic transmission). In that case, symptom-based isolation measures have gaps and preemptive isolation is needed.
 ```
 
-| 術語 | 英文 | 定義 | 與疫調的關係 |
+| Term | English | Definition | Relevance to the investigation |
 |------|------|------|------------|
-| **潛伏期** | Incubation period | 從暴露到**出現症狀**的時間 | 決定暴露窗口往前推算多遠（traceback 期間） |
-| **潛藏期** | Latent period | 從暴露到**開始具傳染性**的時間 | 潛藏期 < 潛伏期 → 存在無症狀傳播風險 |
-| **可傳染期** | Infectious period | 感染者可傳播病原的持續時間 | 決定隔離需要多少天（trace-forward 期間） |
-| **世代間隔** | Serial / Generation interval | 從指標個案發病到續發個案發病的時間差 | 估算基本再生數 R₀；預測下一波發病高峰 |
+| **潛伏期** | Incubation period | Time from exposure to the **appearance of symptoms** | Determines how far back to trace the exposure window (the traceback period) |
+| **潛藏期** | Latent period | Time from exposure to **becoming infectious** | Latent period < incubation period → risk of asymptomatic transmission |
+| **可傳染期** | Infectious period | The duration for which an infected person can transmit the pathogen | Determines how many days of isolation are needed (the trace-forward period) |
+| **世代間隔** | Serial / Generation interval | The time difference between onset in an index case and onset in a secondary case | Used to estimate the basic reproduction number R₀; forecasts the next onset peak |
 
-> ⚠️ **關鍵區分**：**潛伏期**是臨床概念（何時出現症狀），**潛藏期**是傳播概念（何時開始傳染）。檢疫時長應根據**潛伏期**的最大值設定；而無症狀隔離政策的必要性，則取決於**潛藏期是否短於潛伏期**。
+> ⚠️ **Key distinction**: the **incubation period** is a clinical concept (when symptoms appear), whereas the **latent period** is a transmission concept (when infectiousness begins). Quarantine duration should be set based on the maximum of the **incubation period**; whether an asymptomatic isolation policy is necessary depends on **whether the latent period is shorter than the incubation period**.
 
-### 退伍軍人症（本教材主要案例）
+### Legionnaires' disease (this book's main case)
 
-| 指標 | 數值 |
+| Metric | Value |
 |------|------|
-| 潛伏期 | 2–10 天（通常 5–6 天） |
-| 可傳染期 | 極低（幾乎不人傳人）；主要傳播途徑為環境氣溶膠吸入 |
-| 世代間隔 | 不適用（散發型，傳染源為水系統而非病人） |
-| 檢疫意義 | 因不人傳人，接觸者不需強制檢疫；重點放在移除環境傳染源 |
+| Incubation period | 2–10 days (usually 5–6 days) |
+| Infectious period | Extremely low (essentially no person-to-person spread); the main route is inhalation of environmental aerosols |
+| Serial interval | Not applicable (sporadic; the source is the water system, not patients) |
+| Quarantine implication | Because there's no person-to-person spread, contacts don't need mandatory quarantine; the focus is on removing the environmental source |
 
 ---
 
-## G. 傳染鏈六要素與介入策略
+## G. The Six Links of the Chain of Infection and Intervention Strategies
 
-傳染病從病原體傳播到易感宿主，必須依序通過六個環節。只要阻斷任一環節，即可中斷傳播鏈。
+For an infectious disease to spread from a pathogen to a susceptible host, it must pass through six links in sequence. Breaking any single link interrupts the chain of transmission.
 
 ```{figure} images/chain_of_infection.svg
 :name: fig-chain-of-infection
-:alt: 傳染鏈六要素：病原體→傳染窩→離開途徑→傳染途徑→入侵途徑→易感宿主，以及三大介入策略
+:alt: The six links of the chain of infection: pathogen → reservoir → portal of exit → mode of transmission → portal of entry → susceptible host, plus three intervention strategies
 :width: 100%
 
-傳染鏈六要素（上排）與三大介入策略（下排）。退伍軍人症的傳染鏈：*Legionella pneumophila* → 水塔/淋浴水系統 → 氣溶膠 → 吸入（媒介物傳播）→ 呼吸道 → 年長/免疫低下住民。
+The six links of the chain of infection (top row) and the three main intervention strategies (bottom row). The chain of infection for Legionnaires' disease: *Legionella pneumophila* → water towers / shower water systems → aerosols → inhalation (vehicle-borne transmission) → respiratory tract → elderly / immunosuppressed residents.
 ```
 
-### 六要素說明
+### The six links explained
 
-| # | 要素 | 英文 | 退伍軍人症實例 | 諾羅病毒（對比） |
+| # | Link | English | Legionnaires' disease example | Norovirus (for contrast) |
 |---|------|------|--------------|---------------|
-| ① | 病原體 | Pathogen | *Legionella pneumophila* | Norovirus |
-| ② | 傳染窩 | Reservoir | 溫水管路、冷卻水塔、淋浴蓮蓬頭 | 感染者（人） |
-| ③ | 離開途徑 | Portal of exit | 氣溶膠 | 排泄物、嘔吐物 |
-| ④ | 傳染途徑 | Mode of transmission | 吸入（媒介物傳播 vehicle-borne） | 糞口途徑、食物/水污染 |
-| ⑤ | 入侵途徑 | Portal of entry | 呼吸道 | 消化道 |
-| ⑥ | 易感宿主 | Susceptible host | 年長、免疫低下、慢性肺病 | 全年齡（免疫力弱者更嚴重） |
+| ① | Pathogen | Pathogen | *Legionella pneumophila* | Norovirus |
+| ② | Reservoir | Reservoir | Warm-water piping, cooling towers, shower heads | Infected people |
+| ③ | Portal of exit | Portal of exit | Aerosols | Feces, vomit |
+| ④ | Mode of transmission | Mode of transmission | Inhalation (vehicle-borne) | Fecal-oral route, contaminated food/water |
+| ⑤ | Portal of entry | Portal of entry | Respiratory tract | Digestive tract |
+| ⑥ | Susceptible host | Susceptible host | Elderly, immunosuppressed, chronic lung disease | All ages (more severe in those with weak immunity) |
 
-### 三大介入策略
+### The three main intervention strategies
 
-| 策略 | 對應環節 | 常見措施 |
+| Strategy | Link addressed | Common measures |
 |------|---------|---------|
-| **①移除/控制傳染源** | ①② | 感染者隔離、動物撲殺疫苗、環境消毒（水塔加氯、>70°C 熱沖洗） |
-| **②阻斷傳染鏈** | ③④⑤ | 洗手、空氣流通、食物安全、停用污染設施、標準防護措施（PPE） |
-| **③保護易感宿主** | ⑥ | 疫苗接種、暴露後預防（PEP）、高危族群撤離、健康監測 |
+| **① Remove/control the source** | ①② | Isolation of infected people, animal culling and vaccination, environmental disinfection (chlorinating water towers, >70°C hot flushing) |
+| **② Break the chain of transmission** | ③④⑤ | Handwashing, air ventilation, food safety, shutting down contaminated facilities, standard precautions (PPE) |
+| **③ Protect the susceptible host** | ⑥ | Vaccination, post-exposure prophylaxis (PEP), evacuation of high-risk groups, health monitoring |
 
-> 💡 **疫調實務**：控制措施不必等調查完成才實施。只要有合理的假說（例如：懷疑水塔），就應立即啟動「移除傳染源」措施，再邊調查邊修正。
+> 💡 **Investigation practice**: control measures don't have to wait until the investigation is complete. As long as you have a reasonable hypothesis (for example, suspecting a water tower), you should immediately launch "remove the source" measures and then refine them as the investigation proceeds.
 
 ---
 
-## H. 常見食媒病原速查表
+## H. Quick Reference for Common Foodborne Pathogens
 
-食品中毒調查時，潛伏期長短是推估「嫌疑食物時間窗口」的關鍵依據。下表依潛伏期由短到長排列。
+In a food-poisoning investigation, the length of the incubation period is the key basis for estimating the "suspect food time window." The table below is ordered by incubation period from shortest to longest.
 
-| 病原體 | 潛伏期 | 主要症狀 | 傳染方式 | 關鍵辨認線索 |
+| Pathogen | Incubation period | Main symptoms | Mode of transmission | Key identifying clue |
 |--------|--------|---------|---------|------------|
-| **組織胺**（Histamine / Scombroid） | 1–60 分鐘（通常 10–30 分） | 顏面發紅、全身發熱、蕁麻疹、胃腸症狀 | 食用腐敗鮪魚、鯖魚、鰹魚、鬼頭刀等 | 症狀出現極快；抗組織胺藥有效 |
-| **金黃色葡萄球菌毒素**（Staph aureus enterotoxin） | 0.5–8 小時（通常 2–4 小時） | 噁心、嘔吐、腹絞痛、腹瀉（毒素耐熱，加熱食物仍可中毒） | 處理食物者手部傷口污染；常溫放置過久 | 嘔吐為主；發燒少見 |
-| **仙人掌桿菌嘔吐型**（*B. cereus* emetic） | 0.5–6 小時 | 噁心、嘔吐（腹瀉少） | 炒飯等米飯製品放置室溫 | 症狀似Staph；通常與炒飯相關 |
-| **腸炎弧菌**（*V. parahaemolyticus*） | 2–48 小時（通常 12–18 小時） | 噁心、嘔吐、腹瀉（水樣/血便）、發燒 | 生食或未充分熟煮的海鮮 | 夏季高峰；台灣常見 |
-| **仙人掌桿菌腹瀉型**（*B. cereus* diarrheal） | 6–24 小時 | 腹瀉、腹痛（嘔吐少） | 多種食物（肉類、蔬菜）放置不當 | 腹瀉為主；潛伏期比嘔吐型長 |
-| **產氣莢膜桿菌**（*C. perfringens*） | 6–24 小時 | 腹瀉、腹痛（嘔吐少、發燒少） | 大量烹煮的肉類再加熱不足 | 常見於辦桌、大型宴席；症狀輕但人數多 |
-| **沙門氏菌**（*Salmonella* spp.） | 6–72 小時（通常 12–36 小時） | 嘔吐、腹瀉、發燒、肌肉痠痛 | 蛋、禽肉、乳製品、蔬菜 | 發燒明顯；菌血症風險（免疫低下者） |
-| **諾羅病毒**（Norovirus） | 24–48 小時 | 嘔吐（兒童）、腹瀉（成人）、低燒 | 污染的食物、水；人傳人（糞口途徑、飛沫） | 症狀快速緩解（24–72 小時）；高傳播性，小劑量即可感染 |
-| **大腸桿菌 O157（EHEC）** | 1–10 天（通常 3–4 天） | 出血性腸炎、嚴重腹痛；溶血性尿毒症候群（HUS） | 半生牛肉、生菜、未消毒果汁 | 血便（不發燒）；小孩有腎衰竭風險 |
-| **A型肝炎**（HAV） | 15–50 天（通常 28–30 天） | 發燒、倦怠、黃疸、噁心 | 污染食物/水；生食貝類 | 潛伏期最長；黃疸出現前已可傳染 |
-| **肉毒桿菌**（*C. botulinum*） | 通常 12–36 小時（可達數天） | 鬆弛性對稱向下麻痺、複視、吞嚥困難（無發燒） | 家庭自製罐頭、醃漬食品、蜂蜜（嬰兒） | 神經症狀為主（非腸胃症狀）；死亡率高，立即通報 |
-| **李斯特菌（侵襲性）**（*L. monocytogenes*） | 3–70 天（通常 2–3 週） | 敗血症、腦膜炎；孕婦：流產或早產 | 即食冷藏食品（熟食肉品、起司） | 潛伏期最長；高危：孕婦、免疫低下、年長 |
+| **Histamine** (Histamine / Scombroid) | 1–60 minutes (usually 10–30 min) | Facial flushing, whole-body warmth, hives, gastrointestinal symptoms | Eating spoiled tuna, mackerel, bonito, mahi-mahi, etc. | Very rapid onset; antihistamines are effective |
+| **Staph aureus enterotoxin** | 0.5–8 hours (usually 2–4 hours) | Nausea, vomiting, abdominal cramps, diarrhea (the toxin is heat-stable, so reheated food can still cause poisoning) | Contamination from wounds on food handlers' hands; food left out too long | Mostly vomiting; fever is rare |
+| **B. cereus emetic type** (*B. cereus* emetic) | 0.5–6 hours | Nausea, vomiting (little diarrhea) | Rice products such as fried rice left at room temperature | Symptoms resemble Staph; usually linked to fried rice |
+| **Vibrio parahaemolyticus** (*V. parahaemolyticus*) | 2–48 hours (usually 12–18 hours) | Nausea, vomiting, diarrhea (watery/bloody), fever | Raw or undercooked seafood | Summer peak; common in Taiwan |
+| **B. cereus diarrheal type** (*B. cereus* diarrheal) | 6–24 hours | Diarrhea, abdominal pain (little vomiting) | Various foods (meat, vegetables) improperly stored | Mostly diarrhea; longer incubation than the emetic type |
+| **Clostridium perfringens** (*C. perfringens*) | 6–24 hours | Diarrhea, abdominal pain (little vomiting, little fever) | Large batches of cooked meat that were reheated insufficiently | Common at banquets and large catered events; mild symptoms but many affected |
+| **Salmonella** (*Salmonella* spp.) | 6–72 hours (usually 12–36 hours) | Vomiting, diarrhea, fever, muscle aches | Eggs, poultry, dairy, vegetables | Prominent fever; bacteremia risk (in the immunosuppressed) |
+| **Norovirus** (Norovirus) | 24–48 hours | Vomiting (children), diarrhea (adults), low fever | Contaminated food and water; person-to-person (fecal-oral route, droplets) | Symptoms resolve quickly (24–72 hours); highly transmissible, a small dose can infect |
+| **E. coli O157 (EHEC)** | 1–10 days (usually 3–4 days) | Hemorrhagic colitis, severe abdominal pain; hemolytic uremic syndrome (HUS) | Undercooked beef, raw vegetables, unpasteurized juice | Bloody stool (no fever); children at risk of kidney failure |
+| **Hepatitis A** (HAV) | 15–50 days (usually 28–30 days) | Fever, fatigue, jaundice, nausea | Contaminated food/water; raw shellfish | Longest incubation; infectious before jaundice appears |
+| **Clostridium botulinum** (*C. botulinum*) | Usually 12–36 hours (can be several days) | Flaccid, symmetric, descending paralysis, double vision, difficulty swallowing (no fever) | Home-canned goods, pickled foods, honey (infants) | Mostly neurological symptoms (not GI); high fatality, report immediately |
+| **Listeria (invasive)** (*L. monocytogenes*) | 3–70 days (usually 2–3 weeks) | Sepsis, meningitis; in pregnant women: miscarriage or premature birth | Ready-to-eat refrigerated foods (deli meats, cheese) | Longest incubation; high risk: pregnant women, immunosuppressed, elderly |
 
-> 📌 **疫調應用**：當你的案例平均潛伏期約 12–24 小時，優先懷疑沙門氏菌、腸炎弧菌。若 <2 小時且有嘔吐，優先懷疑 Staph aureus 毒素或組織胺中毒（後者有顏面潮紅）。若神經症狀（麻痺、複視），立即考慮肉毒桿菌並通報。
+> 📌 **Investigation application**: when your cases' mean incubation period is about 12–24 hours, suspect Salmonella and Vibrio parahaemolyticus first. If it's <2 hours with vomiting, suspect Staph aureus toxin or histamine poisoning first (the latter comes with facial flushing). If there are neurological symptoms (paralysis, double vision), consider botulism immediately and report it.
 
-### 食物中毒問卷設計重點
+### Key points for designing a food-poisoning questionnaire
 
-食物中毒的問卷飲食史回溯期間，應依**潛伏期**決定：
+The dietary-history recall period in a food-poisoning questionnaire should be determined by the **incubation period**:
 
-| 懷疑病原 | 飲食史回溯時間 |
+| Suspected pathogen | Dietary-history recall window |
 |---------|-------------|
-| 組織胺、Staph 毒素 | 發病前 1–4 小時 |
-| 腸炎弧菌、沙門氏菌 | 發病前 12–72 小時 |
-| 諾羅病毒 | 發病前 24–48 小時（並查接觸史） |
-| 不確定病原 | **至少 3 天**（約 72 小時）飲食史 |
-| A 型肝炎、李斯特菌 | 發病前 2–6 週 |
+| Histamine, Staph toxin | 1–4 hours before onset |
+| Vibrio parahaemolyticus, Salmonella | 12–72 hours before onset |
+| Norovirus | 24–48 hours before onset (also check contact history) |
+| Unknown pathogen | **at least 3 days** (about 72 hours) of dietary history |
+| Hepatitis A, Listeria | 2–6 weeks before onset |
 
 ```{tip}
-**造冊（line list）的暴露欄設計**：每道嫌疑食物各一欄（0/1），讓每位受訪者填寫「有無食用」，再用 RR（世代研究）或 OR（病例對照研究）評估每道菜與發病的關聯。詳見 Ch03 的 2×2 表分析。
+**Designing the exposure columns of a line list**: give each suspect food its own column (0/1), have each respondent record "ate it or not," then use RR (cohort study) or OR (case-control study) to assess the association between each dish and illness. See the 2×2 table analysis in Ch03 for details.
 ```

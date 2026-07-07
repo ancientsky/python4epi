@@ -1,133 +1,133 @@
-# 06 多變項分析：調整後風險比與邏輯斯迴歸
+# 06 Multivariable Analysis: Adjusted Risk Ratios and Logistic Regression
 
-## 情境
+## The Scenario
 
-Ch05 的分層分析告訴我們，功能狀態確實是淋浴使用的干擾因子。但疫調會議上，感控護理師追問：
+The stratified analysis in Ch05 told us that functional status really is a confounder of shower use. But at the investigation meeting, the infection-control nurse pressed on:
 
-> 「同時考慮年齡、所有共病、功能狀態、樓層以後，淋浴使用**還是**顯著的危險因子嗎？」
+> "After we account for age, all the comorbidities, functional status, and floor all at once, is shower use **still** a significant risk factor?"
 
-分層分析一次只能控制一個變項。要**同時調整多個因子**，需要迴歸模型。
+Stratified analysis can only control one variable at a time. To **adjust for several factors simultaneously**, we need a regression model.
 
-> 🔑 **關鍵回顧**：Ch03 將本案定位為**回溯性世代研究**（retrospective cohort），效應測量用 **RR（風險比）**。Ch05 分層分析也算的是 **MH adjusted RR**。為了一路都用同一把尺，這章的主軸方法會是 **Modified Poisson regression**——直接算出 **adjusted RR**。我們也會用邏輯斯迴歸做對照，讓你看到同樣的資料算出 OR 會高估多少。
+> 🔑 **Key recap**: Ch03 framed this investigation as a **retrospective cohort study**, with the effect measure being the **RR (risk ratio)**. The stratified analysis in Ch05 also computed an **MH adjusted RR**. To keep using the same yardstick throughout, the main method in this chapter will be **Modified Poisson regression**—which directly yields an **adjusted RR**. We'll also run logistic regression as a comparison, so you can see how much the OR overestimates the effect on the very same data.
 
-## 你將學到
+## What You'll Learn
 
-- Modified Poisson regression（Zou 2004）同時調整多個因子，算出 adjusted RR
-- 邏輯斯迴歸的原理——用白話文搞懂「機率→勝算→log(勝算)」三階梯
-- 在高侵襲率世代研究中，OR 如何高估效應（與 RR 的實際數值比較）
-- 比較 crude RR → MH adjusted RR (Ch05) → adjusted RR → adjusted OR
-- 標準流行病學 Table 2 格式呈現結果
-- 模型診斷（AIC）與變項選擇
+- Modified Poisson regression (Zou 2004) to adjust for multiple factors at once and compute an adjusted RR
+- The logic behind logistic regression—understanding the "probability → odds → log(odds)" three-step ladder in plain language
+- How the OR overestimates the effect in a high-attack-rate cohort study (compared against the actual RR values)
+- Comparing crude RR → MH adjusted RR (Ch05) → adjusted RR → adjusted OR
+- Presenting the results in the standard epidemiological Table 2 format
+- Model diagnostics (AIC) and variable selection
 
-## 核心概念
+## Core Concepts
 
-### 為什麼還要繼續談 RR？
+### Why do we keep talking about RR?
 
-Ch03 已經解釋過：在世代研究中，我們能直接算出「風險」（risk = 得病人數 ÷ 總人數），所以效應測量應該用 **RR**。只有在病例對照研究（case-control）中，因為無法計算風險，才退而求其次用 **OR**。
+Ch03 already explained it: in a cohort study we can directly compute "risk" (risk = number of cases ÷ total number of people), so the effect measure should be the **RR**. Only in a case-control study—where risk cannot be computed—do we fall back on the **OR**.
 
-> ⚠️ 本案侵襲率高達 **43%**。Ch03 已經警告過：當疾病不罕見時，OR 會**系統性高估**效應。如果你對主管說「淋浴使用的 OR 是 3.5」，他會以為風險是 3.5 倍——但真正的風險比（RR）可能只有 2.0 倍。差很多！
+> ⚠️ In this investigation the attack rate is as high as **43%**. Ch03 already warned: when a disease is not rare, the OR will **systematically overestimate** the effect. If you tell your supervisor "the OR for shower use is 3.5," they'll think the risk is 3.5 times higher—but the true risk ratio (RR) might only be about 2.0. That's a big difference!
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：為什麼要用 RR 而不是 OR？</div>
+  <div class="video-title">Tutorial video: Why use RR instead of OR?</div>
   <div class="youtube-lite" data-id="PrbPC5cAyxM">
-    <img src="https://img.youtube.com/vi/PrbPC5cAyxM/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/PrbPC5cAyxM/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
-### 兩條多變項分析路線
+### Two routes to multivariable analysis
 
 ```{figure} images/multivariate_methods.svg
 :name: fig-multivariate-methods
-:alt: 三種控制干擾因子的方法比較：分層分析（Ch05）、Modified Poisson（Ch06 主軸）、邏輯斯迴歸（Ch06 對照）
+:alt: A comparison of three methods for controlling confounders: stratified analysis (Ch05), Modified Poisson (the main method of Ch06), and logistic regression (the Ch06 comparison)
 :width: 100%
 
-分層分析一次只能控制一個因子；Modified Poisson 和邏輯斯迴歸都能同時控制多個，但前者輸出 RR、後者輸出 OR。
+Stratified analysis can only control one factor at a time; both Modified Poisson and logistic regression can control several at once, but the former outputs an RR and the latter an OR.
 ```
 
-| 方法 | 輸出 | 世代研究適用？ | 何時用？ |
+| Method | Output | Suitable for cohort studies? | When to use |
 |------|------|--------------|---------|
-| 分層分析（Ch05） | MH adjusted RR | 適合，但一次只能控制 1 個因子 | 干擾因子少（1-2 個） |
-| **Modified Poisson**（本章主軸） | **adjusted RR** | **首選** | 世代研究 + 多個干擾因子 |
-| 邏輯斯迴歸（本章對照） | adjusted OR | 高侵襲率下高估 | 病例對照研究、罕見疾病 |
+| Stratified analysis (Ch05) | MH adjusted RR | Yes, but only 1 factor at a time | Few confounders (1–2) |
+| **Modified Poisson** (this chapter's main method) | **adjusted RR** | **First choice** | Cohort study + multiple confounders |
+| Logistic regression (this chapter's comparison) | adjusted OR | Overestimates at high attack rates | Case-control studies, rare diseases |
 
-### Modified Poisson：用 Poisson 的殼算 RR 的魂
+### Modified Poisson: a Poisson shell holding an RR soul
 
-> 🎩 **借帽子比喻**：Poisson 迴歸本來是給「計數資料」用的（例如每天新增幾例）。但流行病學家 Zou（2004 年）發現了一個巧妙的把戲：把二元結果（0/1）丟進 Poisson 迴歸，再用 **robust sandwich variance** 修正標準誤差——得到的 coefficient 就正好是 **log(RR)**！就像跟朋友借了一頂帽子，尺寸不對但貼個修正貼紙就完美合頭了。
+> 🎩 **The "borrowed hat" metaphor**: Poisson regression was originally designed for "count data" (e.g., how many new cases per day). But the epidemiologist Zou (2004) discovered a clever trick: throw a binary outcome (0/1) into a Poisson regression, then correct the standard errors with a **robust sandwich variance**—and the resulting coefficient turns out to be exactly **log(RR)**! It's like borrowing a hat from a friend: the size isn't quite right, but slap on a correction sticker and it fits perfectly.
 
-為什麼能這樣做？三句話版：
+Why does this work? The three-sentence version:
 
-1. Poisson 迴歸模型化的是 **log(E[Y])**，當 Y 是 0/1 時，E[Y] = P(Y=1) = risk，所以 coefficient = **log(risk ratio)**
-2. 但 Poisson 模型假設 variance = mean，對二元資料來說這是錯的 → 標準誤差會偏掉
-3. **Robust (sandwich) SE** 不依賴分佈假設，直接從資料估算變異 → 修正了上面的偏差 → CI 和 p-value 都正確
+1. Poisson regression models **log(E[Y])**; when Y is 0/1, E[Y] = P(Y=1) = risk, so the coefficient = **log(risk ratio)**
+2. But the Poisson model assumes variance = mean, which is wrong for binary data → the standard errors are off
+3. The **robust (sandwich) SE** doesn't rely on the distributional assumption; it estimates the variance directly from the data → this fixes the bias above → the CI and p-value are both correct
 
-> 💡 為什麼不用 **log-binomial**（Binomial + log link）？理論上最「正確」，但實務上常常不收斂（convergence failure），特別是暴露和結果的關聯很強時。Modified Poisson 幾乎不會有收斂問題。
+> 💡 Why not use **log-binomial** (Binomial + log link)? In theory it's the most "correct," but in practice it often fails to converge (convergence failure), especially when the exposure and outcome are strongly associated. Modified Poisson almost never has convergence problems.
 >
-> 為什麼不用 **Cox regression**（proportional hazards）？Cox 需要「時間到事件」的資料，我們的資料是二元結果（感染/未感染），沒有隨訪時間差異。
+> Why not use **Cox regression** (proportional hazards)? Cox requires "time-to-event" data, whereas ours is a binary outcome (infected / not infected) with no differences in follow-up time.
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：Modified Poisson——借帽子算 RR 的魔法</div>
+  <div class="video-title">Tutorial video: Modified Poisson—the borrowed-hat magic for computing RR</div>
   <div class="youtube-lite" data-id="A_KHcLHITN0">
-    <img src="https://img.youtube.com/vi/A_KHcLHITN0/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/A_KHcLHITN0/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
-### 邏輯斯迴歸白話文
+### Logistic regression in plain language
 
-雖然 Modified Poisson 是本案的首選，邏輯斯迴歸（logistic regression）仍然是全世界最常用的多變項分析方法之一。理解它的原理對流行病學家是必備素養。
+Although Modified Poisson is the first choice for this investigation, logistic regression remains one of the most widely used multivariable analysis methods in the world. Understanding how it works is essential knowledge for an epidemiologist.
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：邏輯斯迴歸三階梯——機率→勝算→logit</div>
+  <div class="video-title">Tutorial video: The logistic regression three-step ladder—probability → odds → logit</div>
   <div class="youtube-lite" data-id="o-bRxWzK_xo">
-    <img src="https://img.youtube.com/vi/o-bRxWzK_xo/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/o-bRxWzK_xo/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
 ```{figure} images/logit_intuition.svg
 :name: fig-logit-intuition
-:alt: 邏輯斯迴歸的三階梯：機率（0-1）→ 勝算（0-∞）→ log(勝算)（-∞ 到 +∞）
+:alt: The three-step ladder of logistic regression: probability (0–1) → odds (0–∞) → log(odds) (−∞ to +∞)
 :width: 100%
 
-把機率「拉直」的三個步驟：被卡住的彈簧 → 天平 → 拉直的直線。
+The three steps for "straightening out" a probability: a stuck spring → a balance scale → a straightened line.
 ```
 
-**第一階：機率（probability）**——被壓扁的彈簧
+**Step 1: probability**—the squashed spring
 
-感染機率 $p$ 被卡在 0 到 1 之間。線性迴歸的輸出可以是任意數字（$-\infty$ 到 $+\infty$），但機率不行——你不能說某人的感染機率是 -0.3 或 1.5。就像把彈簧塞進小盒子，越靠近邊界越擠，沒辦法直接做線性迴歸。
+The infection probability $p$ is stuck between 0 and 1. The output of a linear regression can be any number ($-\infty$ to $+\infty$), but a probability can't—you can't say someone's infection probability is -0.3 or 1.5. It's like stuffing a spring into a small box: the closer to the edges, the more cramped it gets, so you can't run a linear regression directly.
 
-**第二階：勝算（odds）**——天平
+**Step 2: odds**—the balance scale
 
 $$\text{odds} = \frac{p}{1-p}$$
 
-> ⚖️ **天平比喻**：如果感染機率 $p = 0.70$，勝算 = $0.70 / 0.30 = 2.33$。意思是天平上「會感染」那邊比「不會感染」那邊重了 2.33 倍。勝算的範圍是 0 到 $+\infty$，右邊解放了，但左邊還是卡在 0。
+> ⚖️ **The balance-scale metaphor**: if the infection probability is $p = 0.70$, the odds = $0.70 / 0.30 = 2.33$. This means that on the scale, the "will be infected" side is 2.33 times heavier than the "won't be infected" side. Odds range from 0 to $+\infty$: the right side is freed, but the left side is still stuck at 0.
 
-**第三階：log(勝算) = logit**——拉直的彈簧
+**Step 3: log(odds) = logit**—the straightened spring
 
 $$\text{logit}(p) = \log\left(\frac{p}{1-p}\right)$$
 
-取 log 之後，範圍變成 $-\infty$ 到 $+\infty$——兩邊都自由了！線性迴歸終於能正常工作。
+After taking the log, the range becomes $-\infty$ to $+\infty$—both sides are free! Linear regression can finally work properly.
 
-邏輯斯迴歸的模型就是：
+The logistic regression model is simply:
 
 $$\text{logit}(p) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots$$
 
-**怎麼解讀 $\beta$？** 假設淋浴使用的 $\beta_1 = 0.50$：
+**How do we interpret $\beta$?** Suppose the $\beta_1$ for shower use is 0.50:
 
 - $\text{OR} = e^{0.50} = 1.65$
-- 白話文：「控制其他因子後，使用淋浴的住民，感染的**勝算**是未使用者的 **1.65 倍**」
-- 注意：這是「**勝算**幾倍」，不是「**風險**幾倍」！在高侵襲率下兩者差距很大
+- In plain language: "after controlling for other factors, residents who used the shower have **odds** of infection that are **1.65 times** those of non-users"
+- Note: this is "how many times the **odds**," not "how many times the **risk**"! At a high attack rate the two differ substantially
 
 ---
 
-## Step 1: 資料準備
+## Step 1: Data Preparation
 
 ```python
-# === Step 1: 載入資料 + 變項重新編碼 ===
+# === Step 1: Load the data + recode variables ===
 
 import pandas as pd
 import numpy as np
@@ -136,45 +136,45 @@ import statsmodels.formula.api as smf       # formula API (logistic)
 import matplotlib.pyplot as plt
 import warnings
 
-# --- 載入退伍軍人症群聚資料 ---
+# --- Load the Legionnaires' disease cluster data ---
 df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
 
-# --- 建立二元結果變項 ---
-# clinical_severity != "not_ill" 代表有感染（包含 mild/moderate/severe）
+# --- Build the binary outcome variable ---
+# clinical_severity != "not_ill" means infected (includes mild/moderate/severe)
 df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
 
-# --- smoking_history 三分類 → 二分類 ---
-# never / former / current → 只要不是 never 就算 ever_smoker
+# --- smoking_history three categories → two categories ---
+# never / former / current → anything that isn't never counts as ever_smoker
 df["ever_smoker"] = (df["smoking_history"] != "never").astype(int)
 
-# --- 功能狀態轉有序數值 ---
-# bedridden(臥床)=0 < assisted(需協助)=1 < independent(獨立行走)=2
+# --- Convert functional status to an ordered numeric score ---
+# bedridden=0 < assisted=1 < independent=2
 fs_map = {"bedridden": 0, "assisted": 1, "independent": 2}
 df["functional_score"] = df["functional_status"].map(fs_map)
 
-# --- 快速確認侵襲率 ---
+# --- Quick check of the attack rate ---
 ar = df["infected"].mean()
-print(f"侵襲率 = {ar:.1%}（{df['infected'].sum()}/{len(df)}）")
-print(f"→ 侵襲率 {ar:.0%} 遠高於 10%，OR 會顯著高估效應，應以 RR 為主")
+print(f"Attack rate = {ar:.1%} ({df['infected'].sum()}/{len(df)})")
+print(f"→ An attack rate of {ar:.0%} is far above 10%, so the OR will markedly overestimate the effect; rely on RR")
 ```
 
-## Step 2: 單變項分析——Crude RR 與 Crude OR 對照
+## Step 2: Univariable Analysis—Crude RR vs Crude OR
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：單變項 crude RR vs OR——for loop 一次比完</div>
+  <div class="video-title">Tutorial video: Univariable crude RR vs OR—compare them all in one for loop</div>
   <div class="youtube-lite" data-id="LBf3HvGOLAA">
-    <img src="https://img.youtube.com/vi/LBf3HvGOLAA/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/LBf3HvGOLAA/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
 ```python
-# === Step 2: 單變項分析迴圈 ===
-# 同時跑 Modified Poisson（算 crude RR）和 logistic（算 crude OR），
-# 讓你看到同一個變項的 RR 和 OR 差多少。
+# === Step 2: Univariable analysis loop ===
+# Run Modified Poisson (for crude RR) and logistic (for crude OR) at the same time,
+# so you can see how much the RR and OR differ for the same variable.
 
-from epi_learning.metrics import risk_ratio  # Ch03 的 2×2 手算 RR
+from epi_learning.metrics import risk_ratio  # the 2×2 hand-computed RR from Ch03
 
 factors = [
     "shower_use", "hydrotherapy_use", "ever_smoker",
@@ -193,8 +193,8 @@ for var in factors:
         try:
             mod_p = smf.glm(
                 f"infected ~ {var}", data=df,
-                family=sm.families.Poisson(),   # 借 Poisson 的殼
-            ).fit(cov_type="HC0", disp=0)       # robust SE 修正
+                family=sm.families.Poisson(),   # borrow the Poisson shell
+            ).fit(cov_type="HC0", disp=0)       # robust SE correction
             rr = np.exp(mod_p.params[var])       # exp(β) = RR
             rr_ci = np.exp(mod_p.conf_int().loc[var])
             rr_p = mod_p.pvalues[var]
@@ -207,7 +207,7 @@ for var in factors:
                 f"infected ~ {var}", data=df,
             ).fit(disp=0, method="lbfgs")
             if not mod_l.mle_retvals["converged"]:
-                print(f"⚠ {var}: logistic 未收斂，跳過")
+                print(f"⚠ {var}: logistic did not converge, skipping")
                 continue
             or_val = np.exp(mod_l.params[var])    # exp(β) = OR
             or_ci = np.exp(mod_l.conf_int().loc[var])
@@ -215,7 +215,7 @@ for var in factors:
         except Exception:
             continue
 
-    # --- (C) 2×2 手算 RR 交叉驗證（僅二元變項） ---
+    # --- (C) 2×2 hand-computed RR for cross-validation (binary variables only) ---
     hand_rr = ""
     if df[var].dropna().isin([0, 1]).all():
         a = ((df[var] == 1) & (df["infected"] == 1)).sum()
@@ -234,86 +234,86 @@ for var in factors:
     })
 
 crude_df = pd.DataFrame(crude_results)
-print("=== Crude RR vs Crude OR（單變項）===")
+print("=== Crude RR vs Crude OR (univariable) ===")
 print(crude_df.to_string(index=False))
 print()
-print("💡 注意：crude_OR 普遍大於 crude_RR，這就是高侵襲率下 OR 高估的效果")
-print("   hand_RR 欄是 Ch03 的 2×2 表手算結果，應與 crude_RR 幾乎一致")
+print("💡 Note: crude_OR is generally larger than crude_RR — this is the OR overestimation at high attack rates")
+print("   The hand_RR column is the 2×2 hand-computed result from Ch03; it should match crude_RR almost exactly")
 ```
 
-### 讀懂公式語法
+### Reading the formula syntax
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：statsmodels formula 語法速懂</div>
+  <div class="video-title">Tutorial video: A quick guide to statsmodels formula syntax</div>
   <div class="youtube-lite" data-id="G-cJPHaz7ag">
-    <img src="https://img.youtube.com/vi/G-cJPHaz7ag/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/G-cJPHaz7ag/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
-statsmodels 的公式借用了 R 語言的 **formula 語法**，用一行字就能描述「用哪些變項來預測結果」：
+statsmodels borrows the **formula syntax** from the R language, letting you describe "which variables predict the outcome" in a single line:
 
-| 符號 | 意思 | 範例 |
+| Symbol | Meaning | Example |
 |------|------|------|
-| `~` | 「被⋯預測」 | `infected ~ age` → 用 age 預測 infected |
-| `+` | 「再加上」 | `~ age + sex` → 同時放 age 和 sex 進模型 |
-| `C()` | 「當成類別變項」 | `C(floor)` → 把 floor 拆成虛擬變項（dummy coding），每個樓層一個 0/1 指標 |
+| `~` | "is predicted by" | `infected ~ age` → use age to predict infected |
+| `+` | "plus" | `~ age + sex` → put both age and sex into the model |
+| `C()` | "treat as categorical" | `C(floor)` → split floor into dummy variables (dummy coding), one 0/1 indicator per floor |
 
-白話文：`infected ~ shower_use + age + C(floor)` 就是說「用淋浴使用、年齡、樓層來預測感染」。模型會自動加上截距項（Intercept），不用額外寫。
+In plain language, `infected ~ shower_use + age + C(floor)` says "use shower use, age, and floor to predict infection." The model automatically adds an intercept term (Intercept), so you don't need to write it.
 
-### 模型放哪些變項？——從 Ch03 和 Ch05 的結果出發
+### Which variables go into the model?—starting from the Ch03 and Ch05 results
 
-多變項模型不是把所有欄位都丟進去，而是要有理由。回顧前面章節的發現，我們把模型變項分成四組：
+A multivariable model isn't about throwing in every column; there needs to be a reason for each one. Reviewing the findings from earlier chapters, we split the model variables into four groups:
 
-| 組別 | 變項 | 角色 | 納入理由 |
+| Group | Variables | Role | Reason for inclusion |
 |------|------|------|----------|
-| **暴露因子** | `shower_use`, `hydrotherapy_use` | 研究焦點 | Ch03 篩選出的顯著危險因子——我們最想回答的問題：「淋浴和水療是不是感染源？」 |
-| **宿主因子** | `age`, `immunosuppressed`, `functional_score` | 潛在干擾因子 | `age` = 流行病學常規必調整因子；`immunosuppressed` = Ch03 顯示 crude RR 最高的因子之一；`functional_score` = Ch05 已確認的干擾因子 |
-| **共病** | `comorbidity_chf`, `comorbidity_dm`, `comorbidity_cancer`, `comorbidity_copd` | 潛在干擾因子 | Ch03 篩選出的候選因子，放入完整模型看控制後暴露因子的 RR 是否改變 |
-| **場所** | `C(floor)` | 潛在干擾因子 | 不同樓層的水管系統或暴露機會可能不同，需要控制樓層差異 |
+| **Exposure factors** | `shower_use`, `hydrotherapy_use` | Study focus | The significant risk factors screened in Ch03—the question we most want to answer: "are the shower and hydrotherapy the source of infection?" |
+| **Host factors** | `age`, `immunosuppressed`, `functional_score` | Potential confounders | `age` = a factor epidemiology routinely adjusts for; `immunosuppressed` = one of the factors with the highest crude RR in Ch03; `functional_score` = the confounder already confirmed in Ch05 |
+| **Comorbidities** | `comorbidity_chf`, `comorbidity_dm`, `comorbidity_cancer`, `comorbidity_copd` | Potential confounders | The candidate factors screened in Ch03, put into the full model to see whether the exposure factors' RR changes after adjustment |
+| **Location** | `C(floor)` | Potential confounder | Different floors may have different plumbing systems or exposure opportunities, so we need to control for floor differences |
 
 ```{tip}
-**為什麼不放 `ever_smoker`？** Ch03 的單變項篩選中，吸菸的 crude RR 接近 1 且未達統計顯著，加上它與多項共病高度相關（共線性），納入模型反而增加估計的不穩定性，因此不放進多變項模型。
+**Why not include `ever_smoker`?** In the Ch03 univariable screening, smoking had a crude RR close to 1 and did not reach statistical significance. On top of that, it is highly correlated with several comorbidities (collinearity), so including it in the model would only increase the instability of the estimates. That's why we leave it out of the multivariable model.
 ```
 
-## Step 3: 多變項 Modified Poisson——Adjusted RR
+## Step 3: Multivariable Modified Poisson—Adjusted RR
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：多變項 adjusted RR——打造漂亮的 Table 2</div>
+  <div class="video-title">Tutorial video: Multivariable adjusted RR—building a beautiful Table 2</div>
   <div class="youtube-lite" data-id="XIfx82VxVaA">
-    <img src="https://img.youtube.com/vi/XIfx82VxVaA/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/XIfx82VxVaA/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
 ```python
-# === Step 3: Modified Poisson — 同時調整所有因子 ===
-# 這是本章的主軸分析：用 Poisson GLM + robust SE 算出 adjusted RR。
-# coefficient = log(RR)，取 exp 就是 RR。
+# === Step 3: Modified Poisson — adjust for all factors at once ===
+# This is the main analysis of the chapter: a Poisson GLM + robust SE to compute the adjusted RR.
+# coefficient = log(RR), so exp() gives the RR.
 
-# --- 公式說明 ---
-# infected ~ ：用右邊的變項預測「是否感染」
-# shower_use + hydrotherapy_use ：暴露因子（研究焦點）
-# age + immunosuppressed + functional_score ：宿主因子（潛在干擾）
-# comorbidity_chf/dm/cancer/copd ：共病（潛在干擾）
-# C(floor) ：樓層當類別變項（控制場所差異）
+# --- Formula explanation ---
+# infected ~ : use the variables on the right to predict "infected or not"
+# shower_use + hydrotherapy_use : exposure factors (study focus)
+# age + immunosuppressed + functional_score : host factors (potential confounders)
+# comorbidity_chf/dm/cancer/copd : comorbidities (potential confounders)
+# C(floor) : floor as a categorical variable (control for location differences)
 formula = (
     "infected ~ shower_use + hydrotherapy_use + age + "
     "comorbidity_chf + comorbidity_dm + comorbidity_cancer + "
     "comorbidity_copd + immunosuppressed + functional_score + "
-    "C(floor)"     # C(floor) = 把 floor 當成類別變項（dummy coding）
+    "C(floor)"     # C(floor) = treat floor as a categorical variable (dummy coding)
 )
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     model_poisson = smf.glm(
         formula, data=df,
-        family=sm.families.Poisson(),   # Poisson 的殼
+        family=sm.families.Poisson(),   # the Poisson shell
     ).fit(cov_type="HC0")               # robust (sandwich) SE
 
-# --- 整理成 Table 2 格式 ---
+# --- Format into Table 2 layout ---
 adj_rr_results = []
 for var in model_poisson.params.index:
     if var == "Intercept":
@@ -328,21 +328,21 @@ for var in model_poisson.params.index:
     })
 
 adj_rr_df = pd.DataFrame(adj_rr_results)
-print("=== Adjusted RR（Modified Poisson, Table 2）===")
+print("=== Adjusted RR (Modified Poisson, Table 2) ===")
 print(adj_rr_df.to_string(index=False))
 ```
 
-## Step 4: 多變項邏輯斯迴歸——Adjusted OR（對照組）
+## Step 4: Multivariable Logistic Regression—Adjusted OR (the comparison)
 
 ```python
-# === Step 4: Logistic Regression — 同一公式，改用 logistic ===
-# 目的：讓你看到同樣的 covariates，OR 和 RR 差多少。
+# === Step 4: Logistic Regression — same formula, switch to logistic ===
+# Goal: let you see how much the OR and RR differ for the same covariates.
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     model_logit = smf.logit(formula, data=df).fit(disp=0, method="lbfgs")
 
-# --- 整理成 Table 2 格式 ---
+# --- Format into Table 2 layout ---
 adj_or_results = []
 for var in model_logit.params.index:
     if var == "Intercept":
@@ -357,52 +357,52 @@ for var in model_logit.params.index:
     })
 
 adj_or_df = pd.DataFrame(adj_or_results)
-print("=== Adjusted OR（Logistic Regression, Table 2）===")
+print("=== Adjusted OR (Logistic Regression, Table 2) ===")
 print(adj_or_df.to_string(index=False))
 ```
 
-```{admonition} 為什麼有些變數「模型未收斂」？
+```{admonition} Why do some variables "fail to converge"?
 :class: tip, dropdown
 
-當某個二元預測變數的其中一個類別完全（或幾乎完全）對應到某個結果時，稱為**完美分離（complete separation）**或**準完美分離（quasi-complete separation）**。此時最大概似估計法（MLE）的 OR 會趨近 0 或 ∞，Hessian 矩陣無法反轉，導致模型無法收斂。
+When one category of a binary predictor corresponds completely (or almost completely) to a particular outcome, this is called **complete separation** or **quasi-complete separation**. In that case the maximum likelihood estimate (MLE) of the OR tends toward 0 or ∞, the Hessian matrix cannot be inverted, and the model fails to converge.
 
-常見處理方式：
-1. 檢查 2×2 表，確認是否有某個格子 = 0
-2. 改用 **Firth's penalized likelihood**（`firthlogist` 套件）
-3. 改用 **Exact logistic regression**
-4. 在教學場景中，先跳過該變數，在多變項模型中一起納入
+Common ways to handle it:
+1. Check the 2×2 table to see whether any cell = 0
+2. Switch to **Firth's penalized likelihood** (the `firthlogist` package)
+3. Switch to **Exact logistic regression**
+4. In a teaching setting, skip that variable for now and include it in the multivariable model instead
 ```
 
-## Step 5: 三個效應測量並排比較
+## Step 5: Comparing the Three Effect Measures Side by Side
 
 ```python
-# === Step 5: Crude RR vs Adjusted RR vs Adjusted OR 並排比較 ===
-# 這是本章最重要的表格：一次看完三種效應測量的差異。
+# === Step 5: Crude RR vs Adjusted RR vs Adjusted OR side by side ===
+# This is the most important table in the chapter: see all three effect measures at once.
 
 key_vars = ["shower_use", "hydrotherapy_use", "age",
             "comorbidity_chf", "immunosuppressed", "functional_score"]
 
 comparison = []
 for var in key_vars:
-    # 從 crude_df 取 crude RR
+    # Get crude RR from crude_df
     c_row = crude_df[crude_df["variable"] == var]
     if len(c_row) == 0:
         continue
     c_rr = c_row.iloc[0]["crude_RR"]
 
-    # 從 adj_rr_df 取 adjusted RR
+    # Get adjusted RR from adj_rr_df
     a_rr_row = adj_rr_df[adj_rr_df["variable"] == var]
     if len(a_rr_row) == 0:
         continue
     a_rr = a_rr_row.iloc[0]["adjusted_RR"]
 
-    # 從 adj_or_df 取 adjusted OR
+    # Get adjusted OR from adj_or_df
     a_or_row = adj_or_df[adj_or_df["variable"] == var]
     if len(a_or_row) == 0:
         continue
     a_or = a_or_row.iloc[0]["adjusted_OR"]
 
-    # 計算變化幅度
+    # Compute the magnitude of change
     rr_change = ((a_rr - c_rr) / c_rr * 100) if c_rr != 0 else 0
     or_vs_rr = ((a_or - a_rr) / a_rr * 100) if a_rr != 0 else 0
 
@@ -411,47 +411,47 @@ for var in key_vars:
         "crude_RR": c_rr,
         "adj_RR": a_rr,           # Modified Poisson
         "adj_OR": a_or,           # Logistic
-        "crude→adj RR": f"{rr_change:+.1f}%",    # 干擾效應
-        "adj RR→OR": f"{or_vs_rr:+.1f}%",        # OR 高估幅度
+        "crude→adj RR": f"{rr_change:+.1f}%",    # confounding effect
+        "adj RR→OR": f"{or_vs_rr:+.1f}%",        # magnitude of OR overestimation
     })
 
 comp_df = pd.DataFrame(comparison)
-print("=== Crude RR → Adjusted RR → Adjusted OR 比較 ===")
+print("=== Crude RR → Adjusted RR → Adjusted OR comparison ===")
 print(comp_df.to_string(index=False))
 print()
-print("📊 解讀：")
-print("  • crude→adj RR 欄：控制干擾因子後 RR 的變化（與 Ch05 MH 結論比較）")
-print("  • adj RR→OR 欄：同一模型下 OR 比 RR 高估多少（侵襲率效應）")
+print("📊 Interpretation:")
+print("  • crude→adj RR column: the change in RR after controlling for confounders (compare with the Ch05 MH conclusion)")
+print("  • adj RR→OR column: how much the OR overestimates relative to the RR in the same model (attack-rate effect)")
 ```
 
-```{admonition} 何時 OR ≈ RR？
+```{admonition} When is OR ≈ RR?
 :class: note
 
-只有當**疾病罕見**（盛行率 < 10%）時，$(1-p) \approx 1$，odds $\approx$ risk，OR $\approx$ RR。本案侵襲率 43%，OR 會系統性地**放大**效應。因此在世代研究中報告結果時，應該用 RR 而非 OR。
+Only when the **disease is rare** (prevalence < 10%) does $(1-p) \approx 1$, so odds $\approx$ risk and OR $\approx$ RR. In this investigation the attack rate is 43%, so the OR will systematically **inflate** the effect. That's why, when reporting results from a cohort study, you should use the RR rather than the OR.
 
-如果你在讀別人的論文，看到他們用 logistic regression 分析**世代研究**且疾病不罕見，可以留意他們是否有用 Modified Poisson 或至少提到 OR ≠ RR 的問題。
+If you're reading someone else's paper and see them analyze a **cohort study** with logistic regression for a disease that isn't rare, watch for whether they used Modified Poisson or at least mentioned the issue that OR ≠ RR.
 ```
 
-## Step 6: Forest Plot（Adjusted RR）
+## Step 6: Forest Plot (Adjusted RR)
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：Adjusted RR 森林圖——一眼看穿真正危險因子</div>
+  <div class="video-title">Tutorial video: The adjusted RR forest plot—spot the real risk factors at a glance</div>
   <div class="youtube-lite" data-id="7GgpIOKr_CY">
-    <img src="https://img.youtube.com/vi/7GgpIOKr_CY/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/7GgpIOKr_CY/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
 ```python
-# === Step 6: Forest Plot — 用圖表呈現 adjusted RR ===
-# 標準的流行病學 forest plot：點 = 點估計，橫線 = 95% CI，虛線 = RR=1（無效應）
+# === Step 6: Forest Plot — present the adjusted RR graphically ===
+# A standard epidemiological forest plot: dot = point estimate, horizontal line = 95% CI, dashed line = RR=1 (no effect)
 
-# 準備繪圖資料（排除 Intercept 和 floor dummy）
+# Prepare the plotting data (exclude Intercept and the floor dummies)
 plot_vars = [r for r in adj_rr_df["variable"] if not r.startswith("C(floor)")]
 plot_data = adj_rr_df[adj_rr_df["variable"].isin(plot_vars)].copy()
 
-# 從 CI 字串還原數值
+# Recover the numeric values from the CI string
 plot_data["ci_lo"] = plot_data["95% CI"].str.split("–").str[0].astype(float)
 plot_data["ci_hi"] = plot_data["95% CI"].str.split("–").str[1].astype(float)
 
@@ -462,30 +462,30 @@ ax.errorbar(
     plot_data["adjusted_RR"], y_pos,
     xerr=[plot_data["adjusted_RR"] - plot_data["ci_lo"],
           plot_data["ci_hi"] - plot_data["adjusted_RR"]],
-    fmt="o", color="#D97757", ecolor="#6A9BCC",   # 品牌色
+    fmt="o", color="#D97757", ecolor="#6A9BCC",   # brand colors
     elinewidth=2, capsize=4, markersize=7,
 )
-ax.axvline(x=1, color="#6B6B6B", linestyle="--", linewidth=1, label="RR = 1（無效應）")
+ax.axvline(x=1, color="#6B6B6B", linestyle="--", linewidth=1, label="RR = 1 (no effect)")
 ax.set_yticks(list(y_pos))
 ax.set_yticklabels(plot_data["variable"])
-ax.set_xlabel("Adjusted RR（95% CI）")
-ax.set_title("Forest Plot — Adjusted Risk Ratio（Modified Poisson）")
+ax.set_xlabel("Adjusted RR (95% CI)")
+ax.set_title("Forest Plot — Adjusted Risk Ratio (Modified Poisson)")
 ax.legend(loc="lower right", fontsize=9)
-ax.invert_yaxis()              # 第一個變項在最上面
+ax.invert_yaxis()              # first variable on top
 plt.tight_layout()
 plt.show()
 ```
 
-## Step 7: 模型診斷
+## Step 7: Model Diagnostics
 
 ```python
-# === Step 7: 模型診斷 — AIC 比較 ===
-# 用 AIC 比較「完整模型」和「精簡模型」，判斷是否放了太多變項。
+# === Step 7: Model diagnostics — AIC comparison ===
+# Use AIC to compare the "full model" and the "reduced model" and judge whether we put in too many variables.
 
-# --- 精簡模型 ---
-# 移除 Ch03 篩選中 crude RR 不顯著或效果量小的共病，以及樓層。
-# 保留：核心暴露因子（shower_use, hydrotherapy_use）
-#       + 理論上最重要的調整因子（age, immunosuppressed, functional_score）
+# --- Reduced model ---
+# Remove the comorbidities that were non-significant or had small effect sizes in the Ch03 screening, plus floor.
+# Keep: the core exposure factors (shower_use, hydrotherapy_use)
+#       + the theoretically most important adjustment factors (age, immunosuppressed, functional_score)
 formula_reduced = (
     "infected ~ shower_use + hydrotherapy_use + age + "
     "immunosuppressed + functional_score"
@@ -497,69 +497,69 @@ with warnings.catch_warnings():
         family=sm.families.Poisson(),
     ).fit(cov_type="HC0")
 
-print(f"完整模型 AIC = {model_poisson.aic:.1f}")
-print(f"精簡模型 AIC = {model_reduced.aic:.1f}")
+print(f"Full model AIC = {model_poisson.aic:.1f}")
+print(f"Reduced model AIC = {model_reduced.aic:.1f}")
 print()
 
-# --- 白話解讀 ---
+# --- Plain-language interpretation ---
 if model_reduced.aic < model_poisson.aic:
-    print("📉 精簡模型 AIC 較小 → 精簡模型在「解釋力 vs 複雜度」之間取得更好平衡")
+    print("📉 The reduced model has a smaller AIC → it strikes a better balance between explanatory power and complexity")
 else:
-    print("📈 完整模型 AIC 較小 → 多放的變項確實有貢獻")
+    print("📈 The full model has a smaller AIC → the extra variables really do contribute")
 ```
 
-> 🍽️ **點菜比喻**：AIC 就像在餐廳點菜。菜太多（變項太多）→ 吃不完浪費錢（overfitting）。菜太少（變項太少）→ 餓肚子（underfitting）。AIC 幫你找到「剛好吃飽又不浪費」的平衡點。AIC 越小越好。
+> 🍽️ **The ordering-food metaphor**: AIC is like ordering dishes at a restaurant. Too many dishes (too many variables) → you can't finish them and waste money (overfitting). Too few dishes (too few variables) → you go hungry (underfitting). AIC helps you find the balance where you're "just full without waste." The smaller the AIC, the better.
 
-```{admonition} AIC 只能比同一 family 的模型
+```{admonition} AIC can only compare models of the same family
 :class: warning
 
-Modified Poisson（Poisson family）和 Logistic Regression（Binomial family）的 AIC 不能直接比較，因為 likelihood 的計算基礎不同。所以上面只比較了兩個 Poisson 模型之間的 AIC。
+The AIC of Modified Poisson (Poisson family) and Logistic Regression (Binomial family) cannot be compared directly, because the likelihoods are computed on different bases. That's why above we only compared the AIC between two Poisson models.
 ```
 
-### 變項怎麼選？三種策略比較
+### How do we choose variables? A comparison of three strategies
 
-上面我們只比了「完整 vs 精簡」兩個模型。但實務上，到底要放哪些變項進模型？有三種常見策略：
+Above we only compared the two models "full vs reduced." But in practice, which variables should go into the model? There are three common strategies:
 
-| 策略 | 做法 | 優點 | 缺點 |
+| Strategy | How it works | Pros | Cons |
 |------|------|------|------|
-| **Forward（往前加）** | 從空模型開始，每次加入一個讓 AIC 下降最多的變項 | 簡單直覺 | 容易漏掉聯合效應；加入順序影響結果 |
-| **Backward（往後刪）** | 從完整模型開始，每次移除一個對 AIC 影響最小的變項 | 能看到所有變項的聯合效應 | 需要夠多樣本才能放所有變項 |
-| **Change-in-estimate（效應改變法）** | 逐一移除候選干擾因子，看暴露因子的 RR 是否改變 ≥ 10% | **流行病學金標準**——以「是否干擾暴露效應」為判斷依據 | 需要先定義「暴露因子」 |
+| **Forward (add in)** | Start from the empty model and each step add the variable that lowers AIC the most | Simple and intuitive | Easily misses joint effects; the order of addition affects the result |
+| **Backward (drop out)** | Start from the full model and each step remove the variable with the smallest effect on AIC | Can see the joint effect of all variables | Needs a large enough sample to include all variables |
+| **Change-in-estimate** | Remove candidate confounders one at a time and see whether the exposure factor's RR changes by ≥ 10% | **The epidemiological gold standard**—judges based on "does it confound the exposure effect" | You must define the "exposure factor" first |
 
 ```{tip}
-**流行病學推薦用 change-in-estimate**，而不是 stepwise（自動選變項）。原因很簡單：我們做多變項分析的目的是**正確估計暴露因子的效應**，不是做預測。一個變項即使 p-value 不顯著，只要它是干擾因子（移除後讓 RR 改變 ≥ 10%），就應該留在模型裡。
+**Epidemiology recommends change-in-estimate**, not stepwise (automatic variable selection). The reason is simple: the purpose of our multivariable analysis is to **correctly estimate the effect of the exposure factor**, not to make predictions. Even if a variable's p-value is not significant, as long as it is a confounder (removing it changes the RR by ≥ 10%), it should stay in the model.
 
-Stepwise 以 p-value 為標準，可能會移除「不顯著但確實在干擾的變項」，導致暴露因子的 RR 被扭曲。
+Stepwise uses the p-value as its criterion and may remove "variables that are non-significant but genuinely confounding," which distorts the exposure factor's RR.
 ```
 
-下面用 Python 實作 **change-in-estimate 法**，看哪些候選干擾因子真正影響了 shower_use 和 hydrotherapy_use 的 RR：
+Below we implement the **change-in-estimate method** in Python to see which candidate confounders truly affect the RR of shower_use and hydrotherapy_use:
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：10% 法則——change-in-estimate 挑變項</div>
+  <div class="video-title">Tutorial video: The 10% rule—choosing variables with change-in-estimate</div>
   <div class="youtube-lite" data-id="OQLEUHJQv7s">
-    <img src="https://img.youtube.com/vi/OQLEUHJQv7s/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/OQLEUHJQv7s/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
 ```python
-# === Step 7b: Change-in-Estimate 變項選擇 ===
-# 流行病學標準做法：逐一移除候選干擾因子，
-# 看暴露因子（shower_use, hydrotherapy_use）的 adjusted RR 改變多少。
-# 改變 ≥ 10% → 該變項是干擾因子，必須留在模型裡。
+# === Step 7b: Change-in-Estimate variable selection ===
+# The standard epidemiological approach: remove candidate confounders one at a time
+# and see how much the exposure factors' (shower_use, hydrotherapy_use) adjusted RR changes.
+# A change of ≥ 10% → that variable is a confounder and must stay in the model.
 
-# --- 完整模型的暴露因子 RR（基準值）---
+# --- The exposure factors' RR from the full model (baseline) ---
 full_rr = {
     var: np.exp(model_poisson.params[var])
     for var in ["shower_use", "hydrotherapy_use"]
 }
-print("完整模型的暴露因子 RR（基準）：")
+print("Exposure factors' RR from the full model (baseline):")
 for var, rr in full_rr.items():
     print(f"  {var}: {rr:.3f}")
 print()
 
-# --- 候選干擾因子：逐一移除測試 ---
+# --- Candidate confounders: test by removing each one ---
 confounders = [
     "age", "comorbidity_chf", "comorbidity_dm", "comorbidity_cancer",
     "comorbidity_copd", "immunosuppressed", "functional_score", "C(floor)",
@@ -567,7 +567,7 @@ confounders = [
 
 cie_results = []
 for drop_var in confounders:
-    # 建立移除一個變項的公式
+    # Build the formula with one variable removed
     keep = [c for c in confounders if c != drop_var]
     formula_test = "infected ~ shower_use + hydrotherapy_use + " + " + ".join(keep)
 
@@ -581,48 +581,48 @@ for drop_var in confounders:
         rr_without = np.exp(m.params[exposure])
         pct_change = (rr_without - full_rr[exposure]) / full_rr[exposure] * 100
         cie_results.append({
-            "移除的變項": drop_var,
-            "暴露因子": exposure,
-            "移除後 RR": round(rr_without, 3),
-            "RR 改變%": f"{pct_change:+.1f}%",
-            "是否干擾": "✓ 干擾" if abs(pct_change) >= 10 else "",
+            "removed variable": drop_var,
+            "exposure factor": exposure,
+            "RR after removal": round(rr_without, 3),
+            "RR change %": f"{pct_change:+.1f}%",
+            "confounder?": "✓ confounder" if abs(pct_change) >= 10 else "",
         })
 
 cie_df = pd.DataFrame(cie_results)
-print("=== Change-in-Estimate 分析 ===")
-print("（移除某變項後，暴露因子的 RR 改變 ≥ 10% → 該變項是干擾因子）\n")
+print("=== Change-in-Estimate analysis ===")
+print("(After removing a variable, if an exposure factor's RR changes by ≥ 10% → that variable is a confounder)\n")
 print(cie_df.to_string(index=False))
 ```
 
-> 📋 **怎麼用這張表？** 看「RR 改變%」欄位。如果移除某個變項後，shower_use 或 hydrotherapy_use 的 RR 改變了 10% 以上，就表示那個變項是干擾因子，必須留在模型裡——即使它自己的 p-value 不顯著。
+> 📋 **How do you use this table?** Look at the "RR change %" column. If, after removing a variable, the RR of shower_use or hydrotherapy_use changes by more than 10%, that variable is a confounder and must stay in the model—even if its own p-value is not significant.
 
 ---
 
-## 解讀重點
+## Key Takeaways for Interpretation
 
-| 結果 | 意義 |
+| Result | Meaning |
 |------|------|
-| Adjusted RR > 1 且 p < 0.05 | 控制其他因子後，仍為獨立危險因子 |
-| Crude RR ≫ Adjusted RR | 粗 RR 被干擾作用膨脹（與 Ch05 MH 結論一致） |
-| Adjusted RR ≈ 1 | 控制後效應消失，原來的關聯可能是假的 |
-| Adjusted OR > Adjusted RR | OR 高估效應（侵襲率高的必然結果） |
-| AIC 較小 | 模型在解釋力與複雜度間取得較好平衡 |
+| Adjusted RR > 1 and p < 0.05 | Still an independent risk factor after controlling for other factors |
+| Crude RR ≫ Adjusted RR | The crude RR was inflated by confounding (consistent with the Ch05 MH conclusion) |
+| Adjusted RR ≈ 1 | The effect disappears after adjustment; the original association may have been spurious |
+| Adjusted OR > Adjusted RR | The OR overestimates the effect (inevitable at a high attack rate) |
+| Smaller AIC | The model strikes a better balance between explanatory power and complexity |
 
-## 常見錯誤
+## Common Mistakes
 
-1. **在世代研究中只報 OR**：侵襲率高時 OR ≠ RR。應該用 Modified Poisson 算 RR，或至少同時報告兩者讓讀者知道差異
-2. **OR 當 RR 用**：對主管說「OR = 3.5 代表風險 3.5 倍」——在高侵襲率下是錯的。要明確區分「勝算幾倍」和「風險幾倍」
-3. **放太多變項**：280 筆資料放 15+ 變項 → 過度擬合。經驗法則：每個 predictor 至少需要 10-15 個 events
-4. **忽略多重共線性**：高度相關的變項不要同時放入（例如 functional_status 和 age 可能高度相關）
-5. **自動選變項**：stepwise 不推薦 → 用流行病學知識和 DAG 選擇
-6. **不報 CI**：只報 p-value 不夠。CI 告訴你效應的精確度和臨床意義
+1. **Reporting only the OR in a cohort study**: at a high attack rate OR ≠ RR. You should use Modified Poisson to compute the RR, or at least report both so readers know the difference
+2. **Using the OR as if it were the RR**: telling your supervisor "OR = 3.5 means the risk is 3.5 times higher" is wrong at a high attack rate. Clearly distinguish "how many times the odds" from "how many times the risk"
+3. **Putting in too many variables**: 280 records with 15+ variables → overfitting. Rule of thumb: each predictor needs at least 10–15 events
+4. **Ignoring multicollinearity**: don't include highly correlated variables together (for example, functional_status and age may be highly correlated)
+5. **Automatic variable selection**: stepwise is not recommended → use epidemiological knowledge and a DAG to select variables
+6. **Not reporting the CI**: reporting only the p-value isn't enough. The CI tells you the precision and clinical significance of the effect
 
-## 下一步
+## Next Step
 
-多變項分析回答了「哪些因子獨立影響感染風險」。但主管接著問：「下週還會有多少新個案？」→ Ch07 時間序列預測。
+The multivariable analysis answered "which factors independently affect the risk of infection." But your supervisor then asks: "How many new cases will there be next week?" → Ch07 time series forecasting.
 
-## 練習本
+## Practice Notebooks
 
-- 課堂筆記：{ref}`06_logistic_regression.ipynb`
-- 作業版：[`06_logistic_regression_exercise.ipynb`](exercises/06_logistic_regression_exercise.ipynb)
-- 解答版（教師版）：[`06_logistic_regression_solution.ipynb`](solutions/06_logistic_regression_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/06_logistic_regression_solution.ipynb>)
+- Class notes: {ref}`06_logistic_regression.ipynb`
+- Exercise version: [`06_logistic_regression_exercise.ipynb`](exercises/06_logistic_regression_exercise.ipynb)
+- Solution version (instructor edition): [`06_logistic_regression_solution.ipynb`](solutions/06_logistic_regression_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/06_logistic_regression_solution.ipynb>)

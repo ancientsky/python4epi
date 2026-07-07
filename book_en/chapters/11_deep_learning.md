@@ -1,22 +1,22 @@
-# 11 深度學習（PyTorch）：280 筆資料用 DL 合理嗎？
+# 11 Deep Learning (PyTorch): Does DL Make Sense for 280 Rows?
 
-## 你將學到
+## What You'll Learn
 
-- 用 PyTorch 建立**二元分類神經網路**
-- 手動撰寫**訓練迴圈（training loop）**與驗證集監控
-- 實作**早停法（early stopping）**避免過擬合
-- 比較 DL 與 Ch10 sklearn 結果，討論「何時該用 / 不該用 DL」
+- Build a **binary classification neural network** with PyTorch
+- Write a **training loop** by hand, with validation-set monitoring
+- Implement **early stopping** to avoid overfitting
+- Compare DL against the Ch10 sklearn results and discuss "when to use / when not to use DL"
 
-## 情境故事
+## The Story
 
-你在 Ch10 用 sklearn 建了 baseline 模型。一位同事問：
-> 「要不要試試深度學習？也許能抓到複雜的交互作用？」
+In Ch10 you built a baseline model with sklearn. A colleague asks:
+> "Should we try deep learning? Maybe it can pick up complex interactions?"
 
-你決定用 PyTorch 實作一個簡單的神經網路，看看在 280 筆資料上表現如何。
+You decide to build a simple neural network with PyTorch and see how it does on 280 rows of data.
 
 ---
 
-## Step 1 — 資料前處理（手動轉 tensor）
+## Step 1 — Data Preprocessing (converting to tensors by hand)
 
 ```python
 import pandas as pd
@@ -27,7 +27,7 @@ from torch import nn
 df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
 df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
 
-# 與 Ch10 相同的特徵
+# Same features as Ch10
 num_cols = ["age"]
 cat_cols = ["sex", "smoking_history", "functional_status", "wing"]
 bin_cols = [
@@ -35,22 +35,22 @@ bin_cols = [
     "comorbidity_copd", "immunosuppressed", "shower_use", "hydrotherapy_use",
 ]
 
-# One-hot 編碼
+# One-hot encoding
 X_df = pd.get_dummies(df[num_cols + cat_cols + bin_cols], drop_first=True)
 X_np = X_df.values.astype(np.float32)
 y_np = df["infected"].values.astype(np.float32)
 
-# 標準化數值特徵
+# Standardize numeric features
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 X_np[:, 0] = scaler.fit_transform(X_np[:, 0:1]).ravel()  # age
 
-# 轉 tensor
+# Convert to tensors
 X_tensor = torch.tensor(X_np)
 y_tensor = torch.tensor(y_np).unsqueeze(1)
 ```
 
-## Step 2 — 模型架構
+## Step 2 — Model Architecture
 
 ```python
 input_dim = X_tensor.shape[1]
@@ -64,15 +64,15 @@ model = nn.Sequential(
 )
 ```
 
-> **架構**：input → 32 → 16 → 1 (sigmoid)，共約 700 個參數。
+> **Architecture**: input → 32 → 16 → 1 (sigmoid), about 700 parameters in total.
 
-## Step 3 — 訓練迴圈 + 驗證集
+## Step 3 — Training Loop + Validation Set
 
 ```python
 loss_fn = nn.BCEWithLogitsLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-# 手動分割訓練 / 驗證
+# Split train / validation by hand
 idx = np.arange(len(X_tensor))
 np.random.seed(42)
 np.random.shuffle(idx)
@@ -83,7 +83,7 @@ X_train, y_train = X_tensor[train_idx], y_tensor[train_idx]
 X_val, y_val = X_tensor[val_idx], y_tensor[val_idx]
 ```
 
-## Step 4 — 早停法
+## Step 4 — Early Stopping
 
 ```python
 best_val_loss = float("inf")
@@ -115,7 +115,7 @@ for epoch in range(200):
 model.load_state_dict(best_state)
 ```
 
-## Step 5 — 評估 + 與 sklearn 比較
+## Step 5 — Evaluation + Comparison with sklearn
 
 ```python
 from sklearn.metrics import roc_auc_score
@@ -129,33 +129,33 @@ print(f"DL Validation AUC = {auc:.3f}")
 
 ---
 
-## 練習題
+## Exercises
 
-- 作業版：[`11_dl_exercise.ipynb`](exercises/11_dl_exercise.ipynb)
-- 解答版（講師）：[`11_dl_solution.ipynb`](solutions/11_dl_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/11_dl_solution.ipynb>)
+- Exercise version: [`11_dl_exercise.ipynb`](exercises/11_dl_exercise.ipynb)
+- Solution version (instructor): [`11_dl_solution.ipynb`](solutions/11_dl_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/11_dl_solution.ipynb>)
 
-## 常見誤用
+## Common Mistakes
 
-| 錯誤 | 正確做法 |
+| Mistake | The right way |
 |------|---------|
-| 只報訓練集結果 | 一定要用驗證集評估 |
-| 沒固定 random seed | `torch.manual_seed(42)` 確保可重現 |
-| 小資料集用複雜架構 | 280 筆最多用 1-2 層隱藏層 |
-| 用 DL 就一定比 ML 好 | 小樣本中 DL 容易 overfit，通常不如簡單模型 |
+| Reporting only training-set results | Always evaluate on a validation set |
+| Not fixing the random seed | `torch.manual_seed(42)` ensures reproducibility |
+| Using a complex architecture on a small dataset | With 280 rows, use at most 1-2 hidden layers |
+| Assuming DL always beats ML | On small samples DL overfits easily and usually loses to a simpler model |
 
-## 280 筆用 DL 合理嗎？
+## Does DL Make Sense for 280 Rows?
 
-| 考量 | 結論 |
+| Consideration | Conclusion |
 |------|------|
-| 樣本量 | 280 筆遠低於 DL 通常需要的數千筆 |
-| 特徵維度 | ~15 維，邏輯斯迴歸已足夠 |
-| 過擬合風險 | DL 參數 >> 樣本數 → 高風險 |
-| 教學價值 | 學會 PyTorch 語法和訓練迴圈 |
-| 實務建議 | 用 sklearn baseline，DL 作為學習工具 |
+| Sample size | 280 rows is far below the thousands DL usually needs |
+| Feature dimensionality | ~15 dimensions; logistic regression is already enough |
+| Overfitting risk | DL parameters >> sample size → high risk |
+| Educational value | You learn PyTorch syntax and the training loop |
+| Practical advice | Use an sklearn baseline; treat DL as a learning tool |
 
-> **結論**：在本案中，DL 不太可能超越 sklearn。但學會 PyTorch 的基本語法，在未來遇到大規模資料（如影像、文本）時就能派上用場。
+> **Bottom line**: In this case, DL is unlikely to beat sklearn. But learning the basics of PyTorch syntax pays off later, when you run into large-scale data (images, text, etc.).
 
-## 下一步
+## Next Step
 
-我們已經用了統計、ML、DL 來分析這場群聚。
-下一章（Ch12），我們退一步思考更根本的問題：**淋浴暴露真的「導致」感染嗎？還是只是統計關聯？** → 因果推論。
+We've now used statistics, ML, and DL to analyze this cluster.
+In the next chapter (Ch12), we step back and think about a more fundamental question: **did shower exposure really "cause" the infections, or is it just a statistical association?** → Causal inference.

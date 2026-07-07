@@ -1,111 +1,111 @@
-# 05 分層分析與干擾因子
+# 05 Stratified Analysis and Confounding
 
-## 情境
+## Scenario
 
-在 Ch03 中，我們發現淋浴使用者的感染風險比（RR）明顯大於 1。但資深疫調人員提出一個質疑：
+Back in Ch03, we found that shower users had a risk ratio (RR) for infection well above 1. But a senior outbreak investigator raised a challenge:
 
-> 「臥床住民幾乎不使用淋浴，而臥床住民本來活動範圍就小、暴露機會也少。你看到的高 RR，會不會只是因為**能走動的人同時也在用淋浴**？」
+> "Bedridden residents almost never use the showers, and bedridden residents already have limited mobility and fewer exposure opportunities to begin with. Could the high RR you're seeing just be because **the people who can walk around are also the ones using the showers**?"
 
-這就是**干擾作用（confounding）**的問題。想像一下：
+This is the problem of **confounding**. Picture this:
 
-> 🌧️ **穿雨衣的人比較容易感冒——所以穿雨衣會害你感冒？**
+> 🌧️ **People who wear raincoats catch colds more often—so does wearing a raincoat give you a cold?**
 >
-> 當然不是！是因為**下雨天**同時讓你穿雨衣（暴露）、也讓你容易感冒（結果）。「下雨天」就是那個藏在背後搞混你判斷的**干擾因子**。
+> Of course not! It's because **rainy days** make you both put on a raincoat (the exposure) and catch a cold more easily (the outcome). "Rainy day" is the **confounder** hiding in the background, muddling your judgment.
 
-在我們的護理之家案例中，「功能狀態」就是那個「下雨天」——它同時影響了住民會不會用淋浴、也影響了住民的感染風險。這一章教你如何找出干擾因子、用分層分析把它「控制」住，再用 Mantel-Haenszel 法得到調整後的 RR。
+In our nursing home case, "functional status" is that "rainy day"—it affects both whether a resident uses the shower and the resident's infection risk. This chapter teaches you how to spot a confounder, use stratified analysis to "control" for it, and then apply the Mantel-Haenszel method to obtain an adjusted RR.
 
-## 你將學到
+## What You Will Learn
 
-- 什麼是干擾因子（confounder）及其三要件
-- 如何用 DAG（有向無環圖）辨識干擾路徑
-- 如何進行分層分析（stratified analysis）
-- 各層 RR 的森林圖（forest plot）視覺化
-- Mantel-Haenszel 加權 RR 及同質性檢定
-- 如何解讀粗 RR vs. 調整後 RR（含量化判斷標準）
+- What a confounder is and its three requirements
+- How to use a DAG (directed acyclic graph) to identify confounding paths
+- How to perform stratified analysis
+- Forest plot visualization of stratum-specific RRs
+- Mantel-Haenszel weighted RR and the test of homogeneity
+- How to interpret crude RR vs. adjusted RR (with a quantitative decision rule)
 
-## 核心概念
+## Core Concepts
 
-### 干擾因子的三要件
+### The Three Requirements of a Confounder
 
-一個變項 C 要被認定為干擾因子（confounder），必須**同時滿足**以下三個條件——少一個都不算：
+For a variable C to be considered a confounder, it must **simultaneously satisfy** all three of the following conditions—missing even one disqualifies it:
 
-1. **C 與暴露有關聯**：例如功能狀態影響住民會不會去淋浴（能走動的人才會走進淋浴間）
-2. **C 與結果有關聯**：例如功能狀態影響感染風險（能走動的人活動範圍大，接觸水霧的機會也多）
-3. **C 不是中間變項**：C 不是暴露到結果因果路徑上的「中繼站」。例如「水霧吸入量」是淋浴→感染路徑上的中間步驟，不能當作干擾因子來控制
+1. **C is associated with the exposure**: e.g., functional status affects whether a resident uses the shower (only people who can walk get into the shower room)
+2. **C is associated with the outcome**: e.g., functional status affects infection risk (people who can walk have a wider range of movement and more chances to encounter water mist)
+3. **C is not an intermediate variable**: C is not a "way station" on the causal path from exposure to outcome. For example, "amount of water mist inhaled" is an intermediate step on the shower→infection path and must not be treated as a confounder to control for
 
-> 🧪 **記憶口訣**：干擾因子像「雙面間諜」——它同時混在暴露組和結果組裡，讓你誤以為暴露和結果有關係（或關係被誇大/壓縮）。三個條件缺一不可，少驗一個就可能「冤枉好人」或「放走嫌犯」。
+> 🧪 **Memory aid**: A confounder is like a "double agent"—it mixes into both the exposure group and the outcome group, tricking you into thinking exposure and outcome are related (or exaggerating/shrinking the true relationship). All three conditions are essential; skip verifying even one and you may "wrongly convict an innocent" or "let the culprit go free."
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：干擾因子的三要件——誰才算共犯</div>
+  <div class="video-title">Tutorial video: The three requirements of a confounder—who counts as an accomplice</div>
   <div class="youtube-lite" data-id="2ZF6K8ylvtI">
-    <img src="https://img.youtube.com/vi/2ZF6K8ylvtI/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/2ZF6K8ylvtI/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
-### 如何發現潛在的干擾因子？
+### How Do You Discover Potential Confounders?
 
-故事開頭是「資深疫調人員」憑經驗提出功能狀態可能是干擾因子。但不可能每次都靠資深人員——有沒有更系統性的方法？其實有好幾條路可以走：
+Our story opened with a "senior outbreak investigator" drawing on experience to suggest that functional status might be a confounder. But you can't rely on senior staff every time—is there a more systematic method? In fact, there are several routes you can take:
 
-| 方法 | 做法 | 優點 | 限制 |
+| Method | How it works | Advantage | Limitation |
 |------|------|------|------|
-| **文獻回顧** | 查過去類似疫情調查的論文，看別人控制了哪些干擾因子 | 站在前人肩膀上，不漏掉已知的干擾因子 | 新型疾病可能沒有先例 |
-| **畫 DAG** | 根據領域知識畫出因果關係圖，找出所有「後門路徑」 | 邏輯清晰，能區分干擾因子 vs. 中間變項 | 需要對因果機制有基本理解 |
-| **統計篩選** | 檢查候選變項是否同時與暴露和結果顯著相關（干擾三要件 #1 + #2） | 用數據佐證，不完全靠直覺 | 統計顯著 ≠ 因果；可能忽略弱但真實的干擾 |
-| **Change-in-estimate** | 在模型中加入/移除候選變項，看暴露的效應測量（RR 或 OR）是否改變 ≥ 10% | 直接回答「它有沒有在干擾」 | 需要先有迴歸模型（→ Ch06） |
-| **專家諮詢** | 請教臨床醫師、感管人員、資深流行病學家 | 能捕捉到統計和文獻抓不到的實務因素 | 主觀，可能有遺漏 |
+| **Literature review** | Search papers from similar past outbreak investigations to see which confounders others controlled for | Stand on the shoulders of predecessors; don't miss known confounders | A novel disease may have no precedent |
+| **Draw a DAG** | Draw a causal diagram based on domain knowledge and find all the "back-door paths" | Logically clear; can distinguish confounders vs. intermediate variables | Requires a basic understanding of the causal mechanism |
+| **Statistical screening** | Check whether a candidate variable is significantly associated with both the exposure and the outcome (confounder requirements #1 + #2) | Backed by data, not purely intuition | Statistical significance ≠ causation; may miss weak but real confounding |
+| **Change-in-estimate** | Add/remove the candidate variable in a model and see whether the exposure's effect measure (RR or OR) changes by ≥ 10% | Directly answers "is it confounding or not" | Requires a regression model first (→ Ch06) |
+| **Expert consultation** | Consult clinicians, infection-control staff, and senior epidemiologists | Captures practical factors that statistics and literature miss | Subjective; may have omissions |
 
 ```{tip}
-**實務上推薦「文獻 + DAG + 統計篩選」三管齊下**。先查文獻列出候選名單 → 畫 DAG 標示因果方向 → 用數據驗證干擾三要件。最後再請資深人員 review，看有沒有漏掉什麼。不要只靠一種方法，也不要只靠直覺。
+**In practice, we recommend a three-pronged approach: "literature + DAG + statistical screening."** First review the literature to draw up a candidate list → draw a DAG to mark causal directions → use data to verify the three confounder requirements. Finally, have senior staff review it to see if anything was missed. Don't rely on just one method, and don't rely on intuition alone.
 ```
 
-### DAG（有向無環圖）
+### DAG (Directed Acyclic Graph)
 
-DAG 是一張「因果關係地圖」，用箭頭表示「誰影響誰」。畫出 DAG 就能一眼看出干擾因子藏在哪裡：
+A DAG is a "map of causal relationships" that uses arrows to show "who affects whom." Drawing a DAG lets you see at a glance where the confounder is hiding:
 
 ```{figure} images/confounding_dag.svg
 :name: fig-confounding-dag
-:alt: 干擾因子 DAG，顯示功能狀態同時影響淋浴使用和感染風險
+:alt: Confounder DAG showing functional status affecting both shower use and infection risk
 :width: 100%
 
-DAG 示意圖：功能狀態（C）同時影響淋浴使用（暴露）和感染風險（結果），如果不控制 C，淋浴的 RR 會被灌水。右下方的雨衣比喻幫助記憶干擾因子的邏輯。
+DAG illustration: functional status (C) affects both shower use (exposure) and infection risk (outcome). If you don't control for C, the RR for showering gets inflated. The raincoat analogy at the bottom right helps you remember the logic of confounding.
 ```
 
-從 DAG 可以看到兩條路徑：
-- **直接路徑**（我們想研究的）：淋浴使用 → 感染
-- **後門路徑**（干擾路徑）：淋浴使用 ← 功能狀態 → 感染
+From the DAG you can see two paths:
+- **Direct path** (the one we want to study): shower use → infection
+- **Back-door path** (the confounding path): shower use ← functional status → infection
 
-後門路徑就像考試時隔壁同學偷看你的答案——他的分數（結果）看起來跟你（暴露）有關，但其實是因為「坐你旁邊」（干擾因子）這個共同原因。分層分析就是把「坐旁邊的」和「沒坐旁邊的」分開看，消除這個虛假關聯。
+The back-door path is like a classmate next to you copying your answers during an exam—their score (the outcome) looks related to yours (the exposure), but really it's because of the common cause of "sitting next to you" (the confounder). Stratified analysis separates "those sitting next to you" from "those not sitting next to you," eliminating this spurious association.
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：DAG 有向無環圖——畫一張因果地圖</div>
+  <div class="video-title">Tutorial video: The DAG—draw a map of causation</div>
   <div class="youtube-lite" data-id="87jXOHHNCog">
-    <img src="https://img.youtube.com/vi/87jXOHHNCog/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/87jXOHHNCog/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
-### 分層分析的邏輯
+### The Logic of Stratified Analysis
 
-> 🍳 **煎蛋比喻**：你想知道「用橄欖油煎蛋是不是比較不焦」，但每次用橄欖油的時候你剛好用小火，用沙拉油的時候你剛好用大火。結果看起來橄欖油比較不焦——但真的是油的關係嗎？
+> 🍳 **The fried-egg analogy**: You want to know "whether frying an egg in olive oil burns it less," but every time you use olive oil you happen to use low heat, and every time you use salad oil you happen to use high heat. The result makes it look like olive oil burns less—but is it really the oil? 
 >
-> **分層分析的做法**：把「小火」和「大火」分開比。小火組裡比較橄欖油 vs. 沙拉油，大火組裡也比較。這樣火候（干擾因子）就被「鎖住」了，你看到的差異才是油的真正效果。
+> **What stratified analysis does**: compare low heat and high heat separately. Within the low-heat group, compare olive oil vs. salad oil; do the same within the high-heat group. Now the heat level (the confounder) is "locked down," and the difference you see is the oil's true effect.
 
-具體來說：把資料按干擾因子分層（例如按功能狀態分成 ambulatory、wheelchair、bedridden 三組），在每層內分別計算 RR。如果各層的 RR 都比粗 RR 小，就表示粗 RR 確實被干擾作用膨脹了。
+Concretely: stratify the data by the confounder (e.g., split into three groups by functional status—ambulatory, wheelchair, bedridden), and compute the RR within each stratum. If every stratum-specific RR is smaller than the crude RR, that means the crude RR was indeed inflated by confounding.
 
-### Mantel-Haenszel 法
+### The Mantel-Haenszel Method
 
-分完層之後，我們需要一個「公平的合併方法」——不能簡單平均，因為各層的人數不同。Mantel-Haenszel（MH）法就是給每一層一個權重（取決於各層的樣本大小），算出一個加權的「調整後 RR」：
+After stratifying, we need a "fair way to combine"—we can't just take a simple average, because the strata have different numbers of people. The Mantel-Haenszel (MH) method gives each stratum a weight (depending on that stratum's sample size) and computes a weighted "adjusted RR":
 
 $$RR_{MH} = \frac{\sum_i \frac{a_i \cdot (c_i + d_i)}{N_i}}{\sum_i \frac{c_i \cdot (a_i + b_i)}{N_i}}$$
 
-> 📊 **白話翻譯**：就像學期成績不能把小考和期末考直接平均——期末考佔比要大一點。MH 法就是按照「每一層有多少人」來決定權重，人多的層影響力大，人少的層影響力小。
+> 📊 **In plain language**: it's like a semester grade—you can't just average quizzes and the final exam; the final should count for more. The MH method decides the weights based on "how many people are in each stratum": strata with more people carry more influence, strata with fewer people carry less.
 
 ---
 
-## Step 1: 資料準備
+## Step 1: Data Preparation
 
 ```python
 import pandas as pd
@@ -113,74 +113,76 @@ import numpy as np
 from scipy.stats import chi2_contingency
 from epi_learning.metrics import risk_ratio
 
-# --- 讀取護理之家資料 ---
+# --- Load the nursing home data ---
 df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
 
-# clinical_severity 不是 "not_ill" 的都算感染
+# Anyone whose clinical_severity is not "not_ill" counts as infected
 df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
 ```
 
-## Step 2: 粗 RR 回顧
+## Step 2: Recap of the Crude RR
 
-先算一次「沒有控制任何干擾因子」的粗 RR，作為後續比較的基準線：
+First compute a crude RR "without controlling for any confounder" as the baseline for later comparisons:
 
 ```python
-# --- 2×2 交叉表：淋浴使用 vs. 感染 ---
+# --- 2×2 cross-tabulation: shower use vs. infection ---
 ct = pd.crosstab(df["shower_use"], df["infected"])
-a = int(ct.loc[1, 1])   # 有淋浴、有感染
-b = int(ct.loc[1, 0])   # 有淋浴、沒感染
-c = int(ct.loc[0, 1])   # 沒淋浴、有感染
-d = int(ct.loc[0, 0])   # 沒淋浴、沒感染
+a = int(ct.loc[1, 1])   # showered, infected
+b = int(ct.loc[1, 0])   # showered, not infected
+c = int(ct.loc[0, 1])   # no shower, infected
+d = int(ct.loc[0, 0])   # no shower, not infected
 
 crude_rr = risk_ratio(a, a + b, c, c + d)
-print(f"粗 RR (shower_use → infected) = {crude_rr:.3f}")
+print(f"Crude RR (shower_use -> infected) = {crude_rr:.3f}")
 ```
 
-## Step 3: 檢查干擾三要件
+## Step 3: Check the Three Confounder Requirements
 
-在分層之前，先驗證「功能狀態」是不是真的符合干擾因子的三個條件。少驗一個就可能白做工：
+Before stratifying, verify that "functional status" really meets the three conditions of a confounder. Skip verifying one and you may be doing all the work for nothing:
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：驗證三要件——pd.crosstab 實戰</div>
+  <div class="video-title">Tutorial video: Verifying the three requirements—hands-on with pd.crosstab</div>
   <div class="youtube-lite" data-id="gPq3SstS3JE">
-    <img src="https://img.youtube.com/vi/gPq3SstS3JE/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/gPq3SstS3JE/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
 ```python
-# --- 條件 1：功能狀態與淋浴使用有關聯嗎？ ---
-# normalize="index" 讓每列加總 = 1，看比例
-print("=== 功能狀態 × 淋浴使用 ===")
+# --- Condition 1: Is functional status associated with shower use? ---
+# normalize="index" makes each row sum to 1, so we see proportions
+print("=== Functional status x Shower use ===")
 print(pd.crosstab(df["functional_status"], df["shower_use"],
                   margins=True, normalize="index").round(3))
 
-# --- 條件 2：功能狀態與感染有關聯嗎？ ---
-print("\n=== 功能狀態 × 感染 ===")
+# --- Condition 2: Is functional status associated with infection? ---
+print("\n=== Functional status x Infection ===")
 print(pd.crosstab(df["functional_status"], df["infected"],
                   margins=True, normalize="index").round(3))
 
-# 條件 3（用邏輯判斷）：功能狀態不是淋浴→感染路徑的中間步驟
-# （一個人不會因為「先用了淋浴」才變成能走動的——因果方向不對）
-# → 三個條件都滿足，可以進行分層分析
+# Condition 3 (judged by logic): functional status is not an intermediate step
+# on the shower->infection path
+# (a person does not become ambulatory because they "used the shower first"
+#  -- the causal direction is wrong)
+# -> All three conditions are met, so we can proceed to stratified analysis
 ```
 
-## Step 4: 分層分析
+## Step 4: Stratified Analysis
 
-> 這是整章的核心步驟——把資料按功能狀態（ambulatory、wheelchair、bedridden）分成三層，每一層內分別算 RR 和 95% 信賴區間。
+> This is the core step of the whole chapter—split the data by functional status (ambulatory, wheelchair, bedridden) into three strata, and within each stratum compute the RR and 95% confidence interval.
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：分層分析——每一層都算一次 RR</div>
+  <div class="video-title">Tutorial video: Stratified analysis—compute an RR for every stratum</div>
   <div class="youtube-lite" data-id="8yhHobtu_BU">
-    <img src="https://img.youtube.com/vi/8yhHobtu_BU/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/8yhHobtu_BU/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
 ```python
-# --- 按 functional_status 分層，各層計算 RR + 95% CI ---
+# --- Stratify by functional_status, computing RR + 95% CI in each stratum ---
 strata = df["functional_status"].unique()
 stratum_results = []
 
@@ -188,11 +190,11 @@ for s in sorted(strata):
     sub = df[df["functional_status"] == s]
     ct_s = pd.crosstab(sub["shower_use"], sub["infected"])
 
-    # 有些層可能只有暴露組或只有對照組 → 跳過
+    # Some strata may have only the exposed or only the unexposed group -> skip
     if ct_s.shape != (2, 2):
         continue
 
-    # 取出四格表的 a, b, c, d
+    # Extract a, b, c, d from the four-fold table
     a_s = int(ct_s.loc[1, 1])
     b_s = int(ct_s.loc[1, 0])
     c_s = int(ct_s.loc[0, 1])
@@ -201,7 +203,7 @@ for s in sorted(strata):
 
     rr_s = risk_ratio(a_s, a_s + b_s, c_s, c_s + d_s)
 
-    # --- 95% 信賴區間（用 log 轉換法）---
+    # --- 95% confidence interval (using the log-transform method) ---
     ln_rr = np.log(rr_s)
     se = np.sqrt(1/a_s - 1/(a_s+b_s) + 1/c_s - 1/(c_s+d_s))
     ci_lo = np.exp(ln_rr - 1.96 * se)
@@ -218,24 +220,24 @@ for s in sorted(strata):
 
 results_df = pd.DataFrame(stratum_results)
 
-# --- 印出各層結果 ---
-print("=== 分層 RR ===")
+# --- Print the results for each stratum ---
+print("=== Stratum-specific RR ===")
 for _, row in results_df.iterrows():
     print(f"  {row['stratum']:20s}  RR={row['RR']:.3f}  "
-          f"(95% CI: {row['CI_lower']:.3f}–{row['CI_upper']:.3f})  n={row['n']}")
+          f"(95% CI: {row['CI_lower']:.3f}-{row['CI_upper']:.3f})  n={row['n']}")
 
-print(f"\n  粗 RR = {crude_rr:.3f}")
+print(f"\n  Crude RR = {crude_rr:.3f}")
 ```
 
-## Step 5: 森林圖
+## Step 5: Forest Plot
 
-森林圖（forest plot）把每一層的 RR 和信賴區間畫在同一張圖上，一眼就能看出各層的效應大小和精確度：
+A forest plot puts each stratum's RR and confidence interval on a single chart, so you can see at a glance the effect size and precision of each stratum:
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：森林圖——一眼看穿各層 RR</div>
+  <div class="video-title">Tutorial video: Forest plot—see through every stratum's RR at a glance</div>
   <div class="youtube-lite" data-id="NhMpRmZgN10">
-    <img src="https://img.youtube.com/vi/NhMpRmZgN10/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/NhMpRmZgN10/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
@@ -243,7 +245,7 @@ print(f"\n  粗 RR = {crude_rr:.3f}")
 ```python
 import matplotlib.pyplot as plt
 
-# -- CJK font setup (避免中文標籤顯示為方框) --
+# -- CJK font setup (prevents Chinese labels from showing as boxes) --
 plt.rcParams["font.sans-serif"] = [
     "Noto Sans CJK TC", "Noto Sans CJK SC", "Noto Sans CJK JP",
     "Noto Sans TC", "Microsoft JhengHei",
@@ -257,40 +259,40 @@ plt.rcParams["figure.dpi"] = 150
 fig, ax = plt.subplots(figsize=(8, 4))
 y_pos = range(len(results_df))
 
-# --- 各層 RR ± 95% CI ---
+# --- Each stratum's RR ± 95% CI ---
 ax.errorbar(
     results_df["RR"], y_pos,
     xerr=[results_df["RR"] - results_df["CI_lower"],
           results_df["CI_upper"] - results_df["RR"]],
     fmt="o", color="#2c7fb8", capsize=4, markersize=8,
 )
-# RR=1 參考線（虛線）：若信賴區間跨過 1，代表沒有統計顯著
+# RR=1 reference line (dashed): if the CI crosses 1, it is not statistically significant
 ax.axvline(x=1, color="gray", linestyle="--", alpha=0.5)
-# 粗 RR 參考線（紅色點線）
-ax.axvline(x=crude_rr, color="red", linestyle=":", alpha=0.7, label=f"粗 RR={crude_rr:.2f}")
+# Crude RR reference line (red dotted)
+ax.axvline(x=crude_rr, color="red", linestyle=":", alpha=0.7, label=f"Crude RR={crude_rr:.2f}")
 ax.set_yticks(y_pos)
 ax.set_yticklabels(results_df["stratum"])
 ax.set_xlabel("Risk Ratio (RR)")
-ax.set_title("分層分析森林圖：淋浴使用 → 感染（按功能狀態分層）")
+ax.set_title("Stratified analysis forest plot: shower use -> infection (stratified by functional status)")
 ax.legend()
 plt.tight_layout()
 plt.show()
 ```
 
-## Step 6: Mantel-Haenszel 加權 RR
+## Step 6: Mantel-Haenszel Weighted RR
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：Mantel-Haenszel 加權——公平的學期成績</div>
+  <div class="video-title">Tutorial video: Mantel-Haenszel weighting—a fair semester grade</div>
   <div class="youtube-lite" data-id="Fj3d4Jr0kQM">
-    <img src="https://img.youtube.com/vi/Fj3d4Jr0kQM/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/Fj3d4Jr0kQM/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
 ```python
-# --- Mantel-Haenszel 加權合併 ---
-# 原理：人數多的層權重大，人數少的層權重小
+# --- Mantel-Haenszel weighted pooling ---
+# Principle: strata with more people get more weight, strata with fewer get less
 numerator = 0
 denominator = 0
 
@@ -302,101 +304,101 @@ for _, row in results_df.iterrows():
 
 rr_mh = numerator / denominator
 
-print(f"Mantel-Haenszel 調整後 RR = {rr_mh:.3f}")
-print(f"粗 RR                     = {crude_rr:.3f}")
-print(f"差異                      = {crude_rr - rr_mh:.3f}")
+print(f"Mantel-Haenszel adjusted RR = {rr_mh:.3f}")
+print(f"Crude RR                    = {crude_rr:.3f}")
+print(f"Difference                  = {crude_rr - rr_mh:.3f}")
 
-# --- 用 10% 法則判斷是否有干擾作用 ---
+# --- Use the 10% rule to judge whether confounding is present ---
 change_pct = abs(crude_rr - rr_mh) / rr_mh * 100
-print(f"變化幅度 = {change_pct:.1f}%")
+print(f"Magnitude of change = {change_pct:.1f}%")
 if change_pct >= 10:
-    print("→ 變化 ≥ 10%，粗 RR 被干擾作用影響了！")
+    print("-> Change >= 10%, the crude RR was affected by confounding!")
     if crude_rr > rr_mh:
-        print("  干擾方向：膨脹（粗 RR 偏高）")
+        print("  Direction of confounding: inflation (crude RR is too high)")
     else:
-        print("  干擾方向：壓抑（粗 RR 偏低）")
+        print("  Direction of confounding: suppression (crude RR is too low)")
 else:
-    print("→ 變化 < 10%，干擾作用不明顯")
+    print("-> Change < 10%, confounding is not notable")
 ```
 
-## Step 7: 同質性檢定——有沒有交互作用？
+## Step 7: Test of Homogeneity—Is There Interaction?
 
-> 🍜 **麻辣鍋比喻**：你調查「吃麻辣鍋會不會拉肚子」，把人分成「胃好的」和「胃不好的」兩組。如果胃好的人 RR=1.2，胃不好的人 RR=4.5——這不是干擾，而是**交互作用**（effect modification）：麻辣鍋的影響「因人而異」。這時候你不能只報一個合併的 RR，必須分開說：「胃好的人影響不大，胃不好的人要小心。」
+> 🍜 **The spicy hotpot analogy**: You're investigating "whether eating spicy hotpot causes diarrhea," and you split people into "strong-stomached" and "weak-stomached" groups. If the strong-stomached group has RR=1.2 and the weak-stomached group has RR=4.5—this isn't confounding, it's **interaction** (effect modification): the effect of spicy hotpot "varies from person to person." In that case you can't just report a single pooled RR; you must report them separately: "For strong-stomached people the effect is small; weak-stomached people should be careful."
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：交互作用——暴露的影響因人而異</div>
+  <div class="video-title">Tutorial video: Interaction—the effect of exposure varies from person to person</div>
   <div class="youtube-lite" data-id="I82KCu2kM_0">
-    <img src="https://img.youtube.com/vi/I82KCu2kM_0/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/I82KCu2kM_0/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
 ```python
-# --- 同質性檢定（simplified Breslow-Day）---
-# 看各層 RR 是不是差不多 → 決定能不能合併報告
+# --- Test of homogeneity (simplified Breslow-Day) ---
+# See whether the stratum-specific RRs are similar -> decide whether to pool the report
 rr_values = results_df["RR"].values
 rr_range = rr_values.max() - rr_values.min()
 
-print(f"各層 RR 範圍：{rr_values.min():.3f} – {rr_values.max():.3f}")
-print(f"RR 變異幅度：{rr_range:.3f}")
+print(f"Range of stratum-specific RRs: {rr_values.min():.3f} - {rr_values.max():.3f}")
+print(f"RR spread: {rr_range:.3f}")
 
 if rr_range > 0.5:
-    print("→ 各層 RR 差異較大，可能存在效果修飾（effect modification）")
-    print("  建議分層報告每組的 RR，不宜只報告合併的 RR_MH")
+    print("-> The stratum-specific RRs differ substantially; effect modification may be present")
+    print("  Recommend reporting each stratum's RR separately, not just the pooled RR_MH")
 else:
-    print("→ 各層 RR 相近，可合理使用 MH 加權合併值")
-    print("  報告一個 RR_MH 即可代表整體效應")
+    print("-> The stratum-specific RRs are similar; the MH weighted pooled value is reasonable to use")
+    print("  Reporting a single RR_MH is enough to represent the overall effect")
 ```
 
 ---
 
-## 解讀重點
+## Interpretation Highlights
 
-分層分析做完之後，你需要回答兩個問題。下面這張流程圖幫你做決定：
+After finishing the stratified analysis, you need to answer two questions. The flowchart below helps you decide:
 
 ```{figure} images/stratified_interpretation.svg
 :name: fig-stratified-interpretation
-:alt: 分層分析解讀流程圖，說明如何判斷干擾作用和交互作用
+:alt: Stratified analysis interpretation flowchart explaining how to judge confounding and interaction
 :width: 100%
 
-分層分析解讀流程圖：先問「有沒有干擾」（比較粗 RR vs. 調整 RR），再問「有沒有交互作用」（比較各層 RR 之間的差異）。
+Stratified analysis interpretation flowchart: first ask "is there confounding?" (compare crude RR vs. adjusted RR), then ask "is there interaction?" (compare the differences among the stratum-specific RRs).
 ```
 
-### 問題一：有沒有干擾作用？
+### Question One: Is There Confounding?
 
-比較**粗 RR** 和**調整後 RR**（MH 加權），用 **10% 法則**判斷：
+Compare the **crude RR** and the **adjusted RR** (MH weighted), using the **10% rule** to decide:
 
-$$\text{變化幅度} = \frac{|\text{粗 RR} - \text{調整 RR}|}{\text{調整 RR}} \times 100\%$$
+$$\text{Magnitude of change} = \frac{|\text{crude RR} - \text{adjusted RR}|}{\text{adjusted RR}} \times 100\%$$
 
-| 情境 | 判斷 | 白話文 | 例子 |
+| Situation | Judgment | Plain language | Example |
 |------|------|--------|------|
-| 變化 ≥ 10% 且粗 RR > 調整 RR | 干擾因子把效應**膨脹**了 | 漢堡看起來很大，拿掉生菜才知道肉餅多厚 | 粗 RR=2.5 → 調整 RR=1.8 |
-| 變化 ≥ 10% 且粗 RR < 調整 RR | 干擾因子把效應**壓抑**了 | 冰塊壓住溫度計，拿掉才看到真實溫度 | 粗 RR=1.2 → 調整 RR=1.8 |
-| 變化 < 10% | 干擾作用**不明顯** | 有沒有生菜都差不多大 → 不需要太擔心 | 粗 RR=1.80 → 調整 RR=1.75 |
+| Change ≥ 10% and crude RR > adjusted RR | The confounder **inflated** the effect | The burger looks huge; only after removing the lettuce do you see how thick the patty really is | Crude RR=2.5 → adjusted RR=1.8 |
+| Change ≥ 10% and crude RR < adjusted RR | The confounder **suppressed** the effect | An ice cube is pressing on the thermometer; remove it to see the true temperature | Crude RR=1.2 → adjusted RR=1.8 |
+| Change < 10% | Confounding is **not notable** | With or without lettuce it's about the same size → no need to worry too much | Crude RR=1.80 → adjusted RR=1.75 |
 
-> 💡 **為什麼是 10%？** 這是流行病學的慣例門檻（convention），不是統計檢定。有些教科書用 5% 或 15%，但 10% 是最廣泛使用的。重點是「改變有沒有大到會影響你的結論」。
+> 💡 **Why 10%?** This is an epidemiological convention, not a statistical test. Some textbooks use 5% or 15%, but 10% is the most widely used. The point is "is the change big enough to affect your conclusion?"
 
-### 問題二：有沒有交互作用（效果修飾）？
+### Question Two: Is There Interaction (Effect Modification)?
 
-比較**各層的 RR 之間**是否相近：
+Compare whether the **stratum-specific RRs** are similar to one another:
 
-| 情境 | 判斷 | 白話文 | 怎麼報告 |
+| Situation | Judgment | Plain language | How to report |
 |------|------|--------|----------|
-| 各層 RR 相近、CI 重疊、同質性 p > 0.05 | **沒有**交互作用 | 不管哪一組人，暴露的影響都差不多 | 報一個 RR_MH 就好 |
-| 各層 RR 差很大、CI 不重疊、p ≤ 0.05 | **有**交互作用 | 暴露的影響因人而異——對某些人影響大、某些人影響小 | 分層報告每組的 RR |
+| Stratum RRs are similar, CIs overlap, homogeneity p > 0.05 | **No** interaction | No matter which group of people, the exposure's effect is about the same | Report a single RR_MH |
+| Stratum RRs differ greatly, CIs don't overlap, p ≤ 0.05 | **Has** interaction | The effect of exposure varies from person to person—large for some, small for others | Report each stratum's RR separately |
 
-> ⚠️ **交互作用 ≠ 干擾作用**：干擾作用是一個「假象」，控制後效應會變；交互作用是一個「真正的現象」，不同人群對暴露的反應確實不同。如果有交互作用，把它合併成一個數字反而會**遺失重要資訊**。
+> ⚠️ **Interaction ≠ confounding**: confounding is an "illusion"—the effect changes after you control for it; interaction is a "real phenomenon"—different populations genuinely respond differently to the exposure. If there is interaction, pooling it into a single number would actually **lose important information**.
 
 ---
 
-## Step 8: 第二個範例 — 按樓層分層
+## Step 8: A Second Example — Stratifying by Floor
 
-用同樣的方法，換一個分層變項（樓層）來練習：
+Using the same method, let's practice with a different stratifying variable (floor):
 
 ```python
-# --- 按樓層分層分析 ---
-print("=== 按樓層分層分析：淋浴 → 感染 ===")
+# --- Stratified analysis by floor ---
+print("=== Stratified analysis by floor: shower -> infection ===")
 
 for floor in sorted(df["floor"].unique()):
     sub = df[df["floor"] == floor]
@@ -412,51 +414,51 @@ for floor in sorted(df["floor"].unique()):
 
 ---
 
-## 補充：病例對照研究也能用分層分析嗎？
+## Supplement: Can Case-Control Studies Also Use Stratified Analysis?
 
-到目前為止，我們的護理之家資料是**世代研究（cohort study）**——所有 280 位住民都在追蹤名單上，我們用侵襲率算 RR。但如果今天換成**病例對照研究（case-control study）**呢？
+So far, our nursing home data is a **cohort study**—all 280 residents are on the follow-up roster, and we used attack rates to compute RR. But what if it were a **case-control study** instead?
 
-> 🏥 **情境**：假設感染人數太多，你沒辦法追蹤全部住民，只能挑 121 位感染者（病例）和 159 位未感染者（對照），然後回頭問他們有沒有用過淋浴。這時候你算不出侵襲率（因為你是刻意挑人、不是追蹤全體），所以**不能算 RR，只能算 OR（勝算比）**。
+> 🏥 **Scenario**: Suppose there were too many infected people to follow everyone, so you could only pick 121 infected people (cases) and 159 uninfected people (controls), then ask them retrospectively whether they had used the shower. In that case you can't compute an attack rate (because you deliberately selected people rather than following the whole population), so you **can't compute an RR—only an OR (odds ratio)**.
 
-好消息：**分層分析的邏輯完全一樣**——一樣驗三要件、一樣按干擾因子分層、一樣用 Mantel-Haenszel 合併。唯一的差異是：
+Good news: **the logic of stratified analysis is exactly the same**—still verify the three requirements, still stratify by the confounder, still pool with Mantel-Haenszel. The only difference is:
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：病例對照版 MH——換個公式，邏輯一樣</div>
+  <div class="video-title">Tutorial video: The case-control MH—swap the formula, same logic</div>
   <div class="youtube-lite" data-id="9441-KkyGqM">
-    <img src="https://img.youtube.com/vi/9441-KkyGqM/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/9441-KkyGqM/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
 </div>
 ```
 
-| | 世代研究（本章） | 病例對照研究 |
+| | Cohort study (this chapter) | Case-control study |
 |---|---|---|
-| **效應測量** | RR（風險比） | OR（勝算比） |
-| **各層計算** | $RR_i = \frac{a_i/(a_i+b_i)}{c_i/(c_i+d_i)}$ | $OR_i = \frac{a_i \cdot d_i}{b_i \cdot c_i}$ |
-| **MH 合併公式** | $RR_{MH} = \frac{\sum a_i(c_i+d_i)/N_i}{\sum c_i(a_i+b_i)/N_i}$ | $OR_{MH} = \frac{\sum a_i d_i / N_i}{\sum b_i c_i / N_i}$ |
-| **判斷干擾** | 比較粗 RR vs. 調整 RR（10% 法則） | 比較粗 OR vs. 調整 OR（10% 法則） |
+| **Effect measure** | RR (risk ratio) | OR (odds ratio) |
+| **Per-stratum calculation** | $RR_i = \frac{a_i/(a_i+b_i)}{c_i/(c_i+d_i)}$ | $OR_i = \frac{a_i \cdot d_i}{b_i \cdot c_i}$ |
+| **MH pooling formula** | $RR_{MH} = \frac{\sum a_i(c_i+d_i)/N_i}{\sum c_i(a_i+b_i)/N_i}$ | $OR_{MH} = \frac{\sum a_i d_i / N_i}{\sum b_i c_i / N_i}$ |
+| **Judging confounding** | Compare crude RR vs. adjusted RR (10% rule) | Compare crude OR vs. adjusted OR (10% rule) |
 
 ```{tip}
-**口訣**：世代研究 → 分層 → MH adjusted **RR**；病例對照 → 分層 → MH adjusted **OR**。方法一樣，只是換了效應測量。
+**Mnemonic**: cohort study → stratify → MH adjusted **RR**; case-control → stratify → MH adjusted **OR**. Same method, just a different effect measure.
 
-如果你的病例對照資料侵襲率很低（< 10%），OR ≈ RR，兩者幾乎一樣。但如果像我們的護理之家（侵襲率 43%），OR 會明顯高估——這也是 Ch06 會深入討論的重點。
+If your case-control data has a very low attack rate (< 10%), then OR ≈ RR and the two are nearly identical. But if it's like our nursing home (attack rate 43%), the OR will clearly overestimate—which is exactly a key point Ch06 will explore in depth.
 ```
 
 ---
 
-## 常見錯誤
+## Common Mistakes
 
-1. **不驗證干擾三要件就分層**：直接分層卻不檢查 C 是否真的與暴露和結果都有關。就像偵探沒有證據就抓人——可能抓錯人（控制了不該控制的變項），反而讓結果更偏
-2. **分層太細、每層人太少**：如果一層只有 5 個人，算出來的 RR 會非常不穩定（信賴區間超寬）。經驗法則：每層至少要有 10–20 人
-3. **有交互作用卻只報 MH 合併值**：各層 RR 差很大（例如 1.2 vs. 4.5），只報一個合併 RR = 2.8 會讓人以為「效應對所有人都是 2.8」——完全失真
-4. **只控制一個干擾因子**：分層分析一次只能控制一個變項。如果同時有年齡、功能狀態、共病等多個干擾因子呢？→ Ch06 多變項分析（Modified Poisson + 邏輯斯迴歸）可以同時調整多個變項
+1. **Stratifying without verifying the three confounder requirements**: jumping straight to stratifying without checking whether C is really associated with both the exposure and the outcome. It's like a detective arresting someone without evidence—you might arrest the wrong person (control for a variable you shouldn't have) and make the result even more biased
+2. **Stratifying too finely, with too few people per stratum**: if a stratum has only 5 people, the computed RR will be extremely unstable (the confidence interval will be super wide). Rule of thumb: at least 10–20 people per stratum
+3. **Reporting only the pooled MH value when interaction is present**: when stratum RRs differ greatly (e.g., 1.2 vs. 4.5), reporting a single pooled RR = 2.8 makes people think "the effect is 2.8 for everyone"—completely misleading
+4. **Controlling for only one confounder**: stratified analysis can control for only one variable at a time. What if you have several confounders at once—age, functional status, comorbidities? → Ch06's multivariable analysis (Modified Poisson + logistic regression) can adjust for many variables simultaneously
 
-## 下一步
+## Next Step
 
-分層分析一次只能控制一個干擾因子。但如果同時有年齡、功能狀態、共病等多個干擾因子呢？Ch06 的 **Modified Poisson regression** 可以一次調整所有變項，直接算出 **adjusted RR**——繼續用我們熟悉的風險比。同時也會用邏輯斯迴歸做對照，讓你看到 OR 在高侵襲率下高估了多少。就像從「一次只能鎖住一個變數」升級到「一次鎖住一打變數」。
+Stratified analysis can control for only one confounder at a time. But what if you have several confounders at once—age, functional status, comorbidities? Ch06's **Modified Poisson regression** can adjust for all variables at once and directly compute an **adjusted RR**—still using the risk ratio we're familiar with. At the same time, it uses logistic regression as a comparison so you can see how much the OR overestimates at a high attack rate. It's like upgrading from "locking down one variable at a time" to "locking down a dozen at once."
 
-## 練習本
+## Workbook
 
-- 課堂筆記：{ref}`05_stratified_analysis.ipynb`
-- 作業版：[`05_stratified_exercise.ipynb`](exercises/05_stratified_exercise.ipynb)
-- 解答版（教師版）：[`05_stratified_solution.ipynb`](solutions/05_stratified_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/05_stratified_solution.ipynb>)
+- Lecture notes: {ref}`05_stratified_analysis.ipynb`
+- Exercise version: [`05_stratified_exercise.ipynb`](exercises/05_stratified_exercise.ipynb)
+- Solution version (instructor edition): [`05_stratified_solution.ipynb`](solutions/05_stratified_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/05_stratified_solution.ipynb>)

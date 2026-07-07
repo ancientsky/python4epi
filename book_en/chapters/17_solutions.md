@@ -1,37 +1,37 @@
-# 17 解答專區（講師版）
+# 17 Solutions (Instructor Edition)
 
-此章節提供各章作業的參考解答。所有解答使用同一份資料集：
-**松柏護理之家退伍軍人症群聚事件**（`data/synthetic/legionella_outbreak.csv`）。
+This chapter provides reference solutions for each chapter's exercises. All solutions use the same dataset:
+**the Pine & Cypress Nursing Home Legionnaires' disease cluster** (`data/synthetic/legionella_outbreak.csv`).
 
-## 使用建議
+## Suggested Use
 
-- 先完成 Ch16 作業專區的對應題目，再查看解答。
-- 解答示範的是一種合理分析流程，**不是唯一正解**。
-- 教學時建議先討論方法選擇與分析邏輯，再展示程式碼。
+- Complete the corresponding questions in Ch16 Exercises first, then review the solutions.
+- Each solution demonstrates one reasonable analysis workflow — it is **not the only correct answer**.
+- When teaching, we recommend discussing the choice of methods and the analytical logic first, then showing the code.
 
-## 解答清單
+## Solution List
 
-| 章 | 主題 | 解答重點 | 解答 |
+| Ch | Topic | Solution focus | Solution |
 |----|------|---------|------|
-| 01 | Python 基礎 | dict 組織疫情資料、函數封裝 | [解答](solutions/01_fundamentals_solution.ipynb) |
-| 02 | 資料處理與視覺化 | 日期衍生欄位、年齡分組流行曲線 | [解答](solutions/02_data_wrangling_solution.ipynb) |
-| 03 | 描述性統計與 2×2 表 | 水療 RR、年齡分組 RR、Fisher's exact | [解答](solutions/03_stats_solution.ipynb) |
-| 04 | 群聚調查工作流 | 自動化 SitRep 函數、嚴重度分析 | [解答](solutions/04_outbreak_workflow_solution.ipynb) |
-| 05 | 分層分析與干擾因子 | 年齡分層、共病干擾、MH adjusted RR | [解答](solutions/05_stratified_solution.ipynb) |
-| 06 | 邏輯斯迴歸 | 重症模型、LRT 比較、預測機率 | [解答](solutions/06_logistic_regression_solution.ipynb) |
-| 07 | 時間序列與預測 | 住院序列、窗口 MAE、嚴重度堆疊圖 | [解答](solutions/07_time_series_solution.ipynb) |
-| 08 | 空間流病 | CFR 熱力圖、淋浴 × 空間相關、高風險房間 | [解答](solutions/08_spatial_solution.ipynb) |
-| 09 | 存活分析 | CHF KM 曲線、年齡分組、Cox 多因子 | [解答](solutions/09_survival_solution.ipynb) |
-| 10 | 機器學習 | 平衡類別、重症預測、三模型 ROC | [解答](solutions/10_ml_solution.ipynb) |
-| 11 | 深度學習 | 三層架構、重症任務、Dropout 比較 | [解答](solutions/11_dl_solution.ipynb) |
-| 12 | 因果推論 | 水療 AR/PAR、日期敏感度、碰撞偏差 | [解答](solutions/12_causal_solution.ipynb) |
-| 13 | 可重現研究 | 摘要驗證、環境檢查、版本記錄 | [解答](solutions/13_reproducibility_solution.ipynb) |
-| 14 | 實戰案例 | 摘要表、RR 比較、迷你 SitRep 圖 | [解答](solutions/14_case_study_solution.ipynb) |
+| 01 | Python basics | Organizing outbreak data with dicts, wrapping logic in functions | [Solution](solutions/01_fundamentals_solution.ipynb) |
+| 02 | Data wrangling and visualization | Derived date columns, epi curve by age group | [Solution](solutions/02_data_wrangling_solution.ipynb) |
+| 03 | Descriptive statistics and 2×2 tables | Hydrotherapy RR, RR by age group, Fisher's exact | [Solution](solutions/03_stats_solution.ipynb) |
+| 04 | Outbreak investigation workflow | Automated SitRep function, severity analysis | [Solution](solutions/04_outbreak_workflow_solution.ipynb) |
+| 05 | Stratified analysis and confounders | Age stratification, comorbidity confounding, MH adjusted RR | [Solution](solutions/05_stratified_solution.ipynb) |
+| 06 | Logistic regression | Severe-case model, LRT comparison, predicted probabilities | [Solution](solutions/06_logistic_regression_solution.ipynb) |
+| 07 | Time series and forecasting | Hospitalization series, windowed MAE, severity stacked chart | [Solution](solutions/07_time_series_solution.ipynb) |
+| 08 | Spatial epidemiology | CFR heatmap, shower × space correlation, high-risk rooms | [Solution](solutions/08_spatial_solution.ipynb) |
+| 09 | Survival analysis | CHF KM curve, age grouping, multivariable Cox | [Solution](solutions/09_survival_solution.ipynb) |
+| 10 | Machine learning | Balanced classes, severe-case prediction, three-model ROC | [Solution](solutions/10_ml_solution.ipynb) |
+| 11 | Deep learning | Three-layer architecture, severe-case task, dropout comparison | [Solution](solutions/11_dl_solution.ipynb) |
+| 12 | Causal inference | Hydrotherapy AR/PAR, date sensitivity, collider bias | [Solution](solutions/12_causal_solution.ipynb) |
+| 13 | Reproducible research | Summary validation, environment check, version log | [Solution](solutions/13_reproducibility_solution.ipynb) |
+| 14 | Real-world case study | Summary table, RR comparison, mini SitRep chart | [Solution](solutions/14_case_study_solution.ipynb) |
 
-## 教學提示
+## Teaching Notes
 
-- **Ch05 分層分析**：重點在於讓學員理解「為什麼 crude RR 和 adjusted RR 不同」
-- **Ch06 邏輯斯迴歸**：強調 crude OR vs adjusted OR 的差異，與 Ch05 的分層分析互補
-- **Ch09 存活分析**：「住院者死亡率較高」是 confounding by indication 的經典範例
-- **Ch12 因果推論**：碰撞偏差（collider bias）是最常被忽略的偏差類型
-- **Ch14 實戰案例**：讓學員自行決定「行動建議」，練習從分析到決策的思維
+- **Ch05 Stratified analysis**: the focus is helping students understand "why the crude RR and adjusted RR differ"
+- **Ch06 Logistic regression**: emphasize the difference between crude OR and adjusted OR, complementing the stratified analysis in Ch05
+- **Ch09 Survival analysis**: "hospitalized patients have higher mortality" is a classic example of confounding by indication
+- **Ch12 Causal inference**: collider bias is the most commonly overlooked type of bias
+- **Ch14 Real-world case study**: let students decide on the "recommended actions" themselves, practicing the leap from analysis to decision-making

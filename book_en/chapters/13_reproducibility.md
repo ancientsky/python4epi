@@ -1,27 +1,27 @@
-# 13 可重現研究與報告
+# 13 Reproducible Research and Reporting
 
-## 你將學到
+## What You'll Learn
 
-- 如何用 `uv` 鎖定環境與版本
-- 如何設計可重跑（reproducible）的分析流程
-- 如何建立最小可驗證報告（data + code + result）
+- How to lock your environment and versions with `uv`
+- How to design a reproducible analysis workflow
+- How to build a minimal verifiable report (data + code + result)
 
-## 情境故事
+## The Scenario
 
-松柏護理之家退伍軍人症群聚事件的分析終於完成了。
-你需要在一週後重新產出同一份疫情報告，並保證同事在另一台機器上得到一致結果。
+The analysis of the Legionnaires' disease cluster at Songbai Nursing Home is finally complete.
+A week from now you'll need to regenerate the same outbreak report, and you have to guarantee that a colleague on a different machine gets identical results.
 
-> 「上次跑出來是 121 人感染、19 人死亡，但我重跑結果不一樣？」
+> "Last time it came out as 121 infected and 19 deaths, but when I rerun it I get something different?"
 
-這就是 **可重現研究** 要解決的問題。
+This is exactly the problem that **reproducible research** is meant to solve.
 
-## 核心概念
+## Core Concepts
 
-- **Environment lock**：以 `uv.lock` 固定相依版本
-- **Single command workflow**：用單一命令重跑分析
-- **Traceability**：每個結果都能追到資料來源與程式版本
+- **Environment lock**: pin your dependency versions with `uv.lock`
+- **Single command workflow**: rerun the whole analysis with one command
+- **Traceability**: every result can be traced back to its data source and code version
 
-## 最小可執行程式碼
+## Minimal Runnable Code
 
 ```bash
 uv sync
@@ -45,27 +45,27 @@ summary = {
 print(summary)
 ```
 
-## 可重現檢查清單
+## Reproducibility Checklist
 
-1. 是否有 `uv.lock`。
-2. 是否能從乾淨環境執行 `uv sync && uv run pytest`。
-3. 是否有固定資料欄位契約（line list schema）。
-4. 是否有最小可重跑腳本（例如 `run_sitrep.py`）。
+1. Is there a `uv.lock`?
+2. Can you run `uv sync && uv run pytest` from a clean environment?
+3. Is there a fixed data column contract (line list schema)?
+4. Is there a minimal rerunnable script (e.g., `run_sitrep.py`)?
 
-## 練習題
+## Exercises
 
-- 作業版：[`13_reproducibility_exercise.ipynb`](exercises/13_reproducibility_exercise.ipynb)
-- 解答版（講師）：[`13_reproducibility_solution.ipynb`](solutions/13_reproducibility_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/13_reproducibility_solution.ipynb>)
+- Exercise version: [`13_reproducibility_exercise.ipynb`](exercises/13_reproducibility_exercise.ipynb)
+- Solution version (instructor): [`13_reproducibility_solution.ipynb`](solutions/13_reproducibility_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/13_reproducibility_solution.ipynb>)
 
-## 常見誤用
+## Common Pitfalls
 
-| 錯誤 | 正確做法 |
+| Mistake | The Right Way |
 |------|----------|
-| 在 notebook 手動改資料卻不記錄 | 所有轉換寫在程式碼中 |
-| 只分享結果圖，不分享程式 | 附上可重跑程式與版本資訊 |
-| 未鎖定套件版本 | 用 `uv.lock` 固定環境 |
-| 亂數種子未固定 | 設定 `random_state` 或 `torch.manual_seed` |
+| Manually editing data in a notebook without recording it | Write all transformations in code |
+| Sharing only result figures, not the code | Include rerunnable code and version info |
+| Not pinning package versions | Lock the environment with `uv.lock` |
+| Not fixing the random seed | Set `random_state` or `torch.manual_seed` |
 
-## 下一步
+## Next Step
 
-確保分析可重現之後，下一章（Ch14）我們將所有技能整合成一個 **完整實戰案例** → 疫情調查 SitRep。
+Once your analysis is reproducible, in the next chapter (Ch14) we'll integrate all these skills into one **complete real-world case study** → an outbreak investigation SitRep.

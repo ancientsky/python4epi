@@ -1,297 +1,297 @@
-# 00 導讀與工具（新手友善版）
+# 00 Getting Started & Tools (Beginner-Friendly Edition)
 
-## 你將學到
+## What you'll learn
 
-- 為什麼流行病學需要程式工具（而不只是試算表）
-- 為什麼這份教材選 Python，而不是 R 或 Excel
-- 為什麼用 `uv` 而不是傳統的 `pip`——以及如何用 `uv` 一站式安裝 Python、套件與 Jupyter Lab
-- 虛擬環境是什麼？為什麼流行病學家的多專案工作需要它？
-- 手把手完成你的第一個流行病學 Hello World（uv + pandas + 流行曲線）
-- 除了 pandas，還有哪些資料清理工具可以選？
-- Jupyter Lab、`.py` 腳本、VS Code——哪種寫法適合什麼場景？`.ipynb` 怎麼轉成 `.py` 做排程？
-- Git 版本控制基礎：流行病學家最常用的情境與指令（包含 Excel 檔案協作）
-- 如何一步一步在你的電腦上安裝好所有工具
-
----
-
-## 先說一個故事：禮拜五下午 4 點的電話
-
-想像你是一位剛進入衛生局的新人。禮拜五下午 4 點，主管打電話來：
-
-> 「某護理之家疑似退伍軍人症群聚，目前通報 280 位住民中有上百人出現肺炎症狀、已有住民死亡。我需要你在 **今天下班前** 給我：侵襲率多少？致死率多少？哪個樓層最嚴重？淋浴設備是不是感染源？能不能畫一張發病時間的流行曲線？」
-
-你打開手邊的 Excel，280 筆資料、32 個欄位——年齡、共病、樓層、暴露史、發病日、住院日、死亡日⋯⋯光是篩選和交叉分析就讓你頭昏眼花。更別說主管接著又問：「幫我做個 2×2 表看淋浴使用的風險比」「按樓層分層再算一次」「下禮拜還會有多少新個案？」。這時你會發現——
-
-- Excel 的列數限制開始卡你
-- 手動篩選、複製貼上很容易出錯
-- 每次主管問「換個條件再算一次」，你就要從頭重做
-- 同事接手你的檔案，根本不知道你當初怎麼算的
-
-**程式不是要取代你的流病判斷，而是幫你把「重複、容易出錯、需要交接」的步驟自動化。** 你寫一次程式碼，以後不管資料換成 300 筆還是 30,000 筆，按一個鍵就能重跑、檢查、交給下一個人。
-
-這就是為什麼越來越多流行病學工作者開始學程式。
+- Why epidemiology needs programming tools (not just spreadsheets)
+- Why this book chose Python instead of R or Excel
+- Why we use `uv` instead of the traditional `pip`—and how `uv` installs Python, packages, and Jupyter Lab all in one place
+- What is a virtual environment? Why does an epidemiologist's multi-project work need it?
+- A hands-on, step-by-step first epidemiology "Hello World" (uv + pandas + epidemic curve)
+- Besides pandas, what other data-cleaning tools can you choose from?
+- Jupyter Lab, `.py` scripts, VS Code—which style suits which situation? How do you convert an `.ipynb` into a `.py` for scheduling?
+- Git version control basics: the situations and commands epidemiologists use most (including collaborating on Excel files)
+- How to install all the tools on your own computer, step by step
 
 ---
 
-## 教學影片
+## First, a story: a phone call at 4 p.m. on Friday
 
-每個概念都有配套的動畫教學影片（約 3 分鐘），嵌在下方對應的小節中。影片包含：主線教學 → 額外防疫範例 → 初學者常見盲點破解。
+Imagine you're a newcomer who just joined the public health department. At 4 p.m. on Friday, your supervisor calls:
 
-建議先看影片再讀文字，學習效果更好！
+> "There's a suspected Legionnaires' disease cluster at a nursing home. Of the 280 residents reported so far, over a hundred have developed pneumonia symptoms and some have already died. I need you to give me, **before you leave today**: What's the attack rate? What's the case fatality rate? Which floor is worst affected? Are the showers the source of infection? Can you draw an epidemic curve of onset dates?"
 
-## 為什麼不用 Excel / Google Sheets 就好？
+You open the Excel file you have on hand: 280 records, 32 columns—age, comorbidities, floor, exposure history, onset date, hospitalization date, death date… Just filtering and cross-tabulating makes your head spin. Not to mention your supervisor then asks: "Make me a 2×2 table for the risk ratio of shower use," "Now stratify by floor and calculate again," "How many new cases will we have next week?" That's when you realize—
+
+- Excel's row limits start to slow you down
+- Manual filtering and copy-pasting is error-prone
+- Every time your supervisor says "change one condition and recalculate," you have to redo it from scratch
+- When a colleague takes over your file, they have no idea how you did the calculations
+
+**Programming isn't meant to replace your epidemiological judgment—it's meant to automate the steps that are repetitive, error-prone, and need handing over.** You write the code once, and no matter whether the data grows to 300 records or 30,000, one press of a button reruns it, checks it, and passes it to the next person.
+
+That's why more and more epidemiology practitioners are starting to learn programming.
+
+---
+
+## Tutorial videos
+
+Every concept comes with an accompanying animated tutorial video (about 3 minutes), embedded in the corresponding section below. Each video includes: main lesson → an extra public health example → busting common beginner blind spots.
+
+Watching the video before reading the text works even better!
+
+## Why not just use Excel / Google Sheets?
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：為什麼用 Python</div>
+  <div class="video-title">Tutorial video: Why use Python</div>
   <div class="youtube-lite" data-id="eMWQ-IqYjvM">
-    <img src="https://img.youtube.com/vi/eMWQ-IqYjvM/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/eMWQ-IqYjvM/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：Excel 的痛點 → Python 的優勢 → Python vs R → COVID-19 大規模疫調範例 → 盲點：數學、先學完、版本問題</p>
+<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: Excel's pain points → Python's advantages → Python vs R → a large-scale COVID-19 investigation example → blind spots: the math, "finish learning first," version issues</p>
 </div>
 ```
 
-你可能會想：「我用 Excel 用了好幾年，為什麼還要學新工具？」
+You might think: "I've used Excel for years—why should I learn a new tool?"
 
-Excel 和 Google Sheets 在很多場景確實夠用，尤其是**小量資料、一次性的快速查看**。但流行病學分析有幾個特殊需求，試算表在這些地方會遇到瓶頸：
+Excel and Google Sheets really are good enough for many situations, especially **small amounts of data and one-off quick looks**. But epidemiological analysis has a few special needs where spreadsheets hit their limits:
 
-| 情境 | 試算表的困難 | 程式的優勢 |
+| Situation | The spreadsheet's difficulty | The programming advantage |
 |------|-------------|-----------|
-| 資料量大（數千～數萬筆 line list） | 操作變慢、容易當機 | 幾秒內處理完，不受列數限制 |
-| 重複分析（每週更新資料重算指標） | 每次都要手動重做一遍 | 跑同一份程式碼，幾秒產出新結果 |
-| 可重現性（別人要驗證你的結果） | 「你是怎麼算出來的？」很難回答 | 程式碼就是完整的分析紀錄 |
-| 多步驟串接（清理 → 統計 → 畫圖 → 報表） | 需要在多個工作表之間切換 | 一份腳本從頭跑到尾 |
-| 進階分析（迴歸、時間序列、機器學習） | 基本上做不到 | 一行指令呼叫成熟的統計套件 |
-| 團隊協作與版本控制 | 「final_v2_真的最終版.xlsx」 | Git 追蹤每一次修改 |
+| Large data (thousands to tens of thousands of line-list records) | Slow to operate, prone to crashing | Processed in seconds, no row-count limit |
+| Repeated analysis (recalculating metrics as data updates weekly) | You have to redo it by hand every time | Run the same code, produce new results in seconds |
+| Reproducibility (someone else needs to verify your results) | "How did you calculate this?" is hard to answer | The code itself is the complete analysis record |
+| Multi-step pipelines (clean → analyze → plot → report) | Requires switching among many worksheets | One script runs the whole thing end to end |
+| Advanced analysis (regression, time series, machine learning) | Basically not possible | A single line calls a mature statistics package |
+| Team collaboration and version control | "final_v2_really_final.xlsx" | Git tracks every change |
 
-**重點不是「Excel 不好」，而是「不同工具適合不同階段」。** 如果你的工作只需要看幾十筆通報、算個百分比，Excel 完全夠。但如果你想要：
+**The point isn't "Excel is bad," it's "different tools suit different stages."** If your job only requires looking at a few dozen reports and calculating a percentage, Excel is perfectly fine. But if you want to:
 
-- 處理大量監測資料
-- 自動產出每週報表
-- 做更深入的統計或預測模型
-- 讓你的分析能被同事重跑、檢驗
+- Handle large volumes of surveillance data
+- Automatically produce weekly reports
+- Do deeper statistics or predictive modeling
+- Let your analysis be rerun and verified by colleagues
 
-那學一個程式工具，長期來看會幫你省下非常多時間。
-
----
-
-## 為什麼選 Python？R 不是更多流行病學家在用嗎？
-
-這是一個非常合理的問題。**R 在傳統流行病學領域確實有深厚的根基**，像 `epitools`、`EpiEstim`、`surveillance` 這些套件都非常成熟，WHO 和各國 CDC 也有大量 R 的教材。
-
-那為什麼這份教材選 Python？原因有三：
-
-### 1. 從統計到機器學習的「一條龍」
-
-流行病學正在快速演進。除了傳統的描述性統計和推論統計，越來越多研究和實務會用到：
-
-- **機器學習**（例如用隨機森林預測疫情擴散風險）
-- **深度學習**（例如用 LSTM 預測登革熱病例趨勢）
-- **自然語言處理**（例如從社群媒體偵測疫情訊號）
-
-Python 在這些領域的生態系（`scikit-learn`、`PyTorch`、`transformers`）遠比 R 成熟。如果你用 R 做完傳統統計，要轉到 ML/DL 時又得學 Python，等於多學一次。**用 Python 打通整條路，你只需要學一個語言。**
-
-### 2. 資料工程與自動化更順
-
-在真實的公衛工作中，「分析」只是其中一步。你可能還需要：
-
-- 自動從資料庫抓最新通報資料
-- 每天早上自動跑一次指標計算
-- 把結果寫入報表或推送到 LINE / Email
-
-Python 在這些**自動化、排程、系統串接**的工作上比 R 強很多，因為它本來就是一個通用程式語言。
-
-### 3. 就業市場與跨領域合作
-
-如果你未來會跟資料工程師、軟體開發者合作（例如建置疫情儀表板、資料平台），他們幾乎都用 Python。會 Python 讓你更容易跟技術團隊溝通。
-
-### 那我已經會 R，怎麼辦？
-
-**完全不需要放棄 R。** R 仍然是優秀的統計工具。如果你已經用 R 做得很順，可以繼續用。這份教材的目標是：**如果你想多學一個工具，或者你是從零開始，Python 是一個值得投資的選擇。**
+then learning a programming tool will, in the long run, save you a great deal of time.
 
 ---
 
-## 為什麼用 `uv` 而不是傳統的 `pip`？
+## Why choose Python? Aren't more epidemiologists using R?
+
+That's a very reasonable question. **R really does have deep roots in traditional epidemiology.** Packages like `epitools`, `EpiEstim`, and `surveillance` are very mature, and the WHO and various national CDCs have plenty of R teaching materials too.
+
+So why did this book choose Python? Three reasons:
+
+### 1. A single pipeline from statistics to machine learning
+
+Epidemiology is evolving rapidly. Beyond traditional descriptive and inferential statistics, more and more research and practice draws on:
+
+- **Machine learning** (e.g., using random forests to predict the risk of an outbreak spreading)
+- **Deep learning** (e.g., using LSTMs to forecast dengue case trends)
+- **Natural language processing** (e.g., detecting outbreak signals from social media)
+
+Python's ecosystem in these areas (`scikit-learn`, `PyTorch`, `transformers`) is far more mature than R's. If you finish your traditional statistics in R, you'll have to learn Python again when you move to ML/DL—effectively learning twice. **Use Python to cover the whole path, and you only need to learn one language.**
+
+### 2. Smoother data engineering and automation
+
+In real public health work, "analysis" is only one step. You might also need to:
+
+- Automatically pull the latest reported data from a database
+- Run a metric calculation automatically every morning
+- Write results into a report or push them to LINE / email
+
+Python is much stronger than R at these **automation, scheduling, and system-integration** tasks, because it's a general-purpose programming language to begin with.
+
+### 3. The job market and cross-disciplinary collaboration
+
+If you'll be working with data engineers or software developers in the future (for example, building an outbreak dashboard or a data platform), they almost all use Python. Knowing Python makes it easier for you to communicate with technical teams.
+
+### But I already know R—what should I do?
+
+**There's absolutely no need to give up R.** R is still an excellent statistical tool. If you're already fluent in R, keep using it. This book's goal is: **if you want to learn one more tool, or if you're starting from scratch, Python is a worthwhile investment.**
+
+---
+
+## Why use `uv` instead of the traditional `pip`?
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：uv 與環境設定</div>
+  <div class="video-title">Tutorial video: uv and environment setup</div>
   <div class="youtube-lite" data-id="AnPBQW8Vqq0">
-    <img src="https://img.youtube.com/vi/AnPBQW8Vqq0/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/AnPBQW8Vqq0/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：為什麼不能直接 pip install → 虛擬環境比喻 → 安裝 uv → uv 三步驟工作流 → 盲點：command not found、uv run、pyproject.toml</p>
+<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: why you can't just pip install → the virtual environment metaphor → installing uv → the uv three-step workflow → blind spots: command not found, uv run, pyproject.toml</p>
 </div>
 ```
 
-如果你 Google「Python 安裝套件」，幾乎所有教學都會教你用 `pip install`。那為什麼我們要用 `uv` 這個比較新的工具？
+If you Google "install Python packages," almost every tutorial will teach you to use `pip install`. So why do we use the newer tool `uv`?
 
-### 先說 `pip` 的問題
+### First, the problems with `pip`
 
-`pip` 是 Python 內建的套件安裝工具，已經存在很多年了。它能用，但在教學場景中有幾個痛點：
+`pip` is Python's built-in package installer, and it's been around for many years. It works, but in a teaching setting it has a few pain points:
 
-- **環境衝突**：你可能聽過「我的電腦上可以跑，但同事的不行」。`pip` 裝的套件版本不一致，是新手最常遇到的挫折。
-- **需要手動管理虛擬環境**：`python -m venv`、`source activate`… 光是啟動環境的步驟就能讓新手迷路。
-- **速度慢**：裝一堆資料科學套件（pandas、matplotlib、scikit-learn…）可能要等好幾分鐘。
+- **Environment conflicts**: You may have heard "it runs on my computer, but not on my colleague's." Inconsistent package versions installed by `pip` are one of the most common frustrations for beginners.
+- **You have to manage virtual environments by hand**: `python -m venv`, `source activate`… just the steps to activate an environment can get a beginner lost.
+- **Slow**: Installing a bunch of data science packages (pandas, matplotlib, scikit-learn…) can take several minutes.
 
-### `uv` 解決了什麼
+### What `uv` solves
 
-[`uv`](https://docs.astral.sh/uv/) 是一個用 Rust 語言寫的新一代 Python 套件管理工具，特色是：
+[`uv`](https://docs.astral.sh/uv/) is a next-generation Python package manager written in Rust. Its highlights are:
 
-- **快非常多**：安裝速度比 `pip` 快 10～100 倍（不誇張）。
-- **連 Python 都幫你裝**：不用事先去官網下載 Python，`uv` 一行指令就幫你搞定。
-- **自動管理虛擬環境**：你不需要手動建立、啟動虛擬環境，`uv sync` 一個指令就搞定。
-- **鎖定版本**：`uv.lock` 檔案確保你跟同學、同事用的套件版本一模一樣，不會出現「我的可以跑，你的不行」。
-- **一個指令做所有事**：安裝 Python、安裝套件、執行程式、管理環境，全部用 `uv` 開頭。
+- **Much faster**: installation speeds 10–100× faster than `pip` (no exaggeration).
+- **Installs Python for you too**: no need to download Python from the official site in advance—`uv` handles it in one command.
+- **Manages the virtual environment automatically**: you don't need to create or activate a virtual environment by hand; `uv sync` handles it in one command.
+- **Locks versions**: the `uv.lock` file ensures you use the exact same package versions as your classmates and colleagues, so you never get "mine runs, yours doesn't."
+- **One command does everything**: installing Python, installing packages, running programs, managing environments—all start with `uv`.
 
-### 實際差異：`pip` vs `uv`
+### The actual difference: `pip` vs `uv`
 
-| 任務 | 傳統做法（`pip`） | 本教材做法（`uv`） |
+| Task | The traditional way (`pip`) | This book's way (`uv`) |
 |------|-------------------|-------------------|
-| 安裝 Python | 去官網下載、手動安裝 | `uv python install 3.13` |
-| 建立環境 | `python -m venv .venv && source .venv/bin/activate` | `uv sync`（自動建立並啟用） |
-| 安裝套件 | `pip install pandas matplotlib` | `uv add pandas matplotlib` 或 `uv sync` |
-| 開 notebook | `jupyter lab`（要先確定裝過） | `uv run jupyter lab` |
-| 跑測試 | `pytest`（要先確定環境對） | `uv run pytest` |
-| 確保版本一致 | 自己管 `requirements.txt`（容易忘記更新） | `uv.lock` 自動鎖定 |
+| Install Python | Download from the official site and install manually | `uv python install 3.13` |
+| Create an environment | `python -m venv .venv && source .venv/bin/activate` | `uv sync` (creates and activates automatically) |
+| Install packages | `pip install pandas matplotlib` | `uv add pandas matplotlib` or `uv sync` |
+| Open a notebook | `jupyter lab` (make sure it's installed first) | `uv run jupyter lab` |
+| Run tests | `pytest` (make sure the environment is right first) | `uv run pytest` |
+| Ensure consistent versions | Manage `requirements.txt` yourself (easy to forget to update) | `uv.lock` locks automatically |
 
-**簡單說：`uv` 讓你少踩 80% 的環境地雷，多花時間在真正的學習上。**
-
----
-
-## 先放心：你不用「先很會寫程式」
-
-讀到這裡，你可能還是有點緊張：「我真的一行程式都沒寫過，能學嗎？」
-
-**可以。** 這份教材是給公衛、流病、醫學背景的學習者設計的。設計原則是：
-
-1. **每段程式碼都可以直接複製、貼上、執行**——你不需要從空白畫面開始寫。
-2. **先看結果，再理解原理**——每章都會先跑出一個圖表或數字，再回頭解釋怎麼做到的。
-3. **用流病情境學程式**——不會教你寫計算機或猜數字遊戲，所有範例都是 line list、侵襲率、流行曲線。
-
-你的學習路徑是：
-
-```
-複製程式碼 → 執行看結果 → 改幾個數字再跑 → 慢慢理解邏輯
-```
-
-程式能力會在章節中自然成長，不需要先去上完一整門「Python 入門」才回來。
+**In short: `uv` helps you avoid 80% of environment landmines, so you can spend more time on actual learning.**
 
 ---
 
-## 安裝工具：只要裝 `uv`，其他它幫你搞定
+## Relax: you don't need to "already be good at programming"
 
-接下來是實際的安裝步驟。好消息是：**你只需要安裝一個工具——`uv`。** Python 本身不用事先安裝，`uv` 會自動幫你下載並管理正確版本的 Python。
+Reading this far, you might still be a little nervous: "I've genuinely never written a single line of code—can I learn this?"
 
-### 等等，我不用先安裝 Python 嗎？
+**Yes, you can.** This book is designed for learners with a public health, epidemiology, or medical background. The design principles are:
 
-**不用！** 這是 `uv` 最方便的地方之一。傳統的方式是：先去 Python 官網下載安裝程式 → 安裝 Python → 再來裝套件管理工具。但 `uv` 把這些步驟合在一起了：
+1. **Every code snippet can be copied, pasted, and run directly**—you don't have to start from a blank screen.
+2. **See the result first, understand the theory second**—each chapter first produces a chart or a number, then goes back and explains how it was done.
+3. **Learn programming through epidemiology scenarios**—we won't teach you to build a calculator or a number-guessing game; every example is a line list, an attack rate, an epidemic curve.
 
-| 傳統方式 | 用 `uv` 的方式 |
+Your learning path is:
+
+```
+Copy the code → run it and see the result → change a few numbers and rerun → gradually understand the logic
+```
+
+Your programming skills will grow naturally through the chapters—you don't need to complete an entire "Intro to Python" course before coming back.
+
+---
+
+## Installing the tools: just install `uv`, and it handles the rest
+
+Next come the actual installation steps. The good news is: **you only need to install one tool—`uv`.** You don't need to install Python itself in advance; `uv` will automatically download and manage the correct version of Python for you.
+
+### Wait, I don't need to install Python first?
+
+**Nope!** This is one of the most convenient things about `uv`. The traditional way is: download the installer from the Python website → install Python → then install a package manager. But `uv` combines these steps:
+
+| The traditional way | The `uv` way |
 |----------|----------------|
-| ① 去官網下載 Python 安裝程式 | ① 安裝 `uv`（一行指令） |
-| ② 安裝 Python | ② `uv python install 3.13`（`uv` 自動下載 Python） |
-| ③ 設定環境變數 PATH | ③ 不需要，`uv` 幫你管理 |
-| ④ 安裝 pip / 建立虛擬環境 | ④ 不需要，`uv sync` 全部搞定 |
+| ① Download the Python installer from the website | ① Install `uv` (one command) |
+| ② Install Python | ② `uv python install 3.13` (`uv` downloads Python automatically) |
+| ③ Configure the PATH environment variable | ③ Not needed—`uv` manages it for you |
+| ④ Install pip / create a virtual environment | ④ Not needed—`uv sync` handles it all |
 
-**簡單說：裝好 `uv`，你就什麼都有了。**
+**In short: once `uv` is installed, you have everything.**
 
-如果你的電腦上已經有 Python 也沒關係，`uv` 會自動偵測並使用它，不會衝突。
+If your computer already has Python, that's fine too—`uv` will detect and use it, with no conflicts.
 
-### 安裝 `uv`
+### Installing `uv`
 
 #### macOS / Linux
 
-打開終端機（macOS 可以用 Spotlight 搜尋 "Terminal"），輸入：
+Open the terminal (on macOS you can search "Terminal" with Spotlight) and type:
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-安裝完關掉終端機再重新打開，然後驗證：
+After it finishes, close the terminal and reopen it, then verify:
 
 ```bash
 uv --version
 ```
 
-#### Windows（PowerShell）
+#### Windows (PowerShell)
 
-按 `Win + X`，選擇「Windows PowerShell」或「終端機」，輸入：
+Press `Win + X`, choose "Windows PowerShell" or "Terminal," and type:
 
 ```powershell
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-關掉 PowerShell 再重新打開，然後驗證：
+Close PowerShell and reopen it, then verify:
 
 ```powershell
 uv --version
 ```
 
-> **驗證成功**：看到 `uv 0.x.x`（任何版本號）就可以了。
+> **Success looks like**: seeing `uv 0.x.x` (any version number) is all you need.
 >
-> **常見問題**：如果顯示 `command not found: uv`，請關掉終端機再重新打開一次。安裝程式會把 `uv` 加入你的 PATH，但需要重新啟動終端機才會生效。
+> **Common issue**: if it shows `command not found: uv`, close the terminal and reopen it once more. The installer adds `uv` to your PATH, but you need to restart the terminal for it to take effect.
 
-### 用 `uv` 安裝 Python
+### Installing Python with `uv`
 
-安裝好 `uv` 之後，一行指令就能安裝 Python：
+Once `uv` is installed, a single command installs Python:
 
 ```bash
 uv python install 3.13
 ```
 
-`uv` 會自動下載 Python 3.13 並安裝到它自己管理的目錄中，不會跟你電腦上現有的 Python 衝突。
+`uv` automatically downloads Python 3.13 and installs it into its own managed directory, so it won't conflict with any Python already on your computer.
 
-驗證：
+Verify:
 
 ```bash
 uv run python --version
-# 你會看到：Python 3.13.x
+# You'll see: Python 3.13.x
 ```
 
-> **為什麼建議 3.13？** Python 3.13 是目前最新的穩定版（2024 年 10 月發布），效能更好、錯誤訊息更清楚，而且所有主要的資料科學套件都已支援。如果你的電腦上已經有 Python 3.12 或 3.11，仍然可以正常使用本教材，但我們建議用最新版以獲得最佳體驗。
+> **Why recommend 3.13?** Python 3.13 is the current stable release (published in October 2024). It has better performance, clearer error messages, and all the major data science packages already support it. If your computer already has Python 3.12 or 3.11, you can still use this book normally, but we recommend the latest version for the best experience.
 
 ---
 
-## 為什麼需要「虛擬環境」？跟流行病學有什麼關係？
+## Why do you need a "virtual environment"? What does it have to do with epidemiology?
 
-你可能會聽到有人說「記得要用虛擬環境」，覺得又是一個程式術語。讓我用流病的情境來解釋：
+You may hear someone say "remember to use a virtual environment," and think it's just another programming buzzword. Let me explain it with an epidemiology scenario:
 
-### 問題：套件版本打架
+### The problem: package versions clashing
 
-想像你同時在做兩個專案：
+Imagine you're working on two projects at the same time:
 
-- **專案 A：登革熱週報**——用 `pandas 1.5`，一年前寫的，跑得很穩
-- **專案 B：COVID 儀表板**——用 `pandas 2.2`，需要新功能
+- **Project A: dengue weekly report**—uses `pandas 1.5`, written a year ago, runs rock-solid
+- **Project B: COVID dashboard**—uses `pandas 2.2`, needs new features
 
-如果兩個專案共用同一個 Python 環境，裝了 `pandas 2.2` 之後，專案 A 可能就壞了（因為某些語法在新版改了）。裝回 `pandas 1.5`，專案 B 又壞了。
+If both projects share the same Python environment, then after you install `pandas 2.2`, Project A might break (because some syntax changed in the new version). Install `pandas 1.5` back, and Project B breaks again.
 
-**虛擬環境（virtual environment）就是幫每個專案建立一個「獨立的套件空間」。** 專案 A 有自己的 pandas 1.5，專案 B 有自己的 pandas 2.2，互不干擾。
+**A virtual environment gives each project its own "isolated package space."** Project A has its own pandas 1.5, Project B has its own pandas 2.2, and they don't interfere with each other.
 
 ```
-你的電腦
-├── 專案 A（登革熱週報）/.venv/
-│   └── pandas 1.5、matplotlib 3.7 ...
-├── 專案 B（COVID 儀表板）/.venv/
-│   └── pandas 2.2、plotly 6.0 ...
-└── 專案 C（本教材）/.venv/
-    └── pandas 2.2、matplotlib 3.10 ...
+Your computer
+├── Project A (dengue weekly report)/.venv/
+│   └── pandas 1.5, matplotlib 3.7 ...
+├── Project B (COVID dashboard)/.venv/
+│   └── pandas 2.2, plotly 6.0 ...
+└── Project C (this book)/.venv/
+    └── pandas 2.2, matplotlib 3.10 ...
 ```
 
-### `uv` 怎麼管理虛擬環境？
+### How does `uv` manage virtual environments?
 
-好消息：**你不需要手動建立虛擬環境，`uv` 會自動幫你做。** 當你在專案資料夾裡執行 `uv sync`，它會：
+Good news: **you don't need to create a virtual environment by hand—`uv` does it automatically.** When you run `uv sync` inside a project folder, it will:
 
-1. 在資料夾內建立一個 `.venv/` 目錄（這就是虛擬環境）
-2. 安裝 `pyproject.toml` 裡列出的所有套件到 `.venv/` 中
-3. 之後每次用 `uv run ...` 執行任何指令，都自動使用這個虛擬環境
+1. Create a `.venv/` directory inside the folder (that's the virtual environment)
+2. Install all the packages listed in `pyproject.toml` into `.venv/`
+3. From then on, every command you run with `uv run ...` automatically uses this virtual environment
 
-你完全不需要執行什麼 `source .venv/bin/activate`——`uv run` 會自動處理。
+You never need to run `source .venv/bin/activate`—`uv run` handles it automatically.
 
 ```bash
-# 這一行就同時建好虛擬環境 + 安裝所有套件
+# This one line both creates the virtual environment and installs all packages
 uv sync
 
-# 之後所有指令都用 uv run 開頭，自動在虛擬環境中執行
+# From then on, prefix every command with uv run to run it inside the virtual environment
 uv run python my_script.py
 uv run jupyter lab
 uv run pytest
@@ -299,123 +299,123 @@ uv run pytest
 
 ---
 
-## `uv` 完整操作指南：從安裝套件到開 Jupyter Lab
+## The complete `uv` guide: from installing packages to opening Jupyter Lab
 
-### 情境 1：跟著本教材學習（最簡單）
+### Scenario 1: following along with this book (the simplest)
 
-如果你是下載本教材的程式碼來學習，只需要：
+If you're downloading this book's code to learn from, you only need:
 
 ```bash
-cd python4epi        # 進入教材資料夾
-uv sync              # 安裝所有套件（第一次約 1-2 分鐘）
-uv run jupyter lab   # 開啟 Jupyter Lab
+cd python4epi        # Enter the book's folder
+uv sync              # Install all packages (about 1–2 minutes the first time)
+uv run jupyter lab   # Open Jupyter Lab
 ```
 
-就這樣三行，所有東西都裝好了——pandas、matplotlib、scikit-learn、Jupyter Lab 全部包含在內。
+That's it—three lines, and everything is installed: pandas, matplotlib, scikit-learn, and Jupyter Lab are all included.
 
-### 情境 2：我想自己建一個新的流病分析專案
+### Scenario 2: I want to build my own new epidemiology analysis project
 
-假設你想從頭建立一個登革熱分析專案：
+Suppose you want to build a dengue analysis project from scratch:
 
 ```bash
-# 建立專案資料夾
+# Create the project folder
 mkdir dengue-analysis
 cd dengue-analysis
 
-# 初始化專案（uv 會建立 pyproject.toml）
+# Initialize the project (uv creates pyproject.toml)
 uv init
 
-# 指定 Python 版本
+# Pin the Python version
 uv python pin 3.13
 
-# 安裝你需要的套件
+# Install the packages you need
 uv add pandas matplotlib jupyterlab openpyxl
 
-# 開啟 Jupyter Lab
+# Open Jupyter Lab
 uv run jupyter lab
 ```
 
-**`uv add` 做了什麼？** 它會：
-1. 自動下載並安裝指定的套件
-2. 把套件名稱寫入 `pyproject.toml`（套件清單）
-3. 更新 `uv.lock`（精確版本鎖定檔案）
-4. 如果虛擬環境還不存在，順便建立
+**What does `uv add` do?** It will:
+1. Automatically download and install the specified packages
+2. Write the package names into `pyproject.toml` (the package list)
+3. Update `uv.lock` (the exact version lock file)
+4. Create the virtual environment too, if it doesn't exist yet
 
-以後你或同事在另一台電腦上只要執行 `uv sync`，就能裝到一模一樣的環境。
+Later, all you or a colleague need to do on another computer is run `uv sync` to get the exact same environment.
 
-### 情境 3：在 Jupyter Lab 裡面安裝新套件
+### Scenario 3: installing a new package from inside Jupyter Lab
 
-你已經在 Jupyter Lab 裡面寫程式了，突然發現需要一個新套件（例如 `seaborn` 用來畫更漂亮的圖）。
+You're already writing code in Jupyter Lab when you suddenly realize you need a new package (say, `seaborn` for prettier plots).
 
-**方法 A：回到終端機安裝（推薦）**
+**Method A: install from the terminal (recommended)**
 
 ```bash
-# 在終端機執行（Jupyter Lab 不用關）
+# Run in the terminal (no need to close Jupyter Lab)
 uv add seaborn
 ```
 
-然後回到 Jupyter Lab，重新啟動 kernel（選單 → Kernel → Restart Kernel），就能 `import seaborn` 了。
+Then go back to Jupyter Lab, restart the kernel (menu → Kernel → Restart Kernel), and you can `import seaborn`.
 
-**方法 B：在 notebook cell 裡安裝**
+**Method B: install from within a notebook cell**
 
-如果你不想切到終端機，也可以在 notebook 的 code cell 裡直接執行：
+If you don't want to switch to the terminal, you can run this directly in a notebook code cell:
 
 ```python
-# 在 notebook cell 中執行（注意前面的驚嘆號）
+# Run in a notebook cell (note the leading exclamation mark)
 !uv add seaborn
 ```
 
-執行完之後同樣需要重新啟動 kernel。
+After it finishes, you'll also need to restart the kernel.
 
 ```{tip}
-建議用方法 A（終端機安裝）。方法 B 雖然方便，但有時候會因為路徑問題找不到 `uv`。如果你用方法 B 遇到 `uv: command not found`，就改用方法 A。
+We recommend Method A (installing from the terminal). Method B is convenient, but it sometimes can't find `uv` due to path issues. If you hit `uv: command not found` with Method B, switch to Method A.
 ```
 
-### `uv` 指令速查表
+### `uv` command cheat sheet
 
-| 我想要… | 指令 | 說明 |
+| I want to… | Command | Notes |
 |---------|------|------|
-| 安裝 Python | `uv python install 3.13` | 下載指定版本的 Python |
-| 初始化新專案 | `uv init` | 建立 `pyproject.toml` |
-| 指定專案的 Python 版本 | `uv python pin 3.13` | 建立 `.python-version` 檔案 |
-| 安裝所有套件 | `uv sync` | 依照 `pyproject.toml` 安裝 |
-| 新增一個套件 | `uv add pandas` | 安裝並記錄到 `pyproject.toml` |
-| 新增多個套件 | `uv add pandas matplotlib seaborn` | 一次裝多個 |
-| 移除一個套件 | `uv remove seaborn` | 移除並從 `pyproject.toml` 刪除 |
-| 在虛擬環境中執行指令 | `uv run python script.py` | 自動使用虛擬環境 |
-| 開 Jupyter Lab | `uv run jupyter lab` | 在虛擬環境中啟動 |
-| 跑測試 | `uv run pytest` | 在虛擬環境中執行測試 |
-| 看目前裝了哪些套件 | `uv pip list` | 列出所有已安裝套件 |
+| Install Python | `uv python install 3.13` | Download the specified Python version |
+| Initialize a new project | `uv init` | Create `pyproject.toml` |
+| Pin the project's Python version | `uv python pin 3.13` | Create a `.python-version` file |
+| Install all packages | `uv sync` | Install according to `pyproject.toml` |
+| Add one package | `uv add pandas` | Install and record it in `pyproject.toml` |
+| Add multiple packages | `uv add pandas matplotlib seaborn` | Install several at once |
+| Remove a package | `uv remove seaborn` | Uninstall and delete it from `pyproject.toml` |
+| Run a command in the virtual environment | `uv run python script.py` | Automatically uses the virtual environment |
+| Open Jupyter Lab | `uv run jupyter lab` | Launch it inside the virtual environment |
+| Run tests | `uv run pytest` | Run tests inside the virtual environment |
+| See which packages are installed | `uv pip list` | List all installed packages |
 
 ---
 
-## 手把手教學：從零開始的流行病學 Hello World
+## Hands-on tutorial: an epidemiology Hello World from scratch
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：第一支程式 Hello Epi</div>
+  <div class="video-title">Tutorial video: your first program, Hello Epi</div>
   <div class="youtube-lite" data-id="VcxttnJxwG4">
-    <img src="https://img.youtube.com/vi/VcxttnJxwG4/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/VcxttnJxwG4/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：git clone + uv sync → 開 Jupyter → 跑分析 → 看到侵襲率 43.2% → 盲點：clone 失敗、sync 很慢、紅色 Warning</p>
+<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: git clone + uv sync → open Jupyter → run the analysis → see an attack rate of 43.2% → blind spots: clone failure, slow sync, red Warnings</p>
 </div>
 ```
 
-光看指令可能還是抽象。讓我們從一台什麼都沒裝的電腦開始，一步一步做出流行病學家的第一個「Hello World」——不是印出一行字，而是**讀取一份護理之家群聚事件的 line list、計算侵襲率與致死率、畫一張流行曲線**。
+Just reading commands can still feel abstract. Let's start from a computer with nothing installed and, step by step, build an epidemiologist's first "Hello World"—not printing a line of text, but **reading a line list from a nursing home cluster, calculating the attack rate and case fatality rate, and drawing an epidemic curve**.
 
-### Step 1：安裝 uv
+### Step 1: install uv
 
 ```bash
 # macOS / Linux
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Windows（PowerShell）
+# Windows (PowerShell)
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-安裝完**關掉終端機再重新打開**。
+After it finishes, **close the terminal and reopen it**.
 
-### Step 2：建立專案
+### Step 2: create the project
 
 ```bash
 mkdir epi-hello-world
@@ -424,407 +424,407 @@ uv init
 uv python pin 3.13
 ```
 
-### Step 3：安裝流病分析套件
+### Step 3: install the epidemiology analysis packages
 
 ```bash
 uv add pandas matplotlib jupyterlab openpyxl
 ```
 
-這一行會安裝：
-- `pandas`：讀取和處理表格資料（line list）
-- `matplotlib`：畫圖（流行曲線）
-- `jupyterlab`：互動式程式編輯環境
-- `openpyxl`：讓 pandas 能讀寫 Excel（`.xlsx`）檔案
+This one line installs:
+- `pandas`: reading and processing tabular data (the line list)
+- `matplotlib`: plotting (the epidemic curve)
+- `jupyterlab`: an interactive coding environment
+- `openpyxl`: lets pandas read and write Excel (`.xlsx`) files
 
-### Step 4：開啟 Jupyter Lab
+### Step 4: open Jupyter Lab
 
 ```bash
 uv run jupyter lab
 ```
 
-瀏覽器會自動打開。點右邊的 **「Python 3 (ipykernel)」** 建立一個新的 notebook。
+Your browser will open automatically. Click **"Python 3 (ipykernel)"** on the right to create a new notebook.
 
-### Step 5：在 notebook 裡輸入以下程式碼
+### Step 5: type the following code into the notebook
 
-每一個 cell 按 `Shift + Enter` 執行：
+Press `Shift + Enter` to run each cell:
 
-**Cell 1：讀入護理之家退伍軍人症群聚的 line list**
+**Cell 1: read in the nursing-home Legionnaires' disease line list**
 
 ```python
 import pandas as pd
 
-# 讀入松柏護理之家退伍軍人症群聚事件的 line list（280 位住民）
+# Read the line list from the Songbai nursing home Legionnaires' disease cluster (280 residents)
 df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
 
-# 看前幾筆——每一列是一位住民的完整紀錄
+# Look at the first few rows—each row is one resident's complete record
 df.head(10)
 ```
 
-**Cell 2：計算侵襲率與致死率**
+**Cell 2: calculate the attack rate and case fatality rate**
 
 ```python
-# len(df) = 資料有幾列（= 住民人數）
+# len(df) = how many rows the data has (= number of residents)
 total_residents = len(df)
 
-# (df["clinical_severity"] != "not_ill") → 產生 True/False 的 Series
-# .sum() → True 當作 1 加總 = 感染人數
+# (df["clinical_severity"] != "not_ill") → produces a Series of True/False
+# .sum() → counts True as 1 = number of infected people
 infected = (df["clinical_severity"] != "not_ill").sum()
 deaths = (df["outcome"] == "dead").sum()
 
-# 侵襲率 = 感染人數 ÷ 全體人數 × 100
+# Attack rate = infected ÷ total × 100
 attack_rate = infected / total_residents * 100
-# 致死率（CFR）= 死亡人數 ÷ 感染人數 × 100（注意分母是感染者！）
+# Case fatality rate (CFR) = deaths ÷ infected × 100 (note the denominator is the infected!)
 cfr = deaths / infected * 100
 
-# f-string：f"..." 裡面的 {變數名} 會被替換成變數的值
-# :.1f → 顯示到小數點後 1 位
-print(f"住民總數：{total_residents} 人")
-print(f"感染人數：{infected} 人")
-print(f"侵襲率：{attack_rate:.1f}%")
-print(f"死亡人數：{deaths} 人")
-print(f"致死率 (CFR)：{cfr:.1f}%")
+# f-string: inside f"..." the {variable_name} is replaced by the variable's value
+# :.1f → show to 1 decimal place
+print(f"Total residents: {total_residents}")
+print(f"Infected: {infected}")
+print(f"Attack rate: {attack_rate:.1f}%")
+print(f"Deaths: {deaths}")
+print(f"Case fatality rate (CFR): {cfr:.1f}%")
 ```
 
-**Cell 3：畫流行曲線（epidemic curve）**
+**Cell 3: draw the epidemic curve**
 
 ```python
-import matplotlib.pyplot as plt  # plt = matplotlib 的慣用縮寫
+import matplotlib.pyplot as plt  # plt = the conventional shorthand for matplotlib
 
-# -- CJK font setup (避免中文標籤顯示為方框 □□□) --
-# matplotlib 預設只認英文字型，中文字會變成「豆腐塊」
-# 下面這行告訴它：「依序嘗試這些中文字型，找到哪個就用哪個」
+# -- CJK font setup (avoid Chinese labels showing as boxes □□□) --
+# matplotlib only recognizes Latin fonts by default; Chinese characters turn into "tofu" boxes
+# The line below tells it: "try these Chinese fonts in order, and use whichever one you find"
 plt.rcParams["font.sans-serif"] = [
     "Noto Sans CJK TC", "Noto Sans CJK SC", "Noto Sans CJK JP",
     "Noto Sans TC", "Microsoft JhengHei",
     "WenQuanYi Zen Hei", "SimHei", "Arial Unicode MS",
     "Heiti TC", "DejaVu Sans",
 ]
-plt.rcParams["axes.unicode_minus"] = False  # 防止負號顯示為方塊
-plt.style.use("ggplot")        # 套用學術風格（淡灰背景 + 白色格線）
-plt.rcParams["figure.dpi"] = 150  # 提高圖片解析度（預設 100 太模糊）
+plt.rcParams["axes.unicode_minus"] = False  # prevent the minus sign from showing as a box
+plt.style.use("ggplot")        # apply an academic style (light gray background + white gridlines)
+plt.rcParams["figure.dpi"] = 150  # raise the image resolution (the default 100 is too blurry)
 
-# 將發病日期的文字轉為日期格式，並算出「每天有幾人發病」
-onset = pd.to_datetime(df["symptom_onset_date"])  # 文字 → 日期
+# Convert the onset-date text to a date format, and count "how many onsets per day"
+onset = pd.to_datetime(df["symptom_onset_date"])  # text → date
 epi_curve = onset.dropna().dt.date.value_counts().sort_index()
-# dropna() = 丟掉沒有發病日期的人（未感染者）
-# .dt.date = 只取日期（去掉時分秒）
-# .value_counts() = 每個日期出現幾次 = 每日病例數
-# .sort_index() = 按日期排序
+# dropna() = drop people with no onset date (the uninfected)
+# .dt.date = keep only the date (drop hours/minutes/seconds)
+# .value_counts() = how many times each date appears = daily case count
+# .sort_index() = sort by date
 
-# fig = 整張圖紙, ax = 圖紙上的畫布（所有繪圖指令都對 ax 操作）
-fig, ax = plt.subplots(figsize=(10, 4))  # figsize=(寬, 高) 單位是英吋
+# fig = the whole sheet of paper, ax = the canvas on it (all plotting commands act on ax)
+fig, ax = plt.subplots(figsize=(10, 4))  # figsize=(width, height) in inches
 ax.bar(epi_curve.index, epi_curve.values, color="#2980B9", edgecolor="white")
-ax.set_xlabel("Onset Date（發病日期）")   # X 軸標籤
-ax.set_ylabel("Cases（病例數）")          # Y 軸標籤
-ax.set_title("Epidemic Curve — 松柏護理之家退伍軍人症群聚")  # 圖表標題
-fig.autofmt_xdate()    # 自動旋轉日期標籤，避免重疊
-plt.tight_layout()     # 自動調整邊距，防止標籤被裁切
-plt.show()             # 顯示圖表
+ax.set_xlabel("Onset Date")   # X-axis label
+ax.set_ylabel("Cases")          # Y-axis label
+ax.set_title("Epidemic Curve — Songbai Nursing Home Legionnaires' Disease Cluster")  # chart title
+fig.autofmt_xdate()    # automatically rotate the date labels to avoid overlap
+plt.tight_layout()     # automatically adjust the margins to prevent labels being cut off
+plt.show()             # display the chart
 ```
 
-**Cell 4：按樓層翼區統計侵襲率**
+**Cell 4: attack rate by floor and wing**
 
 ```python
-# 建立感染旗標：not_ill 以外都算感染，True→1, False→0
+# Create an infection flag: anything other than not_ill counts as infected, True→1, False→0
 df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
 
-# 按樓層 + 翼區分組，同時算住民數和感染數
+# Group by floor + wing, and count both residents and infections
 wing_summary = df.groupby(["floor", "wing"]).agg(
-    total=("case_id", "count"),     # 每組有幾位住民
-    cases=("infected", "sum"),      # 每組有幾位感染者
-).reset_index()  # 把分組索引攤平回普通欄位
+    total=("case_id", "count"),     # how many residents in each group
+    cases=("infected", "sum"),      # how many infected in each group
+).reset_index()  # flatten the group index back into ordinary columns
 
-# 侵襲率 = 感染人數 ÷ 該區住民數 × 100（注意分母是各區人數！）
+# Attack rate = infected ÷ residents in that area × 100 (note the denominator is each area's population!)
 wing_summary["attack_rate_%"] = (wing_summary["cases"] / wing_summary["total"] * 100).round(1)
 
-wing_summary  # 在 Jupyter 裡，最後一行會自動顯示成表格
+wing_summary  # in Jupyter, the last line is automatically displayed as a table
 ```
 
-### Step 6：看到結果
+### Step 6: see the results
 
-你現在應該看到：
-- 一張表格顯示 line list 的前 10 筆資料（包含年齡、共病、暴露史等 32 個欄位）
-- 侵襲率 43.2%、致死率 15.7%
-- 一張**流行曲線長條圖**，顯示 1 月 20 日前後為發病高峰——典型的共同暴露源型態
-- 按樓層翼區分的侵襲率比較（2–3 樓 B 翼明顯較高）
+You should now see:
+- A table showing the first 10 rows of the line list (including 32 columns like age, comorbidities, exposure history)
+- An attack rate of 43.2% and a case fatality rate of 15.7%
+- An **epidemic curve bar chart**, showing a peak in onsets around January 20—the classic pattern of a common-source exposure
+- A comparison of attack rates by floor and wing (the 2nd–3rd floor B wing is clearly higher)
 
-**恭喜！這就是流行病學家用 Python 做的第一個分析。** 整個過程只需要 `uv` 一個工具就能搞定——不用事先裝 Python、不用設定虛擬環境、不用管 pip。
+**Congratulations! This is an epidemiologist's first analysis in Python.** The whole process needs only one tool, `uv`—no need to install Python in advance, no need to set up a virtual environment, no need to deal with pip.
 
 ```{tip}
-試著修改上面的程式碼：改用 `"shower_use"` 欄位分組看侵襲率、或只篩選 `"confirmed"` 個案畫流行曲線。每次改完按 `Shift + Enter` 就能立刻看到結果。這就是程式的威力——改一個條件，整個分析自動重算。
+Try modifying the code above: group by the `"shower_use"` column to look at the attack rate, or filter to only `"confirmed"` cases to draw the epidemic curve. Every time you change something, press `Shift + Enter` to see the result immediately. That's the power of programming—change one condition, and the whole analysis recalculates automatically.
 ```
 
 ---
 
-## 程式碼裡的 `#` 是什麼？——Python 註解入門
+## What's the `#` in the code?—an introduction to Python comments
 
-你剛才在 Hello World 的程式碼裡應該有看到這樣的東西：
+In the Hello World code just now, you should have seen something like this:
 
 ```python
-# 讀入松柏護理之家退伍軍人症群聚事件的 line list
+# Read the line list from the Songbai nursing home Legionnaires' disease cluster
 df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
 ```
 
-那一行 `#` 開頭的文字就是**註解（comment）**——Python 會**完全忽略**它，不會執行。
+That line starting with `#` is a **comment**—Python **completely ignores** it and won't run it.
 
-### 為什麼需要註解？
+### Why do you need comments?
 
-- **給自己看**：三個月後回來看程式碼，你會忘記當初為什麼這樣寫
-- **給同事看**：疫調報告要交接給別人時，有註解他才看得懂你的分析邏輯
-- **給審稿人看**：期刊要求可重現研究（reproducible research），註解是程式碼的說明書
+- **For yourself**: coming back to the code three months later, you'll have forgotten why you wrote it this way
+- **For colleagues**: when handing over an outbreak report, comments let them follow your analytical logic
+- **For reviewers**: journals require reproducible research, and comments are the code's user manual
 
-### 註解的寫法
+### How to write comments
 
 ```python
-# 整行註解：# 後面的所有文字都不會被執行
-attack_rate = infected / total * 100  # 行尾註解：程式碼後面也可以加
+# A full-line comment: everything after the # is not executed
+attack_rate = infected / total * 100  # end-of-line comment: you can also add one after code
 
-# 多行註解？Python 沒有像 C 語言的 /* ... */
-# 每一行都要加 #（這其實是好事，因為對齊起來更整齊）
+# Multi-line comments? Python has nothing like C's /* ... */
+# Every line needs its own # (which is actually a good thing—it lines up more neatly)
 
-# ✅ 好的註解：解釋「為什麼」
-# 用中位數填補年齡遺漏值，因為平均數容易受極端值影響
+# ✅ A good comment: explains the "why"
+# Fill missing ages with the median, because the mean is easily skewed by extreme values
 df["age"].fillna(df["age"].median(), inplace=True)
 
-# ❌ 壞的註解：只重複程式碼已經說的事
-# 把 x 設為 5（這誰看不出來？）
+# ❌ A bad comment: just repeats what the code already says
+# Set x to 5 (who couldn't see that?)
 x = 5
 ```
 
 ```{tip}
-**新手建議：先養成加 `#` 註解的習慣。** 哪怕一開始寫得很囉嗦也沒關係，比完全不寫好一百倍。隨著經驗增加，你會越來越知道哪些地方需要解釋、哪些不用。
+**Beginner advice: build the habit of adding `#` comments first.** Even if they're wordy at the start, that's fine—it's a hundred times better than none at all. As you gain experience, you'll increasingly know which spots need explaining and which don't.
 ```
 
 ---
 
-## Jupyter 筆記本中的 Markdown 格式
+## Markdown formatting in Jupyter notebooks
 
-Jupyter Lab 的 cell 有兩種類型：
+Jupyter Lab cells come in two types:
 
-| Cell 類型 | 用途 | 切換方式 |
+| Cell type | Purpose | How to switch |
 |----------|------|---------|
-| **Code** | 寫 Python 程式碼 | 選中 cell → 按 `Y` |
-| **Markdown** | 寫文字說明、標題、列表 | 選中 cell → 按 `M` |
+| **Code** | Write Python code | Select the cell → press `Y` |
+| **Markdown** | Write text, headings, lists | Select the cell → press `M` |
 
-Markdown cell 讓你的 notebook 不只是一堆程式碼，而是一份**圖文並茂的分析報告**。
+Markdown cells turn your notebook from just a pile of code into an **illustrated analysis report**.
 
-### 最常用的 Markdown 語法
+### The most common Markdown syntax
 
 ```markdown
-# 大標題（一個 # 號）
-## 二級標題（兩個 # 號）
-### 三級標題（三個 # 號）
+# Big heading (one # sign)
+## Second-level heading (two # signs)
+### Third-level heading (three # signs)
 
-**粗體文字**（前後兩個星號）
-*斜體文字*（前後一個星號）
-`行內程式碼`（前後一個反引號）
+**Bold text** (two asterisks on each side)
+*Italic text* (one asterisk on each side)
+`inline code` (one backtick on each side)
 
-- 無序列表項目 1
-- 無序列表項目 2
+- Unordered list item 1
+- Unordered list item 2
 
-1. 有序列表項目 1
-2. 有序列表項目 2
+1. Ordered list item 1
+2. Ordered list item 2
 
-> 引用文字（像這樣加 > 在前面）
+> Quoted text (add > in front like this)
 
-| 欄位 | 說明 |
+| Column | Description |
 |------|------|
-| age  | 年齡 |
-| sex  | 性別 |
+| age  | Age |
+| sex  | Sex |
 ```
 
-### 在 Notebook 裡的使用範例
+### An example inside a notebook
 
-假設你正在分析松柏護理之家的資料，Markdown cell 可以這樣寫：
+Suppose you're analyzing the Songbai nursing home data. A Markdown cell might read like this:
 
 ```markdown
-## 侵襲率分析
+## Attack rate analysis
 
-本分析使用松柏護理之家退伍軍人症群聚事件的 line list（n=280）。
+This analysis uses the line list from the Songbai nursing home Legionnaires' disease cluster (n=280).
 
-### 主要發現
+### Key findings
 
-1. **侵襲率**：43.2%（121/280）
-2. **致死率**：15.7%（19/121）
-3. 2-3 樓 B 翼的侵襲率明顯較高
+1. **Attack rate**: 43.2% (121/280)
+2. **Case fatality rate**: 15.7% (19/121)
+3. The 2nd–3rd floor B wing has a clearly higher attack rate
 
-> ⚠️ 注意：致死率的分母是感染人數（121），不是全體住民（280）
+> ⚠️ Note: the denominator for the case fatality rate is the number infected (121), not all residents (280)
 ```
 
-### 常用小技巧
+### Handy tips
 
-- **快速切換**：在命令模式（按 `Esc`）下，按 `M` 把 cell 變成 Markdown，按 `Y` 變回 Code
-- **執行 Markdown**：跟 Code cell 一樣按 `Shift + Enter`，Markdown 就會渲染成漂亮的格式
-- **雙擊編輯**：雙擊已渲染的 Markdown cell 可以回到編輯模式
-- **用 Markdown 做分析筆記**：好習慣是每段分析前加一個 Markdown cell 說明「這段在做什麼、為什麼」
+- **Quick switching**: in command mode (press `Esc`), press `M` to turn a cell into Markdown, and `Y` to turn it back into Code
+- **Running Markdown**: just like a Code cell, press `Shift + Enter` and the Markdown renders into nicely formatted text
+- **Double-click to edit**: double-click a rendered Markdown cell to go back to edit mode
+- **Use Markdown for analysis notes**: a good habit is to add a Markdown cell before each analysis section explaining "what this does and why"
 
 ```{tip}
-**好的 notebook = 程式碼 + Markdown 說明 + 圖表輸出。** 把你的 notebook 想像成一份疫調報告，任何人打開它都能理解你的分析過程。這就是可重現研究（reproducible research）的精神。
+**A good notebook = code + Markdown explanations + chart outputs.** Think of your notebook as an outbreak investigation report that anyone can open and understand your analysis process. That's the spirit of reproducible research.
 ```
 
 ---
 
-## 除了 pandas，還有哪些資料清理工具？
+## Besides pandas, what other data-cleaning tools are there?
 
-`pandas` 是 Python 生態系中最主流的表格資料處理套件，本教材也以它為主。但隨著你處理的資料量越來越大，你可能會聽到其他選擇。以下是一個簡要的比較：
+`pandas` is the most mainstream package for tabular data in the Python ecosystem, and this book relies on it as well. But as the amount of data you handle grows, you may hear about other options. Here's a brief comparison:
 
-| 套件 | 特色 | 適合場景 | 安裝方式 |
+| Package | Highlights | Best for | Installation |
 |------|------|----------|----------|
-| **pandas** | 最多人用、教材最多、功能最完整 | 大多數流病分析（數千～數十萬筆） | `uv add pandas` |
-| **polars** | 速度極快（比 pandas 快 5～50 倍）、記憶體更省 | 大量資料（百萬筆以上的監測資料） | `uv add polars` |
-| **DuckDB** | 用 SQL 語法查表格資料，不需要資料庫伺服器 | 習慣 SQL 的人、超大 CSV 檔案 | `uv add duckdb` |
-| **pyjanitor** | 在 pandas 基礎上加入更直覺的資料清理語法 | 讓清理步驟更易讀 | `uv add pyjanitor` |
+| **pandas** | Most widely used, most tutorials, most complete features | Most epidemiological analyses (thousands to hundreds of thousands of records) | `uv add pandas` |
+| **polars** | Extremely fast (5–50× faster than pandas), more memory-efficient | Large data (millions of surveillance records or more) | `uv add polars` |
+| **DuckDB** | Query tabular data with SQL syntax, no database server needed | People used to SQL, huge CSV files | `uv add duckdb` |
+| **pyjanitor** | Adds more intuitive data-cleaning syntax on top of pandas | Making cleaning steps more readable | `uv add pyjanitor` |
 
-### 哪個最適合初學者？
+### Which is best for beginners?
 
-**先學 pandas 就對了。** 原因是：
+**Just learn pandas.** The reasons are:
 
-1. **95% 的教材、範例、StackOverflow 回答都用 pandas**——你遇到問題時最容易找到解法
-2. **pandas 的功能對流病分析絕對夠用**——除非你要處理數百萬筆以上的資料，否則不需要換
-3. **其他工具的語法跟 pandas 很像**——學會 pandas 之後，轉去 polars 或 DuckDB 的學習成本很低
+1. **95% of tutorials, examples, and StackOverflow answers use pandas**—so when you hit a problem, it's easiest to find a solution
+2. **pandas' features are more than enough for epidemiological analysis**—unless you're handling millions of records or more, you don't need to switch
+3. **Other tools have syntax very similar to pandas**—once you know pandas, the cost of moving to polars or DuckDB is low
 
-### 什麼時候考慮其他工具？
+### When should you consider other tools?
 
-| 你遇到的問題 | 可以考慮的工具 |
+| The problem you hit | A tool to consider |
 |-------------|---------------|
-| pandas 讀 CSV 很慢（超過 100 萬筆） | `polars`（讀取速度快很多倍） |
-| 記憶體不夠（筆電只有 8GB） | `polars`（記憶體使用更省） |
-| 你本來就會 SQL | `duckdb`（直接對 CSV/Parquet 下 SQL） |
-| 清理步驟太多，程式碼變得很長 | `pyjanitor`（方法鏈更好讀） |
+| pandas reads CSVs slowly (over 1 million records) | `polars` (many times faster to read) |
+| Not enough memory (a laptop with only 8GB) | `polars` (more memory-efficient) |
+| You already know SQL | `duckdb` (run SQL directly on CSV/Parquet) |
+| Too many cleaning steps, making the code long | `pyjanitor` (method chains read better) |
 
 ```{tip}
-本教材所有章節都使用 pandas。如果你未來工作中遇到效能瓶頸，再回來看這張表選擇合適的工具即可。不需要現在就學多個套件。
+Every chapter in this book uses pandas. If you hit a performance bottleneck in future work, come back to this table to choose the right tool. There's no need to learn several packages right now.
 ```
 
 ---
 
-## 為什麼建議用 Jupyter Lab？不能直接寫 `.py` 嗎？
+## Why recommend Jupyter Lab? Can't I just write `.py`?
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：Jupyter Lab 入門</div>
+  <div class="video-title">Tutorial video: getting started with Jupyter Lab</div>
   <div class="youtube-lite" data-id="iELUPwdPk7M">
-    <img src="https://img.youtube.com/vi/iELUPwdPk7M/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/iELUPwdPk7M/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：什麼是 Jupyter → 啟動方法 → Cell 概念 → Shift+Enter → 盲點：執行順序、Restart Kernel、[*] 卡住</p>
+<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: what is Jupyter → how to launch it → the cell concept → Shift+Enter → blind spots: execution order, Restart Kernel, stuck on [*]</p>
 </div>
 ```
 
-你可能會想：「程式不就是一個文字檔嗎？為什麼要用 Jupyter Lab 這個看起來像網頁的東西？」
+You might think: "Isn't a program just a text file? Why use Jupyter Lab, this thing that looks like a web page?"
 
-這是一個很好的問題。答案是：**要看你的目的是什麼。** 不同的工具適合不同的工作階段。
+That's a great question. The answer is: **it depends on your goal.** Different tools suit different stages of work.
 
-### Jupyter Lab 的優勢：「邊寫邊看結果」
+### Jupyter Lab's advantage: "see results as you write"
 
-流行病學分析有一個特點：你通常是**一邊探索資料、一邊做決定**。
+Epidemiological analysis has one distinctive trait: you usually **explore the data and make decisions at the same time**.
 
-比如你拿到一份 line list：
-1. 先看看資料長什麼樣（`df.head()`）
-2. 發現日期欄位格式不對，清理一下
-3. 算個侵襲率，看看數字對不對
-4. 畫一張流行曲線，發現有一天的病例數異常高
-5. 回頭看那天的原始資料，原來是重複通報
-6. 刪掉重複的，重畫一次
+For example, when you get a line list:
+1. First look at what the data looks like (`df.head()`)
+2. Notice the date column is in the wrong format, and clean it
+3. Calculate an attack rate and check whether the number looks right
+4. Draw an epidemic curve and notice one day has an unusually high case count
+5. Go back to that day's raw data and find it was a duplicate report
+6. Delete the duplicate and redraw
 
-這個過程是**互動式、反覆試探**的——你不會一開始就知道最終的分析步驟是什麼。
+This process is **interactive and exploratory**—you don't know the final analysis steps at the outset.
 
-Jupyter Lab 的 notebook（`.ipynb` 檔案）正好適合這種工作方式：
+Jupyter Lab's notebooks (`.ipynb` files) suit exactly this way of working:
 
-- **一格一格執行**：寫一段程式碼按 `Shift + Enter`，馬上看到結果
-- **圖表直接顯示在程式碼下方**：不用另開視窗看圖
-- **可以穿插文字說明**：用 Markdown cell 寫「這一步是在算各區的侵襲率」
-- **結果跟程式碼放在一起**：同事打開你的 notebook 就能看到完整的分析過程和結果
+- **Run cell by cell**: write a snippet, press `Shift + Enter`, and immediately see the result
+- **Charts display right below the code**: no need to open a separate window to view them
+- **You can interleave text explanations**: use a Markdown cell to write "this step calculates each area's attack rate"
+- **Results sit alongside the code**: a colleague who opens your notebook sees the complete analysis process and results
 
-### 那 `.py` 腳本適合什麼？
+### So what are `.py` scripts good for?
 
-`.py` 檔案就是一個純文字的 Python 程式。它沒有「一格一格」的概念——你按「執行」，整個檔案從頭跑到尾。
+A `.py` file is a plain-text Python program. It has no "cell by cell" concept—you press "run," and the whole file runs from top to bottom.
 
-**`.py` 適合的場景是「你已經知道要做什麼步驟，想讓它自動跑」：**
+**A `.py` file suits the scenario "you already know the steps and want them to run automatically":**
 
-| 場景 | 適合的工具 | 原因 |
+| Scenario | The right tool | Why |
 |------|-----------|------|
-| 探索新資料、試不同分析方法 | Jupyter Lab（`.ipynb`） | 需要邊看邊調整 |
-| 每週固定的疫情報表 | `.py` 腳本 | 步驟固定，自動執行 |
-| 建立可重複使用的函式庫 | `.py` 模組 | 讓多個 notebook 都能呼叫 |
-| 排程自動化（每天早上 8 點跑一次） | `.py` 腳本 | 排程工具只能跑 `.py`，不能跑 `.ipynb` |
-| 學習、教學、分享分析 | Jupyter Lab（`.ipynb`） | 圖文並茂，同事看得懂 |
+| Exploring new data, trying different analysis methods | Jupyter Lab (`.ipynb`) | You need to adjust as you look |
+| A fixed weekly outbreak report | A `.py` script | Fixed steps, runs automatically |
+| Building a reusable function library | A `.py` module | Lets multiple notebooks call it |
+| Scheduled automation (run once every morning at 8) | A `.py` script | Schedulers can only run `.py`, not `.ipynb` |
+| Learning, teaching, sharing analysis | Jupyter Lab (`.ipynb`) | Illustrated, easy for colleagues to follow |
 
-**實務上的理想流程是：**
+**The ideal workflow in practice is:**
 
 ```
-用 notebook 探索、實驗（.ipynb）
+Explore and experiment in a notebook (.ipynb)
          ↓
-分析步驟確定後，整理成腳本（.py）
+Once the analysis steps are settled, tidy them into a script (.py)
          ↓
-用排程工具自動執行（cron / Windows 工作排程器）
+Run it automatically with a scheduler (cron / Windows Task Scheduler)
 ```
 
-### 其他編輯器：VS Code、PyCharm
+### Other editors: VS Code, PyCharm
 
-除了 Jupyter Lab，你也可以用其他程式編輯器寫 Python：
+Besides Jupyter Lab, you can also write Python in other code editors:
 
-| 編輯器 | 特色 | 適合誰 |
+| Editor | Highlights | Who it's for |
 |--------|------|--------|
-| **Jupyter Lab** | 互動式、圖表即時顯示、適合探索分析 | 流病分析師、資料科學初學者 |
-| **VS Code** | 功能全面、可以同時編輯 `.py` 和 `.ipynb`、有 AI 輔助 | 想要一站式開發環境的人 |
-| **PyCharm** | 專為 Python 設計、強大的偵錯工具 | 進階 Python 開發者 |
-| **Google Colab** | 免費雲端 Jupyter，不用安裝任何東西 | 電腦效能不夠、想用免費 GPU |
+| **Jupyter Lab** | Interactive, charts display instantly, great for exploratory analysis | Epidemiology analysts, data science beginners |
+| **VS Code** | Full-featured, can edit both `.py` and `.ipynb`, has AI assistance | People who want an all-in-one development environment |
+| **PyCharm** | Purpose-built for Python, powerful debugging tools | Advanced Python developers |
+| **Google Colab** | Free cloud Jupyter, no installation needed | People short on computing power or wanting a free GPU |
 
 ```{tip}
-**本教材建議初學者用 Jupyter Lab。** 當你比較熟悉之後，可以試試 VS Code——它可以直接打開 `.ipynb` 檔案（體驗跟 Jupyter Lab 幾乎一樣），同時也能編輯 `.py` 檔案，兩種格式在同一個環境中搞定。
+**This book recommends Jupyter Lab for beginners.** Once you're more comfortable, try VS Code—it can open `.ipynb` files directly (the experience is almost identical to Jupyter Lab) and also edit `.py` files, handling both formats in one environment.
 ```
 
-### 把 `.ipynb` 轉成 `.py`：三種方法
+### Converting `.ipynb` to `.py`: three methods
 
-當你的分析流程確定了，想把 notebook 轉成 `.py` 腳本（例如要排程自動執行），有三種方式：
+Once your analysis workflow is settled and you want to turn the notebook into a `.py` script (for example, to schedule automatic runs), there are three ways:
 
-#### 方法 1：在 Jupyter Lab 裡直接匯出
+#### Method 1: export directly from within Jupyter Lab
 
-在 Jupyter Lab 的選單中：
+In the Jupyter Lab menu:
 
 ```
 File → Save and Export Notebook As → Executable Script
 ```
 
-這會產生一個 `.py` 檔案，把所有 code cell 串起來，Markdown cell 會變成 `# ` 開頭的註解。
+This produces a `.py` file that strings all the code cells together, with Markdown cells becoming comments starting with `# `.
 
-#### 方法 2：用 `jupyter nbconvert` 指令
+#### Method 2: use the `jupyter nbconvert` command
 
 ```bash
 uv run jupyter nbconvert --to script my_analysis.ipynb
 ```
 
-這會在同一個目錄下產生 `my_analysis.py`。
+This produces `my_analysis.py` in the same directory.
 
-如果你有很多 notebook 要一次轉換：
+If you have many notebooks to convert at once:
 
 ```bash
 uv run jupyter nbconvert --to script notebooks/*.ipynb
 ```
 
-#### 方法 3：手動整理（最推薦用於正式的排程腳本）
+#### Method 3: tidy it by hand (most recommended for a proper scheduled script)
 
-前兩種方法轉出來的 `.py` 會包含一些多餘的東西（例如 `# In[1]:` 之類的 cell 標記）。如果這是要長期使用的排程腳本，建議手動整理：
+The `.py` files produced by the first two methods contain some clutter (like `# In[1]:` cell markers). If this is a scheduled script for long-term use, we recommend tidying it by hand:
 
-1. 打開轉出的 `.py`
-2. 刪掉 `# In[1]:` 這類的 cell 標記
-3. 刪掉探索性的程式碼（例如 `df.head()`、`print(df.shape)` 這些只是在看資料的步驟）
-4. 把重要的步驟保留下來，加上清楚的註解
-5. 把輸出路徑（例如報表存檔的位置）改成絕對路徑
+1. Open the exported `.py`
+2. Delete cell markers like `# In[1]:`
+3. Delete exploratory code (like `df.head()` and `print(df.shape)`—steps that only look at the data)
+4. Keep the important steps and add clear comments
+5. Change output paths (like where the report is saved) to absolute paths
 
-本教材中的 `notebooks/run_sitrep.py` 就是一個整理好的 `.py` 腳本範例——它讀取 line list、計算 CFR 和侵襲率、輸出各區統計表：
+This book's `notebooks/run_sitrep.py` is an example of a tidied `.py` script—it reads the line list, calculates the CFR and attack rate, and outputs a summary table by area:
 
 ```bash
 uv run python notebooks/run_sitrep.py
 ```
 
-### 實戰：把分析腳本排程自動執行
+### In practice: scheduling an analysis script to run automatically
 
-假設你整理好了一個 `weekly_report.py`，要讓它每週一早上 8 點自動執行、產出登革熱週報。
+Suppose you've tidied up a `weekly_report.py` and want it to run automatically every Monday at 8 a.m. to produce a dengue weekly report.
 
-#### macOS：用 launchd（推薦）
+#### macOS: use launchd (recommended)
 
-**launchd** 是 macOS 的原生排程器，比 cron 更穩定，不會被 macOS 的安全機制擋住。建立一個 plist 檔 `~/Library/LaunchAgents/com.epi.weekly.plist`：
+**launchd** is macOS's native scheduler. It's more stable than cron and won't be blocked by macOS's security mechanisms. Create a plist file at `~/Library/LaunchAgents/com.epi.weekly.plist`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -836,15 +836,15 @@ uv run python notebooks/run_sitrep.py
     <string>com.epi.weekly</string>
     <key>ProgramArguments</key>
     <array>
-        <!-- 用 which uv 查你的 uv 絕對路徑 -->
-        <string>/Users/你的帳號/.local/bin/uv</string>
+        <!-- Use `which uv` to find your uv absolute path -->
+        <string>/Users/your-username/.local/bin/uv</string>
         <string>run</string>
         <string>python</string>
-        <string>/Users/你的帳號/projects/python4epi/weekly_report.py</string>
+        <string>/Users/your-username/projects/python4epi/weekly_report.py</string>
     </array>
     <key>WorkingDirectory</key>
-    <string>/Users/你的帳號/projects/python4epi</string>
-    <!-- 每週一（Weekday=1）早上 8:00 -->
+    <string>/Users/your-username/projects/python4epi</string>
+    <!-- Every Monday (Weekday=1) at 8:00 a.m. -->
     <key>StartCalendarInterval</key>
     <dict>
         <key>Weekday</key>
@@ -855,646 +855,648 @@ uv run python notebooks/run_sitrep.py
         <integer>0</integer>
     </dict>
     <key>StandardOutPath</key>
-    <string>/Users/你的帳號/projects/python4epi/output/weekly_stdout.log</string>
+    <string>/Users/your-username/projects/python4epi/output/weekly_stdout.log</string>
     <key>StandardErrorPath</key>
-    <string>/Users/你的帳號/projects/python4epi/output/weekly_stderr.log</string>
+    <string>/Users/your-username/projects/python4epi/output/weekly_stderr.log</string>
 </dict>
 </plist>
 ```
 
 ```bash
-# 載入排程
+# Load the schedule
 launchctl load ~/Library/LaunchAgents/com.epi.weekly.plist
 
-# 確認載入成功
+# Confirm it loaded successfully
 launchctl list | grep epi
 
-# 移除排程
+# Remove the schedule
 launchctl unload ~/Library/LaunchAgents/com.epi.weekly.plist
 ```
 
 ```{tip}
-完整的 launchd 教學（含每日 SitRep 排程範例），請見 Ch04 Step 9。
+For a complete launchd tutorial (including a daily SitRep scheduling example), see Ch04 Step 9.
 ```
 
-#### Linux / macOS：用 cron
+#### Linux / macOS: use cron
 
-macOS 也可以用 cron，但在新版 macOS 上可能需要額外授予「完整磁碟取用權限」——**建議 macOS 使用者優先用上方的 launchd**。
+macOS can also use cron, but on newer macOS versions it may require granting "Full Disk Access"—**macOS users are advised to prefer launchd above**.
 
 ```bash
-# 打開 cron 編輯器
+# Open the cron editor
 crontab -e
 
-# 加入這一行（每週一早上 8 點執行）
+# Add this line (runs every Monday at 8 a.m.)
 0 8 * * 1 cd /path/to/your/project && uv run python weekly_report.py >> /path/to/logs/weekly_report.log 2>&1
 ```
 
-各欄位的意思：
+What each field means:
 
 ```
 0 8 * * 1
 │ │ │ │ │
-│ │ │ │ └── 星期幾（1 = 星期一）
-│ │ │ └──── 月份（* = 每月）
-│ │ └────── 日期（* = 每天）
-│ └──────── 小時（8 = 早上 8 點）
-└────────── 分鐘（0 = 整點）
+│ │ │ │ └── day of week (1 = Monday)
+│ │ │ └──── month (* = every month)
+│ │ └────── day of month (* = every day)
+│ └──────── hour (8 = 8 a.m.)
+└────────── minute (0 = on the hour)
 ```
 
-#### Windows：用「工作排程器」
+#### Windows: use Task Scheduler
 
-1. 搜尋「工作排程器」或「Task Scheduler」
-2. 點「建立基本工作」
-3. 設定觸發條件：每週一上午 8:00
-4. 動作：啟動程式
-   - 程式或指令碼：`cmd`
-   - 新增引數：`/c cd /d C:\path\to\your\project && uv run python weekly_report.py`
+1. Search for "Task Scheduler"
+2. Click "Create Basic Task"
+3. Set the trigger: every Monday at 8:00 a.m.
+4. Action: Start a program
+   - Program/script: `cmd`
+   - Add arguments: `/c cd /d C:\path\to\your\project && uv run python weekly_report.py`
 
-也可以用命令列 `schtasks` 一行搞定：
+You can also do it in one line from the command line with `schtasks`:
 
 ```powershell
 schtasks /create /tn "Weekly_Report" /tr "cmd /c cd /d C:\path\to\your\project && uv run python weekly_report.py" /sc weekly /d MON /st 08:00
 ```
 
-#### 排程腳本的建議
+#### Tips for scheduled scripts
 
-| 建議 | 原因 |
+| Tip | Why |
 |------|------|
-| 在腳本開頭寫好輸入/輸出路徑 | 排程時的工作目錄可能不是你預期的 |
-| 加上 `try/except` 錯誤處理 | 排程執行時你不在電腦前，要把錯誤訊息存起來 |
-| 把結果存成檔案，不要只 print | `print` 只會輸出到 log，存檔才看得到報表 |
-| macOS 優先用 launchd | launchd 是原生排程器，不會被安全機制擋住，日誌管理也更方便 |
-| 先手動跑一次確認沒問題 | 再設定排程，避免每週一都跑出錯誤 |
+| Write input/output paths at the top of the script | The working directory during scheduling may not be what you expect |
+| Add `try/except` error handling | When the schedule runs, you're not at the computer, so save the error messages |
+| Save results to a file, don't just print | `print` only goes to the log; saving to a file is how you actually get the report |
+| macOS: prefer launchd | launchd is the native scheduler—it won't be blocked by security mechanisms, and its logging is easier to manage |
+| Run it once by hand first to confirm it works | Then set up the schedule, to avoid errors every Monday |
 
-### 總結：流行病學家的工具選擇指南
+### Summary: an epidemiologist's tool selection guide
 
 ```
-第一步：學習 & 探索分析
-  → Jupyter Lab（.ipynb）
+Step 1: Learning & exploratory analysis
+  → Jupyter Lab (.ipynb)
 
-第二步：分析流程固定後
-  → 轉成 .py 腳本
+Step 2: Once the analysis workflow is settled
+  → Convert to a .py script
 
-第三步：自動化 & 排程
-  → launchd / cron / 工作排程器 + .py 腳本
+Step 3: Automation & scheduling
+  → launchd / cron / Task Scheduler + .py script
 
-進階：想要更好的開發體驗
-  → VS Code（同時支援 .ipynb 和 .py）
+Advanced: for a better development experience
+  → VS Code (supports both .ipynb and .py)
 ```
 
-**不用一開始就選定一個工具。** 先用 Jupyter Lab 把分析做出來，需要排程再轉成 `.py`，之後覺得 VS Code 更順手就換過去。工具是為你服務的，不是拿來焦慮的。
+**You don't have to pick a single tool from the start.** Do the analysis in Jupyter Lab first, convert to `.py` when you need scheduling, and switch to VS Code later if it feels smoother. Tools are there to serve you, not to make you anxious.
 
 ---
 
-## Git 是什麼？為什麼流行病學家需要它？
+## What is Git? Why do epidemiologists need it?
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：Git 版本控制</div>
+  <div class="video-title">Tutorial video: Git version control</div>
   <div class="youtube-lite" data-id="SdtrxhPbRqk">
-    <img src="https://img.youtube.com/vi/SdtrxhPbRqk/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/SdtrxhPbRqk/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：版本混亂的惡夢 → Git 時光機比喻 → 三區域 → git add/commit/push → 盲點：git add .、commit message、push 被拒</p>
+<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: the nightmare of version chaos → Git as a time machine metaphor → the three areas → git add/commit/push → blind spots: git add ., commit messages, push rejected</p>
 </div>
 ```
 
-### 先說一個場景
+### First, a scenario
 
-你花了一整天寫好登革熱疫情分析腳本，跑出漂亮的流行曲線。隔天主管說：「把分母從確診數改成通報數」，你照做了。又過了兩天，主管說：「還是改回來好了。」
+You spend a whole day writing a dengue outbreak analysis script and produce a beautiful epidemic curve. The next day your supervisor says, "Change the denominator from confirmed cases to reported cases," and you do it. Two days later, your supervisor says, "Actually, change it back."
 
-如果你的檔案叫 `analysis.py`，這時候你手邊可能是這樣的狀態：
+If your file is called `analysis.py`, at this point your folder might look like this:
 
 ```
 analysis.py
 analysis_v2.py
 analysis_v2_final.py
-analysis_v2_final_真的最終版.py
-analysis_v2_final_真的最終版_主管修改.py
+analysis_v2_final_really_final.py
+analysis_v2_final_really_final_supervisor_edits.py
 ```
 
-你根本分不清哪個版本有什麼差異，也不確定改回來之後是不是真的跟原本一樣。
+You can't tell what differs between versions, and you're not sure whether "changing it back" really matches the original.
 
-**Git 就是解決這個問題的工具。** 你可以把它想像成一台「時光機」：
+**Git is the tool that solves this problem.** Think of it as a "time machine":
 
-- 每次你覺得程式碼到了一個穩定的狀態，就拍一張「快照」（叫做 **commit**）
-- 每張快照都有說明（例如「把分母改為通報數」）、時間戳記、誰改的
-- 你隨時可以回到任何一張快照，比對兩個版本之間的差異
-- 多人同時修改同一份程式碼時，Git 會幫你合併，不會互相覆蓋
+- Every time you feel the code has reached a stable state, you take a "snapshot" (called a **commit**)
+- Each snapshot has a description (e.g., "change the denominator to reported cases"), a timestamp, and who made it
+- You can return to any snapshot at any time and compare the differences between two versions
+- When several people modify the same code at once, Git helps you merge without overwriting each other
 
-**用了 Git 之後，你只需要一個 `analysis.py`，所有歷史版本都安全地保存在背後。**
+**Once you use Git, you only need one `analysis.py`, and all historical versions are safely preserved behind the scenes.**
 
 ```{figure} images/git_version_chaos.svg
 :name: fig-git-version-chaos
-:alt: 沒有 Git 時檔案版本混亂 vs 有 Git 時只需要一個檔案
+:alt: File version chaos without Git vs only needing one file with Git
 :width: 100%
 
-沒有 Git 時，你的資料夾會充滿各種版本的檔案，根本分不清哪個是最新的。有了 Git，只需要一個檔案，所有歷史版本都安全地保存在 commit 紀錄中。
+Without Git, your folder fills up with all kinds of file versions, and you can't tell which is the latest. With Git, you only need one file, and all historical versions are safely preserved in the commit history.
 ```
 
-下圖是 Git 運作的核心概念——四大區域與三個關鍵指令。先有個印象就好，後面會一步一步帶你操作：
+The diagram below shows the core concept of how Git works—four areas and three key commands. Just get a general impression for now; we'll walk you through the operations step by step later:
 
 ```{figure} images/git_three_areas.svg
 :name: fig-git-three-areas
-:alt: Git 四大區域：工作目錄、暫存區、本地儲存庫、遠端 GitHub
+:alt: Git's four areas: working directory, staging area, local repository, remote GitHub
 :width: 100%
 
-Git 的四大區域：你在**工作目錄**修改檔案，用 `git add` 放進**暫存區**，用 `git commit` 拍成**快照**存入本地儲存庫，最後用 `git push` 上傳到 GitHub。
+Git's four areas: you modify files in the **working directory**, use `git add` to put them in the **staging area**, use `git commit` to take a **snapshot** into the local repository, and finally use `git push` to upload it to GitHub.
 ```
 
-### 流行病學家最常用的 Git 情境
+### The Git situations epidemiologists use most
 
-你不需要學會 Git 的全部功能。以下是流病工作中最常遇到的情境，以及對應的指令：
+You don't need to learn all of Git's features. Below are the situations you'll most often encounter in epidemiology work, with the corresponding commands:
 
-#### 情境 1：第一次設定（只需要做一次）
+#### Situation 1: first-time setup (only needs to be done once)
 
-剛裝好 Git 之後，先告訴它你是誰。這樣未來每次存檔（commit）都會自動記錄作者：
+Right after installing Git, tell it who you are. That way, every future commit automatically records the author:
 
 ```bash
-git config --global user.name "王小明"
+git config --global user.name "Wang Xiaoming"
 git config --global user.email "xiaoming@health.gov.tw"
 ```
 
-#### 情境 2：每天的工作流程——改完程式碼，存一個版本
+#### Situation 2: the daily workflow—after editing code, save a version
 
-這是你最常做的事。假設你今天修改了流行曲線的腳本：
+This is what you'll do most often. Suppose you modified the epidemic curve script today:
 
 ```bash
-# 1) 先看一下目前有哪些檔案被修改了
+# 1) First check which files have been modified
 git status
 
-# 2) 把改好的檔案加入「準備存檔」的區域（staging area）
+# 2) Add the edited file to the "ready to save" area (staging area)
 git add notebooks/02_visualization_epi_charts.ipynb
 
-# 3) 拍一張快照，附上一句說明
-git commit -m "feat: 流行曲線加入 7 日移動平均線"
+# 3) Take a snapshot with a note
+git commit -m "feat: add a 7-day moving average to the epidemic curve"
 ```
 
 ```{figure} images/git_daily_workflow.svg
 :name: fig-git-daily-workflow
-:alt: 每天的 Git 工作流程：修改 → git status → git add → git commit
+:alt: The daily Git workflow: edit → git status → git add → git commit
 :width: 100%
 
-每天的工作流程就是這四步：修改程式碼、檢查狀態、加入暫存、拍快照存檔。每完成一個小步驟就重複一次。
+The daily workflow is these four steps: edit the code, check the status, add to staging, take a snapshot to save. Repeat once for each small step you complete.
 ```
 
-**`git commit -m "..."` 裡面的訊息很重要**——它是未來的你（或你的同事）回頭查的時候唯一的線索。好的訊息長這樣：
+**The message in `git commit -m "..."` matters a lot**—it's the only clue the future you (or your colleague) has when looking back. A good message looks like this:
 
-| 好的 commit 訊息 | 不好的 commit 訊息 |
+| Good commit message | Bad commit message |
 |---|---|
-| `fix: 修正 CFR 分母為確診數而非通報數` | `更新` |
-| `feat: 新增地區別侵襲率比較長條圖` | `改了一些東西` |
-| `docs: 補充第 3 章信賴區間的解讀說明` | `final` |
+| `fix: correct CFR denominator to confirmed cases, not reported cases` | `update` |
+| `feat: add a bar chart comparing attack rates by area` | `changed some things` |
+| `docs: add an explanation of confidence intervals to Chapter 3` | `final` |
 
-#### 情境 3：看看之前改了什麼
+#### Situation 3: see what you changed before
 
-下週主管問你：「上次那個 CFR 的公式你改了什麼？」
+Next week your supervisor asks: "What did you change in that CFR formula last time?"
 
 ```bash
-# 看最近 5 筆 commit 的摘要
+# See a summary of the 5 most recent commits
 git log --oneline -5
 ```
 
-你會看到類似這樣的清單：
+You'll see a list like this:
 
 ```
-a1b2c3d fix: 修正 CFR 分母為確診數而非通報數
-e4f5g6h feat: 流行曲線加入 7 日移動平均線
-i7j8k9l docs: 補充第 2 章資料清理步驟說明
+a1b2c3d fix: correct CFR denominator to confirmed cases, not reported cases
+e4f5g6h feat: add a 7-day moving average to the epidemic curve
+i7j8k9l docs: add an explanation of the data-cleaning steps to Chapter 2
 ```
 
-想看某一筆 commit 具體改了哪幾行：
+To see exactly which lines a particular commit changed:
 
 ```bash
 git show a1b2c3d
 ```
 
-#### 情境 4：把程式碼同步到 GitHub（雲端備份 + 團隊共享）
+#### Situation 4: sync your code to GitHub (cloud backup + team sharing)
 
-GitHub 就像 Git 的「雲端硬碟」。把程式碼推上去，電腦壞了也不怕，同事也能看到最新版：
+GitHub is like Git's "cloud drive." Push your code there and you needn't worry if your computer breaks, and colleagues can see the latest version:
 
 ```bash
-# 把本機的 commit 推到 GitHub
+# Push your local commits to GitHub
 git push
 ```
 
-反過來，如果同事更新了程式碼，你要把最新版拉下來：
+Conversely, if a colleague updated the code and you want to pull down the latest version:
 
 ```bash
-# 從 GitHub 拉最新版到本機
+# Pull the latest version from GitHub to your machine
 git pull
 ```
 
-#### 情境 5：想嘗試新方法，但不確定會不會搞砸
+#### Situation 5: you want to try a new approach, but aren't sure it'll work
 
-假設你想試試看用不同的統計方法算 R0（基本再生數），但不想弄壞目前能跑的版本。這時候可以開一條「分支（branch）」：
+Suppose you want to try a different statistical method to estimate R0 (the basic reproduction number), but you don't want to break the currently working version. You can open a "branch":
 
 ```bash
-# 建立一條新分支，叫做 try-r0-method
+# Create a new branch called try-r0-method
 git checkout -b try-r0-method
 
-# 在這條分支上隨便改、隨便試
-# ... 寫程式碼 ...
+# Change and experiment freely on this branch
+# ... write code ...
 git add .
-git commit -m "feat: 嘗試用 EpiEstim 方法估計 R0"
+git commit -m "feat: try estimating R0 with the EpiEstim method"
 
-# 如果試成功了，合併回主分支
+# If it works, merge back into the main branch
 git checkout main
 git merge try-r0-method
 
-# 如果試失敗了，直接切回去，什麼都沒影響
+# If it fails, just switch back—nothing is affected
 git checkout main
 ```
 
 ```{figure} images/git_branching.svg
 :name: fig-git-branching
-:alt: Git 分支概念：從 main 岔出分支實驗，成功則合併，失敗則捨棄
+:alt: The Git branching concept: branch off main to experiment, merge if it works, discard if it fails
 :width: 100%
 
-分支就像平行宇宙——從 main 岔出一條線去實驗，成功了合併（merge）回來，失敗了直接切回 main，完全不影響原本的程式碼。
+A branch is like a parallel universe—branch off main to experiment, merge back if it works, or just switch back to main if it fails, leaving the original code completely unaffected.
 ```
 
-分支就像平行宇宙——在另一條線上實驗，成功了再合併回來，失敗了就丟掉，不會影響原本的程式碼。
+A branch is like a parallel universe—experiment on a separate line, merge back if it works, discard it if it fails, all without affecting the original code.
 
-### Git 指令速查表
+### Git command cheat sheet
 
-以下是日常工作會用到的指令，可以收藏起來隨時查：
+Below are the commands you'll use in daily work; bookmark them for quick reference:
 
-| 我想要… | 指令 | 白話說明 |
+| I want to… | Command | In plain words |
 |---------|------|---------|
-| 看現在什麼檔案被改了 | `git status` | 看看有哪些變動還沒存檔 |
-| 把檔案加入準備存檔 | `git add 檔案名稱` | 告訴 Git「這些修改我要存」 |
-| 把所有改過的檔案一起加入 | `git add .` | 全部加入（注意不要加到機密檔案） |
-| 存檔（拍快照） | `git commit -m "說明"` | 建立一個版本紀錄 |
-| 看歷史紀錄 | `git log --oneline -10` | 看最近 10 筆版本摘要 |
-| 看某個檔案的修改歷程 | `git log --oneline 檔案名稱` | 看這個檔案被改過幾次 |
-| 比對目前和上次的差異 | `git diff` | 看我改了哪幾行 |
-| 上傳到 GitHub | `git push` | 同步到雲端 |
-| 從 GitHub 下載最新版 | `git pull` | 把同事的更新拉下來 |
-| 開一條新分支去實驗 | `git checkout -b 分支名稱` | 開平行宇宙 |
-| 切回主分支 | `git checkout main` | 回到主線 |
-| 回到上一個版本（只看，不改） | `git log --oneline` → `git show commit代碼` | 查看過去的快照 |
+| See which files have been changed | `git status` | See which changes aren't saved yet |
+| Add files to be saved | `git add filename` | Tell Git "I want to save these changes" |
+| Add all changed files at once | `git add .` | Add everything (careful not to add secret files) |
+| Save (take a snapshot) | `git commit -m "message"` | Create a version record |
+| See the history | `git log --oneline -10` | See a summary of the 10 most recent versions |
+| See a file's change history | `git log --oneline filename` | See how many times this file was changed |
+| Compare the current and last version | `git diff` | See which lines I changed |
+| Upload to GitHub | `git push` | Sync to the cloud |
+| Download the latest version from GitHub | `git pull` | Pull your colleagues' updates |
+| Open a new branch to experiment | `git checkout -b branchname` | Open a parallel universe |
+| Switch back to the main branch | `git checkout main` | Return to the main line |
+| Return to a previous version (look only, no changes) | `git log --oneline` → `git show commit-hash` | View a past snapshot |
 
-### 什麼時候該 commit？
+### When should you commit?
 
-一個簡單的原則：**每完成一個「有意義的小步驟」就 commit 一次。** 例如：
+A simple rule: **commit once after each "meaningful small step."** For example:
 
-- 清理完 line list 的缺失值 → commit
-- 畫好一張流行曲線 → commit
-- 修正侵襲率的計算公式 → commit
+- Finished cleaning the missing values in the line list → commit
+- Finished drawing an epidemic curve → commit
+- Corrected the attack rate calculation formula → commit
 
-不要等到「整個分析做完」才 commit。太大的 commit 很難回頭找問題；頻繁的小 commit 讓你隨時能回到任何一步。
+Don't wait until "the whole analysis is done" to commit. A commit that's too big is hard to trace problems in; frequent small commits let you return to any step at any time.
 
-### 實戰範例：用 Git 管理 Excel 疫調檔案
+### A worked example: managing Excel investigation files with Git
 
-你可能會問：「我們疫調都用 Excel，Git 也能管 Excel 嗎？」
+You might ask: "We do all our investigations in Excel—can Git manage Excel too?"
 
-**答案是可以的。** Git 可以追蹤任何檔案，包括 `.xlsx`。只是 Excel 是**二進位檔案（binary file）**，Git 沒辦法像純文字檔一樣「逐行比對差異」，但它仍然會幫你保存每一個版本的完整快照，讓你隨時能回到之前的狀態。
+**The answer is yes.** Git can track any file, including `.xlsx`. It's just that Excel is a **binary file**, so Git can't compare it "line by line" the way it does plain text. But it will still preserve a complete snapshot of every version, letting you return to any previous state at any time.
 
-以下是一個完整的團隊協作範例。假設你在衛生局負責一份登革熱疫調的 Excel 檔案，團隊有你和另一位同事小李。
+Below is a complete team collaboration example. Suppose you're responsible for a dengue investigation Excel file at the public health department, and your team is you and a colleague, Xiao Li.
 
-#### 第一步：建立 GitHub 儲存庫，把 Excel 放進去
+#### Step 1: create a GitHub repository and put the Excel file in it
 
-先在 GitHub 上建立一個新的儲存庫（repository），然後在你的電腦上：
+First create a new repository on GitHub, then on your computer:
 
 ```bash
-# 建立專案資料夾
+# Create the project folder
 mkdir dengue-investigation-2025
 cd dengue-investigation-2025
 git init
 
-# 把你的 Excel 檔案放進來
-# （假設你把 line_list.xlsx 複製到這個資料夾了）
+# Put your Excel file in here
+# (assuming you've copied line_list.xlsx into this folder)
 
-# 第一次 commit
+# The first commit
 git add line_list.xlsx
-git commit -m "feat: 新增登革熱疫調 line list 初始版本"
+git commit -m "feat: add the initial version of the dengue investigation line list"
 
-# 連結到 GitHub 上的儲存庫，然後推上去
+# Link to the repository on GitHub, then push it up
 git remote add origin https://github.com/your-team/dengue-investigation-2025.git
 git push -u origin main
 ```
 
-現在你的 Excel 檔案已經在 GitHub 上了，有雲端備份，團隊成員都能存取。
+Now your Excel file is on GitHub, with a cloud backup, and all team members can access it.
 
-#### 第二步：你修改了一筆資料、新增了一張圖表
+#### Step 2: you modify a record and add a chart
 
-隔天你收到新的通報，需要更新資料。你打開 `line_list.xlsx`：
-- 修正了第 23 筆病例的發病日期（原本打錯了）
-- 新增了一個「各區病例統計圖」的工作表（sheet）
+The next day you receive a new report and need to update the data. You open `line_list.xlsx`:
+- Corrected the onset date of case #23 (originally mistyped)
+- Added a new "case counts by area" chart worksheet (sheet)
 
-改完存檔後，回到終端機：
+After saving your changes, go back to the terminal:
 
 ```bash
-# 看看 Git 偵測到什麼變動
+# See what changes Git detected
 git status
-# 你會看到：modified: line_list.xlsx
+# You'll see: modified: line_list.xlsx
 
-# 加入暫存區
+# Add to the staging area
 git add line_list.xlsx
-
-# 存檔，寫清楚你改了什麼
-git commit -m "fix: 修正第 23 筆病例發病日期；新增各區病例統計圖表"
 ```
 
-#### 第三步：推到 GitHub（`git push`）
+```bash
+# Save it, writing clearly what you changed
+git commit -m "fix: correct the onset date of case #23; add a chart of case counts by area"
+```
+
+#### Step 3: push to GitHub (`git push`)
 
 ```bash
 git push
 ```
 
-就這樣一行指令，你本機的最新版就同步到 GitHub 了。
+Just this one command, and your local latest version is synced to GitHub.
 
-**推到哪裡？** 推到你在第一步設定的那個 GitHub 儲存庫。你可以用 `git remote -v` 查看目前連結的遠端位置。
+**Pushed to where?** To the GitHub repository you set up in Step 1. You can use `git remote -v` to see the currently linked remote location.
 
-#### 第四步：為什麼要用 Pull Request？不能直接 push 嗎？
+#### Step 4: why use a Pull Request? Can't I just push?
 
-如果是你一個人的小專案，直接 push 到 `main` 完全沒問題。
+If it's a small solo project of your own, pushing directly to `main` is perfectly fine.
 
-但在團隊協作時，更好的做法是用 **Pull Request（簡稱 PR）**。流程是這樣的：
+But for team collaboration, a better approach is to use a **Pull Request (PR for short)**. The workflow goes like this:
 
 ```bash
-# 先開一條分支，在分支上修改
+# First open a branch and make changes on it
 git checkout -b update-case-23
 
-# 修改 Excel、commit
+# Edit the Excel file, then commit
 git add line_list.xlsx
-git commit -m "fix: 修正第 23 筆病例發病日期"
+git commit -m "fix: correct the onset date of case #23"
 
-# 把分支推到 GitHub
+# Push the branch to GitHub
 git push -u origin update-case-23
 ```
 
-然後到 GitHub 網頁上點「**Create Pull Request**」。
+Then, on the GitHub website, click "**Create Pull Request**."
 
-**PR 的價值在於：**
+**The value of a PR is:**
 
-- **留下審查紀錄**：同事可以在 PR 上留言「確認過原始通報單，日期的確是 6/15 不是 6/5」
-- **防止錯誤進入主檔案**：在 merge（合併）之前，有人先看過一遍
-- **方便追溯**：三個月後如果有人問「這筆資料為什麼改了」，PR 裡有完整的討論記錄
+- **It leaves a review record**: a colleague can comment on the PR, "Checked the original report—the date really is 6/15, not 6/5"
+- **It prevents errors reaching the main file**: someone reviews it before the merge
+- **It's easy to trace**: if someone asks three months later "why was this record changed," the PR has a complete discussion record
 
-**誰可以 merge？** 這取決於儲存庫的權限設定。通常的做法是：
+**Who can merge?** That depends on the repository's permission settings. The usual practice is:
 
-| 角色 | 權限 |
+| Role | Permission |
 |------|------|
-| 專案負責人 / 組長 | 可以 merge PR、管理儲存庫設定 |
-| 團隊成員 | 可以開 PR、審查（review）、留言，但需要負責人批准才能 merge |
-| 外部協作者 | 可以 fork 後開 PR，但不能直接 merge |
+| Project owner / team lead | Can merge PRs and manage repository settings |
+| Team member | Can open PRs, review, and comment, but needs the owner's approval to merge |
+| External collaborator | Can fork and open a PR, but cannot merge directly |
 
-在衛生局的場景中，可能是**疫調組長**負責 merge，確保每次資料修改都經過審核。
+In a public health department setting, it might be the **investigation team lead** who is responsible for merging, ensuring every data change goes through review.
 
 ```{figure} images/git_pull_request_flow.svg
 :name: fig-git-pr-flow
-:alt: Pull Request 流程：開分支 → 修改 → 推上 GitHub → 開 PR → 審查 → Merge
+:alt: The Pull Request flow: open a branch → edit → push to GitHub → open a PR → review → merge
 :width: 100%
 
-Pull Request 流程：從 main 開一條分支修改，推到 GitHub 後開 PR，團隊成員審查確認後，由負責人合併回 main。這樣每一筆修改都有審查紀錄。
+The Pull Request flow: branch off main to make changes, push to GitHub and open a PR, and after team members review and confirm, the owner merges it back into main. This way, every change has a review record.
 ```
 
-#### 第五步：同事小李也要編輯同一個 Excel 檔
+#### Step 5: your colleague Xiao Li also needs to edit the same Excel file
 
-小李也需要新增幾筆病例資料。正確的做法是：
+Xiao Li also needs to add a few case records. The correct approach is:
 
 ```bash
-# 小李先把最新版抓下來
+# Xiao Li first pulls down the latest version
 git clone https://github.com/your-team/dengue-investigation-2025.git
 cd dengue-investigation-2025
 
-# 開一條自己的分支
+# Open a branch of their own
 git checkout -b add-new-cases-lili
 
-# 打開 Excel 修改、存檔
-# ...修改完畢...
+# Open the Excel file, make changes, and save
+# ...done editing...
 
 git add line_list.xlsx
-git commit -m "feat: 新增 6/16 通報的 8 筆新病例"
+git commit -m "feat: add 8 new cases reported on 6/16"
 git push -u origin add-new-cases-lili
 ```
 
-然後小李到 GitHub 上開一個 PR，等負責人審查後 merge。
+Then Xiao Li opens a PR on GitHub, and after the owner reviews it, it's merged.
 
-#### 第六步：小李改完了，你要怎麼同步？
+#### Step 6: Xiao Li is done—how do you sync?
 
-小李的 PR 被 merge 之後，你本機的檔案還是舊的。你需要把最新版拉下來：
+After Xiao Li's PR is merged, your local file is still the old one. You need to pull down the latest version:
 
 ```bash
-# 先切回主分支
+# First switch back to the main branch
 git checkout main
 
-# 從 GitHub 拉最新版
+# Pull the latest version from GitHub
 git pull
 ```
 
-現在你的 `line_list.xlsx` 就包含小李新增的那 8 筆病例了。
+Now your `line_list.xlsx` includes the 8 cases Xiao Li added.
 
-#### 重要提醒：Excel 的合併限制
+#### Important reminder: Excel's merge limitation
 
-有一點必須注意：**如果你和小李同時修改同一個 Excel 檔案的不同部分，Git 無法自動合併。** 因為 Excel 是二進位檔案，Git 看到的是「整個檔案變了」，不知道誰改了哪一格。
+One thing to note: **if you and Xiao Li modify different parts of the same Excel file at the same time, Git cannot merge them automatically.** Because Excel is a binary file, Git sees "the whole file changed" and doesn't know who changed which cell.
 
-這時候 Git 會提示「**merge conflict（合併衝突）**」，你需要手動決定要保留誰的版本。
+In this case Git will report a "**merge conflict**," and you'll need to decide by hand whose version to keep.
 
-**避免衝突的實務做法：**
+**Practical ways to avoid conflicts:**
 
-| 方法 | 說明 |
+| Method | Notes |
 |------|------|
-| **約定時段** | 「上午我編輯，下午你編輯」，避免同時修改 |
-| **分工作表** | 你負責 Sheet1（病例清單），小李負責 Sheet2（統計彙整） |
-| **改用 CSV** | 把資料存成 `.csv`（純文字），Git 就能逐行比對、自動合併 |
-| **先 pull 再改** | 每次開始修改前，先 `git pull` 確保手上是最新版 |
+| **Agree on time slots** | "I edit in the morning, you edit in the afternoon," to avoid editing at the same time |
+| **Split by worksheet** | You handle Sheet1 (the case list), Xiao Li handles Sheet2 (the statistics summary) |
+| **Switch to CSV** | Save the data as `.csv` (plain text), and Git can compare line by line and merge automatically |
+| **Pull before editing** | Before you start editing each time, run `git pull` first to make sure you have the latest version |
 
 ```{tip}
-如果你的團隊經常需要多人同時編輯同一份資料，考慮把 Excel 拆成 CSV（資料）加上 notebook（分析和圖表）。CSV 是純文字檔案，Git 可以逐行比對差異，多人同時修改不同列時能自動合併，比 Excel 友善很多。這也是本教材推薦的工作流程。
+If your team often needs several people editing the same data at once, consider splitting the Excel file into CSV (data) plus a notebook (analysis and charts). CSV is a plain-text file, so Git can compare differences line by line, and when several people modify different rows at once it can merge automatically—far friendlier than Excel. This is also the workflow this book recommends.
 ```
 
-#### 完整流程圖
+#### The complete flowchart
 
-把上面的步驟串起來，就是一個流行病學團隊用 Git 協作的完整流程：
+Stringing the steps above together gives the complete workflow of an epidemiology team collaborating with Git:
 
 ```
-你修改 Excel
+You edit the Excel file
     ↓
-git add → git commit（存檔到本機）
+git add → git commit (save locally)
     ↓
-git checkout -b 分支名 → git push（推到 GitHub）
+git checkout -b branchname → git push (push to GitHub)
     ↓
-在 GitHub 上開 Pull Request
+Open a Pull Request on GitHub
     ↓
-同事審查（review）、留言確認
+Colleagues review and comment to confirm
     ↓
-組長 merge 到 main
+The team lead merges into main
     ↓
-其他人 git pull（同步最新版到本機）
+Everyone else git pull (sync the latest version to their machine)
 ```
 
-> **給完全不想學 Git 的人**：如果你現在只想專心學流病和 Python，可以先跳過這一段。Git 不是本教材的必要條件——所有章節都可以在沒有 Git 的情況下完成。等你有一天遇到「我想找回上週的程式碼」或「我想跟同事共用分析腳本」的時候，再回來看這段就好。
+> **For those who don't want to learn Git at all**: if you just want to focus on epidemiology and Python right now, you can skip this section for now. Git is not a requirement for this book—every chapter can be completed without it. Come back to this section the day you run into "I want to recover last week's code" or "I want to share an analysis script with a colleague."
 
 ---
 
-## 10 分鐘動手做：從安裝到第一張流行曲線
+## 10-minute hands-on: from installation to your first epidemic curve
 
-以下是一個完整的動手練習。跟著做，10 分鐘內你就能畫出第一張流行曲線——一個你在教科書上看過、在真實疫調中一定會用到的經典圖表。
+Below is a complete hands-on exercise. Follow along and, within 10 minutes, you'll draw your first epidemic curve—a classic chart you've seen in textbooks and will definitely use in real outbreak investigations.
 
-### Step 1：確認 `uv` 已安裝
+### Step 1: confirm `uv` is installed
 
 ```bash
 uv --version
 ```
 
-看到版本號就可以往下走。（不需要事先安裝 Python，`uv sync` 會自動幫你處理。）
+Seeing a version number means you can move on. (You don't need to install Python in advance; `uv sync` will handle it automatically.)
 
-### Step 2：下載教材原始碼到你的電腦
+### Step 2: download the book's source code to your computer
 
-這份教材的所有程式碼、資料檔、notebook 都放在一個 **GitHub 儲存庫（repository）** 裡。你可以把它想像成「一個雲端資料夾，裡面裝著整套教材的所有檔案」。
+All of this book's code, data files, and notebooks live in a single **GitHub repository**. Think of it as "a cloud folder holding all the files for the whole book."
 
-我們需要把這個資料夾**下載到你的電腦上**，才能在本機執行程式碼。下載的方式有兩種，選一種你覺得順的就好：
+We need to **download this folder to your computer** to run the code locally. There are two ways to download it—pick whichever feels smoother:
 
-#### 方式 A：用 `git clone`（推薦）
+#### Option A: use `git clone` (recommended)
 
-`git clone` 是程式開發者最常用的「下載專案」指令。它會把整個資料夾複製到你的電腦，而且保留完整的版本歷史，未來教材有更新時可以輕鬆同步。
+`git clone` is the "download a project" command developers use most. It copies the entire folder to your computer while preserving the full version history, so when the book is updated in the future you can sync easily.
 
-打開終端機，輸入：
+Open the terminal and type:
 
 ```bash
 git clone https://github.com/ancientsky/python4epi.git
 cd python4epi
 ```
 
-> **看到 `fatal: ...` 錯誤？** 可能是你的電腦還沒安裝 Git：
-> - **macOS**：輸入 `xcode-select --install`，按提示安裝
-> - **Windows**：到 [https://git-scm.com](https://git-scm.com) 下載安裝，裝完後重開終端機
-> - **Linux**：輸入 `sudo apt install -y git`
+> **See a `fatal: ...` error?** Your computer may not have Git installed yet:
+> - **macOS**: type `xcode-select --install` and follow the prompts to install
+> - **Windows**: download and install from [https://git-scm.com](https://git-scm.com), then reopen the terminal
+> - **Linux**: type `sudo apt install -y git`
 
-#### 方式 B：直接下載 ZIP（不需要 Git）
+#### Option B: download the ZIP directly (no Git needed)
 
-如果你不想安裝 Git，也可以直接下載壓縮檔：
+If you don't want to install Git, you can download the archive directly:
 
-1. 用瀏覽器打開 [https://github.com/ancientsky/python4epi](https://github.com/ancientsky/python4epi)
-2. 點綠色的 **「Code」** 按鈕 → 選 **「Download ZIP」**
-3. 解壓縮到你喜歡的位置（例如桌面或文件夾）
-4. 打開終端機，用 `cd` 切換到解壓縮後的資料夾：
+1. Open [https://github.com/ancientsky/python4epi](https://github.com/ancientsky/python4epi) in your browser
+2. Click the green **"Code"** button → choose **"Download ZIP"**
+3. Unzip it wherever you like (e.g., the Desktop or a documents folder)
+4. Open the terminal and use `cd` to switch to the unzipped folder:
 
 ```bash
-# 範例：如果你解壓在桌面
+# Example: if you unzipped it on the Desktop
 cd ~/Desktop/python4epi-main
 ```
 
-> **方式 A 和 B 的差異**：`git clone` 之後，未來教材更新時只要在資料夾裡執行 `git pull` 就能拿到最新版。ZIP 下載則需要重新下載。兩種方式都不影響後續的學習。
+> **The difference between Option A and B**: after `git clone`, when the book is updated you just run `git pull` in the folder to get the latest version. With a ZIP download, you have to download again. Either way works fine for the rest of your learning.
 
-### Step 3：安裝所有套件
+### Step 3: install all the packages
 
-不管用哪種方式下載，進入教材資料夾後，執行：
+No matter which download option you used, once you're inside the book's folder, run:
 
 ```bash
 uv sync
 ```
 
-- `uv sync`：讀取教材的套件清單，自動下載正確版本的 Python、建立虛擬環境、安裝所有需要的 Python 套件（pandas、matplotlib 等）。一行搞定。
+- `uv sync`: reads the book's package list and automatically downloads the correct version of Python, creates the virtual environment, and installs all the needed Python packages (pandas, matplotlib, etc.). All in one line.
 
-第一次執行 `uv sync` 通常需要 1～2 分鐘（要下載不少套件），之後再執行就會很快。
+The first `uv sync` usually takes 1–2 minutes (there are quite a few packages to download); after that, it's very fast.
 
-### Step 4：開啟 Jupyter Lab
+### Step 4: open Jupyter Lab
 
 ```bash
 uv run jupyter lab
 ```
 
-你的瀏覽器會自動打開一個類似檔案總管的畫面，這就是 **Jupyter Lab**——我們寫程式、看結果的工作環境。
+Your browser will automatically open a file-explorer-like screen—this is **Jupyter Lab**, the working environment where we write code and view results.
 
-### Step 5：開啟第一份 notebook
+### Step 5: open the first notebook
 
-在左邊的檔案列表中，點進 `notebooks/` → 打開 `02_visualization_epi_charts.ipynb`。
+In the file list on the left, click into `notebooks/` → open `02_visualization_epi_charts.ipynb`.
 
-你會看到一格一格的「cell」，有些是文字說明，有些是程式碼。
+You'll see a series of "cells," some with text explanations and some with code.
 
-### Step 6：執行所有程式碼
+### Step 6: run all the code
 
-兩種方式：
+Two ways:
 
-- **一次全部執行**：上方選單 → `Run` → `Run All Cells`
-- **一格一格執行**：點選一個 cell，按 `Shift + Enter`
+- **Run everything at once**: top menu → `Run` → `Run All Cells`
+- **Run cell by cell**: click a cell and press `Shift + Enter`
 
-### Step 7：看到你的第一張流行曲線
+### Step 7: see your first epidemic curve
 
-往下捲，你會看到一張長條圖：
+Scroll down and you'll see a bar chart:
 
-- **標題**：`Epidemic Curve (By Onset Date)`
-- **X 軸**：發病日期（onset date）
-- **Y 軸**：每天的病例數（cases）
+- **Title**: `Epidemic Curve (By Onset Date)`
+- **X-axis**: onset date
+- **Y-axis**: cases per day
 
-這就是流行病學最核心的圖表之一：**流行曲線（epidemic curve）**。它告訴你疫情是在上升、到達高峰、還是正在趨緩。
+This is one of epidemiology's most central charts: the **epidemic curve**. It tells you whether the outbreak is rising, at its peak, or subsiding.
 
-**恭喜！你已經完成了第一個流病資料視覺化任務。**
+**Congratulations! You've completed your first epidemiology data visualization task.**
 
 ---
 
-## 常見問題（新手版）
+## Frequently asked questions (beginner edition)
 
-| 問題 | 解法 |
+| Problem | Solution |
 |------|------|
-| `git clone` 顯示 `fatal` 錯誤 | 你的電腦可能還沒安裝 Git，請參考 Step 2 的安裝說明，或改用 ZIP 下載 |
-| `command not found: uv` | 關掉終端機再重新打開，或確認安裝路徑已加入 `PATH` |
-| `python --version` 不是 3.13 | 沒關係，`uv sync` 會自動下載正確版本的 Python |
-| `uv sync` 失敗 | 檢查網路連線，然後再執行一次。第一次需要下載較多套件 |
-| Jupyter Lab 打開是空白 | 試試在瀏覽器手動輸入終端機顯示的 `http://localhost:8888/...` 網址 |
-| notebook 跑出錯誤 | 確認已執行 `uv sync`，然後從第一個 cell 重新開始執行 |
+| `git clone` shows a `fatal` error | Your computer may not have Git installed—see the installation notes in Step 2, or use the ZIP download instead |
+| `command not found: uv` | Close the terminal and reopen it, or confirm the install path was added to `PATH` |
+| `python --version` isn't 3.13 | That's fine—`uv sync` will automatically download the correct version of Python |
+| `uv sync` fails | Check your internet connection, then run it again. The first run needs to download quite a few packages |
+| Jupyter Lab opens blank | Try manually entering the `http://localhost:8888/...` URL shown in the terminal into your browser |
+| The notebook throws an error | Confirm you've run `uv sync`, then rerun from the first cell |
 
 ---
 
-## 這份教材的學習路線圖
+## This book's learning roadmap
 
 ```{raw} html
 <div class="video-card">
-  <div class="video-title">教學影片：課程地圖與學習策略</div>
+  <div class="video-title">Tutorial video: the course map and learning strategy</div>
   <div class="youtube-lite" data-id="H3fMhNhj3u4">
-    <img src="https://img.youtube.com/vi/H3fMhNhj3u4/hqdefault.jpg" loading="lazy" alt="教學影片">
+    <img src="https://img.youtube.com/vi/H3fMhNhj3u4/hqdefault.jpg" loading="lazy" alt="Tutorial video">
   </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：五幕劇結構 → 必修路線 Ch00-04 → 選修路線 Ch05-14 → 不同角色學習路線 → 盲點：從哪開始、可否跳章、Colab vs 本機</p>
+<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: the five-act structure → the required track Ch00-04 → the elective track Ch05-14 → learning paths for different roles → blind spots: where to start, whether you can skip chapters, Colab vs local</p>
 </div>
 ```
 
-你不需要一口氣學完所有章節。本教材以**松柏護理之家退伍軍人症群聚事件**為貫穿全書的主軸，每一章帶你更深入一層分析，就像真實疫調一樣逐步揭開真相。
+You don't need to learn all the chapters in one go. This book uses the **Songbai nursing home Legionnaires' disease cluster** as the thread running through the whole book, with each chapter taking you one layer deeper into the analysis—just like a real investigation, gradually uncovering the truth.
 
 ```
-【第一幕：接獲通報】
-  00 導讀（你現在在這裡）── 工具安裝、Hello World
-  01 Python 基礎 ── 侵襲率、CFR、最小語法
-  02 資料處理與視覺化 ── 讀入 280 筆 line list、畫流行曲線
+== Act One: The Report Comes In ==
+  00 Getting Started (you are here) — tool installation, Hello World
+  01 Python basics — attack rate, CFR, minimal syntax
+  02 Data handling and visualization — read in the 280-record line list, draw the epidemic curve
 
-【第二幕：從描述到推論】
-  03 暴露與疾病的關聯 ── 2×2 表、RR、OR、卡方檢定
-  04 群聚調查工作流 ── 產出第一份 SitRep 給長官
+== Act Two: From Description to Inference ==
+  03 The association between exposure and disease — 2×2 tables, RR, OR, chi-square test
+  04 The cluster investigation workflow — produce the first SitRep for the boss
 
-【第三幕：深入分析】
-  05 分層分析與干擾因子 ── 臥床老人不淋浴也不生病，是保護還是干擾？
-  06 邏輯斯迴歸 ── 同時調整年齡、共病、暴露，算 adjusted OR
-  07 時間序列與預測 ── 下週還會有多少新個案？
-  08 空間流病 ── 哪個樓層翼區最危險？畫 spot map
+== Act Three: Going Deeper ==
+  05 Stratified analysis and confounders — bedridden seniors don't shower and don't get sick: protection or confounding?
+  06 Logistic regression — adjust for age, comorbidities, and exposure simultaneously to get the adjusted OR
+  07 Time series and forecasting — how many new cases will there be next week?
+  08 Spatial epidemiology — which floor and wing is most dangerous? Draw a spot map
 
-【第四幕：進階建模】
-  09 存活分析 ── 發病到死亡的時間，哪些因子影響存活？
-  10 機器學習 ── 用 32 欄特徵預測感染與重症
-  11 深度學習 ── PyTorch 版本的預測模型
-  12 因果推論 ── 淋浴暴露的因果效應，DAG 怎麼畫？
+== Act Four: Advanced Modeling ==
+  09 Survival analysis — the time from onset to death: which factors affect survival?
+  10 Machine learning — use 32 columns of features to predict infection and severe illness
+  11 Deep learning — the PyTorch version of the predictive model
+  12 Causal inference — the causal effect of shower exposure: how do you draw a DAG?
 
-【第五幕：收尾與實戰】
-  13 可重現研究 ── 讓同事能一鍵重現你的分析
-  14 實戰案例 ── 從接到通報到結案報告，完整走一遍
+== Act Five: Wrapping Up and Real-World Practice ==
+  13 Reproducible research — let colleagues reproduce your analysis with one click
+  14 A real-world case — from receiving the report to the final case report, all the way through
 ```
 
-**前 4 章是基礎**，建議按順序學。第 5 章之後可以跳著看，挑你工作或研究需要的主題。
+**The first 4 chapters are the foundation**, and we recommend learning them in order. From Chapter 5 onward you can skip around, picking the topics your work or research needs.
 
 ```{figure} images/learning_roadmap.svg
 :name: fig-learning-roadmap
-:alt: 學習路線圖：Ch 00-04 基礎必修，Ch 05-14 進階選修
+:alt: Learning roadmap: Ch 00-04 the required foundation, Ch 05-14 advanced electives
 :width: 100%
 
-藍色區塊是基礎必修（Ch 00–04），建議按順序完成。紫色區塊是進階選修（Ch 05–14），完成基礎後可依需求任選。
+The blue blocks are the required foundation (Ch 00–04), which we recommend completing in order. The purple blocks are advanced electives (Ch 05–14), which you can choose from as needed after finishing the foundation.
 ```
 
 ---
 
-## 下一步
+## Next steps
 
-準備好了嗎？執行以下指令，然後翻到第 01 章開始你的流病 × Python 之旅：
+Ready? Run the following commands, then turn to Chapter 01 to begin your epidemiology × Python journey:
 
 ```bash
 uv sync
