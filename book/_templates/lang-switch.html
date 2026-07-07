@@ -1,0 +1,23 @@
+{#-
+  Language switcher for the article header (registered via
+  ``html_theme_options.article_header_end`` in ``_config.yml``).
+
+  Renders a button styled like sphinx-book-theme's other header buttons. The
+  target URL and visible label are filled in client-side by
+  ``_static/lang-switch.js``, which maps the current page to its counterpart in
+  the other-language build (the English tree is deployed under ``/en/``). The
+  same shared template is used by both the zh and en builds.
+-#}
+<a id="lang-switch-link"
+   class="btn btn-sm lang-switch-btn"
+   href="#"
+   rel="alternate"
+   hreflang="en"
+   title="Switch language / 切換語言"
+   data-bs-placement="bottom"
+   data-bs-toggle="tooltip">
+  <span class="btn__icon-container">
+    <i class="fa-solid fa-language"></i>
+  </span>
+  <span class="btn__text-container lang-switch-label">EN / 中文</span>
+</a>

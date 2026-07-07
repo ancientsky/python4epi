@@ -67,3 +67,20 @@ chapters:
       - file: chapters/exercises/12_causal_exercise
       - file: chapters/exercises/13_reproducibility_exercise
       - file: chapters/exercises/14_case_study_exercise
+  - file: chapters/17_solutions
+    sections:
+      - file: chapters/solutions/01_fundamentals_solution
+      - file: chapters/solutions/01b_python_toolbox_solution
+      - file: chapters/solutions/02_data_wrangling_solution
+      - file: chapters/solutions/03_stats_solution
+      - file: chapters/solutions/04_outbreak_workflow_solution
+      - file: chapters/solutions/05_stratified_solution
+      - file: chapters/solutions/06_logistic_regression_solution
+      - file: chapters/solutions/07_time_series_solution
+      - file: chapters/solutions/08_spatial_solution
+      - file: chapters/solutions/09_survival_solution
+      - file: chapters/solutions/10_ml_solution
+      - file: chapters/solutions/11_dl_solution
+      - file: chapters/solutions/12_causal_solution
+      - file: chapters/solutions/13_reproducibility_solution
+      - file: chapters/solutions/14_case_study_solution

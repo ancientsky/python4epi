@@ -11,6 +11,10 @@ book/_build/
 
 # Generated notebook outputs
 data/processed/
+data/external/
+
+# Local per-language data symlink for notebook execution (CI recreates it)
+book_en/data
 
 # Report generation output (Ch04 Step 8)
 output/

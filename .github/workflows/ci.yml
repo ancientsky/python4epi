@@ -47,5 +47,7 @@ jobs:
       - name: Run tests
         run: uv run pytest
 
-      - name: Build Jupyter Book
-        run: uv run jupyter-book build book/
+      - name: Build Jupyter Book (student edition — matches deploy)
+        run: |
+          cp book/_toc_student.yml book/_toc.yml
+          uv run jupyter-book build book/

@@ -36,7 +36,7 @@ jobs:
           node-version: "24"
 
       - name: Set up Python
-        run: uv python install 3.12
+        run: uv python install 3.13
 
       - name: Install CJK fonts for matplotlib
         run: |
@@ -51,7 +51,9 @@ jobs:
         run: |
           # Jupyter Book executes notebooks from their own directory.
           # Symlinks let `data/synthetic/...` resolve from any subdirectory.
-          for dir in book book/chapters book/chapters/exercises book/chapters/solutions book/chapters/notebooks; do
+          for dir in \
+            book book/chapters book/chapters/exercises book/chapters/solutions book/chapters/notebooks \
+            book_en book_en/chapters book_en/chapters/exercises book_en/chapters/solutions book_en/chapters/notebooks; do
             if [ -d "$dir" ]; then
               # Compute relative path back to repo-root data/
               rel=$(python3 -c "import os.path; print(os.path.relpath('data', '$dir'))")
@@ -75,31 +77,57 @@ jobs:
           cp book/_toc_instructor.yml book/_toc.yml
           uv run jupyter-book build book/ --all
 
+      - name: Build English student edition
+        run: |
+          cp book_en/_toc_student.yml book_en/_toc.yml
+          uv run jupyter-book build book_en/
+
+      - name: Save English student build
+        run: |
+          cp -a book_en/_build/html en_student_html
+
+      - name: Build English instructor edition
+        run: |
+          cp book_en/_toc_instructor.yml book_en/_toc.yml
+          uv run jupyter-book build book_en/ --all
+
       - name: Prepare pages artifact
         run: |
-          # Validate student build
-          if [ ! -d student_html ] || [ -z "$(find student_html -maxdepth 1 -name '*.html' | head -n 1)" ]; then
-            echo "ERROR: student build not found or contains no HTML files."
-            exit 1
-          fi
-          # Validate instructor build
-          if [ ! -d book/_build/html ] || [ -z "$(find book/_build/html -maxdepth 1 -name '*.html' | head -n 1)" ]; then
-            echo "ERROR: instructor build not found or contains no HTML files."
-            exit 1
-          fi
+          # Helper: fail if a build dir has no top-level HTML.
+          check_build() {
+            if [ ! -d "$1" ] || [ -z "$(find "$1" -maxdepth 1 -name '*.html' | head -n 1)" ]; then
+              echo "ERROR: $2 not found or contains no HTML files."
+              exit 1
+            fi
+          }
+          # Helper: ensure an index.html exists (fall back to intro.html).
+          ensure_index() {
+            if [ ! -f "$1/index.html" ] && [ -f "$1/intro.html" ]; then
+              cp "$1/intro.html" "$1/index.html"
+            fi
+          }
 
-          # Root = student edition
+          check_build student_html "zh student build"
+          check_build book/_build/html "zh instructor build"
+          check_build en_student_html "en student build"
+          check_build book_en/_build/html "en instructor build"
+
+          # Root = zh student edition
           rm -rf page_artifact
           cp -a student_html page_artifact
-          if [ ! -f page_artifact/index.html ] && [ -f page_artifact/intro.html ]; then
-            cp page_artifact/intro.html page_artifact/index.html
-          fi
+          ensure_index page_artifact
 
-          # /instructor/ = instructor edition (includes solutions)
+          # /instructor/ = zh instructor edition (includes solutions)
           cp -a book/_build/html page_artifact/instructor
-          if [ ! -f page_artifact/instructor/index.html ] && [ -f page_artifact/instructor/intro.html ]; then
-            cp page_artifact/instructor/intro.html page_artifact/instructor/index.html
-          fi
+          ensure_index page_artifact/instructor
+
+          # /en/ = English student edition
+          cp -a en_student_html page_artifact/en
+          ensure_index page_artifact/en
+
+          # /en/instructor/ = English instructor edition
+          cp -a book_en/_build/html page_artifact/en/instructor
+          ensure_index page_artifact/en/instructor
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4

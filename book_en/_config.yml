@@ -1,50 +1,39 @@
 title: Epi With Python
 author: Epi With Python | Python for Epidemiologists
 copyright: "2026, Epi With Python | Python for Epidemiologists. Licensed under the MIT License"
-language: zh
+language: en
 only_build_toc_files: true
 execute:
   execute_notebooks: force
   timeout: 300
 sphinx:
   config:
-    html_baseurl: https://ancientsky.github.io/python4epi/
+    html_baseurl: https://ancientsky.github.io/python4epi/en/
     templates_path: ["_templates"]
-    # Force the document language so pages render <html lang="zh-Hant"> and the
-    # theme UI localizes. (The top-level ``language:`` key above is not reliably
-    # propagated by jupyter-book, so we set it here too.)
-    language: zh_Hant
-    # Explicit per-build language flag consumed by _templates/layout.html to
-    # emit the correct OG/Twitter locale + copy. book_en/ sets epi_lang: en.
+    language: en
+    # Explicit per-build language flag consumed by _templates/layout.html
+    # (shared with book/ via the symlinked _templates dir).
     html_context:
-      epi_lang: zh
+      epi_lang: en
     html_theme_options:
       show_navbar_depth: 2
       show_toc_level: 2
       home_page_in_toc: true
-      # Add a 繁中/EN language switcher to the top-right header button cluster,
-      # after the default download/fullscreen/repo buttons. The switcher target
-      # is computed client-side by _static/lang-switch.js (toggles the /en/
-      # path prefix). The same option is set in book_en/_config.yml.
+      # 繁中/EN language switcher — same component as the zh build. The switcher
+      # target is computed client-side by _static/lang-switch.js (toggles /en/).
       article_header_end: article-header-buttons.html, lang-switch.html
-      # Use Monokai pygments style in BOTH modes so block code (which is
-      # rendered on the dark #2B2B2B background in both light and dark mode —
-      # see book/_static/custom.css) stays legible. Default light style uses
-      # dark tokens designed for white backgrounds.
       pygments_light_style: monokai
       pygments_dark_style: monokai
       logo:
         image_light: _static/logo.svg
         image_dark: _static/logo-dark.svg
-    # Note: Open Graph / Twitter Card meta tags are injected via the template
-    # override at ``book/_templates/layout.html`` (zero-dependency approach —
-    # no sphinxext-opengraph needed). Keep template copy in sync when updating.
+    # OG / Twitter Card meta tags are injected via the shared template override
+    # at _templates/layout.html (symlinked to book/_templates), which branches
+    # on html_context.epi_lang to emit English copy + en_US locale.
     nb_execution_pre_code: |
       import os as _os
       import pathlib as _pathlib
       # Ensure CWD is the project root (where data/ directory lives).
-      # Jupyter Book executes notebooks from the notebook's own directory,
-      # but all notebooks reference data/synthetic/ relative to the project root.
       _cwd = _pathlib.Path.cwd()
       for _ in range(5):
           if (_cwd / "data" / "synthetic").is_dir():
@@ -55,7 +44,8 @@ sphinx:
       import matplotlib.pyplot as plt
       import matplotlib.font_manager as _fm
       import pathlib as _pathlib
-      # Explicitly discover and register CJK font files (more reliable than cache rebuild)
+      # Register CJK font files (harmless for the English build; a few figures
+      # may still carry bilingual labels shared with the zh tree).
       for _font_dir in map(_pathlib.Path, ["/usr/share/fonts", "/usr/local/share/fonts"]):
           if _font_dir.exists():
               for _fp in sorted(_font_dir.rglob("*")):
@@ -66,10 +56,6 @@ sphinx:
                           _fm.fontManager.addfont(str(_fp))
                       except Exception:
                           pass
-      # Discover actually-registered CJK font names.  addfont() only reads
-      # face 0 of .ttc collections, so "Noto Sans CJK TC" may never appear;
-      # the JP/SC/KR variant registered at face 0 covers CJK Unified Ideographs
-      # equally well.
       _discovered = []
       for _entry in _fm.fontManager.ttflist:
           _nlower = _entry.name.lower()
@@ -89,7 +75,6 @@ sphinx:
       plt.rcParams["axes.unicode_minus"] = False
       plt.style.use("ggplot")
       plt.rcParams["figure.dpi"] = 150
-      # Set Plotly renderer for static Jupyter Book builds
       try:
           import plotly.io as _pio
           _pio.renderers.default = "notebook"
@@ -113,7 +98,4 @@ html:
     - _static/lang-switch.js
 launch_buttons:
   notebook_interface: jupyterlab
-  # Show an "Open in Colab" launch target on every notebook page. Combined with
-  # the repository url/branch above, Jupyter Book builds a Colab link per
-  # notebook so learners can run the code without any local setup.
   colab_url: https://colab.research.google.com
