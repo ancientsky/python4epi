@@ -125,18 +125,41 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 
 ## Build the Site
 
-Student edition (default TOC):
+The site ships in **two languages** — Traditional Chinese (`book/`) and English
+(`book_en/`) — each with a student and an instructor edition. Every page has a
+繁中 / EN language switcher in the top-right header (`book/_static/lang-switch.js`
+toggles the `/en/` path prefix). GitHub Pages deploys four variants:
+
+| Edition | URL |
+|---------|-----|
+| 中文 學生版 | `/python4epi/` |
+| 中文 教師版 | `/python4epi/instructor/` |
+| English student | `/python4epi/en/` |
+| English instructor | `/python4epi/en/instructor/` |
+
+Chinese student edition (default TOC):
 
 ```bash
 cp book/_toc_student.yml book/_toc.yml
 uv run jupyter-book build book/
 ```
 
-Instructor edition (includes solution chapter):
+Chinese instructor edition (includes solution chapter):
 
 ```bash
 cp book/_toc_instructor.yml book/_toc.yml
 uv run jupyter-book build book/
+```
+
+English editions (mirror the Chinese tree; `book_en/` shares `_static`,
+`_templates`, chapter images, and `data` with `book/` via symlinks):
+
+```bash
+cp book_en/_toc_student.yml book_en/_toc.yml
+uv run jupyter-book build book_en/            # English student
+
+cp book_en/_toc_instructor.yml book_en/_toc.yml
+uv run jupyter-book build book_en/            # English instructor (with solutions)
 ```
 
 ## Run Checks

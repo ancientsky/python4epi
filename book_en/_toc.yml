@@ -1,69 +1,81 @@
 format: jb-book
 root: intro
-chapters:
-  - file: chapters/00_guide
-  - file: chapters/01_fundamentals
-    sections:
-      - file: chapters/notebooks/01_fundamentals_python_basics
-  - file: chapters/01b_python_toolbox
-    sections:
-      - file: chapters/notebooks/01b_python_toolbox
-  - file: chapters/02_data_wrangling
-    sections:
-      - file: chapters/notebooks/02_data_wrangling_for_beginners
-      - file: chapters/notebooks/02_visualization_epi_charts
-  - file: chapters/03_stats
-    sections:
-      - file: chapters/notebooks/03_stats_basics
-  - file: chapters/04_outbreak_workflow
-    sections:
-      - file: chapters/notebooks/04_outbreak_workflow
-  - file: chapters/05_stratified
-    sections:
-      - file: chapters/notebooks/05_stratified_analysis
-  - file: chapters/06_logistic_regression
-    sections:
-      - file: chapters/notebooks/06_logistic_regression
-  - file: chapters/07_time_series
-    sections:
-      - file: chapters/notebooks/07_time_series_baseline
-  - file: chapters/08_spatial
-    sections:
-      - file: chapters/notebooks/08_spatial_rates
-      - file: chapters/notebooks/08_spatial_choropleth
-  - file: chapters/09_survival
-    sections:
-      - file: chapters/notebooks/09_survival_analysis
-  - file: chapters/10_machine_learning
-    sections:
-      - file: chapters/notebooks/10_ml_baseline
-  - file: chapters/11_deep_learning
-    sections:
-      - file: chapters/notebooks/11_dl_baseline
-  - file: chapters/12_causal
-    sections:
-      - file: chapters/notebooks/12_causal_did
-  - file: chapters/13_reproducibility
-    sections:
-      - file: chapters/notebooks/13_reproducibility_workflow
-  - file: chapters/14_case_studies
-    sections:
-      - file: chapters/notebooks/14_case_study_legionella
-  - file: chapters/15_appendix
-  - file: chapters/16_exercises
-    sections:
-      - file: chapters/exercises/01_fundamentals_exercise
-      - file: chapters/exercises/01b_python_toolbox_exercise
-      - file: chapters/exercises/02_data_wrangling_exercise
-      - file: chapters/exercises/03_stats_exercise
-      - file: chapters/exercises/04_outbreak_workflow_exercise
-      - file: chapters/exercises/05_stratified_exercise
-      - file: chapters/exercises/06_logistic_regression_exercise
-      - file: chapters/exercises/07_time_series_exercise
-      - file: chapters/exercises/08_spatial_exercise
-      - file: chapters/exercises/09_survival_exercise
-      - file: chapters/exercises/10_ml_exercise
-      - file: chapters/exercises/11_dl_exercise
-      - file: chapters/exercises/12_causal_exercise
-      - file: chapters/exercises/13_reproducibility_exercise
-      - file: chapters/exercises/14_case_study_exercise
+parts:
+  - caption: "Act I — The Call"
+    chapters:
+      - file: chapters/00_guide
+      - file: chapters/01_fundamentals
+        sections:
+          - file: chapters/notebooks/01_fundamentals_python_basics
+      - file: chapters/01b_python_toolbox
+        sections:
+          - file: chapters/notebooks/01b_python_toolbox
+      - file: chapters/02_data_wrangling
+        sections:
+          - file: chapters/notebooks/02_data_wrangling_for_beginners
+          - file: chapters/notebooks/02_visualization_epi_charts
+  - caption: "Act II — From Description to Inference"
+    chapters:
+      - file: chapters/03_stats
+        sections:
+          - file: chapters/notebooks/03_stats_basics
+      - file: chapters/04_outbreak_workflow
+        sections:
+          - file: chapters/notebooks/04_outbreak_workflow
+  - caption: "Act III — Digging Deeper"
+    chapters:
+      - file: chapters/05_stratified
+        sections:
+          - file: chapters/notebooks/05_stratified_analysis
+      - file: chapters/06_logistic_regression
+        sections:
+          - file: chapters/notebooks/06_logistic_regression
+      - file: chapters/07_time_series
+        sections:
+          - file: chapters/notebooks/07_time_series_baseline
+      - file: chapters/08_spatial
+        sections:
+          - file: chapters/notebooks/08_spatial_rates
+          - file: chapters/notebooks/08_spatial_choropleth
+  - caption: "Act IV — Advanced Modeling"
+    chapters:
+      - file: chapters/09_survival
+        sections:
+          - file: chapters/notebooks/09_survival_analysis
+      - file: chapters/10_machine_learning
+        sections:
+          - file: chapters/notebooks/10_ml_baseline
+      - file: chapters/11_deep_learning
+        sections:
+          - file: chapters/notebooks/11_dl_baseline
+      - file: chapters/12_causal
+        sections:
+          - file: chapters/notebooks/12_causal_did
+  - caption: "Act V — Wrap-Up & Real Cases"
+    chapters:
+      - file: chapters/13_reproducibility
+        sections:
+          - file: chapters/notebooks/13_reproducibility_workflow
+      - file: chapters/14_case_studies
+        sections:
+          - file: chapters/notebooks/14_case_study_legionella
+  - caption: "Appendix & Exercises"
+    chapters:
+      - file: chapters/15_appendix
+      - file: chapters/16_exercises
+        sections:
+          - file: chapters/exercises/01_fundamentals_exercise
+          - file: chapters/exercises/01b_python_toolbox_exercise
+          - file: chapters/exercises/02_data_wrangling_exercise
+          - file: chapters/exercises/03_stats_exercise
+          - file: chapters/exercises/04_outbreak_workflow_exercise
+          - file: chapters/exercises/05_stratified_exercise
+          - file: chapters/exercises/06_logistic_regression_exercise
+          - file: chapters/exercises/07_time_series_exercise
+          - file: chapters/exercises/08_spatial_exercise
+          - file: chapters/exercises/09_survival_exercise
+          - file: chapters/exercises/10_ml_exercise
+          - file: chapters/exercises/11_dl_exercise
+          - file: chapters/exercises/12_causal_exercise
+          - file: chapters/exercises/13_reproducibility_exercise
+          - file: chapters/exercises/14_case_study_exercise

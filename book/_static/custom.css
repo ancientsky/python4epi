@@ -642,3 +642,61 @@ button.copybtn:hover {
   .bd-article a { color: #000 !important; text-decoration: underline !important; }
   .bd-sidebar-primary, .bd-sidebar-secondary, .bd-header, .bd-footer { display: none !important; }
 }
+
+/* =============================================================================
+ * Language switcher button (article header)
+ *
+ * Rendered by _templates/lang-switch.html and registered in
+ * html_theme_options.article_header_end. Match the theme's other header
+ * buttons but keep the short text label ("EN" / "中文") visible.
+ * ============================================================================= */
+
+.lang-switch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lang-switch-btn .lang-switch-label {
+  font-size: 0.85em;
+  letter-spacing: 0.02em;
+}
+
+.lang-switch-btn:hover {
+  color: var(--epi-accent-orange, #D97757);
+}
+
+/* =============================================================================
+ * Wide-table overflow (mobile-friendly)
+ *
+ * Several chapters use 5–6 column comparison tables that overflow narrow
+ * screens. Let each table scroll horizontally inside its own container so the
+ * page body itself never scrolls sideways.
+ * ============================================================================= */
+
+.bd-article table.table,
+.bd-article .table-responsive,
+.bd-article table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Phone tuning: tighten the article gutters and stat/act cards so the
+ * redesigned landing page and dense tables stay readable on small screens. */
+@media (max-width: 600px) {
+  .bd-article h1:first-child {
+    font-size: 1.9rem;
+  }
+  .bd-article {
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+  }
+  /* sphinx-design cards stack full-width and gain breathing room */
+  .bd-article .sd-card {
+    margin-bottom: 0.5rem;
+  }
+}
