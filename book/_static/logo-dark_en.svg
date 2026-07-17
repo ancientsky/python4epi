@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 56" role="img" aria-label="Epi With Python logo"
+     font-family="Noto Serif TC, Source Han Serif TC, Georgia, 'Times New Roman', serif">
+  <title>Epi With Python</title>
+  <!-- Bacteria glyph (same as favicon.svg / logo.svg but on a dark-navbar-friendly badge) -->
+  <g transform="translate(6 6)">
+    <rect x="0" y="0" width="44" height="44" rx="9" ry="9"
+          fill="#24282E" stroke="#3A3F47" stroke-width="1.5"/>
+    <g transform="rotate(-28 22 22)">
+      <rect x="4" y="17" width="36" height="11" rx="5.5" ry="5.5" fill="#D97757"/>
+      <rect x="7" y="19.2" width="30" height="2.4" rx="1.2" ry="1.2"
+            fill="#F2B89E" opacity="0.6"/>
+      <circle cx="12" cy="22.5" r="2.2" fill="#6A9BCC"/>
+      <circle cx="30" cy="22.5" r="1.7" fill="#788C5D"/>
+    </g>
+  </g>
+  <!-- Wordmark (light for dark navbar) -->
+  <text x="62" y="26" font-size="22" font-weight="700" fill="#EAE7E0">
+    Epi <tspan fill="#D97757">·</tspan> Python
+  </text>
+  <!-- Subtitle -->
+  <text x="62" y="45" font-size="11" font-weight="400" fill="#A3A7AD"
+        font-family="-apple-system, system-ui, sans-serif"
+        letter-spacing="0.3">
+    Epidemiology × Programming
+  </text>
+</svg>

@@ -25,8 +25,8 @@ sphinx:
       pygments_light_style: monokai
       pygments_dark_style: monokai
       logo:
-        image_light: _static/logo.svg
-        image_dark: _static/logo-dark.svg
+        image_light: _static/logo_en.svg
+        image_dark: _static/logo-dark_en.svg
     # OG / Twitter Card meta tags are injected via the shared template override
     # at _templates/layout.html (symlinked to book/_templates), which branches
     # on html_context.epi_lang to emit English copy + en_US locale.
