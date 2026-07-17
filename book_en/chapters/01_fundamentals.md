@@ -63,7 +63,7 @@ We recommend watching the video before reading the code — it makes learning mu
 
 ### 1) Numeric variables — store the numbers first
 
-```{figure} images/python_variables.svg
+```{figure} images/python_variables_en.svg
 :name: fig-python-variables
 :alt: A variable is a labeled box, plus the four basic data types int / float / str / bool
 :width: 100%
@@ -120,7 +120,7 @@ print(f"Hospitalization rate: {hosp_rate:.2%}")
 
 ### 3) Dictionaries — keep data on the same topic together
 
-```{figure} images/python_list_vs_dict.svg
+```{figure} images/python_list_vs_dict_en.svg
 :name: fig-python-list-vs-dict
 :alt: Comparison of list and dict — a list retrieves values by index, a dict retrieves values by key
 :width: 100%
@@ -179,7 +179,7 @@ print(f"Wing with the most infections: {floor_wing_names[max_index]} ({max_cases
 
 ### 5) Conditionals — turn metrics into action signals
 
-```{figure} images/python_if_else_flow.svg
+```{figure} images/python_if_else_flow_en.svg
 :name: fig-python-if-else
 :alt: An if / elif / else flowchart — the CFR passes through several conditions and arrives at the corresponding response level
 :width: 100%
@@ -209,7 +209,7 @@ else:
 
 ### 6) Functions — package your calculation logic into a reusable tool
 
-```{figure} images/python_function_machine.svg
+```{figure} images/python_function_machine_en.svg
 :name: fig-python-function
 :alt: A function is an automatic calculator — inputs go in as parameters, pass through the function body, and an output is returned
 :width: 100%

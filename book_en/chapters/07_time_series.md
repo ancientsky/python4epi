@@ -48,7 +48,7 @@ The main thread of this chapter: **going from the simplest rolling mean all the 
 
 ## Method Overview
 
-```{figure} images/timeseries_method_map.svg
+```{figure} images/timeseries_method_map_en.svg
 :name: fig-timeseries-method-map
 :alt: Comparison of six time series forecasting methods — rolling mean, Poisson+lag, Negative Binomial, Logistic, ARIMA, SARIMA
 :width: 100%
@@ -139,7 +139,7 @@ Advantages of the rolling mean: **simple, intuitive, usable from day one**. Draw
 
 ### Step 4: Lagged Features —— Building "Past k Days" Features for Regression Models
 
-```{figure} images/lag_features_explained.svg
+```{figure} images/lag_features_explained_en.svg
 :name: fig-lag-features
 :alt: Using shift(1) to move past values to today's row, becoming lag_1 / lag_2 features
 :width: 100%
@@ -210,7 +210,7 @@ print(coef_table.round(3))
 
 ### Step 6: Negative Binomial Regression —— Handling Overdispersion
 
-```{figure} images/poisson_vs_nb_dispersion.svg
+```{figure} images/poisson_vs_nb_dispersion_en.svg
 :name: fig-poisson-vs-nb
 :alt: Poisson assumes variance = mean; Negative Binomial allows overdispersion where variance > mean
 :width: 100%
@@ -304,7 +304,7 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 
 ### Step 9: ARIMA —— AutoRegressive Integrated Moving Average
 
-```{figure} images/arima_sarima_decomposition.svg
+```{figure} images/arima_sarima_decomposition_en.svg
 :name: fig-arima-sarima
 :alt: A time series can be decomposed into trend + seasonal + residual; ARIMA(p,d,q) is made of three parts, and SARIMA adds a seasonal component
 :width: 100%

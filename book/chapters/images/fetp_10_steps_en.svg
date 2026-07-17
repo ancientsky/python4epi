@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 580" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6B6B6B"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="860" height="580" fill="#FAF8F3" rx="12"/>
+
+  <!-- Title -->
+  <text x="430" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">FETP's 10-Step Outbreak Investigation: Where Python Helps</text>
+  <text x="430" y="52" text-anchor="middle" font-size="12" fill="#6B6B6B">Taiwan CDC FETP 2.0 framework — orange = Python-enhanced, gray = human judgment in the field</text>
+
+  <!-- ── Column headers ── -->
+  <!-- Left column: Steps 1-5 -->
+  <!-- Right column: Steps 6-10 -->
+
+  <!-- Steps boxes: width=360, height=42, gap=8 -->
+  <!-- Left col: x=20, Right col: x=460 -->
+
+  <!-- STEP 1 – pre-deployment prep (human) -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="68" width="380" height="42" rx="8" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <rect x="20" y="68" width="42" height="42" rx="8" fill="#6B6B6B" fill-opacity="0.25"/>
+  <text x="41" y="94" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B6B6B">1</text>
+  <text x="75" y="87" font-size="13" font-weight="bold" fill="#1A1A1A">Pre-Deployment Prep</text>
+  <text x="75" y="103" font-size="10" fill="#6B6B6B">Team setup, literature review, supplies, partners</text>
+  <text x="392" y="94" text-anchor="end" font-size="10" fill="#6B6B6B">Human judgment</text>
+
+  <!-- Arrow -->
+  <line x1="210" y1="110" x2="210" y2="120" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 2 – confirm an outbreak (human + data) -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="122" width="380" height="42" rx="8" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <rect x="20" y="122" width="42" height="42" rx="8" fill="#6B6B6B" fill-opacity="0.25"/>
+  <text x="41" y="148" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B6B6B">2</text>
+  <text x="75" y="141" font-size="13" font-weight="bold" fill="#1A1A1A">Confirm an Outbreak</text>
+  <text x="75" y="157" font-size="10" fill="#6B6B6B">Compare to baseline; define sporadic/cluster/epidemic</text>
+  <text x="392" y="148" text-anchor="end" font-size="10" fill="#6B6B6B">Surveillance data</text>
+
+  <line x1="210" y1="164" x2="210" y2="174" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 3 – confirm the diagnosis (human) -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="176" width="380" height="42" rx="8" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <rect x="20" y="176" width="42" height="42" rx="8" fill="#6B6B6B" fill-opacity="0.25"/>
+  <text x="41" y="202" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B6B6B">3</text>
+  <text x="75" y="195" font-size="13" font-weight="bold" fill="#1A1A1A">Confirm the Diagnosis</text>
+  <text x="75" y="211" font-size="10" fill="#6B6B6B">Clinical + lab confirmation; incubation vs. latent period</text>
+  <text x="392" y="202" text-anchor="end" font-size="10" fill="#6B6B6B">Clinical + lab</text>
+
+  <line x1="210" y1="218" x2="210" y2="228" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 4 – case definition (human) -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="230" width="380" height="42" rx="8" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <rect x="20" y="230" width="42" height="42" rx="8" fill="#6B6B6B" fill-opacity="0.25"/>
+  <text x="41" y="256" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B6B6B">4</text>
+  <text x="75" y="249" font-size="13" font-weight="bold" fill="#1A1A1A">Case Definition &amp; Case Finding</text>
+  <text x="75" y="265" font-size="10" fill="#6B6B6B">Confirmed/probable/suspect; sensitivity vs specificity</text>
+  <text x="392" y="256" text-anchor="end" font-size="10" fill="#6B6B6B">Human judgment</text>
+
+  <line x1="210" y1="272" x2="210" y2="282" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 5 – descriptive epi (PYTHON ✓) -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="284" width="380" height="42" rx="8" fill="#D97757" fill-opacity="0.12" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="20" y="284" width="42" height="42" rx="8" fill="#D97757" fill-opacity="0.35"/>
+  <text x="41" y="310" text-anchor="middle" font-size="14" font-weight="bold" fill="#D97757">5</text>
+  <text x="75" y="303" font-size="13" font-weight="bold" fill="#D97757">Descriptive Epidemiology</text>
+  <text x="75" y="319" font-size="10" fill="#6B6B6B">Line list, epidemic curve, GIS maps, summary stats</text>
+  <text x="392" y="310" text-anchor="end" font-size="11" font-weight="bold" fill="#D97757">🐍 Python ✓</text>
+
+  <!-- Right column connector line -->
+  <line x1="440" y1="345" x2="460" y2="345" stroke="#6B6B6B" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- STEP 6 – generate hypotheses (human) -->
+  <g filter="url(#shadow)">
+    <rect x="460" y="68" width="380" height="42" rx="8" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <rect x="460" y="68" width="42" height="42" rx="8" fill="#6B6B6B" fill-opacity="0.25"/>
+  <text x="481" y="94" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B6B6B">6</text>
+  <text x="515" y="87" font-size="13" font-weight="bold" fill="#1A1A1A">Generate Hypotheses</text>
+  <text x="515" y="103" font-size="10" fill="#6B6B6B">Pathogen traits, interviews, descriptive outliers</text>
+  <text x="832" y="94" text-anchor="end" font-size="10" fill="#6B6B6B">Human judgment</text>
+
+  <line x1="650" y1="110" x2="650" y2="120" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 7 – test hypotheses (PYTHON ✓) -->
+  <g filter="url(#shadow)">
+    <rect x="460" y="122" width="380" height="42" rx="8" fill="#D97757" fill-opacity="0.12" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="460" y="122" width="42" height="42" rx="8" fill="#D97757" fill-opacity="0.35"/>
+  <text x="481" y="148" text-anchor="middle" font-size="14" font-weight="bold" fill="#D97757">7</text>
+  <text x="515" y="141" font-size="13" font-weight="bold" fill="#D97757">Test Hypotheses</text>
+  <text x="515" y="157" font-size="10" fill="#6B6B6B">Cohort/case-control studies; traceback &amp; trace-forward</text>
+  <text x="832" y="148" text-anchor="end" font-size="11" font-weight="bold" fill="#D97757">🐍 Python ✓</text>
+
+  <line x1="650" y1="164" x2="650" y2="174" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 8 – re-evaluate hypotheses (human) -->
+  <g filter="url(#shadow)">
+    <rect x="460" y="176" width="380" height="42" rx="8" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <rect x="460" y="176" width="42" height="42" rx="8" fill="#6B6B6B" fill-opacity="0.25"/>
+  <text x="481" y="202" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B6B6B">8</text>
+  <text x="515" y="195" font-size="13" font-weight="bold" fill="#1A1A1A">Re-Evaluate Hypotheses if Needed</text>
+  <text x="515" y="211" font-size="10" fill="#6B6B6B">Revise case definition/hypothesis if data conflicts</text>
+  <text x="832" y="202" text-anchor="end" font-size="10" fill="#6B6B6B">Iterative</text>
+
+  <line x1="650" y1="218" x2="650" y2="228" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 9 – control measures (human) -->
+  <g filter="url(#shadow)">
+    <rect x="460" y="230" width="380" height="42" rx="8" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <rect x="460" y="230" width="42" height="42" rx="8" fill="#6B6B6B" fill-opacity="0.25"/>
+  <text x="481" y="256" text-anchor="middle" font-size="14" font-weight="bold" fill="#6B6B6B">9</text>
+  <text x="515" y="249" font-size="13" font-weight="bold" fill="#1A1A1A">Implement Control &amp; Prevention</text>
+  <text x="515" y="265" font-size="10" fill="#6B6B6B">Remove source, break chain, protect susceptible hosts</text>
+  <text x="832" y="256" text-anchor="end" font-size="10" fill="#6B6B6B">Human judgment</text>
+
+  <line x1="650" y1="272" x2="650" y2="282" stroke="#6B6B6B" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- STEP 10 – communicate results (PYTHON partial) -->
+  <g filter="url(#shadow)">
+    <rect x="460" y="284" width="380" height="42" rx="8" fill="#6A9BCC" fill-opacity="0.12" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="460" y="284" width="42" height="42" rx="8" fill="#6A9BCC" fill-opacity="0.35"/>
+  <text x="481" y="310" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A9BCC">10</text>
+  <text x="515" y="303" font-size="13" font-weight="bold" fill="#6A9BCC">Communicate Results</text>
+  <text x="515" y="319" font-size="10" fill="#6B6B6B">Oral+written reports; SitReps; stakeholder comms</text>
+  <text x="832" y="310" text-anchor="end" font-size="11" font-weight="bold" fill="#6A9BCC">🐍 Python △</text>
+
+  <!-- Note: steps can be done simultaneously -->
+  <text x="430" y="348" text-anchor="middle" font-size="11" fill="#6B6B6B" font-style="italic">⚠️ Steps can overlap or reorder, but none can be skipped</text>
+
+  <!-- Legend -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="365" width="820" height="72" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1"/>
+  </g>
+  <text x="36" y="386" font-size="12" font-weight="bold" fill="#1A1A1A">Legend</text>
+
+  <rect x="36" y="396" width="18" height="18" rx="4" fill="#D97757" fill-opacity="0.35" stroke="#D97757" stroke-width="2"/>
+  <text x="60" y="410" font-size="11" fill="#1A1A1A">Python-enhanced (Steps 5, 7): automated SitReps, regression, charts</text>
+
+  <rect x="36" y="420" width="18" height="18" rx="4" fill="#6A9BCC" fill-opacity="0.35" stroke="#6A9BCC" stroke-width="2"/>
+  <text x="60" y="434" font-size="11" fill="#1A1A1A">Python-assisted (Step 10): automated report formatting, visualization</text>
+
+  <rect x="480" y="396" width="18" height="18" rx="4" fill="#6B6B6B" fill-opacity="0.25" stroke="#E8E5DF" stroke-width="1"/>
+  <text x="504" y="410" font-size="10" fill="#1A1A1A">Human judgment (Steps 1-4, 6, 8, 9): fieldwork &amp; interviews</text>
+
+  <!-- Chapters map -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="448" width="820" height="120" rx="10" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1"/>
+  </g>
+  <text x="36" y="468" font-size="12" font-weight="bold" fill="#1A1A1A">How Each Chapter Maps to the Outbreak Investigation Steps</text>
+  <text x="36" y="487" font-size="11" fill="#1A1A1A">Ch04: Steps 1–5, 9, 10 — prep, case def, SitRep, chain break</text>
+  <text x="36" y="503" font-size="11" fill="#1A1A1A">Ch03: Step 7 — 2×2 table, RR, OR, descriptive stats</text>
+  <text x="36" y="519" font-size="11" fill="#1A1A1A">Ch05: Step 7 — stratified analysis, Mantel-Haenszel adjusted RR</text>
+  <text x="36" y="535" font-size="11" fill="#1A1A1A">Ch06: Step 7 — Modified Poisson + logistic regression</text>
+  <text x="440" y="487" font-size="11" fill="#1A1A1A">Ch07: Step 7 (time) — time series, ARIMA/SARIMA forecasting</text>
+  <text x="440" y="503" font-size="11" fill="#1A1A1A">Ch08: Step 5 (place) — spatial analysis, choropleth, spot maps</text>
+  <text x="440" y="519" font-size="11" fill="#1A1A1A">Ch14: Steps 5, 7, 10 — capstone case (full outbreak report)</text>
+</svg>

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="380" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">Three Levels of Spatial Analysis — Scale Determines the Tool</text>
+  <text x="400" y="50" text-anchor="middle" font-size="11" fill="#6B6B6B">From a nursing home to the whole globe, different scales call for different methods</text>
+
+  <!-- Outermost ring: Global -->
+  <ellipse cx="400" cy="215" rx="370" ry="145" fill="#6A9BCC" fill-opacity="0.08" stroke="#6A9BCC" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+  <!-- Middle ring: Administrative -->
+  <ellipse cx="400" cy="215" rx="260" ry="105" fill="#788C5D" fill-opacity="0.10" stroke="#788C5D" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+  <!-- Inner ring: Building -->
+  <ellipse cx="400" cy="215" rx="150" ry="68" fill="#D97757" fill-opacity="0.12" stroke="#D97757" stroke-width="2"/>
+
+  <!-- Inner label -->
+  <text x="400" y="200" text-anchor="middle" font-size="12" font-weight="bold" fill="#D97757">Inside a building / facility</text>
+  <text x="400" y="216" text-anchor="middle" font-size="10" fill="#1A1A1A">Floor × Wing × Room</text>
+  <text x="400" y="232" text-anchor="middle" font-size="10" fill="#D97757">→ Heatmap, Spot Map</text>
+
+  <!-- Middle labels (left/right) -->
+  <text x="148" y="193" text-anchor="middle" font-size="11" font-weight="bold" fill="#788C5D">District</text>
+  <text x="148" y="208" text-anchor="middle" font-size="10" fill="#1A1A1A">counties, townships</text>
+  <text x="148" y="222" text-anchor="middle" font-size="10" fill="#788C5D">→ Choropleth</text>
+
+  <text x="652" y="193" text-anchor="middle" font-size="11" font-weight="bold" fill="#788C5D">District</text>
+  <text x="652" y="208" text-anchor="middle" font-size="10" fill="#1A1A1A">communities, schools</text>
+  <text x="652" y="222" text-anchor="middle" font-size="10" fill="#788C5D">→ Choropleth</text>
+
+  <!-- Outer labels (top/bottom) -->
+  <text x="400" y="82" text-anchor="middle" font-size="11" font-weight="bold" fill="#6A9BCC">Global / international</text>
+  <text x="400" y="97" text-anchor="middle" font-size="10" fill="#1A1A1A">countries, continents</text>
+  <text x="400" y="111" text-anchor="middle" font-size="10" fill="#6A9BCC">→ World Choropleth</text>
+
+  <text x="400" y="323" text-anchor="middle" font-size="11" font-weight="bold" fill="#6A9BCC">Global / international</text>
+  <text x="400" y="338" text-anchor="middle" font-size="10" fill="#1A1A1A">outbreak surveillance, travel advisories</text>
+  <text x="400" y="352" text-anchor="middle" font-size="10" fill="#6A9BCC">→ Interactive map</text>
+
+  <!-- Right side: example cards -->
+  <g filter="url(#shadow)">
+    <rect x="548" y="258" width="230" height="96" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1"/>
+  </g>
+  <text x="663" y="277" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">Ch08: Songbai Nursing Home</text>
+  <rect x="558" y="283" width="66" height="18" rx="4" fill="#D97757" fill-opacity="0.15"/>
+  <text x="591" y="296" text-anchor="middle" font-size="9" font-weight="bold" fill="#D97757">Indoor</text>
+  <text x="635" y="296" font-size="9" fill="#1A1A1A">→ floor × wing attack rate</text>
+  <rect x="558" y="306" width="66" height="18" rx="4" fill="#788C5D" fill-opacity="0.15"/>
+  <text x="591" y="319" text-anchor="middle" font-size="9" font-weight="bold" fill="#788C5D">District</text>
+  <text x="635" y="319" font-size="9" fill="#1A1A1A">→ county incidence map</text>
+  <rect x="558" y="328" width="66" height="18" rx="4" fill="#6A9BCC" fill-opacity="0.15"/>
+  <text x="591" y="341" text-anchor="middle" font-size="9" font-weight="bold" fill="#6A9BCC">Global</text>
+  <text x="635" y="341" font-size="9" fill="#1A1A1A">→ Legionella worldwide</text>
+
+  <!-- Bottom rule -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="363" width="740" height="10" rx="5" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1"/>
+  </g>
+  <text x="400" y="371" text-anchor="middle" font-size="9" fill="#6B6B6B">Smaller scale → finer data → spot clusters; larger scale → compare districts → reveal macro trends</text>
+</svg>

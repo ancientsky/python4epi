@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 460" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="460" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1A1A1A">Anatomy of a Kaplan-Meier Curve — Every Step and Tick Matters</text>
+  <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">Learn to read the curve — see who declined first and who lasted longest</text>
+
+  <!-- Main plot card -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="74" width="500" height="330" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+
+  <!-- Plot area -->
+  <!-- Y axis labels -->
+  <text x="75" y="100" text-anchor="end" font-size="10" fill="#6B6B6B">1.0</text>
+  <text x="75" y="155" text-anchor="end" font-size="10" fill="#6B6B6B">0.75</text>
+  <text x="75" y="215" text-anchor="end" font-size="10" fill="#6B6B6B">0.5</text>
+  <text x="75" y="275" text-anchor="end" font-size="10" fill="#6B6B6B">0.25</text>
+  <text x="75" y="335" text-anchor="end" font-size="10" fill="#6B6B6B">0</text>
+  <text x="42" y="215" text-anchor="middle" font-size="11" fill="#1A1A1A" transform="rotate(-90, 42, 215)">Survival probability S(t)</text>
+
+  <!-- X axis labels -->
+  <text x="250" y="365" text-anchor="middle" font-size="11" fill="#1A1A1A">Days since symptom onset</text>
+
+  <!-- Axes -->
+  <line x1="80" y1="100" x2="80" y2="335" stroke="#1A1A1A" stroke-width="1.5"/>
+  <line x1="80" y1="335" x2="490" y2="335" stroke="#1A1A1A" stroke-width="1.5"/>
+
+  <!-- Gridlines -->
+  <g stroke="#E8E5DF" stroke-width="0.8">
+    <line x1="80" y1="155" x2="490" y2="155"/>
+    <line x1="80" y1="275" x2="490" y2="275"/>
+  </g>
+  <!-- 0.5 dashed reference -->
+  <line x1="80" y1="215" x2="490" y2="215" stroke="#6B6B6B" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="488" y="210" text-anchor="end" font-size="9" fill="#6B6B6B" font-style="italic">S(t)=0.5</text>
+
+  <!-- CI band (shaded) -->
+  <path d="M 80 102 L 130 102 L 130 108 L 180 108 L 180 118 L 230 118 L 230 135 L 280 135 L 280 155 L 340 155 L 340 175 L 400 175 L 400 195 L 490 195
+           L 490 235 L 400 235 L 400 215 L 340 215 L 340 195 L 280 195 L 280 175 L 230 175 L 230 160 L 180 160 L 180 148 L 130 148 L 130 142 L 80 142 Z"
+        fill="#6A9BCC" fill-opacity="0.18"/>
+
+  <!-- Step function (KM curve) -->
+  <path d="M 80 100 L 130 100 L 130 105 L 180 105 L 180 113 L 230 113 L 230 127 L 280 127 L 280 145 L 340 145 L 340 165 L 400 165 L 400 185 L 490 185"
+        fill="none" stroke="#D97757" stroke-width="3"/>
+
+  <!-- Tick marks (censored) on curve -->
+  <g stroke="#788C5D" stroke-width="2">
+    <line x1="110" y1="95" x2="110" y2="105"/>
+    <line x1="155" y1="100" x2="155" y2="110"/>
+    <line x1="260" y1="122" x2="260" y2="132"/>
+    <line x1="320" y1="140" x2="320" y2="150"/>
+    <line x1="430" y1="180" x2="430" y2="190"/>
+    <line x1="470" y1="180" x2="470" y2="190"/>
+  </g>
+
+  <!-- Annotation 1: step down = event -->
+  <line x1="230" y1="122" x2="230" y2="127" stroke="#D94452" stroke-width="2"/>
+  <circle cx="230" cy="120" r="3" fill="#D94452"/>
+  <line x1="230" y1="115" x2="280" y2="78" stroke="#D94452" stroke-width="1" stroke-dasharray="3,2"/>
+  <rect x="278" y="66" width="140" height="30" rx="5" fill="#FFFFFF" stroke="#D94452" stroke-width="1.5"/>
+  <text x="348" y="78" text-anchor="middle" font-size="10" font-weight="bold" fill="#D94452">① Step down</text>
+  <text x="348" y="91" text-anchor="middle" font-size="8" fill="#1A1A1A">= a death occurred that day</text>
+
+  <!-- Annotation 2: tick = censored -->
+  <line x1="110" y1="95" x2="180" y2="78" stroke="#788C5D" stroke-width="1" stroke-dasharray="3,2"/>
+  <rect x="100" y="56" width="140" height="30" rx="5" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.5"/>
+  <text x="170" y="68" text-anchor="middle" font-size="10" font-weight="bold" fill="#788C5D">② Tick marks</text>
+  <text x="170" y="81" text-anchor="middle" font-size="8" fill="#1A1A1A">= censored (still at risk)</text>
+
+  <!-- Annotation 3: median survival -->
+  <circle cx="400" cy="215" r="4" fill="#6A9BCC"/>
+  <line x1="405" y1="218" x2="450" y2="265" stroke="#6A9BCC" stroke-width="1" stroke-dasharray="3,2"/>
+  <rect x="280" y="260" width="170" height="30" rx="5" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.5"/>
+  <text x="365" y="272" text-anchor="middle" font-size="10" font-weight="bold" fill="#6A9BCC">③ Crosses 0.5</text>
+  <text x="365" y="285" text-anchor="middle" font-size="9" fill="#1A1A1A">= median survival time</text>
+
+  <!-- Annotation 4: CI widens -->
+  <rect x="380" y="300" width="110" height="30" rx="5" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <text x="435" y="312" text-anchor="middle" font-size="8" font-weight="bold" fill="#6A9BCC">④ CI band widens</text>
+  <text x="435" y="325" text-anchor="middle" font-size="8" fill="#1A1A1A">= more uncertainty</text>
+
+  <!-- RIGHT: Reading checklist card -->
+  <g filter="url(#shadow)">
+    <rect x="550" y="74" width="220" height="330" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="550" y="74" width="220" height="34" rx="10" fill="#D97757" fill-opacity="0.15"/>
+  <text x="660" y="96" text-anchor="middle" font-size="12" font-weight="bold" fill="#D97757">How to Read a KM Curve</text>
+
+  <g font-size="10" fill="#1A1A1A">
+    <rect x="565" y="122" width="190" height="56" rx="6" fill="#F5F3EE"/>
+    <text x="575" y="140" font-size="11" font-weight="bold" fill="#D94452">① Find the steps</text>
+    <text x="575" y="158" fill="#1A1A1A">Each step = one or more</text>
+    <text x="575" y="172" fill="#1A1A1A">events</text>
+
+    <rect x="565" y="190" width="190" height="56" rx="6" fill="#F5F3EE"/>
+    <text x="575" y="208" font-size="11" font-weight="bold" fill="#788C5D">② Find the ticks</text>
+    <text x="575" y="226" fill="#1A1A1A">Small marks = censored</text>
+    <text x="575" y="240" fill="#1A1A1A">(KM handles this correctly)</text>
+
+    <rect x="565" y="258" width="190" height="56" rx="6" fill="#F5F3EE"/>
+    <text x="575" y="276" font-size="11" font-weight="bold" fill="#6A9BCC">③ Find the median</text>
+    <text x="575" y="294" fill="#1A1A1A">x-value where curve crosses 0.5</text>
+    <text x="575" y="308" fill="#6B6B6B">Never crosses → median = inf</text>
+
+    <rect x="565" y="326" width="190" height="56" rx="6" fill="#F5F3EE"/>
+    <text x="575" y="344" font-size="11" font-weight="bold" fill="#6A9BCC">④ Read the CI band</text>
+    <text x="575" y="362" fill="#1A1A1A">Shading = 95% CI</text>
+    <text x="575" y="376" fill="#6B6B6B">Wider tail → fewer samples</text>
+  </g>
+
+  <!-- Bottom takeaway -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="418" width="740" height="26" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1"/>
+  </g>
+  <text x="400" y="436" text-anchor="middle" font-size="11" fill="#1A1A1A"><tspan font-weight="bold" fill="#D97757">Rule of thumb: </tspan>"Steps = deaths, ticks = censoring, crossing 0.5 = median, wide tails = uncertainty"</text>
+</svg>

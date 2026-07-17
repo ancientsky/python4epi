@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 420" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="700" height="420" fill="#FAF8F3" rx="12"/>
+
+  <text x="350" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">Anatomy of a 2×2 Contingency Table</text>
+  <text x="350" y="52" text-anchor="middle" font-size="12" fill="#6B6B6B">pd.crosstab(exposure, infection) → 1st argument = rows, 2nd = columns</text>
+
+  <text x="310" y="82" text-anchor="middle" font-size="14" font-weight="bold" fill="#D97757">Diseased</text>
+  <text x="490" y="82" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A9BCC">Not Diseased</text>
+  <text x="660" y="82" text-anchor="middle" font-size="13" fill="#6B6B6B">Total</text>
+
+  <text x="130" y="140" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">Exposed</text>
+  <text x="130" y="228" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">Unexposed</text>
+
+  <g filter="url(#shadow)">
+    <rect x="230" y="95" width="160" height="75" rx="8" fill="#D97757" fill-opacity="0.2" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <text x="310" y="140" text-anchor="middle" font-size="36" font-weight="bold" fill="#D97757">a</text>
+  <text x="310" y="162" text-anchor="middle" font-size="11" fill="#6B6B6B">Exposed + Diseased</text>
+
+  <g filter="url(#shadow)">
+    <rect x="410" y="95" width="160" height="75" rx="8" fill="#6A9BCC" fill-opacity="0.15" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <text x="490" y="140" text-anchor="middle" font-size="36" font-weight="bold" fill="#6A9BCC">b</text>
+  <text x="490" y="162" text-anchor="middle" font-size="11" fill="#6B6B6B">Exposed + Not Diseased</text>
+
+  <text x="620" y="142" text-anchor="middle" font-size="16" font-weight="bold" fill="#1A1A1A">a + b</text>
+
+  <g filter="url(#shadow)">
+    <rect x="230" y="185" width="160" height="75" rx="8" fill="#D97757" fill-opacity="0.1" stroke="#D97757" stroke-width="1.5" stroke-dasharray="4"/>
+  </g>
+  <text x="310" y="230" text-anchor="middle" font-size="36" font-weight="bold" fill="#D97757" fill-opacity="0.7">c</text>
+  <text x="310" y="252" text-anchor="middle" font-size="11" fill="#6B6B6B">Unexposed + Diseased</text>
+
+  <g filter="url(#shadow)">
+    <rect x="410" y="185" width="160" height="75" rx="8" fill="#6A9BCC" fill-opacity="0.08" stroke="#6A9BCC" stroke-width="1.5" stroke-dasharray="4"/>
+  </g>
+  <text x="490" y="230" text-anchor="middle" font-size="36" font-weight="bold" fill="#6A9BCC" fill-opacity="0.7">d</text>
+  <text x="490" y="252" text-anchor="middle" font-size="11" fill="#6B6B6B">Unexposed + Not Diseased</text>
+
+  <text x="620" y="232" text-anchor="middle" font-size="16" font-weight="bold" fill="#1A1A1A">c + d</text>
+
+  <rect x="40" y="290" width="295" height="52" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+  <text x="55" y="312" font-size="13" font-weight="bold" fill="#D97757">Attack rate (exposed)</text>
+  <text x="55" y="332" font-size="14" fill="#1A1A1A" font-family="monospace">Risk_exposed = a / (a + b)</text>
+
+  <rect x="365" y="290" width="295" height="52" rx="8" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.5"/>
+  <text x="380" y="312" font-size="13" font-weight="bold" fill="#6A9BCC">Attack rate (unexposed)</text>
+  <text x="380" y="332" font-size="14" fill="#1A1A1A" font-family="monospace">Risk_unexposed = c / (c + d)</text>
+
+  <line x1="310" y1="170" x2="188" y2="290" stroke="#D97757" stroke-width="1.5" stroke-dasharray="4" opacity="0.5"/>
+  <line x1="310" y1="260" x2="513" y2="290" stroke="#6A9BCC" stroke-width="1.5" stroke-dasharray="4" opacity="0.5"/>
+
+  <rect x="40" y="360" width="295" height="48" rx="8" fill="#FAF8F3" stroke="#788C5D" stroke-width="1.5"/>
+  <text x="55" y="380" font-size="12" font-weight="bold" fill="#788C5D">Risk Ratio (RR)</text>
+  <text x="55" y="398" font-size="13" fill="#1A1A1A" font-family="monospace">RR = Risk_exposed / Risk_unexposed</text>
+
+  <rect x="365" y="360" width="295" height="48" rx="8" fill="#FAF8F3" stroke="#788C5D" stroke-width="1.5"/>
+  <text x="380" y="380" font-size="12" font-weight="bold" fill="#788C5D">Odds Ratio (OR)</text>
+  <text x="380" y="398" font-size="13" fill="#1A1A1A" font-family="monospace">OR = (a × d) / (b × c)</text>
+</svg>

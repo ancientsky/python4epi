@@ -352,7 +352,7 @@ When your Python charts have Chinese-display problems, check in this order:
 
 Outbreak investigations often require deciding "how long to isolate," "how many days to quarantine," and "when the exposure window was." All of these decisions rest on correctly distinguishing the following four time-period concepts.
 
-```{figure} images/incubation_periods.svg
+```{figure} images/incubation_periods_en.svg
 :name: fig-incubation-periods
 :alt: Comparison of infectious disease time periods: a timeline comparing the incubation period, latent period, infectious period, and serial interval
 :width: 100%
@@ -384,7 +384,7 @@ Timeline comparison of the four time-period concepts. Note: when the **latent pe
 
 For an infectious disease to spread from a pathogen to a susceptible host, it must pass through six links in sequence. Breaking any single link interrupts the chain of transmission.
 
-```{figure} images/chain_of_infection.svg
+```{figure} images/chain_of_infection_en.svg
 :name: fig-chain-of-infection
 :alt: The six links of the chain of infection: pathogen → reservoir → portal of exit → mode of transmission → portal of entry → susceptible host, plus three intervention strategies
 :width: 100%

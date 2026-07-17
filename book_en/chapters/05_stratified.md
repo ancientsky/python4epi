@@ -64,7 +64,7 @@ Our story opened with a "senior outbreak investigator" drawing on experience to 
 
 A DAG is a "map of causal relationships" that uses arrows to show "who affects whom." Drawing a DAG lets you see at a glance where the confounder is hiding:
 
-```{figure} images/confounding_dag.svg
+```{figure} images/confounding_dag_en.svg
 :name: fig-confounding-dag
 :alt: Confounder DAG showing functional status affecting both shower use and infection risk
 :width: 100%
@@ -357,7 +357,7 @@ else:
 
 After finishing the stratified analysis, you need to answer two questions. The flowchart below helps you decide:
 
-```{figure} images/stratified_interpretation.svg
+```{figure} images/stratified_interpretation_en.svg
 :name: fig-stratified-interpretation
 :alt: Stratified analysis interpretation flowchart explaining how to judge confounding and interaction
 :width: 100%
