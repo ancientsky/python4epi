@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6A9BCC"/>
+    </marker>
+    <marker id="arrowOrange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D97757"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#788C5D"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="520" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">Pull Request Team Workflow</text>
+
+  <text x="200" y="58" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A9BCC">You (Investigator)</text>
+  <text x="620" y="58" text-anchor="middle" font-size="14" font-weight="bold" fill="#788C5D">Colleague / Team Lead</text>
+
+  <rect x="30" y="72" width="5" height="260" rx="3" fill="#6A9BCC" opacity="0.3"/>
+  <text x="24" y="200" font-size="9" fill="#6A9BCC" transform="rotate(-90, 24, 200)">Local machine</text>
+
+  <g filter="url(#shadow)">
+    <rect x="80" y="78" width="240" height="44" rx="8" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.5"/>
+  </g>
+  <text x="200" y="97" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">① Create a branch</text>
+  <text x="200" y="114" text-anchor="middle" font-size="11" fill="#6B6B6B" font-family="monospace">git checkout -b update-case-23</text>
+
+  <line x1="200" y1="122" x2="200" y2="142" stroke="#6A9BCC" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="80" y="146" width="240" height="44" rx="8" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.5"/>
+  </g>
+  <text x="200" y="165" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">② Edit analysis script</text>
+  <text x="200" y="182" text-anchor="middle" font-size="11" fill="#6B6B6B">Fix case data, add charts</text>
+
+  <line x1="200" y1="190" x2="200" y2="210" stroke="#6A9BCC" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="80" y="214" width="240" height="44" rx="8" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.5"/>
+  </g>
+  <text x="200" y="233" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">③ Save locally</text>
+  <text x="200" y="250" text-anchor="middle" font-size="11" fill="#6B6B6B" font-family="monospace">git add → git commit</text>
+
+  <line x1="200" y1="258" x2="200" y2="278" stroke="#6A9BCC" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="80" y="282" width="240" height="44" rx="8" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.5"/>
+  </g>
+  <text x="200" y="301" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">④ Push to GitHub</text>
+  <text x="200" y="318" text-anchor="middle" font-size="11" fill="#6B6B6B" font-family="monospace">git push -u origin update-case-23</text>
+
+  <line x1="320" y1="304" x2="370" y2="304" stroke="#D97757" stroke-width="2" marker-end="url(#arrowOrange)"/>
+
+  <rect x="365" y="275" width="5" height="206" rx="3" fill="#D97757" opacity="0.3"/>
+  <text x="358" y="390" font-size="9" fill="#D97757" transform="rotate(-90, 358, 390)">GitHub</text>
+
+  <g filter="url(#shadow)">
+    <rect x="380" y="282" width="200" height="44" rx="8" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <text x="480" y="301" text-anchor="middle" font-size="12" font-weight="bold" fill="#D97757">⑤ Open a Pull Request</text>
+  <text x="480" y="318" text-anchor="middle" font-size="11" fill="#6B6B6B">Done on the GitHub website</text>
+
+  <line x1="480" y1="326" x2="480" y2="346" stroke="#D97757" stroke-width="2" marker-end="url(#arrowOrange)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="380" y="350" width="200" height="56" rx="8" fill="#FFFFFF" stroke="#788C5D" stroke-width="2"/>
+  </g>
+  <text x="480" y="372" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">⑥ Review</text>
+  <text x="480" y="388" text-anchor="middle" font-size="11" fill="#6B6B6B">Confirm the change is correct</text>
+  <text x="480" y="401" text-anchor="middle" font-size="8" fill="#6B6B6B">Comment: "Matches the original report"</text>
+
+  <path d="M 620 75 L 620 370 L 580 370" fill="none" stroke="#788C5D" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <circle cx="620" cy="75" r="3" fill="#788C5D"/>
+
+  <line x1="480" y1="406" x2="480" y2="426" stroke="#788C5D" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="380" y="430" width="200" height="44" rx="8" fill="#788C5D" fill-opacity="0.1" stroke="#788C5D" stroke-width="2"/>
+  </g>
+  <text x="480" y="449" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">⑦ Merge into main</text>
+  <text x="480" y="466" text-anchor="middle" font-size="11" fill="#6B6B6B">Team lead clicks "Merge"</text>
+
+  <path d="M 380 452 L 320 488" fill="none" stroke="#6A9BCC" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="80" y="478" width="240" height="36" rx="8" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.5"/>
+  </g>
+  <text x="200" y="500" text-anchor="middle" font-size="11" font-weight="bold" fill="#6A9BCC">⑧ Others run git pull to sync</text>
+</svg>

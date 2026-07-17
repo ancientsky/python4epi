@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6A9BCC"/>
+    </marker>
+    <marker id="arrowOrange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D97757"/>
+    </marker>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="320" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">Git's Four Areas &amp; Core Commands</text>
+
+  <g filter="url(#shadow)">
+    <rect x="20" y="55" width="160" height="180" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+    <rect x="20" y="55" width="160" height="36" rx="10" fill="#6A9BCC"/>
+    <rect x="20" y="75" width="160" height="16" fill="#6A9BCC"/>
+  </g>
+  <text x="100" y="78" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Working Directory</text>
+  <text x="100" y="100" text-anchor="middle" font-size="11" fill="#6A9BCC">Working Directory</text>
+  <text x="45" y="128" font-size="12" fill="#6B6B6B">analysis.py</text>
+  <text x="45" y="150" font-size="12" fill="#6B6B6B">clean.py</text>
+  <text x="45" y="174" font-size="12" fill="#D97757">Editing...</text>
+  <text x="45" y="210" font-size="11" fill="#6B6B6B">Where you usually</text>
+  <text x="45" y="226" font-size="11" fill="#6B6B6B">edit files</text>
+
+  <g filter="url(#shadow)">
+    <rect x="250" y="55" width="160" height="180" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+    <rect x="250" y="55" width="160" height="36" rx="10" fill="#D97757"/>
+    <rect x="250" y="75" width="160" height="16" fill="#D97757"/>
+  </g>
+  <text x="330" y="78" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Staging Area</text>
+  <text x="330" y="100" text-anchor="middle" font-size="11" fill="#D97757">Staging Area</text>
+  <text x="275" y="130" font-size="12" fill="#6B6B6B">Changes ready</text>
+  <text x="275" y="150" font-size="12" fill="#6B6B6B">to be saved</text>
+  <text x="275" y="185" font-size="11" fill="#6B6B6B">"Save these</text>
+  <text x="275" y="201" font-size="11" fill="#6B6B6B"> changes"</text>
+
+  <g filter="url(#shadow)">
+    <rect x="480" y="55" width="160" height="180" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="2"/>
+    <rect x="480" y="55" width="160" height="36" rx="10" fill="#788C5D"/>
+    <rect x="480" y="75" width="160" height="16" fill="#788C5D"/>
+  </g>
+  <text x="560" y="78" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">Local Repository</text>
+  <text x="560" y="100" text-anchor="middle" font-size="11" fill="#788C5D">Local Repository</text>
+  <circle cx="510" cy="130" r="6" fill="#788C5D"/>
+  <line x1="510" y1="136" x2="510" y2="148" stroke="#788C5D" stroke-width="2"/>
+  <circle cx="510" cy="154" r="6" fill="#788C5D"/>
+  <line x1="510" y1="160" x2="510" y2="172" stroke="#788C5D" stroke-width="2"/>
+  <circle cx="510" cy="178" r="6" fill="#788C5D" opacity="0.6"/>
+  <text x="528" y="135" font-size="11" fill="#1A1A1A">Snapshot 1</text>
+  <text x="528" y="159" font-size="11" fill="#1A1A1A">Snapshot 2</text>
+  <text x="528" y="183" font-size="11" fill="#1A1A1A">Snapshot 3</text>
+  <text x="500" y="218" font-size="11" fill="#6B6B6B">Full version</text>
+  <text x="500" y="234" font-size="11" fill="#6B6B6B">history</text>
+
+  <g filter="url(#shadow)">
+    <rect x="700" y="75" width="85" height="140" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2" stroke-dasharray="4"/>
+  </g>
+  <text x="742" y="118" text-anchor="middle" font-size="13" font-weight="bold" fill="#6A9BCC">Remote</text>
+  <text x="742" y="138" text-anchor="middle" font-size="11" fill="#6A9BCC">GitHub</text>
+  <text x="742" y="170" text-anchor="middle" font-size="10" fill="#6B6B6B">Cloud backup</text>
+  <text x="742" y="195" text-anchor="middle" font-size="10" fill="#6B6B6B">Team</text>
+  <text x="742" y="206" text-anchor="middle" font-size="10" fill="#6B6B6B">collaboration</text>
+
+  <line x1="185" y1="140" x2="240" y2="140" stroke="#6A9BCC" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <rect x="185" y="114" width="60" height="22" rx="4" fill="#6A9BCC"/>
+  <text x="215" y="129" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF" font-family="monospace">git add</text>
+
+  <line x1="415" y1="140" x2="470" y2="140" stroke="#6A9BCC" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <rect x="412" y="114" width="66" height="22" rx="4" fill="#6A9BCC"/>
+  <text x="445" y="129" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#FFFFFF" font-family="monospace">git commit</text>
+
+  <line x1="645" y1="125" x2="690" y2="125" stroke="#6A9BCC" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <rect x="641" y="100" width="58" height="22" rx="4" fill="#6A9BCC"/>
+  <text x="670" y="115" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#FFFFFF" font-family="monospace">git push</text>
+
+  <line x1="690" y1="170" x2="645" y2="170" stroke="#D97757" stroke-width="2.5" marker-end="url(#arrowOrange)"/>
+  <rect x="641" y="178" width="58" height="22" rx="4" fill="#D97757"/>
+  <text x="670" y="193" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#FFFFFF" font-family="monospace">git pull</text>
+
+  <rect x="20" y="260" width="760" height="48" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1"/>
+  <text x="400" y="282" text-anchor="middle" font-size="13" fill="#1A1A1A">
+    <tspan font-weight="bold" fill="#6A9BCC">git add</tspan>
+    <tspan> &#8594; </tspan>
+    <tspan font-weight="bold" fill="#6A9BCC">git commit</tspan>
+    <tspan> &#8594; </tspan>
+    <tspan font-weight="bold" fill="#6A9BCC">git push</tspan>
+  </text>
+  <text x="400" y="300" text-anchor="middle" font-size="12" fill="#6B6B6B">These three commands cover your daily work!</text>
+</svg>

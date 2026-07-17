@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="380" fill="#FAF8F3" rx="12"/>
+
+  <!-- Left side: Without Git -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="15" width="370" height="350" rx="10" fill="#FFFFFF" stroke="#D94452" stroke-width="1.5" stroke-dasharray="6,3"/>
+  </g>
+  <text x="205" y="45" text-anchor="middle" font-size="17" font-weight="bold" fill="#D94452">Without Git</text>
+
+  <!-- Scattered files -->
+  <rect x="40" y="65" width="230" height="30" rx="6" fill="#D94452" fill-opacity="0.08" stroke="#D94452" stroke-width="1"/>
+  <text x="52" y="85" font-size="12" fill="#D94452" font-family="monospace">analysis.py</text>
+
+  <rect x="50" y="103" width="250" height="30" rx="6" fill="#D94452" fill-opacity="0.12" stroke="#D94452" stroke-width="1"/>
+  <text x="62" y="123" font-size="12" fill="#D94452" font-family="monospace">analysis_v2.py</text>
+
+  <rect x="42" y="141" width="280" height="30" rx="6" fill="#D94452" fill-opacity="0.18" stroke="#D94452" stroke-width="1"/>
+  <text x="54" y="161" font-size="12" fill="#D94452" font-family="monospace">analysis_v2_final.py</text>
+
+  <rect x="48" y="179" width="310" height="30" rx="6" fill="#D94452" fill-opacity="0.25" stroke="#D94452" stroke-width="1.5"/>
+  <text x="60" y="199" font-size="12" fill="#D94452" font-family="monospace">analysis_v2_final_REALLY_FINAL.py</text>
+
+  <rect x="36" y="217" width="340" height="32" rx="6" fill="#D94452" stroke="#D94452" stroke-width="1.5"/>
+  <text x="48" y="238" font-size="11" fill="#FFFFFF" font-family="monospace">analysis_v2_final_REALLY_FINAL_BOSS_EDIT.py</text>
+
+  <!-- Question marks -->
+  <text x="330" y="100" font-size="24" fill="#D94452" opacity="0.4">?</text>
+  <text x="345" y="170" font-size="20" fill="#D94452" opacity="0.3">?</text>
+
+  <text x="55" y="285" font-size="13" fill="#D94452" font-weight="bold">Which one is the latest?</text>
+  <text x="55" y="306" font-size="13" fill="#6B6B6B">No idea what was changed</text>
+  <text x="55" y="327" font-size="13" fill="#6B6B6B">Accidentally overwrote a colleague's work</text>
+  <text x="55" y="348" font-size="13" fill="#6B6B6B">Can't go back to an earlier version</text>
+
+  <!-- Divider -->
+  <line x1="400" y1="30" x2="400" y2="350" stroke="#E8E5DF" stroke-width="2" stroke-dasharray="8,4"/>
+
+  <!-- Right side: With Git -->
+  <g filter="url(#shadow)">
+    <rect x="410" y="15" width="370" height="350" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.5"/>
+  </g>
+  <text x="595" y="45" text-anchor="middle" font-size="17" font-weight="bold" fill="#788C5D">With Git</text>
+
+  <!-- Single file -->
+  <rect x="540" y="62" width="180" height="34" rx="8" fill="#788C5D"/>
+  <text x="556" y="84" font-size="14" fill="#FFFFFF" font-weight="bold" font-family="monospace">analysis.py</text>
+  <text x="540" y="115" font-size="13" fill="#788C5D" font-weight="bold">Just one file</text>
+
+  <!-- Commit timeline -->
+  <line x1="460" y1="145" x2="460" y2="335" stroke="#788C5D" stroke-width="3" opacity="0.3"/>
+
+  <!-- Commit nodes -->
+  <circle cx="460" cy="160" r="8" fill="#788C5D"/>
+  <text x="480" y="157" font-size="10" fill="#6B6B6B" font-family="monospace">a1b2c3d</text>
+  <text x="480" y="172" font-size="12" fill="#1A1A1A">Initial analysis script</text>
+
+  <circle cx="460" cy="210" r="8" fill="#788C5D"/>
+  <text x="480" y="207" font-size="10" fill="#6B6B6B" font-family="monospace">e4f5g6h</text>
+  <text x="480" y="222" font-size="12" fill="#1A1A1A">Denominator changed to reported cases</text>
+
+  <circle cx="460" cy="260" r="8" fill="#788C5D"/>
+  <text x="480" y="257" font-size="10" fill="#6B6B6B" font-family="monospace">i7j8k9l</text>
+  <text x="480" y="272" font-size="12" fill="#1A1A1A">Changed back to confirmed cases</text>
+
+  <circle cx="460" cy="310" r="9" fill="#D97757" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="480" y="307" font-size="10" fill="#6B6B6B" font-family="monospace">m0n1o2p</text>
+  <text x="480" y="322" font-size="12" fill="#1A1A1A">Added moving average line</text>
+
+  <!-- Arrow pointing to latest -->
+  <text x="425" y="314" font-size="14" fill="#D97757" font-weight="bold">HEAD</text>
+  <line x1="445" y1="310" x2="451" y2="310" stroke="#D97757" stroke-width="2"/>
+</svg>

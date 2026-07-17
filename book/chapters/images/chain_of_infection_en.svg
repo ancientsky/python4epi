@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 520" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6B6B6B"/>
+    </marker>
+    <marker id="arr-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D94452"/>
+    </marker>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#788C5D"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="860" height="520" fill="#FAF8F3" rx="12"/>
+
+  <!-- Title -->
+  <text x="430" y="34" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">Chain of Infection: Six Links and Intervention Strategies</text>
+
+  <!-- ── Six nodes equally spaced ── -->
+  <!-- Node width=110, gap=28, start=20 -->
+  <!-- Positions: 20, 158, 296, 434, 572, 710 -->
+
+  <!-- 1. Pathogen -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="78" width="110" height="58" rx="29" fill="#D97757" fill-opacity="0.18" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <text x="75" y="107" text-anchor="middle" font-size="12" font-weight="bold" fill="#D97757">① Pathogen</text>
+  <line x1="130" y1="107" x2="157" y2="107" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- 2. Reservoir -->
+  <g filter="url(#shadow)">
+    <rect x="158" y="78" width="110" height="58" rx="29" fill="#D97757" fill-opacity="0.18" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <text x="213" y="107" text-anchor="middle" font-size="12" font-weight="bold" fill="#D97757">② Reservoir</text>
+  <line x1="268" y1="107" x2="295" y2="107" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- 3. Portal of exit -->
+  <g filter="url(#shadow)">
+    <rect x="296" y="78" width="110" height="58" rx="29" fill="#6A9BCC" fill-opacity="0.18" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <text x="351" y="107" text-anchor="middle" font-size="11" font-weight="bold" fill="#6A9BCC">③ Portal of Exit</text>
+  <line x1="406" y1="107" x2="433" y2="107" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- 4. Transmission -->
+  <g filter="url(#shadow)">
+    <rect x="434" y="78" width="110" height="58" rx="29" fill="#6A9BCC" fill-opacity="0.18" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <text x="489" y="107" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">④ Transmission</text>
+  <line x1="544" y1="107" x2="571" y2="107" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- 5. Portal of entry -->
+  <g filter="url(#shadow)">
+    <rect x="572" y="78" width="110" height="58" rx="29" fill="#788C5D" fill-opacity="0.18" stroke="#788C5D" stroke-width="2"/>
+  </g>
+  <text x="627" y="107" text-anchor="middle" font-size="11" font-weight="bold" fill="#788C5D">⑤ Portal of Entry</text>
+  <line x1="682" y1="107" x2="709" y2="107" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- 6. Susceptible host -->
+  <g filter="url(#shadow)">
+    <rect x="710" y="78" width="130" height="58" rx="29" fill="#788C5D" fill-opacity="0.18" stroke="#788C5D" stroke-width="2"/>
+  </g>
+  <text x="775" y="107" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">⑥ Susceptible Host</text>
+
+  <!-- ── Node details (second row) ── -->
+  <text x="75" y="158" text-anchor="middle" font-size="10" fill="#6B6B6B">Bacteria, viruses</text>
+  <text x="75" y="170" text-anchor="middle" font-size="10" fill="#6B6B6B">fungi, etc.</text>
+
+  <text x="213" y="158" text-anchor="middle" font-size="10" fill="#6B6B6B">Humans, animals</text>
+  <text x="213" y="170" text-anchor="middle" font-size="10" fill="#6B6B6B">Environment (water tower)</text>
+
+  <text x="351" y="158" text-anchor="middle" font-size="10" fill="#6B6B6B">Droplets, secretions</text>
+  <text x="351" y="170" text-anchor="middle" font-size="10" fill="#6B6B6B">Excreta, aerosols</text>
+
+  <text x="489" y="158" text-anchor="middle" font-size="10" fill="#6B6B6B">Direct: droplet contact</text>
+  <text x="489" y="170" text-anchor="middle" font-size="10" fill="#6B6B6B">Indirect: vehicle/food/water</text>
+
+  <text x="627" y="158" text-anchor="middle" font-size="10" fill="#6B6B6B">Respiratory tract, skin</text>
+  <text x="627" y="170" text-anchor="middle" font-size="10" fill="#6B6B6B">GI tract, etc.</text>
+
+  <text x="775" y="158" text-anchor="middle" font-size="10" fill="#6B6B6B">Immunocompromised, elderly</text>
+  <text x="775" y="170" text-anchor="middle" font-size="10" fill="#6B6B6B">Chronic illness, children</text>
+
+  <!-- ── Intervention section ── -->
+  <text x="430" y="205" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">Three Intervention Strategies</text>
+
+  <!-- Intervention 1: Remove source (covers ①②) -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="218" width="238" height="120" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="20" y="218" width="238" height="32" rx="10" fill="#D97757" fill-opacity="0.25"/>
+  <rect x="20" y="238" width="238" height="12" fill="#D97757" fill-opacity="0.25"/>
+  <text x="139" y="239" text-anchor="middle" font-size="13" font-weight="bold" fill="#D97757">① Remove / Control the Source</text>
+  <text x="30" y="265" font-size="10" fill="#1A1A1A">• Treat infected persons (human source)</text>
+  <text x="30" y="281" font-size="10" fill="#1A1A1A">• Isolate infected persons</text>
+  <text x="30" y="297" font-size="10" fill="#1A1A1A">• Animals: culling, vaccination</text>
+  <text x="30" y="313" font-size="10" fill="#1A1A1A">• Environment: disinfect water source</text>
+
+  <!-- Intervention 2: Break chain (covers ③④⑤) -->
+  <g filter="url(#shadow)">
+    <rect x="311" y="218" width="238" height="120" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="311" y="218" width="238" height="32" rx="10" fill="#6A9BCC" fill-opacity="0.25"/>
+  <rect x="311" y="238" width="238" height="12" fill="#6A9BCC" fill-opacity="0.25"/>
+  <text x="430" y="239" text-anchor="middle" font-size="13" font-weight="bold" fill="#6A9BCC">② Break the Chain</text>
+  <text x="321" y="265" font-size="10" fill="#1A1A1A">• Hand hygiene; handle secretions safely</text>
+  <text x="321" y="281" font-size="10" fill="#1A1A1A">• Ventilation (reduce aerosols)</text>
+  <text x="321" y="297" font-size="10" fill="#1A1A1A">• Food handling, water disinfection</text>
+  <text x="321" y="313" font-size="10" fill="#1A1A1A">• Sterilization, standard precautions</text>
+
+  <!-- Intervention 3: Protect host (covers ⑥) -->
+  <g filter="url(#shadow)">
+    <rect x="602" y="218" width="238" height="120" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="2"/>
+  </g>
+  <rect x="602" y="218" width="238" height="32" rx="10" fill="#788C5D" fill-opacity="0.25"/>
+  <rect x="602" y="238" width="238" height="12" fill="#788C5D" fill-opacity="0.25"/>
+  <text x="721" y="239" text-anchor="middle" font-size="13" font-weight="bold" fill="#788C5D">③ Protect the Susceptible Host</text>
+  <text x="612" y="265" font-size="10" fill="#1A1A1A">• Immunization</text>
+  <text x="612" y="281" font-size="10" fill="#1A1A1A">• Post-exposure prophylaxis (PEP)</text>
+  <text x="612" y="297" font-size="10" fill="#1A1A1A">• Keep high-risk groups from exposure</text>
+  <text x="612" y="313" font-size="10" fill="#1A1A1A">• Health monitoring, boost resistance</text>
+
+  <!-- ── Legionella example ── -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="353" width="820" height="70" rx="10" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1"/>
+  </g>
+  <text x="36" y="374" font-size="12" font-weight="bold" fill="#1A1A1A">Legionnaires' Disease: A Worked Example</text>
+  <text x="36" y="393" font-size="11" fill="#1A1A1A">① Pathogen: <tspan font-style="italic">Legionella pneumophila</tspan></text>
+  <text x="36" y="408" font-size="11" fill="#1A1A1A">　→ ② Reservoir: shower / cooling water</text>
+  <text x="280" y="393" font-size="11" fill="#1A1A1A">③ Portal of exit: aerosol spray</text>
+  <text x="280" y="408" font-size="11" fill="#1A1A1A">→ ④ Transmission: inhaled (vehicle)</text>
+  <text x="530" y="393" font-size="11" fill="#1A1A1A">⑤ Portal of entry: respiratory tract</text>
+  <text x="530" y="408" font-size="11" fill="#1A1A1A">→ ⑥ Susceptible host: elderly, immunocompromised</text>
+
+  <!-- ── Quarantine vs isolation note ── -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="433" width="820" height="72" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1"/>
+  </g>
+  <text x="36" y="453" font-size="12" font-weight="bold" fill="#1A1A1A">Isolation vs. Quarantine</text>
+  <rect x="36" y="462" width="12" height="12" rx="3" fill="#D97757"/>
+  <text x="54" y="473" font-size="11" fill="#1A1A1A">Isolation: for people already infected (confirmed or probable cases) — restricts movement to prevent spread</text>
+  <rect x="36" y="480" width="12" height="12" rx="3" fill="#6A9BCC"/>
+  <text x="54" y="491" font-size="11" fill="#1A1A1A">Quarantine: for exposed persons not yet symptomatic; observed until the maximum incubation period ends (see timing diagram)</text>
+</svg>

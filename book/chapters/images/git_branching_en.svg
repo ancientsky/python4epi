@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="400" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">Git Branches: The Parallel Universe Concept</text>
+
+  <!-- Main branch line -->
+  <line x1="60" y1="100" x2="740" y2="100" stroke="#6A9BCC" stroke-width="4"/>
+
+  <!-- Main branch label -->
+  <rect x="20" y="84" width="50" height="22" rx="4" fill="#6A9BCC"/>
+  <text x="45" y="99" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF">main</text>
+
+  <!-- Main commits -->
+  <circle cx="120" cy="100" r="10" fill="#6A9BCC" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="120" y="78" text-anchor="middle" font-size="10" fill="#6B6B6B">Initial analysis</text>
+
+  <circle cx="240" cy="100" r="10" fill="#6A9BCC" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="240" y="78" text-anchor="middle" font-size="10" fill="#6B6B6B">Add epi curve</text>
+
+  <circle cx="360" cy="100" r="10" fill="#6A9BCC" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="360" y="78" text-anchor="middle" font-size="10" fill="#6B6B6B">Fix CFR</text>
+
+  <!-- Branch point indicator -->
+  <circle cx="360" cy="100" r="14" fill="none" stroke="#D97757" stroke-width="2" stroke-dasharray="4,2"/>
+
+  <!-- Scenario A: Merge -->
+  <text x="400" y="156" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">Scenario A: Experiment Succeeds → Merge into main</text>
+
+  <!-- Branch line -->
+  <path d="M 360 100 Q 360 190 420 190" fill="none" stroke="#D97757" stroke-width="3"/>
+  <line x1="420" y1="190" x2="580" y2="190" stroke="#D97757" stroke-width="3"/>
+
+  <!-- Branch label -->
+  <rect x="380" y="200" width="120" height="20" rx="4" fill="#D97757"/>
+  <text x="440" y="214" text-anchor="middle" font-size="10" font-weight="bold" fill="#FFFFFF">try-r0-method</text>
+
+  <!-- Branch commits -->
+  <circle cx="460" cy="190" r="8" fill="#D97757" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="460" y="232" text-anchor="middle" font-size="10" fill="#6B6B6B">Try new method</text>
+
+  <circle cx="560" cy="190" r="8" fill="#D97757" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="560" y="232" text-anchor="middle" font-size="10" fill="#6B6B6B">Looks correct</text>
+
+  <!-- Merge back to main -->
+  <path d="M 560 190 Q 620 190 620 100" fill="none" stroke="#788C5D" stroke-width="3" stroke-dasharray="6,3"/>
+  <circle cx="620" cy="100" r="12" fill="#788C5D" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="620" y="68" text-anchor="middle" font-size="11" font-weight="bold" fill="#788C5D">merge</text>
+
+  <!-- Continue main -->
+  <circle cx="720" cy="100" r="10" fill="#6A9BCC" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="720" y="78" text-anchor="middle" font-size="10" fill="#6B6B6B">More work</text>
+
+  <!-- Merge commands -->
+  <rect x="580" y="248" width="195" height="42" rx="8" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.5"/>
+  <text x="677" y="266" text-anchor="middle" font-size="11" fill="#1A1A1A" font-family="monospace">git checkout main</text>
+  <text x="677" y="282" text-anchor="middle" font-size="11" fill="#1A1A1A" font-family="monospace">git merge try-r0-method</text>
+
+  <!-- Divider -->
+  <line x1="40" y1="305" x2="760" y2="305" stroke="#E8E5DF" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- Scenario B: Discard -->
+  <text x="400" y="330" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">Scenario B: Experiment Fails → Switch Back to main, Nothing Changes</text>
+
+  <!-- Main line B -->
+  <line x1="60" y1="365" x2="740" y2="365" stroke="#6A9BCC" stroke-width="4"/>
+  <rect x="20" y="349" width="50" height="22" rx="4" fill="#6A9BCC"/>
+  <text x="45" y="364" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF">main</text>
+
+  <circle cx="120" cy="365" r="8" fill="#6A9BCC" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="240" cy="365" r="8" fill="#6A9BCC" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="360" cy="365" r="8" fill="#6A9BCC" stroke="#FFFFFF" stroke-width="2"/>
+
+  <!-- Failed branch -->
+  <path d="M 360 365 Q 360 340 400 340" fill="none" stroke="#D94452" stroke-width="2" opacity="0.4"/>
+  <line x1="400" y1="340" x2="500" y2="340" stroke="#D94452" stroke-width="2" opacity="0.4"/>
+  <circle cx="440" cy="340" r="6" fill="#D94452" opacity="0.4"/>
+  <circle cx="490" cy="340" r="6" fill="#D94452" opacity="0.4"/>
+  <text x="520" y="344" font-size="11" fill="#D94452" opacity="0.7">Discarded</text>
+
+  <!-- Main continues -->
+  <circle cx="500" cy="365" r="8" fill="#6A9BCC" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="620" cy="365" r="8" fill="#6A9BCC" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="560" y="390" text-anchor="middle" font-size="12" fill="#6A9BCC" font-weight="bold">main is completely unaffected</text>
+
+  <!-- Command -->
+  <rect x="580" y="332" width="180" height="24" rx="6" fill="#FFFFFF" stroke="#D94452" stroke-width="1"/>
+  <text x="670" y="348" text-anchor="middle" font-size="10" fill="#D94452">git checkout main (switch back)</text>
+</svg>
