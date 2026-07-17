@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 580" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D97757"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="580" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1A1A1A">Anatomy of matplotlib — What Are `fig` and `ax`, Really?</text>
+  <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">fig = the whole canvas (border &amp; title); ax = the drawing pad on it (where plotting happens)</text>
+
+  <!-- Anatomy diagram card -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="72" width="450" height="400" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="50" y="96" font-size="13" font-weight="bold" fill="#1A1A1A">Anatomy of a Figure</text>
+
+  <!-- Figure (outer canvas) -->
+  <rect x="60" y="110" width="400" height="330" fill="#F5F3EE" stroke="#6A9BCC" stroke-width="2" stroke-dasharray="4,3" rx="4"/>
+  <text x="75" y="128" font-size="11" font-weight="bold" fill="#6A9BCC">fig (Figure) = the whole canvas</text>
+
+  <!-- Axes (inner plot area) -->
+  <rect x="110" y="160" width="320" height="240" fill="#FFFFFF" stroke="#D97757" stroke-width="2" rx="2"/>
+  <text x="125" y="178" font-size="11" font-weight="bold" fill="#D97757">ax (Axes) = the drawing pad (with axes)</text>
+
+  <!-- Chart title -->
+  <text x="270" y="200" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1A1A">Daily New Cases</text>
+  <line x1="200" y1="204" x2="340" y2="204" stroke="#1A1A1A" stroke-width="0.5"/>
+
+  <!-- Bars -->
+  <rect x="140" y="330" width="20" height="50" fill="#6A9BCC"/>
+  <rect x="170" y="300" width="20" height="80" fill="#6A9BCC"/>
+  <rect x="200" y="270" width="20" height="110" fill="#6A9BCC"/>
+  <rect x="230" y="250" width="20" height="130" fill="#6A9BCC"/>
+  <rect x="260" y="270" width="20" height="110" fill="#6A9BCC"/>
+  <rect x="290" y="300" width="20" height="80" fill="#6A9BCC"/>
+  <rect x="320" y="320" width="20" height="60" fill="#6A9BCC"/>
+  <rect x="350" y="340" width="20" height="40" fill="#6A9BCC"/>
+
+  <!-- Y axis ticks -->
+  <text x="130" y="384" text-anchor="end" font-size="9" fill="#6B6B6B">0</text>
+  <text x="130" y="344" text-anchor="end" font-size="9" fill="#6B6B6B">5</text>
+  <text x="130" y="304" text-anchor="end" font-size="9" fill="#6B6B6B">10</text>
+  <text x="130" y="264" text-anchor="end" font-size="9" fill="#6B6B6B">15</text>
+
+  <!-- X axis ticks -->
+  <text x="150" y="398" text-anchor="middle" font-size="8" fill="#6B6B6B">1/12</text>
+  <text x="210" y="398" text-anchor="middle" font-size="8" fill="#6B6B6B">1/16</text>
+  <text x="270" y="398" text-anchor="middle" font-size="8" fill="#6B6B6B">1/20</text>
+  <text x="330" y="398" text-anchor="middle" font-size="8" fill="#6B6B6B">1/24</text>
+
+  <!-- Axis labels -->
+  <text x="270" y="420" text-anchor="middle" font-size="10" fill="#1A1A1A">Onset Date</text>
+  <text x="95" y="285" text-anchor="middle" font-size="10" fill="#1A1A1A" transform="rotate(-90, 95, 285)">Case Count</text>
+
+  <!-- Labels with arrows -->
+  <line x1="75" y1="135" x2="105" y2="155" stroke="#6A9BCC" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Arrows pointing to parts -->
+  <text x="50" y="460" font-size="10" fill="#D97757" font-weight="bold">🔸 ax.set_title("Daily New Cases")</text>
+  <text x="50" y="478" font-size="10" fill="#D97757" font-weight="bold">🔸 ax.bar(...) &#160;&#160; blue bars</text>
+  <text x="260" y="460" font-size="10" fill="#D97757" font-weight="bold">🔸 ax.set_ylabel("Case Count")</text>
+  <text x="260" y="478" font-size="10" fill="#D97757" font-weight="bold">🔸 ax.set_xlabel("Onset Date")</text>
+
+  <!-- Right side: code walkthrough -->
+  <g filter="url(#shadow)">
+    <rect x="495" y="72" width="280" height="400" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="635" y="96" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">The Matching Code</text>
+
+  <rect x="510" y="110" width="250" height="340" rx="6" fill="#2B2B2B"/>
+
+  <!-- Step 1 -->
+  <text x="520" y="130" font-size="10" font-family="Menlo, Monaco, monospace" fill="#6B6B6B"># ① Create the canvas + pad</text>
+  <text x="520" y="146" font-size="11" font-family="Menlo, Monaco, monospace" fill="#6A9BCC">fig, ax</text>
+  <text x="575" y="146" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">= plt.subplots(</text>
+  <text x="520" y="162" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">    figsize=(10, 4))</text>
+
+  <!-- Step 2 -->
+  <text x="520" y="192" font-size="10" font-family="Menlo, Monaco, monospace" fill="#6B6B6B"># ② Draw bars on ax</text>
+  <text x="520" y="208" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">ax</text>
+  <text x="533" y="208" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">.bar(dates, cases,</text>
+  <text x="520" y="224" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">       color="#6A9BCC")</text>
+
+  <!-- Step 3 -->
+  <text x="520" y="254" font-size="10" font-family="Menlo, Monaco, monospace" fill="#6B6B6B"># ③ Add title &amp; axis labels</text>
+  <text x="520" y="270" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">ax</text>
+  <text x="533" y="270" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">.set_title("Daily New Cases")</text>
+  <text x="520" y="286" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">ax</text>
+  <text x="533" y="286" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">.set_xlabel("Onset Date")</text>
+  <text x="520" y="302" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">ax</text>
+  <text x="533" y="302" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">.set_ylabel("Case Count")</text>
+
+  <!-- Step 4 -->
+  <text x="520" y="332" font-size="10" font-family="Menlo, Monaco, monospace" fill="#6B6B6B"># ④ Show the figure</text>
+  <text x="520" y="348" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">plt.tight_layout()</text>
+  <text x="520" y="364" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">plt.show()</text>
+
+  <!-- Rule annotation -->
+  <text x="520" y="400" font-size="10" font-family="Menlo, Monaco, monospace" fill="#788C5D">✓ Remember:</text>
+  <text x="520" y="416" font-size="10" font-family="Menlo, Monaco, monospace" fill="#788C5D">  plt.bar  →  ax.bar</text>
+  <text x="520" y="432" font-size="10" font-family="Menlo, Monaco, monospace" fill="#788C5D">  plt.title → ax.set_title</text>
+
+  <!-- Bottom: plt.* vs ax.* cheat sheet -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="490" width="740" height="80" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="50" y="514" font-size="12" font-weight="bold" fill="#1A1A1A">plt.* ↔ ax.* Cheat Sheet — Just Add `set_`</text>
+
+  <text x="50" y="536" font-size="10" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">plt.bar</text>
+  <text x="110" y="536" font-size="10" fill="#6B6B6B">→</text>
+  <text x="125" y="536" font-size="10" font-family="Menlo, Monaco, monospace" fill="#D97757">ax.bar</text>
+
+  <text x="200" y="536" font-size="10" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">plt.title</text>
+  <text x="270" y="536" font-size="10" fill="#6B6B6B">→</text>
+  <text x="285" y="536" font-size="10" font-family="Menlo, Monaco, monospace" fill="#D97757">ax.set_title</text>
+
+  <text x="390" y="536" font-size="10" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">plt.xlabel</text>
+  <text x="465" y="536" font-size="10" fill="#6B6B6B">→</text>
+  <text x="480" y="536" font-size="10" font-family="Menlo, Monaco, monospace" fill="#D97757">ax.set_xlabel</text>
+
+  <text x="590" y="536" font-size="10" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">plt.ylim</text>
+  <text x="650" y="536" font-size="10" fill="#6B6B6B">→</text>
+  <text x="665" y="536" font-size="10" font-family="Menlo, Monaco, monospace" fill="#D97757">ax.set_ylim</text>
+
+  <text x="50" y="556" font-size="10" fill="#1A1A1A">💡 The `set_` version = "set an Axes property." Just remember that formula.</text>
+</svg>

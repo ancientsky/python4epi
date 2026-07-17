@@ -27,7 +27,7 @@ If one particular wing stands out, it may hint that the water system there (show
 
 Spatial questions at different scales call for different tools.
 
-```{figure} images/spatial_analysis_levels.svg
+```{figure} images/spatial_analysis_levels_en.svg
 :name: spatial-analysis-levels
 :alt: Three levels of spatial analysis: inside a building, administrative districts, and the globe
 :width: 100%
@@ -37,7 +37,7 @@ Spatial analysis spans three scales, from inside a building to the whole globe, 
 
 ### When Do You Use Which Chart?
 
-```{figure} images/spatial_chart_decision.svg
+```{figure} images/spatial_chart_decision_en.svg
 :name: spatial-chart-decision
 :alt: Decision chart for spatial visualization
 :width: 100%
@@ -191,7 +191,7 @@ plt.colorbar(sc, label="Attack Rate (%)")
 > A spot map works best when each observational unit (here, a "room") maps to an **x/y position** (or one that can be derived).
 > It directly shows "where high-risk points cluster," offering finer detail than a heatmap.
 
-```{figure} images/spatial_spot_map_guide.svg
+```{figure} images/spatial_spot_map_guide_en.svg
 :name: spatial-spot-map-guide
 :alt: Guide to reading a spot map
 :width: 100%

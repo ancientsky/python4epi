@@ -60,7 +60,7 @@ ages = df["age"]        # the ages of all 280 residents — that's a Series
 | Number of columns | Look at the top letters | `df.shape[1]` |
 | Number of records | Look at the left-side numbers | `df.shape[0]` or `len(df)` |
 
-```{figure} images/pandas_dataframe_anatomy.svg
+```{figure} images/pandas_dataframe_anatomy_en.svg
 :name: pandas-dataframe-anatomy
 :alt: DataFrame anatomy diagram: the structure of rows and columns, the difference between a Series and a DataFrame, and four value-access methods
 :width: 100%
@@ -248,7 +248,7 @@ df["n_comorbidities"] = df[comorbidity_cols].sum(axis=1)
 >
 > Here we want to count how many comorbidities each resident has, so we sum "across columns (axis=1)" over those 5 columns of 0/1 values.
 
-```{figure} images/pandas_axis_0_vs_1.svg
+```{figure} images/pandas_axis_0_vs_1_en.svg
 :name: pandas-axis-0-vs-1
 :alt: axis=0 vs axis=1: a vertical arrow represents axis=0 (one result per column), a horizontal arrow represents axis=1 (one result per row)
 :width: 100%
@@ -515,7 +515,7 @@ print(df["risk_level"].value_counts())
 
 The traditional style breaks each step apart, producing many temporary variables along the way. **Method chaining** links multiple operations into a single pipeline, which is more readable:
 
-```{figure} images/pandas_method_chaining.svg
+```{figure} images/pandas_method_chaining_en.svg
 :name: pandas-method-chaining
 :alt: Method chaining pipeline: each `.` represents a processing station, and the table changes shape between stations
 :width: 100%
@@ -690,7 +690,7 @@ plt.show()                    # display the chart
 
 > 💡 **Why use `fig, ax`?** Because later you'll need to draw multiple subplots on the same canvas (like two epidemic curves stacked for comparison), and only the `fig, ax` style can do that. Get used to this pattern now and you'll thank yourself later.
 
-```{figure} images/matplotlib_fig_ax_anatomy.svg
+```{figure} images/matplotlib_fig_ax_anatomy_en.svg
 :name: matplotlib-fig-ax
 :alt: matplotlib anatomy diagram: the Figure is the outer canvas, the Axes is the actual drawing panel, with the functions that correspond to each component
 :width: 100%

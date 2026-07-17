@@ -38,7 +38,7 @@ Ch03 already explained it: in a cohort study we can directly compute "risk" (ris
 
 ### Two routes to multivariable analysis
 
-```{figure} images/multivariate_methods.svg
+```{figure} images/multivariate_methods_en.svg
 :name: fig-multivariate-methods
 :alt: A comparison of three methods for controlling confounders: stratified analysis (Ch05), Modified Poisson (the main method of Ch06), and logistic regression (the Ch06 comparison)
 :width: 100%
@@ -88,7 +88,7 @@ Although Modified Poisson is the first choice for this investigation, logistic r
 </div>
 ```
 
-```{figure} images/logit_intuition.svg
+```{figure} images/logit_intuition_en.svg
 :name: fig-logit-intuition
 :alt: The three-step ladder of logistic regression: probability (0–1) → odds (0–∞) → log(odds) (−∞ to +∞)
 :width: 100%

@@ -983,7 +983,7 @@ You can't tell what differs between versions, and you're not sure whether "chang
 
 **Once you use Git, you only need one `analysis.py`, and all historical versions are safely preserved behind the scenes.**
 
-```{figure} images/git_version_chaos.svg
+```{figure} images/git_version_chaos_en.svg
 :name: fig-git-version-chaos
 :alt: File version chaos without Git vs only needing one file with Git
 :width: 100%
@@ -993,7 +993,7 @@ Without Git, your folder fills up with all kinds of file versions, and you can't
 
 The diagram below shows the core concept of how Git works—four areas and three key commands. Just get a general impression for now; we'll walk you through the operations step by step later:
 
-```{figure} images/git_three_areas.svg
+```{figure} images/git_three_areas_en.svg
 :name: fig-git-three-areas
 :alt: Git's four areas: working directory, staging area, local repository, remote GitHub
 :width: 100%
@@ -1029,7 +1029,7 @@ git add notebooks/02_visualization_epi_charts.ipynb
 git commit -m "feat: add a 7-day moving average to the epidemic curve"
 ```
 
-```{figure} images/git_daily_workflow.svg
+```{figure} images/git_daily_workflow_en.svg
 :name: fig-git-daily-workflow
 :alt: The daily Git workflow: edit → git status → git add → git commit
 :width: 100%
@@ -1105,7 +1105,7 @@ git merge try-r0-method
 git checkout main
 ```
 
-```{figure} images/git_branching.svg
+```{figure} images/git_branching_en.svg
 :name: fig-git-branching
 :alt: The Git branching concept: branch off main to experiment, merge if it works, discard if it fails
 :width: 100%
@@ -1244,7 +1244,7 @@ Then, on the GitHub website, click "**Create Pull Request**."
 
 In a public health department setting, it might be the **investigation team lead** who is responsible for merging, ensuring every data change goes through review.
 
-```{figure} images/git_pull_request_flow.svg
+```{figure} images/git_pull_request_flow_en.svg
 :name: fig-git-pr-flow
 :alt: The Pull Request flow: open a branch → edit → push to GitHub → open a PR → review → merge
 :width: 100%
@@ -1484,7 +1484,7 @@ You don't need to learn all the chapters in one go. This book uses the **Songbai
 
 **The first 4 chapters are the foundation**, and we recommend learning them in order. From Chapter 5 onward you can skip around, picking the topics your work or research needs.
 
-```{figure} images/learning_roadmap.svg
+```{figure} images/learning_roadmap_en.svg
 :name: fig-learning-roadmap
 :alt: Learning roadmap: Ch 00-04 the required foundation, Ch 05-14 advanced electives
 :width: 100%

@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="480" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">Three Forms of import — Three Ways to Borrow a Toolbox</text>
+  <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">Each style borrows the tool differently → call it by its new name</text>
+
+  <!-- Form 1: import module -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="72" width="250" height="310" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="20" y="72" width="250" height="36" rx="10" fill="#6A9BCC" fill-opacity="0.15"/>
+  <text x="145" y="96" text-anchor="middle" font-size="13" font-weight="bold" fill="#6A9BCC">① import the Whole Toolbox</text>
+
+  <rect x="35" y="122" width="220" height="44" rx="4" fill="#2B2B2B"/>
+  <text x="45" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#6A9BCC">import</text>
+  <text x="95" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">statistics</text>
+  <text x="45" y="158" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">statistics.mean(ages)</text>
+
+  <text x="145" y="190" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">🧰 Take the Whole Box</text>
+  <text x="35" y="212" font-size="10" fill="#6B6B6B">• Must add full prefix when calling</text>
+  <text x="35" y="228" font-size="10" fill="#6B6B6B">• Avoids name clashes with variables</text>
+  <text x="35" y="244" font-size="10" fill="#6B6B6B">• More typing</text>
+
+  <rect x="35" y="260" width="220" height="48" rx="4" fill="#F5F3EE"/>
+  <text x="45" y="278" font-size="10" fill="#1A1A1A" font-weight="bold">✅ Best for:</text>
+  <text x="45" y="294" font-size="10" fill="#6B6B6B">Occasional use; name may clash</text>
+
+  <rect x="35" y="320" width="220" height="48" rx="4" fill="#FFF5F0"/>
+  <text x="45" y="338" font-size="10" fill="#D94452" font-weight="bold">⚠ Common mistake:</text>
+  <text x="45" y="354" font-size="10" fill="#6B6B6B">Forgot the statistics. prefix</text>
+
+  <!-- Form 2: from ... import -->
+  <g filter="url(#shadow)">
+    <rect x="280" y="72" width="240" height="310" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="2"/>
+  </g>
+  <rect x="280" y="72" width="240" height="36" rx="10" fill="#788C5D" fill-opacity="0.15"/>
+  <text x="400" y="96" text-anchor="middle" font-size="13" font-weight="bold" fill="#788C5D">② Borrow Just One Tool</text>
+
+  <rect x="295" y="122" width="210" height="44" rx="4" fill="#2B2B2B"/>
+  <text x="305" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#788C5D">from</text>
+  <text x="338" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">statistics</text>
+  <text x="410" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#788C5D">import</text>
+  <text x="458" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">mean</text>
+  <text x="305" y="158" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">mean(ages)</text>
+
+  <text x="400" y="190" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">🔧 Pick Out Just One</text>
+  <text x="295" y="212" font-size="10" fill="#6B6B6B">• No prefix needed when calling</text>
+  <text x="295" y="228" font-size="10" fill="#6B6B6B">• Shorter to write</text>
+  <text x="295" y="244" font-size="10" fill="#6B6B6B">• May clash with other variables</text>
+
+  <rect x="295" y="260" width="210" height="48" rx="4" fill="#F5F3EE"/>
+  <text x="305" y="278" font-size="10" fill="#1A1A1A" font-weight="bold">✅ Best for:</text>
+  <text x="305" y="294" font-size="10" fill="#6B6B6B">Using 1-2 tools, no name clash</text>
+
+  <rect x="295" y="320" width="210" height="48" rx="4" fill="#FFF5F0"/>
+  <text x="305" y="338" font-size="10" fill="#D94452" font-weight="bold">⚠ Common mistake:</text>
+  <text x="305" y="354" font-size="9" fill="#6B6B6B">Extra statistics. prefix → NameError</text>
+
+  <!-- Form 3: import as alias -->
+  <g filter="url(#shadow)">
+    <rect x="530" y="72" width="250" height="310" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="530" y="72" width="250" height="36" rx="10" fill="#D97757" fill-opacity="0.15"/>
+  <text x="655" y="96" text-anchor="middle" font-size="13" font-weight="bold" fill="#D97757">③ Alias with as (Most Common)</text>
+
+  <rect x="545" y="122" width="220" height="44" rx="4" fill="#2B2B2B"/>
+  <text x="555" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">import</text>
+  <text x="603" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">pandas</text>
+  <text x="652" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">as</text>
+  <text x="672" y="140" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">pd</text>
+  <text x="555" y="158" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">pd.read_csv("...")</text>
+
+  <text x="655" y="190" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">🏷 Short Label on the Toolbox</text>
+  <text x="545" y="212" font-size="10" fill="#6B6B6B">• Short form → faster to type</text>
+  <text x="545" y="228" font-size="10" fill="#6B6B6B">• Prefix means no name clashes</text>
+  <text x="545" y="244" font-size="10" fill="#6B6B6B">• Convention: pd, np, plt, sns</text>
+
+  <rect x="545" y="260" width="220" height="48" rx="4" fill="#F5F3EE"/>
+  <text x="555" y="278" font-size="10" fill="#1A1A1A" font-weight="bold">✅ Best for:</text>
+  <text x="555" y="294" font-size="10" fill="#6B6B6B">Large packages, whole book</text>
+
+  <rect x="545" y="320" width="220" height="48" rx="4" fill="#FFF5F0"/>
+  <text x="555" y="338" font-size="10" fill="#D94452" font-weight="bold">⚠ Common mistake:</text>
+  <text x="555" y="354" font-size="10" fill="#6B6B6B">Random alias, ignoring convention</text>
+
+  <!-- Bottom: conventions table -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="400" width="740" height="65" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="50" y="424" font-size="12" font-weight="bold" fill="#1A1A1A">Conventional Aliases (please use these)</text>
+  <text x="50" y="446" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">pandas → pd</text>
+  <text x="190" y="446" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">numpy → np</text>
+  <text x="325" y="446" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">matplotlib.pyplot → plt</text>
+  <text x="540" y="446" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757">seaborn → sns</text>
+  <text x="50" y="460" font-size="10" fill="#6B6B6B">💡 Convention: put import statements at the top of the file so you can see all borrowed tools at a glance</text>
+</svg>

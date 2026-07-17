@@ -41,7 +41,7 @@ For some people, the stopwatch is still running when the race ends—this is cal
 Here's an analogy: you want to compare "which of two running routes makes people give up more easily," but you can only observe for 30 minutes.
 Some runners give up at 10 minutes (event observed), while others are still going at 30 minutes without giving up (**censored**)—you only know they "lasted at least 30 minutes," not whether they would eventually give up.
 
-```{figure} images/survival_censoring_timeline.svg
+```{figure} images/survival_censoring_timeline_en.svg
 :name: fig-survival-censoring-timeline
 :alt: Follow-up timelines for six patients showing three outcomes: death, censoring, and loss to follow-up
 :width: 100%
@@ -66,7 +66,7 @@ In this chapter:
   - `HR < 1` → the exposed group "dies slower" (a protective factor)
   - `HR = 1` → the two groups have the same speed (no association)
 
-```{figure} images/hazard_ratio_intuition.svg
+```{figure} images/hazard_ratio_intuition_en.svg
 :name: fig-hazard-ratio-intuition
 :alt: A comparison of RR, OR, and HR, plus a visual explanation of the proportional hazards assumption
 :width: 100%
@@ -93,7 +93,7 @@ Visually, when PH holds, the two **log(-log(S(t)))** curves will be roughly **pa
 
 ## The Method Map
 
-```{figure} images/survival_method_map.svg
+```{figure} images/survival_method_map_en.svg
 :name: fig-survival-method-map
 :alt: The four steps of survival analysis: KM description, log-rank inference, Cox regression, and PH assumption diagnosis
 :width: 100%
@@ -157,7 +157,7 @@ plt.show()
 
 ### How to Read a KM Curve
 
-```{figure} images/km_step_function_anatomy.svg
+```{figure} images/km_step_function_anatomy_en.svg
 :name: fig-km-step-function
 :alt: Anatomy of the four key elements of a Kaplan-Meier curve: steps, ticks, median survival time, and the CI band
 :width: 100%

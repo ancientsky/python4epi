@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D97757"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="480" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">Dot Notation — "toolbox's function"</text>
+  <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">`.` means "of": statistics.mean(ages) = "the statistics toolbox's mean function"</text>
+
+  <!-- Big anatomy example -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="72" width="740" height="170" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="50" y="98" font-size="13" font-weight="bold" fill="#1A1A1A">Breaking Down a Call</text>
+
+  <!-- Code line as big text -->
+  <rect x="60" y="115" width="680" height="58" rx="8" fill="#2B2B2B"/>
+  <text x="80" y="152" font-size="22" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">statistics</text>
+  <text x="214" y="152" font-size="22" font-family="Menlo, Monaco, monospace" fill="#D97757" font-weight="bold">.</text>
+  <text x="228" y="152" font-size="22" font-family="Menlo, Monaco, monospace" fill="#6A9BCC">mean</text>
+  <text x="295" y="152" font-size="22" font-family="Menlo, Monaco, monospace" fill="#788C5D">(</text>
+  <text x="306" y="152" font-size="22" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">ages</text>
+  <text x="362" y="152" font-size="22" font-family="Menlo, Monaco, monospace" fill="#788C5D">)</text>
+
+  <!-- Labels under code -->
+  <line x1="140" y1="180" x2="140" y2="200" stroke="#6B6B6B" stroke-width="1"/>
+  <text x="140" y="215" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">Toolbox</text>
+  <text x="140" y="230" text-anchor="middle" font-size="10" fill="#6B6B6B">module</text>
+
+  <line x1="220" y1="180" x2="220" y2="200" stroke="#D97757" stroke-width="1"/>
+  <text x="220" y="215" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">'s</text>
+  <text x="220" y="230" text-anchor="middle" font-size="10" fill="#6B6B6B">dot</text>
+
+  <line x1="255" y1="180" x2="255" y2="200" stroke="#6A9BCC" stroke-width="1"/>
+  <text x="255" y="215" text-anchor="middle" font-size="11" font-weight="bold" fill="#6A9BCC">Function</text>
+  <text x="255" y="230" text-anchor="middle" font-size="10" fill="#6B6B6B">function</text>
+
+  <line x1="335" y1="180" x2="335" y2="200" stroke="#788C5D" stroke-width="1"/>
+  <text x="335" y="215" text-anchor="middle" font-size="11" font-weight="bold" fill="#788C5D">Argument</text>
+  <text x="335" y="230" text-anchor="middle" font-size="10" fill="#6B6B6B">argument</text>
+
+  <!-- Metaphor: toolbox → tool -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="260" width="365" height="200" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="30" y="260" width="365" height="36" rx="10" fill="#6A9BCC" fill-opacity="0.15"/>
+  <text x="212" y="284" text-anchor="middle" font-size="13" font-weight="bold" fill="#6A9BCC">A module = a whole toolbox of tools</text>
+
+  <!-- Toolbox -->
+  <rect x="60" y="312" width="130" height="85" rx="8" fill="#6A9BCC" fill-opacity="0.1" stroke="#6A9BCC" stroke-width="1.5"/>
+  <text x="125" y="332" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">statistics</text>
+  <text x="125" y="348" text-anchor="middle" font-size="10" fill="#1A1A1A">• mean()</text>
+  <text x="125" y="362" text-anchor="middle" font-size="10" fill="#1A1A1A">• median()</text>
+  <text x="125" y="376" text-anchor="middle" font-size="10" fill="#1A1A1A">• stdev()</text>
+  <text x="125" y="390" text-anchor="middle" font-size="10" fill="#1A1A1A">• mode()</text>
+
+  <text x="212" y="360" text-anchor="middle" font-size="20" fill="#D97757">→</text>
+
+  <!-- Tool picked -->
+  <rect x="235" y="330" width="140" height="50" rx="8" fill="#6A9BCC" fill-opacity="0.25" stroke="#6A9BCC" stroke-width="2"/>
+  <text x="305" y="352" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A" font-family="Menlo, Monaco, monospace">.mean(ages)</text>
+  <text x="305" y="370" text-anchor="middle" font-size="10" fill="#6B6B6B">grabs the "mean" tool</text>
+
+  <text x="212" y="420" text-anchor="middle" font-size="11" fill="#6B6B6B">First import statistics to bring in the whole box</text>
+  <text x="212" y="438" text-anchor="middle" font-size="11" fill="#6B6B6B">Then use .mean() to pull out one tool</text>
+
+  <!-- Method on object -->
+  <g filter="url(#shadow)">
+    <rect x="405" y="260" width="365" height="200" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="405" y="260" width="365" height="36" rx="10" fill="#D97757" fill-opacity="0.15"/>
+  <text x="587" y="284" text-anchor="middle" font-size="13" font-weight="bold" fill="#D97757">Method = what an object "can do"</text>
+
+  <!-- Code examples -->
+  <rect x="425" y="312" width="325" height="25" rx="4" fill="#2B2B2B"/>
+  <text x="435" y="330" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">name = "  Legionella  "</text>
+
+  <rect x="425" y="342" width="325" height="25" rx="4" fill="#2B2B2B"/>
+  <text x="435" y="360" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">name</text>
+  <text x="468" y="360" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757" font-weight="bold">.strip()</text>
+  <text x="530" y="360" font-size="11" font-family="Menlo, Monaco, monospace" fill="#6B6B6B"># "Legionella"</text>
+
+  <rect x="425" y="372" width="325" height="25" rx="4" fill="#2B2B2B"/>
+  <text x="435" y="390" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">df</text>
+  <text x="450" y="390" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757" font-weight="bold">.groupby(</text>
+  <text x="524" y="390" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">"floor")</text>
+
+  <text x="440" y="420" font-size="11" fill="#1A1A1A"><tspan font-weight="bold">String</tspan> objects have .strip(), .split(), .lower()</text>
+  <text x="440" y="438" font-size="11" fill="#1A1A1A"><tspan font-weight="bold">DataFrame</tspan> objects have .groupby(), .mean(), .head()</text>
+</svg>

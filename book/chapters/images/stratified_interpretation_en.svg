@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 620" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1A1A1A"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D97757"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6A9BCC"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="620" fill="#FAF8F3" rx="12"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">Stratified Analysis Flowchart — Two Questions, Four Conclusions</text>
+
+  <!-- ===== Question 1: Confounding ===== -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="50" width="740" height="250" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="50" y="75" font-size="14" font-weight="bold" fill="#D97757">❶ Question 1: Is there confounding?</text>
+  <text x="50" y="95" font-size="12" fill="#6B6B6B">Compare the "crude RR" and "adjusted RR" (MH-weighted) — how much do they differ?</text>
+
+  <!-- 10% rule box -->
+  <rect x="50" y="110" width="700" height="36" rx="8" fill="#D97757" fill-opacity="0.08" stroke="#D97757" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="400" y="133" text-anchor="middle" font-size="13" fill="#D97757" font-weight="bold">Rule: |crude RR − adjusted RR| ÷ adjusted RR ≥ 10% → confounding present</text>
+
+  <!-- Left: inflated -->
+  <g filter="url(#shadow)">
+    <rect x="50" y="160" width="330" height="125" rx="8" fill="#FFF" stroke="#D97757" stroke-width="1.5"/>
+  </g>
+  <rect x="50" y="160" width="330" height="28" rx="8" fill="#D97757" fill-opacity="0.15"/>
+  <text x="215" y="179" text-anchor="middle" font-size="13" font-weight="bold" fill="#D97757">Crude RR clearly &gt; adjusted RR (diff ≥ 10%)</text>
+  <text x="65" y="203" font-size="12" fill="#1A1A1A" font-weight="bold">→ The confounder inflated the effect</text>
+  <text x="65" y="223" font-size="11" fill="#6B6B6B">e.g., crude RR = 2.5, adjusted RR = 1.8</text>
+  <text x="65" y="240" font-size="11" fill="#6B6B6B">Gap: (2.5−1.8)/1.8 = 39% ≥ 10%</text>
+  <text x="65" y="260" font-size="11" fill="#D97757">🍔 Analogy: the burger looks huge (crude RR),</text>
+  <text x="65" y="275" font-size="11" fill="#D97757">peel off lettuce to see the real patty (adj RR)</text>
+
+  <!-- Right: suppressed -->
+  <g filter="url(#shadow)">
+    <rect x="420" y="160" width="330" height="125" rx="8" fill="#FFF" stroke="#6A9BCC" stroke-width="1.5"/>
+  </g>
+  <rect x="420" y="160" width="330" height="28" rx="8" fill="#6A9BCC" fill-opacity="0.15"/>
+  <text x="585" y="179" text-anchor="middle" font-size="13" font-weight="bold" fill="#6A9BCC">Crude RR clearly &lt; adjusted RR (diff ≥ 10%)</text>
+  <text x="435" y="203" font-size="12" fill="#1A1A1A" font-weight="bold">→ The confounder suppressed the effect</text>
+  <text x="435" y="223" font-size="11" fill="#6B6B6B">e.g., crude RR = 1.2, adjusted RR = 1.8</text>
+  <text x="435" y="240" font-size="11" fill="#6B6B6B">Gap: (1.8−1.2)/1.8 = 33% ≥ 10%</text>
+  <text x="435" y="260" font-size="11" fill="#6A9BCC">🧊 Analogy: ice weighs on the thermometer,</text>
+  <text x="435" y="275" font-size="11" fill="#6A9BCC">remove it to see the true temp (adjusted RR)</text>
+
+  <!-- ===== Question 2: Effect Modification ===== -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="320" width="740" height="280" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="50" y="345" font-size="14" font-weight="bold" fill="#788C5D">❷ Question 2: Is there interaction (effect modification)?</text>
+  <text x="50" y="365" font-size="12" fill="#6B6B6B">Compare RR across strata — same exposure, different effect in different groups?</text>
+
+  <!-- Threshold box -->
+  <rect x="50" y="380" width="700" height="36" rx="8" fill="#788C5D" fill-opacity="0.08" stroke="#788C5D" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="400" y="403" text-anchor="middle" font-size="13" fill="#788C5D" font-weight="bold">Rule: Do the 95% CIs of stratum-specific RRs overlap substantially? Homogeneity p &gt; 0.05?</text>
+
+  <!-- Left: homogeneous -->
+  <g filter="url(#shadow)">
+    <rect x="50" y="430" width="330" height="155" rx="8" fill="#FFF" stroke="#788C5D" stroke-width="1.5"/>
+  </g>
+  <rect x="50" y="430" width="330" height="28" rx="8" fill="#788C5D" fill-opacity="0.15"/>
+  <text x="215" y="449" text-anchor="middle" font-size="13" font-weight="bold" fill="#788C5D">RRs are similar (CIs overlap, p &gt; 0.05)</text>
+  <text x="65" y="475" font-size="12" fill="#1A1A1A" font-weight="bold">→ No interaction → MH-pooled RR is valid</text>
+  <text x="65" y="498" font-size="11" fill="#6B6B6B">In plain terms: no matter your group,</text>
+  <text x="65" y="515" font-size="11" fill="#6B6B6B">showering's risk effect is about the same.</text>
+  <text x="65" y="535" font-size="11" fill="#788C5D">☕ Analogy: all three cafés taste the same,</text>
+  <text x="65" y="550" font-size="11" fill="#788C5D">one "brand average rating" represents them all.</text>
+  <text x="65" y="573" font-size="12" fill="#788C5D" font-weight="bold">✅ Reporting: report one RR_MH value</text>
+
+  <!-- Right: heterogeneous -->
+  <g filter="url(#shadow)">
+    <rect x="420" y="430" width="330" height="155" rx="8" fill="#FFF" stroke="#D94452" stroke-width="1.5"/>
+  </g>
+  <rect x="420" y="430" width="330" height="28" rx="8" fill="#D94452" fill-opacity="0.15"/>
+  <text x="585" y="449" text-anchor="middle" font-size="12" font-weight="bold" fill="#D94452">RRs differ a lot (CIs don't overlap, p ≤ 0.05)</text>
+  <text x="435" y="475" font-size="12" fill="#1A1A1A" font-weight="bold">→ Interaction present → skip pooled RR</text>
+  <text x="435" y="498" font-size="11" fill="#6B6B6B">Plain terms: showering's effect varies—</text>
+  <text x="435" y="515" font-size="11" fill="#6B6B6B">big effect if ambulatory, small if bedridden.</text>
+  <text x="435" y="535" font-size="11" fill="#D94452">🍜 Analogy: spice levels vary wildly by café,</text>
+  <text x="435" y="550" font-size="11" fill="#D94452">can't just give one "average spice level."</text>
+  <text x="435" y="573" font-size="12" fill="#D94452" font-weight="bold">⚠️ Reporting: report RR per stratum</text>
+
+</svg>

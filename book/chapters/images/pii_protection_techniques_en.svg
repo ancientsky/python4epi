@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrow-right" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D97757"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="600" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1A1A1A">PII Protection Workflow — From Raw Line List to De-identified Data</text>
+  <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">Before analyzing a line list, first remove the PII (Personally Identifiable Information)</text>
+
+  <!-- Left: Raw line list with PII -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="72" width="235" height="260" rx="10" fill="#FFFFFF" stroke="#D94452" stroke-width="2"/>
+  </g>
+  <rect x="20" y="72" width="235" height="36" rx="10" fill="#D94452" fill-opacity="0.15"/>
+  <text x="137" y="96" text-anchor="middle" font-size="10" font-weight="bold" fill="#D94452">⚠ Raw Line List (contains PII)</text>
+
+  <!-- Table with PII highlighted -->
+  <rect x="35" y="120" width="205" height="18" fill="#E8E5DF"/>
+  <text x="45" y="133" font-size="9" font-weight="bold" fill="#1A1A1A">id</text>
+  <text x="70" y="133" font-size="9" font-weight="bold" fill="#D94452">name</text>
+  <text x="105" y="133" font-size="9" font-weight="bold" fill="#D94452">ID No.</text>
+  <text x="155" y="133" font-size="9" font-weight="bold" fill="#D94452">phone</text>
+  <text x="205" y="133" font-size="9" font-weight="bold" fill="#1A1A1A">age</text>
+
+  <rect x="35" y="138" width="205" height="16" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="45" y="150" font-size="9" fill="#1A1A1A">001</text>
+  <text x="70" y="150" font-size="9" fill="#D94452">John</text>
+  <text x="105" y="150" font-size="9" fill="#D94452">A12345****</text>
+  <text x="155" y="150" font-size="9" fill="#D94452">0912-345-678</text>
+  <text x="205" y="150" font-size="9" fill="#1A1A1A">72</text>
+
+  <rect x="35" y="154" width="205" height="16" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="45" y="166" font-size="9" fill="#1A1A1A">002</text>
+  <text x="70" y="166" font-size="9" fill="#D94452">Mary</text>
+  <text x="105" y="166" font-size="9" fill="#D94452">B98765****</text>
+  <text x="155" y="166" font-size="9" fill="#D94452">0928-111-222</text>
+  <text x="205" y="166" font-size="9" fill="#1A1A1A">85</text>
+
+  <rect x="35" y="170" width="205" height="16" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="45" y="182" font-size="9" fill="#1A1A1A">003</text>
+  <text x="70" y="182" font-size="9" fill="#D94452">David</text>
+  <text x="105" y="182" font-size="9" fill="#D94452">A23456****</text>
+  <text x="155" y="182" font-size="9" fill="#D94452">0933-555-888</text>
+  <text x="205" y="182" font-size="9" fill="#1A1A1A">68</text>
+
+  <!-- PII categories -->
+  <rect x="35" y="200" width="205" height="42" rx="4" fill="#D94452" fill-opacity="0.08"/>
+  <text x="45" y="216" font-size="10" font-weight="bold" fill="#D94452">🔴 Direct ID</text>
+  <text x="45" y="230" font-size="9" fill="#6B6B6B">Name, national ID, medical</text>
+  <text x="45" y="240" font-size="9" fill="#6B6B6B">record #, phone, address, email</text>
+
+  <rect x="35" y="248" width="205" height="42" rx="4" fill="#D97757" fill-opacity="0.08"/>
+  <text x="45" y="264" font-size="10" font-weight="bold" fill="#D97757">🟠 Quasi-ID</text>
+  <text x="45" y="278" font-size="9" fill="#6B6B6B">Age + sex + zip code +</text>
+  <text x="45" y="288" font-size="9" fill="#6B6B6B">visit date → identifiable</text>
+
+  <rect x="35" y="296" width="205" height="30" rx="4" fill="#788C5D" fill-opacity="0.08"/>
+  <text x="45" y="312" font-size="10" font-weight="bold" fill="#788C5D">🟢 Sensitive</text>
+  <text x="45" y="322" font-size="9" fill="#6B6B6B">HIV, mental health, genetic data</text>
+
+  <!-- Middle: arrow + techniques -->
+  <line x1="270" y1="200" x2="305" y2="200" stroke="#D97757" stroke-width="3" marker-end="url(#arrow-right)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="280" y="72" width="240" height="260" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="280" y="72" width="240" height="36" rx="10" fill="#6A9BCC" fill-opacity="0.15"/>
+  <text x="400" y="96" text-anchor="middle" font-size="10" font-weight="bold" fill="#6A9BCC">🛡 5 De-identification Techniques</text>
+
+  <!-- Technique 1: Suppression -->
+  <rect x="292" y="118" width="216" height="36" rx="4" fill="#F5F3EE"/>
+  <text x="300" y="132" font-size="10" font-weight="bold" fill="#1A1A1A">① Suppression</text>
+  <text x="300" y="147" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">df.drop(columns=[...])</text>
+
+  <!-- Technique 2: Pseudonymization -->
+  <rect x="292" y="158" width="216" height="36" rx="4" fill="#F5F3EE"/>
+  <text x="300" y="172" font-size="10" font-weight="bold" fill="#1A1A1A">② Pseudonymization</text>
+  <text x="300" y="187" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">John → CASE_001</text>
+
+  <!-- Technique 3: Hashing -->
+  <rect x="292" y="198" width="216" height="36" rx="4" fill="#F5F3EE"/>
+  <text x="300" y="212" font-size="10" font-weight="bold" fill="#1A1A1A">③ Hashing (one-way)</text>
+  <text x="300" y="227" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">sha256(id + salt)</text>
+
+  <!-- Technique 4: Generalization -->
+  <rect x="292" y="238" width="216" height="36" rx="4" fill="#F5F3EE"/>
+  <text x="300" y="252" font-size="10" font-weight="bold" fill="#1A1A1A">④ Generalization</text>
+  <text x="300" y="267" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">age 72 → age_group "70-79"</text>
+
+  <!-- Technique 5: Masking -->
+  <rect x="292" y="278" width="216" height="40" rx="4" fill="#F5F3EE"/>
+  <text x="300" y="294" font-size="10" font-weight="bold" fill="#1A1A1A">⑤ Masking</text>
+  <text x="300" y="309" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">0912-345-678 → 0912-***-***</text>
+
+  <!-- Arrow to right -->
+  <line x1="530" y1="200" x2="565" y2="200" stroke="#D97757" stroke-width="3" marker-end="url(#arrow-right)"/>
+
+  <!-- Right: de-identified -->
+  <g filter="url(#shadow)">
+    <rect x="540" y="72" width="240" height="260" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="2"/>
+  </g>
+  <rect x="540" y="72" width="240" height="36" rx="10" fill="#788C5D" fill-opacity="0.15"/>
+  <text x="660" y="96" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">✓ De-identified DataFrame</text>
+
+  <rect x="555" y="120" width="210" height="18" fill="#E8E5DF"/>
+  <text x="565" y="133" font-size="9" font-weight="bold" fill="#1A1A1A">case_id</text>
+  <text x="615" y="133" font-size="9" font-weight="bold" fill="#1A1A1A">age_grp</text>
+  <text x="665" y="133" font-size="9" font-weight="bold" fill="#1A1A1A">sex</text>
+  <text x="705" y="133" font-size="9" font-weight="bold" fill="#1A1A1A">floor</text>
+
+  <rect x="555" y="138" width="210" height="16" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="565" y="150" font-size="9" fill="#788C5D">CASE_001</text>
+  <text x="615" y="150" font-size="9" fill="#1A1A1A">70-79</text>
+  <text x="665" y="150" font-size="9" fill="#1A1A1A">M</text>
+  <text x="705" y="150" font-size="9" fill="#1A1A1A">1</text>
+
+  <rect x="555" y="154" width="210" height="16" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="565" y="166" font-size="9" fill="#788C5D">CASE_002</text>
+  <text x="615" y="166" font-size="9" fill="#1A1A1A">80-89</text>
+  <text x="665" y="166" font-size="9" fill="#1A1A1A">F</text>
+  <text x="705" y="166" font-size="9" fill="#1A1A1A">2</text>
+
+  <rect x="555" y="170" width="210" height="16" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="565" y="182" font-size="9" fill="#788C5D">CASE_003</text>
+  <text x="615" y="182" font-size="9" fill="#1A1A1A">60-69</text>
+  <text x="665" y="182" font-size="9" fill="#1A1A1A">M</text>
+  <text x="705" y="182" font-size="9" fill="#1A1A1A">3</text>
+
+  <!-- Checklist -->
+  <rect x="555" y="200" width="210" height="126" rx="4" fill="#788C5D" fill-opacity="0.08"/>
+  <text x="565" y="218" font-size="10" font-weight="bold" fill="#788C5D">Protections applied:</text>
+  <text x="565" y="234" font-size="9" fill="#1A1A1A">✓ Name/ID/phone → removed</text>
+  <text x="565" y="248" font-size="9" fill="#1A1A1A">✓ Original id → hashed to CASE_id</text>
+  <text x="565" y="262" font-size="9" fill="#1A1A1A">✓ Exact age → age group</text>
+  <text x="565" y="276" font-size="9" fill="#1A1A1A">✓ Room no. → wing/floor</text>
+  <text x="565" y="290" font-size="9" fill="#1A1A1A">✓ Exact date → epi week</text>
+  <text x="565" y="310" font-size="10" font-weight="bold" fill="#788C5D">GitHub-ready / publishable ✓</text>
+
+  <!-- Bottom: k-anonymity + legal notice -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="348" width="380" height="232" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="40" y="372" font-size="13" font-weight="bold" fill="#1A1A1A">💡 k-anonymity — blend in with ≥k others</text>
+
+  <text x="40" y="394" font-size="11" fill="#1A1A1A">Definition: for any combination (e.g., age</text>
+  <text x="40" y="410" font-size="11" fill="#1A1A1A">group × sex × floor), at least <tspan font-weight="bold" fill="#D97757">k records</tspan> must match.</text>
+
+  <rect x="40" y="422" width="340" height="55" rx="4" fill="#F5F3EE"/>
+  <text x="50" y="438" font-size="10" font-weight="bold" fill="#6A9BCC">What k=5 means:</text>
+  <text x="50" y="454" font-size="10" fill="#6B6B6B">For the group "70–79, female, wing 1A,"</text>
+  <text x="50" y="468" font-size="10" fill="#6B6B6B">there must be ≥5 residents, or someone is identifiable.</text>
+
+  <text x="40" y="496" font-size="10" font-weight="bold" fill="#D94452">⚠ Rule of thumb: k≥5 (k≥10 sensitive, k≥20 public)</text>
+
+  <rect x="40" y="506" width="340" height="62" rx="4" fill="#D94452" fill-opacity="0.08"/>
+  <text x="50" y="524" font-size="10" font-weight="bold" fill="#D94452">If a group has n &lt; k, two options:</text>
+  <text x="50" y="540" font-size="10" fill="#6B6B6B">① Merge groups (70–79 + 80–89 → 70+)</text>
+  <text x="50" y="556" font-size="10" fill="#6B6B6B">② Suppress the row (suppression)</text>
+
+  <!-- Bottom right: legal + workflow -->
+  <g filter="url(#shadow)">
+    <rect x="420" y="348" width="360" height="232" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/>
+  </g>
+  <text x="440" y="372" font-size="13" font-weight="bold" fill="#1A1A1A">📋 Workflow</text>
+
+  <!-- Step boxes -->
+  <rect x="440" y="384" width="320" height="36" rx="4" fill="#D94452" fill-opacity="0.08"/>
+  <text x="450" y="400" font-size="10" font-weight="bold" fill="#D94452">① Raw line list (encrypted, restricted)</text>
+  <text x="450" y="414" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">data/raw/line_list_RESTRICTED.csv</text>
+
+  <rect x="440" y="425" width="320" height="36" rx="4" fill="#6A9BCC" fill-opacity="0.08"/>
+  <text x="450" y="441" font-size="10" font-weight="bold" fill="#6A9BCC">② De-identification script (outputs clean file)</text>
+  <text x="450" y="455" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">scripts/deidentify.py</text>
+
+  <rect x="440" y="466" width="320" height="36" rx="4" fill="#788C5D" fill-opacity="0.08"/>
+  <text x="450" y="482" font-size="10" font-weight="bold" fill="#788C5D">③ De-identified data (git-safe, shareable)</text>
+  <text x="450" y="496" font-size="9" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">data/deidentified/line_list.csv</text>
+
+  <!-- Legal reference -->
+  <rect x="440" y="510" width="320" height="60" rx="4" fill="#F5F3EE"/>
+  <text x="450" y="528" font-size="10" font-weight="bold" fill="#1A1A1A">📚 Legal basis (Taiwan):</text>
+  <text x="450" y="544" font-size="9" fill="#6B6B6B">• Personal Data Protection Act, Art. 6 &amp; 20</text>
+  <text x="450" y="558" font-size="8" fill="#6B6B6B">• Communicable Disease Control Act, Art. 10 (confidentiality duty)</text>
+</svg>

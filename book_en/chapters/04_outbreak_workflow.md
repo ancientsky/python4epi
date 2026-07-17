@@ -22,7 +22,7 @@ You have a line list CSV with 280 rows × 32 columns in hand. This chapter teach
 
 Outbreak investigation follows an internationally recognized **10-step systematic framework**, the one used by Taiwan CDC's FETP 2.0 training. This chapter centers on Step 5 (descriptive epidemiology) while also touching on the core concepts of Steps 1, 3, 4, 9, and 10.
 
-```{figure} images/fetp_10_steps.svg
+```{figure} images/fetp_10_steps_en.svg
 :name: fig-fetp-10-steps
 :alt: The FETP 10-step outbreak investigation framework, highlighting which steps are enhanced by Python
 :width: 100%
@@ -169,7 +169,7 @@ In a real investigation, the line list you receive from a hospital or long-term 
 </div>
 ```
 
-```{figure} images/pii_protection_techniques.svg
+```{figure} images/pii_protection_techniques_en.svg
 :name: pii-protection-techniques
 :alt: PII protection flowchart: raw line list with PII on the left, five de-identification techniques in the middle, clean de-identified data on the right
 :width: 100%
@@ -392,7 +392,7 @@ data/restricted/
 
 Before you start computing attack rates, get clear on the four time concepts related to Legionnaires' disease. These four concepts directly affect how you set the **traceback window** and how you choose the lag in the Ch07 time-series model.
 
-```{figure} images/incubation_periods.svg
+```{figure} images/incubation_periods_en.svg
 :name: fig-incubation-periods-ch04
 :alt: Diagram of four concepts: incubation period, latent period, infectious period, serial interval
 :width: 100%

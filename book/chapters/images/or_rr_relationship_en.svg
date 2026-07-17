@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" fill="#FAF8F3" rx="12"/>
+
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">RR vs OR — When Are They Close, and When Do They Diverge?</text>
+
+  <!-- ===== Section 1: Plain language RR and OR ===== -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="48" width="370" height="140" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+  </g>
+  <rect x="20" y="48" width="370" height="28" rx="10" fill="#D97757" fill-opacity="0.12"/>
+  <text x="30" y="67" font-size="13" font-weight="bold" fill="#D97757">RR in Plain Language</text>
+  <text x="40" y="95" font-size="12" fill="#1A1A1A">RR = 2 means:</text>
+  <text x="40" y="115" font-size="11" fill="#D97757" font-weight="bold">"Exposed people have 2× the risk of unexposed people."</text>
+  <text x="40" y="140" font-size="11" fill="#6B6B6B">Think of a balance scale: exposed group's risk on the left,</text>
+  <text x="40" y="157" font-size="11" fill="#6B6B6B">unexposed on the right. ⚖️ The ratio = RR.</text>
+  <text x="40" y="178" font-size="10" fill="#6B6B6B">Formula: RR = (a/(a+b)) ÷ (c/(c+d)) = Risk₁ ÷ Risk₀</text>
+
+  <g filter="url(#shadow)">
+    <rect x="410" y="48" width="370" height="140" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.5"/>
+  </g>
+  <rect x="410" y="48" width="370" height="28" rx="10" fill="#6A9BCC" fill-opacity="0.12"/>
+  <text x="420" y="67" font-size="13" font-weight="bold" fill="#6A9BCC">OR in Plain Language</text>
+  <text x="430" y="95" font-size="12" fill="#1A1A1A">OR = 3 means:</text>
+  <text x="430" y="115" font-size="11" fill="#6A9BCC" font-weight="bold">"Exposed people have 3× the odds of unexposed people."</text>
+  <text x="430" y="140" font-size="11" fill="#6B6B6B">Odds = diseased ÷ not diseased (not ÷ the total!)</text>
+  <text x="430" y="157" font-size="11" fill="#6B6B6B">🎰 Casino odds: winning is 3× as likely as losing.</text>
+  <text x="430" y="178" font-size="10" fill="#6B6B6B">Formula: OR = (a/b) ÷ (c/d) = (a×d) ÷ (b×c)</text>
+
+  <!-- ===== Section 2: Rare disease approximation ===== -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="205" width="760" height="145" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.5"/>
+  </g>
+  <rect x="20" y="205" width="760" height="28" rx="10" fill="#788C5D" fill-opacity="0.12"/>
+  <text x="30" y="224" font-size="13" font-weight="bold" fill="#788C5D">Why Does OR ≈ RR for Rare Diseases? (10% Threshold)</text>
+
+  <!-- Math intuition -->
+  <text x="40" y="254" font-size="12" fill="#1A1A1A" font-weight="bold">The math intuition:</text>
+  <text x="40" y="274" font-size="11" fill="#6B6B6B">Risk = p, Odds = p/(1−p). When p is small (&lt; 10%), 1−p ≈ 1, so Odds ≈ p ≈ Risk.</text>
+  <text x="40" y="294" font-size="11" fill="#6B6B6B">Both groups' Odds ≈ Risk → OR = Odds₁/Odds₀ ≈ Risk₁/Risk₀ = RR.</text>
+
+  <text x="40" y="320" font-size="12" fill="#1A1A1A" font-weight="bold">Everyday analogy:</text>
+  <text x="40" y="340" font-size="11" fill="#788C5D">🍬 A bag of 100 candies has 3 sour ones. "Chance of picking a sour one" = 3/100 = 3%.</text>
+
+  <!-- ===== Section 3: Visual comparison at different AR ===== -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="368" width="760" height="135" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+  </g>
+  <rect x="20" y="368" width="760" height="28" rx="10" fill="#D97757" fill-opacity="0.12"/>
+  <text x="30" y="387" font-size="13" font-weight="bold" fill="#D97757">Higher Attack Rate → Bigger OR–RR Gap — Worked Example</text>
+
+  <!-- Table header -->
+  <text x="50" y="416" font-size="11" fill="#6B6B6B" font-weight="bold">Attack Rate</text>
+  <text x="170" y="416" font-size="11" fill="#6B6B6B" font-weight="bold">Risk₁</text>
+  <text x="250" y="416" font-size="11" fill="#6B6B6B" font-weight="bold">Risk₀</text>
+  <text x="330" y="416" font-size="11" fill="#D97757" font-weight="bold">RR</text>
+  <text x="410" y="416" font-size="11" fill="#6A9BCC" font-weight="bold">OR</text>
+  <text x="490" y="416" font-size="11" fill="#6B6B6B" font-weight="bold">OR/RR</text>
+  <text x="580" y="416" font-size="11" fill="#6B6B6B" font-weight="bold">Conclusion</text>
+
+  <line x1="40" y1="422" x2="760" y2="422" stroke="#E8E5DF" stroke-width="1"/>
+
+  <!-- Row 1: rare -->
+  <rect x="40" y="426" width="720" height="20" rx="4" fill="#788C5D" fill-opacity="0.06"/>
+  <text x="50" y="440" font-size="11" fill="#788C5D" font-weight="bold">Low (5%)</text>
+  <text x="170" y="440" font-size="11" fill="#1A1A1A">10%</text>
+  <text x="250" y="440" font-size="11" fill="#1A1A1A">5%</text>
+  <text x="330" y="440" font-size="11" fill="#D97757" font-weight="bold">2.00</text>
+  <text x="410" y="440" font-size="11" fill="#6A9BCC" font-weight="bold">2.11</text>
+  <text x="490" y="440" font-size="11" fill="#1A1A1A">1.06</text>
+  <text x="580" y="440" font-size="11" fill="#788C5D">✅ OR ≈ RR (6% off)</text>
+
+  <!-- Row 2: moderate -->
+  <text x="50" y="462" font-size="11" fill="#D97757" font-weight="bold">Moderate (30%)</text>
+  <text x="170" y="462" font-size="11" fill="#1A1A1A">50%</text>
+  <text x="250" y="462" font-size="11" fill="#1A1A1A">30%</text>
+  <text x="330" y="462" font-size="11" fill="#D97757" font-weight="bold">1.67</text>
+  <text x="410" y="462" font-size="11" fill="#6A9BCC" font-weight="bold">2.33</text>
+  <text x="490" y="462" font-size="11" fill="#1A1A1A">1.40</text>
+  <text x="580" y="462" font-size="11" fill="#D97757">⚠️ OR is 40% bigger than RR</text>
+
+  <!-- Row 3: high (our dataset) -->
+  <rect x="40" y="468" width="720" height="20" rx="4" fill="#D94452" fill-opacity="0.06"/>
+  <text x="50" y="484" font-size="10" fill="#D94452" font-weight="bold">High (43%) ← ours</text>
+  <text x="170" y="484" font-size="11" fill="#1A1A1A">55%</text>
+  <text x="250" y="484" font-size="11" fill="#1A1A1A">30%</text>
+  <text x="330" y="484" font-size="11" fill="#D97757" font-weight="bold">1.83</text>
+  <text x="410" y="484" font-size="11" fill="#6A9BCC" font-weight="bold">2.86</text>
+  <text x="490" y="484" font-size="11" fill="#1A1A1A">1.56</text>
+  <text x="580" y="484" font-size="11" fill="#D94452">❌ OR overestimates by 56%!</text>
+
+  <text x="400" y="510" text-anchor="middle" font-size="11" fill="#D94452" font-weight="bold">Bottom line: OR overestimates RR when attack rate &gt; 10%. Here it's 43% — use RR, not OR!</text>
+</svg>

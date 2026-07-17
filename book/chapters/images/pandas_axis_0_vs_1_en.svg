@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrow-down" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 7 4 L 0 8 z" fill="#6A9BCC"/>
+    </marker>
+    <marker id="arrow-right" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 7 4 L 0 8 z" fill="#D97757"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="500" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">axis=0 vs axis=1 — pandas' Most Confusing Pair of Numbers</text>
+  <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">Memory trick: axis=0 points ↓ (top to bottom); axis=1 points → (left to right)</text>
+
+  <g filter="url(#shadow)">
+    <rect x="30" y="72" width="365" height="380" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="2"/>
+  </g>
+  <rect x="30" y="72" width="365" height="40" rx="10" fill="#6A9BCC" fill-opacity="0.15"/>
+  <text x="212" y="98" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A9BCC">axis=0  ↓  Along Rows (by row)</text>
+
+  <text x="212" y="132" text-anchor="middle" font-size="11" fill="#1A1A1A">Operates on each column (sums down rows)</text>
+  <text x="212" y="149" text-anchor="middle" font-size="11" font-weight="bold" fill="#6A9BCC">= "class average per subject"</text>
+
+  <g>
+    <rect x="80" y="162" width="70" height="24" fill="#E8E5DF"/>
+    <text x="115" y="178" text-anchor="middle" font-size="10" font-weight="bold" fill="#1A1A1A">math</text>
+    <rect x="150" y="162" width="70" height="24" fill="#E8E5DF"/>
+    <text x="185" y="178" text-anchor="middle" font-size="10" font-weight="bold" fill="#1A1A1A">english</text>
+    <rect x="220" y="162" width="70" height="24" fill="#E8E5DF"/>
+    <text x="255" y="178" text-anchor="middle" font-size="10" font-weight="bold" fill="#1A1A1A">science</text>
+
+    <rect x="80" y="186" width="70" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="115" y="201" text-anchor="middle" font-size="10" fill="#1A1A1A">80</text>
+    <rect x="150" y="186" width="70" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="185" y="201" text-anchor="middle" font-size="10" fill="#1A1A1A">70</text>
+    <rect x="220" y="186" width="70" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="255" y="201" text-anchor="middle" font-size="10" fill="#1A1A1A">90</text>
+
+    <rect x="80" y="208" width="70" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="115" y="223" text-anchor="middle" font-size="10" fill="#1A1A1A">60</text>
+    <rect x="150" y="208" width="70" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="185" y="223" text-anchor="middle" font-size="10" fill="#1A1A1A">85</text>
+    <rect x="220" y="208" width="70" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="255" y="223" text-anchor="middle" font-size="10" fill="#1A1A1A">75</text>
+
+    <rect x="80" y="230" width="70" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="115" y="245" text-anchor="middle" font-size="10" fill="#1A1A1A">90</text>
+    <rect x="150" y="230" width="70" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="185" y="245" text-anchor="middle" font-size="10" fill="#1A1A1A">60</text>
+    <rect x="220" y="230" width="70" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="255" y="245" text-anchor="middle" font-size="10" fill="#1A1A1A">80</text>
+
+    <line x1="115" y1="258" x2="115" y2="285" stroke="#6A9BCC" stroke-width="2" marker-end="url(#arrow-down)"/>
+    <line x1="185" y1="258" x2="185" y2="285" stroke="#6A9BCC" stroke-width="2" marker-end="url(#arrow-down)"/>
+    <line x1="255" y1="258" x2="255" y2="285" stroke="#6A9BCC" stroke-width="2" marker-end="url(#arrow-down)"/>
+
+    <text x="320" y="275" font-size="10" fill="#6A9BCC" font-weight="bold">axis=0 ↓</text>
+    <text x="320" y="288" font-size="9" fill="#6B6B6B">Down columns</text>
+
+    <rect x="80" y="292" width="70" height="24" fill="#6A9BCC" fill-opacity="0.3"/>
+    <text x="115" y="308" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">76.7</text>
+    <rect x="150" y="292" width="70" height="24" fill="#6A9BCC" fill-opacity="0.3"/>
+    <text x="185" y="308" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">71.7</text>
+    <rect x="220" y="292" width="70" height="24" fill="#6A9BCC" fill-opacity="0.3"/>
+    <text x="255" y="308" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">81.7</text>
+    <text x="320" y="308" font-size="10" fill="#6A9BCC" font-weight="bold">← avg</text>
+  </g>
+
+  <rect x="50" y="332" width="325" height="40" rx="4" fill="#2B2B2B"/>
+  <text x="60" y="350" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">scores.mean(</text>
+  <text x="153" y="350" font-size="11" font-family="Menlo, Monaco, monospace" fill="#6A9BCC" font-weight="bold">axis=0</text>
+  <text x="200" y="350" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">)</text>
+  <text x="60" y="366" font-size="10" font-family="Menlo, Monaco, monospace" fill="#6B6B6B"># → Series: average per subject</text>
+
+  <text x="50" y="394" font-size="11" font-weight="bold" fill="#1A1A1A">🩺 Applied to outbreak investigation:</text>
+  <text x="50" y="412" font-size="10" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">df["age"].mean()</text>
+  <text x="180" y="412" font-size="10" fill="#6B6B6B"># average age of all residents</text>
+  <text x="50" y="430" font-size="10" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">df.sum(axis=0)</text>
+  <text x="180" y="430" font-size="10" fill="#6B6B6B"># sum of each variable</text>
+
+  <g filter="url(#shadow)">
+    <rect x="405" y="72" width="365" height="380" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="2"/>
+  </g>
+  <rect x="405" y="72" width="365" height="40" rx="10" fill="#D97757" fill-opacity="0.15"/>
+  <text x="587" y="98" text-anchor="middle" font-size="14" font-weight="bold" fill="#D97757">axis=1  →  Along Columns (by column)</text>
+
+  <text x="587" y="132" text-anchor="middle" font-size="11" fill="#1A1A1A">Operates on each row (sums across columns)</text>
+  <text x="587" y="149" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">= "total score per student"</text>
+
+  <g>
+    <rect x="435" y="162" width="55" height="24" fill="#E8E5DF"/>
+    <text x="462" y="178" text-anchor="middle" font-size="10" font-weight="bold" fill="#1A1A1A">math</text>
+    <rect x="490" y="162" width="55" height="24" fill="#E8E5DF"/>
+    <text x="517" y="178" text-anchor="middle" font-size="10" font-weight="bold" fill="#1A1A1A">eng</text>
+    <rect x="545" y="162" width="55" height="24" fill="#E8E5DF"/>
+    <text x="572" y="178" text-anchor="middle" font-size="10" font-weight="bold" fill="#1A1A1A">sci</text>
+    <text x="640" y="178" text-anchor="middle" font-size="9" fill="#D97757" font-weight="bold">axis=1 →</text>
+    <rect x="685" y="162" width="70" height="24" fill="#D97757" fill-opacity="0.3"/>
+    <text x="720" y="178" text-anchor="middle" font-size="10" font-weight="bold" fill="#1A1A1A">sum</text>
+
+    <rect x="435" y="186" width="55" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="462" y="201" text-anchor="middle" font-size="10" fill="#1A1A1A">80</text>
+    <rect x="490" y="186" width="55" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="517" y="201" text-anchor="middle" font-size="10" fill="#1A1A1A">70</text>
+    <rect x="545" y="186" width="55" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="572" y="201" text-anchor="middle" font-size="10" fill="#1A1A1A">90</text>
+    <line x1="610" y1="197" x2="678" y2="197" stroke="#D97757" stroke-width="2" marker-end="url(#arrow-right)"/>
+    <rect x="685" y="186" width="70" height="22" fill="#D97757" fill-opacity="0.25"/>
+    <text x="720" y="201" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">240</text>
+
+    <rect x="435" y="208" width="55" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="462" y="223" text-anchor="middle" font-size="10" fill="#1A1A1A">60</text>
+    <rect x="490" y="208" width="55" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="517" y="223" text-anchor="middle" font-size="10" fill="#1A1A1A">85</text>
+    <rect x="545" y="208" width="55" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="572" y="223" text-anchor="middle" font-size="10" fill="#1A1A1A">75</text>
+    <line x1="610" y1="219" x2="678" y2="219" stroke="#D97757" stroke-width="2" marker-end="url(#arrow-right)"/>
+    <rect x="685" y="208" width="70" height="22" fill="#D97757" fill-opacity="0.25"/>
+    <text x="720" y="223" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">220</text>
+
+    <rect x="435" y="230" width="55" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="462" y="245" text-anchor="middle" font-size="10" fill="#1A1A1A">90</text>
+    <rect x="490" y="230" width="55" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="517" y="245" text-anchor="middle" font-size="10" fill="#1A1A1A">60</text>
+    <rect x="545" y="230" width="55" height="22" fill="#FFFFFF" stroke="#E8E5DF"/>
+    <text x="572" y="245" text-anchor="middle" font-size="10" fill="#1A1A1A">80</text>
+    <line x1="610" y1="241" x2="678" y2="241" stroke="#D97757" stroke-width="2" marker-end="url(#arrow-right)"/>
+    <rect x="685" y="230" width="70" height="22" fill="#D97757" fill-opacity="0.25"/>
+    <text x="720" y="245" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A1A">230</text>
+
+    <text x="720" y="272" text-anchor="middle" font-size="10" fill="#D97757" font-weight="bold">↑ row total</text>
+  </g>
+
+  <rect x="425" y="332" width="325" height="40" rx="4" fill="#2B2B2B"/>
+  <text x="435" y="350" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">scores.sum(</text>
+  <text x="525" y="350" font-size="11" font-family="Menlo, Monaco, monospace" fill="#D97757" font-weight="bold">axis=1</text>
+  <text x="572" y="350" font-size="11" font-family="Menlo, Monaco, monospace" fill="#F8F8F2">)</text>
+  <text x="435" y="366" font-size="10" font-family="Menlo, Monaco, monospace" fill="#6B6B6B"># → Series: total per student</text>
+
+  <text x="425" y="394" font-size="11" font-weight="bold" fill="#1A1A1A">🩺 Applied to outbreak investigation:</text>
+  <text x="425" y="412" font-size="10" font-family="Menlo, Monaco, monospace" fill="#6B6B6B">df[["chf","dm"]].sum(axis=1)</text>
+  <text x="425" y="430" font-size="10" fill="#6B6B6B"># number of comorbidities per resident</text>
+
+  <text x="400" y="476" text-anchor="middle" font-size="11" font-weight="bold" fill="#D94452">⚠ Common mistake: using axis=0 when you want row totals (get column averages instead)</text>
+  <text x="400" y="492" text-anchor="middle" font-size="10" fill="#6B6B6B">Mnemonic: "axis=N means dimension N gets collapsed in the result"</text>
+</svg>

@@ -47,7 +47,7 @@ That calls for **inferential statistics**—using sample data to make inferences
 
 What measures you can calculate depends on your **study design**. Here we use everyday analogies to explain four common designs:
 
-```{figure} images/study_designs.svg
+```{figure} images/study_designs_en.svg
 :name: fig-study-designs
 :alt: Four epidemiological study designs: cohort study (following-along documentary), case-control (detective work), nested case-control (reviewing surveillance footage), matched case-control (twin experiment)
 :width: 100%
@@ -134,7 +134,7 @@ $$OR = \frac{a \times d}{b \times c}$$
 
 **In plain language**: OR = 3 means "people who were exposed have 3 times the **odds** of disease as people who weren't." Note this is about "odds," not "risk"—just like a casino quoting 3:1 odds doesn't mean you have a 300% chance of winning.
 
-```{figure} images/or_rr_relationship.svg
+```{figure} images/or_rr_relationship_en.svg
 :name: fig-or-rr-relationship
 :alt: The relationship between RR and OR: they're similar for rare diseases, but the higher the attack rate, the more the OR diverges from the RR
 :width: 100%
@@ -235,7 +235,7 @@ print(f"Overall attack rate: {df['infected'].mean():.1%}")
 
 We already have 280 residents and an `infected` column. Now we'll organize it into a **2×2 contingency table**—the fundamental data structure for epidemiological association analysis. The diagram below shows how each cell maps to the formulas.
 
-```{figure} images/two_by_two_anatomy.svg
+```{figure} images/two_by_two_anatomy_en.svg
 :name: fig-two-by-two-anatomy
 :alt: A map of the a, b, c, d cells of a 2×2 contingency table, showing how each cell is used to compute the RR and OR
 :width: 100%
@@ -290,7 +290,7 @@ print(f"  RR = 1 → no association | RR > 1 → exposure may increase risk | RR
 
 You've just computed the RR, but papers and reports often show the OR too. What's the difference? **Risk is a probability; odds is a ratio**—the figure below explains.
 
-```{figure} images/rr_vs_or_intuition.svg
+```{figure} images/rr_vs_or_intuition_en.svg
 :name: fig-rr-vs-or-intuition
 :alt: An intuition diagram for Risk vs Odds: of 10 residents, 3 are infected, so Risk = 3/10 and Odds = 3/7; cohort studies use RR, case-control studies use OR
 :width: 100%
@@ -334,7 +334,7 @@ print(f"   Wrong wording: 'shower users' infection risk is {or_val:.1f}x that of
 
 The CI is the part that makes beginners' heads spin the most. The key intuition: the scale of RR/OR is **asymmetric** (from 0 to infinity), so you can't just add and subtract a margin of error directly. First we **log-transform** to a symmetric scale, do the work, and then **exp back**. The figure below explains it in three steps:
 
-```{figure} images/ci_log_transform.svg
+```{figure} images/ci_log_transform_en.svg
 :name: fig-ci-log-transform
 :alt: Why do we take the log to compute the CI? A three-step diagram: original scale (asymmetric) → log scale (symmetric, where the normal distribution applies) → exp back
 :width: 100%
@@ -382,7 +382,7 @@ print(f"OR = {or_val:.3f} (95% CI: {ci_or_lo:.3f} – {ci_or_hi:.3f})")
 
 The core logic of the chi-square test: if exposure and infection really were "unrelated" (H₀ is true), how many people should we observe in each cell? How far are the actual numbers from that expectation?
 
-```{figure} images/chi_square_intuition.svg
+```{figure} images/chi_square_intuition_en.svg
 :name: fig-chi-square-intuition
 :alt: An intuition diagram for the chi-square test: comparing observed and expected values—the larger the gap → the larger the χ² → the smaller the p
 :width: 100%
@@ -545,7 +545,7 @@ How to read a forest plot:
 - **Horizontal line segment (─)**: the 95% confidence interval
 - **Dashed line (RR = 1)**: the no-effect line. A CI that crosses the dashed line = not significant; a CI entirely to the right of the dashed line = exposure significantly increases risk
 
-```{figure} images/forest_plot_reading_guide.svg
+```{figure} images/forest_plot_reading_guide_en.svg
 :name: fig-forest-plot-reading-guide
 :alt: A guide to reading a forest plot: the dot shows the point estimate, the horizontal line segment shows the 95% CI, and the dashed line shows the RR=1 no-effect line
 :width: 100%

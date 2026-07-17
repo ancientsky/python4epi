@@ -106,7 +106,7 @@ for cases in floor_cases:       # first level
 
 Every calculation in Ch01 used Python's built-in features. But when you do real outbreak analysis, you'll need to "borrow" powerful tools other people have already written—that's what `import` is for.
 
-```{figure} images/python_import_forms.svg
+```{figure} images/python_import_forms_en.svg
 :name: fig-python-import-forms
 :alt: The three import forms — import module, from module import name, import module as alias
 :width: 100%
@@ -143,7 +143,7 @@ import seaborn as sns         # sns comes from Samuel Norman Seaborn (a TV chara
 
 **Outbreak demo: analyzing case ages with the `statistics` module**
 
-```{figure} images/python_dot_notation.svg
+```{figure} images/python_dot_notation_en.svg
 :name: fig-python-dot-notation
 :alt: Dot notation — statistics.mean(ages) broken down into "toolbox.tool(input)"
 :width: 100%
@@ -225,7 +225,7 @@ if not (cfr < 0.05):
 
 What trips beginners up most is knowing "which bracket to use in which situation." Use the wrong one and the program breaks.
 
-```{figure} images/python_brackets_guide.svg
+```{figure} images/python_brackets_guide_en.svg
 :name: fig-python-brackets
 :alt: A usage map of Python's four bracket types — parentheses ( ), square brackets [ ], curly braces { }, quotes " "
 :width: 100%
@@ -262,7 +262,7 @@ What trips beginners up most is knowing "which bracket to use in which situation
 
 Don't panic at a screen full of red text. Python's error messages are actually quite considerate—just **read from the last line upward**.
 
-```{figure} images/python_traceback_reading.svg
+```{figure} images/python_traceback_reading_en.svg
 :name: fig-python-traceback
 :alt: Reading a Python traceback — read from the bottom up; the last line is the error type, the middle is the execution path
 :width: 100%
