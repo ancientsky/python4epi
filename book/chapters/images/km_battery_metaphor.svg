@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 470" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="760" height="470" fill="#FAF8F3" rx="12"/>
+  <text x="380" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">用「手機電池大賽」看懂 Kaplan-Meier 曲線</text>
+  <text x="380" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">每支手機關機 = 一個事件；下課還開著 = 設限；線往下踏一階 = 有手機關機了</text>
+
+  <!-- Top card: 8 phones -->
+  <g filter="url(#shadow)"><rect x="24" y="66" width="712" height="118" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="40" y="88" font-size="13" font-weight="bold" fill="#1A1A1A">8 支手機，看誰先關機（電量歸零）</text>
+
+  <!-- phone glyph helper drawn inline; 6 die, 2 censored -->
+  <!-- x positions: 60,145,230,315,400,485,585,670 -->
+  <!-- died phones (red) -->
+  <g>
+    <!-- p1 2h --><rect x="60" y="100" width="34" height="58" rx="6" fill="#FDE7E1" stroke="#D94452" stroke-width="1.5"/><rect x="66" y="128" width="22" height="24" rx="2" fill="#D94452"/><text x="77" y="174" text-anchor="middle" font-size="10" fill="#D94452" font-weight="bold">關機 2h</text>
+    <!-- p2 3h --><rect x="145" y="100" width="34" height="58" rx="6" fill="#FDE7E1" stroke="#D94452" stroke-width="1.5"/><rect x="151" y="124" width="22" height="28" rx="2" fill="#D94452"/><text x="162" y="174" text-anchor="middle" font-size="10" fill="#D94452" font-weight="bold">關機 3h</text>
+    <!-- p3 5h --><rect x="230" y="100" width="34" height="58" rx="6" fill="#FDE7E1" stroke="#D94452" stroke-width="1.5"/><rect x="236" y="120" width="22" height="32" rx="2" fill="#D94452"/><text x="247" y="174" text-anchor="middle" font-size="10" fill="#D94452" font-weight="bold">關機 5h</text>
+    <!-- p4 6h --><rect x="315" y="100" width="34" height="58" rx="6" fill="#FDE7E1" stroke="#D94452" stroke-width="1.5"/><rect x="321" y="116" width="22" height="36" rx="2" fill="#D94452"/><text x="332" y="174" text-anchor="middle" font-size="10" fill="#D94452" font-weight="bold">關機 6h</text>
+    <!-- p5 8h --><rect x="400" y="100" width="34" height="58" rx="6" fill="#FDE7E1" stroke="#D94452" stroke-width="1.5"/><rect x="406" y="112" width="22" height="40" rx="2" fill="#D94452"/><text x="417" y="174" text-anchor="middle" font-size="10" fill="#D94452" font-weight="bold">關機 8h</text>
+    <!-- p6 9h --><rect x="485" y="100" width="34" height="58" rx="6" fill="#FDE7E1" stroke="#D94452" stroke-width="1.5"/><rect x="491" y="110" width="22" height="42" rx="2" fill="#D94452"/><text x="502" y="174" text-anchor="middle" font-size="10" fill="#D94452" font-weight="bold">關機 9h</text>
+  </g>
+  <!-- censored phones (blue, still on) -->
+  <g>
+    <rect x="585" y="100" width="34" height="58" rx="6" fill="#E8F0F8" stroke="#6A9BCC" stroke-width="1.5"/><rect x="591" y="106" width="22" height="46" rx="2" fill="#788C5D"/><text x="602" y="174" text-anchor="middle" font-size="10" fill="#6A9BCC" font-weight="bold">還開著＋</text>
+    <rect x="670" y="100" width="34" height="58" rx="6" fill="#E8F0F8" stroke="#6A9BCC" stroke-width="1.5"/><rect x="676" y="106" width="22" height="46" rx="2" fill="#788C5D"/><text x="687" y="174" text-anchor="middle" font-size="10" fill="#6A9BCC" font-weight="bold">還開著＋</text>
+  </g>
+  <text x="627" y="97" text-anchor="middle" font-size="10" fill="#6A9BCC">下課了還開著 = 設限</text>
+
+  <!-- Bottom card: KM staircase -->
+  <g filter="url(#shadow)"><rect x="24" y="198" width="712" height="256" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="40" y="220" font-size="13" font-weight="bold" fill="#1A1A1A">Kaplan-Meier 存活曲線（「還開著的手機比例」）</text>
+
+  <!-- axes: plot area x 110..690 (t=0..13), y 250..410 (S=1..0) -->
+  <line x1="110" y1="250" x2="110" y2="410" stroke="#1A1A1A" stroke-width="1.5"/>
+  <line x1="110" y1="410" x2="700" y2="410" stroke="#1A1A1A" stroke-width="1.5"/>
+  <!-- y labels -->
+  <text x="103" y="254" text-anchor="end" font-size="10" fill="#6B6B6B">100%</text>
+  <text x="103" y="334" text-anchor="end" font-size="10" fill="#6B6B6B">50%</text>
+  <text x="103" y="413" text-anchor="end" font-size="10" fill="#6B6B6B">0%</text>
+  <!-- x ticks 0,2,4,6,8,10,12 -->
+  <text x="110" y="426" text-anchor="middle" font-size="10" fill="#6B6B6B">0</text>
+  <text x="199" y="426" text-anchor="middle" font-size="10" fill="#6B6B6B">2</text>
+  <text x="288" y="426" text-anchor="middle" font-size="10" fill="#6B6B6B">4</text>
+  <text x="378" y="426" text-anchor="middle" font-size="10" fill="#6B6B6B">6</text>
+  <text x="467" y="426" text-anchor="middle" font-size="10" fill="#6B6B6B">8</text>
+  <text x="556" y="426" text-anchor="middle" font-size="10" fill="#6B6B6B">10</text>
+  <text x="645" y="426" text-anchor="middle" font-size="10" fill="#6B6B6B">12</text>
+  <text x="405" y="446" text-anchor="middle" font-size="11" fill="#6B6B6B">時間（小時）</text>
+
+  <!-- 50% median dashed guide -->
+  <line x1="110" y1="330" x2="378" y2="330" stroke="#788C5D" stroke-width="1.2" stroke-dasharray="4"/>
+  <line x1="378" y1="330" x2="378" y2="410" stroke="#788C5D" stroke-width="1.2" stroke-dasharray="4"/>
+  <text x="384" y="326" font-size="10" fill="#788C5D" font-weight="bold">中位存活 ≈ 6 小時（線穿過 50%）</text>
+
+  <!-- KM step polyline (matches the 8 phones) -->
+  <polyline fill="none" stroke="#D97757" stroke-width="2.5"
+    points="110,250 199,250 199,270 244,270 244,290 333,290 333,310 378,310 378,330 467,330 467,350 512,350 512,370 645,370 690,370"/>
+  <!-- censor tick marks at t=12 (2 phones still on) -->
+  <line x1="645" y1="364" x2="645" y2="376" stroke="#6A9BCC" stroke-width="2"/>
+  <line x1="655" y1="364" x2="655" y2="376" stroke="#6A9BCC" stroke-width="2"/>
+
+  <!-- callouts -->
+  <text x="205" y="264" font-size="10" fill="#D97757" font-weight="bold">↓ 每一階 = 一支手機關機</text>
+  <text x="628" y="360" text-anchor="start" font-size="10" fill="#6A9BCC" font-weight="bold">＋ = 設限</text>
+</svg>
