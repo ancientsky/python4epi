@@ -22,6 +22,135 @@ This is the core task of **survival analysis**—not just looking at "whether so
 
 ---
 
+## 🔋 Super Simple Special: Understanding Survival Analysis with a "Phone Battery Contest"
+
+> Does survival analysis sound scary? Don't worry. In this section we're going to swap every scary term for something you use every single day: your **phone battery**. Read this first, then go back and look at the charts below—you'll go "oh, THAT'S what this means!"
+
+### A phone battery contest
+
+Imagine everyone in class brings a fully charged (100%) phone to a contest: **whoever's phone lasts the longest before it dies wins.**
+
+- Survival analysis doesn't just care about "will it die" (every phone eventually will)—it cares about **"how long did it last before dying?"** That's exactly what makes it powerful: **it looks not just at whether something happens, but at "how long until" it happens.**
+- The phone dying (battery hits zero) = the "**event**" we're waiting for. In a hospital, the event might be "death," "recovery and discharge," or "relapse."
+- The number of hours from 100% to shutdown = **survival time**.
+
+### The single most important trick: some phones are "still on when class ends"
+
+Halfway through the contest, the bell rings and you have to go home—but some phones are **still on**. How do you record that?
+
+- Write "0 hours"? Nope, it clearly lasted a while.
+- Write "broken / no data"? Also wrong, it's working perfectly fine.
+- The correct answer: **"This phone lasted at least 12 hours, but I don't know exactly how much longer it would have gone."**
+
+This kind of data—where you only know a lower bound and never saw the ending—is called **censoring (censored data)**.
+
+> 🔑 Remember it in one line: **Censored ≠ dead, and ≠ broken. It means "we only saw half the story."** The clever part of survival analysis is that it can still use these phones in the calculation instead of just throwing them away.
+
+```{figure} images/km_battery_metaphor_en.svg
+:name: fig-km-battery
+:alt: Phone battery metaphor for the Kaplan-Meier curve: of 8 phones, 6 die at different times while 2 are still on when class ends (censored), matched to a survival curve that steps downward, plus the median survival time
+:width: 100%
+
+Top row: 8 phones. Bottom row: a staircase heading downward—**every time a phone dies, the staircase drops one step.**
+```
+
+### The KM curve: a line that "walks down stairs"
+
+Put time on the x-axis and "**the percentage of phones still on right now**" on the y-axis. It starts at 100% (everyone's phone is on), and every time one phone dies, the line **drops one step**—which is why the Kaplan-Meier curve looks like a **staircase heading downward**:
+
+- **The steeper the staircase** = phones are dying one after another very quickly (**poor survival**).
+- **The flatter the staircase** = phones last a long time (**good survival**).
+- The moment **the line crosses 50%** is called the **median survival time**—"half the phones have died by this point."
+- Small tick marks or "+" symbols on the line = **censored** phones (you collected them at that moment), so the line does **not** step down there.
+
+### Comparing two brands: the log-rank test
+
+Split the phones into "Apple brand" and "Banana brand," and draw a staircase for each:
+
+- If Banana brand's staircase **stays below** Apple brand's the whole time (dropping faster), that means Banana brand phones don't last as long.
+- But could that gap **just be luck**? The **log-rank test** asks exactly that: **"Is the gap between these two staircases real, or just chance?"** It gives you a **p-value**, and **p < 0.05** roughly means "this gap is unlikely to be just luck."
+
+### "Battery drain speed": hazard and the hazard ratio (HR)
+
+**Hazard** sounds scary, but it's really just **"how fast the battery is draining right this instant"**—how quickly the phone is losing charge right now. Divide one brand's drain speed by the other's, and you get the **hazard ratio (HR)**:
+
+- **HR = 2**: Banana brand's battery **drains twice as fast** (twice the risk).
+- **HR = 1**: both brands drain at the same speed (no difference).
+- **HR = 0.5**: Banana brand **only drains at half the speed** (it lasts longer—it's a **protective factor**).
+
+Reading an **HR forest plot** works the same way: a dot **to the right of 1** = higher risk; **to the left of 1** = lower risk (protective). The horizontal line through the dot is the **confidence interval (CI)**—if that line **doesn't touch 1**, the difference is real.
+
+### Try it yourself: draw a KM curve for a battery contest
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from lifelines import KaplanMeierFitter
+from lifelines.statistics import logrank_test
+
+rng = np.random.default_rng(7)
+
+# 40 phones per brand, simulating "hours until the battery dies"
+apple = rng.gamma(shape=9, scale=1.1, size=40)    # Apple brand: longer lasting
+banana = rng.gamma(shape=5, scale=1.1, size=40)   # Banana brand: drains faster
+
+# We only observe until hour 12, then "class ends" -> anything past that is censored (still on)
+CUTOFF = 12
+def make(times, brand):
+    return pd.DataFrame({
+        "brand": brand,
+        "hours": np.minimum(times, CUTOFF),
+        "died": (times <= CUTOFF).astype(int),   # 1=died (event), 0=censored
+    })
+phones = pd.concat([make(apple, "Apple brand"), make(banana, "Banana brand")], ignore_index=True)
+
+fig, ax = plt.subplots(figsize=(7, 4.5))
+kmf = KaplanMeierFitter()
+for brand, color in [("Apple brand", "#6A9BCC"), ("Banana brand", "#D97757")]:
+    g = phones[phones["brand"] == brand]
+    kmf.fit(g["hours"], g["died"], label=brand)
+    kmf.plot_survival_function(ax=ax, color=color)
+    print(f"{brand} median survival (time when half have died): {kmf.median_survival_time_:.1f} hours")
+
+ax.axhline(0.5, ls="--", color="#6B6B6B", lw=1)   # 50% reference line -> median survival
+ax.set_xlabel("Time (hours)")
+ax.set_ylabel("Proportion of phones still on")
+ax.set_title("Phone Battery Contest: Kaplan-Meier Survival Curve")
+plt.tight_layout()
+plt.show()
+
+# Is the gap between brands real, or just luck? -> log-rank test
+a = phones[phones.brand == "Apple brand"]
+b = phones[phones.brand == "Banana brand"]
+res = logrank_test(a["hours"], b["hours"], a["died"], b["died"])
+verdict = "the gap is real (p < 0.05)" if res.p_value < 0.05 else "no significant difference detected"
+print(f"Log-rank p-value = {res.p_value:.4f} -> {verdict}")
+```
+
+Go ahead and run it: Apple brand's median survival is roughly double Banana brand's, and the log-rank p-value is tiny—**the two brands really are different**. Congratulations, you've just done a complete survival analysis!
+
+### Cheat sheet for reading the chart (save this)
+
+| What you see... | What it means |
+|---|---|
+| KM staircase is steep | Events happen fast (poor survival) |
+| KM staircase is flat | Lasts a long time (good survival) |
+| Two lines are far apart | The two groups are very different |
+| Two lines stick together | The two groups are about the same |
+| Line crosses 50% | Median survival time |
+| Small tick mark (+) on the line | Censored: we only saw half the story |
+| p < 0.05 | The gap is unlikely to be just luck |
+| HR > 1 (dot to the right of 1) | Higher risk (drains faster) |
+| HR < 1 (dot to the left of 1) | Protective effect (lasts longer) |
+| Confidence interval doesn't touch 1 | This difference is real |
+
+### Back to reality: phones → patients
+
+Swap "phone" for "patient," "died" for "death," and "brand" for "disease severity"—and every trick you just learned is exactly what Steps 2–6 of this chapter are doing. Now go back and look at those KM curves, the log-rank test, and the HR forest plot again—doesn't it all make a lot more sense now? 😉
+
+---
+
 ## Core Concepts
 
 ### Survival Time
