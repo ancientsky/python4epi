@@ -23,6 +23,155 @@ In our nursing home case, "functional status" is that "rainy day"—it affects b
 - Mantel-Haenszel weighted RR and the test of homogeneity
 - How to interpret crude RR vs. adjusted RR (with a quantitative decision rule)
 
+## 🔍 Super Simple Special: Understanding Stratified Analysis with "Do Kids with Bigger Feet Read Better?"
+
+> Do "stratified analysis," "confounder," and "Mantel-Haenszel" sound like three spells from a wizard's book? Don't be scared. This section sets the nursing home aside for a moment and tells a little story where **you'll spot something fishy at a glance**—walking through the whole idea in a way that'll make even a 7th grader slap the table and shout "OH, I get it now!" Once you're done, go back and look at the DAG and forest plot below—it'll click.
+
+### A finding that sounds super convincing... and is actually super suspicious
+
+Say someone goes to an elementary school, measures every kid's **foot size**, and tests whether they **can read**. Here's what they find:
+
+> **Kids with big feet: 68% can read. Kids with small feet: only 32% can read. Risk ratio (RR) ≈ 2.1!**
+
+If you took that number at face value, you'd conclude—**"Bigger feet make you better at reading, so buy your kid bigger shoes to make them smarter?"** Something's clearly off. That's right: the RR is a **real number, correctly calculated**, but the **causal story behind it is fake**. So what's going on?
+
+### The real culprit is hiding behind the scenes: it's "age" pulling the strings
+
+Think about it: **a 10-year-old naturally has bigger feet than a 6-year-old, and is also naturally better at reading.** In other words, there's something that **simultaneously** makes a kid's "feet bigger" and makes them "better at reading"—and that something is **age**.
+
+- It's not that big feet make you read better—it's that **being older** makes "big feet" and "can read" happen together.
+- Foot size and reading ability actually have **no causal relationship** at all. They just both **get dragged along by age**, which makes them look like they're holding hands.
+
+This character hiding in the background—pulling the strings on both the exposure (foot size) and the outcome (reading), and tricking us into a wrong conclusion—is called a **confounder**. Here, the confounder is **age**.
+
+```{figure} images/confounding_shoe_size_en.svg
+:name: fig-confounding-shoe-size
+:alt: The illusion of big feet and reading ability: lumped together, the big-feet group reads at 68% and the small-feet group at 32% (crude RR≈2.1), but the real culprit is age; split by age, both the 6-year-old and 10-year-old groups show 20% and 80% reading rates respectively regardless of foot size, meaning foot size makes no difference at all
+:width: 100%
+
+Top left: lumped together, big feet look like they go with better reading (an illusion); top right: the real culprit "age" pulls the strings on both foot size and reading ability; bottom row: **split by age**, foot size makes no difference at all within the same age group.
+```
+
+### Cracking the case: split it apart by age—this is stratified analysis
+
+Since we suspect age is pulling the strings, let's **hold age constant**: instead of lumping 6-year-olds and 10-year-olds together, let's **compare kids of the same age against each other**.
+
+- **Looking only at 6-year-olds**: big feet read at 20%, small feet also 20%—**identical!**
+- **Looking only at 10-year-olds**: big feet read at 80%, small feet also 80%—**still identical!**
+
+As long as age is held the same, foot size makes **absolutely no difference** (the RR in every stratum = 1.0). That 2.1 "illusion" vanishes instantly.
+
+This approach—**"splitting everyone into groups based on some variable (each group is called a 'stratum'), then comparing within each group separately"**—is called **stratified analysis**. Here, we're **stratifying by age**.
+
+### Why do you even need to bother? (What happens if you don't)
+
+Because the **"crude" lumped-together number will deceive you**. Without stratifying:
+
+- You'd **convict an innocent bystander** (blaming foot size) and **let the real culprit walk free** (missing that it's actually age).
+- Translated to a real outbreak investigation: you might think "showering" is dangerous and order a **blanket ban on showers**, only to find it was a waste of effort, because the real key factor was actually "functional status." **Adjusting for confounding exists precisely so you don't waste your energy on the wrong target or give the wrong infection-control advice.**
+
+### How do you combine the strata into "one" answer? Mantel-Haenszel weighting
+
+Once you've stratified, each stratum has its own RR (here, both strata happen to be exactly 1.0). Usually you want **one** summary number, so you use a **Mantel-Haenszel (MH) weighted average** to combine the stratum-specific RRs, weighted by sample size, into an **adjusted RR**.
+
+Then you put the two numbers side by side:
+
+- **Crude RR = 2.1** (the deceptive version, not split by age)
+- **Adjusted RR = 1.0** (the honest version, split by age)
+
+The two are miles apart → this proves **age really was confounding the result**. In practice there's an easy rule of thumb: **if the crude RR and adjusted RR differ by ≥ 10%, that counts as confounding** (the change-in-estimate rule).
+
+### Try it yourself: catch this confounder with your own two hands
+
+```python
+# A "shoe size x can read" line list, split into two strata by age
+# a=big feet & can read, b=big feet & can't read, c=small feet & can read, d=small feet & can't read
+strata = {
+    "Age 6":  dict(a=4,  b=16, c=16, d=64),   # at this age, everyone's reading rate is low (20%)
+    "Age 10": dict(a=64, b=16, c=16, d=4),    # at this age, everyone's reading rate is high (80%)
+}
+
+def rr_2x2(a, b, c, d):
+    """Risk ratio of reading ability: big feet vs. small feet"""
+    return (a / (a + b)) / (c / (c + d))
+
+# (1) All mixed together (crude RR) -- not yet split by age
+A = sum(s["a"] for s in strata.values())
+B = sum(s["b"] for s in strata.values())
+C = sum(s["c"] for s in strata.values())
+D = sum(s["d"] for s in strata.values())
+crude = rr_2x2(A, B, C, D)
+print(f"Crude RR (not split by age) = {crude:.2f}"
+      f"  ->  big feet read {A/(A+B):.0%}, small feet {C/(C+D):.0%}")
+
+# (2) Split by age (stratified) -- within the same age, is there still a gap?
+for name, s in strata.items():
+    print(f"  {name}: RR = {rr_2x2(**s):.2f}")
+
+# (3) Combine the strata into one "adjusted" answer: Mantel-Haenszel weighted RR
+num = den = 0
+for s in strata.values():
+    n = s["a"] + s["b"] + s["c"] + s["d"]
+    num += s["a"] * (s["c"] + s["d"]) / n
+    den += s["c"] * (s["a"] + s["b"]) / n
+mh = num / den
+print(f"Mantel-Haenszel adjusted RR = {mh:.2f}")
+
+# (4) How far apart are the crude and adjusted RR? A gap >= 10% means confounding
+change = abs(crude - mh) / mh * 100
+print(f"Crude RR {crude:.2f} vs. adjusted {mh:.2f}, a {change:.0f}% difference -> age is a confounder!")
+```
+
+Run it and you'll see:
+
+```text
+Crude RR (not split by age) = 2.12  ->  big feet read 68%, small feet 32%
+  Age 6: RR = 1.00
+  Age 10: RR = 1.00
+Mantel-Haenszel adjusted RR = 1.00
+Crude RR 2.12 vs. adjusted 1.00, a 112% difference -> age is a confounder!
+```
+
+In just a few lines, you've walked through the entire logic of stratified analysis: **look at the crude RR → check each stratum separately → combine them into an MH-adjusted RR → compare how far apart they are**. Congratulations—this is exactly what Steps 4–7 of this chapter are doing!
+
+### Confounding vs. effect modification: a super easy fork to mix up
+
+After stratifying, always take one more look: **how similar are the RRs across strata?** This sends you down one of two completely different paths:
+
+| What you observe | What it means... | How to report it |
+|---|---|---|
+| Stratum RRs are **close to each other** (both 1.0), but **very different from the crude RR** (2.1) | **Confounding** | Report **one** adjusted RR |
+| Stratum RRs are **very different from each other** (e.g., age 6 RR=1.0, age 10 RR=3.0) | **Effect modification** | **Don't combine them**—report each stratum separately, because the effect genuinely differs by group |
+
+To tell which one you're dealing with, statisticians use a **test of homogeneity**: it tests whether "the stratum RRs are all consistent." Our big-feet example is the **former case**—the strata agree with each other (both 1.0), and the whole thing was just confounded by age, so combining into one adjusted RR is the right call.
+
+### Cheat sheet for reading the numbers (save this)
+
+| What you see... | What it means |
+|---|---|
+| Crude RR is clearly ≠ 1 | Don't jump to conclusions yet—a confounder might be pulling the strings |
+| After stratifying, every stratum RR becomes ≈ 1 | The original association was an illusion, confounded by that stratifying variable |
+| Crude RR vs. adjusted RR differ by ≥ 10% | Confounding confirmed → report the **adjusted** number |
+| Stratum RRs are close to each other | It's confounding → combine into one adjusted RR |
+| Stratum RRs are very different from each other | It's effect modification → report each stratum separately, don't combine |
+| An arrow on the DAG points to both exposure and outcome | That source variable is a confounder suspect |
+| Forest plot dots roughly line up across strata | The effect is consistent (homogeneous) across strata → MH pooling is fine |
+
+### Back to reality: reading ability → infection
+
+Now swap the characters in the story for the nursing home version:
+
+| Big-feet story | Real nursing home case |
+|---|---|
+| Foot size (exposure) | Whether the resident used the **shower** (`shower_use`) |
+| Can read or not (outcome) | Whether infected with Legionnaires' disease |
+| Age (confounder) | **Functional status** (`functional_status`, i.e., mobility) |
+| Split by age | **Stratify by functional status** |
+
+Every trick you just learned from the big-feet story—look at the crude RR, stratify, MH-adjust, compare how much they differ, tell confounding apart from effect modification—**is exactly what Steps 1–8 of this chapter do with the nursing home data**. Now scroll down and look at that DAG, those 2x2 tables, and the forest plot again—doesn't it suddenly feel a lot friendlier? 😉
+
+---
+
 ## Core Concepts
 
 ### The Three Requirements of a Confounder

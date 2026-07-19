@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 520" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#6B6B6B"/>
+    </marker>
+  </defs>
+
+  <rect width="780" height="520" fill="#FAF8F3" rx="12"/>
+  <text x="390" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">Do kids with bigger feet read better? Unmask the hidden confounder</text>
+  <text x="390" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">All mixed together → illusion; split by age → the truth appears</text>
+
+  <!-- Card A: crude (mixed) + culprit DAG -->
+  <g filter="url(#shadow)"><rect x="24" y="66" width="732" height="176" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="40" y="90" font-size="13" font-weight="bold" fill="#D94452">① All mixed together (crude RR)</text>
+  <!-- bars: reading rate, scale 100% = 200px from x=120 -->
+  <text x="44" y="123" font-size="11" fill="#1A1A1A">Big feet</text>
+  <rect x="118" y="110" width="136" height="20" rx="3" fill="#D97757"/>
+  <text x="262" y="125" font-size="11" font-weight="bold" fill="#D97757">reads 68%</text>
+  <text x="44" y="159" font-size="11" fill="#1A1A1A">Small feet</text>
+  <rect x="118" y="146" width="64" height="20" rx="3" fill="#6A9BCC"/>
+  <text x="190" y="161" font-size="11" font-weight="bold" fill="#6A9BCC">reads 32%</text>
+  <text x="118" y="200" font-size="11" font-weight="bold" fill="#D94452">⚠ RR ≈ 2.1 → bigger feet, better reading? (fake!)</text>
+
+  <!-- culprit DAG -->
+  <text x="600" y="90" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">The real culprit behind it: Age</text>
+  <ellipse cx="600" cy="120" rx="44" ry="19" fill="#788C5D" fill-opacity="0.18" stroke="#788C5D" stroke-width="1.5"/>
+  <text x="600" y="125" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">Age</text>
+  <ellipse cx="510" cy="196" rx="44" ry="19" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+  <text x="510" y="201" text-anchor="middle" font-size="12" fill="#D97757">Foot size</text>
+  <ellipse cx="690" cy="196" rx="44" ry="19" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.5"/>
+  <text x="690" y="201" text-anchor="middle" font-size="12" fill="#6A9BCC">Reading</text>
+  <line x1="575" y1="135" x2="522" y2="178" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="625" y1="135" x2="678" y2="178" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="600" y="230" text-anchor="middle" font-size="10" fill="#6B6B6B">Age gives older kids both bigger feet AND reading</text>
+
+  <!-- Card B: stratified by age -->
+  <g filter="url(#shadow)"><rect x="24" y="256" width="732" height="200" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="40" y="280" font-size="13" font-weight="bold" fill="#788C5D">② Split by age (stratify): within one age, foot size makes no difference!</text>
+  <line x1="390" y1="292" x2="390" y2="440" stroke="#E8E5DF" stroke-width="1"/>
+
+  <!-- 6yo panel: baseline y=430, scale 100%=104px (y430->326) -->
+  <text x="207" y="306" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1A1A">6-year-olds</text>
+  <line x1="120" y1="430" x2="300" y2="430" stroke="#1A1A1A" stroke-width="1"/>
+  <rect x="150" y="409" width="44" height="21" rx="2" fill="#D97757"/>
+  <text x="172" y="404" text-anchor="middle" font-size="10" font-weight="bold" fill="#D97757">20%</text>
+  <text x="172" y="444" text-anchor="middle" font-size="10" fill="#6B6B6B">Big feet</text>
+  <rect x="224" y="409" width="44" height="21" rx="2" fill="#6A9BCC"/>
+  <text x="246" y="404" text-anchor="middle" font-size="10" font-weight="bold" fill="#6A9BCC">20%</text>
+  <text x="246" y="444" text-anchor="middle" font-size="10" fill="#6B6B6B">Small feet</text>
+
+  <!-- 10yo panel -->
+  <text x="573" y="306" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1A1A">10-year-olds</text>
+  <line x1="486" y1="430" x2="666" y2="430" stroke="#1A1A1A" stroke-width="1"/>
+  <rect x="516" y="346" width="44" height="84" rx="2" fill="#D97757"/>
+  <text x="538" y="341" text-anchor="middle" font-size="10" font-weight="bold" fill="#D97757">80%</text>
+  <text x="538" y="444" text-anchor="middle" font-size="10" fill="#6B6B6B">Big feet</text>
+  <rect x="590" y="346" width="44" height="84" rx="2" fill="#6A9BCC"/>
+  <text x="612" y="341" text-anchor="middle" font-size="10" font-weight="bold" fill="#6A9BCC">80%</text>
+  <text x="612" y="444" text-anchor="middle" font-size="10" fill="#6B6B6B">Small feet</text>
+
+  <!-- Card C: verdict -->
+  <rect x="24" y="470" width="732" height="42" rx="10" fill="#FAF8F3" stroke="#788C5D" stroke-width="1.5"/>
+  <text x="390" y="496" text-anchor="middle" font-size="12" fill="#1A1A1A">Bottom line: crude RR 2.1 (<tspan fill="#D94452" font-weight="bold">illusion</tspan>) → adjusted RR 1.0 (<tspan fill="#788C5D" font-weight="bold">truth</tspan>). The culprit is Age, not foot size — this is <tspan font-weight="bold">confounding</tspan></text>
+</svg>
