@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 380" font-family="system-ui, -apple-system, sans-serif">
+  <defs><filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter></defs>
+  <rect width="760" height="380" fill="#FAF8F3" rx="12"/>
+  <text x="380" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">Real cluster, or an eye trick? Shuffle the coughing seats to test it</text>
+  <text x="380" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">The brain sees Orion even in random stars — so we 'shuffle' to prove a cluster is real</text>
+  <g filter="url(#shadow)"><rect x="40" y="68" width="300" height="238" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="190" y="92" text-anchor="middle" font-size="13" font-weight="bold" fill="#D94452">🤧 Real map: huddled together</text>
+  <rect x="107" y="106" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="122.0" cy="121.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="141" y="106" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="156.0" cy="121.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="175" y="106" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="190.0" cy="121.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="209" y="106" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="224.0" cy="121.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="243" y="106" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="258.0" cy="121.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="107" y="140" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="122.0" cy="155.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="141" y="140" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="156.0" cy="155.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="175" y="140" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="190.0" cy="155.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="209" y="140" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="224.0" cy="155.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="243" y="140" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="258.0" cy="155.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="107" y="174" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="122.0" cy="189.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="141" y="174" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="156.0" cy="189.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="175" y="174" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="190.0" cy="189.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="209" y="174" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="224.0" cy="189.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="243" y="174" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="258.0" cy="189.0" r="9" fill="#D94452"/>
+  <path d="M254.5 191.5 Q258.0 189.3 261.5 191.5" stroke="#FFF" stroke-width="1.1" fill="none"/>
+  <rect x="107" y="208" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="122.0" cy="223.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="141" y="208" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="156.0" cy="223.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="175" y="208" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="190.0" cy="223.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="209" y="208" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="224.0" cy="223.0" r="9" fill="#D94452"/>
+  <path d="M220.5 225.5 Q224.0 223.3 227.5 225.5" stroke="#FFF" stroke-width="1.1" fill="none"/>
+  <rect x="243" y="208" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="258.0" cy="223.0" r="9" fill="#D94452"/>
+  <path d="M254.5 225.5 Q258.0 223.3 261.5 225.5" stroke="#FFF" stroke-width="1.1" fill="none"/>
+  <rect x="107" y="242" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="122.0" cy="257.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="141" y="242" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="156.0" cy="257.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="175" y="242" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="190.0" cy="257.0" r="9" fill="#D94452"/>
+  <path d="M186.5 259.5 Q190.0 257.3 193.5 259.5" stroke="#FFF" stroke-width="1.1" fill="none"/>
+  <rect x="209" y="242" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="224.0" cy="257.0" r="9" fill="#D94452"/>
+  <path d="M220.5 259.5 Q224.0 257.3 227.5 259.5" stroke="#FFF" stroke-width="1.1" fill="none"/>
+  <rect x="243" y="242" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="258.0" cy="257.0" r="9" fill="#D94452"/>
+  <path d="M254.5 259.5 Q258.0 257.3 261.5 259.5" stroke="#FFF" stroke-width="1.1" fill="none"/>
+  <text x="190" y="296" text-anchor="middle" font-size="11" fill="#6B6B6B">adjacent coughing pairs = 6 (clearly bottom-right)</text>
+  <g filter="url(#shadow)"><rect x="420" y="68" width="300" height="238" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="570" y="92" text-anchor="middle" font-size="13" font-weight="bold" fill="#788C5D">🔀 After shuffling: spread out</text>
+  <rect x="487" y="106" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="502.0" cy="121.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="521" y="106" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="536.0" cy="121.0" r="9" fill="#D94452"/>
+  <path d="M532.5 123.5 Q536.0 121.3 539.5 123.5" stroke="#FFF" stroke-width="1.1" fill="none"/>
+  <rect x="555" y="106" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="570.0" cy="121.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="589" y="106" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="604.0" cy="121.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="623" y="106" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="638.0" cy="121.0" r="9" fill="#D94452"/>
+  <path d="M634.5 123.5 Q638.0 121.3 641.5 123.5" stroke="#FFF" stroke-width="1.1" fill="none"/>
+  <rect x="487" y="140" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="502.0" cy="155.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="521" y="140" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="536.0" cy="155.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="555" y="140" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="570.0" cy="155.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="589" y="140" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="604.0" cy="155.0" r="9" fill="#D94452"/>
+  <path d="M600.5 157.5 Q604.0 155.3 607.5 157.5" stroke="#FFF" stroke-width="1.1" fill="none"/>
+  <rect x="623" y="140" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="638.0" cy="155.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="487" y="174" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="502.0" cy="189.0" r="9" fill="#D94452"/>
+  <path d="M498.5 191.5 Q502.0 189.3 505.5 191.5" stroke="#FFF" stroke-width="1.1" fill="none"/>
+  <rect x="521" y="174" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="536.0" cy="189.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="555" y="174" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="570.0" cy="189.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="589" y="174" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="604.0" cy="189.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="623" y="174" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="638.0" cy="189.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="487" y="208" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="502.0" cy="223.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="521" y="208" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="536.0" cy="223.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="555" y="208" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="570.0" cy="223.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="589" y="208" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="604.0" cy="223.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="623" y="208" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="638.0" cy="223.0" r="9" fill="#D94452"/>
+  <path d="M634.5 225.5 Q638.0 223.3 641.5 225.5" stroke="#FFF" stroke-width="1.1" fill="none"/>
+  <rect x="487" y="242" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="502.0" cy="257.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="521" y="242" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="536.0" cy="257.0" r="9" fill="#D94452"/>
+  <path d="M532.5 259.5 Q536.0 257.3 539.5 259.5" stroke="#FFF" stroke-width="1.1" fill="none"/>
+  <rect x="555" y="242" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="570.0" cy="257.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="589" y="242" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="604.0" cy="257.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="623" y="242" width="30" height="30" rx="4" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <circle cx="638.0" cy="257.0" r="7" fill="#6A9BCC" fill-opacity="0.5"/>
+  <text x="570" y="296" text-anchor="middle" font-size="11" fill="#6B6B6B">adjacent coughing pairs ≈ 2 (random)</text>
+  <text x="380" y="185" text-anchor="middle" font-size="12" fill="#6B6B6B">shuffle →</text>
+  <rect x="40" y="320" width="680" height="44" rx="10" fill="#788C5D" fill-opacity="0.12" stroke="#788C5D" stroke-width="1.4"/>
+  <text x="380" y="347" text-anchor="middle" font-size="12.5" fill="#1A1A1A">Moran's I measures how much more clustered the REAL map is than 1000 shuffles → a p-value</text>
+</svg>
