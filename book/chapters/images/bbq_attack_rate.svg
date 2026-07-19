@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 560" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+  <rect width="820" height="560" fill="#FAF8F3" rx="12"/>
+  <text x="410" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">班遊烤肉後，一半的人拉肚子——哪道菜害的？</text>
+  <text x="410" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">破案關鍵：每道菜都來一場「吃過這隊 vs 沒吃那隊」的拉肚子率 PK 🥊</text>
+  <g filter="url(#shadow)"><rect x="24" y="66" width="384" height="404" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="42" y="96" font-size="15" font-weight="bold" fill="#1A1A1A">🥗 生菜沙拉</text>
+  <rect x="270" y="80" width="120" height="24" rx="12" fill="#D97757" fill-opacity="0.15" stroke="#D97757"/>
+  <text x="330" y="97" text-anchor="middle" font-size="12" font-weight="bold" fill="#D97757">🔍 頭號嫌疑犯</text>
+  <text x="42" y="140" font-size="11" fill="#1A1A1A">吃過的人</text>
+  <circle cx="120" cy="136" r="8" fill="#D97757"/>
+  <path d="M116.5 139 Q120 136.5 123.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="142" cy="136" r="8" fill="#D97757"/>
+  <path d="M138.5 139 Q142 136.5 145.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="164" cy="136" r="8" fill="#D97757"/>
+  <path d="M160.5 139 Q164 136.5 167.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="186" cy="136" r="8" fill="#D97757"/>
+  <path d="M182.5 139 Q186 136.5 189.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="208" cy="136" r="8" fill="#D97757"/>
+  <path d="M204.5 139 Q208 136.5 211.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="230" cy="136" r="8" fill="#D97757"/>
+  <path d="M226.5 139 Q230 136.5 233.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="252" cy="136" r="8" fill="#D97757"/>
+  <path d="M248.5 139 Q252 136.5 255.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="274" cy="136" r="8" fill="#D97757"/>
+  <path d="M270.5 139 Q274 136.5 277.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="296" cy="136" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="318" cy="136" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <text x="352" y="141" font-size="15" font-weight="bold" fill="#D97757">80%</text>
+  <text x="352" y="155" font-size="9" fill="#6B6B6B">(16/20)</text>
+  <text x="42" y="184" font-size="11" fill="#1A1A1A">沒吃的人</text>
+  <circle cx="120" cy="180" r="8" fill="#D97757"/>
+  <path d="M116.5 183 Q120 180.5 123.5 183" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="142" cy="180" r="8" fill="#D97757"/>
+  <path d="M138.5 183 Q142 180.5 145.5 183" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="164" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="186" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="208" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="230" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="252" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="274" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="296" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="318" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <text x="352" y="185" font-size="15" font-weight="bold" fill="#6A9BCC">20%</text>
+  <text x="352" y="199" font-size="9" fill="#6B6B6B">(4/20)</text>
+  <rect x="42" y="214" width="348" height="34" rx="8" fill="#FDECE7"/>
+  <text x="216" y="236" text-anchor="middle" font-size="13" font-weight="bold" fill="#D94452">RR = 80% ÷ 20% = 4.0 → 嫌疑重大！</text>
+  <text x="42" y="276" font-size="11" font-weight="bold" fill="#6B6B6B">這兩排小人，其實就是一張 2×2 表 👇</text>
+  <text x="205.0" y="310" text-anchor="middle" font-size="11" font-weight="bold" fill="#D94452">拉肚子</text>
+  <text x="295.0" y="310" text-anchor="middle" font-size="11" font-weight="bold" fill="#788C5D">沒拉</text>
+  <text x="154" y="339.0" text-anchor="end" font-size="11" font-weight="bold" fill="#D97757">吃沙拉</text>
+  <rect x="160" y="318" width="90" height="34" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="205.0" y="340.0" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">16</text>
+  <rect x="250" y="318" width="90" height="34" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="295.0" y="340.0" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">4</text>
+  <text x="154" y="373.0" text-anchor="end" font-size="11" font-weight="bold" fill="#6A9BCC">沒吃</text>
+  <rect x="160" y="352" width="90" height="34" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="205.0" y="374.0" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">4</text>
+  <rect x="250" y="352" width="90" height="34" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="295.0" y="374.0" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">16</text>
+  <text x="216" y="408" text-anchor="middle" font-size="10" fill="#6B6B6B">a=16, b=4, c=4, d=16 → RR = (16/20)÷(4/20) = 4.0</text>
+  <g filter="url(#shadow)"><rect x="424" y="66" width="372" height="404" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="442" y="96" font-size="15" font-weight="bold" fill="#1A1A1A">🍚 白飯</text>
+  <rect x="686" y="80" width="92" height="24" rx="12" fill="#788C5D" fill-opacity="0.15" stroke="#788C5D"/>
+  <text x="732" y="97" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">✅ 清白</text>
+  <text x="442" y="140" font-size="11" fill="#1A1A1A">吃過的人</text>
+  <circle cx="520" cy="136" r="8" fill="#D97757"/>
+  <path d="M516.5 139 Q520 136.5 523.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="542" cy="136" r="8" fill="#D97757"/>
+  <path d="M538.5 139 Q542 136.5 545.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="564" cy="136" r="8" fill="#D97757"/>
+  <path d="M560.5 139 Q564 136.5 567.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="586" cy="136" r="8" fill="#D97757"/>
+  <path d="M582.5 139 Q586 136.5 589.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="608" cy="136" r="8" fill="#D97757"/>
+  <path d="M604.5 139 Q608 136.5 611.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="630" cy="136" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="652" cy="136" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="674" cy="136" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="696" cy="136" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="718" cy="136" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <text x="752" y="141" font-size="15" font-weight="bold" fill="#6B6B6B">50%</text>
+  <text x="752" y="155" font-size="9" fill="#6B6B6B">(10/20)</text>
+  <text x="442" y="184" font-size="11" fill="#1A1A1A">沒吃的人</text>
+  <circle cx="520" cy="180" r="8" fill="#D97757"/>
+  <path d="M516.5 183 Q520 180.5 523.5 183" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="542" cy="180" r="8" fill="#D97757"/>
+  <path d="M538.5 183 Q542 180.5 545.5 183" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="564" cy="180" r="8" fill="#D97757"/>
+  <path d="M560.5 183 Q564 180.5 567.5 183" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="586" cy="180" r="8" fill="#D97757"/>
+  <path d="M582.5 183 Q586 180.5 589.5 183" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="608" cy="180" r="8" fill="#D97757"/>
+  <path d="M604.5 183 Q608 180.5 611.5 183" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="630" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="652" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="674" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="696" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="718" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <text x="752" y="185" font-size="15" font-weight="bold" fill="#6B6B6B">50%</text>
+  <text x="752" y="199" font-size="9" fill="#6B6B6B">(10/20)</text>
+  <rect x="442" y="214" width="336" height="34" rx="8" fill="#EEF2E9"/>
+  <text x="610" y="236" text-anchor="middle" font-size="13" font-weight="bold" fill="#788C5D">RR = 50% ÷ 50% = 1.0 → 清白</text>
+  <rect x="442" y="272" width="336" height="118" rx="10" fill="#FDECE7" stroke="#D94452" stroke-dasharray="4"/>
+  <text x="610" y="298" text-anchor="middle" font-size="12" font-weight="bold" fill="#D94452">⚠️ 新手最常踩的雷：忘了分母</text>
+  <text x="458" y="322" font-size="11" fill="#1A1A1A">「拉肚子的人有八成吃了沙拉！」</text>
+  <text x="458" y="340" font-size="11" fill="#6B6B6B">→ 這什麼都沒證明——搞不好「沒拉肚子的」</text>
+  <text x="458" y="356" font-size="11" fill="#6B6B6B">　 也有八成吃了沙拉啊！</text>
+  <text x="458" y="378" font-size="11" font-weight="bold" fill="#788C5D">✔ 一定要比「吃的隊」對上「沒吃的隊」</text>
+  <rect x="24" y="484" width="772" height="60" rx="10" fill="#FAF8F3" stroke="#6A9BCC" stroke-width="1.5"/>
+  <text x="410" y="508" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1A1A">同一招搬到護理之家 🏥</text>
+  <text x="410" y="530" text-anchor="middle" font-size="12" fill="#1A1A1A">把「沙拉」換成「洗澡 <tspan font-weight="bold" fill="#D97757">shower_use</tspan>」、「拉肚子」換成「<tspan font-weight="bold" fill="#D94452">感染</tspan>」，比較兩隊侵襲率，RR 就出來了。</text>
+</svg>
