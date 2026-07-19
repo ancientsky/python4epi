@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 536" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#6B6B6B"/>
+    </marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#D97757"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="536" fill="#FAF8F3" rx="12"/>
+  <text x="400" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">Does cram school really work? Add "books at home" to see its real effect</text>
+  <text x="400" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">Cram school alone → inflated; put every factor in together → each factor's "own effect" appears</text>
+
+  <!-- Card A: crude -->
+  <g filter="url(#shadow)"><rect x="24" y="66" width="752" height="172" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="40" y="90" font-size="13" font-weight="bold" fill="#D94452">① Cram school alone (single variable)</text>
+  <!-- bars: high-score rate, scale 100% = 200px from x=118 -->
+  <text x="44" y="123" font-size="11" fill="#1A1A1A">Cram</text>
+  <rect x="118" y="110" width="128" height="20" rx="3" fill="#D97757"/>
+  <text x="254" y="125" font-size="11" font-weight="bold" fill="#D97757">high-score 64%</text>
+  <text x="44" y="159" font-size="11" fill="#1A1A1A">No cram</text>
+  <rect x="118" y="146" width="58" height="20" rx="3" fill="#6A9BCC"/>
+  <text x="184" y="161" font-size="11" font-weight="bold" fill="#6A9BCC">high-score 29%</text>
+  <text x="44" y="200" font-size="13" font-weight="bold" fill="#D94452">Crude OR ≈ 4.3</text>
+  <text x="170" y="200" font-size="12" fill="#1A1A1A">→ cram school is magic? Don't sign up yet…</text>
+  <text x="44" y="224" font-size="10" fill="#6B6B6B">🤔 Trap: kids who attend cram school already have more books at home 📚</text>
+
+  <!-- culprit DAG (right) -->
+  <text x="618" y="90" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">The real hero: family background</text>
+  <ellipse cx="618" cy="120" rx="56" ry="19" fill="#788C5D" fill-opacity="0.18" stroke="#788C5D" stroke-width="1.5"/>
+  <text x="618" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="#788C5D">Books at home</text>
+  <ellipse cx="530" cy="196" rx="44" ry="19" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+  <text x="530" y="201" text-anchor="middle" font-size="12" fill="#D97757">Cram</text>
+  <ellipse cx="706" cy="196" rx="46" ry="19" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.5"/>
+  <text x="706" y="201" text-anchor="middle" font-size="11" fill="#6A9BCC">High score</text>
+  <line x1="588" y1="135" x2="542" y2="178" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="648" y1="135" x2="694" y2="178" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Card B: multivariable, shrinking OR -->
+  <g filter="url(#shadow)"><rect x="24" y="250" width="752" height="200" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="40" y="274" font-size="13" font-weight="bold" fill="#788C5D">② Multivariable: put "cram + books at home" into ONE regression model</text>
+  <text x="40" y="296" font-size="11" fill="#6B6B6B">The model finds cram school's OWN effect, holding books-at-home equal → the OR shrinks!</text>
+
+  <!-- OR axis: OR=1 baseline at x=150, scale 1 unit = 110px -->
+  <line x1="180" y1="320" x2="180" y2="430" stroke="#6B6B6B" stroke-width="1.5"/>
+  <text x="180" y="446" text-anchor="middle" font-size="10" fill="#6B6B6B">OR=1 (no effect)</text>
+  <!-- crude OR 4.3 bar -->
+  <text x="170" y="343" text-anchor="end" font-size="11" fill="#D94452">Crude OR</text>
+  <rect x="180" y="330" width="363" height="22" rx="3" fill="#D97757" fill-opacity="0.45"/>
+  <text x="553" y="346" font-size="13" font-weight="bold" fill="#D97757">4.3</text>
+  <!-- adjusted OR 1.5 bar -->
+  <text x="170" y="393" text-anchor="end" font-size="11" fill="#788C5D">Adjusted OR</text>
+  <rect x="180" y="380" width="55" height="22" rx="3" fill="#D97757"/>
+  <text x="245" y="396" font-size="13" font-weight="bold" fill="#D97757">1.5</text>
+  <!-- shrink arrow -->
+  <line x1="330" y1="356" x2="260" y2="378" stroke="#D97757" stroke-width="2" marker-end="url(#arrO)"/>
+  <text x="360" y="372" font-size="11" font-weight="bold" fill="#D97757">Shrinks!</text>
+  <text x="260" y="418" font-size="11" fill="#1A1A1A">Cram itself adds only a little; family background is the main driver</text>
+  <text x="590" y="410" font-size="10" fill="#6B6B6B">💡 In practice, add many at once:</text>
+  <text x="590" y="426" font-size="10" fill="#6B6B6B">age, comorbidities, functional status…</text>
+
+  <!-- Card C: verdict -->
+  <rect x="24" y="464" width="752" height="46" rx="10" fill="#FAF8F3" stroke="#788C5D" stroke-width="1.5"/>
+  <text x="400" y="492" text-anchor="middle" font-size="11" fill="#1A1A1A">Bottom line: crude OR 4.3 (<tspan fill="#D94452" font-weight="bold">inflated by background</tspan>) → adjusted 1.5 (<tspan fill="#788C5D" font-weight="bold">cram's real effect</tspan>) — multivariable compares each factor fairly.</text>
+</svg>

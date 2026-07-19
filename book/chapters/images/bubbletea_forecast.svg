@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 536" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#6B6B6B"/>
+    </marker>
+  </defs>
+  <rect width="800" height="536" fill="#FAF8F3" rx="12"/>
+  <text x="400" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">珍奶店老闆的「水晶球」：看懂時間序列預測</text>
+  <text x="400" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">每天賣幾杯 → 每日病例數；預測明天 → 決定備多少料、排多少人（病床、人力）</text>
+  <g filter="url(#shadow)"><rect x="24" y="66" width="752" height="298" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="40" y="90" font-size="13" font-weight="bold" fill="#1A1A1A">每天賣出杯數：週六日爆單、平日冷清（鋸齒），綠線是 7 天平均看趨勢</text>
+  <line x1="92" y1="108" x2="92" y2="300" stroke="#1A1A1A" stroke-width="1.2"/>
+  <line x1="92" y1="300" x2="766" y2="300" stroke="#1A1A1A" stroke-width="1.2"/>
+  <text x="84" y="137" text-anchor="end" font-size="9" fill="#6B6B6B">120</text>
+  <text x="84" y="220" text-anchor="end" font-size="9" fill="#6B6B6B">60</text>
+  <text x="84" y="303" text-anchor="end" font-size="9" fill="#6B6B6B">0</text>
+  <text x="46" y="200" font-size="10" fill="#6B6B6B" transform="rotate(-90 46 200)" text-anchor="middle">杯數 / 病例數</text>
+  <rect x="595" y="110" width="164" height="190" rx="4" fill="#6B6B6B" fill-opacity="0.10" stroke="#6B6B6B" stroke-dasharray="4" stroke-opacity="0.5"/>
+  <text x="676" y="122" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#6B6B6B">測試週：先蓋起來</text>
+  <rect x="96.5" y="219.2" width="14.8" height="80.8" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="120.4" y="216.4" width="14.8" height="83.6" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="144.2" y="212.3" width="14.8" height="87.7" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="168.1" y="215.1" width="14.8" height="84.9" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="192.0" y="210.9" width="14.8" height="89.1" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="215.8" y="166.3" width="14.8" height="133.7" rx="1.5" fill="#D97757" fill-opacity="1"/>
+  <rect x="239.7" y="174.7" width="14.8" height="125.3" rx="1.5" fill="#D97757" fill-opacity="1"/>
+  <rect x="263.5" y="208.1" width="14.8" height="91.9" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="287.4" y="203.9" width="14.8" height="96.1" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="311.2" y="206.7" width="14.8" height="93.3" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="335.1" y="202.5" width="14.8" height="97.5" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="359.0" y="199.7" width="14.8" height="100.3" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="382.8" y="155.2" width="14.8" height="144.8" rx="1.5" fill="#D97757" fill-opacity="1"/>
+  <rect x="406.7" y="162.1" width="14.8" height="137.9" rx="1.5" fill="#D97757" fill-opacity="1"/>
+  <rect x="430.5" y="196.9" width="14.8" height="103.1" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="454.4" y="192.8" width="14.8" height="107.2" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="478.2" y="195.6" width="14.8" height="104.4" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="502.1" y="191.4" width="14.8" height="108.6" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="526.0" y="188.6" width="14.8" height="111.4" rx="1.5" fill="#6A9BCC" fill-opacity="0.55"/>
+  <rect x="549.8" y="138.5" width="14.8" height="161.5" rx="1.5" fill="#D97757" fill-opacity="1"/>
+  <rect x="573.7" y="146.8" width="14.8" height="153.2" rx="1.5" fill="#D97757" fill-opacity="1"/>
+  <rect x="597.5" y="185.8" width="14.8" height="114.2" rx="1.5" fill="#C9C4BC" fill-opacity="1"/>
+  <rect x="621.4" y="181.6" width="14.8" height="118.4" rx="1.5" fill="#C9C4BC" fill-opacity="1"/>
+  <rect x="645.2" y="184.4" width="14.8" height="115.6" rx="1.5" fill="#C9C4BC" fill-opacity="1"/>
+  <rect x="669.1" y="180.2" width="14.8" height="119.8" rx="1.5" fill="#C9C4BC" fill-opacity="1"/>
+  <rect x="693.0" y="177.5" width="14.8" height="122.5" rx="1.5" fill="#C9C4BC" fill-opacity="1"/>
+  <rect x="716.8" y="127.3" width="14.8" height="172.7" rx="1.5" fill="#C9C4BC" fill-opacity="1"/>
+  <rect x="740.7" y="132.9" width="14.8" height="167.1" rx="1.5" fill="#C9C4BC" fill-opacity="1"/>
+  <polyline fill="none" stroke="#788C5D" stroke-width="2.6" points="247.1,202.1 270.9,200.5 294.8,198.7 318.6,197.9 342.5,196.2 366.4,194.6 390.2,193.0 414.1,191.2 437.9,189.6 461.8,188.0 485.6,186.4 509.5,184.8 533.4,183.2 557.2,180.8 581.1,178.6"/>
+  <polyline fill="none" stroke="#D97757" stroke-width="2.2" stroke-dasharray="5 3" points="581.1,178.6 604.9,176.5 628.8,174.3 652.6,172.1 676.5,169.9 700.4,167.7 724.2,165.5 748.1,163.3"/>
+  <text x="176" y="316" text-anchor="middle" font-size="9.5" fill="#6B6B6B">第 1 週</text>
+  <text x="342" y="316" text-anchor="middle" font-size="9.5" fill="#6B6B6B">第 2 週</text>
+  <text x="510" y="316" text-anchor="middle" font-size="9.5" fill="#6B6B6B">第 3 週</text>
+  <text x="676" y="316" text-anchor="middle" font-size="9.5" fill="#6B6B6B">第 4 週</text>
+  <text x="223" y="158" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#D97757">週六爆單</text>
+  <text x="342" y="184" font-size="10" font-weight="bold" fill="#788C5D">7 天平均（抹平鋸齒）</text>
+  <text x="700" y="137" text-anchor="middle" font-size="10" font-weight="bold" fill="#D97757">預測</text>
+  <text x="700" y="150" text-anchor="middle" font-size="9" fill="#6B6B6B">再掀開對答案</text>
+  <g filter="url(#shadow)"><rect x="24" y="376" width="752" height="134" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="40" y="400" font-size="13" font-weight="bold" fill="#1A1A1A">三個關鍵詞，一次記住</text>
+  <rect x="40" y="410" width="228" height="58" rx="8" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <text x="54" y="430" font-size="12" font-weight="bold" fill="#788C5D">滾動平均</text>
+  <text x="54" y="447" font-size="9.5" fill="#6B6B6B">別看今天一天的忽高忽低；</text>
+  <text x="54" y="461" font-size="9.5" fill="#6B6B6B">看 7 天平均才知道真趨勢</text>
+  <rect x="280" y="410" width="228" height="58" rx="8" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <text x="294" y="430" font-size="12" font-weight="bold" fill="#6A9BCC">自迴歸</text>
+  <text x="294" y="447" font-size="9.5" fill="#6B6B6B">「昨天賣爆，今天大概也旺」；</text>
+  <text x="294" y="461" font-size="9.5" fill="#6B6B6B">用最近幾天推明天</text>
+  <rect x="520" y="410" width="228" height="58" rx="8" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <text x="534" y="430" font-size="12" font-weight="bold" fill="#D97757">週期 s=7</text>
+  <text x="534" y="447" font-size="9.5" fill="#6B6B6B">「每逢週六必爆」；</text>
+  <text x="534" y="461" font-size="9.5" fill="#6B6B6B">每 7 天準時重播的節奏</text>
+  <text x="400" y="492" text-anchor="middle" font-size="12" fill="#1A1A1A">為什麼要預測？珍奶店：<tspan fill="#D97757" font-weight="bold">備多少珍珠、排幾個店員</tspan> ＝ 疫情：<tspan fill="#6A9BCC" font-weight="bold">準備多少病床、多少人力</tspan></text>
+</svg>

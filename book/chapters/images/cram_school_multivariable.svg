@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 536" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#6B6B6B"/>
+    </marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#D97757"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="536" fill="#FAF8F3" rx="12"/>
+  <text x="400" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">補習真的有效嗎？把「家裡藏書」也放進來，看補習的真本事</text>
+  <text x="400" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">只看補習 → 效果被灌水；多變項一起算 → 每個因子的「純效果」現形</text>
+
+  <!-- Card A: crude -->
+  <g filter="url(#shadow)"><rect x="24" y="66" width="752" height="172" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="40" y="90" font-size="13" font-weight="bold" fill="#D94452">① 只看補習（單變項）：補習組分數高好多</text>
+  <!-- bars: high-score rate, scale 100% = 200px from x=118 -->
+  <text x="44" y="123" font-size="11" fill="#1A1A1A">補習組</text>
+  <rect x="118" y="110" width="128" height="20" rx="3" fill="#D97757"/>
+  <text x="254" y="125" font-size="11" font-weight="bold" fill="#D97757">高分率 64%</text>
+  <text x="44" y="159" font-size="11" fill="#1A1A1A">沒補習組</text>
+  <rect x="118" y="146" width="58" height="20" rx="3" fill="#6A9BCC"/>
+  <text x="184" y="161" font-size="11" font-weight="bold" fill="#6A9BCC">高分率 29%</text>
+  <text x="44" y="200" font-size="13" font-weight="bold" fill="#D94452">粗 OR ≈ 4.3</text>
+  <text x="136" y="200" font-size="12" fill="#1A1A1A">→ 補習根本神器？先別急著報名…</text>
+  <text x="44" y="224" font-size="10" fill="#6B6B6B">🤔 陷阱：會去補習的小孩，家裡本來就比較多書 📚</text>
+
+  <!-- culprit DAG (right) -->
+  <text x="618" y="90" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">真正的功臣：家庭背景</text>
+  <ellipse cx="618" cy="120" rx="52" ry="19" fill="#788C5D" fill-opacity="0.18" stroke="#788C5D" stroke-width="1.5"/>
+  <text x="618" y="125" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">家裡藏書</text>
+  <ellipse cx="530" cy="196" rx="42" ry="19" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/>
+  <text x="530" y="201" text-anchor="middle" font-size="12" fill="#D97757">補習</text>
+  <ellipse cx="706" cy="196" rx="42" ry="19" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.5"/>
+  <text x="706" y="201" text-anchor="middle" font-size="12" fill="#6A9BCC">高分</text>
+  <line x1="592" y1="135" x2="542" y2="178" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="644" y1="135" x2="694" y2="178" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Card B: multivariable, shrinking OR -->
+  <g filter="url(#shadow)"><rect x="24" y="250" width="752" height="200" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="40" y="274" font-size="13" font-weight="bold" fill="#788C5D">② 多變項：把「補習＋家裡藏書」一起放進迴歸模型</text>
+  <text x="40" y="296" font-size="11" fill="#6B6B6B">模型會在「家裡藏書一樣多」的前提下，算出補習「自己」的效果 → OR 縮水！</text>
+
+  <!-- OR axis: OR=1 baseline at x=150, scale 1 unit = 110px -->
+  <line x1="150" y1="320" x2="150" y2="430" stroke="#6B6B6B" stroke-width="1.5"/>
+  <text x="150" y="446" text-anchor="middle" font-size="10" fill="#6B6B6B">OR=1（沒效果）</text>
+  <!-- crude OR 4.3 bar -->
+  <text x="140" y="343" text-anchor="end" font-size="11" fill="#D94452">粗 OR</text>
+  <rect x="150" y="330" width="363" height="22" rx="3" fill="#D97757" fill-opacity="0.45"/>
+  <text x="523" y="346" font-size="13" font-weight="bold" fill="#D97757">4.3</text>
+  <!-- adjusted OR 1.5 bar -->
+  <text x="140" y="393" text-anchor="end" font-size="11" fill="#788C5D">校正 OR</text>
+  <rect x="150" y="380" width="55" height="22" rx="3" fill="#D97757"/>
+  <text x="215" y="396" font-size="13" font-weight="bold" fill="#D97757">1.5</text>
+  <!-- shrink arrow -->
+  <line x1="300" y1="356" x2="230" y2="378" stroke="#D97757" stroke-width="2" marker-end="url(#arrO)"/>
+  <text x="330" y="372" font-size="11" font-weight="bold" fill="#D97757">縮水！</text>
+  <text x="230" y="418" font-size="11" fill="#1A1A1A">補習「自己」只加一點點，家庭背景才是主力</text>
+  <text x="560" y="410" font-size="10" fill="#6B6B6B">💡 現實中可一次放進</text>
+  <text x="560" y="426" font-size="10" fill="#6B6B6B">年齡、共病、功能狀態…很多個</text>
+
+  <!-- Card C: verdict -->
+  <rect x="24" y="464" width="752" height="46" rx="10" fill="#FAF8F3" stroke="#788C5D" stroke-width="1.5"/>
+  <text x="400" y="492" text-anchor="middle" font-size="12" fill="#1A1A1A">結論：粗 OR 4.3（<tspan fill="#D94452" font-weight="bold">被家庭背景灌水</tspan>）→ 校正後 1.5（<tspan fill="#788C5D" font-weight="bold">補習的真本事</tspan>）。多變項分析＝一次全部放進來，公平比較每個因子。</text>
+</svg>

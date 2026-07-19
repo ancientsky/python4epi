@@ -19,6 +19,144 @@ Stratified analysis can only control one variable at a time. To **adjust for sev
 - Presenting the results in the standard epidemiological Table 2 format
 - Model diagnostics (AIC) and variable selection
 
+## 🎯 Super Simple Special: Understanding Multivariable Analysis with "Does Cram School Really Work?"
+
+> "Multivariable analysis," "adjusted OR," "odds ratio" sound like grown-up territory? Don't be scared. This section sets the nursing home aside for a moment and uses a question **you and your friends have argued about since you were kids**—**"Does cram school actually work?"**—to walk through the whole idea in a way that'll make even a 7th grader get it instantly. Once you're done, go back and look at the regression table below—you'll suddenly find every number is telling this exact same story!
+
+### An argument that never ends: does cram school really make you smarter?
+
+Someone surveys a bunch of middle schoolers and finds:
+
+> **Among kids who go to cram school, 64% score 80 or above. Among kids who don't, only 29% do.**
+
+If you jumped straight to a conclusion—**"Cram school doubles your chance of a high score, sign up now!"**—you might have fallen into the same "big feet" trap as Ch05. Because...
+
+> 🤔 **Kids who go to cram school usually already have more books at home, and their parents already care more about studying.** In other words, there's a "family background" factor that **simultaneously** makes a kid "more likely to go to cram school" and "more likely to score high anyway."
+
+That "family background" is a **confounder** lurking behind the scenes—playing the exact same role that "age" played in the big-feet story.
+
+### But this time it's different: cram school might have "a little bit of real effect"
+
+In Ch05, once we stratified the big-feet story, the RR dropped all the way from 2.1 down to **1.0**—foot size turned out to have **zero effect at all**, a pure illusion. Cram school is a bit different: **it might really have a small genuine effect, just wildly "inflated" by family background.** What we want to ask is:
+
+> **After "subtracting out" family background, how much real credit does cram school get to keep on its own?**
+
+This is where **multivariable analysis** comes in.
+
+### Key intuition #1: the parallel-universe twin
+
+How do you "subtract out" family background? Picture this:
+
+> 👯 **You have an identical twin in a parallel universe**—just as smart, with just as many books at home, with parents who feel the same way about studying—**the only difference is "they went to cram school and you didn't."** So do they score higher than you? By how much? **That "extra score"—that's cram school's real, honest contribution.**
+
+That's exactly what multivariable regression does: mathematically, it "**pretends everything else is equal**," letting only the cram-school variable differ, and calculates cram school's effect **by itself**. This is called "**holding others constant**."
+
+### Key intuition #2: why do you have to put everything "together" in one model?
+
+You might ask: why not just analyze each variable one at a time, separately?
+
+> 🕵️ **The interrogation room metaphor**: question suspects one at a time, separately, and each one will take credit for everyone else's work ("it was all me!"). But **lock all the suspects in the same interrogation room and confront them together**, and you can finally squeeze out how much each one **actually** did. A multivariable model is that interrogation room—it throws cram school, family background, age, comorbidities... all into the **same** model at once, so each factor's effect is its net contribution "**after subtracting out everyone else**."
+
+This is exactly where multivariable analysis beats the stratified analysis from Ch05: **stratifying can only control one variable at a time, while regression can control a whole bunch at once.**
+
+```{figure} images/cram_school_multivariable_en.svg
+:name: fig-cram-school-multivariable
+:alt: Multivariable analysis of cram school: looking at cram school alone, the cram-school group scores high 64% of the time versus 29% for the no-cram-school group (crude OR≈4.3), but the real culprit is family background (books at home); once cram school and books at home are put into the regression model together, cram school's OR shrinks from 4.3 to 1.5, meaning cram school's own effect is much smaller
+:width: 100%
+
+Top left: looking at cram school alone, it looks super effective (crude OR 4.3); top right: the real culprit "family background" drives both cram school attendance and high scores; bottom: once both are put into the model together, cram school's OR **shrinks to 1.5**—not zero, "shrunk but still alive."
+```
+
+### While we're at it: odds and the odds ratio (OR)
+
+The number that comes out of a regression is called an **OR (odds ratio)**, not an RR. What's "odds"? The fastest way to think about it is betting odds:
+
+> 🎲 **Probability** is "6 out of 30 people are infected" = 6/30 = 20%.
+> **Odds** is "the 6 infected **against** the 24 not infected" = 6:24 = 0.25, like the **betting odds** on a scoreboard.
+> The **odds ratio (OR)** is just the two groups' odds **divided by each other**. A cram-school OR of 4.3 means: "the **betting odds** of 'scoring high' for the cram-school group are 4.3 times those of the no-cram-school group."
+
+### Try it yourself: calculate cram school's "real skill" with your own two hands
+
+```python
+import numpy as np
+import pandas as pd
+import statsmodels.formula.api as smf
+
+rng = np.random.default_rng(42)
+n = 800
+
+# For each student: number of books at home (in tens), whether they go to cram school, whether they score 80+
+# Books at home is an "upstream" factor: more books -> more likely to go to cram school AND more likely to score high anyway (a true confounder)
+home_books = rng.normal(10, 3, n).clip(2, 20)
+p_cram = 1 / (1 + np.exp(-(home_books - 10) / 2))   # kids with more books at home are more likely to go to cram school
+cram = rng.binomial(1, p_cram)
+# Scoring high: mostly driven by family background; cram school "itself" only adds a little (true effect OR = e^0.4 ~= 1.5)
+p_high = 1 / (1 + np.exp(-(-6 + 0.55 * home_books + 0.4 * cram)))
+high_score = rng.binomial(1, p_high)
+
+students = pd.DataFrame({"cram": cram, "home_books": home_books, "high_score": high_score})
+
+# (1) Cram school alone (univariate): how far apart are the two groups' high-score rates?
+r1 = students.loc[students.cram == 1, "high_score"].mean()
+r0 = students.loc[students.cram == 0, "high_score"].mean()
+print(f"Cram group high-score {r1:.0%}, no-cram {r0:.0%}")
+
+# Crude OR: the model only includes "cram"
+crude = smf.logit("high_score ~ cram", data=students).fit(disp=0)
+print(f"Crude OR (cram only)               = {np.exp(crude.params['cram']):.2f}")
+
+# (2) Multivariable: put "cram + books at home" into the same model together (that interrogation room)
+adj = smf.logit("high_score ~ cram + home_books", data=students).fit(disp=0)
+print(f"Adjusted OR (cram + books at home) = {np.exp(adj.params['cram']):.2f}")
+```
+
+Running this, you'll see:
+
+```text
+Cram group high-score 64%, no-cram 29%
+Crude OR (cram only)               = 4.33
+Adjusted OR (cram + books at home) = 1.51
+```
+
+> 💡 **Here's the "aha" moment**: more than half of cram school's glow was actually borrowed from "already having more books at home"—peel that glow away layer by layer, and the OR drops from **4.3 to 1.5**. Most of the credit belonged to someone else, but **the remaining 1.5 is cram school's own, honest earning**.
+
+### ⚠️ Three caveats you must remember
+
+1. **Adjusting doesn't always make the number smaller**: this time cram school shrank from 4.3 to 1.5, but adjusting can also make a number **bigger**, or even **flip its direction**. The point isn't "it always shrinks"—it's that "**as soon as adjusting changes the number, that proves there was confounding**."
+2. **A model can only expose the suspects you actually bring into the interrogation room**: any factor you didn't think of and didn't put into the model (say, "whether the kid got enough sleep") is still running free outside—this is called **residual confounding**. So the adjusted number is only the best estimate "**given what's currently known**," not an ironclad guarantee of causation.
+3. **OR is not "how many times the probability"**: OR = 4.3 means 4.3 times the **odds**, not 4.3 times the **risk**. And **the more common the disease, the more OR exaggerates the number**—our outbreak has an attack rate as high as 43% (very common!), which is exactly why this chapter's **main method is Modified Poisson**, which computes the honest **RR (risk ratio)** directly, instead of the OR, which tends to overestimate.
+
+### Cheat sheet for reading the numbers (save this)
+
+| What you see... | What it means |
+|---|---|
+| An OR/RR computed from just one variable | The **crude** value—possibly inflated by a confounder |
+| A model with a bunch of variables in it | **Multivariable**: each coefficient is the net effect "holding the other factors constant" |
+| Crude OR 4.3 → adjusted OR 1.5 | Shrunk but not zeroed out: part borrowed glow, part real skill |
+| The number changes after adjusting (bigger/smaller/flips) | A confounder is at work |
+| The number barely changes after adjusting | That variable probably isn't an important confounder |
+| OR (from logistic regression) | How many times the **odds**—overestimates risk when the attack rate is high |
+| RR (from Modified Poisson) | How many times the **risk**—the go-to, more honest choice for cohort studies |
+| exp(coefficient) | Turns the regression coefficient β back into an OR or RR ($e^\beta$) |
+
+### Back to reality: cram school → shower use
+
+Now swap the characters in the story for the nursing home version:
+
+| Cram school story | Real nursing home case |
+|---|---|
+| Whether the kid goes to cram school (exposure) | Whether the resident used the **shower** (`shower_use`) |
+| Scoring high (outcome) | Whether infected with Legionnaires' disease |
+| Family background / books at home (confounder) | **Age, comorbidities, functional status** (`age`, `comorbidity_*`, `functional_status`) |
+| The parallel-universe twin | A regression coefficient = the effect "holding the other factors constant" |
+| Locked in the interrogation room together | A multivariable model, adjusting several factors at once |
+| Cram school's "betting odds" multiplier | Odds ratio OR (logistic regression) |
+| Cram school's "number of kids who scored high" multiplier | Risk ratio RR (Modified Poisson, this chapter's main method) |
+
+Every trick you just learned from the cram-school story—crude vs. adjusted, the twin intuition, the interrogation room, OR vs. RR—**is exactly what Steps 2–5 of this chapter do with the nursing home data**. Now scroll down and look at those regression tables and Table 2 again—doesn't it suddenly feel a lot friendlier? 😉
+
+---
+
 ## Core Concepts
 
 ### Why do we keep talking about RR?
