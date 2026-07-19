@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 560" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+  <rect width="820" height="560" fill="#FAF8F3" rx="12"/>
+  <text x="410" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">Half the class got diarrhea after the BBQ trip — which dish did it?</text>
+  <text x="410" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">The key move: every dish gets a face-off — "ate it" team vs "skipped it" team, whose rate is higher? 🥊</text>
+  <g filter="url(#shadow)"><rect x="24" y="66" width="384" height="404" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="42" y="96" font-size="15" font-weight="bold" fill="#1A1A1A">🥗 Green salad</text>
+  <rect x="264" y="80" width="126" height="24" rx="12" fill="#D97757" fill-opacity="0.15" stroke="#D97757"/>
+  <text x="327" y="97" text-anchor="middle" font-size="12" font-weight="bold" fill="#D97757">🔍 Prime suspect</text>
+  <text x="42" y="140" font-size="11" fill="#1A1A1A">Ate it</text>
+  <circle cx="120" cy="136" r="8" fill="#D97757"/>
+  <path d="M116.5 139 Q120 136.5 123.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="142" cy="136" r="8" fill="#D97757"/>
+  <path d="M138.5 139 Q142 136.5 145.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="164" cy="136" r="8" fill="#D97757"/>
+  <path d="M160.5 139 Q164 136.5 167.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="186" cy="136" r="8" fill="#D97757"/>
+  <path d="M182.5 139 Q186 136.5 189.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="208" cy="136" r="8" fill="#D97757"/>
+  <path d="M204.5 139 Q208 136.5 211.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="230" cy="136" r="8" fill="#D97757"/>
+  <path d="M226.5 139 Q230 136.5 233.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="252" cy="136" r="8" fill="#D97757"/>
+  <path d="M248.5 139 Q252 136.5 255.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="274" cy="136" r="8" fill="#D97757"/>
+  <path d="M270.5 139 Q274 136.5 277.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="296" cy="136" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="318" cy="136" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <text x="352" y="141" font-size="15" font-weight="bold" fill="#D97757">80%</text>
+  <text x="352" y="155" font-size="9" fill="#6B6B6B">(16/20)</text>
+  <text x="42" y="184" font-size="11" fill="#1A1A1A">Skipped it</text>
+  <circle cx="120" cy="180" r="8" fill="#D97757"/>
+  <path d="M116.5 183 Q120 180.5 123.5 183" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="142" cy="180" r="8" fill="#D97757"/>
+  <path d="M138.5 183 Q142 180.5 145.5 183" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="164" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="186" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="208" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="230" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="252" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="274" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="296" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="318" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <text x="352" y="185" font-size="15" font-weight="bold" fill="#6A9BCC">20%</text>
+  <text x="352" y="199" font-size="9" fill="#6B6B6B">(4/20)</text>
+  <rect x="42" y="214" width="348" height="34" rx="8" fill="#FDECE7"/>
+  <text x="216" y="236" text-anchor="middle" font-size="13" font-weight="bold" fill="#D94452">RR = 80% ÷ 20% = 4.0 → highly suspicious!</text>
+  <text x="42" y="276" font-size="11" font-weight="bold" fill="#6B6B6B">These two rows ARE a 2×2 table 👇</text>
+  <text x="222.0" y="310" text-anchor="middle" font-size="11" font-weight="bold" fill="#D94452">Diarrhea</text>
+  <text x="318.0" y="310" text-anchor="middle" font-size="11" font-weight="bold" fill="#788C5D">No</text>
+  <text x="168" y="339.0" text-anchor="end" font-size="11" font-weight="bold" fill="#D97757">Ate</text>
+  <rect x="174" y="318" width="96" height="34" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="222.0" y="340.0" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">16</text>
+  <rect x="270" y="318" width="96" height="34" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="318.0" y="340.0" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">4</text>
+  <text x="168" y="373.0" text-anchor="end" font-size="11" font-weight="bold" fill="#6A9BCC">Skip</text>
+  <rect x="174" y="352" width="96" height="34" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="222.0" y="374.0" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">4</text>
+  <rect x="270" y="352" width="96" height="34" fill="#FFFFFF" stroke="#E8E5DF"/>
+  <text x="318.0" y="374.0" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1A1A">16</text>
+  <text x="216" y="408" text-anchor="middle" font-size="10" fill="#6B6B6B">a=16, b=4, c=4, d=16 → RR = (16/20)÷(4/20) = 4.0</text>
+  <g filter="url(#shadow)"><rect x="424" y="66" width="372" height="404" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="442" y="96" font-size="15" font-weight="bold" fill="#1A1A1A">🍚 Plain rice</text>
+  <rect x="686" y="80" width="92" height="24" rx="12" fill="#788C5D" fill-opacity="0.15" stroke="#788C5D"/>
+  <text x="732" y="97" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">✅ Innocent</text>
+  <text x="442" y="140" font-size="11" fill="#1A1A1A">Ate it</text>
+  <circle cx="524" cy="136" r="8" fill="#D97757"/>
+  <path d="M520.5 139 Q524 136.5 527.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="546" cy="136" r="8" fill="#D97757"/>
+  <path d="M542.5 139 Q546 136.5 549.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="568" cy="136" r="8" fill="#D97757"/>
+  <path d="M564.5 139 Q568 136.5 571.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="590" cy="136" r="8" fill="#D97757"/>
+  <path d="M586.5 139 Q590 136.5 593.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="612" cy="136" r="8" fill="#D97757"/>
+  <path d="M608.5 139 Q612 136.5 615.5 139" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="634" cy="136" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="656" cy="136" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="678" cy="136" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="700" cy="136" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="722" cy="136" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <text x="752" y="141" font-size="15" font-weight="bold" fill="#6B6B6B">50%</text>
+  <text x="752" y="155" font-size="9" fill="#6B6B6B">(10/20)</text>
+  <text x="442" y="184" font-size="11" fill="#1A1A1A">Skipped it</text>
+  <circle cx="524" cy="180" r="8" fill="#D97757"/>
+  <path d="M520.5 183 Q524 180.5 527.5 183" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="546" cy="180" r="8" fill="#D97757"/>
+  <path d="M542.5 183 Q546 180.5 549.5 183" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="568" cy="180" r="8" fill="#D97757"/>
+  <path d="M564.5 183 Q568 180.5 571.5 183" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="590" cy="180" r="8" fill="#D97757"/>
+  <path d="M586.5 183 Q590 180.5 593.5 183" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="612" cy="180" r="8" fill="#D97757"/>
+  <path d="M608.5 183 Q612 180.5 615.5 183" stroke="#FFFFFF" stroke-width="1.1" fill="none"/>
+  <circle cx="634" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="656" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="678" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="700" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <circle cx="722" cy="180" r="8" fill="#FFFFFF" stroke="#C9C4BC" stroke-width="1.5"/>
+  <text x="752" y="185" font-size="15" font-weight="bold" fill="#6B6B6B">50%</text>
+  <text x="752" y="199" font-size="9" fill="#6B6B6B">(10/20)</text>
+  <rect x="442" y="214" width="336" height="34" rx="8" fill="#EEF2E9"/>
+  <text x="610" y="236" text-anchor="middle" font-size="13" font-weight="bold" fill="#788C5D">RR = 50% ÷ 50% = 1.0 → innocent</text>
+  <rect x="442" y="272" width="336" height="118" rx="10" fill="#FDECE7" stroke="#D94452" stroke-dasharray="4"/>
+  <text x="610" y="298" text-anchor="middle" font-size="12" font-weight="bold" fill="#D94452">⚠️ The #1 rookie mistake: forgetting the denominator</text>
+  <text x="458" y="322" font-size="11" fill="#1A1A1A">"80% of the sick kids ate salad!"</text>
+  <text x="458" y="340" font-size="11" fill="#6B6B6B">→ proves nothing — maybe 80% of the NOT-sick</text>
+  <text x="458" y="356" font-size="11" fill="#6B6B6B">　 kids ate salad too!</text>
+  <text x="458" y="378" font-size="11" font-weight="bold" fill="#788C5D">✔ Always compare the "ate" team vs the "skipped" team</text>
+  <rect x="24" y="484" width="772" height="60" rx="10" fill="#FAF8F3" stroke="#6A9BCC" stroke-width="1.5"/>
+  <text x="410" y="508" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1A1A">The same move in the nursing home 🏥</text>
+  <text x="410" y="530" text-anchor="middle" font-size="12" fill="#1A1A1A">Swap "salad" for "showering <tspan font-weight="bold" fill="#D97757">shower_use</tspan>" and "diarrhea" for "<tspan font-weight="bold" fill="#D94452">infection</tspan>", compare the two teams — out comes the RR.</text>
+</svg>

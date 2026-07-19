@@ -104,6 +104,144 @@ You find a 70-year-old male case, so you deliberately go find someone of **simil
 
 ---
 
+## 🍢 Super Simple Special: Understanding the 2×2 Table and Risk Ratio with "Half the Class Got Diarrhea After the BBQ Trip"
+
+> 2×2 tables, attack rate, risk ratio, chi-square test... a lot of new vocabulary this chapter? Don't be scared. This section sets the nursing home aside for a moment and uses a disaster **everyone dreads**—**"half the class ended up running to the bathroom after a class BBQ trip"**—to walk through the single most important trick in this whole chapter, in a way that'll make even a 7th grader get it instantly. Master this one trick, and the 2×2 table, RR, and chi-square test later on are all just it wearing different costumes.
+
+### The tragedy of a class BBQ
+
+40 classmates go on a class trip and have a BBQ. Afterward, **20 of them start having diarrhea** 😖. The teacher wants to find out: **which dish is to blame?**
+
+The dishes on the table line up like a row of "suspects": 🥗 green salad, 🌭 grilled sausage, 🍚 plain rice, 🍗 grilled chicken... any one of them could be guilty. How do you catch the real culprit?
+
+### The key to cracking the case: an "ate it vs. skipped it" face-off for every dish 🥊
+
+For **each dish**, we split the whole class into two teams:
+
+- **The "ate this dish" team**—what fraction of them got diarrhea?
+- **The "skipped this dish" team**—what fraction of them got diarrhea?
+
+If a dish shows "**the people who ate it got diarrhea way more often than the people who skipped it**," it's a prime suspect. On the other hand, if both teams have **about the same** diarrhea rate, that dish is probably innocent.
+
+### Why do you have to look at "the people who skipped it"? (beginners' #1 trap)
+
+You might say: "Can't I just ask the sick kids what they ate?"—**that's exactly the classic mistake!**
+
+> 🚨 **"80% of the sick kids ate the salad! So it's the salad!"**—this sentence actually **proves nothing**. What if 80% of the kids who *didn't* get sick also ate the salad? (Then the salad would have nothing to do with it at all.)
+
+> ⚽ Remember it in one line: **counting how many goals one team scored doesn't tell you who won the game.** You always have to look at "the salad-eating team's hit rate" **against** "the salad-skipping team's hit rate"—only a face-off between the two teams tells you whether the salad is really the problem. This habit of "never forget to compare against the unexposed" is the bedrock of all epidemiology.
+
+### Attack rate: it all comes down to the denominator
+
+We're not comparing "how many people got sick"—we're comparing **the proportion who got sick within each team**. That proportion is called the **attack rate**:
+
+$$\text{attack rate} = \frac{\text{number sick in this team}}{\text{total in this team}}$$
+
+> 🔑 **The denominator is everything**: "3 people got sick after eating the grilled chicken" sounds scary, right? But if **100 people in total ate the chicken**, the attack rate is only 3%; if instead **only 3 people ate the chicken and all 3 got sick**, that's 100%! Same "3 people sick," wildly different meaning—**before you react to a number, always ask what the denominator is.**
+
+```{figure} images/bbq_attack_rate_en.svg
+:name: fig-bbq-attack-rate
+:alt: BBQ 2x2 table and attack-rate face-off: in the green salad group, 80% (16/20) of those who ate it got diarrhea versus 20% (4/20) of those who skipped it, RR=4.0 makes it suspect #1, expanded into a 2x2 table with a=16, b=4, c=4, d=16; in the plain rice group both eaters and skippers are 50%, RR=1.0, innocent; a reminder that "counting only the sick people's plates" is a denominator trap, bridging finally to the nursing home's shower_use x infection
+:width: 100%
+
+Left: for the green salad, the "ate it" team is 80% vs. the "skipped it" team at 20%, RR=4.0—prime suspect #1. These two rows of little stick figures are literally a 2x2 table. Right: for plain rice, both teams are at 50%, RR=1.0—innocent. Don't forget the denominator.
+```
+
+### Try it yourself: catch the guilty dish with your own two hands
+
+```python
+from scipy.stats import chi2_contingency
+
+# 40 classmates go on a BBQ trip, 20 get diarrhea. Build a 2x2 table for each dish:
+# compare the diarrhea rate (attack rate) of "people who ate this dish" vs. "people who didn't"
+# each tuple = (ate and sick, ate and not sick, skipped and sick, skipped and not sick)
+foods = {
+    "Green salad":     (16, 4, 4, 16),
+    "Grilled sausage": (10, 8, 10, 12),
+    "Plain rice":       (10, 10, 10, 10),
+}
+
+for name, (a, b, c, d) in foods.items():
+    ar_eat = a / (a + b)      # attack rate among people who ate this dish
+    ar_skip = c / (c + d)     # attack rate among people who skipped it
+    rr = ar_eat / ar_skip
+    print(f"{name}: ate {ar_eat:.0%} sick vs skipped {ar_skip:.0%} → RR = {rr:.1f}")
+
+# Suspect #1 is the green salad (highest RR). Is this gap real, or did the 40 kids just get unlucky differently? -> chi-square test
+a, b, c, d = foods["Green salad"]
+chi2, p, dof, _ = chi2_contingency([[a, b], [c, d]], correction=False)
+print(f"\nGreen salad 2x2 chi-square test: p = {p:.4f} (p < 0.001 → a gap this big is almost impossible by chance)")
+```
+
+Running this, you'll see:
+
+```text
+Green salad: ate 80% sick vs skipped 20% → RR = 4.0
+Grilled sausage: ate 56% sick vs skipped 45% → RR = 1.2
+Plain rice: ate 50% sick vs skipped 50% → RR = 1.0
+
+Green salad 2x2 chi-square test: p = 0.0001 (p < 0.001 → a gap this big is almost impossible by chance)
+```
+
+### What does RR = 4 actually feel like? RR is an "innocence-o-meter"
+
+**Risk ratio (RR) = the "ate it" team's attack rate ÷ the "skipped it" team's attack rate.**
+
+> 🎟️ **RR = 4 isn't "4% more"—it's a full 4 times over**—eating that dish quadruples your chance of getting hit. Picture the same scratch-card game: **for people who ate the salad, 1 out of every 4 cards is a "diarrhea" winner; for people who skipped it, you'd need 16 cards to hit one.**
+
+RR works like an "innocence-o-meter"—**the farther from 1, the more suspicious**:
+
+- **RR ≈ 1** (plain rice): both teams have the same hit rate → **innocent**
+- **RR = 4** (salad): the "ate it" team gets hit four times as often → **prime suspect**
+
+### Is the gap real, or just bad luck? → the chi-square test
+
+Even if the salad's two teams show different hit rates, could it just be that **these particular 40 kids happened to get unlucky in different ways**?
+
+> 🎲 **The chi-square test asks exactly this**: "Is this gap too big to be a coincidence from rolling the dice?" It hands you back a **p-value**. For the salad, **p = 0.0001** means: **if the salad were actually innocent, the chance of a gap this big showing up from pure luck alone is less than 1 in 10,000**—so we can be almost certain the salad's guilt is for real.
+
+### ⚠️ Four honest caveats
+
+1. **Statistics can only flag a "suspect," not deliver a "conviction"**: a high RR only means the salad is **suspicious**—an actual conviction needs a lab to culture the pathogen off the salad, plus further investigation. Statistics points the direction; evidence closes the case.
+2. **With enough dishes, one of them will "just happen" to look suspicious**: if you compare 20 dishes at once, even if all of them are innocent, one or two might get a small p-value from pure luck. Don't pop the champagne the moment you spot a suspect (you'll learn how to correct for this "multiple comparisons" problem later).
+3. **Some dishes always show up as a pair**: salad is often eaten together with salad dressing—so which one is the real culprit? When two exposures are tangled together, each pointing the finger at the other, you need **the stratified analysis from Ch05** to untangle them (remember the "big feet"?).
+4. **When a cell has too few people (< 5), the chi-square test gets unreliable**: switch to **Fisher's exact test** instead (covered in the main text of this chapter).
+
+> 💡 A little extra: here, we **know every single classmate** and what each of them ate—that's a **cohort study**, so **RR** is exactly the right tool. If instead we could only find "the people who already got sick" and had to ask them afterward what they'd eaten, we'd need the **OR (odds ratio)**—the "casino odds" idea from the main text of this chapter.
+
+### Cheat sheet for reading the chart (save this)
+
+| What you see... | What it means |
+|---|---|
+| Looking only at "what the sick kids ate" | ❌ Forgetting the denominator—you'll get fooled |
+| "Attack rate of the 'ate it' team vs. the 'skipped it' team" | ✔ The correct comparison (the soul of the 2×2 table) |
+| Attack rate | The **proportion** sick within one team (denominator = that team's total) |
+| RR ≈ 1 | Both teams the same → this exposure is probably innocent |
+| RR much greater than 1 | The "ate it" team got hit way more → prime suspect |
+| RR < 1 | The "ate it" team actually got hit less → possibly a protective factor (like a vaccine) |
+| Chi-square p-value is small (< 0.05) | This gap is unlikely to be just luck |
+| A cell has < 5 people | Switch to Fisher's exact test |
+
+### Back to reality: salad → showering
+
+Now swap the BBQ scenario for the nursing home version:
+
+| BBQ world | Real nursing home case |
+|---|---|
+| Each dish (salad, rice...) | Each exposure (`shower_use`, `hydrotherapy_use`...) |
+| Ate / skipped this dish | Showered / didn't shower |
+| Diarrhea / fine | Infected / not infected |
+| "Ate vs. didn't × sick vs. not" laid out in a grid | 2×2 table (a / b / c / d) |
+| Attack rate of the "ate it" team | Attack rate among those who showered |
+| Attack rate of the "skipped it" team | Attack rate among those who didn't shower |
+| Dividing the two teams' hit rates | Risk ratio (RR) |
+| "Is this gap just luck?" | Chi-square test / p-value |
+| Catching the guilty dish | Finding the source of infection |
+
+Every trick you just learned at the BBQ table—splitting into two teams for a face-off, computing the attack rate, never forgetting the denominator, RR as an innocence-o-meter, and asking the chi-square test whether it's just luck—**is exactly what Steps 2–5 of this chapter do with the nursing home data**. Now scroll back down to those 2×2 tables and RR and OR—doesn't it suddenly feel a lot friendlier? 😉
+
+---
+
 ## Core Concepts
 
 ### The 2×2 Contingency Table
