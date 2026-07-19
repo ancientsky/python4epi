@@ -815,10 +815,12 @@ name = "epi-with-python"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "esda" },
     { name = "fpdf2" },
     { name = "geopandas" },
     { name = "jupyter-book" },
     { name = "jupyterlab" },
+    { name = "libpysal" },
     { name = "lifelines" },
     { name = "matplotlib" },
     { name = "nbclient" },
@@ -849,10 +851,12 @@ video = [
 
 [package.metadata]
 requires-dist = [
+    { name = "esda", specifier = ">=2.10.0" },
     { name = "fpdf2", specifier = ">=2.8.0" },
     { name = "geopandas", specifier = ">=1.0.0" },
     { name = "jupyter-book", specifier = ">=1.0.0,<2" },
     { name = "jupyterlab", specifier = ">=4.3.0" },
+    { name = "libpysal", specifier = ">=4.12.0" },
     { name = "lifelines", specifier = ">=0.29.0" },
     { name = "matplotlib", specifier = ">=3.10.0" },
     { name = "nbclient", specifier = ">=0.10.0" },
@@ -879,6 +883,24 @@ video = [
     { name = "edge-tts", specifier = ">=6.1.0" },
     { name = "manim", specifier = ">=0.20.1,<0.21" },
     { name = "pyyaml", specifier = ">=6.0" },
+]
+
+[[package]]
+name = "esda"
+version = "2.10.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "geopandas" },
+    { name = "libpysal" },
+    { name = "numpy" },
+    { name = "pandas" },
+    { name = "scikit-learn" },
+    { name = "scipy" },
+    { name = "shapely" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d9/d9/8de7b97bc2dd5646136766c08fa85543a15331d38896af2aa1e7af6de4ba/esda-2.10.0.tar.gz", hash = "sha256:2dad5b73d8408bc2fe5fff95524a38b98552e09cc494df5010649f8f12019ea5", size = 19423383, upload-time = "2026-06-19T17:20:24.58Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/be/72/e1ae9577ba22e594c888983178e80261aed813f4507c1ad8e81c16892801/esda-2.10.0-py3-none-any.whl", hash = "sha256:d7ddc446b59e17855b46b43bce16819bce711f8694d273a17754532429f870d6", size = 247772, upload-time = "2026-06-19T17:20:21.996Z" },
 ]
 
 [[package]]
@@ -1718,6 +1740,28 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/27/dd/4270b2c5e2ee49316c3859e62293bd2ea8e382339d63ab7bbe9f39c0ec3b/latexcodec-3.0.1.tar.gz", hash = "sha256:e78a6911cd72f9dec35031c6ec23584de6842bfbc4610a9678868d14cdfb0357", size = 31222, upload-time = "2025-06-17T18:47:34.051Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b5/40/23569737873cc9637fd488606347e9dd92b9fa37ba4fcda1f98ee5219a97/latexcodec-3.0.1-py3-none-any.whl", hash = "sha256:a9eb8200bff693f0437a69581f7579eb6bca25c4193515c09900ce76451e452e", size = 18532, upload-time = "2025-06-17T18:47:30.726Z" },
+]
+
+[[package]]
+name = "libpysal"
+version = "4.15.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "beautifulsoup4" },
+    { name = "geopandas" },
+    { name = "jinja2" },
+    { name = "numpy" },
+    { name = "packaging" },
+    { name = "pandas" },
+    { name = "platformdirs" },
+    { name = "requests" },
+    { name = "scikit-learn" },
+    { name = "scipy" },
+    { name = "shapely" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/54/94/7b7d286e65b66db8bcd0eb18accae8d68501b432cb7255fe9d264338cf22/libpysal-4.15.0.tar.gz", hash = "sha256:db9eee1579678a2eec6974c831dc93abf612a4df5a3c45e9d7ed35ea5f9e2497", size = 6776607, upload-time = "2026-07-03T14:44:42.538Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/da/45/ede6d644008022592ba97211a562eca7cce527a0adc061028716fa20d34f/libpysal-4.15.0-py3-none-any.whl", hash = "sha256:081b603c385dd237254b5698e524a0f072b1698db0ceca33c6dcecdbdbedeb6e", size = 2525426, upload-time = "2026-07-03T14:44:40.45Z" },
 ]
 
 [[package]]
