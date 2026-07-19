@@ -37,6 +37,7 @@ parts:
         sections:
           - file: chapters/notebooks/08_spatial_rates
           - file: chapters/notebooks/08_spatial_choropleth
+          - file: chapters/notebooks/08_spatial_statistics
   - caption: "Act IV — Advanced Modeling"
     chapters:
       - file: chapters/09_survival

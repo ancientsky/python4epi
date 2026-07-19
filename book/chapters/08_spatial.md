@@ -9,7 +9,9 @@
 - 知道什麼情況下選熱力圖、選 spot map、或選 choropleth
 - 觀察到空間差異後，如何進一步分析（CFR、暴露因子比較）
 - 用 **GeoJSON + Plotly** 畫地理 choropleth（概念延伸）
-- 空間分析常見陷阱與 debug checklist
+- 用 **空間統計**檢定群聚是真是假：全域 **Moran's I**、局部 **LISA**（HH/LL/HL/LH 四象限）、熱點 **Getis-Ord Gi\***
+- 認識**空間權重**（Queen 接壤 / KNN）、掃描統計（SaTScan）與疾病製圖平滑（Empirical Bayes / BYM）的概念
+- 空間分析常見陷阱與 debug checklist（含 MAUP、權重敏感度）
 
 ## 情境故事
 
@@ -329,6 +331,128 @@ anim.save("animation.gif", writer="pillow", fps=1, dpi=80)
 
 ---
 
+## Part 3：空間統計分析（`08_spatial_statistics.ipynb`）
+
+Part 1、Part 2 教你**畫**空間分布圖。但地圖上出現一片紅，你怎麼知道那是**真的群聚**，還是眼睛自己腦補的？這一段用**空間統計**把「感覺」變成「證據」，回答三個問題：全臺是不是有群聚（**Moran's I**）、熱區核心在哪（**LISA**）、哪裡是顯著熱點（**Gi\***）。
+
+> 🦟 **換個舞台：為什麼改用登革熱？**
+> 退伍軍人病是「一棟樓」的故事，單一建築不適合縣市級空間統計。所以這一段換上**登革熱 × 全臺縣市**——這正是台灣空間流病最經典的應用（熱點年年落在南部）。方法一樣能**縮小尺度**，拿去在一座城市的各棟大樓找 Legionella 熱區。（notebook 的病例數為**合成教學資料**。）
+
+### 為什麼不能「只用眼睛」看地圖？
+
+> 🌌 **看星座的陷阱**：人腦是台「找圖案的機器」——把隨機的星星硬連成獵戶座。看著色地圖也一樣，你**一定**會「看到」群聚，但那可能只是隨機的顏色排列。
+
+空間統計就是一把尺，量出「這個群聚是真的，還是我腦補的」。背後是地理鐵律 **Tobler 第一定律：「近的東西比較像」**。所以我們問的不是「有沒有群聚」，而是「**這相似程度，有沒有超過『隨機本來就會有』的程度**」。做法很直白：把各縣市的數字**剪下來、洗牌、隨機重貼**很多次，看真實地圖有沒有比洗出來的更集中。
+
+### 第一步：定義「鄰居」——空間權重（spatial weights）
+
+要說「跟鄰居像不像」，得先白紙黑字定義**誰是鄰居**。
+
+```{figure} images/spatial_weights_neighbors.svg
+:name: fig-spatial-weights
+:alt: 空間權重示意：焦點縣市用綠線連到接壤的鄰居（Queen 接壤），權重矩陣 W 是「誰是誰的鄰居」點名表、row-standardized 讓鄰居各得 1/k；離島在海上用接壤定義得到 0 鄰居，改用 KNN 跨海抓最近的 k 個
+:width: 100%
+
+**Queen 接壤**：邊界碰到（連一個角）就是鄰居。權重矩陣 $W$ 是「誰是誰的鄰居」點名表；`transform="r"` 讓每個縣市的鄰居權重加起來 = 1（公平投票）。**離島**用接壤會得到 0 鄰居 → 改用 **KNN**（抓最近的 k 個）。
+```
+
+```python
+from libpysal.weights import Queen, KNN
+
+w_all = Queen.from_dataframe(gdf, use_index=False)
+print("接壤定義下『沒有鄰居』的縣市：",
+      [gdf.iloc[i]["COUNTYNAME"] for i in w_all.islands])   # 金門、澎湖、連江
+
+# 群聚分析聚焦本島 19 個相連縣市；離島留到「平滑」再處理
+main = gdf[~gdf["is_inset"]].reset_index(drop=True)
+w = Queen.from_dataframe(main, use_index=False)
+w.transform = "r"   # row-standardized
+```
+
+> ⚠️ **換一種鄰居定義，答案就會變**——離島讓我們親眼看到這件事。這正是後面「權重敏感度」陷阱的現場。
+
+### 第二步：全域 Moran's I —— 整張地圖的「物以類聚」指數
+
+**全域 Moran's I** 用一個數字總結整座島：**I ≈ +1** 高聚高、低聚低（分區明顯）；**I ≈ 0** 隨機散布；**I ≈ −1** 高低相間（罕見）。光有 I 還不夠，要用**洗牌 p 值**確認不是巧合。
+
+```python
+from esda.moran import Moran
+
+moran = Moran(main["rate"].values, w, permutations=999)
+print(f"Moran's I = {moran.I:.3f}, p = {moran.p_sim:.4f}")   # ≈ 0.50, p < 0.05 → 有顯著群聚
+```
+
+### 第三步：局部 LISA —— 熱區核心到底在哪？
+
+全域 Moran 給整座島**一個**分數；**LISA** 拉近鏡頭，問每一個縣市：「你跟你的鄰居，是哪一種關係？」同時看**自己的值**和**鄰居的平均值**，分成四象限：
+
+```{figure} images/lisa_quadrants.svg
+:name: fig-lisa-quadrants
+:alt: LISA 四象限：橫軸是縣市自己的率、縱軸是鄰居平均率；HH 高-高（疫情震央）、LL 低-低（安全淨土）、HL 高-低與 LH 低-高是空間離群值；對角線是跟鄰居同調的群聚成員，反對角是唱反調的離群值
+:width: 100%
+
+橫軸 = 自己的率、縱軸 = 鄰居平均率。**HH**（震央）、**LL**（淨土）是「跟鄰居同調」的群聚成員；**HL**（孤島火苗）、**LH**（颱風眼）是「跟鄰居唱反調」的空間離群值——常是故事最有趣的地方。
+```
+
+```python
+from esda.moran import Moran_Local
+
+lisa = Moran_Local(main["rate"].values, w, permutations=999, seed=8)
+# ⚠️ esda 象限編碼：.q 中 1=HH、2=LH、3=LL、4=HL（LH 是 2，不是 3！）
+labels = {1: "HH 震央", 2: "LH 颱風眼", 3: "LL 淨土", 4: "HL 火苗"}
+main["lisa"] = ["不顯著" if p >= 0.05 else labels[q]
+                for q, p in zip(lisa.q, lisa.p_sim)]
+```
+
+在合成資料上，**臺南／高雄／嘉義**跳出來是 **HH 震央**，北部是 **LL 淨土**——南部登革熱熱區用統計坐實了。
+
+### 第四步：熱點分析 Getis-Ord Gi\* —— 給長官看的熱區圖
+
+> 🌡️ **紅外線熱像儀**：Gi\* 不管「你跟鄰居像不像」，只問「把你和鄰居圈成一圈，這一圈燙不燙？」輸出 **z 分數** = 燙了幾個標準差。跟 LISA 不同，Gi\* **沒有離群類別**，只給你一條紅到藍的溫度光譜，最適合做「哪裡優先派人」的熱區圖。
+
+```python
+from esda.getisord import G_Local
+
+w_b = Queen.from_dataframe(main, use_index=False); w_b.transform = "B"
+gi = G_Local(main["rate"].values, w_b, permutations=999, seed=8, star=True)
+hot = main.loc[(gi.p_sim < 0.05) & (gi.Zs > 0), "COUNTYNAME"].tolist()   # 顯著熱點
+```
+
+### 概念延伸：掃描統計與疾病製圖（平滑）
+
+縣市層級最常用的就是上面三招。還有兩個更進階的工具，先建立概念（多半用 R 或專門軟體）：
+
+- **📡 Kulldorff 掃描統計（SaTScan）**：在地圖上移動、放大圓圈，自動找「圈內特別多」的可疑集群，能抓不規則形狀、還能做時間-空間掃描。CDC 早期預警常用。工具：**SaTScan**、`rsatscan`。
+- **📷 貝氏疾病製圖 / 平滑**：小人口的率**忽高忽低**（連江縣人口才 1.3 萬，多 1 例率就跳 7.7）。平滑「向鄰居借資訊」估出穩定風險。工具：**R-INLA**、`CARBayes`（BYM 模型）；Python 有 `esda.smoothing.Empirical_Bayes`。
+
+### 判讀小抄（存起來）
+
+**全域 Moran's I**
+
+| 讀什麼 | 意思 |
+|---|---|
+| 正負號 | + 高聚高低聚低（群聚）；≈0 隨機；− 高低相間 |
+| 大小 | 越接近 ±1 越強；期望值 ≈ −1/(n−1)（≈0）才是「無空間結構」 |
+| p_sim | < 0.05 → 模式不是隨機。**只有 I 顯著才往下做 LISA** |
+
+**LISA 四象限**（`.q`：1=HH、2=LH、3=LL、4=HL）
+
+| 類別 | 白話 | 行動 |
+|---|---|---|
+| **HH** | 熱區核心（震央） | 全區作戰、找共同傳染源 |
+| **LL** | 安全淨土 | 低優先、可當對照 |
+| **HL** | 孤島火苗（離群值） | **立刻查**：獨立傳入？資料異常？ |
+| **LH** | 颱風眼（離群值） | 高風險緩衝，快防守 / 找保護因子 |
+| NS | `p_sim ≥ 0.05` | 不顯著，別解讀，塗灰 |
+
+**Getis-Ord Gi\* z 分數**：`≥ +1.96` 顯著熱區、`≤ −1.96` 顯著冷區、中間不顯著（小樣本改看洗牌 `p_sim`）。
+
+> **一句話分清 LISA vs Gi\***：LISA 回答「我是四種鄰里的**哪一種**（含唱反調的離群值）」；Gi\* 回答「我這一圈**有多燙**（只有冷熱、沒有離群）」。兩者互補。
+
+完整可跑的程式、三張地圖（原始率、LISA 群聚圖、Gi\* 熱點圖）與平滑示範，見 [`08_spatial_statistics.ipynb`](notebooks/08_spatial_statistics.ipynb)。
+
+---
+
 ## 練習題
 
 - 作業版：[`08_spatial_exercise.ipynb`](exercises/08_spatial_exercise.ipynb)
@@ -344,6 +468,11 @@ anim.save("animation.gif", writer="pillow", fps=1, dpi=80)
 | GeoJSON ID 與資料不一致 | 先做字串比對（`set.difference()`），確認 ID 吻合 |
 | 不同時間窗混在同一張圖 | 統一分析時間段 |
 | 把空間群聚當成因果 | Ecological fallacy：翼區高侵襲率只是假設，需要暴露因子分析才能確認原因 |
+| 只用眼睛判斷「有沒有群聚」 | 用 Moran's I + 洗牌 p 值檢定，區分真群聚與隨機錯覺 |
+| 換空間單元（縣市↔村里）卻以為結論不變 | MAUP：改變面積單元，Moran's I 和熱區可能整個翻掉 |
+| 只用一種鄰居定義就下結論 | 權重敏感度：Queen / KNN / k 值會移動結果，務必換一種檢查 |
+| LISA/Gi\* 多個地區同時檢定不修正 | 多重比較：n 個地區＝n 次檢定，單一地區剛好顯著要存疑 |
+| 直接畫小人口地區的原始率 | 小人口率不穩，應考慮 Empirical Bayes / 貝氏平滑 |
 
 ## 下一步
 

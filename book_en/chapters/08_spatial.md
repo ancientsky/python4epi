@@ -9,7 +9,9 @@
 - Know when to choose a heatmap, a spot map, or a choropleth
 - Once you spot a spatial difference, know how to dig deeper (CFR, comparing exposure factors)
 - Draw a geographic choropleth with **GeoJSON + Plotly** (concept extension)
-- Common pitfalls in spatial analysis and a debugging checklist
+- Use **spatial statistics** to test whether clustering is real: global **Moran's I**, local **LISA** (HH/LL/HL/LH quadrants), and hot-spot **Getis-Ord Gi\***
+- Understand **spatial weights** (Queen contiguity / KNN), the scan statistic (SaTScan), and disease-mapping smoothing (Empirical Bayes / BYM) as concepts
+- Common pitfalls in spatial analysis and a debugging checklist (including MAUP and weight sensitivity)
 
 ## The Scenario
 
@@ -329,6 +331,126 @@ Incidence rate (per 100k) = confirmed cases / county population × 100,000
 
 ---
 
+## Part 3: Spatial Statistics (`08_spatial_statistics.ipynb`)
+
+Part 1 and Part 2 taught you how to **draw** spatial distribution maps. But when a patch of red shows up on the map, how do you know it's a **real cluster** and not something your eyes made up? This section uses **spatial statistics** to turn "gut feeling" into "evidence," answering three questions: is there really a cluster across Taiwan (**Moran's I**), where is the core of the hot zone (**LISA**), and which areas are significant hot spots (**Gi\***)?
+
+> 🦟 **Changing the stage: why switch to dengue?**
+> Legionnaires' disease is a "single building" story, and a single building isn't suited to county-level spatial statistics. So this section switches to **dengue fever × Taiwan's counties/cities** — the single most classic application of spatial epidemiology in Taiwan (the hot spots land in the south, year after year). The same methods can be **scaled down** and applied to find Legionella hot spots among the buildings of a single city. (The case counts in the notebook are **synthetic teaching data**.)
+
+### Why Can't You Just "Eyeball" the Map?
+
+> 🌌 **The constellation trap**: The human brain is a "pattern-finding machine" — it forces random stars into the shape of Orion. The same thing happens with a choropleth: you'll **always** "see" clusters, but that may just be a random arrangement of colors.
+
+Spatial statistics is the ruler that measures whether "this cluster is real, or just something I imagined." Behind it stands the iron law of geography, **Tobler's First Law: "near things are more related than distant things."** So the question we ask isn't "is there a cluster," but "**does this degree of similarity exceed what randomness alone would produce**?" The method is straightforward: **cut out, shuffle, and randomly re-paste** the numbers for each county many times over, and check whether the real map is more clustered than the shuffled ones.
+
+### Step 1: Define "Neighbors" — Spatial Weights
+
+Before you can say whether something "resembles its neighbors," you first need to spell out, in black and white, **who counts as a neighbor**.
+
+```{figure} images/spatial_weights_neighbors_en.svg
+:name: fig-spatial-weights
+:alt: Diagram of spatial weights: the focal county is connected by green lines to its contiguous neighbors (Queen contiguity); the weights matrix W is a roll call of "who is whose neighbor," row-standardized so each neighbor gets 1/k; offshore islands get 0 neighbors under contiguity, so KNN is used instead to reach across the water to the nearest k counties
+:width: 100%
+
+**Queen contiguity**: touching boundaries (even just one corner) makes two areas neighbors. The weights matrix $W$ is a roll call of "who is whose neighbor"; `transform="r"` makes each county's neighbor weights sum to 1 (a fair vote). **Offshore islands** get 0 neighbors under contiguity → switch to **KNN** (grab the nearest k).
+```
+
+```python
+from libpysal.weights import Queen, KNN
+
+w_all = Queen.from_dataframe(gdf, use_index=False)
+print("Counties with 'no neighbors' under contiguity:",
+      [gdf.iloc[i]["COUNTYNAME"] for i in w_all.islands])   # Kinmen, Penghu, Lienchiang
+
+# Cluster analysis focuses on the 19 connected counties on the main island; offshore islands are handled later under "smoothing"
+main = gdf[~gdf["is_inset"]].reset_index(drop=True)
+w = Queen.from_dataframe(main, use_index=False)
+w.transform = "r"   # row-standardized
+```
+
+> ⚠️ **Change the neighbor definition and the answer changes** — the offshore islands let us see this firsthand. This is exactly where the "weight sensitivity" pitfall shows up later.
+
+### Step 2: Global Moran's I — A "Birds of a Feather" Index for the Whole Map
+
+**Global Moran's I** summarizes the whole island with a single number: **I ≈ +1** means highs cluster with highs and lows cluster with lows (a clear zoning pattern); **I ≈ 0** means random scatter; **I ≈ −1** means highs and lows alternate (rare). I alone isn't enough — you need a **permutation p-value** to confirm it isn't just chance.
+
+```python
+from esda.moran import Moran
+
+moran = Moran(main["rate"].values, w, permutations=999)
+print(f"Moran's I = {moran.I:.3f}, p = {moran.p_sim:.4f}")   # ≈ 0.50, p < 0.05 → significant clustering
+```
+
+### Step 3: Local LISA — Where Exactly Is the Core of the Hot Zone?
+
+Global Moran's I gives the whole island **one** score; **LISA** zooms in and asks each county: "what kind of relationship do you have with your neighbors?" It looks at both **your own value** and **the average of your neighbors**, sorting counties into four quadrants:
+
+```{figure} images/lisa_quadrants_en.svg
+:name: fig-lisa-quadrants
+:alt: LISA's four quadrants: the x-axis is the county's own rate, the y-axis is the neighbors' average rate; HH high-high (epidemic epicenter), LL low-low (safe zone), HL high-low and LH low-high are spatial outliers; the diagonal holds cluster members that agree with their neighbors, the anti-diagonal holds outliers that disagree
+:width: 100%
+
+x-axis = the county's own rate, y-axis = neighbors' average rate. **HH** (epicenter) and **LL** (safe zone) are cluster members that "agree with their neighbors"; **HL** (lone spark) and **LH** (eye of the storm) are spatial outliers that "disagree with their neighbors" — often the most interesting part of the story.
+```
+
+```python
+from esda.moran import Moran_Local
+
+lisa = Moran_Local(main["rate"].values, w, permutations=999, seed=8)
+# ⚠️ esda quadrant encoding: in .q, 1=HH, 2=LH, 3=LL, 4=HL (LH is 2, not 3!)
+labels = {1: "HH epicenter", 2: "LH eye of storm", 3: "LL safe zone", 4: "HL spark"}
+main["lisa"] = ["Not significant" if p >= 0.05 else labels[q]
+                for q, p in zip(lisa.q, lisa.p_sim)]
+```
+
+In the synthetic data, **Tainan / Kaohsiung / Chiayi** stand out as **HH epicenters**, while the north comes out as **LL safe zone** — the southern dengue hot zone is confirmed statistically.
+
+### Step 4: Hot Spot Analysis with Getis-Ord Gi\* — The Map You Show Your Boss
+
+> 🌡️ **Thermal camera**: Gi\* doesn't care whether "you resemble your neighbors" — it only asks "if we draw a circle around you and your neighbors, how hot is that circle?" The output is a **z-score** = how many standard deviations hot. Unlike LISA, Gi\* has **no outlier category** — it just gives you a red-to-blue temperature spectrum, which makes it ideal for a hot-spot map of "where to send people first."
+
+```python
+from esda.getisord import G_Local
+
+w_b = Queen.from_dataframe(main, use_index=False); w_b.transform = "B"
+gi = G_Local(main["rate"].values, w_b, permutations=999, seed=8, star=True)
+hot = main.loc[(gi.p_sim < 0.05) & (gi.Zs > 0), "COUNTYNAME"].tolist()   # significant hot spots
+```
+
+### Concept Extension: Scan Statistics and Disease Mapping (Smoothing)
+
+At the county level, the three tools above are the ones you'll use most. There are two more advanced tools worth knowing conceptually (mostly done in R or specialized software):
+
+- **📡 Kulldorff's scan statistic (SaTScan)**: slides and grows a circle across the map, automatically finding suspicious clusters where "the count inside is unusually high." It can catch irregular shapes and even run space-time scans. Commonly used for CDC early warning. Tools: **SaTScan**, `rsatscan`.
+- **📷 Bayesian disease mapping / smoothing**: rates for small populations **swing wildly** (Lienchiang County has a population of only 13,000, so one extra case jumps the rate by 7.7). Smoothing "borrows information from neighbors" to estimate a more stable risk. Tools: **R-INLA**, `CARBayes` (BYM model); in Python, `esda.smoothing.Empirical_Bayes`.
+
+### Interpretation Cheat Sheet (Save This)
+
+**Global Moran's I**
+
+| What to read | Meaning |
+|---|---|
+| Sign | + means highs cluster with highs, lows with lows (clustering); ≈0 means random; − means highs and lows alternate |
+| Magnitude | The closer to ±1, the stronger; the expected value ≈ −1/(n−1) (≈0) is what "no spatial structure" looks like |
+| p_sim | < 0.05 → the pattern isn't random. **Only move on to LISA if I is significant** |
+
+**LISA's Four Quadrants** (`.q`: 1=HH, 2=LH, 3=LL, 4=HL)
+
+| Category | In plain words | Action |
+|---|---|---|
+| **HH** | Core of the hot zone (epicenter) | Mobilize the whole area, look for a common source |
+| **LL** | Safe zone | Low priority, can serve as a comparison group |
+| **HL** | Lone spark (outlier) | **Investigate immediately**: an independent introduction? A data error? |
+| **LH** | Eye of the storm (outlier) | A high-risk buffer zone — defend quickly / look for protective factors |
+| NS | `p_sim ≥ 0.05` | Not significant, don't interpret it, gray it out |
+
+**Getis-Ord Gi\* z-score**: `≥ +1.96` significant hot spot, `≤ −1.96` significant cold spot, in between not significant (for small samples, check the permutation `p_sim` instead).
+
+> **LISA vs. Gi\* in one sentence**: LISA answers "**which** of the four neighborhood types am I (including the outliers that disagree)"; Gi\* answers "**how hot** is my circle (only hot/cold, no outliers)." The two are complementary.
+
+For the complete runnable code, three maps (raw rate, LISA cluster map, Gi\* hot-spot map), and a smoothing demonstration, see [`08_spatial_statistics.ipynb`](notebooks/08_spatial_statistics.ipynb).
+
 ## Exercises
 
 - Exercise version: [`08_spatial_exercise.ipynb`](exercises/08_spatial_exercise.ipynb)
@@ -344,6 +466,11 @@ Incidence rate (per 100k) = confirmed cases / county population × 100,000
 | GeoJSON IDs not matching the data | Do a string comparison first (`set.difference()`) to confirm the IDs line up |
 | Mixing different time windows in one chart | Standardize the analysis time period |
 | Treating a spatial cluster as causation | Ecological fallacy: a high attack rate in a wing is only a hypothesis; exposure-factor analysis is needed to confirm the cause |
+| Judging "is there a cluster" by eye alone | Use Moran's I + a shuffle p-value to tell a real cluster from a random illusion |
+| Assuming conclusions hold when you change the spatial unit (county↔village) | MAUP: changing the areal unit can flip Moran's I and the hot spots entirely |
+| Concluding from just one neighbor definition | Weight sensitivity: Queen / KNN / k value shift results — always re-check with another |
+| Not correcting for testing many areas at once in LISA/Gi\* | Multiple comparisons: n areas = n tests; be skeptical if a single area is just barely significant |
+| Mapping raw rates directly for small-population areas | Small-population rates are unstable; consider Empirical Bayes / Bayesian smoothing |
 
 ## Next Step
 
