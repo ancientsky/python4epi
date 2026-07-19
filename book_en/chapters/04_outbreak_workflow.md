@@ -18,6 +18,153 @@ You have a line list CSV with 280 rows × 32 columns in hand. This chapter teach
 - Producing a structured report (tables + charts)
 - Turning the analysis into a rerunnable script
 
+## 🩺 Super Simple Special: Understanding the Outbreak Investigation Workflow with "You're the School Nurse's Outbreak Lead"
+
+> The FETP ten steps, line list, SitRep, Person/Time/Place... this chapter throws a lot of jargon at you — starting to feel dizzy? Don't worry. This section sets the nursing home aside for a moment and lets you be the **outbreak lead in the school nurse's office** — walking through the whole "how do you investigate an outbreak" process in a way that'll make even a 7th grader get it instantly. Once you've mastered this workflow, every Step later in this chapter is just a zoomed-in detail of it.
+
+### 👀 Uh oh, one red eye after another across the whole class
+
+Second week of school, and the line outside the nurse's office keeps growing — **a bunch of classmates have red, itchy, watery eyes** (acute conjunctivitis, a.k.a. "pink eye"). The principal calls you in: "Look into this! What's going on, is it going to spread, what do I do?"
+
+All you have is a messy pile of absence slips and clinic visit records. **Your first instinct is to panic** — but panicking doesn't help. What a real outbreak-investigation pro does at this moment is one thing: **open the SOP and follow the recipe, step by step.**
+
+> 🧑‍🍳 **The SOP is designed for "panicked you," not "calm you."** The more you panic, the easier it is to miscount or blame the wrong thing; following a checklist step by step means that even with shaky hands, you won't skip the box that says "who actually counts as sick." **An outbreak investigation isn't a contest of who guesses fastest — it's a contest of who misses nothing.**
+
+### Step 1: Agree on "who counts as a hit" first — the case definition
+
+Before you start counting, you need to **draw a line**: how red do the eyes have to be, is there discharge, within how many days — for it to count as "a case in this outbreak"? That's the **case definition**.
+
+> 🥅 **Never change the rule while you're still counting!** If you change the criteria halfway through — something that didn't count yesterday counts today — the number becomes a rubber band anyone can stretch. That's not an investigation, that's haggling. **The case definition is that line: wherever you draw it, that's what the numbers will look like. So draw the line first, then start counting.**
+
+(In practice this splits into three tiers — **confirmed / probable / not-a-case** — covered in detail in the main text of this chapter.)
+
+### 🕵️ The three questions that crack the case: Person, Time, Place (descriptive epidemiology)
+
+Once the line is drawn and you start building the **line list** (one row per person), you just keep asking three questions — **Person, Time, Place**:
+
+| Question | In plain English | What it tells you |
+|------|------|-----------|
+| **Person** | Who got hit? Which people, what characteristics? | Who's especially at risk |
+| **Time** | Which days did it break out? Which day was the peak? | Roughly **when** people got infected (draw it as an **epidemic curve**) |
+| **Place** | Which classroom got hit hardest? (highest attack rate) | **Where** to go looking for the source |
+
+> 🗺️ **Stack all three clues together, and the suspect source surfaces on its own.** Skip one, and you're working with only half a treasure map.
+
+```{figure} images/school_outbreak_workflow_en.svg
+:name: fig-school-outbreak-workflow
+:alt: School pink-eye outbreak-investigation dashboard: at the top is the SOP step bar (define case → person → time → place → SitRep), the middle has three panels for person/time/place (person = red-eye stick figures 17/60, time = epidemic curve peaking on day 3, place = attack rate by classroom with Room A at 60% as the hotspot near the water fountain), and the bottom rolls it all up into a one-page SitRep that bridges to the 280-person Legionnaires' disease investigation at the nursing home
+:width: 100%
+
+An "outbreak-investigation dashboard": follow the SOP → ask the three questions Person/Time/Place → roll it up into a one-page SitRep. Zoom that exact same workflow up to full scale, and it's the 280-person Legionnaires' disease investigation at the nursing home.
+```
+
+### Try it yourself: run "Person, Time, Place" with your own two hands
+
+```python
+import pandas as pd
+
+# The nurse's office line list: who in this "pink eye" outbreak got sick, on which day, in which classroom
+line_list = pd.DataFrame({
+    "classroom": (["Room A"] * 12 + ["Room B"] * 3 + ["Room C"] * 2),
+    "onset_day": [1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5, 6,   2, 3, 5,   3, 4],
+})
+class_size = {"Room A": 20, "Room B": 30, "Room C": 10}  # Each classroom has a different size (the denominator matters!)
+
+# ── Time: draw the epidemic curve using the "onset date" (not the absence date!)—which day is the peak? ──
+by_day = line_list["onset_day"].value_counts().sort_index()
+print("[Time] New cases per day (mini epidemic curve, drawn using onset date):")
+for day, n in by_day.items():
+    print(f"  Day {day} | {'█' * n} {n}")
+print(f"  -> Peak on day {by_day.idxmax()}\n")
+
+# ── Place: compare the "attack rate," not the case count! ──
+by_room = line_list["classroom"].value_counts()
+ar = by_room / pd.Series(class_size)
+print("[Place] Attack rate by classroom: case count vs. attack rate")
+for room in class_size:
+    print(f"  {room} | {by_room[room]} cases | {by_room[room]}/{class_size[room]} = {ar[room]:.0%}")
+print(f"  -> Highest attack rate: {ar.idxmax()} (go check out what's special about that room!)")
+print("     Note: Room B has 3 cases > Room C's 2, but Room B's attack rate of 10% < Room C's 20%—more people naturally means more cases, so you have to look at rates!\n")
+
+# ── Person / Summary ──
+total_cases, total_students = len(line_list), sum(class_size.values())
+print(f"[Person/Summary] {total_students} students total, {total_cases} got sick, overall attack rate {total_cases/total_students:.0%}")
+```
+
+Running this, you'll see:
+
+```text
+[Time] New cases per day (mini epidemic curve, drawn using onset date):
+  Day 1 | █ 1
+  Day 2 | ███ 3
+  Day 3 | ██████ 6
+  Day 4 | ████ 4
+  Day 5 | ██ 2
+  Day 6 | █ 1
+  -> Peak on day 3
+
+[Place] Attack rate by classroom: case count vs. attack rate
+  Room A | 12 cases | 12/20 = 60%
+  Room B | 3 cases | 3/30 = 10%
+  Room C | 2 cases | 2/10 = 20%
+  -> Highest attack rate: Room A (go check out what's special about that room!)
+     Note: Room B has 3 cases > Room C's 2, but Room B's attack rate of 10% < Room C's 20%—more people naturally means more cases, so you have to look at rates!
+
+[Person/Summary] 60 students total, 17 got sick, overall attack rate 28%
+```
+
+### Reading the clues: stack the three pictures together
+
+- **Time**: there's only **one peak** (day 3), then it drops off → this shape usually means **everyone got it from the same source**, rather than person-to-person spread dragging on and on. (Sound like something everyone shares? 💧)
+- **Place**: **Room A has a 60% attack rate**, far higher than the other rooms → the source is likely right in that classroom.
+- You go take a look: **there's a water fountain right outside Room A's door that everyone uses.**
+
+> 💧 **Hold on — don't convict it yet!** The water fountain is now the **prime suspect**, not "the culprit." **Descriptive analysis (Person/Time/Place) can only "identify a suspect," not "prove guilt."** To prove guilt, you need the 2×2 tables and regression from later chapters, plus **environmental sampling** (actually culturing the pathogen from the fountain). That's exactly why Ch03, Ch05, and Ch06 of this book exist.
+
+### The last step: write a one-page SitRep and hand it in
+
+The principal doesn't have 30 minutes to listen to you talk. **A SitRep (situation report) is the "say it in one page" version**: how many are affected right now, where it's concentrated, whether that's up or down from yesterday, and what to do next.
+
+> 📋 **A SitRep isn't something you write once and you're done — the outbreak changes daily, so you update a new version every day. Today's SitRep is the starting point for tomorrow's decisions.** That's exactly why this chapter teaches you to write "one script, rerun every day."
+
+### ⚠️ Four honest caveats
+
+1. **Description ≠ causation**: however beautifully you draw Person/Time/Place, it only "points at a suspect." Once the water fountain is named, you still need 2×2 tables, regression, plus environmental sampling later to confirm it.
+2. **Draw the epidemic curve using the "onset date," not the "absence date" or "notification date"**: use the wrong date and the peak shifts, and you'll look in the wrong time window. (The main text of this chapter uses the dataset's `symptom_onset_date`, not `notification_date`.)
+3. **For "Place," compare rates, not counts**: a bigger classroom naturally has more cases. You must divide by each classroom's headcount (the denominator) — comparing the **attack rate** is the only fair comparison. That's exactly why Room B's 3 cases is actually "safer" than Room C's 2.
+4. **Following the SOP ≠ being rigid**: some steps loop back and rerun; and **you should start control measures the moment they're warranted** (like shutting off the fountain right away) — you don't have to wait for the whole investigation to finish before acting. Saving people comes first; investigation and response can run in parallel.
+
+### Cheat sheet for reading the picture (save this)
+
+| What you see... | What it means |
+|---|---|
+| Case definition set before counting starts | Draw the line first, so no one can fudge the numbers |
+| Person | Who got hit, what characteristics |
+| Time (epidemic curve) | Which days it broke out, which day peaked (drawn using **onset date**) |
+| Place (attack rate by location) | Where's hit hardest → where to look for the source (compare **rates**, not counts) |
+| A "single peak" epidemic curve | Usually means a common source |
+| The location with the highest attack rate | Prime suspect, but **not proven guilty yet** |
+| SitRep | A one-page situation report, updated daily |
+| Descriptive analysis | Generates hypotheses, doesn't prove causation |
+
+### Back to reality: pink eye → Legionnaires' disease
+
+Now swap the school scenario for the nursing home:
+
+| School pink-eye outbreak | Real nursing home case |
+|---|---|
+| Absence slips and clinic records in the nurse's office | 280-row line list (one row per person) |
+| Agreeing up front on "how red counts as a hit" | Case definition (confirmed / probable / not-a-case) |
+| Who got hit, which people | Person (age, sex, comorbidity distribution) |
+| Which days it broke out, peaked day 3 | Time (epidemic curve, `symptom_onset_date`) |
+| Which classroom got hit hardest (Room A at 60%) | Place (attack rate by floor/wing) |
+| Room A's water fountain → suspect | Water supply system → hypothesis to be verified |
+| The one page you reported to the principal | Daily SitRep to the incident commander |
+
+Every trick you just learned in the nurse's office — follow the SOP, define the case first, ask Person/Time/Place, compare rates not counts, write a one-page SitRep — **is exactly what this chapter does with the 280-person nursing home data, from Step 1 through Step 8**. Now scroll down to the FETP ten-step framework and each individual Step — doesn't it suddenly feel a lot friendlier? 😉
+
+---
+
 ## The FETP 10-step outbreak investigation: where this chapter fits
 
 Outbreak investigation follows an internationally recognized **10-step systematic framework**, the one used by Taiwan CDC's FETP 2.0 training. This chapter centers on Step 5 (descriptive epidemiology) while also touching on the core concepts of Steps 1, 3, 4, 9, and 10.
