@@ -23,6 +23,136 @@ The main thread of this chapter: **going from the simplest rolling mean all the 
 - Capturing trend + seasonality on longer series with **ARIMA / SARIMA**
 - Systematically comparing six models with **MAE / AIC**
 
+## 🔮 Super Simple Special: Understanding Time-Series Forecasting with a "Bubble-Tea Shop Owner's Crystal Ball"
+
+> ARIMA, SARIMA, autocorrelation, stationarity... does that pile of jargon make your head spin? Don't be scared. This section sets the outbreak aside for a moment and brings in a super down-to-earth character—**a bubble-tea shop owner trying to predict how many cups she'll sell tomorrow**—to walk through the entire logic of time-series forecasting in a way that'll make even a 7th grader nod along. Once you're done, go back and look at the six models below—you'll notice they're all just doing what the shop owner does every single day!
+
+### The Owner's Dilemma: How Much Should I Prep for Tomorrow?
+
+Every morning, the bubble-tea shop owner is betting on one thing:
+
+> "How many tapioca pearls should I cook today? How many staff should I schedule? Prep too much and it goes to waste; prep too little and customers will chew me out."
+
+How she wishes she had a **crystal ball** that could show roughly how many cups she'll sell tomorrow. That's exactly what **time-series forecasting** does—and it turns out her dilemma is **identical** to an outbreak commander's:
+
+> 🛏️ **"Roughly how many people will fall ill tomorrow? How many hospital beds and how much staff do we need to prepare?"** The shop's "pearls and staff" are the outbreak's "hospital beds and healthcare workers." **Forecasting exists so you can prepare ahead of time.**
+
+### Move One: Rolling Average — Don't Panic Over a Single Day
+
+When the owner looks at daily sales, she notices they're **jagged, jumping up and down like a sawtooth**: Saturdays are a mob scene, Mondays are dead quiet. If she just looks at "yesterday was crazy busy" and preps like crazy, Monday's leftovers are a disaster. What should she do?
+
+> ⚖️ **The weighing-yourself metaphor**: Would you panic because "I'm 0.5 kg heavier this morning"? No—that's probably just drinking an extra glass of water. You need to look at the **average over a whole week** to get an accurate picture. Daily case counts work the same way: a **7-day rolling average (rolling mean)** is like putting on a pair of "de-jaggifying glasses"—it smooths out the ups and downs of the weekend and reveals the **real underlying trend** hiding beneath.
+
+### Move Two: Autoregression — Tomorrow Looks a Lot Like Your Recent Self
+
+The owner's most intuitive forecasting method: "Sales were high yesterday and the day before, so today probably won't be too bad either."
+
+> 🌡️ This is called **autoregression**—just like weather has momentum ("cold yesterday, probably cold today too"). Business has momentum too, so you can **use the last few days' numbers to guess tomorrow**. The Poisson + lag model in Part A of this chapter is doing exactly that: "using yesterday and the day before as features to predict today."
+
+### Move Three: Seasonality — Saturday Always Gets Slammed
+
+The owner has also noticed an ironclad rule: **every single Saturday gets slammed**, week after week.
+
+> 📅 **The folding-the-calendar metaphor**: Fold the calendar into stacks of 7 days each, and you'll notice the "Saturday" square is always the most crowded one. This fixed rerun that plays **exactly every 7 days** is **seasonality, with period s=7**. The `s=7` in SARIMA's name is reminding the model: "every 7 days, look back and check the same day of the week again."
+
+> 🔑 One sentence to tell them apart: **autoregression is "short-term momentum" (the lingering warmth of the last few days), while seasonality is "long-term rhythm" (the same fixed day every week)**—use both together for an accurate forecast.
+
+### Move Four: Train/Test — No Peeking at the Answers!
+
+The owner comes up with a forecasting formula—how does she know if it's actually accurate? **She can't brag using days she's already seen.**
+
+> 📝 **The old-exam-questions metaphor**: If you quiz yourself with a test you've already checked the answers to, of course you'll score 100%—but that doesn't mean you can solve **tomorrow's** brand-new questions. The right approach: **cover up** the actual sales from the last week first, force yourself to predict without seeing the answers, and only then lift the cover to check. Peeking at the future = **cheating (data leakage)**—the model will "ace the test" but flop badly once it's actually deployed.
+
+This is exactly what a **train/test split** is: use the earlier data to come up with the formula (training), then check it against the hidden last few days (testing), and score it with **MAE (average error in cups)**—the smaller, the more accurate.
+
+```{figure} images/bubbletea_forecast_en.svg
+:name: fig-bubbletea-forecast
+:alt: Daily bubble-tea sales time series: jagged bars showing weekend spikes, a green 7-day rolling-average line that smooths out the sawtooth pattern, a covered-up test week with a dashed forecast line, and the three key terms rolling average / autoregression / seasonality s=7
+:width: 100%
+
+The bars are cups sold each day (orange spikes on weekends), the green line is the 7-day average (smoothing out the sawtooth to reveal the trend), the last week is "covered up" as the test week, and the orange dashed line is the forecast—only by lifting the cover do we know if it was accurate.
+```
+
+### Try It Yourself: Forecast the Owner's Next Week, and See Which Formula Wins
+
+```python
+import numpy as np
+import pandas as pd
+
+rng = np.random.default_rng(7)
+# 8 weeks = 56 days of daily cups sold (business slowly improves, weekends spike)
+days = pd.date_range("2026-03-02", periods=56, freq="D")   # starts on a Monday
+t = np.arange(56)
+weekend_bonus = np.where(days.weekday >= 5, 40, 0)         # Sat/Sun get +40 cups
+cups = (60 + 1.2 * t + weekend_bonus + rng.normal(0, 8, 56)).round().astype(int)
+sales = pd.DataFrame({"date": days, "cups": cups}).set_index("date")
+
+# Move One: 7-day rolling average, smooths out the sawtooth to reveal the trend
+sales["rolling7"] = sales["cups"].rolling(7).mean()
+
+# Move Four: "cover up" the last 7 days as the test set, the first 49 days are the training set
+train, test = sales.iloc[:-7], sales.iloc[-7:]
+
+# Two forecasting formulas, lift the cover and compare MAE (mean absolute error, smaller = more accurate)
+pred_naive = np.full(7, train["cups"].iloc[-1])        # (a) Naive: tomorrow ~= today (the plainest form of autoregression)
+pred_seasonal = train["cups"].iloc[-7:].to_numpy()     # (b) Same-day-last-week: captures the 7-day cycle
+
+mae_naive = np.abs(test["cups"].to_numpy() - pred_naive).mean()
+mae_seasonal = np.abs(test["cups"].to_numpy() - pred_seasonal).mean()
+print(f"Naive (yesterday)  MAE = {mae_naive:.1f} cups")
+print(f"Same-day-last-week MAE = {mae_seasonal:.1f} cups  <- captures the weekly 'Saturday spike' -> more accurate!")
+```
+
+Running this, you'll see:
+
+```text
+Naive (yesterday)  MAE = 23.7 cups
+Same-day-last-week MAE = 16.0 cups  <- captures the weekly 'Saturday spike' -> more accurate!
+```
+
+**Do you see it?** Simply factoring in the "replays every 7 days" cycle drops the average error from 23.7 cups to 16. That's exactly why a slightly fancier method like **SARIMA** (which automatically picks up on seasonality) so often beats the plain, naive forecast.
+
+### ⚠️ Four Caveats You Must Remember (These Really Matter)
+
+1. **This is weather forecasting, not fortune-telling**: the model assumes "tomorrow ≈ the last few days," so it **breaks down at turning points**—it can't guess which day the outbreak will hit its **peak**, and it can't predict a sudden superspreading event or the sharp drop after "shutting off the water source." It's like the shop owner using "this week" to predict "next week"—a typhoon day will still catch her off guard. **Fine for the short term, but the further out you go, the less accurate it gets.**
+2. **An outbreak's "weekend dip" is often fake**: the bubble-tea shop's Saturday spike is **real** (customers genuinely increase); but the weekend drop in outbreak case counts is **often just an illusion caused by "fewer people seeking care, getting tested, and reporting on weekends"**—the virus doesn't take weekends off. This is the **one place the bubble-tea metaphor will trick you**—make sure to remember it.
+3. **The rolling average always "lags a beat behind"**: it's an average looking backward at the past, so on the very day things truly spike, the smoothed line is still slowly catching up—**don't rely on it alone to catch a sudden peak**.
+4. **An outbreak won't climb forever**: if you stubbornly extrapolate an "always rising" trend out to infinity, you'll end up predicting infinite cases. Real outbreaks eventually **turn the corner and cool off**, because the pool of susceptible people who can still be infected runs low—which is exactly why we keep a close eye on whether the rolling-average line's "head is starting to droop."
+
+> 📏 One more practical reminder: the nursing home's data spans only **17 days**—too short to pick up an "every 7 days" cycle (SARIMA needs at least 2 full cycles). That's exactly why Part B of this chapter switches to **90 days of synthetic influenza-like data** to demonstrate seasonal forecasting—**you can't work out "monthly patterns" when the shop's only been open a week**.
+
+### Cheat Sheet for Reading the Chart (Save This)
+
+| What you see... | What it means |
+|---|---|
+| Daily numbers jumping up and down (sawtooth) | Raw noise—don't panic over a single day |
+| 7-day rolling average line | The **real trend** after smoothing out the sawtooth |
+| The smoothed line's head tilts upward | Still growing (the outbreak is still burning -> prep more beds fast) |
+| The smoothed line's head droops downward | Cooling off (you can breathe a little easier) |
+| Highs and lows repeating at a fixed interval | Seasonality (s=7 = weekly) |
+| "Using yesterday, the day before to predict today" | Autoregression (lag features) |
+| Hiding the last few days to test against | Train/test split (guards against cheating) |
+| Smaller MAE | Less average forecasting error (more accurate) |
+| Model loses accuracy at peaks and sharp drops | Normal! Models can't tell fortunes—turning points are always the hardest |
+
+### Back to Reality: Pearls -> Cases
+
+Now swap the bubble-tea shop for the nursing home:
+
+| Bubble-tea shop owner | Real nursing home case |
+|---|---|
+| How many cups sold each day | Daily **symptom onset** count (daily case count) |
+| Sawtooth pattern from weekend spikes | Noise in the daily numbers (but the weekend dip might be a reporting effect!) |
+| 7-day rolling average | The epidemic curve's 7-day average, for spotting the trend |
+| "Busy yesterday, probably busy today too" | Autoregression (Part A: Poisson + lag) |
+| "Always slammed every Saturday" | Seasonality (Part B: SARIMA, s=7) |
+| Cover last week, forecast, then check the answer | Train/test split + MAE |
+| How many pearls to prep, how many staff to schedule | How many hospital beds and how much staff to prepare |
+
+Every move you just helped the owner learn—rolling average, autoregression, seasonality, train/test—**is exactly what Part A and Part B of this chapter do with the outbreak data**. Now scroll down and look at that big showdown between six models—doesn't it suddenly feel a lot friendlier? 😉
+
+---
+
 ## Core Concepts
 
 | Concept | Explanation |
