@@ -234,6 +234,8 @@ Cox 迴歸有一個關鍵假設：**兩組的 hazard 比值在整段追蹤期間
 
 ## Step 1 — 建立分析資料集
 
+存活分析的資料和一般表格不一樣，它需要**三樣東西**：每個人觀察了**多久**（time）、最後**有沒有發生事件**（event，1/0）、還有誰是「還沒發生就結束觀察」的**設限**。這個 Step 就是把原始 line list 加工出這三欄。
+
 ```python
 import pandas as pd
 
@@ -255,9 +257,23 @@ cases["end_date"] = cases.apply(
 cases["time_to_event"] = (cases["end_date"] - cases["symptom_onset_date"]).dt.days
 ```
 
+> **逐行拆解**（這段是全章最重要的資料前處理，值得慢慢看）：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `pd.to_datetime(...)` | 把日期字串轉成真正的「日期型別」，之後才能相減算天數（字串直接相減會報錯） |
+> | `df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)` | 布林 `True/False` → `1/0`；只要不是 `not_ill` 就算發病 |
+> | `cases = df[df["infected"] == 1].copy()` | 存活分析只看**確實發病**的人；`.copy()` 是為了之後安心改欄位、不跳 `SettingWithCopyWarning` |
+> | `cases["event"] = (cases["outcome"] == "dead").astype(int)` | **事件旗標**：死亡=1、存活=0（設限）。三樣東西的第②樣 |
+> | `investigation_end = ...max() + Timedelta(days=14)` | 沒死的人也要有「觀察到哪天」的截止日；用最後一位發病日再加 14 天 |
+> | `cases.apply(lambda r: 死亡日 if event==1 else 截止日, axis=1)` | 每個人碼表的 **stop 時間**：死的人用死亡日，活的人用截止日 |
+> | `(end_date - onset).dt.days` | stop − start ＝ **存活時間**（天）。第①樣東西完成 |
+
 > **重點**：存活者的 `time_to_event` 使用「最後發病日 + 14 天」當作觀察截止——代表「我們至少觀察了這麼久都沒看到死亡」。這個值**不是** 0，也**不是**遺漏。
 
 ## Step 2 — Kaplan-Meier 全體存活曲線
+
+先看**全體**一條曲線：把剛剛做好的 `time_to_event` 和 `event` 餵給 `KaplanMeierFitter`，它就會畫出那條會「下樓梯」的存活曲線。
 
 ```python
 import matplotlib.pyplot as plt
@@ -284,6 +300,17 @@ plt.ylabel("存活機率")
 plt.show()
 ```
 
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `plt.rcParams["font.sans-serif"] = [...]` | **中文字型樣板**，讓圖上的中文不變成方框（□□□）；每張有中文的圖都貼一次就好 |
+> | `kmf = KaplanMeierFitter()` | 建一台「KM 估計機」，等著餵資料 |
+> | `kmf.fit(time_to_event, event_observed=event, label="全體")` | **只餵兩欄**：撐多久 + 有沒有發生事件。設限（event=0）lifelines 會自動幫你處理 |
+> | `kmf.plot_survival_function()` | 畫出下樓梯曲線（含 95% CI 陰影帶） |
+>
+> 💡 **KM 的魔法只要兩欄**：時間 + 事件旗標。設限的人（`event=0`）交給 `fit()`，它會讓那個人「撐到最後一刻都算在分母裡、但不讓曲線往下踏一階」——這正是設限被正確納入、不被丟掉的地方。
+
 ### 怎麼讀 KM 曲線
 
 ```{figure} images/km_step_function_anatomy.svg
@@ -307,6 +334,8 @@ plt.show()
 
 ## Step 3 — 按嚴重度分組的存活曲線
 
+全體一條線看不出「誰預後比較差」，所以我們**照嚴重度拆成三組**、各畫一條線疊在同一張圖上比較。
+
 ```python
 for severity in ["mild", "moderate", "severe"]:
     mask = cases["clinical_severity"] == severity
@@ -317,6 +346,17 @@ for severity in ["mild", "moderate", "severe"]:
 plt.title("存活曲線（按嚴重度分組）")
 plt.show()
 ```
+
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `for severity in ["mild", "moderate", "severe"]:` | 對每一種嚴重度各畫一條線 |
+> | `mask = cases["clinical_severity"] == severity` | 做一個布林遮罩，選出「這一組」的人 |
+> | `kmf.fit(cases.loc[mask, ...], ...)` | 只用這一組的資料重新 fit（同一台 `kmf` 重複用沒關係，每次 fit 會覆蓋上一次） |
+> | `plt.show()` 放在迴圈**外面** | 三條線要畫在**同一張圖**才能互相比較 |
+>
+> 🧭 **關鍵在「同一張圖」**：`plot_survival_function()` 每次都畫在目前的座標軸上，迴圈跑三次就疊出三條線。想比較分組，千萬別在迴圈**裡面**就 `plt.show()`（那會拆成三張各一條線的圖，根本沒法比）。
 
 ### 看分組 KM 曲線的三個視角
 
@@ -331,6 +371,8 @@ plt.show()
 
 ## Step 4 — Log-rank 檢定
 
+Step 3 用眼睛看兩條線有沒有分開；Step 4 用 **Log-rank 檢定**問一個更嚴謹的問題：**這個差距是真的，還是只是碰巧？**
+
 ```python
 from lifelines.statistics import logrank_test
 
@@ -343,6 +385,16 @@ result = logrank_test(
 )
 print(f"Log-rank p-value = {result.p_value:.4f}")
 ```
+
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `severe = cases[... == "severe"]` / `non_severe = cases[... != "severe"]` | 把人分成**要比較的兩組** |
+> | `logrank_test(A時間, B時間, event_observed_A=, event_observed_B=)` | 餵**兩組各自**的時間與事件旗標，回傳一個結果物件 |
+> | `result.p_value` | 取出 p 值——就是「這差距是不是碰巧」的答案 |
+>
+> ⚠️ **log-rank 要餵四樣**：兩組的時間 + 兩組的事件旗標，缺一不可。它比的是**整條曲線**、不是某一天——所以就算兩組中位存活一樣，只要曲線形狀不同也可能顯著。
 
 ### Log-rank 白話版
 
@@ -359,6 +411,8 @@ print(f"Log-rank p-value = {result.p_value:.4f}")
 
 ## Step 5 — Cox 比例風險迴歸
 
+Log-rank 只說「有沒有差」；**Cox 迴歸**進一步回答「差多少」，而且能**同時**放進年齡、性別、共病等多個因子，各自算出一個 HR（校正掉其他因子後的效應）。
+
 ```python
 from lifelines import CoxPHFitter
 
@@ -373,6 +427,17 @@ cph = CoxPHFitter()
 cph.fit(cox_df, duration_col="time_to_event", event_col="event")
 cph.print_summary()
 ```
+
+> **逐行拆解**（重點在把資料整理成 Cox 吃得下的樣子）：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `cox_df = cases[[...]].copy()` | 挑出要進模型的欄位：**時間 + 事件 + 各個預測因子** |
+> | `cox_df["is_male"] = (cox_df["sex"] == "M").astype(int)` | Cox 只吃數字，把文字類別 `sex` 轉成 0/1 的 `is_male` |
+> | `cox_df.drop(columns=["sex"])` | 原本的文字欄位要**丟掉**，留著會讓 `fit()` 報錯 |
+> | `cph.fit(cox_df, duration_col="time_to_event", event_col="event")` | 告訴 Cox **哪一欄是時間、哪一欄是事件**；其餘欄位一律當預測因子 |
+>
+> 💡 **Cox 的兩個必填參數**：`duration_col`（時間）和 `event_col`（事件旗標）。剩下的欄位它全部當成要估 HR 的因子——所以 `cox_df` 裡**不能夾帶** `case_id`、姓名這種無關欄位，會被當成因子亂估。
 
 ### 讀懂 `print_summary()` 每一欄
 
@@ -414,11 +479,21 @@ cph.print_summary()
 
 ## Step 6 — HR 森林圖
 
+`print_summary()` 的表格用看的容易眼花，**森林圖**把每個變項的 HR 和信賴區間畫成「點 + 橫線」，一眼就看出誰危險、誰不顯著。
+
 ```python
 cph.plot()
 plt.title("Cox Regression — Hazard Ratio")
 plt.show()
 ```
+
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `cph.plot()` | 一行畫出**森林圖**：把 Step 5 表格裡每個變項的 log(HR) 和 CI 畫成點 + 橫線 |
+>
+> 💡 **森林圖 ＝ `print_summary()` 的圖形版**：同一組數字、換個看法。點落在 0 右邊＝危險因子、橫線跨過 0 ＝不顯著，比一欄一欄讀表格快多了。
 
 ### 怎麼看 HR 森林圖
 
@@ -449,6 +524,8 @@ Step 5 給我們一堆 HR 數字，但那些數字是在「假設兩組 hazard �
 # 檢查 PH 假設（show_plots=False 讓輸出只印文字結論，避免多餘子圖）
 results = cph.check_assumptions(cox_df, show_plots=False)
 ```
+
+> **逐行拆解**：`cph.check_assumptions(cox_df, show_plots=False)` —— 用**同一份** `cox_df`，對每個變項做 Schoenfeld residuals 檢定；`show_plots=False` 讓它只印文字結論、不畫出一堆子圖。
 
 這個函式會：
 1. 對每個變項做 Schoenfeld residuals 檢定
