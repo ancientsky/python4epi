@@ -234,6 +234,8 @@ Survival analysis is four things: **describe → infer → regress → diagnose*
 
 ## Step 1 — Build the Analysis Dataset
 
+Survival data is different from an ordinary table: it needs **three things**—how **long** each person was observed (time), whether an **event happened** in the end (event, 1/0), and who is **censored** (observation ended before the event). This Step turns the raw line list into those three columns.
+
 ```python
 import pandas as pd
 
@@ -255,9 +257,23 @@ cases["end_date"] = cases.apply(
 cases["time_to_event"] = (cases["end_date"] - cases["symptom_onset_date"]).dt.days
 ```
 
+> **Line-by-line** (this is the most important preprocessing in the whole chapter—read it slowly):
+>
+> | This line | What it does |
+> |---|---|
+> | `pd.to_datetime(...)` | Turns date strings into a real "date type" so we can subtract them to get a number of days (subtracting strings directly raises an error) |
+> | `df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)` | Boolean `True/False` → `1/0`; anything other than `not_ill` counts as infected |
+> | `cases = df[df["infected"] == 1].copy()` | Survival analysis only looks at people who **actually got sick**; `.copy()` lets us edit columns later without the `SettingWithCopyWarning` |
+> | `cases["event"] = (cases["outcome"] == "dead").astype(int)` | **Event flag**: death=1, survived=0 (censored). The second of the three things |
+> | `investigation_end = ...max() + Timedelta(days=14)` | People who didn't die still need an "observed until when" cutoff; take the last onset date plus 14 days |
+> | `cases.apply(lambda r: death_date if event==1 else cutoff, axis=1)` | Each person's stopwatch **stop time**: the death date if they died, the cutoff if they survived |
+> | `(end_date - onset).dt.days` | stop − start = **survival time** (days). The first of the three things, done |
+
 > **Key point**: for survivors, `time_to_event` uses "the last onset date + 14 days" as the observation cutoff—meaning "we observed at least this long and saw no death." This value is **not** 0, and it is **not** missing.
 
 ## Step 2 — Kaplan-Meier Survival Curve for Everyone
+
+First, one curve for **everyone**: feed the `time_to_event` and `event` we just built to `KaplanMeierFitter`, and it draws that "going-downstairs" survival curve.
 
 ```python
 import matplotlib.pyplot as plt
@@ -284,6 +300,17 @@ plt.ylabel("Survival probability")
 plt.show()
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `plt.rcParams["font.sans-serif"] = [...]` | A **font-fallback template** (kept identical across editions) so any CJK characters render instead of boxes (□□□) |
+> | `kmf = KaplanMeierFitter()` | Build a "KM estimator machine," waiting to be fed data |
+> | `kmf.fit(cases["time_to_event"], event_observed=cases["event"], label="All")` | **Feed just two columns**: how long each person lasted + whether the event happened. Censoring (event=0) is handled automatically by lifelines |
+> | `kmf.plot_survival_function()` | Draw the downstairs curve (with the 95% CI shaded band) |
+>
+> 💡 **KM's magic needs only two columns**: time + event flag. Hand the censored people (`event=0`) to `fit()`, and it lets each of them "count in the denominator up to the last moment, but never make the curve step down"—that is exactly where censoring is correctly included instead of thrown away.
+
 ### How to Read a KM Curve
 
 ```{figure} images/km_step_function_anatomy_en.svg
@@ -307,6 +334,8 @@ Four steps for reading the curve:
 
 ## Step 3 — Survival Curves by Severity Group
 
+One curve for everyone can't reveal "who has the worse prognosis," so we **split into three groups by severity** and draw one curve each, layered on the same figure to compare.
+
 ```python
 for severity in ["mild", "moderate", "severe"]:
     mask = cases["clinical_severity"] == severity
@@ -317,6 +346,17 @@ for severity in ["mild", "moderate", "severe"]:
 plt.title("Survival curves (grouped by severity)")
 plt.show()
 ```
+
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `for severity in ["mild", "moderate", "severe"]:` | Draw one curve for each severity |
+> | `mask = cases["clinical_severity"] == severity` | A boolean mask selecting the people in "this group" |
+> | `kmf.fit(cases.loc[mask, ...], ...)` | Re-fit using only this group's data (reusing the same `kmf` is fine—each `fit` overwrites the previous one) |
+> | `plt.show()` is **outside** the loop | All three curves must be drawn on the **same figure** to be comparable |
+>
+> 🧭 **The key is "the same figure"**: `plot_survival_function()` always draws on the current axes, so three loop iterations stack up three curves. To compare groups, never call `plt.show()` **inside** the loop (that would split it into three figures with one curve each—nothing to compare).
 
 ### Three Perspectives for Reading Grouped KM Curves
 
@@ -331,6 +371,8 @@ plt.show()
 
 ## Step 4 — Log-rank Test
 
+Step 3 used our eyes to see whether two curves separate; Step 4 uses the **Log-rank test** to ask a stricter question: **is this gap real, or just chance?**
+
 ```python
 from lifelines.statistics import logrank_test
 
@@ -343,6 +385,16 @@ result = logrank_test(
 )
 print(f"Log-rank p-value = {result.p_value:.4f}")
 ```
+
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `severe = cases[... == "severe"]` / `non_severe = cases[... != "severe"]` | Split people into the **two groups to compare** |
+> | `logrank_test(A_time, B_time, event_observed_A=, event_observed_B=)` | Feed **each group's own** times and event flags; returns a result object |
+> | `result.p_value` | Pull out the p-value—the answer to "is this gap just chance?" |
+>
+> ⚠️ **Log-rank needs four things fed in**: both groups' times + both groups' event flags, none optional. It compares the **whole curve**, not one single day—so even if the two medians are equal, a different curve shape can still be significant.
 
 ### The Log-rank Test in Plain Words
 
@@ -359,6 +411,8 @@ print(f"Log-rank p-value = {result.p_value:.4f}")
 
 ## Step 5 — Cox Proportional Hazards Regression
 
+Log-rank only says "is there a difference"; **Cox regression** goes further and answers "how much," and it can put age, sex, comorbidities, and more into the model **simultaneously**, giving each its own HR (the effect after adjusting for the others).
+
 ```python
 from lifelines import CoxPHFitter
 
@@ -373,6 +427,17 @@ cph = CoxPHFitter()
 cph.fit(cox_df, duration_col="time_to_event", event_col="event")
 cph.print_summary()
 ```
+
+> **Line-by-line** (the point is shaping the data into something Cox can eat):
+>
+> | This line | What it does |
+> |---|---|
+> | `cox_df = cases[[...]].copy()` | Pick the columns to go into the model: **time + event + each predictor** |
+> | `cox_df["is_male"] = (cox_df["sex"] == "M").astype(int)` | Cox only eats numbers, so convert the text category `sex` into a 0/1 `is_male` |
+> | `cox_df.drop(columns=["sex"])` | The original text column must be **dropped**—leaving it in makes `fit()` raise an error |
+> | `cph.fit(cox_df, duration_col="time_to_event", event_col="event")` | Tell Cox **which column is time and which is the event**; every remaining column is treated as a predictor |
+>
+> 💡 **Cox's two required arguments**: `duration_col` (time) and `event_col` (event flag). It treats every other column as a factor to estimate an HR for—so `cox_df` **must not smuggle in** irrelevant columns like `case_id` or names, which would be estimated as nonsense factors.
 
 ### Reading Every Column of `print_summary()`
 
@@ -414,11 +479,21 @@ The epidemiological rule of thumb (Peduzzi 1995): **each variable needs at least
 
 ## Step 6 — HR Forest Plot
 
+Reading the `print_summary()` table with your eyes is dizzying; a **forest plot** draws each variable's HR and confidence interval as a "dot + horizontal line," so you see at a glance who's risky and who's not significant.
+
 ```python
 cph.plot()
 plt.title("Cox Regression — Hazard Ratio")
 plt.show()
 ```
+
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `cph.plot()` | One line draws the **forest plot**: it plots each variable's log(HR) and CI from the Step 5 table as a dot + horizontal line |
+>
+> 💡 **A forest plot = the graphical version of `print_summary()`**: same numbers, different view. A dot to the right of 0 = risk factor; a horizontal line crossing 0 = not significant—far faster than reading the table column by column.
 
 ### How to Read the HR Forest Plot
 
@@ -449,6 +524,8 @@ Step 5 gives us a pile of HR numbers, but those numbers were computed under the 
 # Check the PH assumption (show_plots=False prints text conclusions only, avoiding extra subplots)
 results = cph.check_assumptions(cox_df, show_plots=False)
 ```
+
+> **Line-by-line**: `cph.check_assumptions(cox_df, show_plots=False)` —— using the **same** `cox_df`, it runs a Schoenfeld-residuals test on each variable; `show_plots=False` makes it print only the text conclusion instead of drawing a pile of subplots.
 
 This function will:
 1. Run a Schoenfeld residuals test for each variable
