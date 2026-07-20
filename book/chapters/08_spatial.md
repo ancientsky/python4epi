@@ -147,6 +147,8 @@ print("→ 真實比亂貼的擠很多，p 很小 → 這是真的群聚！" if 
 
 ### Step 1 — 資料準備
 
+先讀入清洗後的病例資料，再建立「有沒有感染」「有沒有死亡」這兩個 0/1 旗標欄位，之後所有分組統計都靠它們。
+
 ```python
 import pandas as pd
 import seaborn as sns
@@ -304,6 +306,16 @@ ax.barh(spatial_sorted["label"], spatial_sorted["attack_rate"],
         color=["#e34a33" if ar > 50 else "#2c7fb8" for ar in spatial_sorted["attack_rate"]])
 ```
 
+> **逐行拆解**
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `spatial["floor"].astype(str) + "F-" + spatial["wing"]` | 把數字樓層轉成字串，跟翼區代碼併起來，組成 `"1F-A"` 這種好讀的標籤 |
+> | `sort_values("attack_rate", ascending=True)` | 依侵襲率由小到大排序，讓 `barh()` 畫出來時最高風險的翼區自然排在最上面 |
+> | `color=[... for ar in ...]` | 用 list comprehension 逐一檢查每個翼區的侵襲率，超過 50% 上紅色、其餘上藍色 |
+>
+> 💡 `ascending=True` 搭配 `barh()` 是常見組合：水平長條圖由下往上畫，遞增排序後最大值自然落在最上方、最顯眼。
+
 > 排序水平條圖讓高風險翼區一目了然。顏色條件式上色（>50% 用紅色）突出需要優先處理的區域。
 > 最右側的翼區 = 最危險，環境採樣和調查資源應優先分配到那裡。
 
@@ -324,6 +336,8 @@ heatmap_cfr = spatial.pivot(index="floor", columns="wing", values="cfr")
 sns.heatmap(heatmap_cfr, annot=True, fmt=".1f", cmap="Reds")
 ```
 
+> 🔑 這裡重用 Step 3 的 `pivot()` + `sns.heatmap()` 套路，只把 `values` 換成 `cfr`——同一張矩陣、換一個欄位，就能比較「感染多的地方」和「死得多的地方」是不是同一群人。
+
 **方向 2：比較特定暴露因子的空間分布**
 
 退伍軍人病的主要傳播途徑是受汙染的熱水霧化（蓮蓬頭、按摩浴缸）。
@@ -338,6 +352,8 @@ shower_by_wing = df.groupby("wing").agg(
 shower_by_wing["shower_pct"] = (shower_by_wing["shower_users"] / shower_by_wing["total"] * 100).round(1)
 print(shower_by_wing)
 ```
+
+> 🔑 這是 Step 2 `groupby().agg()` 的縮小版：只用一個分組欄位（`wing`），邏輯完全相同——先數總人數，再對旗標欄位加總，最後相除得到百分比。
 
 **方向 3：環境採樣優先順序**
 
@@ -380,9 +396,13 @@ def normalize_county(name):
     return TAI_NORMALIZE.get(str(name).strip(), str(name).strip())
 ```
 
+> 💡 `TAI_NORMALIZE.get(key, key)` 是常見的「查表、查不到就用原字串」寫法：字典裡列出的舊縣市名/台臺變體會被轉換，沒列出的（如新北市、桃園市）原封不動地回傳。
+
 JOIN 前必須對 SHP 和 CDC CSV **雙邊都套用**這個函數，否則地圖上會出現大量空白。
 
 ### 工作流程
+
+以下把整個 Choropleth 流程串成七個步驟——從下載邊界檔到輸出動畫地圖：
 
 ```python
 # 1. 下載 SHP（ZIP）→ 解壓縮 → geopandas.read_file()
@@ -409,6 +429,20 @@ gdf_merged.plot(column="rate_per_100k", cmap="Reds", legend=True, ax=ax)
 anim = FuncAnimation(fig, update_func, frames=years, interval=800)
 anim.save("animation.gif", writer="pillow", fps=1, dpi=80)
 ```
+
+> **逐行拆解**
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `gpd.read_file(shp_path).to_crs(epsg=4326)` | 讀入 SHP 檔案，並把座標系統轉成 WGS84（EPSG:4326）—— 網頁地圖（Plotly、Leaflet）都吃這種經緯度座標 |
+> | `shp_counties - data_counties` | 集合相減：找出「SHP 有、疫情資料沒有」的縣市名 —— 這些地方地圖會空白 |
+> | `data_counties - shp_counties` | 反過來找出「疫情資料有、SHP 沒有」的縣市名 —— 這些資料會被靜靜丟掉、不會顯示 |
+> | `groupby(["year","county"])["cases"].sum()` | 依年度和縣市加總病例數，才能算出每年、每縣市各自的發生率 |
+> | `cases / county.map(COUNTY_POP) * 100_000` | 除以人口數再乘以 100,000，把病例數換算成「每十萬人發生率」，才能公平比較大小縣市 |
+> | `gdf.merge(latest, left_on="county_norm", right_on="county", how="left")` | 用正規化後的縣市名稱把地圖（`gdf`）和疫情資料（`latest`）合併，`how="left"` 保留所有地圖上的縣市，即使沒有對應資料也不會消失 |
+> | `gdf_merged.plot(column="rate_per_100k", cmap="Reds", legend=True)` | GeoPandas 的 `.plot()` 直接依 `rate_per_100k` 欄位上色，畫出 choropleth |
+>
+> ⚠️ 第 4 步的 ID 比對是整個 choropleth 最容易出包的地方：merge 前如果 SHP 和資料的縣市名稱對不上（例如台/臺沒有正規化），合併出來的列會變成 NaN，地圖上就會出現一大片空白——而且**不會報錯**。務必先印出 `shp_counties - data_counties` 這種差集，肉眼確認完全吻合再往下做。
 
 > **為什麼用 GeoPandas + matplotlib 而不是 Plotly？**
 > SHP 格式需要 `geopandas.read_file()` 讀取，而 GeoPandas 本身就能直接用 `.plot()` 畫 choropleth。
@@ -463,6 +497,15 @@ w = Queen.from_dataframe(main, use_index=False)
 w.transform = "r"   # row-standardized
 ```
 
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `Queen.from_dataframe(gdf, use_index=False)` | 用 **Queen 接壤**（邊界碰到、含只碰一個角）自動建出「誰是誰的鄰居」權重矩陣 W |
+> | `w_all.islands` | 列出**沒有任何鄰居**的縣市（離島）——它們在海上，接壤定義下誰都碰不到 |
+> | `main = gdf[~gdf["is_inset"]]` | 聚焦本島 19 個相連縣市（離島留到平滑處理），免得離島的 0 鄰居壞了計算 |
+> | `w.transform = "r"` | **row-standardized**：讓每個縣市的鄰居權重加起來 = 1，鄰居多的不會自動比較大聲（公平投票） |
+>
 > ⚠️ **換一種鄰居定義，答案就會變**——離島讓我們親眼看到這件事。這正是後面「權重敏感度」陷阱的現場。
 
 ### 第二步：全域 Moran's I —— 整張地圖的「物以類聚」指數
@@ -475,6 +518,16 @@ from esda.moran import Moran
 moran = Moran(main["rate"].values, w, permutations=999)
 print(f"Moran's I = {moran.I:.3f}, p = {moran.p_sim:.4f}")   # ≈ 0.50, p < 0.05 → 有顯著群聚
 ```
+
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `Moran(main["rate"].values, w, permutations=999)` | 餵三樣：各縣市的**率**、剛剛的**鄰居權重 w**、**洗牌 999 次**。它算出全域 Moran's I，並把率剪下來洗 999 次當對照 |
+> | `moran.I` | 全域指數：+1 物以類聚、0 隨機、−1 高低相間 |
+> | `moran.p_sim` | **洗牌 p 值**：真實地圖的 I 比 999 次隨機洗牌高多少——< 0.05 才代表群聚不是碰巧 |
+>
+> 💡 **光看 I 不夠、要看 p_sim**：I = 0.5 看起來像有群聚，但要靠洗牌 p 值證明「這 0.5 不是隨機也會出現的」。只有 I 顯著，才值得往下做 LISA 找熱區核心。
 
 ### 第三步：局部 LISA —— 熱區核心到底在哪？
 
@@ -498,6 +551,17 @@ main["lisa"] = ["不顯著" if p >= 0.05 else labels[q]
                 for q, p in zip(lisa.q, lisa.p_sim)]
 ```
 
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `Moran_Local(main["rate"].values, w, permutations=999, seed=8)` | 局部版：對**每一個**縣市各算一個 local Moran，同時看自己的率和鄰居平均率；`seed=8` 讓洗牌可重現 |
+> | `lisa.q` | 每個縣市落在哪一象限的代碼——**esda 編碼是 1=HH、2=LH、3=LL、4=HL** |
+> | `lisa.p_sim` | 每個縣市各自的洗牌 p 值（局部顯著性） |
+> | `["不顯著" if p >= 0.05 else labels[q] ...]` | 先看顯著性：p ≥ 0.05 一律標「不顯著」，顯著的才翻成 HH/LH/LL/HL 標籤 |
+>
+> ⚠️ **最容易踩雷的是 `.q` 的編碼**：直覺會以為 1234 = HH/HL/LL/LH，但 esda 是 **1=HH、2=LH、3=LL、4=HL**（LH 是 2、不是 3！）。照對照表抄，別自己按順序填，否則「颱風眼」和「火苗」會標反。
+
 在合成資料上，**臺南／高雄／嘉義**跳出來是 **HH 震央**，北部是 **LL 淨土**——南部登革熱熱區用統計坐實了。
 
 ### 第四步：熱點分析 Getis-Ord Gi\* —— 給長官看的熱區圖
@@ -511,6 +575,18 @@ w_b = Queen.from_dataframe(main, use_index=False); w_b.transform = "B"
 gi = G_Local(main["rate"].values, w_b, permutations=999, seed=8, star=True)
 hot = main.loc[(gi.p_sim < 0.05) & (gi.Zs > 0), "COUNTYNAME"].tolist()   # 顯著熱點
 ```
+
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `w_b = Queen.from_dataframe(main); w_b.transform = "B"` | Gi\* 用 **binary（0/1）**權重（`"B"`），不做 row-standardize——它算「這一圈的總熱度」，不是平均 |
+> | `G_Local(..., star=True)` | `star=True` = Gi\***（含自己）**：把焦點縣市自己也圈進「這一圈」一起算熱度 |
+> | `gi.Zs` | 每個縣市的 z 分數：正=比整體平均熱、負=冷 |
+> | `gi.p_sim` | 洗牌 p 值（小樣本要靠這個判顯著，不能只看 z 有沒有過 1.96） |
+> | `(gi.p_sim < 0.05) & (gi.Zs > 0)` | **顯著熱點**的正確判準：p 值顯著**且** z 為正 |
+>
+> ⚠️ **別用 `Zs > 1.96` 硬篩熱點**：縣市只有 19 個，樣本太小時常態近似不準，要用**洗牌 p_sim** 判顯著，再用 **Zs 的正負號**分冷熱。冷熱點都顯著時，光看 z 的絕對值會把冷點也誤當熱點。
 
 ### 概念延伸：掃描統計與疾病製圖（平滑）
 

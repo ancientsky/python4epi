@@ -256,6 +256,8 @@ $$RR_{MH} = \frac{\sum_i \frac{a_i \cdot (c_i + d_i)}{N_i}}{\sum_i \frac{c_i \cd
 
 ## Step 1: Data Preparation
 
+This Step loads the raw line list and builds the `infected` column that the rest of the chapter depends on—every RR and every stratum from here on is built on top of this one column.
+
 ```python
 import pandas as pd
 import numpy as np
@@ -268,6 +270,17 @@ df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
 # Anyone whose clinical_severity is not "not_ill" counts as infected
 df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
 ```
+
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `from epi_learning.metrics import risk_ratio` | Imports the risk-ratio helper we'll reuse throughout the chapter (the same tool built back in Ch03) |
+> | `df = pd.read_csv(...)` | Loads the line list for all 280 residents |
+> | `df["clinical_severity"] != "not_ill"` | Boolean test: anything other than "not ill" counts as infected |
+> | `.astype(int)` | Converts `True`/`False` into `1`/`0`, so it can be used as a `pd.crosstab` column, summed, and fed into the RR formula |
+>
+> 🔑 **`infected` is the foundation of the whole chapter**: every crude RR, stratum RR, and MH-adjusted RR in Steps 2–8 is built from this single 0/1 column.
 
 ## Step 2: Recap of the Crude RR
 
@@ -284,6 +297,8 @@ d = int(ct.loc[0, 0])   # no shower, not infected
 crude_rr = risk_ratio(a, a + b, c, c + d)
 print(f"Crude RR (shower_use -> infected) = {crude_rr:.3f}")
 ```
+
+> 💡 **`pd.crosstab` builds the 2×2 table for you**: `ct.loc[1, 1]` indexes row-then-column, pulling out the count for "showered and infected"; once all four cells are in hand, they go straight into the `risk_ratio()` helper from Ch03—no manual arithmetic needed.
 
 ## Step 3: Check the Three Confounder Requirements
 
@@ -316,6 +331,18 @@ print(pd.crosstab(df["functional_status"], df["infected"],
 #  -- the causal direction is wrong)
 # -> All three conditions are met, so we can proceed to stratified analysis
 ```
+
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `pd.crosstab(df["functional_status"], df["shower_use"], ...)` | Cross-tab: within each functional status, what proportion did/didn't use the shower—this checks confounder **requirement #1** |
+> | `normalize="index"` | Makes each row (each functional status) sum to 1, so you read proportions instead of raw counts |
+> | `margins=True` | Prints an extra "All" row/column for the overall total, useful for comparison |
+> | `pd.crosstab(df["functional_status"], df["infected"], ...)` | The same technique checks the association between functional status and infection—**requirement #2** |
+> | The comment for condition 3 (no code) | Requirement 3 ("not an intermediate variable") is a **logical judgment**, not something you compute—it relies on reasoning about causal direction, not a number |
+>
+> 🧭 **Only two of the three requirements can be backed up with `pd.crosstab`**: requirements #1 and #2 show up in the numbers, but #3 always depends on understanding the causal mechanism—no statistic can answer it for you.
 
 ## Step 4: Stratified Analysis
 
@@ -378,6 +405,23 @@ for _, row in results_df.iterrows():
 print(f"\n  Crude RR = {crude_rr:.3f}")
 ```
 
+> **Line-by-line** (the loop is a bit long, but every iteration does exactly what Ch03 did for a single RR):
+>
+> | This line | What it does |
+> |---|---|
+> | `strata = df["functional_status"].unique()` | Finds the distinct functional-status categories to loop over |
+> | `for s in sorted(strata):` | Runs one iteration of the loop per stratum |
+> | `sub = df[df["functional_status"] == s]` | Filters down to just the residents in this stratum |
+> | `if ct_s.shape != (2, 2): continue` | Skips a stratum that's missing the exposed or unexposed group (table isn't 2×2), avoiding a crash |
+> | `rr_s = risk_ratio(a_s, a_s + b_s, c_s, c_s + d_s)` | Computes this stratum's own RR |
+> | `ln_rr = np.log(rr_s)` | The CI formula works on log(RR) (its sampling distribution is closer to normal) |
+> | `se = np.sqrt(1/a_s - 1/(a_s+b_s) + 1/c_s - 1/(c_s+d_s))` | The standard error formula for log(RR) |
+> | `ci_lo/ci_hi = np.exp(ln_rr ± 1.96 * se)` | After computing the CI on the log scale, `np.exp()` converts it back to the RR scale |
+> | `stratum_results.append({...})` | Stores this stratum's n, a, b, c, d, RR, and CI into a list |
+> | `results_df = pd.DataFrame(stratum_results)` | Once the loop finishes, turns the list into a tidy table for Steps 5–7 to use |
+>
+> 🔑 **Don't drop the `if ct_s.shape != (2, 2): continue` line**: if even one stratum happens to have no exposed or no unexposed group (e.g., everyone in it used the shower), `.loc[1,1]`-style indexing crashes immediately—this is one of the most common traps in stratified analysis.
+
 ## Step 5: Forest Plot
 
 A forest plot puts each stratum's RR and confidence interval on a single chart, so you can see at a glance the effect size and precision of each stratum:
@@ -428,7 +472,11 @@ plt.tight_layout()
 plt.show()
 ```
 
+> 💡 **The forest plot is just Step 4's `results_df` drawn on a chart**: `ax.errorbar`'s `xerr` gives the distance from the RR down to the CI lower bound and up to the CI upper bound; `axvline(x=1)` marks the "no association" reference line, and `axvline(x=crude_rr)` overlays the crude RR for comparison—if a stratum's horizontal line never crosses the gray dashed line, that stratum is statistically significant.
+
 ## Step 6: Mantel-Haenszel Weighted RR
+
+This step takes Step 4's per-stratum results and pools them with the Mantel-Haenszel formula into a single adjusted RR—strata with more people get more weight, strata with fewer people get less.
 
 ```{raw} html
 <div class="video-card">
@@ -470,7 +518,23 @@ else:
     print("-> Change < 10%, confounding is not notable")
 ```
 
+> **Line-by-line** (compare each line against the MH formula in Core Concepts above):
+>
+> | This line | What it does |
+> |---|---|
+> | `for _, row in results_df.iterrows():` | Pulls out each stratum's saved results from Step 4, accumulating one at a time |
+> | `n_i = a_i + b_i + c_i + d_i` | This stratum's total sample size, the basis for its weight |
+> | `numerator += a_i * (c_i + d_i) / n_i` | Accumulates the MH formula's numerator, one stratum at a time |
+> | `denominator += c_i * (a_i + b_i) / n_i` | Accumulates the MH formula's denominator |
+> | `rr_mh = numerator / denominator` | Only after every stratum is summed does it divide **once** to get the single adjusted RR |
+> | `change_pct = abs(crude_rr - rr_mh) / rr_mh * 100` | How many percent the crude RR and adjusted RR differ—compared against the 10% rule from Core Concepts |
+> | `if change_pct >= 10:` | Applies the threshold to judge confounding, printing "inflation" or "suppression" depending on direction |
+>
+> ⚠️ **Don't divide too early inside the loop**: the MH formula sums each stratum's numerator and denominator separately first, and only divides **once** at the very end—computing `a_i*(c_i+d_i) / c_i*(a_i+b_i)` per stratum and averaging those would NOT give the correct MH-weighted value.
+
 ## Step 7: Test of Homogeneity—Is There Interaction?
+
+Eyeballing whether the stratum RRs look similar isn't precise enough; this step uses a simplified numeric check of homogeneity to decide whether the strata can be pooled into a single MH value.
 
 > 🍜 **The spicy hotpot analogy**: You're investigating "whether eating spicy hotpot causes diarrhea," and you split people into "strong-stomached" and "weak-stomached" groups. If the strong-stomached group has RR=1.2 and the weak-stomached group has RR=4.5—this isn't confounding, it's **interaction** (effect modification): the effect of spicy hotpot "varies from person to person." In that case you can't just report a single pooled RR; you must report them separately: "For strong-stomached people the effect is small; weak-stomached people should be careful."
 
@@ -499,6 +563,16 @@ else:
     print("-> The stratum-specific RRs are similar; the MH weighted pooled value is reasonable to use")
     print("  Reporting a single RR_MH is enough to represent the overall effect")
 ```
+
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `rr_values = results_df["RR"].values` | Pulls Step 4's stratum RRs out into an array |
+> | `rr_range = rr_values.max() - rr_values.min()` | This chapter's **simplified** homogeneity check: max RR minus min RR—the bigger the spread, the more the strata disagree |
+> | `if rr_range > 0.5:` | Uses 0.5 as the cutoff—above it, suspect interaction and don't report just one MH value |
+>
+> ⚠️ **This is a simplified check, not a formal statistical test**: a proper test of homogeneity would use Breslow-Day or Woolf's test to get a p-value; the 'RR range' method here is a quick eyeball check—do both for a real report.
 
 ---
 
@@ -560,6 +634,17 @@ for floor in sorted(df["floor"].unique()):
     print(f"  {floor}F: RR={rr_f:.3f}  (shower: {a_f}/{a_f+b_f}, "
           f"no shower: {c_f}/{c_f+d_f})")
 ```
+
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `for floor in sorted(df["floor"].unique()):` | Swaps in **floor** as the stratifying variable, repeating Step 4's exact logic |
+> | `sub = df[df["floor"] == floor]` | Filters down to just the residents on this floor |
+> | `if ct_f.shape != (2, 2): continue` | Same safeguard: skip this floor if it's missing the exposed or unexposed group |
+> | `rr_f = risk_ratio(a_f, a_f + b_f, c_f, c_f + d_f)` | Computes this floor's own RR |
+>
+> 🔑 **Almost identical to Step 4**—just swap `functional_status` for `floor`. The stratified-analysis logic is directly reusable; plug in a different stratifying variable and rerun it.
 
 ---
 
