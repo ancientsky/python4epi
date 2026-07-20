@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 372" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="720" height="372" fill="#FAF8F3" rx="12"/>
+  <text x="360" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">Cross-Validation (k-fold): every row takes a turn being the 'exam'</text>
+  <text x="360" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">Split into 5 folds; each round trains on 4, tests on 1 → five AUCs</text>
+  <text x="108" y="98.0" text-anchor="end" font-size="11" font-weight="bold" fill="#1A1A1A">Fold 1</text>
+  <rect x="120" y="74" width="88" height="40" rx="4" fill="#788C5D" fill-opacity="0.9"/>
+  <text x="164.0" y="98.0" text-anchor="middle" font-size="10" font-weight="bold" fill="#FFFFFF">test</text>
+  <rect x="212" y="74" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="304" y="74" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="396" y="74" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="488" y="74" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <text x="588" y="98.0" font-size="11" fill="#788C5D">→ AUC1</text>
+  <text x="108" y="146.0" text-anchor="end" font-size="11" font-weight="bold" fill="#1A1A1A">Fold 2</text>
+  <rect x="120" y="122" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="212" y="122" width="88" height="40" rx="4" fill="#788C5D" fill-opacity="0.9"/>
+  <text x="256.0" y="146.0" text-anchor="middle" font-size="10" font-weight="bold" fill="#FFFFFF">test</text>
+  <rect x="304" y="122" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="396" y="122" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="488" y="122" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <text x="588" y="146.0" font-size="11" fill="#788C5D">→ AUC2</text>
+  <text x="108" y="194.0" text-anchor="end" font-size="11" font-weight="bold" fill="#1A1A1A">Fold 3</text>
+  <rect x="120" y="170" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="212" y="170" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="304" y="170" width="88" height="40" rx="4" fill="#788C5D" fill-opacity="0.9"/>
+  <text x="348.0" y="194.0" text-anchor="middle" font-size="10" font-weight="bold" fill="#FFFFFF">test</text>
+  <rect x="396" y="170" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="488" y="170" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <text x="588" y="194.0" font-size="11" fill="#788C5D">→ AUC3</text>
+  <text x="108" y="242.0" text-anchor="end" font-size="11" font-weight="bold" fill="#1A1A1A">Fold 4</text>
+  <rect x="120" y="218" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="212" y="218" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="304" y="218" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="396" y="218" width="88" height="40" rx="4" fill="#788C5D" fill-opacity="0.9"/>
+  <text x="440.0" y="242.0" text-anchor="middle" font-size="10" font-weight="bold" fill="#FFFFFF">test</text>
+  <rect x="488" y="218" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <text x="588" y="242.0" font-size="11" fill="#788C5D">→ AUC4</text>
+  <text x="108" y="290.0" text-anchor="end" font-size="11" font-weight="bold" fill="#1A1A1A">Fold 5</text>
+  <rect x="120" y="266" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="212" y="266" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="304" y="266" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="396" y="266" width="88" height="40" rx="4" fill="#6A9BCC" fill-opacity="0.5"/>
+  <rect x="488" y="266" width="88" height="40" rx="4" fill="#788C5D" fill-opacity="0.9"/>
+  <text x="532.0" y="290.0" text-anchor="middle" font-size="10" font-weight="bold" fill="#FFFFFF">test</text>
+  <text x="588" y="290.0" font-size="11" fill="#788C5D">→ AUC5</text>
+  <rect x="120" y="320" width="16" height="14" rx="3" fill="#788C5D" fill-opacity="0.9"/><text x="142" y="332" font-size="11" fill="#1A1A1A">test fold</text>
+  <rect x="300" y="320" width="16" height="14" rx="3" fill="#6A9BCC" fill-opacity="0.5"/><text x="322" y="332" font-size="11" fill="#1A1A1A">train</text>
+  <text x="360" y="358" text-anchor="middle" font-size="12" fill="#1A1A1A">Average the 5 AUCs ± std (small std = stable) — this is what cross_val_score does</text>
+</svg>

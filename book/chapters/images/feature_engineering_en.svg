@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 410" font-family="system-ui, -apple-system, sans-serif">
+  <defs><filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter>
+       <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6B6B6B"/></marker></defs>
+  <rect width="800" height="410" fill="#FAF8F3" rx="12"/>
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">Feature Engineering: turn a messy chart into numbers a model understands</text>
+  <text x="400" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">Models only eat numbers — three column types, three treatments</text>
+  <g filter="url(#shadow)"><rect x="24" y="120" width="176" height="170" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="112" y="142" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1A1A">raw line list</text>
+  <text x="40" y="162" font-size="11" fill="#6B6B6B">age</text>
+  <text x="184" y="162" text-anchor="end" font-size="11" font-weight="bold" fill="#1A1A1A">65</text>
+  <text x="40" y="186" font-size="11" fill="#6B6B6B">sex</text>
+  <text x="184" y="186" text-anchor="end" font-size="11" font-weight="bold" fill="#D97757">M</text>
+  <text x="40" y="210" font-size="11" fill="#6B6B6B">shower_use</text>
+  <text x="184" y="210" text-anchor="end" font-size="11" font-weight="bold" fill="#788C5D">1</text>
+  <text x="40" y="234" font-size="11" fill="#6B6B6B">fever</text>
+  <text x="184" y="234" text-anchor="end" font-size="11" font-weight="bold" fill="#D94452">Y 🚫</text>
+  <line x1="204" y1="114" x2="248" y2="114" stroke="#6B6B6B" stroke-width="1.3" marker-end="url(#ar)"/>
+  <rect x="252" y="96" width="300" height="72" rx="8" fill="#6A9BCC" fill-opacity="0.10" stroke="#6A9BCC" stroke-width="1.3"/>
+  <text x="266" y="118" font-size="12" font-weight="bold" fill="#6A9BCC">numeric (age)</text>
+  <text x="266" y="138" font-size="10.5" fill="#1A1A1A">StandardScaler → standardize</text>
+  <text x="266" y="156" font-size="10.5" fill="#6B6B6B">mean 0, std 1; comparable scale</text>
+  <line x1="204" y1="208" x2="248" y2="208" stroke="#6B6B6B" stroke-width="1.3" marker-end="url(#ar)"/>
+  <rect x="252" y="190" width="300" height="72" rx="8" fill="#D97757" fill-opacity="0.10" stroke="#D97757" stroke-width="1.3"/>
+  <text x="266" y="212" font-size="12" font-weight="bold" fill="#D97757">categorical (sex, wing)</text>
+  <text x="266" y="232" font-size="10.5" fill="#1A1A1A">OneHotEncoder → split columns</text>
+  <text x="266" y="250" font-size="10.5" fill="#6B6B6B">M/F, A/B each become a 0/1 column</text>
+  <line x1="204" y1="302" x2="248" y2="302" stroke="#6B6B6B" stroke-width="1.3" marker-end="url(#ar)"/>
+  <rect x="252" y="284" width="300" height="72" rx="8" fill="#788C5D" fill-opacity="0.10" stroke="#788C5D" stroke-width="1.3"/>
+  <text x="266" y="306" font-size="12" font-weight="bold" fill="#788C5D">binary (comorbidities, shower_use)</text>
+  <text x="266" y="326" font-size="10.5" fill="#1A1A1A">passthrough → use as-is</text>
+  <text x="266" y="344" font-size="10.5" fill="#6B6B6B">already 0/1, no transform needed</text>
+  <line x1="556" y1="208" x2="600" y2="208" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#ar)"/>
+  <g filter="url(#shadow)"><rect x="604" y="150" width="172" height="118" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="690" y="180" text-anchor="middle" font-size="13">🔢</text>
+  <text x="690" y="206" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1A1A1A">an all-numeric matrix</text>
+  <text x="690" y="226" text-anchor="middle" font-size="10.5" fill="#6B6B6B">→ ready for the model</text>
+  <text x="690" y="250" text-anchor="middle" font-size="15">🤖</text>
+  <rect x="24" y="320" width="752" height="66" rx="10" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <text x="40" y="343" font-size="12" font-weight="bold" fill="#1A1A1A">Three rules for picking features:</text>
+  <text x="40" y="364" font-size="11" fill="#6B6B6B">1. domain knowledge picks meaningful ones   2. never use post-outcome vars (fever = leakage 🚫)</text>
+  <text x="40" y="381" font-size="11" fill="#6B6B6B">3. don't dump everything in — noise columns drag the model down (seen in Part B)</text>
+</svg>

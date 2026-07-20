@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" font-family="system-ui, -apple-system, sans-serif">
+  <defs><filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter></defs>
+  <rect width="720" height="360" fill="#FAF8F3" rx="12"/>
+  <text x="360" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">What AUC measures: the eye for ranking patients correctly</text>
+  <text x="360" y="51" text-anchor="middle" font-size="11.5" fill="#6B6B6B">Pick a random case + a random non-case; AUC = chance the model ranks the case higher</text>
+  <g filter="url(#shadow)"><rect x="24" y="70" width="300" height="266" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="174" y="94" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#1A1A1A">The model's risk leaderboard (high→low)</text>
+  <circle cx="70" cy="112" r="9" fill="#D97757"/>
+  <text x="88" y="116" font-size="10.5" fill="#1A1A1A">score 90  ● true case</text>
+  <circle cx="70" cy="138" r="9" fill="#D97757"/>
+  <text x="88" y="142" font-size="10.5" fill="#1A1A1A">score 81  ● true case</text>
+  <circle cx="70" cy="164" r="9" fill="#D97757"/>
+  <text x="88" y="168" font-size="10.5" fill="#1A1A1A">score 72  ● true case</text>
+  <circle cx="70" cy="190" r="9" fill="#6A9BCC"/>
+  <text x="88" y="194" font-size="10.5" fill="#1A1A1A">score 63  ● true non-case</text>
+  <circle cx="70" cy="216" r="9" fill="#D97757"/>
+  <text x="88" y="220" font-size="10.5" fill="#1A1A1A">score 54  ● true case</text>
+  <circle cx="70" cy="242" r="9" fill="#6A9BCC"/>
+  <text x="88" y="246" font-size="10.5" fill="#1A1A1A">score 45  ● true non-case</text>
+  <circle cx="70" cy="268" r="9" fill="#6A9BCC"/>
+  <text x="88" y="272" font-size="10.5" fill="#1A1A1A">score 36  ● true non-case</text>
+  <circle cx="70" cy="294" r="9" fill="#6A9BCC"/>
+  <text x="88" y="298" font-size="10.5" fill="#1A1A1A">score 27  ● true non-case</text>
+  <text x="174" y="326" text-anchor="middle" font-size="10" fill="#788C5D">Good model: true cases (orange) mostly on top</text>
+  <g filter="url(#shadow)"><rect x="348" y="70" width="348" height="266" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="522" y="94" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#1A1A1A">AUC gauge</text>
+  <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#C9C4BC"/><stop offset="0.5" stop-color="#6A9BCC"/><stop offset="1" stop-color="#788C5D"/></linearGradient></defs>
+  <rect x="378" y="150" width="288" height="18" rx="9" fill="url(#g)"/>
+  <line x1="378" y1="144" x2="378" y2="174" stroke="#6B6B6B" stroke-width="1.6"/>
+  <text x="378" y="140" text-anchor="middle" font-size="10" font-weight="bold" fill="#6B6B6B">0.5</text>
+  <text x="378" y="190" text-anchor="middle" font-size="9.5" fill="#6B6B6B">coin flip🪙</text>
+  <line x1="493" y1="144" x2="493" y2="174" stroke="#6A9BCC" stroke-width="1.6"/>
+  <text x="493" y="140" text-anchor="middle" font-size="10" font-weight="bold" fill="#6A9BCC">0.7</text>
+  <text x="493" y="190" text-anchor="middle" font-size="9.5" fill="#6B6B6B">passing</text>
+  <line x1="551" y1="144" x2="551" y2="174" stroke="#788C5D" stroke-width="1.6"/>
+  <text x="551" y="140" text-anchor="middle" font-size="10" font-weight="bold" fill="#788C5D">0.8</text>
+  <text x="551" y="190" text-anchor="middle" font-size="9.5" fill="#6B6B6B">good</text>
+  <line x1="666" y1="144" x2="666" y2="174" stroke="#D94452" stroke-width="1.6"/>
+  <text x="666" y="140" text-anchor="middle" font-size="10" font-weight="bold" fill="#D94452">1.0</text>
+  <text x="666" y="190" text-anchor="middle" font-size="9.5" fill="#6B6B6B">all correct</text>
+  <text x="522" y="250" text-anchor="middle" font-size="11" fill="#1A1A1A">AUC = chance the model ranks</text>
+  <text x="522" y="272" text-anchor="middle" font-size="11" fill="#1A1A1A">a random case above a non-case</text>
+  <rect x="368" y="288" width="308" height="34" rx="8" fill="#FDECE7" stroke="#D94452" stroke-dasharray="3"/>
+  <text x="522" y="309" text-anchor="middle" font-size="10" fill="#D94452">On imbalanced data don't use accuracy: 'all-negative' scores 76% yet is useless → use AUC</text>
+</svg>

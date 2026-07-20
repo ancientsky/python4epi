@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 250" font-family="system-ui, -apple-system, sans-serif">
+  <defs><filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter>
+       <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6B6B6B"/></marker></defs>
+  <rect width="800" height="250" fill="#FAF8F3" rx="12"/>
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">Training an intern doctor = the whole ML workflow</text>
+  <g filter="url(#shadow)"><rect x="20" y="64" width="140" height="86" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.3"/></g>
+  <text x="90.0" y="94" text-anchor="middle" font-size="20">🔍</text>
+  <text x="90.0" y="117" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1A1A1A">Sort the chart clues</text>
+  <text x="90.0" y="136" text-anchor="middle" font-size="9.5" fill="#D97757">feature engineering</text>
+  <line x1="161" y1="107" x2="171" y2="107" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#ar)"/>
+  <g filter="url(#shadow)"><rect x="172" y="64" width="140" height="86" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.3"/></g>
+  <text x="242.0" y="94" text-anchor="middle" font-size="20">📚</text>
+  <text x="242.0" y="117" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1A1A1A">Study the formulas</text>
+  <text x="242.0" y="136" text-anchor="middle" font-size="9.5" fill="#6A9BCC">train</text>
+  <line x1="313" y1="107" x2="323" y2="107" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#ar)"/>
+  <g filter="url(#shadow)"><rect x="324" y="64" width="140" height="86" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.3"/></g>
+  <text x="394.0" y="94" text-anchor="middle" font-size="20">📝</text>
+  <text x="394.0" y="117" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1A1A1A">Mock exam (retakeable)</text>
+  <text x="394.0" y="136" text-anchor="middle" font-size="9.5" fill="#6A9BCC">validation</text>
+  <line x1="465" y1="107" x2="475" y2="107" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#ar)"/>
+  <g filter="url(#shadow)"><rect x="476" y="64" width="140" height="86" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="2.4"/></g>
+  <text x="546.0" y="94" text-anchor="middle" font-size="20">🔁</text>
+  <text x="546.0" y="117" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1A1A1A">5 question banks</text>
+  <text x="546.0" y="136" text-anchor="middle" font-size="9.5" fill="#788C5D">k-fold CV</text>
+  <text x="546.0" y="58" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#788C5D">★ used here</text>
+  <line x1="617" y1="107" x2="627" y2="107" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#ar)"/>
+  <g filter="url(#shadow)"><rect x="628" y="64" width="140" height="86" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.3"/></g>
+  <text x="698.0" y="94" text-anchor="middle" font-size="20">🎓</text>
+  <text x="698.0" y="117" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1A1A1A">License exam (once)</text>
+  <text x="698.0" y="136" text-anchor="middle" font-size="9.5" fill="#788C5D">test</text>
+  <rect x="20" y="176" width="444" height="34" rx="8" fill="#FDECE7" stroke="#D94452" stroke-dasharray="4"/>
+  <text x="242" y="197" text-anchor="middle" font-size="10.5" fill="#D94452">Peeking at past papers = data leakage: symptoms/outcome as features, scaling before the split → looks great, fails live</text>
+  <text x="400" y="234" text-anchor="middle" font-size="11.5" fill="#1A1A1A">Report card = AUC (the eye for ranking patients correctly)</text>
+</svg>
