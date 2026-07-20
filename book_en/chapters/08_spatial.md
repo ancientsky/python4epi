@@ -147,6 +147,8 @@ Choose the most suitable spatial visualization based on your data structure. Par
 
 ### Step 1 — Prepare the Data
 
+First read in the cleaned case data, then build two 0/1 flag columns for "was infected" and "died" — every group-by calculation from here on relies on them.
+
 ```python
 import pandas as pd
 import seaborn as sns
@@ -304,6 +306,16 @@ ax.barh(spatial_sorted["label"], spatial_sorted["attack_rate"],
         color=["#e34a33" if ar > 50 else "#2c7fb8" for ar in spatial_sorted["attack_rate"]])
 ```
 
+> **Line-by-line breakdown**
+>
+> | This line | What it does |
+> |---|---|
+> | `spatial["floor"].astype(str) + "F-" + spatial["wing"]` | Converts the numeric floor to a string and concatenates it with the wing code, building a readable label like `"1F-A"` |
+> | `sort_values("attack_rate", ascending=True)` | Sorts by attack rate from smallest to largest, so that when `barh()` draws the chart, the highest-risk wing naturally ends up at the top |
+> | `color=[... for ar in ...]` | A list comprehension that checks each wing's attack rate one by one, coloring it red if it's over 50% and blue otherwise |
+>
+> 💡 Pairing `ascending=True` with `barh()` is a common combo: a horizontal bar chart draws from the bottom up, so an ascending sort naturally puts the largest value at the top, where it stands out most.
+
 > A sorted horizontal bar chart makes the high-risk wings obvious at a glance. Conditional coloring (>50% shown in red) highlights the areas that need to be dealt with first.
 > The wing furthest to the right = the most dangerous, and environmental sampling and investigation resources should be directed there first.
 
@@ -324,6 +336,8 @@ heatmap_cfr = spatial.pivot(index="floor", columns="wing", values="cfr")
 sns.heatmap(heatmap_cfr, annot=True, fmt=".1f", cmap="Reds")
 ```
 
+> 🔑 This directly reuses Step 3's `pivot()` + `sns.heatmap()` pattern, just swapping `values` for `cfr` — same matrix, different column, letting you compare "where infections are highest" against "where deaths are highest."
+
 **Direction 2: Compare the spatial distribution of a specific exposure factor**
 
 The main transmission route for Legionnaires' disease is aerosolized contaminated hot water (showerheads, whirlpool tubs).
@@ -338,6 +352,8 @@ shower_by_wing = df.groupby("wing").agg(
 shower_by_wing["shower_pct"] = (shower_by_wing["shower_users"] / shower_by_wing["total"] * 100).round(1)
 print(shower_by_wing)
 ```
+
+> 🔑 This is a slimmed-down version of Step 2's `groupby().agg()`: only one grouping column (`wing`), but the exact same logic — count the total, sum the flag column, then divide to get a percentage.
 
 **Direction 3: Prioritizing environmental sampling**
 
@@ -380,9 +396,13 @@ def normalize_county(name):
     return TAI_NORMALIZE.get(str(name).strip(), str(name).strip())
 ```
 
+> 💡 `TAI_NORMALIZE.get(key, key)` is the classic "look it up, and if it's not there just return the original" pattern: county names listed in the dict (old names, 台/臺 variants) get converted, while anything not listed (like New Taipei City or Taoyuan City) passes through unchanged.
+
 Before the JOIN you must apply this function to **both sides** — the SHP and the CDC CSV — otherwise the map will have large blank areas.
 
 ### Workflow
+
+The following stitches the whole choropleth process into seven steps, from downloading the boundary file to exporting an animated map:
 
 ```python
 # 1. Download the SHP (ZIP) → unzip → geopandas.read_file()
@@ -409,6 +429,20 @@ gdf_merged.plot(column="rate_per_100k", cmap="Reds", legend=True, ax=ax)
 anim = FuncAnimation(fig, update_func, frames=years, interval=800)
 anim.save("animation.gif", writer="pillow", fps=1, dpi=80)
 ```
+
+> **Line-by-line breakdown**
+>
+> | This line | What it does |
+> |---|---|
+> | `gpd.read_file(shp_path).to_crs(epsg=4326)` | Reads the SHP file and reprojects it to WGS84 (EPSG:4326) — the latitude/longitude system standard web maps (Plotly, Leaflet) expect |
+> | `shp_counties - data_counties` | Set subtraction: finds county names that are **in the SHP but not in the case data** — these areas show up blank on the map |
+> | `data_counties - shp_counties` | The reverse: finds county names that are **in the case data but not in the SHP** — this data gets silently dropped |
+> | `groupby(["year","county"])["cases"].sum()` | Sums case counts by year and county, a prerequisite for computing each county's yearly rate |
+> | `cases / county.map(COUNTY_POP) * 100_000` | Divides by population and multiplies by 100,000, converting raw case counts into a **rate per 100,000** so counties of different sizes can be compared fairly |
+> | `gdf.merge(latest, left_on="county_norm", right_on="county", how="left")` | Merges the map (`gdf`) with the case data (`latest`) on the normalized county name; `how="left"` keeps every county on the map even if it has no matching data |
+> | `gdf_merged.plot(column="rate_per_100k", cmap="Reds", legend=True)` | GeoPandas' `.plot()` colors each county directly from the `rate_per_100k` column, drawing the choropleth |
+>
+> ⚠️ Step 4's ID matching is the single easiest place for a choropleth to silently break: if the county names in the SHP and the case data don't line up before the merge (say, 台/臺 wasn't normalized), the merged rows come out as NaN — the map goes blank in places, with **no error raised at all**. Always print a set difference like `shp_counties - data_counties` and eyeball it before moving on.
 
 > **Why use GeoPandas + matplotlib instead of Plotly?**
 > The SHP format needs `geopandas.read_file()` to be read, and GeoPandas itself can draw a choropleth directly with `.plot()`.
@@ -463,6 +497,15 @@ w = Queen.from_dataframe(main, use_index=False)
 w.transform = "r"   # row-standardized
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `Queen.from_dataframe(gdf, use_index=False)` | Uses **Queen contiguity** (sharing a border, even just a corner) to auto-build the weight matrix W of "who is whose neighbor" |
+> | `w_all.islands` | Lists the counties with **no neighbors at all** (the offshore islands) — out at sea, they touch no one under a contiguity definition |
+> | `main = gdf[~gdf["is_inset"]]` | Focus on the 19 connected counties on the main island (islands handled later by smoothing), so 0-neighbor islands don't break the math |
+> | `w.transform = "r"` | **Row-standardized**: makes each county's neighbor weights sum to 1, so counties with more neighbors don't automatically get a louder vote (fair voting) |
+>
 > ⚠️ **Change the neighbor definition and the answer changes** — the offshore islands let us see this firsthand. This is exactly where the "weight sensitivity" pitfall shows up later.
 
 ### Step 2: Global Moran's I — A "Birds of a Feather" Index for the Whole Map
@@ -475,6 +518,16 @@ from esda.moran import Moran
 moran = Moran(main["rate"].values, w, permutations=999)
 print(f"Moran's I = {moran.I:.3f}, p = {moran.p_sim:.4f}")   # ≈ 0.50, p < 0.05 → significant clustering
 ```
+
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `Moran(main["rate"].values, w, permutations=999)` | Feeds three things: each county's **rate**, the **neighbor weights w** from before, and **999 shuffles**. It computes global Moran's I and shuffles the rates 999 times as a null comparison |
+> | `moran.I` | The global index: +1 birds-of-a-feather, 0 random, −1 alternating high/low |
+> | `moran.p_sim` | The **permutation p-value**: how far the real map's I sits above 999 random shuffles — only < 0.05 means the clustering isn't chance |
+>
+> 💡 **A significant I is the gate to LISA**: I = 0.5 looks clustered, but the permutation p-value is what proves it isn't something random would produce too. Only if I is significant is it worth drilling into LISA to find the hot-zone core.
 
 ### Step 3: Local LISA — Where Exactly Is the Core of the Hot Zone?
 
@@ -498,6 +551,17 @@ main["lisa"] = ["Not significant" if p >= 0.05 else labels[q]
                 for q, p in zip(lisa.q, lisa.p_sim)]
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `Moran_Local(main["rate"].values, w, permutations=999, seed=8)` | The local version: computes a local Moran for **each** county, looking at both its own rate and its neighbors' average; `seed=8` makes the shuffling reproducible |
+> | `lisa.q` | The quadrant code for each county — **esda encodes it as 1=HH, 2=LH, 3=LL, 4=HL** |
+> | `lisa.p_sim` | Each county's own permutation p-value (local significance) |
+> | `["Not significant" if p >= 0.05 else labels[q] ...]` | Significance first: anything with p ≥ 0.05 is labeled "Not significant"; only the significant ones get translated into HH/LH/LL/HL labels |
+>
+> ⚠️ **The easiest line to trip on is the `.q` encoding**: intuition says 1234 = HH/HL/LL/LH, but esda uses **1=HH, 2=LH, 3=LL, 4=HL** (LH is 2, not 3!). Copy it straight from the reference table — don't fill it in by guessing the order, or "eye of the storm" and "spark" come out swapped.
+
 In the synthetic data, **Tainan / Kaohsiung / Chiayi** stand out as **HH epicenters**, while the north comes out as **LL safe zone** — the southern dengue hot zone is confirmed statistically.
 
 ### Step 4: Hot Spot Analysis with Getis-Ord Gi\* — The Map You Show Your Boss
@@ -511,6 +575,18 @@ w_b = Queen.from_dataframe(main, use_index=False); w_b.transform = "B"
 gi = G_Local(main["rate"].values, w_b, permutations=999, seed=8, star=True)
 hot = main.loc[(gi.p_sim < 0.05) & (gi.Zs > 0), "COUNTYNAME"].tolist()   # significant hot spots
 ```
+
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `w_b = Queen.from_dataframe(main); w_b.transform = "B"` | Gi\* uses **binary (0/1)** weights (`"B"`), not row-standardized — it measures "the total heat of this circle," not an average |
+> | `G_Local(..., star=True)` | `star=True` = Gi\* **(includes itself)**: the focal county is counted inside its own "circle" when summing the heat |
+> | `gi.Zs` | Each county's z-score: positive = hotter than the overall average, negative = colder |
+> | `gi.p_sim` | The permutation p-value (with a small sample you must judge significance by this, not by whether z clears 1.96) |
+> | `(gi.p_sim < 0.05) & (gi.Zs > 0)` | The correct test for a **significant hot spot**: p-value significant **and** z positive |
+>
+> ⚠️ **Don't threshold hot spots with `Zs > 1.96`**: there are only 19 counties, and with such a small sample the normal approximation is unreliable — judge significance by the **permutation p_sim**, then split hot vs cold by the **sign of Zs**. When both hot and cold spots are significant, using |z| alone would mislabel cold spots as hot.
 
 ### Concept Extension: Scan Statistics and Disease Mapping (Smoothing)
 

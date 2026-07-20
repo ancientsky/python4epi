@@ -190,6 +190,8 @@ Every move you just helped the owner learn—rolling average, autoregression, se
 
 ## Step 1: Build the Daily Onset Series
 
+This code turns the raw line list into a time series of **daily onset case counts**—the starting point for every model that follows.
+
 ```python
 import numpy as np
 import pandas as pd
@@ -221,7 +223,22 @@ daily.name = "cases"
 print(f"Series length: {len(daily)} days | Total cases: {daily.sum()}")
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `df = pd.read_csv(...)` | Reads in the full line list of 280 residents |
+> | `pd.to_datetime(..., errors="coerce")` | Converts date strings to a real date type; `errors="coerce"` turns unparseable dates into `NaT` instead of crashing the whole script |
+> | `df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)` | Anything other than "not ill" counts as infected, converted to 1/0 |
+> | `cases = df[df["infected"] == 1]` | Keeps only the cases who actually got sick |
+> | `cases.groupby("symptom_onset_date").size()` | Groups by onset date and counts → daily case counts |
+> | `daily.asfreq("D", fill_value=0)` | **Fills in the dates with no onsets**, setting the missing days to 0 |
+>
+> 🔑 **`asfreq` is the soul of this step**: `groupby` only produces "dates that had cases"—if a day has zero cases, it simply vanishes. Without `asfreq("D", fill_value=0)` to fill the gaps, the time series would "skip dates," throwing off both the rolling average and ARIMA later on.
+
 ## Step 2: Epidemic Curve + Rolling Average Visualization
+
+Here we plot the daily case counts as a bar chart with a 7-day rolling average line on top, so the jagged sawtooth reveals the real underlying trend.
 
 ```python
 rolling_7 = daily.rolling(window=7, min_periods=1).mean()
@@ -237,11 +254,23 @@ ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
 fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `daily.rolling(window=7, min_periods=1).mean()` | Computes the 7-day rolling average; `min_periods=1` lets it produce a value even at the very start of the series (before 7 days have accumulated), instead of returning `NaN` for that whole stretch |
+> | `ax.bar(daily.index, daily.values, ...)` | Plots the daily case counts as bars (the raw sawtooth) |
+> | `ax.plot(rolling_7.index, rolling_7.values, ...)` | Overlays the rolling average line (the trend after smoothing out the sawtooth) |
+>
+> 💡 **Bars + line on the same chart**: the bars show "day-to-day noise," the orange line shows "the overall trend"—look at both together so you don't get spooked (or falsely reassured) by a single day's number.
+
 ---
 
 ## Part A ── Short-Term Outbreak Forecasting (Nursing Home Data, 17 Days)
 
 ### Step 3: Baseline —— Rolling Mean Forecast
+
+Before reaching for a regression model, start with the simplest possible baseline—the **rolling mean**: guess "tomorrow" using the average of the previous w days, and sweep across a few window sizes to find the most accurate one.
 
 ```{raw} html
 <div class="video-card">
@@ -265,9 +294,22 @@ mae_rolling = mae_by_window[3]
 print(f"\n→ Best: window=3, MAE={mae_rolling:.3f}")
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `daily.rolling(window=w).mean()` | Computes the rolling average over the previous w days |
+> | `.shift(1)` | **Pushes the prediction forward by one day**: guesses "today" using the average through "yesterday," never using today's own value |
+> | `.dropna()` | The first few days of the series can't fill a full window of w days, so those `NaN` rows get dropped |
+> | `mean_absolute_error(actual_w, pred_w)` | Computes how far off the predictions are from the actual values (MAE, smaller = more accurate) |
+>
+> ⚠️ **`shift(1)` cannot be skipped**: using "today's rolling average" to predict "today" is equivalent to peeking at today's answer (data leakage)—the MAE looks unrealistically great, then collapses the moment it's deployed.
+
 Advantages of the rolling mean: **simple, intuitive, usable from day one**. Drawbacks: it's always "the average of the past few days," so it can't predict turning points, has no confidence intervals, and can't incorporate other variables (like floor or day of week).
 
 ### Step 4: Lagged Features —— Building "Past k Days" Features for Regression Models
+
+This step doesn't build a model—it just **gives the time series a makeover**: adding a few columns of "case counts from the past few days" to each day, so regression models can actually consume time-series data.
 
 ```{figure} images/lag_features_explained_en.svg
 :name: fig-lag-features
@@ -295,6 +337,18 @@ ts_model = ts.dropna().reset_index(drop=True)  # Drop the first two rows (NaN)
 print(ts_model.head())
 print(f"Usable rows: {len(ts_model)}")
 ```
+
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `ts = daily.to_frame("cases").reset_index(names="date")` | Converts the Series back into an ordinary table, turning `date` into a normal column |
+> | `ts["day_idx"] = range(len(ts))` | Adds a "day number" column so the model can pick up a rising/falling trend over time |
+> | `ts["lag_1"] = ts["cases"].shift(1)` | **Pushes the whole column down one row**: today's row now also holds "yesterday's case count" |
+> | `ts["lag_2"] = ts["cases"].shift(2)` | Same idea, adding a column for "the day before yesterday's case count" |
+> | `ts.dropna()` | The first two days have no "yesterday/day before" to draw on, so those rows are `NaN` and get dropped |
+>
+> 🧭 **What a lag feature really is**: `shift(1)` simply "moves" a column's data down one row, turning "what happened yesterday" into "a column on today's row"—the time series becomes an ordinary regression table, which is exactly what the models in Steps 5-7 need to consume.
 
 ```{note}
 Why add lags? Because infection is transmissible—today's case count is highly correlated with yesterday's (autocorrelation). By using "yesterday's value" as a feature, the regression model can learn: "many yesterday, many today" and "a surge yesterday means today might surge again."
@@ -336,9 +390,23 @@ coef_table = pd.DataFrame({
 print(coef_table.round(3))
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `smf.glm("cases ~ lag_1 + lag_2 + day_idx", data=ts_model, family=sm.families.Poisson())` | Builds a Poisson GLM: explains today's case count using yesterday's and the day before's counts plus a day-trend term |
+> | `.fit()` | Actually **estimates the parameters** (runs maximum likelihood estimation) and returns the fitted model object |
+> | `model_pois.predict(ts_model)` | Uses the fitted model to compute an "expected case count" for every row |
+> | `mean_absolute_error(...)` | Computes the MAE, on the same scale as the rolling-mean baseline for comparison |
+> | `np.exp(model_pois.params)` | Converts the log-scale coefficients into the **IRR (incidence rate ratio)**, which is what you can actually interpret in plain terms |
+>
+> 💡 **Poisson coefficients only make sense after `exp()`**: `coef` is on the log scale and isn't meaningful on its own; `exp(coef)` is the IRR—"for each extra unit, the case count multiplies by this much."
+
 **In plain terms**: `IRR(lag_1) ≈ 1.15` means "for each additional person who fell ill yesterday, today's expected value is 15% higher."
 
 ### Step 6: Negative Binomial Regression —— Handling Overdispersion
+
+This step is a "check-up" first—verify whether the data is overdispersed before deciding whether to swap Step 5's Poisson model for a Negative Binomial model that can absorb the extra variance.
 
 ```{figure} images/poisson_vs_nb_dispersion_en.svg
 :name: fig-poisson-vs-nb
@@ -375,6 +443,16 @@ mae_nb = mean_absolute_error(ts_model["cases"], pred_nb)
 print(f"\nNegative Binomial + lag:  MAE={mae_nb:.3f},  AIC={model_nb.aic:.2f}")
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `ts_model["cases"].var() / ts_model["cases"].mean()` | Computes the **dispersion ratio**: variance ÷ mean |
+> | `family=sm.families.NegativeBinomial(alpha=1.0)` | Switches to the Negative Binomial distribution; `alpha` is the extra parameter that absorbs the "overdispersion" |
+> | `model_nb.predict(ts_model)` / `mean_absolute_error(...)` | Same workflow as Step 5: predict, then compute MAE, so the two can be compared directly |
+>
+> ⚠️ **Only switch models when dispersion > 1.5**: Poisson assumes variance = mean; once the actual variance is far greater than the mean (overdispersion), Poisson's confidence intervals come out too narrow, making you think the results are more certain than they really are.
+
 ### Step 7: Logistic Regression —— "Will Tomorrow Be a Peak Day?"
 
 The supervisor's second question is a **yes/no alert**, not a continuous number. The approach: **binarize** each day's case count (above a certain threshold → 1, otherwise → 0), then use logistic regression to predict the probability.
@@ -401,6 +479,18 @@ pred_binary = (prob > 0.5).astype(int)
 acc = (pred_binary == ts_model["high_day"]).mean()
 print(f"\nLogistic (threshold): accuracy = {acc:.3f}")
 ```
+
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `ts_model["cases"].quantile(0.75)` | Takes the 75th percentile of the case counts as the "peak day" threshold |
+> | `(ts_model["cases"] > threshold).astype(int)` | **Binarizes** the continuous case count: above the threshold = 1 (peak day), otherwise = 0 |
+> | `smf.logit("high_day ~ lag_1 + lag_2", data=ts_model).fit(disp=False)` | Uses yesterday's and the day before's case counts to predict "is today a peak day"; `disp=False` just suppresses the optimizer's step-by-step progress messages |
+> | `model_logit.predict(ts_model)` | Computes a **probability** (not 0/1), representing how likely "tomorrow is a peak day" is |
+> | `(prob > 0.5).astype(int)` | Converts the probability back to 0/1 so accuracy can be computed |
+>
+> 🔑 **Logistic regression gives you a probability, not a case count**: `predict()` returns a probability between 0 and 1—exactly where a statement like "there's a 72% chance tomorrow exceeds the alert line" comes from.
 
 **This model won't tell you "how many people there will be tomorrow," but it will tell you "there's a 72% chance tomorrow exceeds the alert line"**—which is exactly the output an early warning system really needs.
 
@@ -432,7 +522,20 @@ ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
 fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `trend = np.linspace(3, 7, n_days)` | Builds a slowly rising **trend line** (daily mean climbing from 3 to 7) |
+> | `seasonal = 3 * np.sin(2 * np.pi * np.arange(n_days) / 7)` | Uses a sine wave to manufacture **seasonality**: one full cycle every 7 days |
+> | `noise = rng.normal(0, 1.2, n_days)` | Adds random noise, simulating the fact that real data is never this "clean" |
+> | `np.maximum(0, (trend + seasonal + noise).round())` | Adds the three components together, rounds, and clips negative values to 0 (a case count can't be negative) |
+>
+> 💡 **This is practice data with a known answer key**: because trend, seasonal, and noise were all specified by us, we already know what to expect—so we can judge for ourselves whether ARIMA / SARIMA actually pick up on the seasonality below. That makes this a great way to verify a model is doing its job.
+
 ### Step 9: ARIMA —— AutoRegressive Integrated Moving Average
+
+Before actually fitting an ARIMA model, first run an ADF test to confirm the series is stationary enough, then split off a train/test set to check how accurate the forecast is.
 
 ```{figure} images/arima_sarima_decomposition_en.svg
 :name: fig-arima-sarima
@@ -469,7 +572,22 @@ mae_arima = mean_absolute_error(test.values, forecast_arima.values)
 print(f"\nARIMA(1,1,1):  MAE={mae_arima:.3f},  AIC={model_arima.aic:.2f}")
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `adfuller(synth)` | **ADF stationarity test**: checks whether the series' mean/variance drift over time |
+> | `train, test = synth.iloc[:-7], synth.iloc[-7:]` | Splits train/test: the last 7 days are held out as the test set |
+> | `ARIMA(train, order=(1, 1, 1))` | Builds the ARIMA model; `order=(p, d, q)` = **(number of autoregressive lags, number of differences, number of moving-average lags)**: `p=1` looks at itself 1 day back, `d=1` differences once to make the series stationary, `q=1` looks at the forecast error from 1 step back |
+> | `.fit()` | **Estimates the parameters** using the training set |
+> | `model_arima.forecast(steps=7)` | Uses the fitted model to **forecast 7 steps ahead** (matching the held-out test days) |
+> | `mean_absolute_error(test.values, forecast_arima.values)` | Lifts the cover on the test set and computes the forecast error |
+>
+> 🔑 **Remember `(p, d, q)` in plain terms**: `p` = how many days back the autoregression looks at itself, `d` = how many times it differences the series to make it stationary, `q` = how many past forecast errors the moving-average term looks at. These three numbers aren't picked at random—`d` should follow the ADF test result, while `p` and `q` are usually chosen with the ACF/PACF plots or by comparing AIC.
+
 ### Step 10: SARIMA —— Adding Seasonality
+
+On top of ARIMA, SARIMA adds a set of seasonal parameters specifically to capture the "repeats every 7 days" cycle, so the forecast follows the rhythm of the day of the week.
 
 ```python
 from statsmodels.tsa.statespace.sarimax import SARIMAX
@@ -502,11 +620,23 @@ ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
 fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `SARIMAX(train, order=(1, 1, 1), seasonal_order=(1, 1, 1, 7))` | `order=(p,d,q)` is the same "regular" autoregression/differencing/moving-average as ARIMA; `seasonal_order=(P,D,Q,s)` is the **seasonal version** of the same trio, with `s=7` meaning a 7-day cycle |
+> | `.fit(disp=False)` | Estimates the parameters; `disp=False` keeps the optimizer from flooding the output with progress messages |
+> | `model_sarima.forecast(steps=7)` | Forecasts 7 days ahead, using the same test set as ARIMA for comparison |
+>
+> 🧭 **The four numbers in `seasonal_order`**: `(P, D, Q, s)` are the seasonal autoregressive order, seasonal differencing order, seasonal moving-average order, and the length of the seasonal cycle—`s=7` is what tells the model "every 7 days, look back and compare against the same day of the week again." This is exactly the extra piece SARIMA has over ARIMA, and it's what lets it catch the weekend surge.
+
 **Key observation**: SARIMA's MAE is clearly smaller than ARIMA's, because it captured the 7-day weekly cycle. For data with **no seasonality**, adding SARIMA is actually wasteful (more parameters, prone to overfitting).
 
 ---
 
 ## Step 11: Model Showdown
+
+This lays out the MAE, minimum data requirement, and whether a confidence interval is available for all six models in one table, so you can compare them directly.
 
 ```{raw} html
 <div class="video-card">
@@ -535,6 +665,8 @@ comparison = pd.DataFrame([
 print(comparison.to_string(index=False))
 ```
 
+> 💡 **The point of this table isn't the numbers themselves—it's the "min data" and "captures seasonality" columns**: don't force SARIMA onto data that's too short, and don't reach for it just to show off when there's no seasonality to capture.
+
 **Conclusions in plain terms**:
 - **Only one or two weeks of data** (outbreak just started) → Rolling mean or Poisson + lag is enough
 - **Clear overdispersion** (cluster, sudden outbreak) → switch to Negative Binomial
@@ -543,6 +675,8 @@ print(comparison.to_string(index=False))
 - **Influenza-like, weekly surveillance** (obvious weekly cycle) → SARIMA
 
 ## Step 12: Onset vs Hospitalization Curve (Lag Effect)
+
+Here we overlay the onset curve and the hospitalization curve to see how many days the hospitalization peak lags behind the onset peak.
 
 ```python
 hosp_daily = (
@@ -566,6 +700,16 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 lag_days = (hosp_aligned.idxmax() - daily.idxmax()).days
 print(f"Onset peak → hospitalization peak lag = {lag_days} days")
 ```
+
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `cases[...].groupby("hospitalization_date").size()` | Groups by hospitalization date and counts → daily hospitalization counts |
+> | `pd.date_range(...)` + `hosp_daily.reindex(all_dates, fill_value=0)` | **Aligns** the hospitalization curve to the onset curve's full date range, filling missing dates with 0, so the two lines can be overlaid on the same time axis |
+> | `hosp_aligned.idxmax() - daily.idxmax()` | Finds the hospitalization peak date and the onset peak date, and subtracts to get the **day gap (lag)** |
+>
+> 💡 **Aligning the dates is a prerequisite for overlaying the curves**: without `reindex` to fill the gaps, the two curves' date ranges might not line up, and the resulting lag would be distorted.
 
 This lag is a **golden indicator for bed planning**: hospitalization demand only peaks a few days after the onset peak has passed.
 

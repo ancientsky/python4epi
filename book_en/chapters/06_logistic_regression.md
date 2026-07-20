@@ -264,6 +264,8 @@ $$\text{logit}(p) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots$$
 
 ## Step 1: Data Preparation
 
+This step loads the raw line list and does two things: it turns categorical columns into numbers the regression can use (binary or ordered), and computes the attack rate as an early clue for whether to trust the RR or the OR later on.
+
 ```python
 # === Step 1: Load the data + recode variables ===
 
@@ -296,7 +298,21 @@ print(f"Attack rate = {ar:.1%} ({df['infected'].sum()}/{len(df)})")
 print(f"→ An attack rate of {ar:.0%} is far above 10%, so the OR will markedly overestimate the effect; rely on RR")
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `import statsmodels.api as sm` and `import statsmodels.formula.api as smf` | Two different interfaces: `sm` is used later with `family=` to specify a GLM by hand (needed for Modified Poisson), while `smf` provides the `"y ~ x"` formula syntax (needed for logistic regression) |
+> | `df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)` | Converts boolean `True`/`False` to `1`/`0`, building the **binary outcome variable** the regression needs |
+> | `df["ever_smoker"] = (df["smoking_history"] != "never").astype(int)` | Collapses the three categories never/former/current into two, reducing the model's degrees of freedom |
+> | `fs_map = {...}`, `df["functional_score"] = df["functional_status"].map(fs_map)` | Uses `.map()` to turn the text categories (bedridden/assisted/independent) into an **ordered number** (0/1/2) so the regression can treat it as continuous |
+> | `ar = df["infected"].mean()` | `infected` only holds 0 and 1, so its mean is the "proportion of 1s"—that's the attack rate, a handy pandas trick |
+>
+> 💡 **Key point**: the attack rate Step 1 computes (43%) is far above the 10% "rare disease" threshold—that's exactly why this chapter's main method is **Modified Poisson for RR**, with logistic regression only as a comparison.
+
 ## Step 2: Univariable Analysis—Crude RR vs Crude OR
+
+This step loops over each candidate factor and fits both Modified Poisson (for the crude RR) and logistic regression (for the crude OR), lining up the two effect measures in a single table so you can see, up front, how far apart RR and OR are for a single factor.
 
 ```{raw} html
 <div class="video-card">
@@ -379,6 +395,19 @@ print("💡 Note: crude_OR is generally larger than crude_RR — this is the OR 
 print("   The hand_RR column is the 2×2 hand-computed result from Ch03; it should match crude_RR almost exactly")
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `for var in factors:` | Loops through the candidate factors, fitting one univariable model per variable |
+> | `smf.glm(f"infected ~ {var}", data=df, family=sm.families.Poisson()).fit(cov_type="HC0", disp=0)` | **Modified Poisson**: a Poisson-family GLM with robust SEs (`cov_type="HC0"`)—the chapter's standard way to compute an RR |
+> | `rr = np.exp(mod_p.params[var])` | The Poisson model's coefficient is log(RR); `exp()` converts it back to the crude RR |
+> | `smf.logit(f"infected ~ {var}", data=df).fit(disp=0, method="lbfgs")` | The same variable, refit as logistic regression (Binomial family + logit link) |
+> | `or_val = np.exp(mod_l.params[var])` | The logistic model's coefficient is log(OR); `exp()` converts it back to the crude OR |
+> | `if df[var].dropna().isin([0, 1]).all(): ...` | For binary variables only, cross-checks against the Ch03 2x2-table hand calculation to confirm the model's RR isn't off |
+>
+> ⚠️ **Key point**: `cov_type="HC0"` isn't optional—the Poisson model assumes variance = mean, which is wrong for a binary (0/1) outcome. Without the robust SE, the confidence intervals and p-values would both be wrong.
+
 ### Reading the formula syntax
 
 ```{raw} html
@@ -416,6 +445,8 @@ A multivariable model isn't about throwing in every column; there needs to be a 
 ```
 
 ## Step 3: Multivariable Modified Poisson—Adjusted RR
+
+This step is the chapter's main analysis: it puts every exposure factor and potential confounder into a single Modified Poisson model at once, directly producing the adjusted RR.
 
 ```{raw} html
 <div class="video-card">
@@ -470,7 +501,22 @@ print("=== Adjusted RR (Modified Poisson, Table 2) ===")
 print(adj_rr_df.to_string(index=False))
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `formula = "infected ~ shower_use + ... + C(floor)"` | Puts the exposure factors, host factors, comorbidities, and floor into the **same** formula, so every coefficient is the effect "holding the other variables constant" |
+> | `smf.glm(formula, data=df, family=sm.families.Poisson())` | Builds the **Modified Poisson** model: the outcome is the binary `infected`, but it's fit with a Poisson-family shell—the outcome is not a count, it's binary |
+> | `.fit(cov_type="HC0")` | Corrects the standard errors with a **robust (sandwich) SE**, because the Poisson assumption variance = mean does not hold for binary data; with the correction the CI and p-value are valid |
+> | `coef = model_poisson.params[var]` | Pulls out that variable's coefficient, which is **log(adjusted RR)** |
+> | `np.exp(coef)` | `exp()` converts log(RR) back into the **adjusted RR** (not an adjusted OR) |
+> | `model_poisson.conf_int().loc[var]` | Pulls out the coefficient's 95% CI (still on the log scale); it also needs `exp()` before it can sit alongside the RR |
+>
+> 🔑 **Key point**: this is a "Poisson shell with an RR soul"—the outcome really is binary (infected or not), but fitting it with a Poisson family plus robust SE means `exp(coef)` reads out as an honest **adjusted RR**, not an OR.
+
 ## Step 4: Multivariable Logistic Regression—Adjusted OR (the comparison)
+
+This step reuses the exact same formula, swapping only the family for logistic regression, to compute the adjusted OR so it can be compared directly against Step 3's adjusted RR.
 
 ```python
 # === Step 4: Logistic Regression — same formula, switch to logistic ===
@@ -499,6 +545,17 @@ print("=== Adjusted OR (Logistic Regression, Table 2) ===")
 print(adj_or_df.to_string(index=False))
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `smf.logit(formula, data=df)` | Uses **the exact same formula** as Step 3 (identical variables), but this time as logistic regression (Binomial family + logit link) |
+> | `.fit(disp=0, method="lbfgs")` | `disp=0` suppresses the iteration log; `method="lbfgs"` switches to a solver that converges more reliably than the default on this data |
+> | `coef = model_logit.params[var]` | Pulls out that variable's coefficient, which is **log(adjusted OR)** |
+> | `np.exp(coef)` | `exp()` converts it back into the **adjusted OR** |
+>
+> 💡 **Key point**: the only difference between Step 3 and Step 4 is the `family` (Poisson vs. logistic)—the formula is identical, which is exactly what lets you cleanly see how far apart RR and OR are on the same data.
+
 ```{admonition} Why do some variables "fail to converge"?
 :class: tip, dropdown
 
@@ -512,6 +569,8 @@ Common ways to handle it:
 ```
 
 ## Step 5: Comparing the Three Effect Measures Side by Side
+
+This step lines up the crude RR from Step 2, the adjusted RR from Step 3, and the adjusted OR from Step 4 into one merged table, so you can see both the confounding effect (crude to adjusted) and the OR's overestimation (adjusted RR to OR) in a single view.
 
 ```python
 # === Step 5: Crude RR vs Adjusted RR vs Adjusted OR side by side ===
@@ -562,6 +621,18 @@ print("  • crude→adj RR column: the change in RR after controlling for confo
 print("  • adj RR→OR column: how much the OR overestimates relative to the RR in the same model (attack-rate effect)")
 ```
 
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `c_row = crude_df[crude_df["variable"] == var]` | Pulls this variable's crude RR out of the Step 2 table |
+> | `a_rr_row = adj_rr_df[adj_rr_df["variable"] == var]` | Pulls this variable's adjusted RR out of the Step 3 table |
+> | `a_or_row = adj_or_df[adj_or_df["variable"] == var]` | Pulls this variable's adjusted OR out of the Step 4 table |
+> | `rr_change = ((a_rr - c_rr) / c_rr * 100)` | How many % the RR changed from crude to adjusted—quantifying the size of **confounding** (echoing the Ch05 logic) |
+> | `or_vs_rr = ((a_or - a_rr) / a_rr * 100)` | For the same variable, how many % the adjusted OR overestimates the adjusted RR by—quantifying how much the **OR is inflated at a high attack rate** |
+>
+> 🧭 **Key point**: this table stitches together the results of three separately fitted models—the `crude→adj RR` column answers "was there confounding," and the `adj RR→OR` column answers "how much did the OR overestimate." Don't mix up the two questions.
+
 ```{admonition} When is OR ≈ RR?
 :class: note
 
@@ -571,6 +642,8 @@ If you're reading someone else's paper and see them analyze a **cohort study** w
 ```
 
 ## Step 6: Forest Plot (Adjusted RR)
+
+This step turns Step 3's adjusted RR table into a forest plot, trading a wall of numbers for point estimates and confidence-interval bars you can read at a glance.
 
 ```{raw} html
 <div class="video-card">
@@ -614,7 +687,11 @@ plt.tight_layout()
 plt.show()
 ```
 
+> 💡 **Key point**: this forest plot reuses Step 3's `adj_rr_df` directly—`ax.errorbar`'s `xerr` is the error length computed by subtracting `ci_lo`/`ci_hi` from `adjusted_RR`, and the dashed vertical line marks the RR = 1 no-effect reference; only a horizontal bar that doesn't cross that line is a statistically significant factor.
+
 ## Step 7: Model Diagnostics
+
+This step uses AIC to compare the "full model" with more variables against a "reduced model" with only the core variables, to judge whether the full model is carrying too many variables.
 
 ```python
 # === Step 7: Model diagnostics — AIC comparison ===
@@ -645,6 +722,17 @@ if model_reduced.aic < model_poisson.aic:
 else:
     print("📈 The full model has a smaller AIC → the extra variables really do contribute")
 ```
+
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `formula_reduced = "infected ~ shower_use + hydrotherapy_use + age + immunosuppressed + functional_score"` | The reduced model: keeps only the core exposure factors and the most important adjustment factors, dropping the remaining comorbidities and floor |
+> | `smf.glm(formula_reduced, data=df, family=sm.families.Poisson()).fit(cov_type="HC0")` | Refits with the same Modified Poisson setup but fewer variables, so its AIC can be fairly compared against the full model's |
+> | `model_poisson.aic` / `model_reduced.aic` | Reads out both models' AIC values to compare—the number itself has no absolute meaning, only a **relative** one |
+> | `if model_reduced.aic < model_poisson.aic:` | A smaller AIC means a better trade-off between explanatory power and complexity; this condition judges whether the reduced model wins |
+>
+> 💡 **Key point**: AIC can only be compared **within the same family** (both Poisson here)—it can't be compared against Step 4's logistic-regression AIC, a point the admonition below repeats.
 
 > 🍽️ **The ordering-food metaphor**: AIC is like ordering dishes at a restaurant. Too many dishes (too many variables) → you can't finish them and waste money (overfitting). Too few dishes (too few variables) → you go hungry (underfitting). AIC helps you find the balance where you're "just full without waste." The smaller the AIC, the better.
 

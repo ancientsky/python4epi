@@ -256,6 +256,8 @@ $$RR_{MH} = \frac{\sum_i \frac{a_i \cdot (c_i + d_i)}{N_i}}{\sum_i \frac{c_i \cd
 
 ## Step 1: 資料準備
 
+這個 Step 把原始 line list 讀進來，並建立整章都會用到的 `infected` 欄位——後面每一次分層、每一次算 RR，都是以這一欄為基礎。
+
 ```python
 import pandas as pd
 import numpy as np
@@ -268,6 +270,17 @@ df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
 # clinical_severity 不是 "not_ill" 的都算感染
 df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
 ```
+
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `from epi_learning.metrics import risk_ratio` | 匯入本章要重複使用的風險比計算函式（Ch03 就寫好的工具） |
+> | `df = pd.read_csv(...)` | 讀入 280 位住民的 line list |
+> | `df["clinical_severity"] != "not_ill"` | 布林判斷：只要臨床嚴重度不是「未發病」就算感染 |
+> | `.astype(int)` | 把 `True`/`False` 轉成 `1`/`0`，之後才能當 `pd.crosstab` 的欄位、加總、算 RR |
+>
+> 🔑 **`infected` 是整章的地基**：後面 Step 2–8 所有的粗 RR、分層 RR、MH 加權 RR，都是從這個 0/1 欄位延伸出去的。
 
 ## Step 2: 粗 RR 回顧
 
@@ -284,6 +297,8 @@ d = int(ct.loc[0, 0])   # 沒淋浴、沒感染
 crude_rr = risk_ratio(a, a + b, c, c + d)
 print(f"粗 RR (shower_use → infected) = {crude_rr:.3f}")
 ```
+
+> 💡 **`pd.crosstab` 直接生出 2×2 表**：`ct.loc[1, 1]` 是先列後欄，取出「有淋浴、有感染」的人數；四格湊齊後丟給 Ch03 寫好的 `risk_ratio()`，就能算出粗 RR，不用手算。
 
 ## Step 3: 檢查干擾三要件
 
@@ -314,6 +329,18 @@ print(pd.crosstab(df["functional_status"], df["infected"],
 # （一個人不會因為「先用了淋浴」才變成能走動的——因果方向不對）
 # → 三個條件都滿足，可以進行分層分析
 ```
+
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `pd.crosstab(df["functional_status"], df["shower_use"], ...)` | 交叉表：每一種功能狀態裡，用/不用淋浴各占多少比例——對應干擾三要件的**條件 1** |
+> | `normalize="index"` | 讓每一「列」（每個功能狀態）的比例加總為 1，才能直接看百分比而不是人數 |
+> | `margins=True` | 多印一列/欄「All」總計，方便對照整體比例 |
+> | `pd.crosstab(df["functional_status"], df["infected"], ...)` | 同樣手法檢查功能狀態和感染的關聯——對應**條件 2** |
+> | 條件 3 的註解（沒有對應程式碼） | 條件 3「不是中間變項」是**邏輯判斷**，不是算出來的——靠因果方向推理，程式跑不出答案 |
+>
+> 🧭 **三要件裡只有兩個能用 `pd.crosstab` 佐證**：條件 1、2 可以看數字，條件 3 永遠得靠對因果機制的理解，不是統計能單獨告訴你的。
 
 ## Step 4: 分層分析
 
@@ -376,6 +403,23 @@ for _, row in results_df.iterrows():
 print(f"\n  粗 RR = {crude_rr:.3f}")
 ```
 
+> **逐行拆解**（迴圈稍長，但每一輪做的事和 Ch03 算一次 RR 完全一樣）：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `strata = df["functional_status"].unique()` | 找出功能狀態有哪幾種類別，準備逐一分層 |
+> | `for s in sorted(strata):` | 每一層各跑一次迴圈 |
+> | `sub = df[df["functional_status"] == s]` | 篩出「這一層」的住民 |
+> | `if ct_s.shape != (2, 2): continue` | 若這層缺暴露組或對照組（表不是 2×2），跳過避免報錯 |
+> | `rr_s = risk_ratio(a_s, a_s + b_s, c_s, c_s + d_s)` | 算出這一層自己的 RR |
+> | `ln_rr = np.log(rr_s)` | 信賴區間公式建立在 log(RR) 上（log 轉換後分布較接近常態） |
+> | `se = np.sqrt(1/a_s - 1/(a_s+b_s) + 1/c_s - 1/(c_s+d_s))` | log(RR) 的標準誤公式 |
+> | `ci_lo/ci_hi = np.exp(ln_rr ± 1.96 * se)` | 算完信賴區間，用 `np.exp()` 轉換回原本的 RR 尺度 |
+> | `stratum_results.append({...})` | 把這一層的 n、a、b、c、d、RR、CI 存進一個 list |
+> | `results_df = pd.DataFrame(stratum_results)` | 迴圈跑完後，把 list 轉成一張整齊的表格，供後面 Step 5–7 使用 |
+>
+> 🔑 **`if ct_s.shape != (2, 2): continue` 別漏掉**：只要有一層剛好沒有暴露組或對照組（例如全部都用淋浴、沒有對照），`.loc[1,1]` 這種寫法會直接報錯——這行是分層分析最常踩到的地雷之一。
+
 ## Step 5: 森林圖
 
 森林圖（forest plot）把每一層的 RR 和信賴區間畫在同一張圖上，一眼就能看出各層的效應大小和精確度：
@@ -426,7 +470,11 @@ plt.tight_layout()
 plt.show()
 ```
 
+> 💡 **森林圖就是把 Step 4 的 `results_df` 畫出來**：`ax.errorbar` 的 `xerr` 兩端分別是「RR 到 CI 下界」和「CI 上界到 RR」的距離；`axvline(x=1)` 畫出「無關聯」的參考線，`axvline(x=crude_rr)` 疊上粗 RR 方便對照——點的橫線只要沒有跨過灰色虛線，這一層就是統計顯著。
+
 ## Step 6: Mantel-Haenszel 加權 RR
+
+這一步把 Step 4 各層的結果，用 Mantel-Haenszel 公式加權合併成「一個」校正後 RR——樣本數多的層權重大，樣本數少的層權重小。
 
 ```{raw} html
 <div class="video-card">
@@ -468,7 +516,23 @@ else:
     print("→ 變化 < 10%，干擾作用不明顯")
 ```
 
+> **逐行拆解**（對照上面核心概念的 MH 公式，一行一行看更清楚）：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `for _, row in results_df.iterrows():` | 把 Step 4 存好的每一層結果拿出來，逐層累加 |
+> | `n_i = a_i + b_i + c_i + d_i` | 這一層的總人數，是這一層權重的基礎 |
+> | `numerator += a_i * (c_i + d_i) / n_i` | 累加 MH 公式的分子：每一層算一次、加進同一個總和 |
+> | `denominator += c_i * (a_i + b_i) / n_i` | 累加 MH 公式的分母 |
+> | `rr_mh = numerator / denominator` | 所有層都加總完，才做**最後一次**相除，得到一個校正後 RR |
+> | `change_pct = abs(crude_rr - rr_mh) / rr_mh * 100` | 粗 RR 和校正後 RR 差多少百分比——對照核心概念裡的 10% 法則 |
+> | `if change_pct >= 10:` | 依門檻判斷有沒有干擾，並依方向印出「膨脹」或「壓抑」 |
+>
+> ⚠️ **千萬別在迴圈裡面提早相除**：MH 公式是「每層先分別累加分子、分母，全部加總完才相除一次」——如果在迴圈裡就算 `a_i*(c_i+d_i) / c_i*(a_i+b_i)` 再逐層平均，得到的不是正確的 MH 加權值。
+
 ## Step 7: 同質性檢定——有沒有交互作用？
+
+光用眼睛看各層 RR 像不像不夠精確；這一步用數字做一個簡化版的同質性判斷，決定各層效應能不能合併成一個 MH 值。
 
 > 🍜 **麻辣鍋比喻**：你調查「吃麻辣鍋會不會拉肚子」，把人分成「胃好的」和「胃不好的」兩組。如果胃好的人 RR=1.2，胃不好的人 RR=4.5——這不是干擾，而是**交互作用**（effect modification）：麻辣鍋的影響「因人而異」。這時候你不能只報一個合併的 RR，必須分開說：「胃好的人影響不大，胃不好的人要小心。」
 
@@ -497,6 +561,16 @@ else:
     print("→ 各層 RR 相近，可合理使用 MH 加權合併值")
     print("  報告一個 RR_MH 即可代表整體效應")
 ```
+
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `rr_values = results_df["RR"].values` | 把 Step 4 各層的 RR 取出來，變成一個陣列 |
+> | `rr_range = rr_values.max() - rr_values.min()` | 本章使用的**簡化版**同質性判斷：最大 RR 減最小 RR，全距越大代表各層差越多 |
+> | `if rr_range > 0.5:` | 用 0.5 當門檻——超過就懷疑有交互作用，不宜只報一個 MH 值 |
+>
+> ⚠️ **這是簡化版判斷，不是正式的統計檢定**：正式的同質性檢定應該用 Breslow-Day 或 Woolf 檢定算出 p-value；這裡的「RR 全距」法只是快速目測，正式報告建議兩者都做。
 
 ---
 
@@ -558,6 +632,17 @@ for floor in sorted(df["floor"].unique()):
     print(f"  {floor}F: RR={rr_f:.3f}  (shower: {a_f}/{a_f+b_f}, "
           f"no shower: {c_f}/{c_f+d_f})")
 ```
+
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `for floor in sorted(df["floor"].unique()):` | 換成用**樓層**當分層變項，重複 Step 4 一模一樣的邏輯 |
+> | `sub = df[df["floor"] == floor]` | 篩出這個樓層的住民 |
+> | `if ct_f.shape != (2, 2): continue` | 同樣防呆：這個樓層若缺暴露組或對照組就跳過 |
+> | `rr_f = risk_ratio(a_f, a_f + b_f, c_f, c_f + d_f)` | 算出這個樓層自己的 RR |
+>
+> 🔑 **和 Step 4 幾乎一模一樣**：只是把 `functional_status` 換成 `floor`——分層分析的邏輯可以直接複用，換一個分層變項就能重跑一次。
 
 ---
 

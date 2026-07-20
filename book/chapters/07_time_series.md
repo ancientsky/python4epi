@@ -190,6 +190,8 @@ print(f"上週同一天法 MAE = {mae_seasonal:.1f} 杯  ← 抓住『週六爆�
 
 ## Step 1: 建立每日發病序列
 
+這段程式把原始線列資料整理成**每日發病病例數**的時間序列，是後面所有模型的起點。
+
 ```python
 import numpy as np
 import pandas as pd
@@ -221,7 +223,22 @@ daily.name = "cases"
 print(f"序列長度：{len(daily)} 天 | 總病例：{daily.sum()}")
 ```
 
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `df = pd.read_csv(...)` | 讀入完整的 280 位住民線列資料 |
+> | `pd.to_datetime(..., errors="coerce")` | 把日期字串轉成日期型別；`errors="coerce"` 讓無法解析的日期變成 `NaT`，不會讓整段程式當掉 |
+> | `df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)` | 嚴重度不是「未發病」就算感染，轉成 1/0 |
+> | `cases = df[df["infected"] == 1]` | 只留下確實發病的病例 |
+> | `cases.groupby("symptom_onset_date").size()` | 依發病日分組計數 → 每日病例數 |
+> | `daily.asfreq("D", fill_value=0)` | **補齊沒有發病的日期**，缺的天數填 0 |
+>
+> 🔑 **`asfreq` 是這一步的靈魂**：`groupby` 只會產生「有病例的日期」，中間如果有一天零確診，那天會直接消失。少了 `asfreq("D", fill_value=0)` 補齊，時間序列會「跳日期」，後面的滾動平均和 ARIMA 都會算錯。
+
 ## Step 2: 流行曲線 + 滾動平均視覺
+
+這裡把每日病例數畫成長條圖，疊上 7 天滾動平均線，讓忽高忽低的鋸齒現出真正的走勢。
 
 ```python
 rolling_7 = daily.rolling(window=7, min_periods=1).mean()
@@ -237,11 +254,23 @@ ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
 fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 ```
 
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `daily.rolling(window=7, min_periods=1).mean()` | 算 7 天滾動平均；`min_periods=1` 讓序列一開始（不足 7 天）也能算出數值，不會整批變成 `NaN` |
+> | `ax.bar(daily.index, daily.values, ...)` | 每日病例數畫成長條（原始鋸齒） |
+> | `ax.plot(rolling_7.index, rolling_7.values, ...)` | 疊上滾動平均線（抹平鋸齒後的趨勢） |
+>
+> 💡 **長條 + 線疊在同一張圖**：長條看「單日波動」，橘線看「整體趨勢」——兩個一起看，才不會被單日的忽高忽低嚇到或報喜。
+
 ---
 
 ## Part A ── 短期 outbreak 預測（護理之家資料，17 天）
 
 ### Step 3: Baseline —— Rolling mean 預測
+
+在正式上迴歸模型之前，先用最簡單的**滾動平均**當 baseline：用前 w 天的平均去猜「明天」，順便掃過幾個窗口大小找出最準的一個。
 
 ```{raw} html
 <div class="video-card">
@@ -265,9 +294,22 @@ mae_rolling = mae_by_window[3]
 print(f"\n→ 最佳：window=3, MAE={mae_rolling:.3f}")
 ```
 
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `daily.rolling(window=w).mean()` | 算前 w 天的滾動平均 |
+> | `.shift(1)` | **把預測值往後推一天**：用「到昨天為止」的平均去猜「今天」，不能用到今天自己的值 |
+> | `.dropna()` | 序列最前面幾天湊不齊 w 天，丟掉那些 `NaN` |
+> | `mean_absolute_error(actual_w, pred_w)` | 算預測值和實際值差多少（MAE，越小越準） |
+>
+> ⚠️ **`shift(1)` 不能省略**：如果直接用「今天的滾動平均」去預測「今天」，等於偷看了今天的答案（data leakage）——MAE 會漂亮到不真實，一上線就崩潰。
+
 Rolling mean 的優點：**簡單、直覺、在第一天就能用**。缺點：它永遠是「看過去幾天的平均」，不會預測轉折、沒有信賴區間、也沒辦法放其他變項（例如樓層、星期幾）。
 
 ### Step 4: Lagged features —— 為迴歸模型建立「過去 k 天」特徵
+
+這一步不建模型，只是**把時間序列改頭換面**：幫每一天多加幾欄「過去幾天的病例數」，讓迴歸模型能吃得下時間序列資料。
 
 ```{figure} images/lag_features_explained.svg
 :name: fig-lag-features
@@ -295,6 +337,18 @@ ts_model = ts.dropna().reset_index(drop=True)  # 掉掉前兩列（NaN）
 print(ts_model.head())
 print(f"可用列數：{len(ts_model)}")
 ```
+
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `ts = daily.to_frame("cases").reset_index(names="date")` | 把 Series 轉回一般表格，`date` 變成正常欄位 |
+> | `ts["day_idx"] = range(len(ts))` | 加一欄「第幾天」，讓模型能抓到隨時間上升/下降的趨勢 |
+> | `ts["lag_1"] = ts["cases"].shift(1)` | **把整欄往下推一格**：今天這一列多了「昨天的病例數」 |
+> | `ts["lag_2"] = ts["cases"].shift(2)` | 同樣道理，多一欄「前天的病例數」 |
+> | `ts.dropna()` | 前兩天沒有「昨天/前天」可用，會是 `NaN`，直接丟掉 |
+>
+> 🧭 **lag 特徵的本質**：`shift(1)` 只是把整欄資料「搬」到下一列，讓「昨天發生的事」變成「今天這一列的一個欄位」——時間序列從此變成一張普通的迴歸表格，Step 5-7 的模型才吃得下。
 
 ```{note}
 為什麼要加 lag？因為感染是傳染的——今天的病例數和昨天高度相關（autocorrelation）。把「昨天的值」當特徵，迴歸模型就能學會：「昨天多、今天多」「昨天激增、今天可能再增」。
@@ -336,9 +390,23 @@ coef_table = pd.DataFrame({
 print(coef_table.round(3))
 ```
 
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `smf.glm("cases ~ lag_1 + lag_2 + day_idx", data=ts_model, family=sm.families.Poisson())` | 建立 Poisson GLM：用昨天、前天的病例數 + 天數趨勢，去解釋今天的病例數 |
+> | `.fit()` | 真正**估計參數**（跑最大概似估計），回傳配適好的模型物件 |
+> | `model_pois.predict(ts_model)` | 用配適好的模型，對每一列算出「預期病例數」 |
+> | `mean_absolute_error(...)` | 算 MAE，和 baseline 的 rolling mean 放在同一把尺上比較 |
+> | `np.exp(model_pois.params)` | 把 log scale 的係數換成 **IRR（incidence rate ratio）**，才有白話可解讀 |
+>
+> 💡 **Poisson 係數要先取 `exp()` 才看得懂**：`coef` 是 log scale，直接看沒有意義；`exp(coef)` 才是「每多一單位，病例數變成幾倍」的 IRR。
+
 **白話解讀**：`IRR(lag_1) ≈ 1.15` 表示「昨天每多 1 人發病，今天預期值會多 15%」。
 
 ### Step 6: Negative Binomial regression —— 處理過度離散
+
+這一步先「驗傷」——檢查資料是不是過度離散（overdispersion），再決定要不要把 Step 5 的 Poisson 換成能吸收額外變異的 Negative Binomial。
 
 ```{figure} images/poisson_vs_nb_dispersion.svg
 :name: fig-poisson-vs-nb
@@ -375,6 +443,16 @@ mae_nb = mean_absolute_error(ts_model["cases"], pred_nb)
 print(f"\nNegative Binomial + lag:  MAE={mae_nb:.3f},  AIC={model_nb.aic:.2f}")
 ```
 
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `ts_model["cases"].var() / ts_model["cases"].mean()` | 算 **dispersion ratio**：變異數 ÷ 平均數 |
+> | `family=sm.families.NegativeBinomial(alpha=1.0)` | 換成 Negative Binomial 分布，`alpha` 是額外吸收「過度離散」的參數 |
+> | `model_nb.predict(ts_model)` / `mean_absolute_error(...)` | 和 Step 5 一樣的流程：預測、算 MAE，方便互相比較 |
+>
+> ⚠️ **dispersion > 1.5 才需要換模型**：Poisson 假設 variance = mean；一旦實際變異遠大於平均（過度離散），Poisson 的信賴區間會算得太窄，讓你誤以為結果比實際上更確定。
+
 ### Step 7: Logistic regression —— 「明天會不會是高峰日？」
 
 長官問的第二個問題是**是/否警報**，不是連續數字。做法：把每天的病例數**二值化**（超過某個門檻 → 1，否則 → 0），再用 logistic regression 預測機率。
@@ -401,6 +479,18 @@ pred_binary = (prob > 0.5).astype(int)
 acc = (pred_binary == ts_model["high_day"]).mean()
 print(f"\nLogistic (threshold): accuracy = {acc:.3f}")
 ```
+
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `ts_model["cases"].quantile(0.75)` | 抓病例數的 75th 百分位數，當「高峰日」的門檻 |
+> | `(ts_model["cases"] > threshold).astype(int)` | 把連續病例數**二值化**：超過門檻 = 1（高峰日），否則 = 0 |
+> | `smf.logit("high_day ~ lag_1 + lag_2", data=ts_model).fit(disp=False)` | 用昨天、前天的病例數去預測「今天是不是高峰日」；`disp=False` 只是不印出最佳化過程的逐次訊息 |
+> | `model_logit.predict(ts_model)` | 算出**機率**（不是 0/1），代表「明天是高峰日」的可能性 |
+> | `(prob > 0.5).astype(int)` | 把機率轉回 0/1，方便算準確率 |
+>
+> 🔑 **Logistic 給的是機率，不是病例數**：`predict()` 回傳的是 0～1 之間的機率，這正是「明天超過警戒線的機率是 72%」這種早期預警語言的來源。
 
 **這個模型不給你「明天會有幾人」，但會告訴你「明天超過警戒線的機率是 72%」**——這才是早期預警系統真正需要的輸出。
 
@@ -432,7 +522,20 @@ ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
 fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 ```
 
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `trend = np.linspace(3, 7, n_days)` | 打造一條慢慢上升的**趨勢線**（每日平均從 3 升到 7） |
+> | `seasonal = 3 * np.sin(2 * np.pi * np.arange(n_days) / 7)` | 用正弦波製造**季節性**：每 7 天完整繞一圈 |
+> | `noise = rng.normal(0, 1.2, n_days)` | 加入隨機噪音，模擬真實資料不會這麼「乾淨」 |
+> | `np.maximum(0, (trend + seasonal + noise).round())` | 三者相加後四捨五入，並把負值夾在 0（病例數不能是負的） |
+>
+> 💡 **這是「已知答案」的練習資料**：因為 trend、seasonal、noise 都是自己指定的，等一下 ARIMA / SARIMA 抓不抓得到週期，我們自己心裡有底——這是驗證模型有沒有用的好方法。
+
 ### Step 9: ARIMA —— AutoRegressive Integrated Moving Average
+
+在真正配適 ARIMA 之前，先用 ADF 檢定確認序列夠不夠平穩，再切出訓練/測試集看預測準不準。
 
 ```{figure} images/arima_sarima_decomposition.svg
 :name: fig-arima-sarima
@@ -469,7 +572,22 @@ mae_arima = mean_absolute_error(test.values, forecast_arima.values)
 print(f"\nARIMA(1,1,1):  MAE={mae_arima:.3f},  AIC={model_arima.aic:.2f}")
 ```
 
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `adfuller(synth)` | **ADF 平穩性檢定**：檢查序列的均值/變異有沒有隨時間漂移 |
+> | `train, test = synth.iloc[:-7], synth.iloc[-7:]` | 切訓練／測試集：最後 7 天蓋起來當測試 |
+> | `ARIMA(train, order=(1, 1, 1))` | 建立 ARIMA 模型，`order=(p, d, q)` = **(自迴歸落後項數, 差分次數, 移動平均落後項數)**：`p=1` 看前 1 天自己、`d=1` 做 1 次差分讓序列平穩、`q=1` 看前 1 次的預測誤差 |
+> | `.fit()` | 用訓練集**估計參數** |
+> | `model_arima.forecast(steps=7)` | 用配適好的模型，往前**預測 7 步**（對應蓋起來的測試集天數） |
+> | `mean_absolute_error(test.values, forecast_arima.values)` | 掀開測試集答案，算預測誤差 |
+>
+> 🔑 **記住 `(p, d, q)` 的白話翻譯**：`p` = 自迴歸看幾天前的自己，`d` = 差分幾次讓序列平穩，`q` = 移動平均看幾次前的誤差。三個數字不是隨便選的，`d` 要參考 ADF 檢定的結果，`p`、`q` 通常要配合 ACF / PACF 圖或用 AIC 比較。
+
 ### Step 10: SARIMA —— 加入季節性
+
+SARIMA 在 ARIMA 之外多一組季節參數，專門捕捉「每 7 天重複一次」的週期，讓預測跟著星期幾的節奏走。
 
 ```python
 from statsmodels.tsa.statespace.sarimax import SARIMAX
@@ -502,11 +620,23 @@ ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
 fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 ```
 
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `SARIMAX(train, order=(1, 1, 1), seasonal_order=(1, 1, 1, 7))` | `order=(p,d,q)` 跟 ARIMA 一樣是「一般」的自迴歸/差分/移動平均；`seasonal_order=(P,D,Q,s)` 是**季節版**的同一組東西，`s=7` 代表週期 = 7 天 |
+> | `.fit(disp=False)` | 估計參數；`disp=False` 讓最佳化過程不要一直印訊息洗版 |
+> | `model_sarima.forecast(steps=7)` | 往前預測 7 天，和 ARIMA 用同一組測試集比較 |
+>
+> 🧭 **`seasonal_order` 的四個數字**：`(P, D, Q, s)` 分別是「季節自迴歸項數、季節差分次數、季節移動平均項數、季節週期長度」——`s=7` 就是告訴模型「每隔 7 天，回頭比對一次同一個星期幾」，這正是 SARIMA 比 ARIMA 多出來、能抓住週末爆量的關鍵。
+
 **關鍵觀察**：SARIMA 的 MAE 明顯小於 ARIMA，因為它抓到了 7 天的週循環。對於**沒有週期性**的資料，多加 SARIMA 反而浪費（參數多、容易過配）。
 
 ---
 
 ## Step 11: 模型大比拼
+
+把前面六個模型的 MAE、資料需求、能不能給信賴區間全部攤開放進同一張表，方便直接比較。
 
 ```{raw} html
 <div class="video-card">
@@ -535,6 +665,8 @@ comparison = pd.DataFrame([
 print(comparison.to_string(index=False))
 ```
 
+> 💡 **這張表的重點不是數字本身，是「最少資料」和「捕捉週期」兩欄**——資料不夠長就不用勉強上 SARIMA，沒有季節性也不用為了炫技硬上。
+
 **結論白話版**：
 - **資料只有一兩週**（outbreak 剛爆發）→ Rolling mean 或 Poisson + lag 就夠
 - **過度離散明顯**（群聚、突發疫情）→ 改 Negative Binomial
@@ -543,6 +675,8 @@ print(comparison.to_string(index=False))
 - **類流感、每週監測**（有明顯週循環）→ SARIMA
 
 ## Step 12: 發病 vs 住院曲線（Lag 效應）
+
+這裡疊圖比較發病曲線和住院曲線，看住院高峰比發病高峰晚了幾天。
 
 ```python
 hosp_daily = (
@@ -566,6 +700,16 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 lag_days = (hosp_aligned.idxmax() - daily.idxmax()).days
 print(f"發病高峰 → 住院高峰 lag = {lag_days} 天")
 ```
+
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `cases[...].groupby("hospitalization_date").size()` | 依住院日期分組計數 → 每日住院人數 |
+> | `pd.date_range(...)` + `hosp_daily.reindex(all_dates, fill_value=0)` | 把住院曲線**對齊**發病曲線的完整日期範圍，缺的日期補 0，兩條線才能疊在同一個時間軸上比較 |
+> | `hosp_aligned.idxmax() - daily.idxmax()` | 找出住院高峰日和發病高峰日，相減得到**天數差（lag）** |
+>
+> 💡 **對齊日期是疊圖比較的前提**：如果不用 `reindex` 補齊，兩條曲線的日期範圍可能對不齊，畫出來的 lag 會失真。
 
 這個 lag 是**床位規劃的黃金指標**：發病高峰過了幾天後，住院需求才會到頂。
 
