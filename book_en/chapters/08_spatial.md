@@ -23,6 +23,100 @@ If one particular wing stands out, it may hint that the water system there (show
 
 ---
 
+## 🗺️ Super Simple Special: Understanding Spatial Epidemiology with a "Classroom Cough Seating Chart"
+
+> Spatial autocorrelation, Moran's I, hot-spot analysis... does this chapter's jargon sound intimidating? Don't be scared. This section sets the nursing home aside for a moment and uses a **classroom seating chart**—watching who's coughing—to explain "what spatial epidemiology is actually doing" in a way that'll make even a 7th grader get it instantly. Once you've got this trick down, every map and Moran's I calculation later in this chapter is just a scaled-up version of it.
+
+### Three Kids in the Back Corner Are All Coughing — Is It a "Transmission Chain," or Just a Coincidence?
+
+A cold spreads to the kid sitting next to you, so the coughing seats often **clump together**. One day the teacher notices **a small cluster of kids in the back-right corner are all coughing**, and her heart skips a beat: is this **a genuine chain of transmission**, or did they each **catch something separately at home and just happen to sit near each other**?
+
+**Spatial epidemiology** exists to answer exactly this kind of question—turning "it feels crowded" into "it's statistically, provably crowded."
+
+### Why Does "Location" Matter? — Near Things Are Alike
+
+> 🧲 **Geography's law of gravity (Tobler's First Law)**: **"Near things are alike."** Your deskmate's cold and your next-door neighbor's house price are both more similar to yours than the ones across town. Disease works the same way—for a contagious illness, the people who get sick will cluster together in space, "birds of a feather." So "where" isn't just trivia—it's hiding **clues about transmission**.
+
+But first, an ironclad rule:
+
+> 📏 **When you look at location, you always have to calculate the "rate," not compare "counts."** A place with more people naturally has more cases (duh). What you should compare is the **attack rate** (the **proportion** of people who got sick in that area)—this is the exact same "don't forget the denominator" lesson from Ch03's BBQ trip, just moved onto a map.
+
+### The Trap: A Sea of Red ≠ a Real Cluster (Your Brain Loves to Fill In Patterns)
+
+> 🌌 **The constellation trap**: Your brain is a "pattern-finding machine"—it'll force a bunch of random stars into "Orion the Hunter." Looking at a choropleth map is the same: you're **guaranteed** to "see" clustering, but that might just be an illusion created by colors randomly falling into place.
+
+How do you tell real from fake? Epidemiologists have a method that's brute-force, but brilliant:
+
+> 🔀 **The shuffle test**: **cut the "coughing" labels off the seats, shuffle them randomly, and stick them back on**—repeat this many times (say, 1,000). If the **real map** is **way more clustered** than these "randomly re-stuck" versions, the cluster is real; if it looks about the same as the shuffled versions, you were just imagining it.
+
+```{figure} images/shuffle_test_intuition_en.svg
+:name: fig-shuffle-test
+:alt: On the left, the real classroom seating chart, with red "coughing" seats clumped into a cluster in the back-right corner (adjacent cough pairs = 6); on the right, the same labels after shuffling, now scattered (adjacent cough pairs ≈ 2); Moran's I measures exactly how much more clustered the real map is than the shuffled ones, producing a p-value
+:width: 100%
+
+Left: the real map, with coughs clumped together; right: after shuffling, they're scattered. **Moran's I measures exactly how much more clustered "reality" is than "1,000 shuffles" → a p-value.**
+```
+
+### Try It Yourself: Run Your Own "Shuffle Test"
+
+```python
+import numpy as np
+
+# 5x5 classroom seating chart; coughing students marked 1. Reality: a cluster in the back-right corner all coughing together
+seats = np.zeros((5, 5), dtype=int)
+for r, c in [(3, 3), (3, 4), (4, 3), (4, 4), (2, 4), (4, 2)]:
+    seats[r, c] = 1
+
+def adjacent_cough_pairs(grid):
+    """Count pairs of 'two adjacent seats both coughing' (up/down/left/right only)"""
+    pairs = 0
+    for r in range(5):
+        for c in range(5):
+            if grid[r, c] == 1:
+                if c + 1 < 5 and grid[r, c + 1] == 1: pairs += 1   # neighbor to the right
+                if r + 1 < 5 and grid[r + 1, c] == 1: pairs += 1   # neighbor below
+    return pairs
+
+real = adjacent_cough_pairs(seats)
+
+# Shuffle: randomly re-stick the coughing labels 200 times, counting adjacent cough pairs each time
+rng = np.random.default_rng(8)
+flat = seats.flatten()
+shuffled = np.array([adjacent_cough_pairs(rng.permutation(flat).reshape(5, 5))
+                     for _ in range(200)])
+p = (shuffled >= real).mean()
+
+print(f"Real map: adjacent cough pairs = {real}")
+print(f"200 shuffles: mean = {shuffled.mean():.1f} (max {shuffled.max()})")
+print(f"Proportion of shuffles >= real = p ≈ {p:.3f}")
+print("→ The real map is way more clustered than the shuffled ones, p is tiny → this is a real cluster!" if p < 0.05 else "→ No significant clustering detected")
+```
+
+Running this, you'll see:
+
+```text
+Real map: adjacent cough pairs = 6
+200 shuffles: mean = 2.1 (max 5)
+Proportion of shuffles >= real = p ≈ 0.000
+→ The real map is way more clustered than the shuffled ones, p is tiny → this is a real cluster!
+```
+
+> 💡 **This is the soul of Moran's I**: the Moran's I and p-value that this chapter computes in one line using `esda` is, under the hood, exactly this "shuffle-and-compare" trick—it just uses a fancier formula, and it can also tell apart a "hot-spot core (LISA)" from a "significant hot spot (Gi\*)."
+
+### ⚠️ A Few Caveats You Must Remember
+
+1. **Always calculate the rate before you compare**: always use attack rate / incidence rate per 100,000, never compare raw case counts directly.
+2. **Clustering ≠ cause (the ecological fallacy)**: finding a hot spot only answers "**where**," not "**why**." A hot spot is a **signpost** pointing toward the problem, not the answer itself—you still have to go back and do exposure analysis to find the actual culprit (a shared water source? or did that area just happen to share one air conditioner?).
+3. **The shuffle-test p-value only compares against "random"**: it proves "this isn't a coincidence," but it doesn't prove causation, and it doesn't tell you the reason why.
+4. **Change the neighbor definition or the spatial unit, and the answer changes**: Queen contiguity vs. KNN, counties vs. villages (MAUP)—the result can flip completely; an offshore island using "contiguity" ends up with zero neighbors.
+5. **Rates in small populations jump around wildly**: in a place with a small denominator (like Lienchiang County), just one extra case sends the rate skyrocketing—use **smoothing**, don't plot the raw rate directly.
+
+### Back to reality: seating chart → Taiwan map
+
+Swap "classroom seats" for "counties and cities across Taiwan," "coughing" for "dengue fever incidence," and "adjacent seats" for "bordering counties"—every trick you just learned (calculate the rate first, run the shuffle test, clustering ≠ cause) **is exactly what Part 3 of this chapter does with nationwide county-level data**. Now scroll down and look at those maps, Moran's I, LISA, and Gi\*—doesn't it suddenly feel a lot friendlier? 😉
+
+---
+
 ## Core Concepts
 
 ### The Three Levels of Spatial Analysis

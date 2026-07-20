@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="720" height="260" fill="#FAF8F3" rx="12"/>
+  <text x="360" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">資料三切分：訓練 / 驗證 / 測試</text>
+  <text x="360" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">切好了就別再偷看——測試集是「只掀一次」的期末考</text>
+  <rect x="40" y="86" width="384" height="52" fill="#6A9BCC" fill-opacity="0.85" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="232" y="117" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">訓練 train</text>
+  <text x="232" y="160" text-anchor="middle" font-size="11" font-weight="bold" fill="#6A9BCC">60%</text>
+  <text x="232" y="178" text-anchor="middle" font-size="10.5" fill="#6B6B6B">學公式（fit）</text>
+  <rect x="424" y="86" width="128" height="52" fill="#D97757" fill-opacity="0.85" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="488" y="117" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">驗證 validation</text>
+  <text x="488" y="160" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">20%</text>
+  <text x="488" y="178" text-anchor="middle" font-size="10.5" fill="#6B6B6B">調參、選模型</text>
+  <rect x="552" y="86" width="128" height="52" fill="#788C5D" fill-opacity="0.85" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="616" y="117" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">測試 test</text>
+  <text x="616" y="160" text-anchor="middle" font-size="11" font-weight="bold" fill="#788C5D">20%</text>
+  <text x="616" y="178" text-anchor="middle" font-size="10.5" fill="#6B6B6B">只掀一次·最終評估</text>
+  <rect x="40" y="212" width="640" height="34" rx="8" fill="#FDECE7" stroke="#D94452" stroke-dasharray="4"/>
+  <text x="360" y="234" text-anchor="middle" font-size="11.5" fill="#D94452">❌ 資料洩漏：先標準化/SMOTE 再切分、把結果當特徵、偷看未來 → 考很高、上線慘敗</text>
+</svg>
