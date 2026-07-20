@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 410" font-family="system-ui, -apple-system, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 452" font-family="system-ui, -apple-system, sans-serif">
   <defs><filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter>
        <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6B6B6B"/></marker></defs>
-  <rect width="800" height="410" fill="#FAF8F3" rx="12"/>
+  <rect width="800" height="452" fill="#FAF8F3" rx="12"/>
   <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">特徵工程：把「雜亂病歷」變成「模型看得懂的數字」</text>
   <text x="400" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">模型只吃數字——三種欄位，三種處理法</text>
   <g filter="url(#shadow)"><rect x="24" y="120" width="176" height="170" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
@@ -35,8 +35,8 @@
   <text x="690" y="206" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1A1A1A">一張全是數字的矩陣</text>
   <text x="690" y="226" text-anchor="middle" font-size="10.5" fill="#6B6B6B">→ 才能丟進模型</text>
   <text x="690" y="250" text-anchor="middle" font-size="15">🤖</text>
-  <rect x="24" y="320" width="752" height="66" rx="10" fill="#F5F3EE" stroke="#E8E5DF"/>
-  <text x="40" y="343" font-size="12" font-weight="bold" fill="#1A1A1A">挑特徵三原則：</text>
-  <text x="40" y="364" font-size="11" fill="#6B6B6B">① 靠領域知識選有意義的　② 不放「結果之後」才有的（症狀 fever = 洩漏 🚫）</text>
-  <text x="40" y="381" font-size="11" fill="#6B6B6B">③ 別全部塞進去——雜訊欄位會拖累模型（Part B 會看到）</text>
+  <rect x="24" y="368" width="752" height="66" rx="10" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <text x="40" y="391" font-size="12" font-weight="bold" fill="#1A1A1A">挑特徵三原則：</text>
+  <text x="40" y="412" font-size="11" fill="#6B6B6B">① 靠領域知識選有意義的　② 不放「結果之後」才有的（症狀 fever = 洩漏 🚫）</text>
+  <text x="40" y="429" font-size="11" fill="#6B6B6B">③ 別全部塞進去——雜訊欄位會拖累模型（Part B 會看到）</text>
 </svg>

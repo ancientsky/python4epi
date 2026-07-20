@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" font-family="system-ui, -apple-system, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 464" font-family="system-ui, -apple-system, sans-serif">
   <defs>
     <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
       <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
     </filter>
   </defs>
 
-  <rect width="800" height="440" fill="#FAF8F3" rx="12"/>
+  <rect width="800" height="464" fill="#FAF8F3" rx="12"/>
 
   <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">設限資料（Censored Data）—— 比賽還沒結束就離場</text>
   <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">6 位病人的追蹤時間軸：有人看到結局、有人沒看到</text>
@@ -49,7 +49,7 @@
   <text x="80" y="194" text-anchor="end" font-size="11" font-weight="bold" fill="#1A1A1A">Pt C</text>
   <line x1="100" y1="190" x2="490" y2="190" stroke="#6A9BCC" stroke-width="3"/>
   <polygon points="490,184 502,190 490,196" fill="#6A9BCC"/>
-  <text x="510" y="194" font-size="10" fill="#6A9BCC" font-weight="bold">設限（仍存活）</text>
+  <text x="486" y="181" text-anchor="end" font-size="10" fill="#6A9BCC" font-weight="bold">設限（仍存活）</text>
 
   <!-- Patient D: death at day 8 -->
   <text x="80" y="234" text-anchor="end" font-size="11" font-weight="bold" fill="#1A1A1A">Pt D</text>
@@ -67,14 +67,14 @@
   <text x="80" y="314" text-anchor="end" font-size="11" font-weight="bold" fill="#1A1A1A">Pt F</text>
   <line x1="100" y1="310" x2="490" y2="310" stroke="#6A9BCC" stroke-width="3"/>
   <polygon points="490,304 502,310 490,316" fill="#6A9BCC"/>
-  <text x="510" y="314" font-size="10" fill="#6A9BCC" font-weight="bold">設限（仍存活）</text>
+  <text x="486" y="301" text-anchor="end" font-size="10" fill="#6A9BCC" font-weight="bold">設限（仍存活）</text>
 
   <!-- Legend icons under axis -->
-  <g transform="translate(100, 400)">
+  <g transform="translate(100, 404)">
     <circle cx="8" cy="5" r="6" fill="#D94452" stroke="#FFFFFF" stroke-width="2"/>
-    <text x="20" y="9" font-size="10" fill="#1A1A1A">● 觀察到事件（event=1）</text>
+    <text x="22" y="9" font-size="10" fill="#1A1A1A">觀察到事件（event=1）</text>
     <polygon points="200,-1 212,5 200,11" fill="#6A9BCC"/>
-    <text x="220" y="9" font-size="10" fill="#1A1A1A">▸ 設限（event=0）</text>
+    <text x="222" y="9" font-size="10" fill="#1A1A1A">設限（event=0）</text>
   </g>
 
   <!-- RIGHT: Censoring types card -->
@@ -107,7 +107,7 @@
 
   <!-- Bottom key takeaway -->
   <g filter="url(#shadow)">
-    <rect x="30" y="408" width="740" height="24" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1"/>
+    <rect x="30" y="426" width="740" height="26" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1"/>
   </g>
-  <text x="400" y="425" text-anchor="middle" font-size="11" fill="#1A1A1A"><tspan font-weight="bold" fill="#D94452">關鍵：</tspan>設限資料不是遺漏值！不能丟掉，也不能當成「已死亡」處理 —— 要用存活分析正確納入</text>
+  <text x="400" y="443" text-anchor="middle" font-size="11" fill="#1A1A1A"><tspan font-weight="bold" fill="#D94452">關鍵：</tspan>設限資料不是遺漏值！不能丟掉，也不能當成「已死亡」處理 —— 要用存活分析正確納入</text>
 </svg>
