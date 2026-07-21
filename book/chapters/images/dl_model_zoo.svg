@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" font-family="system-ui, -apple-system, sans-serif">
+  <defs><filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter></defs>
+  <rect width="800" height="440" fill="#FAF8F3" rx="12"/>
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">DL Model Zoo：不同任務，找不同工具</text>
+  <text x="400" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">看題目長什麼樣子，就知道該找誰幫忙</text>
+
+  <!-- Row 1: 4 cards -->
+  <g filter="url(#shadow)"><rect x="20" y="90" width="178" height="150" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.5"/></g>
+  <text x="109" y="120" text-anchor="middle" font-size="20">🧩</text>
+  <text x="109" y="145" text-anchor="middle" font-size="13" font-weight="bold" fill="#6A9BCC">MLP</text>
+  <text x="109" y="163" text-anchor="middle" font-size="10.5" fill="#1A1A1A">多功能通才</text>
+  <text x="109" y="188" text-anchor="middle" font-size="9" fill="#6B6B6B">何時用：</text>
+  <text x="109" y="203" text-anchor="middle" font-size="9" fill="#6B6B6B">表格資料的預設起點</text>
+
+  <g filter="url(#shadow)"><rect x="214" y="90" width="178" height="150" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/></g>
+  <text x="303" y="120" text-anchor="middle" font-size="20">🕵️</text>
+  <text x="303" y="145" text-anchor="middle" font-size="13" font-weight="bold" fill="#D97757">LSTM</text>
+  <text x="303" y="163" text-anchor="middle" font-size="10.5" fill="#1A1A1A">有記憶的偵探</text>
+  <text x="303" y="188" text-anchor="middle" font-size="9" fill="#6B6B6B">何時用：</text>
+  <text x="303" y="203" text-anchor="middle" font-size="9" fill="#6B6B6B">有時間相關性的序列</text>
+
+  <g filter="url(#shadow)"><rect x="408" y="90" width="178" height="150" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.5"/></g>
+  <text x="497" y="120" text-anchor="middle" font-size="20">🔍</text>
+  <text x="497" y="145" text-anchor="middle" font-size="13" font-weight="bold" fill="#6A9BCC">CNN</text>
+  <text x="497" y="163" text-anchor="middle" font-size="10.5" fill="#1A1A1A">看局部指紋的鑑識官</text>
+  <text x="497" y="188" text-anchor="middle" font-size="9" fill="#6B6B6B">何時用：</text>
+  <text x="497" y="203" text-anchor="middle" font-size="9" fill="#6B6B6B">抓局部特徵（影像、訊號）</text>
+
+  <g filter="url(#shadow)"><rect x="602" y="90" width="178" height="150" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.5"/></g>
+  <text x="691" y="120" text-anchor="middle" font-size="20">🕸️</text>
+  <text x="691" y="145" text-anchor="middle" font-size="13" font-weight="bold" fill="#788C5D">GNN</text>
+  <text x="691" y="163" text-anchor="middle" font-size="10.5" fill="#1A1A1A">社群網絡分析師</text>
+  <text x="691" y="188" text-anchor="middle" font-size="9" fill="#6B6B6B">何時用：</text>
+  <text x="691" y="203" text-anchor="middle" font-size="9" fill="#6B6B6B">空間傳播、接觸網絡</text>
+
+  <!-- Row 2: 3 cards, centered -->
+  <g filter="url(#shadow)"><rect x="117" y="270" width="178" height="150" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.5"/></g>
+  <text x="206" y="300" text-anchor="middle" font-size="20">🎯</text>
+  <text x="206" y="325" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#D97757">Transformer / TFT</text>
+  <text x="206" y="343" text-anchor="middle" font-size="10.5" fill="#1A1A1A">懂得分配注意力</text>
+  <text x="206" y="368" text-anchor="middle" font-size="9" fill="#6B6B6B">何時用：</text>
+  <text x="206" y="383" text-anchor="middle" font-size="9" fill="#6B6B6B">長序列、多變量預測</text>
+
+  <g filter="url(#shadow)"><rect x="311" y="270" width="178" height="150" rx="10" fill="#FFFFFF" stroke="#D94452" stroke-width="1.5"/></g>
+  <text x="400" y="300" text-anchor="middle" font-size="20">⚖️</text>
+  <text x="400" y="325" text-anchor="middle" font-size="13" font-weight="bold" fill="#D94452">PINN</text>
+  <text x="400" y="343" text-anchor="middle" font-size="10.5" fill="#1A1A1A">綁著物理定律的模型</text>
+  <text x="400" y="368" text-anchor="middle" font-size="9" fill="#6B6B6B">何時用：</text>
+  <text x="400" y="383" text-anchor="middle" font-size="9" fill="#6B6B6B">資料少但機制明確（如 SEIR）</text>
+
+  <g filter="url(#shadow)"><rect x="505" y="270" width="178" height="150" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.5"/></g>
+  <text x="594" y="300" text-anchor="middle" font-size="20">🌍</text>
+  <text x="594" y="325" text-anchor="middle" font-size="13" font-weight="bold" fill="#788C5D">TSFM</text>
+  <text x="594" y="343" text-anchor="middle" font-size="10.5" fill="#1A1A1A">讀遍全球案件的老手</text>
+  <text x="594" y="368" text-anchor="middle" font-size="9" fill="#6B6B6B">何時用：</text>
+  <text x="594" y="383" text-anchor="middle" font-size="9" fill="#6B6B6B">零樣本／少樣本、新病原早期</text>
+</svg>
