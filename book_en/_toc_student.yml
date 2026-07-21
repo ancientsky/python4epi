@@ -50,6 +50,7 @@ parts:
       - file: chapters/11_deep_learning
         sections:
           - file: chapters/notebooks/11_dl_baseline
+          - file: chapters/notebooks/11_dl_sequence
       - file: chapters/12_causal
         sections:
           - file: chapters/notebooks/12_causal_did
