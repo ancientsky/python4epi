@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" font-family="system-ui, -apple-system, sans-serif">
+  <defs><filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter>
+       <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6B6B6B"/></marker></defs>
+  <rect width="800" height="480" fill="#FAF8F3" rx="12"/>
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">PINN：模型要同時做對兩件事</text>
+  <text x="400" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">貼近資料，也要遵守 SEIR 方程式</text>
+
+  <!-- Equation card -->
+  <g filter="url(#shadow)"><rect x="150" y="80" width="500" height="70" rx="10" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.3"/></g>
+  <text x="400" y="123" text-anchor="middle" font-size="16" font-weight="bold" font-family="Menlo, Monaco, monospace">
+    <tspan fill="#1A1A1A">L_total = </tspan><tspan fill="#6A9BCC">L_data</tspan><tspan fill="#1A1A1A"> + λ · </tspan><tspan fill="#D97757">L_physics</tspan>
+  </text>
+
+  <!-- Down arrows to branches -->
+  <line x1="300" y1="150" x2="220" y2="198" stroke="#6B6B6B" stroke-width="1.6" marker-end="url(#ar)"/>
+  <line x1="500" y1="150" x2="580" y2="198" stroke="#6B6B6B" stroke-width="1.6" marker-end="url(#ar)"/>
+  <text x="400" y="180" text-anchor="middle" font-size="16" font-weight="bold" fill="#1A1A1A">+</text>
+
+  <!-- Left branch: data loss -->
+  <g filter="url(#shadow)"><rect x="60" y="200" width="320" height="180" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.6"/></g>
+  <text x="220" y="228" text-anchor="middle" font-size="13" font-weight="bold" fill="#6A9BCC">L_data 資料誤差</text>
+  <text x="220" y="252" text-anchor="middle" font-size="19">📈</text>
+  <text x="220" y="278" text-anchor="middle" font-size="11" fill="#1A1A1A">模型預測 vs. 實際觀測</text>
+  <text x="220" y="296" text-anchor="middle" font-size="9.5" fill="#6B6B6B">（每日新案例數的預測誤差）</text>
+  <text x="220" y="322" text-anchor="middle" font-size="10.5" font-family="Menlo, Monaco, monospace" fill="#1A1A1A">Σ(y_pred − y_true)²</text>
+  <text x="220" y="352" text-anchor="middle" font-size="11" font-weight="bold" fill="#6A9BCC">→ 讓模型「準」</text>
+
+  <!-- Right branch: physics loss -->
+  <g filter="url(#shadow)"><rect x="420" y="200" width="320" height="180" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.6"/></g>
+  <text x="580" y="228" text-anchor="middle" font-size="13" font-weight="bold" fill="#D97757">L_physics 物理殘差</text>
+  <text x="580" y="252" text-anchor="middle" font-size="19">⚛️</text>
+  <text x="580" y="278" text-anchor="middle" font-size="11" fill="#1A1A1A">S, E, I, R 有沒有遵守微分方程</text>
+  <text x="580" y="296" text-anchor="middle" font-size="9.5" fill="#6B6B6B">dS/dt, dE/dt, dI/dt, dR/dt 的殘差</text>
+  <text x="580" y="322" text-anchor="middle" font-size="10.5" font-family="Menlo, Monaco, monospace" fill="#1A1A1A">residual = d(SEIR)/dt − f(S,E,I,R)</text>
+  <text x="580" y="352" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">→ 讓模型「合理」</text>
+
+  <!-- Summary strip -->
+  <rect x="60" y="396" width="680" height="54" rx="8" fill="#F5F3EE" stroke="#E8E5DF"/>
+  <text x="400" y="428" text-anchor="middle" font-size="12.5" fill="#1A1A1A">💡 模型必須同時「貼近資料」且「遵守 SEIR 方程式」——兩者缺一不可</text>
+</svg>
