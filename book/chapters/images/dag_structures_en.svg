@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 470" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1A1A1A"/></marker>
+    <marker id="ar-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6B6B6B"/></marker>
+  </defs>
+  <rect width="800" height="470" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="30" text-anchor="middle" font-size="15.5" font-weight="bold" fill="#1A1A1A">DAG's Three Structures: What to Adjust, What to Never Touch</text>
+  <text x="400" y="50" text-anchor="middle" font-size="11.5" fill="#6B6B6B">Know the shape first, then decide whether to control for it</text>
+
+  <!-- ===== Panel 1: Confounder (fork) ===== -->
+  <g filter="url(#shadow)"><rect x="20" y="75" width="240" height="370" rx="12" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.6"/></g>
+  <text x="140" y="101" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#6A9BCC">Confounder (fork)</text>
+
+  <circle cx="140" cy="165" r="20" fill="#6A9BCC" fill-opacity="0.15" stroke="#6A9BCC" stroke-width="2"/>
+  <text x="140" y="171" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A9BCC">C</text>
+
+  <rect x="40" y="250" width="90" height="34" rx="17" fill="#FFFFFF" stroke="#6B6B6B" stroke-width="1.3"/>
+  <text x="85" y="271" text-anchor="middle" font-size="10" fill="#1A1A1A">Exposure A</text>
+
+  <rect x="150" y="250" width="90" height="34" rx="17" fill="#FFFFFF" stroke="#6B6B6B" stroke-width="1.3"/>
+  <text x="195" y="271" text-anchor="middle" font-size="10" fill="#1A1A1A">Outcome Y</text>
+
+  <line x1="126" y1="181" x2="87" y2="248" stroke="#1A1A1A" stroke-width="1.8" marker-end="url(#ar)"/>
+  <line x1="154" y1="181" x2="193" y2="248" stroke="#1A1A1A" stroke-width="1.8" marker-end="url(#ar)"/>
+  <line x1="130" y1="267" x2="150" y2="267" stroke="#6B6B6B" stroke-width="1.4" stroke-dasharray="3,2" marker-end="url(#ar-gray)"/>
+  <text x="140" y="300" text-anchor="middle" font-size="8" font-style="italic" fill="#6B6B6B">A⇢Y: effect we want</text>
+
+  <g><rect x="35" y="380" width="210" height="45" rx="8" fill="#788C5D" fill-opacity="0.12" stroke="#788C5D" stroke-width="1.3"/></g>
+  <text x="140" y="399" text-anchor="middle" font-size="11" font-weight="bold" fill="#788C5D">✓ Adjust for C</text>
+  <text x="140" y="415" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#788C5D">(controls confounding)</text>
+
+  <!-- ===== Panel 2: Mediator (chain) ===== -->
+  <g filter="url(#shadow)"><rect x="280" y="75" width="240" height="370" rx="12" fill="#FFFFFF" stroke="#C9944A" stroke-width="1.6"/></g>
+  <text x="400" y="101" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#C9944A">Mediator (chain)</text>
+
+  <rect x="300" y="228" width="56" height="34" rx="17" fill="#FFFFFF" stroke="#6B6B6B" stroke-width="1.3"/>
+  <text x="328" y="250" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">A</text>
+
+  <rect x="372" y="228" width="56" height="34" rx="17" fill="#C9944A" fill-opacity="0.15" stroke="#C9944A" stroke-width="2"/>
+  <text x="400" y="250" text-anchor="middle" font-size="14" font-weight="bold" fill="#C9944A">M</text>
+
+  <rect x="444" y="228" width="56" height="34" rx="17" fill="#FFFFFF" stroke="#6B6B6B" stroke-width="1.3"/>
+  <text x="472" y="250" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">Y</text>
+
+  <line x1="356" y1="245" x2="372" y2="245" stroke="#1A1A1A" stroke-width="1.8" marker-end="url(#ar)"/>
+  <line x1="428" y1="245" x2="444" y2="245" stroke="#1A1A1A" stroke-width="1.8" marker-end="url(#ar)"/>
+
+  <text x="328" y="280" text-anchor="middle" font-size="7.5" fill="#6B6B6B">Exposure A</text>
+  <text x="400" y="280" text-anchor="middle" font-size="7.5" font-weight="bold" fill="#C9944A">Mediator M</text>
+  <text x="472" y="280" text-anchor="middle" font-size="7.5" fill="#6B6B6B">Outcome Y</text>
+
+  <text x="400" y="305" text-anchor="middle" font-size="8" font-style="italic" fill="#6B6B6B">A affects M, M affects Y</text>
+
+  <g><rect x="295" y="380" width="210" height="45" rx="8" fill="#C9944A" fill-opacity="0.12" stroke="#C9944A" stroke-width="1.3"/></g>
+  <text x="400" y="399" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#C9944A">Total effect → don't adjust M</text>
+  <text x="400" y="415" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#C9944A">Direct effect → do adjust</text>
+
+  <!-- ===== Panel 3: Collider ===== -->
+  <g filter="url(#shadow)"><rect x="540" y="75" width="240" height="370" rx="12" fill="#FFFFFF" stroke="#D94452" stroke-width="1.6"/></g>
+  <text x="660" y="101" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#D94452">Collider (two arrows in)</text>
+
+  <rect x="560" y="130" width="90" height="34" rx="17" fill="#FFFFFF" stroke="#6B6B6B" stroke-width="1.3"/>
+  <text x="605" y="151" text-anchor="middle" font-size="10" fill="#1A1A1A">Exposure A</text>
+
+  <rect x="670" y="130" width="90" height="34" rx="17" fill="#FFFFFF" stroke="#6B6B6B" stroke-width="1.3"/>
+  <text x="715" y="151" text-anchor="middle" font-size="10" fill="#1A1A1A">Outcome Y</text>
+
+  <circle cx="660" cy="260" r="20" fill="#D94452" fill-opacity="0.15" stroke="#D94452" stroke-width="2"/>
+  <text x="660" y="266" text-anchor="middle" font-size="14" font-weight="bold" fill="#D94452">K</text>
+
+  <line x1="605" y1="164" x2="645" y2="243" stroke="#1A1A1A" stroke-width="1.8" marker-end="url(#ar)"/>
+  <line x1="715" y1="164" x2="675" y2="243" stroke="#1A1A1A" stroke-width="1.8" marker-end="url(#ar)"/>
+  <text x="660" y="310" text-anchor="middle" font-size="8" font-style="italic" fill="#6B6B6B">Both arrows point into K</text>
+
+  <g><rect x="555" y="380" width="210" height="45" rx="8" fill="#D94452" fill-opacity="0.12" stroke="#D94452" stroke-width="1.3"/></g>
+  <text x="660" y="399" text-anchor="middle" font-size="10" font-weight="bold" fill="#D94452">✗ Never adjust for K</text>
+  <text x="660" y="415" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#D94452">(creates spurious association)</text>
+</svg>

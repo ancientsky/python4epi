@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter>
+    <marker id="ar-dark" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1A1A1A"/></marker>
+    <marker id="ar-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#D94452"/></marker>
+  </defs>
+  <rect width="800" height="400" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#1A1A1A">Association ≠ Causation: Watch for the Real Culprit</text>
+  <text x="400" y="50" text-anchor="middle" font-size="11.5" fill="#6B6B6B">When two variables move together, it doesn't mean one causes the other</text>
+
+  <!-- Top confounder box -->
+  <g filter="url(#shadow)"><rect x="290" y="76" width="220" height="54" rx="10" fill="#D97757" fill-opacity="0.12" stroke="#D97757" stroke-width="1.8"/></g>
+  <text x="400" y="98" text-anchor="middle" font-size="16">☀️</text>
+  <text x="400" y="120" text-anchor="middle" font-size="13" font-weight="bold" fill="#D97757">Summer / Hot weather</text>
+
+  <!-- Solid arrows down to the two boxes -->
+  <line x1="342" y1="130" x2="204" y2="222" stroke="#1A1A1A" stroke-width="1.8" marker-end="url(#ar-dark)"/>
+  <line x1="458" y1="130" x2="596" y2="222" stroke="#1A1A1A" stroke-width="1.8" marker-end="url(#ar-dark)"/>
+  <text x="400" y="200" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#1A1A1A">The real common cause (confounder)</text>
+
+  <!-- Two lower boxes -->
+  <g filter="url(#shadow)"><rect x="110" y="224" width="180" height="56" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.8"/></g>
+  <text x="200" y="248" text-anchor="middle" font-size="16">🍦</text>
+  <text x="200" y="270" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">Ice cream sales ↑</text>
+
+  <g filter="url(#shadow)"><rect x="510" y="224" width="180" height="56" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.8"/></g>
+  <text x="600" y="248" text-anchor="middle" font-size="16">🌊</text>
+  <text x="600" y="270" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">Drowning deaths ↑</text>
+
+  <!-- Dashed spurious connector between the two boxes -->
+  <line x1="290" y1="252" x2="508" y2="252" stroke="#D94452" stroke-width="2" stroke-dasharray="7,4" marker-end="url(#ar-red)"/>
+  <text x="400" y="242" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#D94452">Looks correlated (but not causal)</text>
+
+  <!-- Footer -->
+  <g filter="url(#shadow)"><rect x="90" y="308" width="620" height="52" rx="10" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.3"/></g>
+  <text x="400" y="339" text-anchor="middle" font-size="12" fill="#1A1A1A">Counterfactual: remove ice cream — would drownings drop? → No</text>
+</svg>

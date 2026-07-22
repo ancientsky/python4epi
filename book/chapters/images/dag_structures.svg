@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 470" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1A1A1A"/></marker>
+    <marker id="ar-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6B6B6B"/></marker>
+  </defs>
+  <rect width="800" height="470" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">DAG 三種結構：什麼該調整、什麼千萬別調整</text>
+  <text x="400" y="50" text-anchor="middle" font-size="12" fill="#6B6B6B">看懂三種結構，才知道該放行還是該擋下</text>
+
+  <!-- ===== Panel 1: Confounder (fork) ===== -->
+  <g filter="url(#shadow)"><rect x="20" y="75" width="240" height="370" rx="12" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.6"/></g>
+  <text x="140" y="101" text-anchor="middle" font-size="13" font-weight="bold" fill="#6A9BCC">干擾 Confounder（fork）</text>
+
+  <circle cx="140" cy="165" r="20" fill="#6A9BCC" fill-opacity="0.15" stroke="#6A9BCC" stroke-width="2"/>
+  <text x="140" y="171" text-anchor="middle" font-size="14" font-weight="bold" fill="#6A9BCC">C</text>
+
+  <rect x="40" y="250" width="80" height="34" rx="17" fill="#FFFFFF" stroke="#6B6B6B" stroke-width="1.3"/>
+  <text x="80" y="271" text-anchor="middle" font-size="11" fill="#1A1A1A">暴露 A</text>
+
+  <rect x="160" y="250" width="80" height="34" rx="17" fill="#FFFFFF" stroke="#6B6B6B" stroke-width="1.3"/>
+  <text x="200" y="271" text-anchor="middle" font-size="11" fill="#1A1A1A">結果 Y</text>
+
+  <line x1="128" y1="181" x2="82" y2="248" stroke="#1A1A1A" stroke-width="1.8" marker-end="url(#ar)"/>
+  <line x1="152" y1="181" x2="198" y2="248" stroke="#1A1A1A" stroke-width="1.8" marker-end="url(#ar)"/>
+  <line x1="120" y1="267" x2="160" y2="267" stroke="#6B6B6B" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ar-gray)"/>
+  <text x="140" y="300" text-anchor="middle" font-size="8.5" font-style="italic" fill="#6B6B6B">A⇢Y：想估的效應</text>
+
+  <g><rect x="35" y="380" width="210" height="45" rx="8" fill="#788C5D" fill-opacity="0.12" stroke="#788C5D" stroke-width="1.3"/></g>
+  <text x="140" y="407" text-anchor="middle" font-size="11" font-weight="bold" fill="#788C5D">✓ C 要調整（控制干擾）</text>
+
+  <!-- ===== Panel 2: Mediator (chain) ===== -->
+  <g filter="url(#shadow)"><rect x="280" y="75" width="240" height="370" rx="12" fill="#FFFFFF" stroke="#C9944A" stroke-width="1.6"/></g>
+  <text x="400" y="101" text-anchor="middle" font-size="13" font-weight="bold" fill="#C9944A">中介 Mediator（chain）</text>
+
+  <rect x="300" y="228" width="56" height="34" rx="17" fill="#FFFFFF" stroke="#6B6B6B" stroke-width="1.3"/>
+  <text x="328" y="250" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">A</text>
+
+  <rect x="372" y="228" width="56" height="34" rx="17" fill="#C9944A" fill-opacity="0.15" stroke="#C9944A" stroke-width="2"/>
+  <text x="400" y="250" text-anchor="middle" font-size="14" font-weight="bold" fill="#C9944A">M</text>
+
+  <rect x="444" y="228" width="56" height="34" rx="17" fill="#FFFFFF" stroke="#6B6B6B" stroke-width="1.3"/>
+  <text x="472" y="250" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">Y</text>
+
+  <line x1="356" y1="245" x2="372" y2="245" stroke="#1A1A1A" stroke-width="1.8" marker-end="url(#ar)"/>
+  <line x1="428" y1="245" x2="444" y2="245" stroke="#1A1A1A" stroke-width="1.8" marker-end="url(#ar)"/>
+
+  <text x="328" y="280" text-anchor="middle" font-size="8.5" fill="#6B6B6B">暴露 A</text>
+  <text x="400" y="280" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#C9944A">中介 M</text>
+  <text x="472" y="280" text-anchor="middle" font-size="8.5" fill="#6B6B6B">結果 Y</text>
+
+  <text x="400" y="305" text-anchor="middle" font-size="8.5" font-style="italic" fill="#6B6B6B">A 影響 M，M 再影響 Y</text>
+
+  <g><rect x="295" y="380" width="210" height="45" rx="8" fill="#C9944A" fill-opacity="0.12" stroke="#C9944A" stroke-width="1.3"/></g>
+  <text x="400" y="399" text-anchor="middle" font-size="10" font-weight="bold" fill="#C9944A">總效應 → 不要調整 M</text>
+  <text x="400" y="415" text-anchor="middle" font-size="10" font-weight="bold" fill="#C9944A">直接效應 → 才調整</text>
+
+  <!-- ===== Panel 3: Collider ===== -->
+  <g filter="url(#shadow)"><rect x="540" y="75" width="240" height="370" rx="12" fill="#FFFFFF" stroke="#D94452" stroke-width="1.6"/></g>
+  <text x="660" y="101" text-anchor="middle" font-size="13" font-weight="bold" fill="#D94452">碰撞 Collider（兩箭頭指入）</text>
+
+  <rect x="560" y="130" width="80" height="34" rx="17" fill="#FFFFFF" stroke="#6B6B6B" stroke-width="1.3"/>
+  <text x="600" y="151" text-anchor="middle" font-size="11" fill="#1A1A1A">暴露 A</text>
+
+  <rect x="680" y="130" width="80" height="34" rx="17" fill="#FFFFFF" stroke="#6B6B6B" stroke-width="1.3"/>
+  <text x="720" y="151" text-anchor="middle" font-size="11" fill="#1A1A1A">結果 Y</text>
+
+  <circle cx="660" cy="260" r="20" fill="#D94452" fill-opacity="0.15" stroke="#D94452" stroke-width="2"/>
+  <text x="660" y="266" text-anchor="middle" font-size="14" font-weight="bold" fill="#D94452">K</text>
+
+  <line x1="600" y1="164" x2="645" y2="243" stroke="#1A1A1A" stroke-width="1.8" marker-end="url(#ar)"/>
+  <line x1="720" y1="164" x2="675" y2="243" stroke="#1A1A1A" stroke-width="1.8" marker-end="url(#ar)"/>
+  <text x="660" y="310" text-anchor="middle" font-size="8.5" font-style="italic" fill="#6B6B6B">兩條箭頭都指入 K</text>
+
+  <g><rect x="555" y="380" width="210" height="45" rx="8" fill="#D94452" fill-opacity="0.12" stroke="#D94452" stroke-width="1.3"/></g>
+  <text x="660" y="407" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#D94452">✗ K 千萬不要調整（會製造假關聯）</text>
+</svg>

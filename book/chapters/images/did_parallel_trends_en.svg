@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 410" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter>
+  </defs>
+  <rect width="800" height="410" fill="#FAF8F3" rx="12"/>
+
+  <text x="400" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#1A1A1A">Difference-in-Differences: Did the Intervention Actually Work?</text>
+  <text x="400" y="50" text-anchor="middle" font-size="11.5" fill="#6B6B6B">Look at the trend lines, not just the before/after gap</text>
+
+  <g filter="url(#shadow)"><rect x="40" y="78" width="720" height="312" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.5"/></g>
+
+  <!-- axes -->
+  <line x1="100" y1="105" x2="100" y2="355" stroke="#1A1A1A" stroke-width="1"/>
+  <line x1="100" y1="355" x2="740" y2="355" stroke="#1A1A1A" stroke-width="1"/>
+  <text x="740" y="374" text-anchor="end" font-size="10.5" fill="#6B6B6B">Time →</text>
+  <text x="85" y="230" text-anchor="middle" font-size="9.5" fill="#6B6B6B" transform="rotate(-90,85,230)">Outcome measure</text>
+
+  <!-- intervention line -->
+  <line x1="420" y1="105" x2="420" y2="355" stroke="#6B6B6B" stroke-width="1.4" stroke-dasharray="4,3"/>
+  <text x="420" y="94" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#6B6B6B">Intervention</text>
+
+  <!-- parallel trends label (pre-period) -->
+  <text x="250" y="270" text-anchor="middle" font-size="10" font-weight="bold" fill="#788C5D">Parallel trends ✓</text>
+
+  <!-- control line (flat-ish) -->
+  <path d="M 100 300 L 740 268" fill="none" stroke="#6A9BCC" stroke-width="2.3"/>
+
+  <!-- treatment pre-period (parallel to control) -->
+  <path d="M 100 320 L 420 304" fill="none" stroke="#D97757" stroke-width="2.3"/>
+  <!-- treatment post-period (actual, drops) -->
+  <path d="M 420 304 L 740 346" fill="none" stroke="#D97757" stroke-width="2.3"/>
+  <!-- counterfactual (dashed extension of pre-trend) -->
+  <path d="M 420 304 L 740 288" fill="none" stroke="#D97757" stroke-width="2" stroke-dasharray="6,4" opacity="0.75"/>
+
+  <!-- DiD bracket -->
+  <line x1="680" y1="291" x2="680" y2="338" stroke="#1A1A1A" stroke-width="1.6"/>
+  <line x1="676" y1="291" x2="684" y2="291" stroke="#1A1A1A" stroke-width="1.6"/>
+  <line x1="676" y1="338" x2="684" y2="338" stroke="#1A1A1A" stroke-width="1.6"/>
+  <text x="688" y="318" text-anchor="start" font-size="10.5" font-weight="bold" fill="#D97757">DiD effect</text>
+
+  <!-- legend -->
+  <g filter="url(#shadow)"><rect x="595" y="92" width="150" height="72" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.2"/></g>
+  <line x1="608" y1="110" x2="628" y2="110" stroke="#D97757" stroke-width="2.5"/>
+  <text x="634" y="114" font-size="9" fill="#1A1A1A">Treatment</text>
+  <line x1="608" y1="130" x2="628" y2="130" stroke="#6A9BCC" stroke-width="2.5"/>
+  <text x="634" y="134" font-size="9" fill="#1A1A1A">Control</text>
+  <line x1="608" y1="150" x2="628" y2="150" stroke="#D97757" stroke-width="2" stroke-dasharray="4,3" opacity="0.75"/>
+  <text x="634" y="154" font-size="9" fill="#1A1A1A">Counterfactual</text>
+</svg>
