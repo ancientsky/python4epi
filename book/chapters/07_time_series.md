@@ -8,7 +8,7 @@
 >
 > 「**明天**會不會又是一個高峰日？要不要提前啟動警報？」
 
-第一個問題要**連續數字**的預測（下週的病例數），第二個問題要**是/否的訊號**（明天是不是高峰）。這兩種需求用同一個滾動平均可能不夠——我們要比較**六種模型**，看誰最適合。
+第一個問題要**連續數字**的預測（下週的病例數），第二個問題要**是/否的訊號**（明天是不是高峰）。這兩種需求用同一個滾動平均可能不夠——我們要比較**七種模型**，看誰最適合。
 
 這一章的主軸：**從最簡單的 rolling mean 一路走到 ARIMA/SARIMA**，用護理之家資料示範短期預測，用 90 天合成類流感資料示範長期 + 週期預測。
 
@@ -21,11 +21,12 @@
 - 用 **Negative Binomial regression** 處理過度離散（overdispersion）
 - 用 **Logistic regression** 做「高峰日警報」二元預測
 - 用 **ARIMA / SARIMA** 在較長序列上捕捉趨勢 + 週期
-- 用 **MAE / AIC** 系統性比較六種模型
+- 用 **Prophet** 自動拆解趨勢/週期/假日並產生帶不確定區間的預測
+- 用 **MAE / AIC** 系統性比較七種模型
 
 ## 🔮 超白話特別篇：用「珍奶店老闆的水晶球」看懂時間序列預測
 
-> ARIMA、SARIMA、自相關、平穩性……一堆名詞是不是看得頭很痛？別怕。這一段先把疫情放一邊，改用一個超接地氣的角色——**一位想預測明天要賣幾杯的珍奶店老闆**——把時間序列預測整套邏輯講到讓國中生也會點頭。看完再回頭看下面那六種模型，你會發現：它們全都在做老闆每天在做的事！
+> ARIMA、SARIMA、自相關、平穩性……一堆名詞是不是看得頭很痛？別怕。這一段先把疫情放一邊，改用一個超接地氣的角色——**一位想預測明天要賣幾杯的珍奶店老闆**——把時間序列預測整套邏輯講到讓國中生也會點頭。看完再回頭看下面那七種模型，你會發現：它們全都在做老闆每天在做的事！
 
 ### 老闆的煩惱：明天到底要備多少料？
 
@@ -149,7 +150,7 @@ print(f"上週同一天法 MAE = {mae_seasonal:.1f} 杯  ← 抓住『週六爆�
 | 蓋住上週、預測再對答案 | 訓練／測試切分 + MAE |
 | 備多少珍珠、排幾個店員 | 準備多少病床、多少醫護人力 |
 
-你剛剛幫老闆學會的每一招——滾動平均、自迴歸、週期、訓練/測試——**就是本章 Part A 與 Part B 在疫情資料上做的事**。現在往下看那六種模型的大比拼，是不是突然變親切了？😉
+你剛剛幫老闆學會的每一招——滾動平均、自迴歸、週期、訓練/測試——**就是本章 Part A 與 Part B 在疫情資料上做的事**。現在往下看那七種模型的大比拼，是不是突然變親切了？😉
 
 ---
 
@@ -185,6 +186,8 @@ print(f"上週同一天法 MAE = {mae_seasonal:.1f} 杯  ← 抓住『週六爆�
 
 **時間序列預測方法地圖**：六個模型從簡單到複雜排開。資料越少 → 越左邊；需要捕捉週期 → 最右邊。每張卡片告訴你「最少要幾天資料」「能不能給信賴區間」「適合哪種情境」。
 ```
+
+> 📌 本章後面還會加碼第七種選項——**Prophet**：概念上介於「好上手」與「自動抓週期」之間，用**趨勢＋週期＋假日**三塊積木取代手動選 `(p,d,q)(P,D,Q,s)`，是免調參版的 SARIMA 替代方案。
 
 ---
 
@@ -634,9 +637,80 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 
 ---
 
-## Step 11: 模型大比拼
+## Step 11: Prophet —— Meta 的「自動拆積木」水晶球
 
-把前面六個模型的 MAE、資料需求、能不能給信賴區間全部攤開放進同一張表，方便直接比較。
+Prophet 是 Meta 開源的預測工具，把序列**自動拆成 趨勢(trend) + 週期(seasonality) + 假日(holidays)** 三塊積木相加，只要 `ds`/`y` 兩欄、幾乎免調參，還自帶不確定區間。
+
+```{figure} images/prophet_decomposition.svg
+:name: fig-prophet-decomposition
+:alt: Prophet 把觀測序列自動拆成趨勢加週期加假日三塊積木相加，並輸出帶不確定區間的預測
+:width: 100%
+
+Prophet 的核心：觀測 = 趨勢 + 週期 + 假日，還附一條不確定區間。
+```
+
+```python
+import logging
+logging.getLogger("cmdstanpy").setLevel(logging.ERROR)  # 關掉 Stan 的雜訊 log
+from prophet import Prophet
+
+# Prophet 只吃兩欄：ds（日期）+ y（值）
+pdf = synth.reset_index()
+pdf.columns = ["ds", "y"]
+p_train = pdf.iloc[:-7]                    # 跟前面同一個 train/test 切分
+
+m = Prophet(weekly_seasonality=True, yearly_seasonality=False,
+            daily_seasonality=False, interval_width=0.9)
+m.fit(p_train)                             # 自動偵測趨勢變點 + 擬合週期
+
+future = m.make_future_dataframe(periods=7)   # 往後展 7 天
+forecast = m.predict(future)
+yhat = forecast["yhat"].iloc[-7:].values
+mae_prophet = mean_absolute_error(test.values, yhat)
+print(f"Prophet:  MAE={mae_prophet:.3f}  (fit 幾乎不用調參，還自帶不確定區間)")
+print(forecast[["ds", "yhat", "yhat_lower", "yhat_upper"]].tail(7).to_string(index=False))
+
+# 視覺化：預測 + 90% 不確定區間
+fig, ax = plt.subplots(figsize=(10, 4))
+ax.plot(train.index[-30:], train.values[-30:], color="#6B6B6B",
+        linewidth=1.2, label="訓練（最後 30 天）")
+ax.plot(test.index, test.values, color="#1A1A1A", linewidth=2,
+        marker="o", markersize=5, label="實際")
+ax.plot(test.index, yhat, color="#788C5D", linewidth=1.8,
+        marker="D", markersize=5, linestyle="--", label=f"Prophet (MAE={mae_prophet:.2f})")
+ax.fill_between(test.index, forecast["yhat_lower"].iloc[-7:].values,
+                forecast["yhat_upper"].iloc[-7:].values,
+                color="#788C5D", alpha=0.2, label="90% 不確定區間")
+ax.set_title("Prophet 未來 7 天預測（含不確定區間）", fontweight="bold")
+ax.set_xlabel("日期"); ax.set_ylabel("每日通報數")
+ax.legend(loc="upper left"); ax.set_ylim(bottom=0)
+ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
+fig.autofmt_xdate(); plt.tight_layout(); plt.show()
+```
+
+> **逐行拆解**：
+>
+> | 這行程式 | 在做什麼 |
+> |---|---|
+> | `logging.getLogger("cmdstanpy").setLevel(logging.ERROR)` | Prophet 底層用 Stan 做貝氏估計，預設會印一堆訓練過程訊息；這行把雜訊關掉 |
+> | `pdf.columns = ["ds", "y"]` | **Prophet 只認這兩個欄名**：`ds`（日期，datestamp）和 `y`（要預測的值）——改完欄名它才吃得下 |
+> | `Prophet(weekly_seasonality=True, yearly_seasonality=False, daily_seasonality=False, interval_width=0.9)` | 打開「每週週期」偵測（我們的資料週期 s=7）、關掉不需要的年/日週期；`interval_width=0.9` 設定輸出 **90% 不確定區間** |
+> | `m.fit(p_train)` | 餵訓練資料，Prophet 自動拆解趨勢 + 週期（連趨勢轉折點都會自動抓） |
+> | `m.make_future_dataframe(periods=7)` | 在既有日期後面**再接 7 天**空白列，準備讓模型往未來預測 |
+> | `m.predict(future)` | 對每一天輸出 `yhat`（預測值）+ `yhat_lower` / `yhat_upper`（不確定區間上下界） |
+> | `forecast["yhat"].iloc[-7:]` | 取出最後 7 天（對應蓋起來的測試集）的預測值，跟其他模型用同一把尺（MAE）比較 |
+>
+> 🔑 **`ds`/`y` 是 Prophet 的唯一規矩**：不用手動做 lag、不用選 `(p,d,q)`，只要把日期欄改名 `ds`、目標欄改名 `y`，其餘全部交給模型自動處理。
+
+💡 **準度沒有更神，但省下一大堆調參功夫**：Prophet 在這條序列上 **MAE ≈ 0.774**，跟**調好的 SARIMA（0.770）幾乎打平**——但 SARIMA 要自己選 `(p,d,q)(P,D,Q,s)`、還要處理平穩性，Prophet 只要兩欄資料就能上手。Prophet 真正的優勢是**好上手 + 自動抓週期/假日/變點 + 免費附不確定區間**，不是準度更高。
+
+⚠️ **Prophet 不是萬靈丹**：它是**加法模型**，假設未來是「已學到的趨勢＋週期」的延續；疫情爆發期那種非線性回饋（像 SEIR 的傳播動力）它抓不到，資料太短（不到約 2 個週期）也學不動——它加入工具箱的是**誠實的選項**，不是更準的水晶球。
+
+---
+
+## Step 12: 模型大比拼
+
+把前面七個模型的 MAE、資料需求、能不能給信賴區間全部攤開放進同一張表，方便直接比較。
 
 ```{raw} html
 <div class="video-card">
@@ -661,6 +735,8 @@ comparison = pd.DataFrame([
      "最少資料": "30 天", "捕捉週期": "弱",    "信賴區間": "是"},
     {"model": "⑥ SARIMA(1,1,1)(1,1,1,7)",  "資料集": "synth 90d", "MAE": mae_sarima,
      "最少資料": "60 天", "捕捉週期": "強",    "信賴區間": "是"},
+    {"model": "⑦ Prophet",                 "資料集": "synth 90d", "MAE": mae_prophet,
+     "最少資料": "~14 天", "捕捉週期": "強(自動)", "信賴區間": "是"},
 ])
 print(comparison.to_string(index=False))
 ```
@@ -673,8 +749,9 @@ print(comparison.to_string(index=False))
 - **需要是/否警報**（要不要啟動應變層級）→ Logistic regression
 - **中長期監測**（> 一個月、無明顯週期）→ ARIMA
 - **類流感、每週監測**（有明顯週循環）→ SARIMA
+- **要快速上手、想要趨勢/週期/假日自動拆解 + 不確定區間** → Prophet
 
-## Step 12: 發病 vs 住院曲線（Lag 效應）
+## Step 13: 發病 vs 住院曲線（Lag 效應）
 
 這裡疊圖比較發病曲線和住院曲線，看住院高峰比發病高峰晚了幾天。
 
@@ -734,6 +811,7 @@ print(f"發病高峰 → 住院高峰 lag = {lag_days} 天")
 5. **過度配適**：資料 17 天還想訓練 SARIMA → 參數比觀測值還多
 6. **忽略平穩性**：不做 ADF test 就套 ARIMA → d 值亂猜
 7. **ARIMA 階數亂試**：隨便選 (p,d,q) 不看 AIC / ACF / PACF → 結果碰運氣
+8. **以為 Prophet 一定比 ARIMA/SARIMA 準**：它強在好上手與自動化，準度是與調好的 SARIMA 相當，不是天生更準
 
 ## 下一步
 

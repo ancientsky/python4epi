@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 500" font-family="system-ui, -apple-system, sans-serif">
+  <defs><filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter></defs>
+  <rect width="880" height="500" fill="#FAF8F3" rx="12"/>
+  <text x="440" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">Prophet：把一條曲線自動拆成積木</text>
+  <text x="440" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">觀測 = 趨勢(trend) + 週期(seasonality) + 假日(holidays)，還自帶不確定區間</text>
+
+  <!-- ============ Left column: 3 component panels ============ -->
+
+  <!-- Panel A: trend -->
+  <g filter="url(#shadow)"><rect x="30" y="75" width="210" height="110" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.6"/></g>
+  <text x="135" y="95" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#6A9BCC">📈 ① 趨勢 trend</text>
+  <path d="M 44 152 L 100 143 L 130 136 L 180 119 L 226 111" fill="none" stroke="#6A9BCC" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="130" cy="136" r="3.5" fill="#6A9BCC"/>
+  <text x="135" y="170" text-anchor="middle" font-size="8" fill="#6A9BCC">● 變點 changepoint</text>
+
+  <!-- Panel B: weekly seasonality -->
+  <g filter="url(#shadow)"><rect x="30" y="201" width="210" height="110" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.6"/></g>
+  <text x="135" y="221" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#788C5D">🔁 ② 週期 weekly</text>
+  <path d="M 44 255 C 55 243 66 243 77 255 C 88 267 99 267 110 255 C 121 243 132 243 143 255 C 154 267 165 267 176 255 C 187 243 198 243 209 255 C 215 249 220 252 226 255" fill="none" stroke="#788C5D" stroke-width="2" stroke-linecap="round"/>
+  <text x="135" y="296" text-anchor="middle" font-size="8" fill="#788C5D">7 天一循環 weekly cycle</text>
+
+  <!-- Panel C: holidays -->
+  <g filter="url(#shadow)"><rect x="30" y="327" width="210" height="110" rx="10" fill="#FFFFFF" stroke="#D97757" stroke-width="1.6"/></g>
+  <text x="135" y="347" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#D97757">🎉 ③ 假日 holidays</text>
+  <path d="M 44 395 L 95 395 L 106 362 L 117 395 L 226 395" fill="none" stroke="#D97757" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="106" cy="362" r="3" fill="#D97757"/>
+  <text x="135" y="422" text-anchor="middle" font-size="8" fill="#D97757">▲ 連假／介入</text>
+
+  <!-- "+" between panels -->
+  <text x="135" y="200" text-anchor="middle" font-size="20" font-weight="bold" fill="#6B6B6B">+</text>
+  <text x="135" y="326" text-anchor="middle" font-size="20" font-weight="bold" fill="#6B6B6B">+</text>
+
+  <!-- "=" flowing into the result -->
+  <text x="270" y="266" text-anchor="middle" font-size="30" font-weight="bold" fill="#1A1A1A">=</text>
+
+  <!-- ============ Right panel: reconstructed forecast ============ -->
+  <g filter="url(#shadow)"><rect x="310" y="75" width="540" height="362" rx="12" fill="#FFFFFF" stroke="#E8E5DF"/></g>
+  <text x="580" y="103" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">🔮 ④ 預測 forecast</text>
+  <text x="580" y="121" text-anchor="middle" font-size="10" fill="#6B6B6B">history 實線・forecast 虛線，外圍是不確定區間</text>
+
+  <!-- uncertainty band (drawn first, sits behind the curve) -->
+  <path d="M610,235 L656,224 L695,187 L732,181 L772,146 L820,125 L820,195 L772,202 L732,223 L695,217 L656,240 L610,235 Z" fill="#6A9BCC" fill-opacity="0.18" stroke="none"/>
+
+  <!-- today divider -->
+  <line x1="610" y1="140" x2="610" y2="330" stroke="#6B6B6B" stroke-width="1.3" stroke-dasharray="4,3"/>
+  <text x="616" y="152" text-anchor="start" font-size="9" fill="#6B6B6B">今天 / today</text>
+
+  <!-- history (solid): trend + weekly wobble + one holiday spike -->
+  <path d="M 340 300 C 360 292 375 288 390 292 C 405 296 415 303 428 298 C 440 293 450 275 462 255 C 468 240 474 222 480 218 C 486 224 493 248 502 262 C 516 271 530 266 545 257 C 560 249 575 246 590 240 C 598 237 604 236 610 235" fill="none" stroke="#1A1A1A" stroke-width="2.2" stroke-linecap="round"/>
+
+  <!-- forecast (dashed): continues trend + weekly wobble -->
+  <path d="M 610 235 C 628 228 642 240 656 232 C 670 224 680 208 695 202 C 708 197 718 210 732 202 C 746 194 758 180 772 174 C 786 168 798 164 810 161 L 820 160" fill="none" stroke="#1A1A1A" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="6,4"/>
+
+  <!-- legend -->
+  <line x1="340" y1="358" x2="364" y2="358" stroke="#1A1A1A" stroke-width="2.2"/>
+  <text x="372" y="362" font-size="10" fill="#1A1A1A">歷史觀測 history（實線）</text>
+  <line x1="340" y1="381" x2="364" y2="381" stroke="#1A1A1A" stroke-width="2.2" stroke-dasharray="6,4"/>
+  <text x="372" y="385" font-size="10" fill="#1A1A1A">預測 forecast（虛線）</text>
+  <rect x="340" y="397" width="24" height="12" fill="#6A9BCC" fill-opacity="0.3"/>
+  <text x="372" y="406" font-size="10" fill="#1A1A1A">不確定區間 uncertainty interval</text>
+
+  <text x="440" y="462" text-anchor="middle" font-size="11" fill="#1A1A1A">好上手、自動抓趨勢/週期/假日、給不確定區間——但它是加法模型，不是萬靈丹</text>
+</svg>

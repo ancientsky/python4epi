@@ -8,7 +8,7 @@ The Legionnaires' disease outbreak at Songbai Nursing Home has entered its secon
 >
 > "Will **tomorrow** be another peak day? Should we trigger an alert early?"
 
-The first question asks for a **continuous number** forecast (next week's case count); the second asks for a **yes/no signal** (whether tomorrow is a peak). A single rolling average may not be enough for both needs—so we'll compare **six models** to see which fits best.
+The first question asks for a **continuous number** forecast (next week's case count); the second asks for a **yes/no signal** (whether tomorrow is a peak). A single rolling average may not be enough for both needs—so we'll compare **seven models** to see which fits best.
 
 The main thread of this chapter: **going from the simplest rolling mean all the way to ARIMA/SARIMA**, using the nursing home data to demonstrate short-term forecasting, and using 90 days of synthetic influenza-like data to demonstrate long-term + seasonal forecasting.
 
@@ -21,11 +21,12 @@ The main thread of this chapter: **going from the simplest rolling mean all the 
 - Handling overdispersion with **Negative Binomial regression**
 - Making "peak day alert" binary predictions with **Logistic regression**
 - Capturing trend + seasonality on longer series with **ARIMA / SARIMA**
-- Systematically comparing six models with **MAE / AIC**
+- Automatically decomposing trend/seasonality/holidays and producing forecasts with uncertainty intervals using **Prophet**
+- Systematically comparing seven models with **MAE / AIC**
 
 ## 🔮 Super Simple Special: Understanding Time-Series Forecasting with a "Bubble-Tea Shop Owner's Crystal Ball"
 
-> ARIMA, SARIMA, autocorrelation, stationarity... does that pile of jargon make your head spin? Don't be scared. This section sets the outbreak aside for a moment and brings in a super down-to-earth character—**a bubble-tea shop owner trying to predict how many cups she'll sell tomorrow**—to walk through the entire logic of time-series forecasting in a way that'll make even a 7th grader nod along. Once you're done, go back and look at the six models below—you'll notice they're all just doing what the shop owner does every single day!
+> ARIMA, SARIMA, autocorrelation, stationarity... does that pile of jargon make your head spin? Don't be scared. This section sets the outbreak aside for a moment and brings in a super down-to-earth character—**a bubble-tea shop owner trying to predict how many cups she'll sell tomorrow**—to walk through the entire logic of time-series forecasting in a way that'll make even a 7th grader nod along. Once you're done, go back and look at the seven models below—you'll notice they're all just doing what the shop owner does every single day!
 
 ### The Owner's Dilemma: How Much Should I Prep for Tomorrow?
 
@@ -149,7 +150,7 @@ Now swap the bubble-tea shop for the nursing home:
 | Cover last week, forecast, then check the answer | Train/test split + MAE |
 | How many pearls to prep, how many staff to schedule | How many hospital beds and how much staff to prepare |
 
-Every move you just helped the owner learn—rolling average, autoregression, seasonality, train/test—**is exactly what Part A and Part B of this chapter do with the outbreak data**. Now scroll down and look at that big showdown between six models—doesn't it suddenly feel a lot friendlier? 😉
+Every move you just helped the owner learn—rolling average, autoregression, seasonality, train/test—**is exactly what Part A and Part B of this chapter do with the outbreak data**. Now scroll down and look at that big showdown between seven models—doesn't it suddenly feel a lot friendlier? 😉
 
 ---
 
@@ -185,6 +186,8 @@ Every move you just helped the owner learn—rolling average, autoregression, se
 
 **Map of time series forecasting methods**: six models laid out from simple to complex. Less data → further left; need to capture seasonality → furthest right. Each card tells you "how many days of data at minimum," "whether it can give confidence intervals," and "which situation it suits."
 ```
+
+> 📌 Later in this chapter we add a seventh option—**Prophet**: conceptually it sits between "easy to pick up" and "automatically captures seasonality," replacing manual selection of `(p,d,q)(P,D,Q,s)` with three building blocks—**trend + seasonality + holidays**—making it a tuning-free alternative to SARIMA.
 
 ---
 
@@ -634,9 +637,80 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 
 ---
 
-## Step 11: Model Showdown
+## Step 11: Prophet —— Meta's "Auto-Decompose" Crystal Ball
 
-This lays out the MAE, minimum data requirement, and whether a confidence interval is available for all six models in one table, so you can compare them directly.
+Prophet is Meta's open-source forecasting tool. It **automatically decomposes** a series into three additive building blocks—**trend + seasonality + holidays**—needs only two columns (`ds`/`y`), requires almost no tuning, and comes with uncertainty intervals built in.
+
+```{figure} images/prophet_decomposition_en.svg
+:name: fig-prophet-decomposition
+:alt: Prophet automatically decomposes an observed series into trend plus seasonality plus holidays, and outputs a forecast with an uncertainty interval
+:width: 100%
+
+Prophet's core idea: observed = trend + seasonality + holidays, plus an uncertainty interval.
+```
+
+```python
+import logging
+logging.getLogger("cmdstanpy").setLevel(logging.ERROR)  # Silence Stan's noisy logging
+from prophet import Prophet
+
+# Prophet only accepts two columns: ds (date) + y (value)
+pdf = synth.reset_index()
+pdf.columns = ["ds", "y"]
+p_train = pdf.iloc[:-7]                    # Same train/test split as before
+
+m = Prophet(weekly_seasonality=True, yearly_seasonality=False,
+            daily_seasonality=False, interval_width=0.9)
+m.fit(p_train)                             # Auto-detects trend changepoints + fits seasonality
+
+future = m.make_future_dataframe(periods=7)   # Extend 7 days into the future
+forecast = m.predict(future)
+yhat = forecast["yhat"].iloc[-7:].values
+mae_prophet = mean_absolute_error(test.values, yhat)
+print(f"Prophet:  MAE={mae_prophet:.3f}  (fitting needs almost no tuning, and comes with an uncertainty interval)")
+print(forecast[["ds", "yhat", "yhat_lower", "yhat_upper"]].tail(7).to_string(index=False))
+
+# Visualization: forecast + 90% uncertainty interval
+fig, ax = plt.subplots(figsize=(10, 4))
+ax.plot(train.index[-30:], train.values[-30:], color="#6B6B6B",
+        linewidth=1.2, label="Training (last 30 days)")
+ax.plot(test.index, test.values, color="#1A1A1A", linewidth=2,
+        marker="o", markersize=5, label="Actual")
+ax.plot(test.index, yhat, color="#788C5D", linewidth=1.8,
+        marker="D", markersize=5, linestyle="--", label=f"Prophet (MAE={mae_prophet:.2f})")
+ax.fill_between(test.index, forecast["yhat_lower"].iloc[-7:].values,
+                forecast["yhat_upper"].iloc[-7:].values,
+                color="#788C5D", alpha=0.2, label="90% uncertainty interval")
+ax.set_title("Prophet 7-day forecast (with uncertainty interval)", fontweight="bold")
+ax.set_xlabel("Date"); ax.set_ylabel("Daily case count")
+ax.legend(loc="upper left"); ax.set_ylim(bottom=0)
+ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
+fig.autofmt_xdate(); plt.tight_layout(); plt.show()
+```
+
+> **Line-by-line**:
+>
+> | This line | What it does |
+> |---|---|
+> | `logging.getLogger("cmdstanpy").setLevel(logging.ERROR)` | Prophet uses Stan under the hood for Bayesian estimation, which by default prints a flood of training-progress messages; this line silences that noise |
+> | `pdf.columns = ["ds", "y"]` | **Prophet only recognizes these two column names**: `ds` (date, datestamp) and `y` (the value to forecast)—only after renaming the columns will it accept the data |
+> | `Prophet(weekly_seasonality=True, yearly_seasonality=False, daily_seasonality=False, interval_width=0.9)` | Turns on weekly-seasonality detection (our data's cycle is s=7), turns off the yearly/daily seasonality we don't need; `interval_width=0.9` sets the output to a **90% uncertainty interval** |
+> | `m.fit(p_train)` | Feeds in the training data; Prophet automatically decomposes trend + seasonality (it even auto-detects trend changepoints) |
+> | `m.make_future_dataframe(periods=7)` | **Appends 7 more days** of blank rows after the existing dates, getting ready for the model to forecast into the future |
+> | `m.predict(future)` | For every day, outputs `yhat` (the forecast) plus `yhat_lower` / `yhat_upper` (the lower/upper bounds of the uncertainty interval) |
+> | `forecast["yhat"].iloc[-7:]` | Pulls out the forecast for the last 7 days (matching the held-out test set), to compare against the other models on the same scale (MAE) |
+>
+> 🔑 **`ds`/`y` are Prophet's only rule**: no manual lag features, no choosing `(p,d,q)`—just rename the date column to `ds` and the target column to `y`, and the model handles everything else automatically.
+
+💡 **Not more accurate, but it saves a mountain of tuning effort**: on this series, Prophet gets **MAE ≈ 0.774**, essentially tying **the tuned SARIMA (0.770)**—but SARIMA requires you to choose `(p,d,q)(P,D,Q,s)` yourself and deal with stationarity, while Prophet only needs two columns of data to get started. Prophet's real advantage is **being easy to pick up + automatically capturing seasonality/holidays/changepoints + free uncertainty intervals**, not higher accuracy.
+
+⚠️ **Prophet is not a silver bullet**: it's an **additive model** that assumes the future is a continuation of "the trend and seasonality it has already learned"; it can't catch the nonlinear feedback of an outbreak in full swing (like SEIR transmission dynamics), and it can't learn much from data shorter than roughly 2 cycles either—what it adds to your toolbox is an **honest option**, not a more accurate crystal ball.
+
+---
+
+## Step 12: Model Showdown
+
+This lays out the MAE, minimum data requirement, and whether a confidence interval is available for all seven models in one table, so you can compare them directly.
 
 ```{raw} html
 <div class="video-card">
@@ -661,6 +735,8 @@ comparison = pd.DataFrame([
      "min data": "30 days", "captures seasonality": "Weak",   "confidence interval": "Yes"},
     {"model": "⑥ SARIMA(1,1,1)(1,1,1,7)",  "dataset": "synth 90d", "MAE": mae_sarima,
      "min data": "60 days", "captures seasonality": "Strong", "confidence interval": "Yes"},
+    {"model": "⑦ Prophet",                 "dataset": "synth 90d", "MAE": mae_prophet,
+     "min data": "~14 days", "captures seasonality": "Strong (auto)", "confidence interval": "Yes"},
 ])
 print(comparison.to_string(index=False))
 ```
@@ -673,8 +749,9 @@ print(comparison.to_string(index=False))
 - **Need a yes/no alert** (whether to escalate the response level) → Logistic regression
 - **Medium-to-long-term surveillance** (> a month, no obvious cycle) → ARIMA
 - **Influenza-like, weekly surveillance** (obvious weekly cycle) → SARIMA
+- **Want to get started fast, and want trend/seasonality/holidays auto-decomposed + uncertainty intervals** → Prophet
 
-## Step 12: Onset vs Hospitalization Curve (Lag Effect)
+## Step 13: Onset vs Hospitalization Curve (Lag Effect)
 
 Here we overlay the onset curve and the hospitalization curve to see how many days the hospitalization peak lags behind the onset peak.
 
@@ -734,6 +811,7 @@ This lag is a **golden indicator for bed planning**: hospitalization demand only
 5. **Overfitting**: only 17 days of data yet wanting to train SARIMA → more parameters than observations
 6. **Ignoring stationarity**: applying ARIMA without an ADF test → guessing the d value blindly
 7. **Randomly trying ARIMA orders**: picking (p,d,q) arbitrarily without looking at AIC / ACF / PACF → results by luck
+8. **Assuming Prophet is always more accurate than ARIMA/SARIMA**: its strength is being easy to use and automated—its accuracy is on par with a well-tuned SARIMA, not inherently higher
 
 ## Next Step
 
