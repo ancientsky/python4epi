@@ -181,13 +181,13 @@ print(f"上週同一天法 MAE = {mae_seasonal:.1f} 杯  ← 抓住『週六爆�
 
 ```{figure} images/timeseries_method_map.svg
 :name: fig-timeseries-method-map
-:alt: 六種時間序列預測方法比較 —— rolling mean, Poisson+lag, Negative Binomial, Logistic, ARIMA, SARIMA
+:alt: 七種時間序列預測方法比較 —— rolling mean, Poisson+lag, Negative Binomial, Logistic, ARIMA, SARIMA, Prophet
 :width: 100%
 
-**時間序列預測方法地圖**：六個模型從簡單到複雜排開。資料越少 → 越左邊；需要捕捉週期 → 最右邊。每張卡片告訴你「最少要幾天資料」「能不能給信賴區間」「適合哪種情境」。
+**時間序列預測方法地圖**：七個模型從簡單到複雜排開，最下面整排的綠色寬卡是 **Prophet**（好上手的現代選項）。資料越少 → 越左邊；需要捕捉週期 → 最右邊。每張卡片告訴你「最少要幾天資料」「能不能給信賴區間」「適合哪種情境」。
 ```
 
-> 📌 本章後面還會加碼第七種選項——**Prophet**：概念上介於「好上手」與「自動抓週期」之間，用**趨勢＋週期＋假日**三塊積木取代手動選 `(p,d,q)(P,D,Q,s)`，是免調參版的 SARIMA 替代方案。
+> 📌 最下面那張綠色寬卡就是第七種——**Prophet**：用**趨勢＋週期＋假日**三塊積木取代手動選 `(p,d,q)(P,D,Q,s)`，是免調參版的 SARIMA 替代方案。本章 **Step 11** 會動手實作。
 
 ---
 

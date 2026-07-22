@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" font-family="system-ui, -apple-system, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 670" font-family="system-ui, -apple-system, sans-serif">
   <defs>
     <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
       <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/>
     </filter>
   </defs>
 
-  <rect width="800" height="520" fill="#FAF8F3" rx="12"/>
+  <rect width="800" height="670" fill="#FAF8F3" rx="12"/>
 
   <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">時間序列預測方法地圖 Time Series Method Map</text>
   <text x="400" y="54" text-anchor="middle" font-size="12" fill="#6B6B6B">依資料量和需求，選擇最合適的模型 (simple → complex)</text>
@@ -21,7 +21,7 @@
   <text x="720" y="88" text-anchor="end" font-size="11" fill="#6B6B6B">複雜 complex</text>
   <text x="400" y="125" text-anchor="middle" font-size="11" fill="#6B6B6B">需要的資料量與模型複雜度</text>
 
-  <!-- 6 method cards arranged in 2 rows × 3 cols -->
+  <!-- 7 method cards: 6 in 2 rows × 3 cols, plus a Prophet row -->
 
   <!-- Row 1: simple methods -->
   <g filter="url(#shadow)">
@@ -96,4 +96,20 @@
   <text x="545" y="445" font-size="10" fill="#6B6B6B">優：捕捉每週/每年規律</text>
   <text x="545" y="462" font-size="10" fill="#6B6B6B">缺：參數多、計算久</text>
   <text x="545" y="479" font-size="10" fill="#D97757" font-weight="bold">→ 類流感每週監測</text>
+
+  <!-- Row 3: Prophet (full-width, featured modern option) -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="510" width="740" height="140" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="2"/>
+  </g>
+  <rect x="30" y="510" width="740" height="36" rx="10" fill="#788C5D" fill-opacity="0.12"/>
+  <text x="400" y="534" text-anchor="middle" font-size="14" font-weight="bold" fill="#788C5D">⑦ Prophet — Meta 開源、自動拆解（好上手）</text>
+  <line x1="398" y1="558" x2="398" y2="636" stroke="#E8E5DF" stroke-width="1"/>
+  <text x="45" y="574" font-size="11" fill="#1A1A1A" font-weight="bold">自動拆解：趨勢 + 週期 + 假日</text>
+  <text x="45" y="594" font-size="11" fill="#6B6B6B">最少需要 <tspan font-weight="bold" fill="#1A1A1A">~14 天（約 2 週期）</tspan></text>
+  <text x="45" y="613" font-size="11" fill="#6B6B6B">週期性：✓✓（自動）　信賴區間：✓</text>
+  <text x="45" y="636" font-size="10" fill="#D97757" font-weight="bold">→ 快速上手的每日／每週監測預測</text>
+  <text x="416" y="574" font-size="10" fill="#6B6B6B">優：只要 ds / y 兩欄、幾乎免調參，</text>
+  <text x="416" y="590" font-size="10" fill="#6B6B6B">　　自動抓趨勢 / 週期 / 假日、自帶區間</text>
+  <text x="416" y="613" font-size="10" fill="#6B6B6B">缺：加法模型，抓不到爆發期的</text>
+  <text x="416" y="629" font-size="10" fill="#6B6B6B">　　非線性回饋（那要用 SEIR）</text>
 </svg>
