@@ -181,13 +181,13 @@ Every move you just helped the owner learn—rolling average, autoregression, se
 
 ```{figure} images/timeseries_method_map_en.svg
 :name: fig-timeseries-method-map
-:alt: Comparison of six time series forecasting methods — rolling mean, Poisson+lag, Negative Binomial, Logistic, ARIMA, SARIMA
+:alt: Comparison of seven time series forecasting methods — rolling mean, Poisson+lag, Negative Binomial, Logistic, ARIMA, SARIMA, Prophet
 :width: 100%
 
-**Map of time series forecasting methods**: six models laid out from simple to complex. Less data → further left; need to capture seasonality → furthest right. Each card tells you "how many days of data at minimum," "whether it can give confidence intervals," and "which situation it suits."
+**Map of time series forecasting methods**: seven models laid out from simple to complex — the full-width green card at the bottom is **Prophet** (the easy, modern option). Less data → further left; need to capture seasonality → furthest right. Each card tells you "how many days of data at minimum," "whether it can give confidence intervals," and "which situation it suits."
 ```
 
-> 📌 Later in this chapter we add a seventh option—**Prophet**: conceptually it sits between "easy to pick up" and "automatically captures seasonality," replacing manual selection of `(p,d,q)(P,D,Q,s)` with three building blocks—**trend + seasonality + holidays**—making it a tuning-free alternative to SARIMA.
+> 📌 The full-width green card at the bottom is that seventh option—**Prophet**: it replaces manual selection of `(p,d,q)(P,D,Q,s)` with three building blocks—**trend + seasonality + holidays**—a tuning-free alternative to SARIMA. **Step 11** walks through it hands-on.
 
 ---
 
