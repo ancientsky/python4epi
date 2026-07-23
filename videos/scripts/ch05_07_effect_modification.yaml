@@ -3,7 +3,8 @@ meta:
   concept: "effect_modification"
   title: "交互作用——暴露的影響因人而異"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch05_07_effect_modification"
   scene_class: "Ch05EffectModificationScene"
 

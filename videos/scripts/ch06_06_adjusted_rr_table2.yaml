@@ -3,7 +3,8 @@ meta:
   concept: "adjusted_rr_table2"
   title: "多變項 adjusted RR：打造漂亮的 Table 2"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch06_06_adjusted_rr_table2"
   scene_class: "Ch06AdjustedRrTable2Scene"
 

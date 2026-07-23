@@ -3,7 +3,8 @@ meta:
   concept: "generate_sitrep"
   title: "函式化——把 SitRep 包成一鍵更新"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch04_06_generate_sitrep"
   scene_class: "Ch04GenerateSitrepScene"
 

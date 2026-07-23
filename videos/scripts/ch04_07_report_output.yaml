@@ -3,7 +3,8 @@ meta:
   concept: "report_output"
   title: "專業報告輸出——Dashboard、Word、PPT、PDF 一次搞定"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch04_07_report_output"
   scene_class: "Ch04ReportOutputScene"
 

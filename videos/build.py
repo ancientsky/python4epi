@@ -41,11 +41,23 @@ def main() -> None:
         help="Build one concept video (e.g., 'variables')",
     )
     group.add_argument(
+        "--chapter",
+        type=str,
+        help="Build every video in one chapter (e.g., 'ch08')",
+    )
+    group.add_argument(
         "--script",
         type=pathlib.Path,
         help="Path to a specific YAML script",
     )
 
+    parser.add_argument(
+        "--lang",
+        choices=["zh", "en", "both"],
+        default="both",
+        help="Language filter: zh (Chinese), en (English '*_en.yaml'), or both "
+        "(default: both). Ignored with --script.",
+    )
     parser.add_argument(
         "--quality",
         choices=["l", "m", "h"],
@@ -70,20 +82,35 @@ def main() -> None:
         format="%(levelname)-8s %(message)s",
     )
 
-    if args.all:
-        scripts = sorted(SCRIPTS_DIR.glob("ch*.yaml"))
-        if not scripts:
-            logging.error("No scripts found in %s", SCRIPTS_DIR)
-            sys.exit(1)
-    elif args.concept:
-        # Match any chapter with this concept name
-        matches = sorted(SCRIPTS_DIR.glob(f"*_{args.concept}.yaml"))
-        if not matches:
-            logging.error("No script found for concept '%s'", args.concept)
-            sys.exit(1)
-        scripts = matches
-    else:
+    def _is_en(path: pathlib.Path) -> bool:
+        """English scripts follow the ``*_en.yaml`` naming convention."""
+        return path.stem.endswith("_en")
+
+    if args.script:
         scripts = [args.script]
+    else:
+        if args.all:
+            scripts = sorted(SCRIPTS_DIR.glob("ch*.yaml"))
+        elif args.chapter:
+            # e.g. --chapter ch08  →  every ch08_*.yaml
+            scripts = sorted(SCRIPTS_DIR.glob(f"{args.chapter}_*.yaml"))
+        else:  # args.concept — match the concept in either language
+            scripts = sorted(
+                {
+                    *SCRIPTS_DIR.glob(f"*_{args.concept}.yaml"),
+                    *SCRIPTS_DIR.glob(f"*_{args.concept}_en.yaml"),
+                }
+            )
+        # Apply the language filter (zh = non-_en, en = _en, both = all).
+        if args.lang == "zh":
+            scripts = [s for s in scripts if not _is_en(s)]
+        elif args.lang == "en":
+            scripts = [s for s in scripts if _is_en(s)]
+
+        if not scripts:
+            sel = args.chapter or args.concept or "any"
+            logging.error("No scripts found for '%s' (lang=%s)", sel, args.lang)
+            sys.exit(1)
 
     succeeded: list[str] = []
     failed: list[tuple[str, str]] = []

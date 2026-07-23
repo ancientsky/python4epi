@@ -3,85 +3,43 @@ name: Build Tutorial Videos
 on:
   workflow_dispatch:
     inputs:
-      concept:
-        description: "Which video to build (leave empty for all)"
+      chapter:
+        description: "Which chapter to build (pick 'all' for every chapter)"
         required: false
-        default: ""
+        default: "all"
         type: choice
         options:
-          - ""
-          - why_python
-          - uv_setup
-          - jupyter
-          - hello_epi
-          - git_basics
-          - roadmap
-          - indentation
-          - imports
-          - types
-          - errors
-          - try_except
-          - strings_loops
-          - uv_advanced
-          - jupyter_tips
-          - variables
-          - arithmetic
-          - dictionaries
-          - lists
-          - conditionals
-          - functions
-          - dataframe
-          - data_inspect
-          - datetime
-          - derived
-          - missing
-          - groupby
-          - epicurve
-          - seaborn_plotly
-          - value_counts
-          - pivot_table
-          - method_chaining
-          - merge
-          - str_cleanup
-          - two_by_two
-          - risk_ratio
-          - odds_ratio
-          - confidence_interval
-          - chi_square
-          - fisher_test
-          - forest_plot
-          - sitrep_overview
-          - person
-          - time
-          - place
-          - classification
-          - generate_sitrep
-          - report_output
-          - pii_protection
-          - confounder_concept
-          - dag
-          - verify_criteria
-          - stratified_rr
-          - stratified_forest_plot
-          - mantel_haenszel
-          - effect_modification
-          - case_control_mh
-          - why_rr_not_or
-          - logit_intuition
-          - modified_poisson
-          - formula_syntax
-          - crude_rr_or_loop
-          - adjusted_rr_table2
-          - forest_plot_adjusted
-          - change_in_estimate
-          - ts_basics
-          - rolling_baseline
-          - lag_features
-          - poisson_lag
-          - negative_binomial
-          - logistic_threshold
-          - arima_sarima
-          - ts_model_comparison
+          - all
+          - ch00   # 導讀與工具 / Getting started
+          - ch01   # Python 基礎 / Python basics
+          - ch01b  # 開發者工具箱 / Developer toolbox
+          - ch02   # 資料處理與視覺化 / Data handling & viz
+          - ch03   # 2×2 表與推論統計 / 2×2 tables & inference
+          - ch04   # 群聚調查工作流 / Outbreak workflow
+          - ch05   # 分層分析與干擾 / Stratified analysis
+          - ch06   # 多變項分析 / Multivariable analysis
+          - ch07   # 時間序列與預測 / Time series & forecasting
+          - ch08   # 空間流病 / Spatial epidemiology
+          - ch09   # 存活分析 / Survival analysis
+          - ch10   # 機器學習 / Machine learning
+          - ch11   # 深度學習 / Deep learning
+          - ch12   # 因果推論 / Causal inference
+          - ch13   # 可重現研究 / Reproducibility
+          - ch14   # 實戰案例與報告 / Capstone & reporting
+      language:
+        description: "Narration language"
+        required: false
+        default: "zh"
+        type: choice
+        options:
+          - zh     # 中文 (Traditional Chinese)
+          - en     # English
+          - both   # both editions
+      concept:
+        description: "Optional: build only ONE concept (e.g. 'moran' or 'moran_en'); overrides chapter"
+        required: false
+        default: ""
+        type: string
       quality:
         description: "Render quality"
         required: false
@@ -129,9 +87,11 @@ jobs:
       - name: Build videos
         run: |
           if [ -n "${{ inputs.concept }}" ]; then
-            uv run python videos/build.py --concept "${{ inputs.concept }}" --quality "${{ inputs.quality }}" -v
+            uv run python videos/build.py --concept "${{ inputs.concept }}" --lang "${{ inputs.language }}" --quality "${{ inputs.quality }}" -v
+          elif [ "${{ inputs.chapter }}" = "all" ]; then
+            uv run python videos/build.py --all --lang "${{ inputs.language }}" --quality "${{ inputs.quality }}" -v
           else
-            uv run python videos/build.py --all --quality "${{ inputs.quality }}" -v
+            uv run python videos/build.py --chapter "${{ inputs.chapter }}" --lang "${{ inputs.language }}" --quality "${{ inputs.quality }}" -v
           fi
 
       - name: List generated videos
@@ -161,7 +121,7 @@ jobs:
           TITLE="Tutorial Videos $(date +%Y-%m-%d)"
 
           # Build release notes
-          NOTES="## Tutorial Videos (Ch00–07 導讀與工具 / 開發者工具箱 / Python 基礎 / 資料處理與視覺化 / 2×2 表與推論統計 / 群聚調查工作流 / 分層分析與干擾因子 / 多變項分析 / 時間序列與預測)\n\n"
+          NOTES="## Tutorial Videos — chapter: ${{ inputs.chapter }} · language: ${{ inputs.language }}\n\n"
           NOTES+="Generated with Manim + edge-tts + ffmpeg.\n\n"
           NOTES+="| # | Video | Size |\n"
           NOTES+="|---|-------|------|\n"

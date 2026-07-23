@@ -3,7 +3,8 @@ meta:
   concept: "groupby"
   title: "分組統計秘密武器——groupby + agg 完全攻略"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch02_06_groupby"
   scene_class: "Ch02GroupbyScene"
 

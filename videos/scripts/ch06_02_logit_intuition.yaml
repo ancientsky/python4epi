@@ -3,7 +3,8 @@ meta:
   concept: "logit_intuition"
   title: "邏輯斯迴歸三階梯：機率、勝算、logit"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch06_02_logit_intuition"
   scene_class: "Ch06LogitIntuitionScene"
 

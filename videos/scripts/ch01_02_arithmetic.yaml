@@ -3,7 +3,8 @@ meta:
   concept: "arithmetic"
   title: "計算指標——用除法得到比率"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch01_02_arithmetic"
   scene_class: "Ch01ArithmeticScene"
 

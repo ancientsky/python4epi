@@ -3,7 +3,8 @@ meta:
   concept: "rolling_baseline"
   title: "Rolling mean baseline 與 shift(1) 救命符"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch07_02_rolling_baseline"
   scene_class: "Ch07RollingBaselineScene"
 

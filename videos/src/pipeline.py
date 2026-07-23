@@ -62,7 +62,8 @@ def build_video(
     concept = meta["concept"]
     chapter = meta["chapter"]
     voice = meta.get("voice", "zh-TW-HsiaoChenNeural")
-    rate = meta.get("rate", "-10%")
+    rate = meta.get("rate", "+8%")
+    pitch = meta.get("pitch", "+8Hz")
     scene_module = meta["scene_module"]
     scene_class = meta["scene_class"]
 
@@ -79,6 +80,7 @@ def build_video(
         audio_dir,
         voice=voice,
         rate=rate,
+        pitch=pitch,
         force_cache=skip_tts,
     )
 

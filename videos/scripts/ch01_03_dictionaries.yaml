@@ -3,7 +3,8 @@ meta:
   concept: "dictionaries"
   title: "字典——把同一主題的資料放一起"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch01_03_dictionaries"
   scene_class: "Ch01DictionariesScene"
 

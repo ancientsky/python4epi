@@ -3,7 +3,8 @@ meta:
   concept: "stratified_rr"
   title: "分層分析——每一層都算一次 RR"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch05_04_stratified_rr"
   scene_class: "Ch05StratifiedRrScene"
 

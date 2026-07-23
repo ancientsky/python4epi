@@ -3,7 +3,8 @@ meta:
   concept: "ts_model_comparison"
   title: "六模型大比拼：誰適合什麼情境？"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch07_08_model_comparison"
   scene_class: "Ch07ModelComparisonScene"
 

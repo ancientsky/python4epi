@@ -3,7 +3,8 @@ meta:
   concept: "epicurve"
   title: "用 matplotlib 畫出疫調等級的流行曲線"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch02_07_epicurve"
   scene_class: "Ch02EpiCurveScene"
 

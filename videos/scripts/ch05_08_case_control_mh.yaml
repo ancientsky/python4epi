@@ -3,7 +3,8 @@ meta:
   concept: "case_control_mh"
   title: "病例對照版 MH——換個公式，邏輯一樣"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch05_08_case_control_mh"
   scene_class: "Ch05CaseControlMhScene"
 

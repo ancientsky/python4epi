@@ -3,7 +3,8 @@ meta:
   concept: "pivot_table"
   title: "Excel 樞紐分析表——pivot_table 完全攻略"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch02_10_pivot_table"
   scene_class: "Ch02PivotTableScene"
 

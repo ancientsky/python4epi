@@ -3,7 +3,8 @@ meta:
   concept: "verify_criteria"
   title: "驗證三要件——pd.crosstab 實戰"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch05_03_verify_criteria"
   scene_class: "Ch05VerifyCriteriaScene"
 

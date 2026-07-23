@@ -3,7 +3,8 @@ meta:
   concept: "imports"
   title: "import——借用別人的工具"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch01b_02_imports"
   scene_class: "Ch01bImportsScene"
 

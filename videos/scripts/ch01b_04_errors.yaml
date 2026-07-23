@@ -3,7 +3,8 @@ meta:
   concept: "errors"
   title: "讀懂錯誤訊息——traceback 不是天書"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch01b_04_errors"
   scene_class: "Ch01bErrorsScene"
 

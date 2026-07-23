@@ -3,7 +3,8 @@ meta:
   concept: "strings_loops"
   title: "字串與迴圈進階——清理疫調資料的瑞士刀"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch01b_06_strings_loops"
   scene_class: "Ch01bStringsLoopsScene"
 

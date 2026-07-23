@@ -3,7 +3,8 @@ meta:
   concept: "two_by_two"
   title: "2×2 列聯表——把疫調資料變成四格表"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch03_01_two_by_two"
   scene_class: "Ch03TwoByTwoScene"
 

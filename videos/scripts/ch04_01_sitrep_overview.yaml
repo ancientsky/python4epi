@@ -3,7 +3,8 @@ meta:
   concept: "sitrep_overview"
   title: "SitRep 速成——兩小時交出疫情日報"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch04_01_sitrep_overview"
   scene_class: "Ch04SitrepOverviewScene"
 

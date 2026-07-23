@@ -3,7 +3,8 @@ meta:
   concept: "seaborn_plotly"
   title: "seaborn + plotly + 圖表輸出投稿密技"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch02_08_seaborn_plotly"
   scene_class: "Ch02SeabornPlotlyScene"
 

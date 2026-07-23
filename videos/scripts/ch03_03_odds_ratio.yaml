@@ -3,7 +3,8 @@ meta:
   concept: "odds_ratio"
   title: "勝算比 OR——RR 的好兄弟，差在哪裡？"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch03_03_odds_ratio"
   scene_class: "Ch03OddsRatioScene"
 

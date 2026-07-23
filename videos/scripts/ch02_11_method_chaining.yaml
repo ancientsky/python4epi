@@ -3,7 +3,8 @@ meta:
   concept: "method_chaining"
   title: "一行寫完分析——Method Chaining 流水線"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch02_11_method_chaining"
   scene_class: "Ch02MethodChainingScene"
 

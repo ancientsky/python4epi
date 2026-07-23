@@ -3,7 +3,8 @@ meta:
   concept: "derived"
   title: "衍生變項四大招——cut, axis, astype, dt"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch02_04_derived"
   scene_class: "Ch02DerivedScene"
 

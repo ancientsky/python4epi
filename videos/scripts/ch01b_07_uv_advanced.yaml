@@ -3,7 +3,8 @@ meta:
   concept: "uv_advanced"
   title: "uv 進階——管理 Python 版本與套件"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch01b_07_uv_advanced"
   scene_class: "Ch01bUvAdvancedScene"
 

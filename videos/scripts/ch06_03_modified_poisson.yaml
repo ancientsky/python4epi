@@ -3,7 +3,8 @@ meta:
   concept: "modified_poisson"
   title: "Modified Poisson：借帽子算 RR 的魔法"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch06_03_modified_poisson"
   scene_class: "Ch06ModifiedPoissonScene"
 

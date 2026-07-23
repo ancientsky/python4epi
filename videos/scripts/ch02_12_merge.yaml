@@ -3,7 +3,8 @@ meta:
   concept: "merge"
   title: "合併資料表——merge 就是你的 VLOOKUP"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch02_12_merge"
   scene_class: "Ch02MergeScene"
 

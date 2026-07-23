@@ -3,7 +3,8 @@ meta:
   concept: "indentation"
   title: "縮排——Python 的必修規矩"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch01b_01_indentation"
   scene_class: "Ch01bIndentationScene"
 

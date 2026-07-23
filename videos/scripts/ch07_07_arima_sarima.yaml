@@ -3,7 +3,8 @@ meta:
   concept: "arima_sarima"
   title: "ARIMA vs SARIMA：經典武器 + 週期性捕捉"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch07_07_arima_sarima"
   scene_class: "Ch07ArimaSarimaScene"
 

@@ -3,7 +3,8 @@ meta:
   concept: "stratified_forest_plot"
   title: "森林圖——一眼看穿各層 RR"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch05_05_forest_plot"
   scene_class: "Ch05ForestPlotScene"
 

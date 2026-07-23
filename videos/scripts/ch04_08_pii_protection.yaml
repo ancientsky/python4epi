@@ -3,7 +3,8 @@ meta:
   concept: "pii_protection"
   title: "個資保護——拿到 Line List 的第一件事"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch04_08_pii_protection"
   scene_class: "Ch04PiiProtectionScene"
 

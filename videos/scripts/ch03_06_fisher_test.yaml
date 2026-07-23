@@ -3,7 +3,8 @@ meta:
   concept: "fisher_test"
   title: "Fisher 精確檢定——小樣本的救星"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch03_06_fisher_test"
   scene_class: "Ch03FisherTestScene"
 
