@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" font-family="system-ui, -apple-system, sans-serif">
+  <defs><filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter></defs>
+  <rect width="800" height="480" fill="#FAF8F3" rx="12"/>
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">Why Did My Results Change on Rerun?</text>
+  <text x="400" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">Landmines vs. pillars: two very different worlds</text>
+
+  <!-- LEFT panel: landmines -->
+  <g filter="url(#shadow)"><rect x="30" y="75" width="350" height="385" rx="12" fill="#FFFFFF" stroke="#D94452" stroke-width="1.6"/></g>
+  <text x="205" y="107" text-anchor="middle" font-size="14" font-weight="bold" fill="#D94452">❌ Common Landmines</text>
+
+  <rect x="50" y="135" width="310" height="38" rx="8" fill="#FFFFFF" stroke="#D94452" stroke-width="1.2"/>
+  <text x="205" y="159" text-anchor="middle" font-size="10.5" fill="#1A1A1A">Unpinned package versions</text>
+
+  <rect x="50" y="189" width="310" height="38" rx="8" fill="#FFFFFF" stroke="#D94452" stroke-width="1.2"/>
+  <text x="205" y="213" text-anchor="middle" font-size="10.5" fill="#1A1A1A">No fixed random seed</text>
+
+  <rect x="50" y="243" width="310" height="38" rx="8" fill="#FFFFFF" stroke="#D94452" stroke-width="1.2"/>
+  <text x="205" y="267" text-anchor="middle" font-size="10.5" fill="#1A1A1A">Manual notebook edits, undocumented</text>
+
+  <!-- diverging wobbly lines -->
+  <circle cx="70" cy="345" r="3" fill="#D94452"/>
+  <path d="M 70 345 C 160 335 260 318 350 305" fill="none" stroke="#D94452" stroke-width="1.8"/>
+  <path d="M 70 345 C 160 348 260 358 350 365" fill="none" stroke="#D94452" stroke-width="1.8" opacity="0.75"/>
+  <path d="M 70 345 C 160 355 260 385 350 410" fill="none" stroke="#D94452" stroke-width="1.8" opacity="0.55"/>
+  <text x="205" y="432" text-anchor="middle" font-size="14" font-weight="bold" fill="#D94452">😵 Results drift</text>
+
+  <!-- RIGHT panel: pillars -->
+  <g filter="url(#shadow)"><rect x="420" y="75" width="350" height="385" rx="12" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.6"/></g>
+  <text x="595" y="107" text-anchor="middle" font-size="14" font-weight="bold" fill="#788C5D">✅ Three Pillars</text>
+
+  <rect x="440" y="135" width="310" height="38" rx="8" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.2"/>
+  <text x="595" y="159" text-anchor="middle" font-size="10.5" fill="#1A1A1A">uv.lock pins versions</text>
+
+  <rect x="440" y="189" width="310" height="38" rx="8" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.2"/>
+  <text x="595" y="213" text-anchor="middle" font-size="10.5" fill="#1A1A1A">Fixed seed</text>
+
+  <rect x="440" y="243" width="310" height="38" rx="8" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.2"/>
+  <text x="595" y="267" text-anchor="middle" font-size="10.5" fill="#1A1A1A">Every transform is in code</text>
+
+  <!-- converging stable lines -->
+  <path d="M 460 305 C 550 322 620 330 630 330 L 740 330" fill="none" stroke="#788C5D" stroke-width="1.8" opacity="0.7"/>
+  <path d="M 460 330 L 740 330" fill="none" stroke="#788C5D" stroke-width="2.4"/>
+  <path d="M 460 355 C 550 338 620 330 630 330 L 740 330" fill="none" stroke="#788C5D" stroke-width="1.8" opacity="0.7"/>
+  <circle cx="740" cy="330" r="3" fill="#788C5D"/>
+  <text x="595" y="432" text-anchor="middle" font-size="14" font-weight="bold" fill="#788C5D">😌 Consistent every time</text>
+</svg>

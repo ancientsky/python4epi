@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 470" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6B6B6B"/></marker>
+  </defs>
+  <rect width="800" height="470" fill="#FAF8F3" rx="12"/>
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">One Click: Analysis Into a Presentable Report</text>
+  <text x="400" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">No more copy-pasting results by hand</text>
+
+  <!-- Left: analysis outputs -->
+  <g filter="url(#shadow)"><rect x="30" y="100" width="200" height="220" rx="10" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.4"/></g>
+  <text x="130" y="132" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#1A1A1A">📦 Analysis Outputs</text>
+  <text x="130" y="175" text-anchor="middle" font-size="12" fill="#1A1A1A">📈 Charts</text>
+  <text x="130" y="210" text-anchor="middle" font-size="12" fill="#1A1A1A">📋 Tables</text>
+  <text x="130" y="245" text-anchor="middle" font-size="12" fill="#1A1A1A">🔢 Key Numbers</text>
+  <text x="130" y="290" text-anchor="middle" font-size="9" fill="#6B6B6B">from matplotlib, pandas</text>
+
+  <!-- Middle: tool chips -->
+  <g filter="url(#shadow)"><rect x="280" y="110" width="180" height="80" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.6"/></g>
+  <text x="370" y="140" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">🎞️ python-pptx</text>
+  <text x="370" y="165" text-anchor="middle" font-size="9.5" fill="#6B6B6B">→ Slide deck</text>
+
+  <g filter="url(#shadow)"><rect x="280" y="220" width="180" height="80" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.6"/></g>
+  <text x="370" y="250" text-anchor="middle" font-size="12" font-weight="bold" fill="#788C5D">📄 python-docx</text>
+  <text x="370" y="275" text-anchor="middle" font-size="9.5" fill="#6B6B6B">→ Word report</text>
+
+  <g filter="url(#shadow)"><rect x="280" y="320" width="180" height="90" rx="10" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1.2"/></g>
+  <text x="370" y="345" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#1A1A1A">io.BytesIO</text>
+  <text x="370" y="368" text-anchor="middle" font-size="9" fill="#6B6B6B">Charts stay in memory</text>
+  <text x="370" y="388" text-anchor="middle" font-size="9" fill="#6B6B6B">inserted directly</text>
+
+  <!-- Right: outputs -->
+  <g filter="url(#shadow)"><rect x="530" y="110" width="200" height="100" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.6"/></g>
+  <text x="630" y="150" text-anchor="middle" font-size="26">📊</text>
+  <text x="630" y="180" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">SitRep.pptx</text>
+  <text x="630" y="198" text-anchor="middle" font-size="10" fill="#6B6B6B">Slide deck</text>
+
+  <g filter="url(#shadow)"><rect x="530" y="240" width="200" height="100" rx="10" fill="#FFFFFF" stroke="#788C5D" stroke-width="1.6"/></g>
+  <text x="630" y="280" text-anchor="middle" font-size="26">📄</text>
+  <text x="630" y="310" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A1A">Report.docx</text>
+  <text x="630" y="328" text-anchor="middle" font-size="10" fill="#6B6B6B">Word document</text>
+
+  <!-- Arrows -->
+  <line x1="230" y1="180" x2="280" y2="150" stroke="#6B6B6B" stroke-width="1.6" marker-end="url(#ar)"/>
+  <line x1="230" y1="240" x2="280" y2="260" stroke="#6B6B6B" stroke-width="1.6" marker-end="url(#ar)"/>
+  <line x1="460" y1="150" x2="530" y2="160" stroke="#6B6B6B" stroke-width="1.6" marker-end="url(#ar)"/>
+  <line x1="460" y1="260" x2="530" y2="290" stroke="#6B6B6B" stroke-width="1.6" marker-end="url(#ar)"/>
+
+  <text x="400" y="440" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#788C5D">No manual copy-paste, consistent formatting, reproducible (ties to Ch13)</text>
+</svg>
