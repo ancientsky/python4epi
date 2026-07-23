@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 620" font-family="system-ui, -apple-system, sans-serif">
+  <defs><filter id="shadow" x="-2%" y="-2%" width="104%" height="104%"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter></defs>
+  <rect width="800" height="620" fill="#FAF8F3" rx="12"/>
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1A1A1A">The 8 Sections of a SitRep ↔ Skills Used</text>
+  <text x="400" y="51" text-anchor="middle" font-size="12" fill="#6B6B6B">From notification to conclusion, mapped to chapters you've learned</text>
+
+  <!-- Row 1 -->
+  <g filter="url(#shadow)"><rect x="30" y="80" width="740" height="44" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.2"/></g>
+  <rect x="40" y="86" width="32" height="32" rx="8" fill="#D97757"/>
+  <text x="56" y="108" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">1</text>
+  <text x="88" y="107" font-size="12.5" font-weight="bold" fill="#1A1A1A">Background &amp; Notification</text>
+  <rect x="560" y="87" width="190" height="30" rx="15" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1"/>
+  <text x="655" y="107" text-anchor="middle" font-size="10.5" fill="#D97757">Ch00, Ch04</text>
+
+  <!-- Row 2 -->
+  <g filter="url(#shadow)"><rect x="30" y="140" width="740" height="44" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.2"/></g>
+  <rect x="40" y="146" width="32" height="32" rx="8" fill="#6A9BCC"/>
+  <text x="56" y="168" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">2</text>
+  <text x="88" y="167" font-size="12.5" font-weight="bold" fill="#1A1A1A">Methods · Line List</text>
+  <rect x="560" y="147" width="190" height="30" rx="15" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1"/>
+  <text x="655" y="167" text-anchor="middle" font-size="10.5" fill="#6A9BCC">Ch02</text>
+
+  <!-- Row 3 -->
+  <g filter="url(#shadow)"><rect x="30" y="200" width="740" height="44" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.2"/></g>
+  <rect x="40" y="206" width="32" height="32" rx="8" fill="#788C5D"/>
+  <text x="56" y="228" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">3</text>
+  <text x="88" y="227" font-size="12.5" font-weight="bold" fill="#1A1A1A">Descriptive Epi · Epi Curve · Attack Rate</text>
+  <rect x="560" y="207" width="190" height="30" rx="15" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1"/>
+  <text x="655" y="227" text-anchor="middle" font-size="10.5" fill="#788C5D">Ch02–04</text>
+
+  <!-- Row 4 -->
+  <g filter="url(#shadow)"><rect x="30" y="260" width="740" height="44" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.2"/></g>
+  <rect x="40" y="266" width="32" height="32" rx="8" fill="#D97757"/>
+  <text x="56" y="288" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">4</text>
+  <text x="88" y="287" font-size="12.5" font-weight="bold" fill="#1A1A1A">Analytic Epi · 2×2 · Stratified · Regression</text>
+  <rect x="560" y="267" width="190" height="30" rx="15" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1"/>
+  <text x="655" y="287" text-anchor="middle" font-size="10.5" fill="#D97757">Ch03, 05, 06</text>
+
+  <!-- Row 5 -->
+  <g filter="url(#shadow)"><rect x="30" y="320" width="740" height="44" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.2"/></g>
+  <rect x="40" y="326" width="32" height="32" rx="8" fill="#6A9BCC"/>
+  <text x="56" y="348" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">5</text>
+  <text x="88" y="347" font-size="12.5" font-weight="bold" fill="#1A1A1A">Time &amp; Space</text>
+  <rect x="560" y="327" width="190" height="30" rx="15" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1"/>
+  <text x="655" y="347" text-anchor="middle" font-size="10.5" fill="#6A9BCC">Ch07, Ch08</text>
+
+  <!-- Row 6 -->
+  <g filter="url(#shadow)"><rect x="30" y="380" width="740" height="44" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.2"/></g>
+  <rect x="40" y="386" width="32" height="32" rx="8" fill="#788C5D"/>
+  <text x="56" y="408" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">6</text>
+  <text x="88" y="407" font-size="12.5" font-weight="bold" fill="#1A1A1A">Advanced · Survival · ML · DL</text>
+  <rect x="560" y="387" width="190" height="30" rx="15" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1"/>
+  <text x="655" y="407" text-anchor="middle" font-size="10.5" fill="#788C5D">Ch09–11</text>
+
+  <!-- Row 7 -->
+  <g filter="url(#shadow)"><rect x="30" y="440" width="740" height="44" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.2"/></g>
+  <rect x="40" y="446" width="32" height="32" rx="8" fill="#D97757"/>
+  <text x="56" y="468" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">7</text>
+  <text x="88" y="467" font-size="12.5" font-weight="bold" fill="#1A1A1A">Causal Reasoning &amp; Recommendations</text>
+  <rect x="560" y="447" width="190" height="30" rx="15" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1"/>
+  <text x="655" y="467" text-anchor="middle" font-size="10.5" fill="#D97757">Ch12</text>
+
+  <!-- Row 8 -->
+  <g filter="url(#shadow)"><rect x="30" y="500" width="740" height="44" rx="8" fill="#FFFFFF" stroke="#E8E5DF" stroke-width="1.2"/></g>
+  <rect x="40" y="506" width="32" height="32" rx="8" fill="#6A9BCC"/>
+  <text x="56" y="528" text-anchor="middle" font-size="13" font-weight="bold" fill="#FFFFFF">8</text>
+  <text x="88" y="527" font-size="12.5" font-weight="bold" fill="#1A1A1A">Conclusion &amp; Action Items</text>
+  <rect x="560" y="507" width="190" height="30" rx="15" fill="#F5F3EE" stroke="#E8E5DF" stroke-width="1"/>
+  <text x="655" y="527" text-anchor="middle" font-size="10.5" fill="#6A9BCC">Recap</text>
+
+  <!-- Footer -->
+  <g filter="url(#shadow)"><rect x="30" y="560" width="740" height="40" rx="10" fill="#FFF8F3" stroke="#D97757" stroke-width="1.4"/></g>
+  <text x="400" y="585" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#D97757">📋 One report = everything from the first 14 chapters, combined</text>
+</svg>
