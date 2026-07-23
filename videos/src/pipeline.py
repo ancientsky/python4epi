@@ -64,6 +64,9 @@ def build_video(
     voice = meta.get("voice", "zh-TW-HsiaoChenNeural")
     rate = meta.get("rate", "+8%")
     pitch = meta.get("pitch", "+8Hz")
+    # Language for the on-screen scene text ("zh" / "en"); the scene reads this
+    # via the EPI_VIDEO_LANG env var and picks strings from its TEXT dict.
+    lang = meta.get("lang", "zh")
     scene_module = meta["scene_module"]
     scene_class = meta["scene_class"]
 
@@ -104,6 +107,7 @@ def build_video(
         timing_path,
         raw_video_dir,
         quality=quality,
+        lang=lang,
     )
 
     # ------------------------------------------------------------------
@@ -199,6 +203,7 @@ def _render_manim(
     output_dir: pathlib.Path,
     *,
     quality: str = "h",
+    lang: str = "zh",
 ) -> pathlib.Path:
     """Invoke manim CLI to render a scene with timing data."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -206,7 +211,12 @@ def _render_manim(
     pythonpath = os.environ.get("PYTHONPATH", "")
     if project_root not in pythonpath.split(os.pathsep):
         pythonpath = project_root + (os.pathsep + pythonpath if pythonpath else "")
-    env = {**os.environ, "EPI_VIDEO_TIMING": str(timing_path), "PYTHONPATH": pythonpath}
+    env = {
+        **os.environ,
+        "EPI_VIDEO_TIMING": str(timing_path),
+        "EPI_VIDEO_LANG": lang,
+        "PYTHONPATH": pythonpath,
+    }
 
     module_path = module.replace(".", "/") + ".py"
     # Resolve against the project root (not the current working directory) so
