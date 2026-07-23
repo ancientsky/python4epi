@@ -1,0 +1,164 @@
+meta:
+  chapter: "08"
+  concept: "lisa"
+  title: "局部 LISA 四象限：熱區核心到底藏在哪？"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch08_05_lisa"
+  scene_class: "Ch08LisaScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨！歡迎回到空間流病教室。上一集我們用全域 Moran's I
+      幫全臺灣打了一個總分，知道「有沒有群聚」。
+      但長官接下來一定會追問：「所以哪裡最嚴重？」
+      全域指數答不出來，因為它只給整座島一個數字。
+      這一集主角是局部 LISA，它會拉近鏡頭，一個一個縣市問：
+      「你跟你的鄰居，到底是什麼關係？」
+      而且，這一集藏著整章最容易被記反的地雷，準備好了嗎？
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "lisa_vs_global"
+    narration: >
+      先搞懂差別。全域 Moran's I 是「一整班的平均分數」，只有一個數字。
+      局部 LISA 是「每個人的個人成績單」——
+      19 個縣市，每個都有自己的一個分數、一個 p 值。
+      全域公式其實就是所有局部分數加總、再除以一個常數。
+      所以 LISA 就是把 Moran's I 拆開來的顯微鏡版本。
+    animation: "show_lisa_vs_global"
+    pause_after: 0.5
+
+  - id: "quadrant_diagram"
+    narration: >
+      LISA 同時看兩件事：橫軸是「你自己的率」，縱軸是「鄰居的平均率」。
+      四個象限、四種人設。
+      右上角，自己高、鄰居也高——熱區震央，跟鄰居一起發燒。
+      左下角，自己低、鄰居也低——安全淨土。
+      這兩個是跟鄰居「同一國」的乖寶寶。
+      真正精彩的在另外兩格：右下角自己高、鄰居低，孤島火苗，
+      很可能是獨立傳入的新案例；
+      左上角自己低、鄰居高，颱風眼，風平浪靜但已被高風險包圍，要提高警覺。
+    animation: "show_quadrant_diagram"
+    pause_after: 0.5
+
+  - id: "q_encoding_warning"
+    narration: >
+      重頭戲來了，這是整章最容易踩的地雷。
+      esda 套件把四個象限存在 .q 這個欄位，用數字 1 到 4 代表。
+      你直覺會猜 1234 就是照順序 HH、HL、LL、LH 對吧？錯！
+      官方編碼是 1 等於 HH、2 等於 LH、3 等於 LL、4 等於 HL。
+      看清楚，LH 颱風眼是 2，不是 3！
+      這個順序完全不直覺，唯一辦法就是——別憑感覺填，乖乖對照表抄。
+    animation: "show_q_encoding"
+    pause_after: 0.5
+
+  - id: "code_lisa"
+    narration: >
+      實際上程式碼長這樣。從 esda.moran 匯入 Moran_Local，
+      餵進去率、剛剛算好的鄰居權重 w，加上 999 次洗牌、固定 seed 方便重現。
+      拿到 lisa 物件之後，用一個字典把 1234 翻譯成標籤，
+      再用一個 list comprehension 先檢查每個縣市的洗牌 p 值——
+      p 大於等於 0.05 一律標不顯著，顯著的才查表翻譯成 HH、LH、LL、HL。
+    animation: "show_code_lisa"
+    code: |
+      from esda.moran import Moran_Local
+
+      lisa = Moran_Local(main["rate"].values, w,
+                          permutations=999, seed=8)
+      # esda 編碼：1=HH, 2=LH, 3=LL, 4=HL
+      labels = {1: "HH", 2: "LH", 3: "LL", 4: "HL"}
+      main["lisa"] = [
+          "not_sig" if p >= 0.05 else labels[q]
+          for q, p in zip(lisa.q, lisa.p_sim)
+      ]
+    pause_after: 0.5
+
+  - id: "reading_result"
+    narration: >
+      套到登革熱全臺資料上，答案很有畫面。
+      臺南、高雄、嘉義這幾個南部縣市，穩穩落在右上角——HH 震央，年年上榜不意外。
+      北部縣市大多落在左下角——LL 淨土。
+      如果某個縣市自己不高、卻被一群 HH 包圍變成 LH 颱風眼，
+      那就是重點盯哨對象，資源要提前佈署，別等它真的燒起來。
+    animation: "show_reading_result"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      整理一下今天的重點。
+      第一，LISA 是全域 Moran's I 的局部顯微鏡版，每個地區都有自己的分數和 p 值。
+      第二，象限看兩軸：自己的率、鄰居的平均率。
+      第三，也是最重要的，.q 編碼永遠是 1 HH、2 LH、3 LL、4 HL，記反超危險。
+      第四，動作永遠先看 p_sim 顯不顯著，不顯著的一律不解讀。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例，這次把鏡頭從全臺灣拉近，帶回我們熟悉的退伍軍人病世界。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_nursing_homes"
+    narration: >
+      假設同一個縣市有十幾家安養機構，把每一家的退伍軍人病侵襲率丟進 LISA。
+      結果三家彼此相鄰的機構全部落在 HH——很可能共用同一套區域自來水系統，
+      或同一家配管承包商，是共同水源的強烈訊號。
+      而某一家孤零零地自己高、周圍都低，變成 HL 火苗，
+      那就要優先查它自己的蓮蓬頭和熱水塔，八成不是社區傳播，是自家的問題。
+      同一招，從全臺尺度縮小到一座城市的建築尺度，照樣好用。
+    animation: "show_extra_nursing_homes"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      準備好了嗎？三個新手最容易踩的地雷，一次公開！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_encoding"
+    narration: >
+      第一個地雷，就是剛剛的重頭戲：憑直覺猜 .q 編碼順序，
+      以為 1234 就是 HH、HL、LL、LH。
+      結果颱風眼和火苗全部標反，報告拿給長官，方向直接指錯。
+      正確做法：手邊永遠留一張對照表，1 HH、2 LH、3 LL、4 HL。
+    animation: "show_blindspot_encoding"
+    error_code: "labels = {1: 'HH', 2: 'HL', 3: 'LL', 4: 'LH'}"
+    correct_code: "labels = {1: 'HH', 2: 'LH', 3: 'LL', 4: 'HL'}"
+    pause_after: 0.5
+
+  - id: "blindspot_no_pfilter"
+    narration: >
+      第二個地雷：拿到 .q 就直接畫圖，完全沒檢查 p_sim。
+      結果一堆本來只是隨機雜訊的縣市，也被硬貼上 HH 或 HL 的標籤，
+      地圖上熱鬧滾滾其實都是假警報。
+      正確做法：p_sim 大於等於 0.05 的地區一律標不顯著、塗灰色，別解讀。
+    animation: "show_blindspot_no_pfilter"
+    error_code: "main['lisa'] = [labels[q] for q in lisa.q]"
+    correct_code: "main['lisa'] = [labels[q] if p < .05 else 'ns' for q, p in zip(lisa.q, lisa.p_sim)]"
+    pause_after: 0.5
+
+  - id: "blindspot_islands"
+    narration: >
+      第三個地雷：忘記處理離島。金門、澎湖、連江在 Queen 接壤定義下完全沒有鄰居，
+      硬要塞進 Moran_Local，鄰居平均率算不出來，程式不是報錯就是產生怪結果。
+      正確做法：先把離島篩掉，只對本島相連的縣市跑 LISA，
+      離島留到之後用 KNN 或平滑另外處理。
+    animation: "show_blindspot_islands"
+    error_code: "lisa = Moran_Local(gdf['rate'].values, w_all, permutations=999)"
+    correct_code: "lisa = Moran_Local(main['rate'].values, w_mainland, permutations=999)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      局部 LISA 學完了，你現在知道怎麼在地圖上抓出「震央」和「唱反調的離群值」。
+      下一集，我們換上紅外線熱像儀，用 Getis-Ord Gi 星星，
+      直接畫出一張給長官看的熱區地圖。
+      還會告訴你，為什麼絕對不能只看 Z 分數有沒有超過 1.96。
+      下集見！
+    animation: "show_outro"
+    pause_after: 1.0

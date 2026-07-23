@@ -1,0 +1,163 @@
+meta:
+  chapter: "08"
+  concept: "attack_rate_map"
+  title: "樓層 x 翼區侵襲率：crosstab 到熱力圖"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch08_02_attack_rate_map"
+  scene_class: "Ch08AttackRateMapScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      歡迎回來！上一集我們用教室座位圖搞懂了空間流病的直覺，
+      這一集要動真格的了：打開松柏護理之家的地圖。
+      3 層樓、A B 兩個翼區，共 280 位住民，
+      我們要用 groupby 和 pivot，算出每個樓層翼區的侵襲率，
+      畫成一張熱力圖，找出哪裡最危險。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "setup_flags"
+    narration: >
+      第一步，先建立兩個 0、1 旗標欄位：有沒有感染、有沒有死亡。
+      clinical_severity 不是 not_ill 就代表感染，astype int 把 True 變 1、False 變 0。
+      outcome 是 dead 就代表死亡，同樣的招式做一次。
+      這兩個旗標欄位是後面所有分組統計的地基，先做起來放。
+    animation: "show_setup_flags"
+    code: |
+      df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
+      df["died"]     = (df["outcome"] == "dead").astype(int)
+    pause_after: 0.5
+
+  - id: "groupby_agg"
+    narration: >
+      有了旗標，一行 groupby agg 就能算出每個樓層翼區的三個數字：
+      總人數、感染人數、死亡人數。
+      count 數筆數，sum 對旗標加總——加總 0 跟 1，就等於算出「有多少人是 1」。
+      算完再除一下，attack_rate 是侵襲率，cfr 是致死率。
+      跑出來會看到一張 6 乘 5 的表格，3 層樓乘 2 翼區。
+    animation: "show_groupby_agg"
+    code: |
+      spatial = df.groupby(["floor", "wing"]).agg(
+          total    = ("case_id",  "count"),
+          infected = ("infected", "sum"),
+          died     = ("died",     "sum"),
+      ).reset_index()
+      spatial["attack_rate"] = (spatial["infected"] / spatial["total"] * 100).round(1)
+      spatial["cfr"]         = (spatial["died"] / spatial["infected"] * 100).round(1)
+    pause_after: 0.5
+
+  - id: "pivot_heatmap"
+    narration: >
+      長表格不好看熱區，我們把它轉成矩陣：pivot，
+      index 放 floor、columns 放 wing、values 放 attack_rate。
+      轉完丟給 seaborn heatmap，annot 顯示數字、cmap 用黃橘紅，
+      顏色越紅代表侵襲率越高，一眼就看出哪個樓層翼區最兇。
+      這種兩個類別變數天然形成矩陣的情境，熱力圖是最直覺的選擇。
+    animation: "show_pivot_heatmap"
+    code: |
+      heatmap_ar = spatial.pivot(index="floor", columns="wing", values="attack_rate")
+      sns.heatmap(heatmap_ar, annot=True, fmt=".1f", cmap="YlOrRd",
+                  cbar_kws={"label": "%"})
+    pause_after: 0.5
+
+  - id: "sorted_bar"
+    narration: >
+      熱力圖看區塊，排序條圖看名次。
+      把樓層翼區組成 1F-A 這種好讀標籤，依侵襲率由小到大排序，
+      畫成水平長條圖，最高風險的翼區自然浮到最上面。
+      再用 list comprehension 逐一檢查：超過 50% 上紅色，其餘上藍色，
+      環境採樣的優先順序，一張圖就講完了。
+    animation: "show_sorted_bar"
+    code: |
+      spatial["label"] = spatial["floor"].astype(str) + "F-" + spatial["wing"]
+      spatial_sorted = spatial.sort_values("attack_rate", ascending=True)
+      ax.barh(spatial_sorted["label"], spatial_sorted["attack_rate"],
+              color=["#e34a33" if ar > 50 else "#2c7fb8"
+                     for ar in spatial_sorted["attack_rate"]])
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      今天的四步口訣打包起來。
+      一，建旗標：infected、died 兩欄 0/1。
+      二，groupby agg：一次算出總人數、感染、死亡。
+      三，pivot 轉矩陣，餵給 heatmap。
+      四，排序條圖 + 條件式上色，找出優先處理的翼區。
+      學會這四步，下一集的空間權重會更有感覺。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：換個場景，工廠武漢肺炎群聚！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid"
+    narration: >
+      某工廠爆發 COVID-19 群聚，一樣有樓層，還多了「班別」：早班、晚班、大夜班。
+      完全同一套招式：groupby floor 和 shift、agg 算侵襲率、
+      pivot 轉矩陣、heatmap 上色。
+      不管是護理之家的翼區，還是工廠的班別，
+      「兩個分類變數 crosstab 出侵襲率」永遠是這招的核心。
+    animation: "show_extra_covid"
+    code: |
+      spatial2 = factory_df.groupby(["floor", "shift"]).agg(
+          total    = ("worker_id", "count"),
+          infected = ("infected",  "sum"),
+      ).reset_index()
+      spatial2["attack_rate"] = (spatial2["infected"] / spatial2["total"] * 100).round(1)
+      heat2 = spatial2.pivot(index="floor", columns="shift", values="attack_rate")
+      sns.heatmap(heat2, annot=True, fmt=".1f", cmap="YlOrRd")
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      侵襲率地圖三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：clinical_severity 是文字類別，不能直接 mean。
+      一定要先做 Step 1 的旗標欄位，
+      算出 infected 除以 total，才是真正的侵襲率。
+    animation: "show_blindspot_no_flag"
+    error_code: "spatial['attack_rate'] = df['clinical_severity'].mean()"
+    correct_code: "spatial['attack_rate'] = spatial['infected'] / spatial['total'] * 100"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：groupby agg 完忘記 reset_index。
+      分組鍵還卡在索引裡，後面的 pivot 會整個報錯或跑出奇怪結果。
+      養成習慣，groupby agg 後面永遠接一個 reset_index。
+    animation: "show_blindspot_no_reset_index"
+    error_code: "spatial = df.groupby(['floor','wing']).agg(n=('case_id','count'))"
+    correct_code: "spatial = df.groupby(['floor','wing']).agg(n=('case_id','count')).reset_index()"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：不看人數，直接排侵襲率名次。
+      只有 1 個人的房間，感染了就是 100%，
+      這個數字完全不可靠，不能跟 50 人的翼區相提並論。
+      排名前先過濾掉樣本數太小的組別。
+    animation: "show_blindspot_small_n"
+    error_code: "rank_by_attack_rate(spatial)"
+    correct_code: "rank_by_attack_rate(spatial[spatial['total'] >= 10])"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      樓層翼區的侵襲率地圖打完收工！
+      下一集我們要往深一層走：
+      怎麼幫地圖上的每個單元「正式定義鄰居」——
+      Queen 接壤 vs KNN，還有 row-standardize 是在公平什麼。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0
