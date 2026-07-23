@@ -3,7 +3,8 @@ meta:
   concept: "risk_ratio"
   title: "風險比 RR——暴露到底有沒有增加風險？"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch03_02_risk_ratio"
   scene_class: "Ch03RiskRatioScene"
 

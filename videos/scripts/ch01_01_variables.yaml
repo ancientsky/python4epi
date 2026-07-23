@@ -3,7 +3,8 @@ meta:
   concept: "variables"
   title: "數值變數——先把數字存起來"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch01_01_variables"
   scene_class: "Ch01VariablesScene"
 

@@ -3,7 +3,8 @@ meta:
   concept: "ts_basics"
   title: "時間序列基本概念：asfreq、自相關、平穩性"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch07_01_ts_basics"
   scene_class: "Ch07TsBasicsScene"
 

@@ -3,7 +3,8 @@ meta:
   concept: "jupyter_tips"
   title: "Jupyter 實用密技——讓你的效率翻倍"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch01b_08_jupyter_tips"
   scene_class: "Ch01bJupyterTipsScene"
 

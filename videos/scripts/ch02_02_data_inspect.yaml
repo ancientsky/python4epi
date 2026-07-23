@@ -3,7 +3,8 @@ meta:
   concept: "data_inspect"
   title: "一分鐘看懂你的資料——info() 與 describe()"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch02_02_data_inspect"
   scene_class: "Ch02DataInspectScene"
 

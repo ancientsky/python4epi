@@ -3,7 +3,8 @@ meta:
   concept: "jupyter"
   title: "Jupyter Lab 入門——邊寫邊看結果的神器"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch00_03_jupyter"
   scene_class: "Ch00JupyterScene"
 

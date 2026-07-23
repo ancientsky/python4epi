@@ -3,7 +3,8 @@ meta:
   concept: "formula_syntax"
   title: "statsmodels 公式語法：波浪、加號、C() 完全解析"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch06_04_formula_syntax"
   scene_class: "Ch06FormulaSyntaxScene"
 

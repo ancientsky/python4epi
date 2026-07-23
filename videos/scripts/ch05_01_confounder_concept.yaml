@@ -3,7 +3,8 @@ meta:
   concept: "confounder_concept"
   title: "干擾因子的三要件——誰才算共犯"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch05_01_confounder_concept"
   scene_class: "Ch05ConfounderConceptScene"
 

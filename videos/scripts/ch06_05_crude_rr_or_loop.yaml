@@ -3,7 +3,8 @@ meta:
   concept: "crude_rr_or_loop"
   title: "單變項 crude RR vs OR：for loop 一次比完"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch06_05_crude_rr_or_loop"
   scene_class: "Ch06CrudeRrOrLoopScene"
 

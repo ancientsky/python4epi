@@ -3,7 +3,8 @@ meta:
   concept: "str_cleanup"
   title: "文字清理三板斧——str + drop_duplicates + rename"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch02_13_str_cleanup"
   scene_class: "Ch02StrCleanupScene"
 

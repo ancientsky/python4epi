@@ -3,7 +3,8 @@ meta:
   concept: "confidence_interval"
   title: "95% 信賴區間——為什麼要先取 log 再 exp 回來？"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch03_04_confidence_interval"
   scene_class: "Ch03ConfidenceIntervalScene"
 

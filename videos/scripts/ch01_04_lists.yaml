@@ -3,7 +3,8 @@ meta:
   concept: "lists"
   title: "列表——存放一組同類資料"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch01_04_lists"
   scene_class: "Ch01ListsScene"
 

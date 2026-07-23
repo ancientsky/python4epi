@@ -3,7 +3,8 @@ meta:
   concept: "why_python"
   title: "為什麼用 Python——流行病學家的超級工具"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch00_01_why_python"
   scene_class: "Ch00WhyPythonScene"
 

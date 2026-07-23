@@ -3,7 +3,8 @@ meta:
   concept: "forest_plot"
   title: "森林圖——一張圖比較所有嫌疑因子"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch03_07_forest_plot"
   scene_class: "Ch03ForestPlotScene"
 

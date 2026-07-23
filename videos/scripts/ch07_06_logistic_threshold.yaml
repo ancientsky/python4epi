@@ -3,7 +3,8 @@ meta:
   concept: "logistic_threshold"
   title: "Logistic regression：明天會不會是高峰日？"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch07_06_logistic_threshold"
   scene_class: "Ch07LogisticThresholdScene"
 

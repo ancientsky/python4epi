@@ -3,7 +3,8 @@ meta:
   concept: "change_in_estimate"
   title: "10% 法則：change-in-estimate 挑變項"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch06_08_change_in_estimate"
   scene_class: "Ch06ChangeInEstimateScene"
 

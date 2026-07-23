@@ -3,7 +3,8 @@ meta:
   concept: "uv_setup"
   title: "uv 與環境設定——一行搞定 Python 套件管理"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch00_02_uv_setup"
   scene_class: "Ch00UvSetupScene"
 

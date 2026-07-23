@@ -3,7 +3,8 @@ meta:
   concept: "conditionals"
   title: "條件判斷——把指標轉成行動訊號"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch01_05_conditionals"
   scene_class: "Ch01ConditionalsScene"
 

@@ -3,7 +3,8 @@ meta:
   concept: "mantel_haenszel"
   title: "Mantel-Haenszel 加權——公平的學期成績"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch05_06_mantel_haenszel"
   scene_class: "Ch05MantelHaenszelScene"
 

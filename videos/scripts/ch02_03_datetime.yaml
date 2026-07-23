@@ -3,7 +3,8 @@ meta:
   concept: "datetime"
   title: "日期時間大魔王——to_datetime 完全攻略"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch02_03_datetime"
   scene_class: "Ch02DatetimeScene"
 

@@ -3,7 +3,8 @@ meta:
   concept: "poisson_lag"
   title: "Poisson regression + lag：IRR 解讀每日病例"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch07_04_poisson_lag"
   scene_class: "Ch07PoissonLagScene"
 

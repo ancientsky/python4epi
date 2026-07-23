@@ -18,17 +18,20 @@ import edge_tts
 logger = logging.getLogger(__name__)
 
 DEFAULT_VOICE = "zh-TW-HsiaoChenNeural"
-DEFAULT_RATE = "-10%"
+# Livelier default prosody: a slightly faster rate and a brighter pitch keep
+# the narration energetic instead of sleepy. Per-script meta can override.
+DEFAULT_RATE = "+8%"
+DEFAULT_PITCH = "+8Hz"
 
 
-def _content_hash(text: str, voice: str, rate: str) -> str:
+def _content_hash(text: str, voice: str, rate: str, pitch: str) -> str:
     """Stable hash of the inputs that determine a segment's audio.
 
-    Used to invalidate the TTS cache when narration text (or voice/rate)
+    Used to invalidate the TTS cache when narration text (or voice/rate/pitch)
     changes — keying only on the segment id/filename would silently reuse
     stale audio after an edit.
     """
-    payload = "|".join((text, voice, rate)).encode("utf-8")
+    payload = "|".join((text, voice, rate, pitch)).encode("utf-8")
     return hashlib.sha256(payload).hexdigest()
 
 
@@ -46,9 +49,10 @@ async def _generate_one(
     output_path: pathlib.Path,
     voice: str = DEFAULT_VOICE,
     rate: str = DEFAULT_RATE,
+    pitch: str = DEFAULT_PITCH,
 ) -> None:
     """Generate a single audio segment with edge-tts."""
-    communicate = edge_tts.Communicate(text, voice, rate=rate)
+    communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
     await communicate.save(str(output_path))
 
 
@@ -78,6 +82,7 @@ def generate_segment_audio(
     output_path: pathlib.Path,
     voice: str = DEFAULT_VOICE,
     rate: str = DEFAULT_RATE,
+    pitch: str = DEFAULT_PITCH,
     *,
     force_cache: bool = False,
 ) -> float:
@@ -107,7 +112,7 @@ def generate_segment_audio(
     float
         Duration of the generated audio in seconds.
     """
-    want_hash = _content_hash(text, voice, rate)
+    want_hash = _content_hash(text, voice, rate, pitch)
     hash_path = _hash_path(output_path)
 
     if output_path.exists():
@@ -121,7 +126,7 @@ def generate_segment_audio(
         logger.info("Narration changed, regenerating: %s", output_path.name)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    asyncio.run(_generate_one(text, output_path, voice=voice, rate=rate))
+    asyncio.run(_generate_one(text, output_path, voice=voice, rate=rate, pitch=pitch))
     hash_path.write_text(want_hash)
     duration = get_audio_duration(output_path)
     logger.info("Generated %s (%.1fs)", output_path.name, duration)
@@ -133,6 +138,7 @@ def generate_all_segments(
     output_dir: pathlib.Path,
     voice: str = DEFAULT_VOICE,
     rate: str = DEFAULT_RATE,
+    pitch: str = DEFAULT_PITCH,
     *,
     force_cache: bool = False,
 ) -> list[dict]:
@@ -168,6 +174,7 @@ def generate_all_segments(
             audio_path,
             voice=voice,
             rate=rate,
+            pitch=pitch,
             force_cache=force_cache,
         )
         enriched.append({**seg, "audio_path": audio_path, "audio_duration": duration})

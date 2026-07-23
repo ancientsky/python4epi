@@ -3,7 +3,8 @@ meta:
   concept: "dataframe"
   title: "DataFrame 是什麼？從 CSV 到表格的第一步"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch02_01_dataframe"
   scene_class: "Ch02DataFrameScene"
 

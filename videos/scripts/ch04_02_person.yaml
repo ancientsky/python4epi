@@ -3,7 +3,8 @@ meta:
   concept: "person"
   title: "描述流行病學（人）——感染者的臉譜"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch04_02_person"
   scene_class: "Ch04PersonScene"
 

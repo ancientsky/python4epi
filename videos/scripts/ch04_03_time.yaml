@@ -3,7 +3,8 @@ meta:
   concept: "time"
   title: "流行曲線——用長條圖抓住疫情的脈搏"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch04_03_time"
   scene_class: "Ch04TimeScene"
 

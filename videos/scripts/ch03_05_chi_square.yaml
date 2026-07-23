@@ -3,7 +3,8 @@ meta:
   concept: "chi_square"
   title: "卡方檢定——觀察值 vs 期望值的擂台賽"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch03_05_chi_square"
   scene_class: "Ch03ChiSquareScene"
 

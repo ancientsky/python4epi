@@ -3,7 +3,8 @@ meta:
   concept: "why_rr_not_or"
   title: "為什麼世代研究要用 RR 不用 OR"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch06_01_why_rr_not_or"
   scene_class: "Ch06WhyRrNotOrScene"
 

@@ -3,7 +3,8 @@ meta:
   concept: "dag"
   title: "DAG 有向無環圖——畫一張因果地圖"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch05_02_dag"
   scene_class: "Ch05DagScene"
 

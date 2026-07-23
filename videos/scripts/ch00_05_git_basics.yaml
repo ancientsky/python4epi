@@ -3,7 +3,8 @@ meta:
   concept: "git_basics"
   title: "Git 版本控制——程式碼的時光機"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch00_05_git_basics"
   scene_class: "Ch00GitBasicsScene"
 

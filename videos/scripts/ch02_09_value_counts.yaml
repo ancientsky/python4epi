@@ -3,7 +3,8 @@ meta:
   concept: "value_counts"
   title: "頻率表速成——value_counts + crosstab 完全攻略"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch02_09_value_counts"
   scene_class: "Ch02ValueCountsScene"
 

@@ -3,7 +3,8 @@ meta:
   concept: "types"
   title: "型別與轉換——數字、文字、布林值"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch01b_03_types"
   scene_class: "Ch01bTypesScene"
 

@@ -3,7 +3,8 @@ meta:
   concept: "forest_plot_adjusted"
   title: "Adjusted RR 森林圖：一眼看穿真正危險因子"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch06_07_forest_plot_adjusted"
   scene_class: "Ch06ForestPlotAdjustedScene"
 

@@ -3,7 +3,8 @@ meta:
   concept: "try_except"
   title: "try/except——優雅處理意外"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch01b_05_try_except"
   scene_class: "Ch01bTryExceptScene"
 

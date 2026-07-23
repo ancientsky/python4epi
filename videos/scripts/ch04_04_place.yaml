@@ -3,7 +3,8 @@ meta:
   concept: "place"
   title: "地點比較——哪個翼區最危險？"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch04_04_place"
   scene_class: "Ch04PlaceScene"
 

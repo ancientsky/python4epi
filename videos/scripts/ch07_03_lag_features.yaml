@@ -3,7 +3,8 @@ meta:
   concept: "lag_features"
   title: "Lag features：把時間序列變成迴歸資料"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch07_03_lag_features"
   scene_class: "Ch07LagFeaturesScene"
 

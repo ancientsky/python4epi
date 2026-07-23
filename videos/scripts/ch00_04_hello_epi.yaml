@@ -3,7 +3,8 @@ meta:
   concept: "hello_epi"
   title: "第一支程式 Hello Epi——十分鐘跑完你的第一個流病分析"
   voice: "zh-TW-HsiaoChenNeural"
-  rate: "-10%"
+  rate: "+8%"
+  pitch: "+8Hz"
   scene_module: "scenes.ch00_04_hello_epi"
   scene_class: "Ch00HelloEpiScene"
 
