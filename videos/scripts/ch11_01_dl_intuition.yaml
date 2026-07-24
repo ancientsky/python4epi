@@ -1,0 +1,137 @@
+meta:
+  chapter: "11"
+  concept: "dl_intuition"
+  title: "深度學習超白話：訓練一位新手偵探"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch11_01_dl_intuition"
+  scene_class: "Ch11DLIntuitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨，歡迎來到深度學習教室！
+      一聽到 neuron、backprop、epoch 這堆黑話就頭暈？別怕。
+      這一集我用一個比喻把整章串起來：把訓練一個神經網路，想成訓練一位新手偵探破案。
+      看懂這位偵探怎麼養成，後面每一個技術名詞，都只是他成長路上的一站。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "detective_metaphor"
+    narration: >
+      先說故事。一位新手偵探，也就是我們的模型，一開始什麼都不會，只能憑直覺亂猜。
+      你給他一疊已經知道結局的舊案子，也就是訓練資料，讓他一次次練習：
+      猜一次、對答案、檢討哪裡想錯、再調整判斷方式。
+      練到他培養出經驗，看到新案子也能猜對七八成——這整套養成流程，就是深度學習的訓練迴圈。
+    animation: "show_detective_metaphor"
+    pause_after: 0.5
+
+  - id: "five_sentences"
+    narration: >
+      五句話看懂整套訓練法。
+      neuron 是憑直覺對線索加權判斷；training loop 是帶著標準答案反覆練習；
+      backprop 是案子破錯了，往回追查哪一步該負責；
+      early stopping 是見好就收、不練到走火入魔；
+      deploy 就是出師，帶著累積的經驗去辦真正的新案子。就這五步，記住了。
+    animation: "show_five_sentences"
+    pause_after: 0.5
+
+  - id: "term_mapping"
+    narration: >
+      把偵探的世界翻成 DL 術語。
+      憑直覺對案情下判斷，就是一個 neuron——每條線索乘上有多可信，加總後決定要不要採信。
+      帶著答案反覆練習，就是 training loop；見好就收、不練過頭，就是 early stopping。
+      同一件事，只是換了兩種講法而已。
+    animation: "show_term_mapping"
+    pause_after: 0.5
+
+  - id: "five_steps"
+    narration: >
+      把整個養成流程排成一條生產線：憑直覺猜、反覆練習、檢討想錯、見好就收、最後出師上線。
+      對應到深度學習，就是 neuron、train loop、backprop、early stop、deploy 一路走下來。
+      深度學習再花俏，骨架就是這五步，一步都少不了。
+    animation: "show_five_steps"
+    pause_after: 0.5
+
+  - id: "sledgehammer"
+    narration: >
+      但有句誠實話一定要先講：深度學習是一把牛刀，不是萬靈丹。
+      再厲害的偵探，線索太少也破不了案——像本書這份兩百八十筆的資料，
+      找一位資深老偵探邏輯斯迴歸反而更快、更準、更好跟法官解釋。
+      什麼時候該磨這把刀，決策框架會教你判斷。
+    animation: "show_sledgehammer"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      五句話幫你打包這一集。
+      一，模型是新手偵探，經驗全靠你餵的舊案子。
+      二，訓練迴圈就是猜、對答案、檢討、調整。
+      三，backprop 是往回追查誰該負責。
+      四，early stopping 是見好就收，領獎盃的是表現最好那一次，不是練到最後那次。
+      五，資料太少，牛刀殺不出優勢。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：換個場景，胸部 X 光的肺炎分診！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_pneumonia"
+    narration: >
+      換到急診：我們想要一個模型看一眼胸部 X 光片，就先幫忙分流哪些病人像肺炎、該優先看。
+      這次的線索不是表格數字，而是幾十萬張影像的像素——資料量夠大、又是高維非線性的影像。
+      這正是深度學習真的發威的地方，找 CNN 這位專看局部指紋的鑑識官來辦最合適。
+      同一套偵探養成邏輯，換成影像照樣通。
+    animation: "show_extra_pneumonia"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      深度學習三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_no_baseline"
+    narration: >
+      第一個地雷：還沒跑過傳統 baseline，就急著上深度學習。
+      正確順序永遠是先跑邏輯斯迴歸或簡單 ML，測出一個基準分數，
+      不夠好、又符合決策樹的條件，才考慮磨牛刀。
+      跳過 baseline，你根本不知道 DL 到底有沒有贏。
+    animation: "show_blindspot_no_baseline"
+    error_code: "model = DeepNet(); model.fit(X)"
+    correct_code: "run_baseline_first(X, y)  # decide"
+    pause_after: 0.5
+
+  - id: "blindspot_tiny_data"
+    narration: >
+      第二個地雷：小資料集硬套複雜架構。
+      兩百八十筆資料配一個好幾層、上千參數的大網路，參數比樣本還多，過擬合風險爆表。
+      資料小的時候，簡單模型往往更誠實、也更好解釋。
+    animation: "show_blindspot_tiny_data"
+    error_code: "net = BigNet(layers=20)  # 280 rows"
+    correct_code: "net = LogisticRegression()  # small"
+    pause_after: 0.5
+
+  - id: "blindspot_black_box"
+    narration: >
+      第三個地雷：把深度學習當黑盒子盲目相信。
+      模型吐出一個分數，你不能照單全收——用 SHAP 或 attention 權重打開黑盒子，
+      看看它到底靠哪些線索在判斷。
+      重要不等於因果，這點跟前面幾章一模一樣。
+    animation: "show_blindspot_black_box"
+    error_code: "trust(model.predict(x))  # black box"
+    correct_code: "explain = shap.DeepExplainer(model)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      這一集我們認識了新手偵探的養成藍圖。
+      接下來就把比喻翻成正式的技術名詞，一站一站手把手：
+      下一集拆解 neuron、layer、activation，看神經網路到底在算什麼。我們下次見！
+    animation: "show_outro"
+    pause_after: 1.0

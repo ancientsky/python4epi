@@ -1,0 +1,143 @@
+meta:
+  chapter: "10"
+  concept: "train_test_split"
+  title: "資料三切分：先把考卷分好，測試集絕不偷看"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch10_02_train_test_split"
+  scene_class: "Ch10TrainTestSplitScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集我們認識了實習醫師的養成藍圖，這一集從第一站開始——資料切分。
+      在把病歷丟給實習醫師之前，你得先把資料切開：
+      一部分拿來上課學、一部分留著最後打分數。
+      這一步看起來簡單，卻是新手翻車的第一個彎道。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_split"
+    narration: >
+      為什麼一定要切開？因為如果你拿同一份資料又上課又考試，
+      實習醫師只要把答案背起來就滿分了，完全看不出真本事。
+      就像第七章說的「不能偷看未來」，機器學習的版本就是把資料切成 train、validation、test 三份，各司其職。
+    animation: "show_why_split"
+    pause_after: 0.5
+
+  - id: "split_diagram"
+    narration: >
+      三份各有各的工作。
+      train 大約六成，用來上課學公式；
+      validation 大約兩成，用來模擬考、調參數、選模型；
+      test 大約兩成，是執照考，只掀一次。記住那句咒語：測試集看過就作廢。
+    animation: "show_split_diagram"
+    pause_after: 0.5
+
+  - id: "split_ratios"
+    narration: >
+      那到底要切六二二、還是七一五、八一一？
+      一句話：資料越多，validation 和 test 的比例可以越小。
+      而我們這章只有 280 筆，屬於典型的「小資料」——所以你不會看到一個叫 X_val 的東西，
+      固定的模擬考被下一集的交叉驗證接手了，test 一樣留兩成。
+    animation: "show_split_ratios"
+    pause_after: 0.5
+
+  - id: "split_code"
+    narration: >
+      寫成程式就一行 train_test_split。
+      餵進特徵 X 和標籤 y，test_size 設 0.2 留兩成當測試集，
+      random_state 固定讓結果可重現。
+      最關鍵的是最後那個 stratify 等於 y——這叫分層切，下一段告訴你為什麼它是保命符。
+    animation: "show_split_code"
+    code: |
+      from sklearn.model_selection import train_test_split
+
+      X_train, X_test, y_train, y_test = train_test_split(
+          X, y, test_size=0.2, random_state=42, stratify=y,
+      )
+    pause_after: 0.5
+
+  - id: "stratify_why"
+    narration: >
+      為什麼要分層切？因為我們的重症病人只佔兩成四，屬於少數。
+      如果隨機亂切，運氣不好某一折可能幾乎沒有半個重症病人，成績就會亂跳。
+      stratify 等於 y 會保證每一份裡，重症和非重症的比例都跟原始資料一樣，成績才穩。
+      切分和交叉驗證都要記得開這個開關。
+    animation: "show_stratify_why"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三個重點打包。
+      一，一定要先切分，train 上課、test 打分數，測試集看過作廢。
+      二，資料越大，測試比例可以越小；本章 280 筆太小，validation 交給交叉驗證。
+      三，不平衡資料一定要分層切，stratify 等於 y 是保命符。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：換個場景，流感季住院預測模型！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_flu"
+    narration: >
+      換個場景，你想建一個流感季的住院預測模型，判斷掛急診的病人會不會需要住院。
+      住院的病人通常是少數，所以這裡更要分層切。
+      你看，程式碼幾乎一個字都沒改，一樣 train_test_split、一樣 stratify——
+      同一套切分武器，換個疾病照樣鋒利。
+    animation: "show_extra_flu"
+    code: |
+      # 流感季住院預測：一樣先切、一樣分層
+      X_tr, X_te, y_tr, y_te = train_test_split(
+          X, admit, test_size=0.2, stratify=admit,
+      )
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      資料切分三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_scale_before_split"
+    narration: >
+      第一個地雷，也是最隱蔽的一個：在切分之前就先標準化。
+      你用全部資料算平均值和標準差，測試集的資訊就偷偷滲進了訓練，這是最難察覺的資料洩漏。
+      正確做法是把標準化包進 Pipeline，讓它在每一折內部才做。
+    animation: "show_blindspot_scale_before_split"
+    error_code: "X = scaler.fit_transform(X)  # before split"
+    correct_code: "pipe = make_pipeline(StandardScaler(), lr)"
+    pause_after: 0.5
+
+  - id: "blindspot_no_stratify"
+    narration: >
+      第二個地雷：不平衡資料卻用隨機亂切。
+      少數類別可能整個掉進同一邊，某一折幾乎沒有正例，成績像坐雲霄飛車。
+      只要加上 stratify 等於 y，就能維持每一份的類別比例。
+    animation: "show_blindspot_no_stratify"
+    error_code: "train_test_split(X, y)  # no stratify"
+    correct_code: "train_test_split(X, y, stratify=y)"
+    pause_after: 0.5
+
+  - id: "blindspot_time_series"
+    narration: >
+      第三個地雷：時間序列資料還用隨機打亂來切。
+      這等於拿未來的資料去預測過去，鐵定作弊。
+      時間資料要用 TimeSeriesSplit 照時間順序切，空間資料則要用 spatial CV，都不能隨便 shuffle。
+    animation: "show_blindspot_time_series"
+    error_code: "train_test_split(X, y, shuffle=True)  # ts"
+    correct_code: "TimeSeriesSplit(n_splits=5)  # ordered"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      資料切好、考卷分妥，實習醫師的第一站就完成了。
+      可是機器學習連「預測誰會生病」這種句子都聽不懂——它只認得 0 跟 1。
+      下一集我們就來把長官那句模糊的問題，翻譯成一欄乾淨的 0/1 標籤。下次見！
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,125 @@
+meta:
+  chapter: "13"
+  concept: "min_reproducible_report"
+  title: "最小可重跑報告：三行指令，從乾淨環境到報告"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch13_03_min_reproducible_report"
+  scene_class: "Ch13MinReportScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集我們認清了三顆地雷，這一集開始動手。
+      師傅要教你組一份「最小可重跑報告」：從一台乾淨的機器出發，只靠固定的三行指令，
+      就能產出跟原作者一模一樣的數字。零手動步驟，這正是 single-command workflow 的精神。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "the_goal"
+    narration: >
+      先講目標。從「一份原始資料」到「一份報告」之間，不該有任何只存在你腦中的手動步驟。
+      理想狀態是：別人複製你的 repo，跑幾行固定指令，就拿到跟你一樣的輸出。
+      不用問你「還要裝什麼、還要改哪裡」，複製貼上就能重現。
+    animation: "show_the_goal"
+    pause_after: 0.5
+
+  - id: "three_commands"
+    narration: >
+      關鍵就這三行指令，一行都不多。
+      第一行 uv sync，依照 uv.lock 把整個虛擬環境重建起來，套件版本完全一致。
+      第二行 uv run pytest，在剛建好的環境裡跑單元測試，確認環境是活的、程式是對的。
+      第三行 uv run python 跑分析腳本，讀 line list、算致死率跟侵襲率、輸出報告。三行搞定。
+    animation: "show_three_commands"
+    code: |
+      uv sync
+      uv run pytest
+      uv run python notebooks/run_sitrep.py
+    pause_after: 0.5
+
+  - id: "command_breakdown"
+    narration: >
+      把這三行的分工再拆清楚一點。
+      uv sync 負責重建環境，不管在哪台機器跑，裝出來的套件都一樣。
+      uv run pytest 負責驗證，測試通過才代表環境跟程式都沒問題。
+      uv run python 才是真正跑一次分析、產出報告。裝好、驗好、跑好，三步驟一氣呵成。
+    animation: "show_command_breakdown"
+    pause_after: 0.5
+
+  - id: "why_single_command"
+    narration: >
+      為什麼堅持要「單一命令」？因為手動步驟就是可重現的頭號殺手。
+      只要有一步「記得先改某個設定」是靠人腦記憶，別人就重現不出來，過幾個月連你自己都忘。
+      把每一步都寫成固定指令，等於把你的記憶外包給程式，這才叫可追溯。
+    animation: "show_why_single_command"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      主線三重點。第一，最小可重跑報告 = 乾淨環境 + 固定指令 + 固定程式碼。
+      第二，三行指令分工明確：uv sync 建環境、uv run pytest 驗證、uv run python 產報告。
+      第三，零手動步驟才是精髓，別人複製貼上就能重現。這份報告，就是你可重現研究的門面。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：一行指令，產出流感週報！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_flu"
+    narration: >
+      把同樣的精神搬到流感監測。每週要交一份流感週報，你不想每次都手動點十個步驟。
+      於是你把讀資料、算就診率、畫流行曲線、輸出 PDF 全包進一支腳本。
+      以後每週只要跑這一行 uv run python，週報就自己長出來，完全不用回想上週怎麼做的。
+    animation: "show_extra_flu"
+    code: |
+      uv run python notebooks/flu_weekly.py
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      單一命令三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：把關鍵步驟寫在註解、寫在腦子裡，就是沒寫進指令。
+      「記得先設一下 PATH」這種提醒，過三個月你自己都忘。
+      正確做法是讓 uv sync 一鍵到位，零手動步驟。
+    animation: "show_bs_manual_steps"
+    error_code: "# remember to set PATH first"
+    correct_code: "uv sync  # zero manual steps"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：用 pip 裝 requirements.txt，繞過 uv.lock 的鎖定。
+      requirements 通常只寫大概版本，裝出來的環境跟原作者不一定一樣。
+      正確做法是用 uv sync，讓 uv.lock 幫你精確到 patch 版號。
+    animation: "show_bs_pip_vs_uv"
+    error_code: "pip install -r requirements.txt"
+    correct_code: "uv sync  # uses uv.lock"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：只在自己機器上跑成功，從沒驗證乾淨環境能不能跑。
+      你電腦裡可能藏了某個沒寫進 lock 的套件，換台機器就爆炸。
+      正確做法是先 uv run pytest 驗證，再跑腳本，CI 也照這個順序把關。
+    animation: "show_bs_no_clean_env"
+    error_code: "python run_sitrep.py  # my machine"
+    correct_code: "uv run pytest && uv run run_sitrep.py"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      三行指令，就把「在我電腦上可以跑」升級成「在任何人電腦上都可以跑」。
+      但報告裡的數字到底怎麼算出來的？下一集我們鑽進 Step 2，
+      看怎麼把原始資料變成一份「唯一的標準答案」摘要。敬請期待！
+    animation: "show_outro"
+    pause_after: 1.0

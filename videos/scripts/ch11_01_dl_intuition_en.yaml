@@ -1,0 +1,133 @@
+meta:
+  chapter: "11"
+  concept: "dl_intuition"
+  title: "Deep Learning, Plain and Simple: Training a Rookie Detective"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch11_01_dl_intuition"
+  scene_class: "Ch11DLIntuitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hey, welcome to the deep-learning classroom!
+      Does your head spin the moment you hear jargon like neuron, backprop, and epoch?
+      Don't worry.
+      In this episode I'll tie the whole chapter together with one metaphor: think of training a neural network as training a rookie detective to crack cases.
+      Once you see how this detective is raised, every technical term later is just one stop along his growth.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "detective_metaphor"
+    narration: >
+      Let's tell the story first.
+      A rookie detective, which is our model, starts out knowing nothing and can only guess on gut instinct.
+      You hand him a stack of old cases whose endings are already known, which is the training data, and let him drill over and over: make a guess, check the answer, review where his thinking went wrong, then adjust how he judges.
+      Drill until he builds up experience and nails new cases seven or eight times out of ten, and that whole training routine is exactly the deep-learning training loop.
+    animation: "show_detective_metaphor"
+    pause_after: 0.5
+
+  - id: "five_sentences"
+    narration: >
+      Here's the whole training method in five lines.
+      A neuron weighs the clues by trust and makes a judgement; the training loop is drilling over and over with the answer key; backprop is when the case is cracked wrong and you trace back which step is to blame; early stopping is quitting while you're ahead instead of over-training yourself into a frenzy; and deploy is graduating and taking all that accumulated experience out to work real new cases.
+      Just these five steps, got it.
+    animation: "show_five_sentences"
+    pause_after: 0.5
+
+  - id: "term_mapping"
+    narration: >
+      Now let's translate the detective's world into DL terms.
+      Making a gut judgement on a case is one neuron: each clue is multiplied by how trustworthy it is, summed up, and that decides whether to buy it.
+      Drilling over and over with the answers is the training loop; quitting while ahead instead of overtraining is early stopping.
+      Same thing, just two different ways of saying it.
+    animation: "show_term_mapping"
+    pause_after: 0.5
+
+  - id: "five_steps"
+    narration: >
+      Line the whole training routine up as an assembly line: guess on instinct, drill repeatedly, review the mistakes, quit while ahead, and finally graduate and go live.
+      Mapped onto deep learning, that's neuron, train loop, backprop, early stop, and deploy, straight down the line.
+      However fancy deep learning gets, the skeleton is these five steps, and you can't skip a single one.
+    animation: "show_five_steps"
+    pause_after: 0.5
+
+  - id: "sledgehammer"
+    narration: >
+      But there's one honest thing I have to say up front: deep learning is a sledgehammer, not a cure-all.
+      Even the sharpest detective can't crack a case with too few clues, and with a dataset like this book's two hundred eighty rows, calling in a veteran like logistic regression is actually faster, sharper, and easier to explain to the judge.
+      When to swing this hammer, the decision framework will teach you to judge.
+    animation: "show_sledgehammer"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Five lines to pack up this episode.
+      One, the model is a rookie detective, and its experience comes entirely from the old cases you feed it.
+      Two, the training loop is guess, check, review, adjust.
+      Three, backprop traces back who's to blame.
+      Four, early stopping is quitting while ahead, and the trophy goes to the best run, not the last one.
+      Five, with too little data, the sledgehammer wins no edge.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a change of scene, pneumonia triage from chest X-rays!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_pneumonia"
+    narration: >
+      Over to the ER: we want a model that takes one glance at a chest X-ray and helps triage which patients look like pneumonia and should be seen first.
+      This time the clues aren't table numbers but pixels across hundreds of thousands of images, plenty of data and a high-dimensional, non-linear image.
+      This is exactly where deep learning truly shines, and CNN, the forensic expert who reads local fingerprints, is the best one to call in.
+      Same detective-training logic, and it works just as well on images.
+    animation: "show_extra_pneumonia"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for deep learning!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_no_baseline"
+    narration: >
+      Blind spot number one: rushing into deep learning before ever running a traditional baseline.
+      The right order is always to run logistic regression or simple ML first to get a baseline score, and only when it's not good enough and the decision tree's conditions are met do you consider sharpening the sledgehammer.
+      Skip the baseline and you have no idea whether DL actually won.
+    animation: "show_blindspot_no_baseline"
+    error_code: "model = DeepNet(); model.fit(X)"
+    correct_code: "run_baseline_first(X, y)  # decide"
+    pause_after: 0.5
+
+  - id: "blindspot_tiny_data"
+    narration: >
+      Blind spot number two: forcing a complex architecture onto a small dataset.
+      Two hundred eighty rows paired with a big multi-layer network of thousands of parameters means more parameters than samples, and the overfitting risk goes through the roof.
+      When the data is small, a simple model is usually more honest and easier to explain.
+    animation: "show_blindspot_tiny_data"
+    error_code: "net = BigNet(layers=20)  # 280 rows"
+    correct_code: "net = LogisticRegression()  # small"
+    pause_after: 0.5
+
+  - id: "blindspot_black_box"
+    narration: >
+      Blind spot number three: blindly trusting deep learning as a black box.
+      When the model spits out a score, you can't take it at face value; use SHAP or attention weights to open the black box and see which clues it's actually judging on.
+      Important does not equal causal, and that's exactly the same as in the earlier chapters.
+    animation: "show_blindspot_black_box"
+    error_code: "trust(model.predict(x))  # black box"
+    correct_code: "explain = shap.DeepExplainer(model)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      This episode we met the blueprint for training a rookie detective.
+      Next we'll translate the metaphor into formal technical terms, one stop at a time, hand in hand: next episode we break down neuron, layer, and activation to see what a neural network actually computes.
+      See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

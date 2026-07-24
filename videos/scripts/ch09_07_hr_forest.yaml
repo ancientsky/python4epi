@@ -1,0 +1,150 @@
+meta:
+  chapter: "09"
+  concept: "hr_forest"
+  title: "HR 森林圖：一眼看出誰危險、誰不顯著"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch09_07_hr_forest"
+  scene_class: "Ch09HRForestScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集我們讓 Cox 吐出一張塞滿數字的成績單。
+      問題是，一整欄 coef、一整欄 CI 這樣讀下來，眼睛真的會脫窗。
+      這一集教你一招把它變好看：HR 森林圖，
+      同一組數字換個畫法，誰危險、誰保護、誰不顯著，一眼就掃完。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_forest"
+    narration: >
+      為什麼要畫森林圖？因為人腦看圖比看表快太多了。
+      森林圖不是新東西，它就是 print_summary 那張表的圖形版，一模一樣的數字。
+      每個變項變成一個「點加一條橫線」：點是 HR 的估計值，橫線是它的信賴區間。
+      排成一排，誰高誰低、誰穩誰抖，瞬間現形。
+    animation: "show_why_forest"
+    pause_after: 0.5
+
+  - id: "forest_anatomy"
+    narration: >
+      來看這張圖的結構。中間這條虛線是參考線，代表 HR 等於 1、也就是沒關係。
+      severe 的點落在右邊、整條橫線都在右邊沒碰到參考線，是危險又顯著，畫成紅色。
+      age 的橫線橫跨參考線，代表不顯著，畫成灰色。
+      而 female 的點跑到左邊、整條線都在左邊，是保護又顯著，畫成綠色。
+    animation: "show_forest_anatomy"
+    pause_after: 0.5
+
+  - id: "forest_code"
+    narration: >
+      畫它有多簡單？一行 cph.plot 就生出森林圖了。
+      要提醒一件事：lifelines 的森林圖預設 x 軸畫的是 log 過的 HR，
+      所以那條「沒關係」的參考線，位置是在 x 等於 0，不是 1。
+      加一條 axvline 在 0 的位置，讀起來就更清楚。
+    animation: "show_forest_code"
+    code: |
+      import matplotlib.pyplot as plt
+
+      cph.plot()   # forest plot of every HR + 95% CI
+      plt.axvline(0, color="grey", ls="--")  # log(HR)=0 -> HR=1
+      plt.title("Cox Regression - Hazard Ratio")
+      plt.show()
+    pause_after: 0.5
+
+  - id: "read_forest"
+    narration: >
+      讀森林圖記住三步驟。第一步，看點落在參考線的哪一邊，那決定方向——右邊危險、左邊保護。
+      第二步，看那條橫線有沒有跨過參考線，跨過去就是不顯著，證據不夠。
+      第三步，看橫線多長，越長代表信賴區間越寬、越不確定，通常是那個變項樣本太少。
+      方向、顯著、確定性，一二三，掃完收工。
+    animation: "show_read_forest"
+    pause_after: 0.5
+
+  - id: "adjusted_meaning"
+    narration: >
+      還有一個很多人忽略的重點：森林圖上每一個 HR，都是「校正後」的 adjusted HR。
+      因為 Cox 是同時放進所有因子一起估，它們彼此互相校正、互相扣掉干擾。
+      所以這裡的年齡效應，是「在共病、免疫都一樣的情況下」年齡的淨效應，
+      而不是單看年齡那種會被別人干擾的粗略關聯。這正是多變項模型最值錢的地方。
+    animation: "show_adjusted_meaning"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      HR 森林圖三個重點。
+      一，點的位置看方向，橫線看顯著，就這麼直覺。
+      二，信賴區間只要跨過 1——在 log 圖上就是跨過 0——那就是不顯著。
+      三，圖上每個都是校正後的 adjusted HR，不是粗略關聯。
+      不過這些漂亮的 HR 能不能信，其實還藏著一個大前提，下集揭曉。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：癌症篩檢世代的校正 HR！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_screening"
+    narration: >
+      公衛很愛問一個問題：做篩檢到底有沒有降低死亡風險？
+      把一群人依有沒有參加篩檢分組，追蹤好幾年看癌症死亡，
+      用 Cox 校正掉年齡跟性別，再一行 plot 畫森林圖。
+      如果篩檢組的 HR 小於 1、而且整條信賴區間都在 1 的左邊，就是紮實的保護效果。
+    animation: "show_extra_screening"
+    code: |
+      # cancer-screening cohort, adjust age + sex
+      cox.fit(screen, "years", "cancer_death")
+      cox.plot()   # forest of adjusted HRs
+      # screened arm: HR < 1 and CI below 1 -> protective
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      HR 森林圖三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_refline"
+    narration: >
+      第一個地雷：把參考線畫在 HR 等於 1 的地方。
+      問題是 lifelines 的森林圖 x 軸是 log 過的 HR，
+      log 之後 HR 等於 1 會落在 0，不是 1。
+      參考線要畫在 x 等於 0，畫錯位置整張圖的顯著性都會判反。
+    animation: "show_blindspot_refline"
+    error_code: 'plt.axvline(1)  # x is log(HR)'
+    correct_code: 'plt.axvline(0)  # log(HR)=0 is HR=1'
+    pause_after: 0.5
+
+  - id: "blindspot_ci_crosses_one"
+    narration: >
+      第二個地雷：只看點在 1 的右邊，就宣布這是危險因子。
+      點的位置只講方向，真正決定顯不顯著的是整條信賴區間。
+      只要 CI 還跨在 1 上，代表 1 這個「沒差」的可能性沒被排除，就不能說顯著。
+      判斷要看 CI 的上下界有沒有同時落在 1 的同一側。
+    animation: "show_blindspot_ci_crosses_one"
+    error_code: 'significant = hr > 1  # ignores CI'
+    correct_code: 'significant = ci_low > 1 or ci_hi < 1'
+    pause_after: 0.5
+
+  - id: "blindspot_ci_width"
+    narration: >
+      第三個地雷：看到橫線又粗又長，就以為效應特別強。
+      剛好相反，橫線的長度代表的是不確定性，越長越模糊。
+      效應的強度看的是點的位置也就是 HR，橫線的長度只是在說你有多信這個估計。
+      別把「不確定」誤讀成「很厲害」。
+    animation: "show_blindspot_ci_width"
+    error_code: 'effect = ci_width  # wider=stronger'
+    correct_code: 'effect = hr  # width is uncertainty'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      現在你會畫森林圖、也會用一二三步驟秒讀它了。
+      但這些點跟橫線能不能信，其實全都押在 Cox 的一個關鍵假設上——比例風險假設。
+      下一集我們就來驗證這個前提，教你用一行程式檢查，還有違反時的補救辦法。
+      存活分析的最後一塊拼圖，我們下集補上！
+    animation: "show_outro"
+    pause_after: 1.0

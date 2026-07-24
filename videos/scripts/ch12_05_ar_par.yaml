@@ -1,0 +1,147 @@
+meta:
+  chapter: "12"
+  concept: "ar_par"
+  title: "歸因風險 AR 與族群歸因風險 PAR：把「有關」變成「能救幾個人」"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch12_05_ar_par"
+  scene_class: "Ch12ARPARScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      歡迎回到因果推論教室！前面十一章我們一直說「淋浴跟感染有關」，
+      這一集要把「有關」變成可以砸錢做決策的數字。
+      主角有兩個：歸因風險 AR，跟族群歸因風險 PAR。
+      一個問「暴露組多背了多少風險」，一個問「整個族群拿掉這個暴露，能少掉多少病例」。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "ar_vs_rr"
+    narration: >
+      先講最容易搞混的地方：AR 是相減，不是相除！
+      第三章算過的風險比 RR 是「相除」，回答風險變幾倍；
+      歸因風險 AR 是「相減」，回答暴露組比非暴露組多背了幾個百分點。
+      同一份資料、兩種問法，公衛決策上的意義完全不同。
+    animation: "show_ar_vs_rr"
+    pause_after: 0.5
+
+  - id: "two_by_two"
+    narration: >
+      護理之家只有 280 筆、訊號有點弱，我們換一組乾淨的教學數字來練。
+      經典的 2×2 表：暴露又患病 120 人、暴露沒事 280 人、
+      沒暴露卻患病 25 人、沒暴露也沒事 375 人。
+      暴露組風險三成、未暴露組只有六分多，光用看的就知道差很多。
+    animation: "show_two_by_two"
+    pause_after: 0.5
+
+  - id: "ar_code"
+    narration: >
+      把 2×2 塞進 Python。暴露組風險等於 a 除以 a 加 b，未暴露組風險等於 c 除以 c 加 d。
+      歸因風險 AR 就是兩個相減——再強調一次，是減號！
+      風險比 RR 才是相除。這兩行只差一個符號，意義卻天差地遠。
+    animation: "show_ar_code"
+    code: |
+      a, b, c, d = 120, 280, 25, 375
+      risk_exp = a / (a + b)      # 0.300
+      risk_unexp = c / (c + d)    # 0.0625
+      AR = risk_exp - risk_unexp  # 相減，不是相除！
+      RR = risk_exp / risk_unexp  # 這才是相除
+    pause_after: 0.5
+
+  - id: "par_paf"
+    narration: >
+      接下來換族群視角。族群歸因風險 PAR，把分母從「暴露組」換成「整個族群」，
+      看這個暴露對全體貢獻了多少風險。它的百分比版本叫族群歸因分數 PAF，
+      可以用 Levin 公式算：只要暴露盛行率 Pe 跟風險比 RR 兩個數字，就能推出來。
+    animation: "show_par_paf"
+    code: |
+      risk_total = (a + c) / (a + b + c + d)     # 0.181
+      Pe = (a + b) / (a + b + c + d)             # 暴露盛行率 0.5
+      PAR = risk_total - risk_unexp              # 族群歸因風險
+      PAF = Pe * (RR - 1) / (1 + Pe * (RR - 1))  # Levin 公式
+    pause_after: 0.5
+
+  - id: "ar_output"
+    narration: >
+      跑出來，AR 等於 0.2375，暴露組足足多背了 23.7 個百分點；
+      RR 等於 4.8，風險是四點八倍；PAF 大約 65.5%。
+      翻成人話：如果這真的是因果，把暴露完全消除，理論上可以少掉六成五的病例——
+      這數字長官超愛聽，但等一下地雷區會告訴你，為什麼不能亂用。
+    animation: "show_ar_output"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      AR 跟 PAR 三個重點打包。
+      一，AR 相減、RR 相除，差一個符號，別搞混。
+      二，PAR 和 PAF 是族群視角，分母換成全體。
+      三，PAF 只有在因果成立時，才能拿去估「能救多少人」。
+      記住這三點，你就能把關聯翻成決策數字。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：抽菸對肺病的族群歸因！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_smoking"
+    narration: >
+      把同一條 Levin 公式，搬去公共衛生最經典的戰場：抽菸與肺病。
+      假設族群吸菸盛行率 25%、肺病風險比高達 10 倍，代進 Levin 公式，PAF 大約 69%。
+      意思是全族群將近七成的肺病，可歸因於吸菸——
+      同一條公式，換個暴露照樣打天下。
+    animation: "show_extra_smoking"
+    code: |
+      Pe, RR = 0.25, 10        # 吸菸盛行率、肺病風險比
+      PAF = Pe * (RR - 1) / (1 + Pe * (RR - 1))
+      print(f"PAF = {PAF:.0%}")   # PAF = 69%
+      # 全族群近七成肺病可歸因於吸菸
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      AR 和 PAR 三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：把 AR 寫成相除。相除算出來的是風險比 RR，不是歸因風險。
+      AR 一定是暴露組風險「減」未暴露組風險，一個減號寫錯，整個解讀就翻車。
+    animation: "show_blindspot_subtract_not_divide"
+    error_code: "AR = risk_exp / risk_unexp"
+    correct_code: "AR = risk_exp - risk_unexp"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：以為光靠風險比 RR 就能講族群衝擊。
+      RR 再大，如果暴露的人很少，實際能預防的病例也有限。
+      族群層級一定要用 Levin 公式，把暴露盛行率 Pe 一起算進去，那才是 PAF。
+    animation: "show_blindspot_rr_alone"
+    error_code: "pop_impact = RR"
+    correct_code: "PAF = Pe*(RR-1) / (1 + Pe*(RR-1))"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：不管三七二十一，直接拿 PAF 乘上病例數，當成「可預防人數」。
+      PAF 只有在暴露和疾病真的是因果關係時才成立；
+      如果背後其實藏著干擾因子，消除暴露根本救不了這些病例。先確認因果，再乘下去。
+    animation: "show_blindspot_paf_causal"
+    error_code: "saved = total_cases * PAF"
+    correct_code: "if causal: saved = total_cases * PAF"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      AR、PAR、PAF 三兄弟到手，你已經能把「有關聯」翻成「能救多少人」的決策語言。
+      但別忘了——這些數字的靈魂，全押在「因果」兩個字上。
+      下一集，我們就用差異中之差異 DiD，正面對決「介入到底有沒有效」！
+    animation: "show_outro"
+    pause_after: 1.0

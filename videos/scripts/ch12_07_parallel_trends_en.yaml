@@ -1,0 +1,132 @@
+meta:
+  chapter: "12"
+  concept: "parallel_trends"
+  title: "The Parallel-Trends Assumption: DiD's Lifeblood - If It Breaks, Everything Collapses"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch12_07_parallel_trends"
+  scene_class: "Ch12ParallelTrendsScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode's DiD was mighty, but it has one lifeblood, and if it snaps the whole estimate collapses:
+      the parallel-trends assumption.
+      This episode we devote ourselves to guarding that lifeblood, and along the way we'll learn the advanced check called the event study.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_matters"
+    narration: >
+      DiD's core logic is this: the control group's change after the intervention can stand in for "what the treated group would have done if it had never been intervened on."
+      But for that sentence to hold, the two groups had to be running on parallel tracks before the intervention in the first place.
+      If the slopes already differed before the intervention, the gap you see afterward
+      might just be the two groups already going their separate ways, with nothing to do with the intervention at all.
+    animation: "show_why_matters"
+    pause_after: 0.5
+
+  - id: "parallel_ok"
+    narration: >
+      First, the healthy picture. Before the intervention, the treated and control groups sit at different heights,
+      but their up-and-down slopes are almost identical, moving in parallel.
+      Only then is that counterfactual extension line after the intervention trustworthy, and only then dare you count the gap between the two lines as the intervention effect.
+      Parallel before the intervention: check, DiD can be trusted.
+    animation: "show_parallel_ok"
+    pause_after: 0.5
+
+  - id: "parallel_broken"
+    narration: >
+      Now the broken picture. Before the intervention, the treated group is already charging upward while the control stays flat, and the two lines aren't parallel at all.
+      In this case, even if you compute a post-intervention gap, most of that gap is "the treated group was already rising,"
+      and forcing it into an intervention effect is just fooling yourself.
+      Not parallel before the intervention: cross it out, DiD can't be trusted.
+    animation: "show_parallel_broken"
+    pause_after: 0.5
+
+  - id: "how_to_check"
+    narration: >
+      So there's an iron rule: plot first, trust the model second.
+      Before running the regression, always plot both groups' daily trends on one chart and stare only at the "left" of the intervention day,
+      to see whether the two lines rise and fall roughly in parallel.
+      This step needs no fancy statistics; one chart and a pair of eyes can save your life.
+    animation: "show_how_to_check"
+    pause_after: 0.5
+
+  - id: "event_study"
+    narration: >
+      If you want to be more rigorous, use the event-study method.
+      Cut the time before and after the intervention into several periods and estimate one effect coefficient for each period.
+      Ideally, every pre-intervention period's coefficient should hug zero, because the intervention hasn't happened yet, so there shouldn't be any effect.
+      Look at this chart: the pre-intervention points all stick near the zero line and only drop clearly after the intervention, and that's the ironclad proof that parallel trends holds up.
+    animation: "show_event_study"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways on parallel trends. One, DiD is only credible if the two groups' trends were parallel before the intervention.
+      Two, plot first and look only to the left of the intervention day; a pair of eyes beats a pile of formulas.
+      Three, for rigor run an event study and check whether the pre-intervention coefficients are all roughly zero.
+      Guard this lifeblood, and your DiD won't be a castle in the air.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a minimum smoking-age policy!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_mla"
+    narration: >
+      Here's a classic counter-example: suppose a state raises the minimum smoking age from 18 to 21
+      and wants to use DiD to compare its own youth smoking rate against a neighboring state's.
+      Here's the problem: before the policy took effect, this state's smoking rate was already sliding downward, not parallel to the neighbor's trend at all.
+      Force a DiD here and you'll count the part that "was already dropping" toward the policy's credit, badly overstating the effect. Once parallel trends collapses, no matter how pretty the estimate, it can't be trusted.
+    animation: "show_extra_mla"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three parallel-trends blind spots!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: skipping the plot and running DiD straight to the finish.
+      Without first checking whether the two groups are parallel before the intervention, your DiD could be an illusion from start to end.
+      Always plot the pre-intervention trend first, then decide whether to trust the model.
+    animation: "show_blindspot_skip_plot"
+    error_code: "did = fit_did(panel)  # no pre-check"
+    correct_code: "plot_pretrends(panel); did = fit_did(panel)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: claiming parallel trends hold with only two time points, before and after.
+      Connect two points with a line and it always looks "parallel"; there's simply nothing to test.
+      You need to keep several more pre-intervention periods before the trend can actually be verified.
+    animation: "show_blindspot_two_points"
+    error_code: "times = [pre, post]  # only 2 points"
+    correct_code: "times = range(-4, 4)  # many periods"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: the event study comes back with pre-intervention coefficients that clearly don't hug zero, yet you turn a blind eye and trust the DiD anyway.
+      Pre-intervention coefficients significantly off zero are the alarm that parallel trends doesn't hold.
+      You must confirm the pre-intervention coefficients are all roughly zero before you dare trust the estimate that follows.
+    animation: "show_blindspot_ignore_precoef"
+    error_code: "trust_did = True"
+    correct_code: "trust_did = (pre_coefs.abs() < eps).all()"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Guard parallel trends, and your DiD finally stands on solid ground.
+      With that, the three big tools of this causal-inference chapter, attributable risk, difference-in-differences, and the parallel-trends assumption, are all assembled!
+      Next chapter we enter reproducible research, so that every step of your analysis can survive someone else's re-check. Stay tuned!
+    animation: "show_outro"
+    pause_after: 1.0

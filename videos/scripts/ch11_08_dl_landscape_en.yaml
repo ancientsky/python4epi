@@ -1,0 +1,141 @@
+meta:
+  chapter: "11"
+  concept: "dl_landscape"
+  title: "The Modern Deep-Learning Landscape: GNN, Transformer, DeepSurv, TSFM"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch11_08_dl_landscape"
+  scene_class: "Ch11LandscapeScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      In the last two episodes you've gotten your hands on three models, MLP, LSTM, and CNN.
+      But the territory of deep learning is far larger than these.
+      This episode is a conceptual tour; we won't write runnable code, but instead take you on a walk through the model zoo of modern deep learning.
+      There's just one point: knowing which detective to call for help when you meet a given problem in the future.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "model_zoo"
+    narration: >
+      First, let's line up the three we already know.
+      MLP is the generalist that can take any table; LSTM is the veteran with a good memory who reads the whole storyline of a case; CNN is the forensic expert who hunts for local fingerprints.
+      Every new model I'm about to introduce has its own best-suited type of case, and by looking at what the problem looks like, you'll know who to call.
+    animation: "show_model_zoo"
+    pause_after: 0.5
+
+  - id: "gnn"
+    narration: >
+      First new face: GNN, the graph neural network, a social-network analyst.
+      What makes it powerful is that it looks not only at each person's own traits but also at who connects to whom.
+      In outbreak control, contact-tracing networks, cross-institution referral networks, and geographically adjacent spatial spread all naturally grow into node-plus-edge graphs.
+      For tools, reach for torch-geometric, also known as PyG, or DGL.
+    animation: "show_gnn"
+    pause_after: 0.5
+
+  - id: "transformer"
+    narration: >
+      Second: the spatio-temporal Transformer, or its epi-specialized version TFT, a secretary who knows how to allocate attention.
+      In a long string of data, it automatically figures out which day and which variable to look at more for this prediction.
+      It's suited to looking at several leading indicators at once, case counts, temperature, mobility, and vaccine coverage, while predicting many days ahead.
+      Even better, its attention weights can be printed out directly, so it comes with built-in interpretability.
+      For tools, reach for pytorch-forecasting.
+    animation: "show_transformer"
+    pause_after: 0.5
+
+  - id: "deepsurv"
+    narration: >
+      Third, echoing Ch09's survival analysis specifically: DeepSurv, the neural-network version of Cox regression.
+      Ch09's Cox assumes each factor's contribution to the log hazard ratio adds up linearly; DeepSurv replaces that linear relationship with a neural network, giving the non-linearity and interactions among risk factors a chance to be learned.
+      When you suspect the proportional-hazards assumption doesn't hold and the data volume is large enough, it's its turn.
+      For tools, reach for pycox.
+    animation: "show_deepsurv"
+    pause_after: 0.5
+
+  - id: "tsfm"
+    narration: >
+      Fourth, the most sci-fi: TSFM, the time-series foundation model, a veteran who has read every case worldwide.
+      It's pretrained on massive, cross-domain time series, and when you use it to forecast a new series, you often don't retrain at all, which is called zero-shot.
+      Look at this illustrative code: after loading the pretrained weights, you forecast directly, with no fit step in between at all!
+      This is exactly the answer at box four of the decision tree: a new pathogen with no early data, so borrow other people's outbreak experience to forecast.
+      Tools include TimesFM and Chronos.
+    animation: "show_tsfm"
+    code: |
+      import timesfm
+
+      tfm = timesfm.TimesFm(context_len=512, horizon_len=14)
+      tfm.load_from_checkpoint("google/timesfm-1.0-200m")
+      # 直接預測，沒有 fit() 這一步（零樣本）
+      forecast, _ = tfm.forecast([cases_history], freq=[0])
+    pause_after: 0.5
+
+  - id: "hybrid"
+    narration: >
+      Last, and the one I most recommend to epidemiologists: hybrid models and knowledge injection.
+      The flagship is PINN, the physics-informed neural network.
+      It makes the model sit two exams at once: one asks does it match the observed data, and one asks does it obey the SEIR differential equations, and the loss is these two added together.
+      It suits emerging infectious diseases where data is scarce but the transmission mechanism is clear, because what you want is a curve that respects epidemiological common sense, not one that forcibly fits the noise.
+    animation: "show_hybrid"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: how to match a model to the right problem!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_matching"
+    narration: >
+      Let me condense the whole zoo into one matching table for you.
+      A problem shaped like a contact network with nodes and edges, reach for GNN; multivariate, long sequences, and you also want to see attention, reach for Transformer or TFT; survival data but you suspect non-linear interactions, reach for DeepSurv; a new pathogen with no early data but plenty of external data, reach for TSFM; scarce data but a clear mechanism, use PINN or a hybrid model.
+      Look at the problem, find the specialty, and that's the whole trick.
+    animation: "show_extra_matching"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for picking a model!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_overkill_graph"
+    narration: >
+      Blind spot number one: forcing data into a graph and using GNN without any real network structure.
+      If the edges are ones you connected at random with no predictive power, then GNN just adds complexity for nothing and is worse than a simple model.
+      The right move: first confirm the relationships themselves carry signal, and if they don't, use logistic regression on tabular data like a good student.
+    animation: "show_blindspot_overkill_graph"
+    error_code: "GNN(x, random_edges)  # edges = noise"
+    correct_code: "LogisticRegression().fit(X, y)"
+    pause_after: 0.5
+
+  - id: "blindspot_shap_causal"
+    narration: >
+      Blind spot number two: treating SHAP or attention weights as causation.
+      They tell you how much the model relies on a given clue to predict, not that changing this feature will change the outcome along with it.
+      The right move: to ask about causation, look at Ch06's adjusted OR after correcting for confounding, or Ch12's causal inference methods.
+    animation: "show_blindspot_shap_causal"
+    error_code: "cause = top_shap_feature(model)"
+    correct_code: "effect = adjusted_or(fit_adj)  # Ch06"
+    pause_after: 0.5
+
+  - id: "blindspot_no_uncertainty"
+    narration: >
+      Blind spot number three: no matter how trendy the model, spitting out only a single point prediction.
+      Policy decisions need uncertainty, a confidence interval and a probability distribution, not a judgement made on one lonely number.
+      The right move: output a prediction interval so the boss can see the range from best to worst before deciding.
+    animation: "show_blindspot_no_uncertainty"
+    error_code: "yhat = model.predict(x)  # point only"
+    correct_code: "lo, hi = model.predict_interval(x)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      We've toured the deep-learning landscape, from GNN, Transformer, and DeepSurv to TSFM and PINN, and you now know which detective to call for which kind of problem.
+      But hold onto this firmly: no matter how accurate the model, strong predictive power does not equal a causal relationship.
+      Next chapter, Ch12, we return to the most fundamental question: did shower exposure really cause infection, or is it just a statistical correlation?
+      Causal inference, see you next chapter!
+    animation: "show_outro"
+    pause_after: 1.0

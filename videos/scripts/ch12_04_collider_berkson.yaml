@@ -1,0 +1,135 @@
+meta:
+  chapter: "12"
+  concept: "collider_berkson"
+  title: "對撞因子的陷阱：Berkson 悖論與三峽登革熱 DAG"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch12_04_collider_berkson"
+  scene_class: "Ch12ColliderScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集三種結構裡，最陰險、最容易讓人翻船的，就是對撞因子。
+      它可怕的地方在於：你以為自己做了一個很合理的篩選，
+      結果卻在兩個本來八竿子打不著的變項之間，硬生生生出一條假關聯。
+      這一集我們就專門來拆這個陷阱：Berkson 悖論。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "collider_recap"
+    narration: >
+      先快速複習對撞因子長什麼樣。
+      假設暴露和疾病嚴重度在全體住民裡本來互不相關，
+      但只要其中一個夠強，就足以讓人住院——暴露會、嚴重度也會。
+      於是「住院」同時被兩邊指向，這就是典型的對撞因子。
+    animation: "show_collider_recap"
+    pause_after: 0.5
+
+  - id: "conditioning_cost"
+    narration: >
+      對撞因子最要命的動作，叫做「條件化」——
+      也就是只挑「對撞因子等於某個值」的子集來分析，例如只看有住院的病人。
+      這一挑，就會在兩個本來無關的變項之間，憑空製造出一條假關聯。
+      這個現象有個正式名字，叫做 Berkson 悖論。
+    animation: "show_conditioning_cost"
+    pause_after: 0.5
+
+  - id: "berkson_intuition"
+    narration: >
+      給你看直覺版。左邊是全體樣本，暴露和嚴重度亂七八糟散開，根本沒有相關。
+      但右邊只留下住院的人：暴露低的，多半是因為嚴重度特別高才被送醫；
+      嚴重度不高的，多半是因為暴露特別多、風險特別大才住院。
+      兩者被硬綁在一起，於是冒出一條在全體樣本裡根本不存在的假負相關。
+    animation: "show_berkson_intuition"
+    pause_after: 0.5
+
+  - id: "sanxia_dag"
+    narration: >
+      拿一個真實情境練手：三峽的登革熱本土群聚，畫一張最簡單的 DAG 草稿。
+      積水容器會孳生病媒蚊，病媒蚊再把病傳給居民——病媒蚊是中介。
+      而本土病例數和積水稽查強度，都會推高「有沒有被通報」——通報就是對撞因子。
+      如果你只分析「有被通報」的個案，就可能在本土病例和稽查強度之間看出假關聯。
+    animation: "show_sanxia_dag"
+    pause_after: 0.5
+
+  - id: "common_traps"
+    narration: >
+      這件事之所以危險，是因為它偽裝得很好。
+      只分析有通報、有確診的病例；只分析有住院的病人；只分析有回診的個案——
+      這些聽起來都超合理的篩選標準，其實每一個都是在對某個對撞因子做條件化。
+      一不小心，就生出實際上不存在的關聯，或掩蓋掉真正存在的關聯。
+    animation: "show_common_traps"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      對撞因子三個重點收好。
+      第一，對撞因子是被暴露和結果「同時指向」的變項。
+      第二，對它條件化，會生出根本不存在的假關聯，這就是 Berkson 悖論。
+      第三，最常見的兇手就是「只看住院、只看通報、只看回診」。
+      所以分析前一定先畫 DAG，認出對撞因子，再決定要不要篩。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：醫院裡的選樣偏差。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_hospital"
+    narration: >
+      這是 Berkson 悖論最原汁原味的版本。
+      如果你做病例對照研究，病例和對照全都只從住院病人裡面挑，就要非常小心。
+      因為「有沒有住院」會被好幾種疾病共同推高，是個對撞因子。
+      結果兩種本來毫無關係的疾病，在住院者裡看起來竟然相關——Berkson 當年正是這樣發現的。
+    animation: "show_extra_hospital"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      對撞因子三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：分析前先把資料篩成「只剩住院病人」。
+      這一刀切下去，就是在對住院這個對撞因子條件化，偏誤悄悄跟著進來。
+      正確做法是分析整個世代，而不是只留住院的那一小群。
+    animation: "show_blindspot_only_hospitalized"
+    error_code: "df = df[df['hospitalized'] == 1]"
+    correct_code: "df = full_cohort  # no collider filter"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：只拿「有被通報」的病例來分析。
+      通報與否也常常是對撞因子，只留通報者，一樣會扭曲你看到的關聯。
+      正確做法是盡量把沒被通報的個案也納進來，別讓通報這道門幫你偷偷選樣。
+    animation: "show_blindspot_only_notified"
+    error_code: "cases = df[df['notified'] == 1]"
+    correct_code: "cases = df  # include unreported too"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：把對撞因子直接丟進迴歸校正。
+      別以為只有「篩子集」才叫條件化，在迴歸式裡多加一個 hospitalized，效果一模一樣，照樣打開假關聯。
+      正確做法是讓對撞因子離迴歸式遠一點，該放過就放過。
+    animation: "show_blindspot_adjust_collider"
+    error_code: "smf.ols('sev ~ exp + hospitalized')"
+    correct_code: "smf.ols('sev ~ exp')  # drop collider"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      關聯不等於因果、反事實、DAG、還有最陰險的對撞因子，
+      因果推論的「起手式」到這裡就打包完成了。
+      接下來翻開課本，我們會把這些直覺變成實際能算的工具：
+      歸因風險 AR、族群歸因風險 PAR，還有評估政策效果的 DiD。第十二章，我們課本上見！
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,158 @@
+meta:
+  chapter: "09"
+  concept: "logrank"
+  title: "The Log-rank Test: Is That Gap Real, or Just Luck?"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch09_05_logrank"
+  scene_class: "Ch09LogrankScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode we stacked two groups' survival curves together and saw with our eyes
+      one on top and one below. But here's the question: is that gap a real difference, or
+      just good luck? This episode we bring in the log-rank test and let a single p-value
+      settle it once and for all.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "question"
+    narration: >
+      First, let's be clear about what's worrying us. The eye is easily fooled: two curves
+      can look far apart, but if each group has only a few people, that little gap may be
+      nothing more than random sampling noise. We need an objective statistical tool to
+      upgrade "looks different" into "is different."
+    animation: "show_question"
+    pause_after: 0.5
+
+  - id: "logrank_idea"
+    narration: >
+      The log-rank test asks one very simple question: suppose the two groups' survival
+      curves are actually identical, would the distribution of deaths we actually observed
+      happen to look like this? That's the null hypothesis. And it compares the whole
+      curve, not any single day, so even if the median survival is the same, a different
+      shape can still be significant.
+    animation: "show_logrank_idea"
+    pause_after: 0.5
+
+  - id: "two_curves"
+    narration: >
+      Look at these two lines. The blue one on top drops slowly, the orange one below
+      drops fast, and a clear gap opens up between them. Your eye says "there's a
+      difference," but is that gap real or just coincidence? That question mark is exactly
+      what log-rank is here to answer.
+    animation: "show_two_curves"
+    pause_after: 0.5
+
+  - id: "logrank_code"
+    narration: >
+      In the code, remember to feed four things: each group's times, plus each group's
+      event flags, none of them optional. logrank_test returns a result object, and the
+      answer you want lives in result.p_value. Here we compare the severe group against
+      the non-severe group.
+    animation: "show_logrank_code"
+    code: |
+      from lifelines.statistics import logrank_test
+
+      result = logrank_test(
+          severe["time"], non_severe["time"],
+          event_observed_A=severe["event"],
+          event_observed_B=non_severe["event"],
+      )
+      print(f"log-rank p = {result.p_value:.4f}")
+    pause_after: 0.5
+
+  - id: "pvalue_read"
+    narration: >
+      How do you read the p-value? If p is below 0.05, you reject the null hypothesis,
+      meaning the two survival curves differ significantly and that gap doesn't look much
+      like luck. If p is 0.05 or above, there isn't enough evidence, and you can't claim a
+      difference yet. But remember log-rank has a ceiling: it only tells you whether
+      there's a difference, not how big it is, and to quantify that you need Cox
+      regression.
+    animation: "show_pvalue_read"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways, packaged up. One, log-rank asks whether this gap is real or luck.
+      Two, you must feed four things: both groups' times and both groups' event flags.
+      Three, it only says whether there's a difference; to learn how much, use the Cox
+      regression from the next chapter.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a two-arm trial of a new dengue drug!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue"
+    narration: >
+      Suppose there's a trial of a new dengue drug, patients are randomly split into a
+      drug arm and a placebo arm, and we track how many days until the fever breaks. Feed
+      each arm's days and fever-broke flags into logrank_test, and a single p-value tells
+      you whether the new drug really does bring the fever down faster, or whether that
+      gap is just coincidence. Same move, new setting, works just as well.
+    animation: "show_extra_dengue"
+    code: |
+      arm_a = trial[trial["arm"] == "drug"]
+      arm_b = trial[trial["arm"] == "placebo"]
+      res = logrank_test(arm_a["days"], arm_b["days"],
+                         arm_a["fever"], arm_b["fever"])
+      print(res.p_value)
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for log-rank!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: feeding only the two groups' times and forgetting the event
+      flags. Without the event flags, log-rank can't tell who died from who was censored,
+      and the result comes out completely wrong. Two sets of times, two sets of events,
+      all four are required.
+    animation: "show_blindspot_missing_events"
+    error_code: "logrank_test(a.time, b.time)"
+    correct_code: "logrank_test(a.t, b.t, a.e, b.e)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: treating the p-value as the effect size, thinking a smaller p
+      means a bigger gap. The p-value only answers whether there's a difference, which is
+      a separate thing from how much. To learn how many times the risk differs, compute
+      the hazard ratio from Cox regression, and don't ask the p-value to do a job it
+      can't.
+    animation: "show_blindspot_p_as_effect"
+    error_code: "effect_size = result.p_value"
+    correct_code: "# p tells if, not how much: use Cox"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: running log-rank on many groups pairwise all at once
+      without correcting. The more comparisons you make, the higher the chance one turns
+      up significant on pure luck. For multiple comparisons, remember to adjust your
+      significance level, for example by dividing alpha by the number of comparisons.
+    animation: "show_blindspot_multiple_tests"
+    error_code: "logrank_test(a,b); logrank_test(a,c)"
+    correct_code: "# adjust alpha for many comparisons"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      log-rank upgrades "looks different" into "is different," but it stops at whether
+      there's a difference at all. To go further and ask how many times the risk, or which
+      factor is most deadly, you step into the world of Cox proportional-hazards
+      regression. That wraps up the inference part of survival analysis, see you next
+      time!
+    animation: "show_outro"
+    pause_after: 1.0

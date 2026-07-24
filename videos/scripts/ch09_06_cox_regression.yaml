@@ -1,0 +1,156 @@
+meta:
+  chapter: "09"
+  concept: "cox_regression"
+  title: "Cox 比例風險迴歸：一次量化每個因子的風險比"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch09_06_cox_regression"
+  scene_class: "Ch09CoxRegressionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      前面 log-rank 幫我們回答了「兩組有沒有差」，
+      但主治醫師接著會追問：「那到底差多少？年齡、共病、免疫，哪個最要命？」
+      這一集，我們請出存活分析的重砲主角——Cox 比例風險迴歸，
+      它能一口氣把好幾個因子塞進同一個模型，各自算出一個乾淨的風險比。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_cox"
+    narration: >
+      為什麼 log-rank 之後還要 Cox？很簡單。
+      log-rank 只會點頭或搖頭：有差、沒差，就這樣。
+      Cox 厲害在它會給你數字——差幾倍，而且可以同時放進年齡、性別、一堆共病，
+      彼此互相校正，最後每個因子各吐出一個 adjusted HR。這就是升級的地方。
+    animation: "show_why_cox"
+    pause_after: 0.5
+
+  - id: "hr_meaning"
+    narration: >
+      先把主角看清楚：風險比 HR，其實就是一把量尺。
+      HR 等於 1，代表這個因子跟死亡速度沒關係；
+      HR 大於 1，往右邊跑，是危險因子，讓人死得比較快；
+      HR 小於 1，往左邊靠，是保護因子，死得比較慢。
+      記住：HR 是「速率比」，不是機率、也不是勝算比，別搞混了。
+    animation: "show_hr_meaning"
+    pause_after: 0.5
+
+  - id: "cox_code"
+    narration: >
+      程式其實很短。先把文字欄位 sex 轉成 0 跟 1 的 is_male，
+      因為 Cox 只吃數字，文字留著會直接報錯。
+      然後開一台 CoxPHFitter，告訴它哪一欄是時間、哪一欄是事件，
+      剩下的欄位它全部當成要估 HR 的因子。最後一行 print_summary 把成績單印出來。
+    animation: "show_cox_code"
+    code: |
+      from lifelines import CoxPHFitter
+
+      cox_df["is_male"] = (cox_df["sex"] == "M").astype(int)
+      cox_df = cox_df.drop(columns=["sex"])
+
+      cph = CoxPHFitter()
+      cph.fit(cox_df, "time_to_event", "event")
+      cph.print_summary()   # exp(coef)=HR, p, 95% CI
+    pause_after: 0.5
+
+  - id: "read_summary"
+    narration: >
+      print_summary 會印出一張看起來很嚇人的大表，但其實只要盯兩欄。
+      第一欄 exp(coef) 就是 HR 本尊，全場最重要，方向加強度一次看完。
+      再看它的 p 值和 95% 信賴區間——CI 只要跨過 1，就是不顯著。
+      表格最下面還有一個 Concordance，也就是 c-index、一致性指數，
+      衡量模型的排序能力：0.5 等於亂猜，越接近 1 排得越準。
+    animation: "show_read_summary"
+    pause_after: 0.5
+
+  - id: "epv_warning"
+    narration: >
+      這裡要敲個警鐘：樣本數。流病有個老口訣，每個變項至少要配 10 個事件。
+      我們這份示範資料只有 19 個死亡，卻塞了 7 個變項，
+      19 除以 7 大約 2.7，遠遠不到 10。
+      硬塞的下場就是過度配適，HR 跟 CI 都會抖到不能信。
+      所以正式研究記得先篩因子，只留一兩個最關鍵的就好。
+    animation: "show_epv_warning"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Cox 迴歸三個重點打包帶走。
+      一，看 exp(coef) 也就是 HR，它告訴你方向和強度。
+      二，看它的信賴區間有沒有跨過 1，那決定顯不顯著。
+      三，用 c-index 看排序力、用 EPV 檢查樣本撐不撐得住這麼多變項。
+      這張表看懂了，下一集我們就把它畫成一目了然的森林圖。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：換個場景，洗腎世代的死亡風險因子！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dialysis"
+    narration: >
+      腎臟科很常做這種分析：一群洗腎病人追蹤好幾個月，看誰先走。
+      同一台 CoxPHFitter，把時間換成 months、事件換成 death，
+      放進年齡、糖尿病、白蛋白這些因子，就能算出各自的 HR。
+      白蛋白偏低通常 HR 大於 1，是危險因子；順手印個 c-index 看模型準不準。
+    animation: "show_extra_dialysis"
+    code: |
+      # dialysis cohort: follow months, event = death
+      cox = CoxPHFitter()
+      cox.fit(dialysis, "months", "death")
+      cox.print_summary()   # HR for age / DM / albumin
+      print("c-index =", cox.concordance_index_)
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Cox 迴歸三個新手地雷，來囉！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_coef_vs_hr"
+    narration: >
+      第一個地雷：把 coef 那一欄當成 HR 讀。
+      coef 是 log 過的 HR，數字通常小小的、還可能是負數，
+      直接拿去講「風險幾倍」就完全錯了。
+      要 HR 請認明 exp(coef) 那一欄，那才是還原回來的真身。
+    animation: "show_blindspot_coef_vs_hr"
+    error_code: 'hr = cph.summary["coef"]  # this is logHR'
+    correct_code: 'hr = cph.summary["exp(coef)"]  # real HR'
+    pause_after: 0.5
+
+  - id: "blindspot_epv"
+    narration: >
+      第二個地雷：事件才十幾個，卻硬塞七八個變項。
+      模型會給你一堆好看的 HR，但那都是過度配適硬擠出來的幻覺。
+      記住每個變項至少 10 個事件的口訣，
+      事件少就先篩選，只留最關鍵的一兩個因子再 fit。
+    animation: "show_blindspot_epv"
+    error_code: 'cph.fit(df7, "time", "event")  # 19 events'
+    correct_code: 'cph.fit(df[top2], "time", "event")'
+    pause_after: 0.5
+
+  - id: "blindspot_id_column"
+    narration: >
+      第三個地雷：cox_df 裡夾帶了 case_id 這種身分編號欄位。
+      Cox 不會幫你判斷哪欄有意義，它會把 case_id 也當成一個因子亂估，
+      甚至讓模型直接報錯或算出莫名其妙的 HR。
+      進模型前，先把 ID、姓名這類無關欄位通通 drop 掉，乾乾淨淨再上場。
+    animation: "show_blindspot_id_column"
+    error_code: 'cph.fit(cox_df, "time", "event")  # has id'
+    correct_code: 'cox_df = cox_df.drop(columns="case_id")'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      這集你學會了用 Cox 一次量化多個因子的風險比，還會逐欄讀懂那張成績單。
+      但一整欄一整欄讀表格，眼睛真的會花。
+      下一集我們用一行程式，把每個 HR 和信賴區間變成「點加橫線」的森林圖，
+      誰危險、誰保護、誰不顯著，一眼就分得出來。我們下集見！
+    animation: "show_outro"
+    pause_after: 1.0

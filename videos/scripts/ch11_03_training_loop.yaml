@@ -1,0 +1,141 @@
+meta:
+  chapter: "11"
+  concept: "training_loop"
+  title: "訓練迴圈：模型怎麼從錯誤裡學乖"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch11_03_training_loop"
+  scene_class: "Ch11TrainingLoopScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集我們看到，一個 neuron 剛出生時 weight 全是隨機亂猜。
+      那它怎麼從一張白紙，練成有經驗的判斷？答案是訓練迴圈。
+      每一個 PyTorch 模型的訓練，永遠是同一個四拍節奏——這一集，我把這四拍拆給你看。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "four_beats"
+    narration: >
+      訓練迴圈永遠是這四拍。
+      第一拍 forward，資料流過網路、得到目前的猜測；
+      第二拍 loss，拿猜測跟正確答案比，算出錯多少的一個數字；
+      第三拍 backprop，從 loss 往回推，算出每個 weight 這次該負多少責任；
+      第四拍 update，優化器依這個方向把每個 weight 微調一點點。繞一圈，再來一次。
+    animation: "show_four_beats"
+    pause_after: 0.5
+
+  - id: "loss_concept"
+    narration: >
+      先講 loss，也就是損失函數。它就是一個分數，量你猜得離正確答案有多遠，數字越小代表猜得越準。
+      做二元分類常用 BCEWithLogitsLoss，做迴歸預測常用 MSELoss。
+      訓練的全部目標，就是想辦法把這個數字壓到最低。
+    animation: "show_loss_concept"
+    pause_after: 0.5
+
+  - id: "gradient_descent"
+    narration: >
+      怎麼壓低 loss？靠梯度下降。
+      想像 loss 是一座山谷，模型現在站在半山腰，backprop 算出的梯度會告訴它哪個方向是下坡；
+      優化器，像 Adam，就順著坡度往下踏一小步。
+      踏太大步會飛過谷底來回震盪，踏太小又走超慢——這個步伐大小就是 learning rate。一步一步走到谷底，loss 就最低了。
+    animation: "show_gradient_descent"
+    pause_after: 0.5
+
+  - id: "training_code"
+    narration: >
+      翻成 PyTorch 就這四行，順序不能錯。
+      先 zero_grad 清掉上一輪殘留的梯度；再算 loss，這一步就是 forward；
+      loss.backward 做反向傳播、自動算好每個參數的梯度；
+      最後 optimizer.step 依梯度更新權重。這四行，你會在每一個訓練腳本裡一遍又一遍看到。
+    animation: "show_training_code"
+    code: |
+      optimizer.zero_grad()          # 清掉舊梯度
+      loss = loss_fn(model(X), y)    # forward + 算 loss
+      loss.backward()                # backprop 反向傳播
+      optimizer.step()               # 梯度下降更新
+    pause_after: 0.5
+
+  - id: "epoch_curve"
+    narration: >
+      把所有訓練資料都跑完一輪這四拍，叫一個 epoch。
+      訓練通常要跑幾十、幾百個 epoch，每跑一輪就把 loss 往下壓一點。
+      畫成曲線，你會看到 train loss 一路往下掉——這就是模型正在把經驗一點一滴累積起來的樣子。
+    animation: "show_epoch_curve"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      四句話打包訓練迴圈。
+      一，永遠是四拍：forward、loss、backprop、update。
+      二，loss 是錯多少，越小越好。
+      三，梯度下降就是順著坡往谷底走，步伐大小是 learning rate。
+      四，全部資料跑一輪叫一個 epoch，跑很多輪把 loss 壓低。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：訓練一個發燒人數預報器！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_fever"
+    narration: >
+      換個任務：用過去十四天的發燒人數，預報未來七天的發燒人數。
+      四拍節奏一個字都不用改，只有一個地方換——因為現在預測的是連續數字，
+      loss 從分類的 BCE 換成迴歸的 MSELoss。
+      forward 一樣猜、backward 一樣檢討、step 一樣微調。學會一次訓練迴圈，換個題目照樣套。
+    animation: "show_extra_fever"
+    code: |
+      pred = model(X_past14)          # forward: 過去 14 天
+      loss = mse(pred, fever_next7)   # 迴歸用 MSELoss
+      loss.backward(); opt.step()     # 一樣的 backprop + update
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      訓練迴圈三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_zero_grad"
+    narration: >
+      第一個地雷：忘了 optimizer.zero_grad。
+      PyTorch 的梯度預設是累加的，你不清空，這一輪的梯度會跟上一輪疊在一起，越加越大，訓練直接歪掉。
+      每一圈的開頭，先 zero_grad 清乾淨。
+    animation: "show_blindspot_zero_grad"
+    error_code: "loss.backward(); opt.step()"
+    correct_code: "opt.zero_grad(); loss.backward(); opt.step()"
+    pause_after: 0.5
+
+  - id: "blindspot_big_lr"
+    narration: >
+      第二個地雷：learning rate 設太大。
+      步伐一大，模型每次都飛過谷底、在兩邊來回彈跳，loss 不但不降，還可能爆成 NaN。
+      常見的安全起點是像 1e-3 這種小數；覺得學太慢，再慢慢往上調。
+    animation: "show_blindspot_big_lr"
+    error_code: "Adam(model.parameters(), lr=10.0)"
+    correct_code: "Adam(model.parameters(), lr=1e-3)"
+    pause_after: 0.5
+
+  - id: "blindspot_no_grad"
+    narration: >
+      第三個地雷：算驗證 loss 時忘了包 no_grad。
+      驗證只是要看分數、不需要算梯度，忘了關會白白吃掉記憶體、還可能誤更新。
+      驗證區段記得用 torch.no_grad 包起來，也別忘了先切 model.eval。
+    animation: "show_blindspot_no_grad"
+    error_code: "val_loss = loss_fn(model(X_val), y_val)"
+    correct_code: "with torch.no_grad(): model(X_val)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      現在你會寫訓練迴圈了，也知道怎麼把 loss 一路壓低。
+      但這裡藏著一個危險：練得越久，模型會不會開始死背？train loss 一路探底，真的越低越好嗎？
+      下一集我們談過擬合和早停法，教你什麼時候該喊卡。下次見！
+    animation: "show_outro"
+    pause_after: 1.0

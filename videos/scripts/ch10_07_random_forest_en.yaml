@@ -1,0 +1,152 @@
+meta:
+  chapter: "10"
+  concept: "random_forest"
+  title: "Random Forest & Feature Importance: a smarter brain, then which clue matters most"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch10_07_random_forest"
+  scene_class: "Ch10RandomForestScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Logistic regression only draws one straight line, which sometimes is just too rigid.
+      This episode we give the intern a smarter brain, the Random Forest,
+      then ask it a question the boss loves: out of all these clues, which one is really the most useful?
+      Let's go see how the forest and feature importance play!
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "tree_vs_forest"
+    narration: >
+      Logistic is like a ruler that can only cut straight lines; hit a twisty, curvy relationship and it's helpless.
+      A Random Forest is a whole crowd of decision trees, each looking at part of the data, each casting a vote, and the majority wins.
+      That "pool everyone's wisdom" approach lets it catch nonlinearity and interactions between features,
+      far more flexible than a single straight line.
+    animation: "show_tree_vs_forest"
+    pause_after: 0.5
+
+  - id: "rf_code"
+    narration: >
+      Look at the code and you'll fall in love with Pipeline. The preprocessing part doesn't change one character;
+      you only swap the model cell from LogisticRegression to RandomForestClassifier.
+      That's the sweet reward of wrapping a Pipeline: switch models by changing one cell.
+      Then drop it into cross_val_score as usual and grade with roc_auc.
+    animation: "show_rf_code"
+    code: |
+      from sklearn.ensemble import RandomForestClassifier
+
+      clf_rf = Pipeline([
+          ("preprocess", preprocess),
+          ("model", RandomForestClassifier(n_estimators=100)),
+      ])
+      scores = cross_val_score(clf_rf, X, y, scoring="roc_auc")
+    pause_after: 0.5
+
+  - id: "rf_honest"
+    narration: >
+      The result is brutally honest: on these 280 rows, the forest's AUC is about 0.61,
+      practically tying logistic's 0.62, barely any stronger.
+      It's not that the forest is dumb; the clues in these charts were thin to begin with.
+      Give the intern a smarter brain and it still can't conjure information that isn't in the data.
+    animation: "show_rf_honest"
+    pause_after: 0.5
+
+  - id: "importance_intro"
+    narration: >
+      The forest throws in a nice bonus: feature importance.
+      After fitting, feature_importances_ gives every column a score,
+      and a quick sort with pandas shows at a glance which clue the model leans on most.
+      That answers the boss's line, "which features matter most?"
+    animation: "show_importance_intro"
+    code: |
+      rf.fit(X, y)
+      imp = rf.feature_importances_
+      rank = pd.Series(imp, index=X.columns)
+      print(rank.sort_values(ascending=False))
+    pause_after: 0.5
+
+  - id: "importance_bars"
+    narration: >
+      Draw the importances as a bar chart and it's crystal clear.
+      On this synthetic data, age ranks first, followed by immunosuppression, shower exposure,
+      COPD, and heart failure. They line up nicely with the known risk factors for Legionnaires', which makes sense.
+      But remember one line: important does not equal causal.
+    animation: "show_importance_bars"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Random Forest plus feature importance, three takeaways, packaged.
+      One, the forest is a crowd of decision trees voting, able to catch nonlinearity and interactions.
+      Two, swap models by changing one cell, but when the signal is thin, the forest is basically logistic.
+      Three, feature_importances_ finds the most useful clue, but important does not equal causal.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: rank the suspected contamination sources with feature importance!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_source"
+    narration: >
+      The most thrilling step in a Legionnaires' investigation: pinning down exactly which water source is spewing the bug.
+      Treat exposures like the cooling tower, hot tub, shower, and fountain all as features,
+      use the forest to compute feature importance, then sort, and the most suspicious candidate source floats right up.
+      This is exactly how you hook the ML ranking back onto real outbreak-investigation action.
+    animation: "show_extra_source"
+    code: |
+      sources = ["cooling_tower", "hot_tub", "shower", "fountain"]
+      rf.fit(X[sources], y)
+      rank = pd.Series(rf.feature_importances_, index=sources)
+      print(rank.sort_values(ascending=False))
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Random Forest and feature importance, three beginner blind spots!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: grading on the training data itself.
+      Fit and score on the same data and the forest easily memorizes, driving the training AUC up to 1.0 while go-live is only 0.7.
+      Always use cross-validation so it's examined on folds it hasn't seen.
+    animation: "show_blindspot_train_auc"
+    error_code: "rf.fit(X, y); score(X, y)  # same!"
+    correct_code: "cross_val_score(rf, X, y, cv=5)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: blindly trusting feature_importances_ built-in importance.
+      This impurity-based importance is biased toward columns with many categories, so it easily distorts.
+      A steadier approach: use permutation_importance, shuffle a column, and see how much the AUC drops.
+    animation: "show_blindspot_impurity_importance"
+    error_code: "imp = rf.feature_importances_"
+    correct_code: "permutation_importance(rf, X, y)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: treating the most important feature as an intervention target on the spot.
+      Important only means it helps prediction; it doesn't mean changing it will prevent disease.
+      To confirm causation, you have to walk through Chapter 12's causal inference, so don't rush to act.
+    animation: "show_blindspot_importance_causal"
+    error_code: "prevent(top_feature)  # important!"
+    correct_code: "study_cause(top_feature)  # Ch12"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      You've tried the forest and ranked the clues, so you've now touched both of ML's jobs, predicting and explaining.
+      Next episode we enter Part B: throw open the whole model zoo, play with ensembles pooling their wisdom,
+      and learn SHAP to explain every single reason a black-box model gives, in language a doctor can follow.
+      See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

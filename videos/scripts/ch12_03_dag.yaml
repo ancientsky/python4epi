@@ -1,0 +1,135 @@
+meta:
+  chapter: "12"
+  concept: "dag"
+  title: "用 DAG 把因果畫出來：干擾、中介、對撞三結構"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch12_03_dag"
+  scene_class: "Ch12DAGScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集我們一直在嘴巴上講「這是干擾、那是中介」，
+      但因果推論最厲害的一招，是把這些關係「畫出來」。
+      這一集主角登場：DAG，有向無環圖。
+      看懂三種結構的差別，你就學會了因果推論裡最重要的一課。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "dag_basics"
+    narration: >
+      先認識這個工具。DAG 是 directed acyclic graph，有向無環圖。
+      用箭頭表示「誰影響誰」，箭頭的方向就是因果的方向。
+      「無環」是指不能繞一圈回到自己，因為「因」不可能是自己的「果」。
+      提醒你：畫 DAG 難的從來不是選哪個軟體，而是「畫之前先想清楚誰影響誰」。
+    animation: "show_dag_basics"
+    pause_after: 0.5
+
+  - id: "fork"
+    narration: >
+      第一種結構，干擾因子，形狀像一把叉子 fork。
+      C 同時有箭頭指向 A 和 Y，代表它是暴露和結果的「共同原因」，就是藏在背後的真兇。
+      這時 A 和 Y 之間那條虛線的關聯是假的。
+      處理方式：一定要調整——分層或迴歸校正，就是第五、六章做過的事。
+    animation: "show_fork_confounder"
+    pause_after: 0.5
+
+  - id: "chain"
+    narration: >
+      第二種結構，中介變項，形狀像一條鏈子 chain。
+      A 先影響 M，M 再影響 Y，M 剛好站在暴露通往結果的因果路徑正中間，是傳話筒。
+      規則跟干擾完全相反：想看「總效應」時千萬別調 M，
+      調了就把路徑關掉、會低估效果；只有想單獨看「直接效應」時才調整 M。
+    animation: "show_chain_mediator"
+    pause_after: 0.5
+
+  - id: "collider"
+    narration: >
+      第三種結構，對撞因子 collider，兩個箭頭同時「撞」進同一個點。
+      A 指向 K、Y 也指向 K，K 同時被暴露和結果指向，是典型的選樣陷阱。
+      規則最斬釘截鐵：絕對不能調整 K，也不能只挑 K 的某個子集來分析。
+      為什麼這麼嚴格？下一集的 Berkson 悖論會給你看它有多可怕。
+    animation: "show_collider"
+    pause_after: 0.5
+
+  - id: "nursing_home_map"
+    narration: >
+      把三種結構對回護理之家。
+      干擾：功能狀態同時影響淋浴使用和感染，這是第五章抓出來校正過的。
+      中介：水系統汙染要透過淋浴水霧才能影響感染，水霧就是中介。
+      對撞：住院同時被嚴重度和其他因素指向，是典型碰撞因子——所以別只分析住院的人。
+    animation: "show_nursing_home_map"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三種結構一次記牢。
+      干擾 fork，C 指向 A 和 Y，要調整。
+      中介 chain，A 到 M 到 Y，看總效應時不調整。
+      對撞 collider，A 和 Y 一起指向 K，絕對不能調整。
+      同樣是多一個第三變項，箭頭方向不一樣，處理方式就完全相反。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：抽菸、焦油、肺癌的中介鏈。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_smoking"
+    narration: >
+      這是流病課本最愛舉的中介例子。抽菸會產生焦油，焦油沉積在肺裡再引發肺癌，
+      是一條漂亮的因果鏈：吸菸到焦油到肺癌。焦油正是中介。
+      如果你想評估「抽菸整體對肺癌的傷害」，卻手癢把焦油也校正進去，
+      等於把這條因果路徑硬生生關掉，反而會嚴重低估抽菸的總效應。
+    animation: "show_extra_smoking"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      DAG 三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：把中介變項當成干擾因子調掉。
+      在迴歸式裡多丟一個 m 進去，看似謹慎，其實把因果路徑關掉了，總效應會被低估。
+      正確做法是先畫 DAG 分清誰是中介，看總效應時就讓 M 留在外面。
+    animation: "show_blindspot_adjust_mediator"
+    error_code: "smf.ols('y ~ a + m')  # m is mediator"
+    correct_code: "smf.ols('y ~ a')  # total effect"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：沒畫 DAG，就把手邊所有變數一股腦全丟進迴歸。
+      多校正不一定更乾淨，萬一裡面藏了中介或對撞，反而製造偏誤。
+      正確做法是先畫 DAG，再根據結構挑出「該調整的」那幾個變數。
+    animation: "show_blindspot_no_dag"
+    error_code: "smf.ols('y ~ a + b + c + d + e')"
+    correct_code: "controls = pick_from_dag(my_dag)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：把對撞因子也調整進去。
+      像 hospitalized 這種被兩邊指向的碰撞因子，一旦放進迴歸校正，就會打開一條假的關聯。
+      正確做法是用 DAG 認出對撞因子，讓它離迴歸式遠遠的。
+    animation: "show_blindspot_adjust_collider"
+    error_code: "smf.ols('y ~ a + hospitalized')"
+    correct_code: "smf.ols('y ~ a')  # keep collider out"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      三種結構、兩套相反規則，你已經拿到因果推論的地圖了。
+      其中最陰險、最容易出事的，就是對撞因子。
+      下一集我們單獨開一集，用 Berkson 悖論加上三峽登革熱的 DAG 草稿，
+      讓你親眼看到「只分析住院病人」是怎麼生出假關聯的。我們下一集見！
+    animation: "show_outro"
+    pause_after: 1.0

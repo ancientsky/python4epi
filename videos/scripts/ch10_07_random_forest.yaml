@@ -1,0 +1,152 @@
+meta:
+  chapter: "10"
+  concept: "random_forest"
+  title: "隨機森林與特徵重要性：換顆聰明腦袋，再問哪條線索最有用"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch10_07_random_forest"
+  scene_class: "Ch10RandomForestScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      logistic 迴歸只會畫一條直線，有時候太死板。
+      這一集我們給實習醫師換一顆更聰明的腦袋——Random Forest 隨機森林，
+      然後問它一個長官最愛的問題：這麼多線索裡，到底哪一條最有用？
+      走吧，看看森林跟特徵重要性怎麼玩！
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "tree_vs_forest"
+    narration: >
+      logistic 就像一把只能切直線的尺，遇到彎彎曲曲的關係就沒轍。
+      隨機森林則是一群決策樹，每棵樹各看部分資料、各投一票，最後多數決。
+      這種「集思廣益」讓它能抓到非線性，還有特徵之間的交互作用，
+      比單獨一條直線靈活多了。
+    animation: "show_tree_vs_forest"
+    pause_after: 0.5
+
+  - id: "rf_code"
+    narration: >
+      看程式，你會愛上 Pipeline。前處理那一段一個字都沒動，
+      只把 model 那一格從 LogisticRegression 換成 RandomForestClassifier。
+      這就是包 Pipeline 的甜頭：換模型只換一格。
+      然後照樣丟進 cross_val_score，用 roc_auc 打分數。
+    animation: "show_rf_code"
+    code: |
+      from sklearn.ensemble import RandomForestClassifier
+
+      clf_rf = Pipeline([
+          ("preprocess", preprocess),
+          ("model", RandomForestClassifier(n_estimators=100)),
+      ])
+      scores = cross_val_score(clf_rf, X, y, scoring="roc_auc")
+    pause_after: 0.5
+
+  - id: "rf_honest"
+    narration: >
+      結果很誠實：在這 280 筆資料上，森林的 AUC 大約 0.61，
+      幾乎追平 logistic 的 0.62，沒有變強多少。
+      不是森林笨，是這批病歷線索本來就薄——
+      實習醫師換再聰明的腦袋，也變不出資料裡沒有的資訊。
+    animation: "show_rf_honest"
+    pause_after: 0.5
+
+  - id: "importance_intro"
+    narration: >
+      森林還附贈一個好東西：特徵重要性。
+      Fit 完之後，feature_importances_ 會給每一欄一個分數，
+      再用 pandas 排個序，一眼就看出哪條線索模型最依賴。
+      這正好回答長官那句「哪些特徵最重要？」。
+    animation: "show_importance_intro"
+    code: |
+      rf.fit(X, y)
+      imp = rf.feature_importances_
+      rank = pd.Series(imp, index=X.columns)
+      print(rank.sort_values(ascending=False))
+    pause_after: 0.5
+
+  - id: "importance_bars"
+    narration: >
+      把重要性畫成長條圖，一目瞭然。
+      這份合成資料上，年齡排第一，接著是免疫低下、淋浴暴露、
+      COPD 和心衰竭。跟退伍軍人症的已知危險因子對得起來，很合理。
+      但記住一句話：重要，不等於有因果。
+    animation: "show_importance_bars"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      隨機森林加特徵重要性，三個重點打包。
+      一，森林是一群決策樹投票，能抓非線性和交互作用。
+      二，換模型只換一格；但線索薄時，森林幾乎等於 logistic。
+      三，feature_importances_ 找出最有用的線索，但重要不等於因果。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：用特徵重要性替可疑污染源排名！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_source"
+    narration: >
+      退伍軍人症最刺激的一步：找出到底哪個水源在放毒。
+      把冷卻水塔、按摩浴缸、淋浴、噴泉這些暴露都當特徵，
+      用森林算特徵重要性再排序，最可疑的候選源就浮上來了。
+      這正是把 ML 的排名，接回真正的疫調行動。
+    animation: "show_extra_source"
+    code: |
+      sources = ["cooling_tower", "hot_tub", "shower", "fountain"]
+      rf.fit(X[sources], y)
+      rank = pd.Series(rf.feature_importances_, index=sources)
+      print(rank.sort_values(ascending=False))
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      隨機森林與特徵重要性，三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：拿訓練資料本身去打分數。
+      在同一份資料上 fit 又 score，森林很容易死背，訓練 AUC 飆到 1.0，
+      上線卻只有 0.7。一定要用交叉驗證，讓它在沒看過的折上考。
+    animation: "show_blindspot_train_auc"
+    error_code: "rf.fit(X, y); score(X, y)  # same!"
+    correct_code: "cross_val_score(rf, X, y, cv=5)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：直接信 feature_importances_ 的內建重要性。
+      這種以不純度算的重要性，會偏心「類別很多」的欄位，容易失真。
+      更穩的做法：用 permutation_importance，把欄位洗牌看 AUC 掉多少。
+    animation: "show_blindspot_impurity_importance"
+    error_code: "imp = rf.feature_importances_"
+    correct_code: "permutation_importance(rf, X, y)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：把最重要的特徵直接當成介入標的。
+      重要只代表它能幫忙預測，不代表改變它就能防病。
+      想確認因果，得走 Ch12 的因果推論，別急著下手。
+    animation: "show_blindspot_importance_causal"
+    error_code: "prevent(top_feature)  # important!"
+    correct_code: "study_cause(top_feature)  # Ch12"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      森林試過了、線索也排名了，你已經摸到 ML 的預測與解釋兩件事。
+      下一集我們進 Part B：打開整座模型動物園、玩集成集思廣益，
+      還要學 SHAP，把黑盒模型的每一條理由，好好解釋給醫師聽。
+      我們下次見！
+    animation: "show_outro"
+    pause_after: 1.0

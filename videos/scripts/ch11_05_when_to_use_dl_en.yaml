@@ -1,0 +1,133 @@
+meta:
+  chapter: "11"
+  concept: "when_to_use_dl"
+  title: "Should You Use Deep Learning? Don't Crack a Nut With a Sledgehammer"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch11_05_when_to_use_dl"
+  scene_class: "Ch11WhenToUseDLScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi!
+      Welcome to the very first lesson of deep learning.
+      Funny thing: every other classroom teaches you how to write a neural network, but this episode insists on first teaching you when not to.
+      Because deep learning is a razor-sharp cleaver, yet the problem in your hands is, very often, just a chicken.
+      This episode hands you a decision framework so that before you sharpen the blade, you think it through: does this blade even need sharpening?
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "temptation"
+    narration: >
+      Here's the story.
+      In Ch10 you honestly ran a round with sklearn, and logistic regression and random forest tied, both with AUC right around 0.6.
+      That's when a colleague leans over and says, I hear deep learning is powerful, maybe it can catch complex interactions we didn't think of?
+      It's a good question, but the answer is absolutely not just use it.
+      Ask yourself four questions first, then decide whether to sharpen this cleaver.
+    animation: "show_temptation"
+    pause_after: 0.5
+
+  - id: "decision_tree"
+    narration: >
+      The decision framework: four questions asked top to bottom, and wherever you match, you stop at that box.
+      First, is the data fewer than a thousand rows?
+      If so, traditional statistics or simple ML is more stable and easier to explain.
+      Second, do you want will it or why?
+      If you want mechanism and causation, that's the home turf of mechanistic models like SEIR.
+      Third, is it high-dimensional, long sequences, and genuinely large in volume?
+      Only then is it deep learning's turn.
+      Fourth, a new pathogen with almost no data early on?
+      Then borrow a pretrained time-series foundation model for zero-shot forecasting.
+    animation: "show_decision_tree"
+    pause_after: 0.5
+
+  - id: "data_spectrum"
+    narration: >
+      Put this book's two hundred eighty rows of Legionella data on this data-volume spectrum and see.
+      On the left is small data, where a simple model will do; in the middle is the gray zone of a few thousand rows; on the right you need tens of thousands or more before it's deep learning's turn.
+      And two hundred eighty rows?
+      It sits far off on the left, not even touching the gray zone.
+      Run it through the decision tree we just saw and you stop at the very first question: this chicken really doesn't need a cleaver.
+    animation: "show_data_spectrum"
+    pause_after: 0.5
+
+  - id: "fit_vs_overkill"
+    narration: >
+      Organize it into a good-fit versus overkill comparison table.
+      Signals that deep learning fits: large data volume, high dimension, non-linearity, images or long sequences, and, you've already run a baseline and it's still not good enough.
+      Signals to hold back: small samples, low-dimensional tables, cross-sectional data where every row is independent, and the most common one, reaching for deep learning before you've even run a baseline.
+    animation: "show_fit_vs_overkill"
+    pause_after: 0.5
+
+  - id: "iron_rule"
+    narration: >
+      So this chapter's iron rule is one sentence: run a traditional statistics or ML baseline first, and only when it's not good enough and the decision tree's conditions are met do you consider deep learning.
+      Two hundred eighty rows and about fifteen dimensions, logistic regression already has enough expressive power; deep learning's parameter count far exceeds the sample size, and the overfitting risk goes through the roof.
+      Is learning PyTorch syntax worth it?
+      Absolutely, it'll come in handy for images and large samples down the road.
+      But for this formal analysis, stick with sklearn like a good student, and keep the cleaver in its sheath.
+    animation: "show_iron_rule"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a real scenario where logistic regression beats a neural network!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_logreg_wins"
+    narration: >
+      A hospital wants to predict whether a patient will be readmitted within thirty days, with only four hundred records and eight tabular features on hand.
+      Someone gets itchy and forces in a three-layer MLP, and the validation AUC comes out at just 0.68, actually losing to logistic regression's 0.72, and on top of that logistic regression's coefficients can explain directly to the doctors which factor matters how much.
+      This is a living, breathing case of cracking a nut with a sledgehammer: small samples, a low-dimensional table, and the simple model is faster, sharper, and easier to explain.
+    animation: "show_extra_logreg_wins"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Should you use DL?
+      Three blind spots beginners step on most!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_no_baseline"
+    narration: >
+      Blind spot number one: diving headfirst into deep learning without even running a baseline.
+      Without a benchmark to compare against, you have no idea whether this cleaver is actually any sharper.
+      The right move: spend five minutes running a logistic regression first, and treat it as the bar you have to beat.
+    animation: "show_blindspot_no_baseline"
+    error_code: "dl = MLP().fit(X, y)  # no baseline"
+    correct_code: "lr = LogisticRegression().fit(X, y)"
+    pause_after: 0.5
+
+  - id: "blindspot_giant_model"
+    narration: >
+      Blind spot number two: pairing small data with a giant model.
+      With two hundred eighty rows you stack several layers and hundreds of neurons, and with the parameter count far exceeding the sample size, the model just memorizes the noise.
+      The right move: for small data, at most one or two small hidden layers, or, just don't use deep learning at all.
+    animation: "show_blindspot_giant_model"
+    error_code: "net = MLP(hidden=[256, 128])  # n=280"
+    correct_code: "net = MLP(hidden=[16])  # or skip DL"
+    pause_after: 0.5
+
+  - id: "blindspot_train_only"
+    narration: >
+      Blind spot number three: declaring victory on the training-set score alone.
+      When the model has the training set memorized cold and is unbelievably accurate, that's just cramming the past exam, and it gets exposed on a fresh batch of data.
+      The right move: always evaluate on an independent test set the model hasn't seen, because only that score counts.
+    animation: "show_blindspot_train_only"
+    error_code: "acc = score(model, X_train, y_train)"
+    correct_code: "auc = score(model, X_test, y_test)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      You've learned the decision framework!
+      Remember the iron rule: run a baseline first, then ask the four questions, and only sharpen the cleaver if you truly need it.
+      All talk and no practice doesn't count, so next episode we roll up our sleeves and run a PyTorch MLP by hand on the same two hundred eighty rows, to see whether swinging a cleaver at a chicken actually carves out any edge.
+      See you next episode!
+    animation: "show_outro"
+    pause_after: 1.0

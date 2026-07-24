@@ -1,0 +1,132 @@
+meta:
+  chapter: "14"
+  concept: "export_docx"
+  title: "輸出正式 DOCX 報告：python-docx 標題、表格、內嵌圖"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch14_05_export_docx"
+  scene_class: "Ch14ExportDocxScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      簡報適合上台報告，但正式歸檔、公文往返，長官要的是一份 Word 報告。
+      這一集我們用 python-docx，把同一套圖表和數字，組成一份有標題、有段落、有內嵌圖的正式報告文件。
+      好消息是——素材完全一樣，只是換個輸出工具。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_docx"
+    narration: >
+      為什麼還要 DOCX？因為簡報是給眼睛掃的，正式報告是給人逐字讀、存檔、簽核的。
+      Word 報告有正式的標題階層、段落、表格樣式，適合當作結案文件歸檔。
+      而且跟 PPTX 一樣，是程式化產出、可重現。
+    animation: "show_why_docx"
+    pause_after: 0.5
+
+  - id: "docx_code"
+    narration: >
+      來看 python-docx 的主戲。Document 開一份新文件，add_heading 加標題——
+      level 0 是文件主標題、level 1 是小節標題；add_paragraph 寫一段內文；
+      add_picture 把記憶體裡的流行曲線圖直接內嵌進去，最後 doc.save 存成 docx。
+    animation: "show_docx_code"
+    code: |
+      from docx import Document
+      from docx.shared import Inches as DInches
+      doc = Document()
+      doc.add_heading("Legionella cluster report", level=0)
+      doc.add_heading("Summary", level=1)
+      doc.add_paragraph(f"AR {ar:.1%}, CFR {cfr:.1%}")
+      doc.add_picture(buf, width=DInches(5.5))
+      doc.save("legionella_report.docx")
+    pause_after: 0.5
+
+  - id: "doc_mockup"
+    narration: >
+      跑完長這樣：最上面是文件大標，底下「摘要」小節寫一段病例數與致死率，
+      再來「流行曲線」小節內嵌那張圖。
+      標題階層清清楚楚，長官打開 Word 就能直接讀、直接印、直接簽。
+    animation: "show_doc_mockup"
+    pause_after: 0.5
+
+  - id: "reproducible"
+    narration: >
+      這裡呼應 Ch13 的可重現精神：報告不是手打的，是程式長出來的。
+      資料更新、結論修正，重跑一次同一段程式，Word 報告就用最新數字重生一次——
+      永遠不會有「這份報告用的是哪一版的圖」這種疑問。
+    animation: "show_reproducible"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三個重點。一，add_heading 的 level 控制標題階層，level 0 主標題、level 1 小節。
+      二，add_paragraph 加內文、add_picture 內嵌記憶體圖。
+      三，DOCX 跟 PPTX 共用同一套素材，換工具不換資料。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：一份正式的諾羅病毒院內群聚報告！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_formal_report"
+    narration: >
+      假設醫院爆發諾羅病毒院內群聚。把八個段落的標題和內文存成一個清單，用一個迴圈跑過去，
+      每一段 add_heading 加標題、add_paragraph 加內文，最後內嵌流行曲線、存檔。
+      一份格式一致、章節分明的正式結案報告，就這樣自動長出來。
+    animation: "show_extra_formal_report"
+    code: |
+      doc = Document()
+      doc.add_heading("Norovirus outbreak report", level=0)
+      for sec in REPORT_8_SECTIONS:
+          doc.add_heading(sec.title, level=1)
+          doc.add_paragraph(sec.body)
+      doc.add_picture(epi_curve, width=DInches(6))
+      doc.save("norovirus_report.docx")
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      DOCX 輸出三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：同一張 BytesIO 圖，PPTX 用過一次後沒 seek(0) 就給 DOCX 用。
+      游標停在檔案尾端，Word 會插入一張空白圖。
+      共用同一張圖，每次插入前都要先 seek(0)。
+    animation: "show_blindspot_forgot_seek"
+    error_code: "doc.add_picture(buf)"
+    correct_code: "buf.seek(0); doc.add_picture(buf)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：Inches 撞名。pptx.util 和 docx.shared 都有 Inches，同時 import 會蓋掉彼此。
+      docx 這邊記得改個別名，像 Inches as DInches，才不會用錯單位。
+    animation: "show_blindspot_inches_clash"
+    error_code: "from pptx.util import Inches"
+    correct_code: "from docx.shared import Inches as D"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：想要標題，卻用 add_paragraph 硬打粗體字冒充。
+      正確做法是 add_heading 搭配 level，才會套用 Word 內建的標題樣式，之後也能自動生成目錄。
+    animation: "show_blindspot_heading_as_paragraph"
+    error_code: 'doc.add_paragraph("Summary")  # as title'
+    correct_code: 'doc.add_heading("Summary", level=1)'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜！你已經走完整套疫調流程——從接獲通報、清理資料、描述分析、統計推論、時空建模，
+      一路到因果研判，最後一鍵輸出成簡報和 Word 報告。這一章，也是這系列影片的最終回。
+      你，已經是能獨當一面的疫調分析師了！
+    animation: "show_outro"
+    pause_after: 1.0

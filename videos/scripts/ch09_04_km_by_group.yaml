@@ -1,0 +1,122 @@
+meta:
+  chapter: "09"
+  concept: "km_by_group"
+  title: "分組 KM 曲線：誰的預後比較差？"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch09_04_km_by_group"
+  scene_class: "Ch09KMByGroupScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      全體只有一條線，只能告訴你「整群人怎麼掉」，卻答不出主治醫師最想知道的問題：
+      到底是誰預後比較差？這一集我們把病人照臨床嚴重度分組，
+      在同一張圖上疊好幾條線，一眼看出高下。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_group"
+    narration: >
+      為什麼要分組？因為全體那條線是把 mild、moderate、severe 全部混在一起平均掉，
+      輕症的人把曲線往上拉、重症的人往下拖，混在一起你什麼都看不出來。
+      拆開來，各畫一條，差異才會現形。
+    animation: "show_why_group"
+    pause_after: 0.5
+
+  - id: "group_code"
+    narration: >
+      寫法很直覺：用一個 for 迴圈跑過三種嚴重度，每一組各自 fit、各自 plot。
+      這裡有個超關鍵的細節——plt.show() 一定要放在迴圈「外面」，
+      三條線才會疊在同一張圖上；放裡面就變成三張各一條線的圖，根本沒法比。
+    animation: "show_group_code"
+    code: |
+      for sev in ["mild", "moderate", "severe"]:
+          g = cases[cases["clinical_severity"] == sev]
+          kmf.fit(g["time"], event_observed=g["event"], label=sev)
+          kmf.plot_survival_function()
+      plt.show()   # after the loop: all lines on one figure
+    pause_after: 0.5
+
+  - id: "two_curves"
+    narration: >
+      畫出來大概長這樣。mild 那條又高又平，撐得住；severe 那條又早又陡，掉得很快。
+      兩條線之間張開的距離，就是嚴重度的效應——距離越大，代表這個因子的影響越強。
+    animation: "show_two_curves"
+    pause_after: 0.5
+
+  - id: "three_views"
+    narration: >
+      看分組曲線抓三個視角。第一，什麼時候開始分開，越早分開效應越立竿見影。
+      第二，垂直間距多大，間距越大效應越強。
+      第三，有沒有交叉——如果交叉了，就要警覺比例風險假設可能被違反，Cox 迴歸的結果要小心解讀。
+    animation: "show_three_views"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三個重點打包。一，分組是為了看出「誰預後差」，全體一條線做不到。
+      二，plt.show() 放迴圈外，三條線才疊同一張圖。
+      三，看分離時點、看間距、看有沒有交叉，交叉就是 PH 假設的警報。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：新冠加護病房，按年齡分組！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid_age"
+    narration: >
+      新冠重症住進加護病房，把病人照年齡分成年輕、中年、高齡三組，各畫一條存活曲線。
+      通常高齡那條掉得又早又快，年輕那條又高又平，三條線一疊，年齡的威力一目瞭然。
+      同一套 for 迴圈、同一張圖，換個分組變數就好。
+    animation: "show_extra_covid_age"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      分組 KM 曲線三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：把 plt.show() 寫在迴圈裡面。
+      這樣每一組畫完就各自跳出一張圖，你會拿到三張各一條線的圖，根本沒辦法互相比較。
+      show 一定要放在迴圈跑完之後。
+    animation: "show_blindspot_show_in_loop"
+    error_code: "for g in grps: kmf.fit(g); plt.show()"
+    correct_code: "for g in grps: kmf.fit(g)  # show after"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：光用眼睛看「這條在下面就是比較差」，就直接下結論。
+      眼睛會騙人，看起來分很開的差距，也可能只是運氣。
+      要下定論，一定要補一個對數秩檢定 log-rank 來驗證，那正是下一集的主題。
+    animation: "show_blindspot_eyeball_only"
+    error_code: "severe_worse = curve_below  # by eye"
+    correct_code: "logrank_test(a.t, b.t, a.e, b.e)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：某一組人數超少，還硬畫一條線來比。
+      分組後如果某一組只剩幾個人，那條曲線會抖得亂七八糟、極度不穩定。
+      經驗法則是每組至少要有十來個人、幾個事件，再拿來比才靠得住。
+    animation: "show_blindspot_tiny_group"
+    error_code: "kmf.fit(tiny_group.t, tiny_group.e)"
+    correct_code: "# need n>=10 per group first"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      分組、疊圖、三個視角，你都上手了！
+      但眼睛看到的差距到底是真的還是運氣？下一集我們請出對數秩檢定 log-rank，
+      用一個 p 值幫你一槌定音。我們下集見！
+    animation: "show_outro"
+    pause_after: 1.0

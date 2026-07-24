@@ -1,0 +1,135 @@
+meta:
+  chapter: "12"
+  concept: "collider_berkson"
+  title: "The Collider Trap: Berkson's Paradox and a Sanxia Dengue DAG"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch12_04_collider_berkson"
+  scene_class: "Ch12ColliderScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Of the three shapes from last episode, the most treacherous, the one most likely to capsize you, is the collider.
+      What makes it scary is this: you think you've applied a perfectly reasonable filter,
+      yet you end up forcibly conjuring a fake association between two variables that had absolutely nothing to do with each other.
+      This episode we take that trap apart on its own: Berkson's paradox.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "collider_recap"
+    narration: >
+      First, a quick recap of what a collider looks like.
+      Suppose exposure and disease severity are entirely unrelated across all the residents,
+      but either one being strong enough is enough to get someone admitted; exposure can do it, and so can severity.
+      So "admission" is pointed to by both sides at once, and that's a classic collider.
+    animation: "show_collider_recap"
+    pause_after: 0.5
+
+  - id: "conditioning_cost"
+    narration: >
+      A collider's most lethal move is called "conditioning,"
+      which means analyzing only the subset where the collider equals a certain value, for example looking only at admitted patients.
+      That one choice manufactures a fake association out of thin air between two variables that were unrelated.
+      This phenomenon has a formal name: Berkson's paradox.
+    animation: "show_conditioning_cost"
+    pause_after: 0.5
+
+  - id: "berkson_intuition"
+    narration: >
+      Let me show you the intuitive version. On the left is the full sample, with exposure and severity scattered all over, no correlation at all.
+      But on the right we keep only the admitted: those with low exposure were mostly admitted because their severity was especially high;
+      those with modest severity were mostly admitted because their exposure was especially heavy and their risk especially large.
+      The two get forcibly tied together, and out pops a fake negative correlation that doesn't exist in the full sample at all.
+    animation: "show_berkson_intuition"
+    pause_after: 0.5
+
+  - id: "sanxia_dag"
+    narration: >
+      Let's practice on a real scenario: a local dengue cluster in Sanxia, drawing the simplest possible DAG sketch.
+      Standing water breeds the mosquito vectors, and the vectors then pass the disease to residents; the vectors are the mediator.
+      Meanwhile both the local case count and the intensity of water inspections push up "whether it got reported," so reporting is the collider.
+      If you analyze only the cases that "got reported," you may see a fake association between local cases and inspection intensity.
+    animation: "show_sanxia_dag"
+    pause_after: 0.5
+
+  - id: "common_traps"
+    narration: >
+      What makes this dangerous is how well it disguises itself.
+      Analyzing only the reported and confirmed cases; analyzing only the admitted patients; analyzing only the cases that returned for follow-up;
+      these all sound like perfectly sensible filtering criteria, yet every single one conditions on some collider.
+      One slip and you've conjured an association that doesn't actually exist, or buried one that truly does.
+    animation: "show_common_traps"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Tuck away three takeaways on colliders.
+      First, a collider is a variable pointed to by both exposure and outcome at the same time.
+      Second, conditioning on it gives birth to a fake association that doesn't exist at all, and that's Berkson's paradox.
+      Third, the usual culprits are "look only at admitted, look only at reported, look only at follow-up."
+      So before analyzing, always draw the DAG first, spot the collider, then decide whether to filter.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: selection bias inside the hospital.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_hospital"
+    narration: >
+      This is the most original flavor of Berkson's paradox.
+      If you run a case-control study and pick both cases and controls only from admitted patients, be very careful.
+      Because "whether you're admitted" is pushed up by several diseases at once, it's a collider.
+      As a result, two diseases with no relationship whatsoever look correlated among the admitted, and that's exactly how Berkson discovered it back then.
+    animation: "show_extra_hospital"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three collider blind spots!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: filtering the data down to "admitted patients only" before analyzing.
+      That one cut is conditioning on the admission collider, and the bias quietly follows it in.
+      The right move is to analyze the whole cohort, not just the small group who were admitted.
+    animation: "show_blindspot_only_hospitalized"
+    error_code: "df = df[df['hospitalized'] == 1]"
+    correct_code: "df = full_cohort  # no collider filter"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: analyzing only the cases that "got reported."
+      Whether something is reported is often a collider too, and keeping only the reported likewise distorts the association you see.
+      The right move is to bring in the unreported cases as much as you can, and don't let the reporting gate quietly do your sampling for you.
+    animation: "show_blindspot_only_notified"
+    error_code: "cases = df[df['notified'] == 1]"
+    correct_code: "cases = df  # include unreported too"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: dropping the collider straight into the regression as an adjustment.
+      Don't assume only "subsetting" counts as conditioning; adding one hospitalized into the regression does the exact same thing and opens up the fake association just the same.
+      The right move is to keep the collider away from the regression, and let it go when you should.
+    animation: "show_blindspot_adjust_collider"
+    error_code: "smf.ols('sev ~ exp + hospitalized')"
+    correct_code: "smf.ols('sev ~ exp')  # drop collider"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Association isn't causation, the counterfactual, the DAG, and the most treacherous collider of all;
+      causal inference's "opening moves" are now fully packed up.
+      Next we open the book and turn these intuitions into tools you can actually compute:
+      attributable risk AR, population attributable risk PAR, and DiD for evaluating policy effects. Chapter 12, see you in the book!
+    animation: "show_outro"
+    pause_after: 1.0

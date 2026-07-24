@@ -1,0 +1,143 @@
+meta:
+  chapter: "10"
+  concept: "train_test_split"
+  title: "The Train / Val / Test Split: split the exams first, never peek at the test set"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch10_02_train_test_split"
+  scene_class: "Ch10TrainTestSplitScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode we met the blueprint for training our intern doctor; this one starts at stop number one, splitting the data.
+      Before you hand the case files to your intern, you have to slice the data first:
+      one chunk for learning in class, another set aside to grade them at the very end.
+      It looks simple, but it's the first hairpin turn where beginners spin out.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_split"
+    narration: >
+      Why must you split it at all? Because if you use the exact same data for class and for the exam,
+      the intern just memorizes the answers and scores a perfect hundred, and you learn nothing about their real skill.
+      It's like chapter seven's rule, "no peeking at the future"; the machine learning version is slicing the data into three sets, train, validation, and test, each with its own job.
+    animation: "show_why_split"
+    pause_after: 0.5
+
+  - id: "split_diagram"
+    narration: >
+      Three sets, three jobs.
+      Train is roughly sixty percent, for attending class and fitting the formulas.
+      Validation is about twenty percent, for the mock exam, tuning parameters, and picking the model.
+      Test is about twenty percent, the licensing exam, opened exactly once. Remember the mantra: once you've seen the test set, it's void.
+    animation: "show_split_diagram"
+    pause_after: 0.5
+
+  - id: "split_ratios"
+    narration: >
+      So should you split sixty-twenty-twenty, seventy-fifteen-fifteen, or eighty-ten-ten?
+      One rule: the more data you have, the smaller the validation and test shares can be.
+      And this chapter has just 280 rows, a textbook "small data" case, so you won't see anything called X_val;
+      the fixed mock exam gets handed off to next episode's cross-validation, while test still keeps its twenty percent.
+    animation: "show_split_ratios"
+    pause_after: 0.5
+
+  - id: "split_code"
+    narration: >
+      In code it's a single line of train_test_split.
+      Feed in the features X and the labels y, set test_size to 0.2 to reserve twenty percent as the test set,
+      and fix random_state so the result is reproducible.
+      The most crucial piece is that stratify equals y at the end; that's the stratified split, and the next segment tells you why it's a lifesaver.
+    animation: "show_split_code"
+    code: |
+      from sklearn.model_selection import train_test_split
+
+      X_train, X_test, y_train, y_test = train_test_split(
+          X, y, test_size=0.2, random_state=42, stratify=y,
+      )
+    pause_after: 0.5
+
+  - id: "stratify_why"
+    narration: >
+      Why split by strata? Because our severe cases are only twenty-four percent, a minority.
+      Split at random and, with bad luck, one fold could end up with almost no severe patients at all, and the grades bounce all over the place.
+      Stratify equals y guarantees every set keeps the same severe-to-non-severe ratio as the original data, so the scores stay steady.
+      Flip this switch on for both the split and cross-validation.
+    animation: "show_stratify_why"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways, packaged.
+      One, always split first: train learns, test grades, and once seen the test is void.
+      Two, the bigger the data, the smaller the test share can be; this chapter's 280 rows are too small, so validation goes to cross-validation.
+      Three, imbalanced data must be split by strata; stratify equals y is your lifesaver.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: switch the scene, a flu-season admission model!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_flu"
+    narration: >
+      New scene: you want to build a flu-season admission model, deciding whether an ER patient will need to be hospitalized.
+      Admitted patients are usually the minority, so here the stratified split matters even more.
+      Look, the code barely changes a single character, same train_test_split, same stratify;
+      one splitting weapon, different disease, still sharp.
+    animation: "show_extra_flu"
+    code: |
+      # 流感季住院預測：一樣先切、一樣分層
+      X_tr, X_te, y_tr, y_te = train_test_split(
+          X, admit, test_size=0.2, stratify=admit,
+      )
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots in data splitting!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_scale_before_split"
+    narration: >
+      Blind spot number one, and the sneakiest of all: standardizing before you split.
+      You compute the mean and standard deviation on the whole dataset, and the test set's information quietly seeps into training; that's the hardest kind of data leakage to spot.
+      The fix is to wrap standardization inside a Pipeline so it only runs within each fold.
+    animation: "show_blindspot_scale_before_split"
+    error_code: "X = scaler.fit_transform(X)  # before split"
+    correct_code: "pipe = make_pipeline(StandardScaler(), lr)"
+    pause_after: 0.5
+
+  - id: "blindspot_no_stratify"
+    narration: >
+      Blind spot number two: imbalanced data split at random.
+      The minority class might tumble entirely onto one side, leaving one fold with almost no positives, and the grades ride a rollercoaster.
+      Just add stratify equals y and every set keeps its class ratio.
+    animation: "show_blindspot_no_stratify"
+    error_code: "train_test_split(X, y)  # no stratify"
+    correct_code: "train_test_split(X, y, stratify=y)"
+    pause_after: 0.5
+
+  - id: "blindspot_time_series"
+    narration: >
+      Blind spot number three: shuffling time-series data at random to split it.
+      That's using the future to predict the past, guaranteed cheating.
+      Time data needs TimeSeriesSplit to slice in chronological order, and spatial data needs spatial CV; neither one gets to shuffle freely.
+    animation: "show_blindspot_time_series"
+    error_code: "train_test_split(X, y, shuffle=True)  # ts"
+    correct_code: "TimeSeriesSplit(n_splits=5)  # ordered"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Data sliced, exam papers divided, and the intern's first stop is done.
+      But machine learning can't even understand a sentence like "predict who gets sick"; it only recognizes zeros and ones.
+      Next episode we'll take the boss's fuzzy question and translate it into one clean column of 0/1 labels. See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

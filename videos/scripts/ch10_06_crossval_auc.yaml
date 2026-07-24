@@ -1,0 +1,144 @@
+meta:
+  chapter: "10"
+  concept: "crossval_auc"
+  title: "交叉驗證 + AUC：這張成績單到底在比什麼？"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch10_06_crossval_auc"
+  scene_class: "Ch10CrossvalAucScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      模型包好了，接下來要打分數。但這一步最容易讓新手迷路——
+      交叉驗證到底在做什麼？AUC 又是什麼鬼東西？
+      別怕，這一集我用「換題庫模擬考」跟「排病人的眼力」兩個比喻，
+      一次幫你把這兩個名詞徹底搞懂。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "cv_idea"
+    narration: >
+      先看交叉驗證。把資料切成 5 折，每一輪拿 4 折訓練、留 1 折當考題，
+      綠色那折就是測試折，藍色是訓練折，測試折沿著對角線輪流換位置。
+      這樣輪 5 次，每一筆資料都剛好當過一次考題，
+      最後拿到 5 個 AUC，再取平均和標準差。公平多了！
+    animation: "show_cv_idea"
+    pause_after: 0.5
+
+  - id: "cv_code"
+    narration: >
+      寫成程式超短：cross_val_score，把包好的 clf、資料、
+      cv 等於 5、scoring 設成 roc_auc，一行就跑完 5 折。
+      重點是它回傳「5 個分數」，所以我們印出平均加減標準差。
+      注意：它不是在比兩個模型，是給同一個模型打一個更可信的分數。
+    animation: "show_cv_code"
+    code: |
+      from sklearn.model_selection import cross_val_score
+
+      scores = cross_val_score(
+          clf_lr, X, y, cv=5, scoring="roc_auc")
+      print(f"AUC = {scores.mean():.3f} +/- {scores.std():.3f}")
+    pause_after: 0.5
+
+  - id: "cv_output"
+    narration: >
+      跑出來，logistic 的 5 折平均 AUC 大約 0.62，標準差只有 0.05。
+      看兩個數字：平均告訴你大概多強，標準差告訴你穩不穩。
+      標準差小，代表換題庫成績也不會大崩，這個分數才可靠。
+    animation: "show_cv_output"
+    pause_after: 0.5
+
+  - id: "auc_meaning"
+    narration: >
+      那 AUC 到底是什麼？忘掉「曲線下面積」那種嚇人的講法。
+      最白話的定義：隨機抓一個真的會感染的、一個真的不會感染的，
+      模型把感染者的分數排在前面的機率，就是 AUC。
+      0.5 是閉眼猜、0.7 及格、0.8 不錯、1.0 全對——太高反而先懷疑洩漏。
+    animation: "show_auc_meaning"
+    pause_after: 0.5
+
+  - id: "why_not_accuracy"
+    narration: >
+      有人問：那幹嘛不看準確率就好？因為重症任務只有 24% 是正例。
+      模型只要無腦全猜「沒重症」，準確率照樣有 76%，聽起來很高，
+      其實一個病人都沒抓到，完全沒用。
+      AUC 看的是排序、不受門檻影響，在不平衡資料上誠實得多。
+    animation: "show_why_not_accuracy"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      交叉驗證加 AUC，三個重點打包。
+      一，CV 是給同一個模型一個更可信的分數，不是比兩個模型。
+      二，看兩個數字：平均代表多強、標準差代表穩不穩。
+      三，AUC 是把感染者排在健康人前面的機率，不是「猜對幾個」。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：換個場景，30 天再住院預測模型！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_readmit"
+    narration: >
+      醫院最愛的一個題目：預測病人 30 天內會不會再住院。
+      同一把尺完全不用改：把資料丟進 cross_val_score，
+      cv 等於 5、scoring 一樣用 roc_auc，就得到平均 AUC。
+      不管是感染、重症還是再住院，這套評分工具都能通吃。
+    animation: "show_extra_readmit"
+    code: |
+      readmit = Pipeline([("prep", prep), ("model", rf)])
+      scores = cross_val_score(
+          readmit, X, y, cv=5, scoring="roc_auc")
+      print(f"30-day readmit AUC = {scores.mean():.3f}")
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      交叉驗證與 AUC，三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：只看平均，忘了看標準差。
+      平均 0.7 但標準差 0.2，代表換題庫就崩，這種分數不能信。
+      一定要平均和標準差一起看，才知道模型穩不穩。
+    animation: "show_blindspot_mean_only"
+    error_code: "print(scores.mean())"
+    correct_code: "print(scores.mean(), scores.std())"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：資料不平衡卻沒有分層切。
+      重症只佔 24%，隨機切可能某一折幾乎沒有正例，成績亂跳。
+      正確做法：用 StratifiedKFold，讓每一折的正例比例都一致。
+    animation: "show_blindspot_not_stratified"
+    error_code: "cross_val_score(clf, X, y, cv=5)"
+    correct_code: "cv = StratifiedKFold(5, shuffle=True)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：在不平衡資料上用 accuracy 當評分。
+      全猜沒病就有 76% 準確率，這個數字騙你騙得可開心了。
+      正確做法：scoring 用 roc_auc，看排序、不受門檻左右。
+    animation: "show_blindspot_accuracy_metric"
+    error_code: 'scoring="accuracy"  # imbalanced!'
+    correct_code: 'scoring="roc_auc"  # rank-based'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      有了交叉驗證跟 AUC，你已經會替模型打出可信的分數了。
+      下一集，我們要給實習醫師換一顆更聰明的腦袋——Random Forest，
+      還要問它：在這一堆線索裡，到底哪一條最有用？
+      特徵重要性，我們下次見！
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,137 @@
+meta:
+  chapter: "14"
+  concept: "export_pptx"
+  title: "一鍵輸出 PPTX 簡報：python-pptx 把圖表塞進投影片"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch14_04_export_pptx"
+  scene_class: "Ch14ExportPptxScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      分析做完、結論也寫好，但長官要看的通常不是 notebook，而是一份能直接上呈的簡報。
+      傳統做法是把圖表一張張截圖貼進 PowerPoint——資料一更新就要整套重來。
+      這一集教你用 python-pptx，一行程式把圖表塞進投影片。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_export"
+    narration: >
+      為什麼要程式化輸出？因為手動截圖貼投影片有三個痛點：慢、容易貼錯版本、資料更新要重做。
+      用 python-pptx 直接組簡報，完全不用複製貼上，而且可重現——
+      重跑一次 notebook，簡報就用最新資料重生一次。
+    animation: "show_why_export"
+    pause_after: 0.5
+
+  - id: "bytesio"
+    narration: >
+      第一步是關鍵魔法：把 matplotlib 圖存進「記憶體裡的 PNG」，不落地成檔案。
+      用 io.BytesIO 開一個記憶體緩衝區，fig.savefig 存進去，再 buf.seek(0) 把游標倒回開頭。
+      這個 buf 就能直接塞進投影片，不用先寫進硬碟。
+    animation: "show_bytesio"
+    code: |
+      import io
+      buf = io.BytesIO()
+      fig.savefig(buf, format="png", dpi=150)
+      plt.close(fig)
+      buf.seek(0)   # rewind before reading
+    pause_after: 0.5
+
+  - id: "pptx_code"
+    narration: >
+      接著就是 python-pptx 的主戲。Presentation 開一份新簡報，
+      add_slide 搭配版面 0 做標題投影片、版面 5 做空白投影片，
+      再用 shapes.add_picture 把剛剛那個記憶體 PNG 直接貼上去，最後 prs.save 存成 pptx。
+    animation: "show_pptx_code"
+    code: |
+      from pptx import Presentation
+      from pptx.util import Inches
+      prs = Presentation()
+      t = prs.slides.add_slide(prs.slide_layouts[0])
+      t.shapes.title.text = "Legionella cluster SitRep"
+      s = prs.slides.add_slide(prs.slide_layouts[5])
+      s.shapes.add_picture(buf, Inches(0.5), Inches(1.2))
+      prs.save("legionella_sitrep.pptx")
+    pause_after: 0.5
+
+  - id: "slide_mockup"
+    narration: >
+      跑完長這樣：一張標題投影片，加一張放了淋浴 vs 侵襲率長條圖、
+      旁邊配一個關鍵數字小表格的內容投影片。
+      資料變了？重跑一次，這張投影片自動更新，數字永遠跟分析同步。
+    animation: "show_slide_mockup"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三個重點。一，io.BytesIO 讓圖表不落地就能塞進簡報。
+      二，python-pptx 的 add_slide 加 add_picture 是核心兩招。
+      三，程式化輸出等於一鍵重跑、格式一致、零手工錯誤。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：自動產生的流感週報簡報！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_auto_deck"
+    narration: >
+      把輸出包成一個函式，餵一串圖進去，它就自動一張圖一張投影片地生出整份簡報。
+      每週流感監測資料一更新，排程跑一次這個函式，
+      一份格式一致的情勢報告簡報就自己長出來——這就是自動化情勢報告的雛形。
+    animation: "show_extra_auto_deck"
+    code: |
+      def build_sitrep(figs):
+          prs = Presentation()
+          for fig in figs:
+              s = prs.slides.add_slide(prs.slide_layouts[5])
+              s.shapes.add_picture(to_png(fig), Inches(0.5))
+          prs.save("weekly_flu_sitrep.pptx")
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      PPTX 輸出三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：插入圖片前忘了 buf.seek(0)。
+      BytesIO 只能讀一次，上次讀完游標停在檔案尾端，忘了倒回開頭，投影片就插入一張空白圖。
+      插圖前一定要 seek(0)。
+    animation: "show_blindspot_forgot_seek"
+    error_code: "slide.shapes.add_picture(buf)"
+    correct_code: "buf.seek(0); slide.shapes.add_picture(buf)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：還在手動截圖存成檔案再插入。
+      整個 python-pptx 的意義就是不落地——直接用 fig.savefig 存進 BytesIO，跳過截圖那一步。
+    animation: "show_blindspot_manual_screenshot"
+    error_code: 'img = screenshot("chart.png")'
+    correct_code: 'fig.savefig(buf, format="png")'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：畫完圖忘了 plt.close(fig)。
+      批次產很多張圖時，沒關掉的 figure 會一直佔記憶體，跑到一半就爆掉。存完圖記得 close。
+    animation: "show_blindspot_forgot_close"
+    error_code: "fig.savefig(buf)"
+    correct_code: "fig.savefig(buf); plt.close(fig)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      簡報搞定了！但正式歸檔，長官還是要一份 Word 報告。
+      下一集我們用 python-docx，把同一套圖表和數字，組成一份有標題、有表格、有內嵌圖的正式報告文件。
+      下集見！
+    animation: "show_outro"
+    pause_after: 1.0

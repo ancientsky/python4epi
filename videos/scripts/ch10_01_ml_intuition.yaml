@@ -1,0 +1,134 @@
+meta:
+  chapter: "10"
+  concept: "ml_intuition"
+  title: "機器學習超白話：把模型當成一位受訓中的實習醫師"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch10_01_ml_intuition"
+  scene_class: "Ch10MLIntuitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      哈囉，歡迎來到機器學習教室！
+      別看到「機器學習」四個字就手心冒汗，這一集我用一個比喻把整章串起來——
+      把模型想成一位正在受訓、準備考執照的實習醫師。
+      看懂這位實習醫師怎麼養成，後面每一個步驟就都只是他成長路上的一站。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "intern_metaphor"
+    narration: >
+      先記住一句話：模型不是天才，是實習醫師。
+      他懂的每一件事，全都是你餵給他的病歷線索。
+      線索給錯，他就作弊；線索太雜，他就學不動。
+      所以整個機器學習，其實就是把一位菜鳥實習醫師，訓練到能獨立看診的過程。
+    animation: "show_intern_metaphor"
+    pause_after: 0.5
+
+  - id: "ml_task"
+    narration: >
+      那長官到底要這位實習醫師做什麼？答案是「預測」。
+      第六章的迴歸是在解釋「為什麼會感染」，機器學習更進一步，
+      要在住民一入住、還沒生病的時候，就預測「他會不會感染」。
+      解釋是回頭看，預測是往前猜，這是兩種不同的功夫。
+    animation: "show_ml_task"
+    pause_after: 0.5
+
+  - id: "three_exams"
+    narration: >
+      這位實習醫師的養成，分成三種考試。
+      train 訓練集是「上課」，可以翻書、慢慢學公式；
+      validation 驗證集是「模擬考」，可以看答案、邊考邊改讀書方法；
+      test 測試集是「執照考」，只考一次，掀開就作廢，代表他上線後的真實實力。
+    animation: "show_three_exams"
+    pause_after: 0.5
+
+  - id: "cross_validation"
+    narration: >
+      這裡有個問題：我們的資料只有 280 筆，超小。
+      只切一份模擬考出來，樣本太少，成績全看運氣——剛好考到會的就假高。
+      所以我們改用交叉驗證：把資料切成五份，輪流拿一份當考題、其他四份上課，總共考五次。
+      每一筆資料都剛好當過一次考題，取平均才知道他真正的實力，還有他穩不穩。
+    animation: "show_cross_validation"
+    pause_after: 0.5
+
+  - id: "auc_scorecard"
+    narration: >
+      考完要打分數，這張成績單就叫 AUC。
+      AUC 不是「答對幾題」，而是「排序病人的眼力」：
+      隨便抓一個真的會感染的、一個不會感染的，實習醫師能不能把會感染的排在前面？排對的機率就是 AUC。
+      0.5 是閉眼猜銅板、0.7 及格、0.8 不錯，如果高到接近 1.0，先別開心，多半是偷看了答案。
+    animation: "show_auc_scorecard"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      五句話幫你打包這一集。
+      一，模型是實習醫師，吃的是你給的線索。
+      二，train 上課、validation 模擬考、test 執照考，執照考只考一次。
+      三，資料小就用交叉驗證，換五份題庫取平均。
+      四，AUC 是排序病人的眼力，不是答對幾題。
+      五，換更聰明的腦袋，線索薄的時候也變不出資訊。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：換個場景，敗血症的早期預警分數！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_sepsis"
+    narration: >
+      換個場景，加護病房想要一個敗血症早期預警分數，提早幾小時抓出快要惡化的病人。
+      整套邏輯一模一樣：把生命徵象當線索餵給實習醫師、切訓練與測試、用 AUC 評估他排序病人的眼力。
+      同一位實習醫師的養成邏輯，換個疾病照樣能用。
+    animation: "show_extra_sepsis"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      機器學習三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_peek_test"
+    narration: >
+      第一個地雷：拿執照考的考卷來訓練，等於偷看答案。
+      測試集一旦參與訓練，就從「執照考」退化成「模擬考」，
+      你會嚴重高估實習醫師的實力，一上線立刻現形。測試集請鎖起來，最後只掀一次。
+    animation: "show_blindspot_peek_test"
+    error_code: "model.fit(X_test, y_test)  # tune on test"
+    correct_code: "model.fit(X_train, y_train)  # keep test"
+    pause_after: 0.5
+
+  - id: "blindspot_train_score"
+    narration: >
+      第二個地雷：只看訓練分數就沾沾自喜。
+      實習醫師把上課的例題全背起來，訓練分數當然漂亮，但那可能只是死背。
+      要看的是交叉驗證的平均分數——換一份沒看過的考卷，他還考得好，才算真本事。
+    animation: "show_blindspot_train_score"
+    error_code: "score = model.score(X_train, y_train)"
+    correct_code: "score = cross_val_score(model, X, y).mean()"
+    pause_after: 0.5
+
+  - id: "blindspot_complex_model"
+    narration: >
+      第三個地雷：以為換一顆更聰明的腦袋就一定考更高。
+      在只有 280 筆、訊號又薄的資料上，Random Forest 常常只追平 logistic，甚至更容易死背。
+      資料小的時候，簡單模型加交叉驗證，往往比華麗的大模型更誠實可靠。
+    animation: "show_blindspot_complex_model"
+    error_code: "model = DeepNet(layers=50)  # data has 280"
+    correct_code: "model = LogisticRegression()  # small data"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      這一集我們認識了這位實習醫師的養成藍圖。
+      接下來就從第一站開始手把手：下一集談資料三切分，
+      先學會怎麼把考卷分好、還有為什麼執照考絕對不能偷看。我們下次見！
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,125 @@
+meta:
+  chapter: "14"
+  concept: "capstone_intuition"
+  title: "超白話總複習：把整箱工具組裝成一份能上呈的報告"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch14_01_capstone_intuition"
+  scene_class: "Ch14CapstoneIntuitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      恭喜你走到全書最後一章！這一集是超白話總複習——我們一個新招都不學，
+      而是把前面十三章學過的每一件工具，通通擺上桌，
+      組成一份能寄給長官的疫調報告。準備好把工具箱端成一桌好菜了嗎？
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "detective_recap"
+    narration: >
+      疫調其實就是一場偵探辦案。你先像 Ch02 一樣把雜亂資料整理成乾淨的 line list，
+      再算侵襲率、畫流行曲線抓出案發輪廓，接著排除干擾因子這種偽證人，鎖定時間和地點。
+      這一章要做的，就是辦案片的最後一幕：把所有物證攤在會議桌上，講完整案情，說出結論。
+    animation: "show_detective_recap"
+    pause_after: 0.5
+
+  - id: "toolbox_meal"
+    narration: >
+      重點來了：一箱工具擺著，不會自己變成一頓飯。
+      要有人決定哪道菜配哪道醬汁，端出一桌上得了檯面的菜。
+      疫調報告也一樣——每一章的技能都是食材或器具，這一章負責把它們組裝、擺盤、端出去。
+    animation: "show_toolbox_meal"
+    pause_after: 0.5
+
+  - id: "tool_mapping"
+    narration: >
+      來對一下菜單。Line list 清理是食材處理，侵襲率是開胃菜先給總覽，
+      分層分析幫你去骨挑出干擾因子，邏輯斯迴歸是主廚特調醬汁同時校正多個因子，
+      空間分析負責擺盤標出熱點，因果推論則是主廚簽名——把有關聯講成有理由相信是原因。
+    animation: "show_tool_mapping"
+    pause_after: 0.5
+
+  - id: "narrative_thread"
+    narration: >
+      最關鍵的心法：這些數字不是各自獨立的，它們是同一條敘事線上的環節。
+      流行曲線的形狀指向共同暴露源，空間熱點指向特定樓層的水管，
+      暴露分析排除競爭假說，最後因果研判把整條線收尾成一句能寫進報告的結論。
+    animation: "show_narrative_thread"
+    pause_after: 0.5
+
+  - id: "actionable"
+    narration: >
+      再提醒一次：再多圖表、再花俏的模型，都不會讓報告變得有說服力。
+      報告真正的價值是「每個數字都有脈絡、每個結論都有行動建議」。
+      別丟一堆圖表給長官，要給他一個能做決定的答案。
+    animation: "show_actionable"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三個重點打包。一，這章不教新招，是把前十三章串成一條敘事線。
+      二，工具箱要有人組裝擺盤，才會變成一桌菜。
+      三，好報告等於有脈絡的數字，加上可行動的建議。恭喜，你已經有能力產出完整疫調報告了！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：換個場景，寫一份完整的麻疹群聚報告！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_measles"
+    narration: >
+      假設某國小爆發麻疹群聚。同一套流程原封不動搬過去：
+      先清 line list、算侵襲率、畫流行曲線看是不是單一暴露源，
+      用疫苗接種史做分層分析，再用地圖標出班級熱點，最後因果研判指向某個指標個案。
+      你看，換了疾病，工具箱一件都不用換。
+    animation: "show_extra_measles"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      疫調報告三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：只列數字，不給脈絡。你寫侵襲率 43%，長官會問「這算高嗎？」。
+      每個數字都要附上比較基準，像是全國致死率、往年侵襲率，數字才有意義。
+    animation: "show_blindspot_no_context"
+    error_code: 'slide.add(f"attack rate = {ar:.1%}")'
+    correct_code: 'slide.add(f"{ar:.1%} vs natl {base:.1%}")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：圖表全部塞進去，缺乏重點。
+      不是「有算就放上去」，挑三到五張關鍵圖表，每一張都要有明確結論，
+      放太多反而稀釋掉重點。
+    animation: "show_blindspot_too_many_charts"
+    error_code: "for fig in all_figs: deck.add(fig)"
+    correct_code: "for fig in key_figs[:5]: deck.add(fig)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：分析做完就收工，沒有行動建議。
+      報告要能讓人「照著做」，不只是「知道了」。
+      一定要有一段具體的介入建議，這才是報告存在的理由。
+    animation: "show_blindspot_no_action"
+    error_code: "report = findings"
+    correct_code: "report = findings + action_items"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      這一集把整箱工具串成了一條敘事線。
+      下一集我們把這條線裝進標準格式——疫調報告的八個段落，
+      看每一段各自對應到哪一章的技能。下集見！
+    animation: "show_outro"
+    pause_after: 1.0

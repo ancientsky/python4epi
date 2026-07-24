@@ -1,0 +1,139 @@
+meta:
+  chapter: "09"
+  concept: "logrank"
+  title: "Log-rank 檢定：那道差距是真的，還是運氣？"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch09_05_logrank"
+  scene_class: "Ch09LogrankScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集我們把兩組的存活曲線疊在一起，用眼睛看到一條在上面、一條在下面。
+      但問題來了：這道差距，是真的有差，還是只是運氣好？這一集就請出對數秩檢定 log-rank，
+      用一個 p 值幫你一槌定音。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "question"
+    narration: >
+      先講清楚我們在煩惱什麼。眼睛很容易被騙：兩條曲線看起來分很開，
+      但如果每組只有幾個人，那點差距很可能只是抽樣的隨機波動。
+      我們需要一個客觀的統計工具，把「看起來有差」升級成「真的有差」。
+    animation: "show_question"
+    pause_after: 0.5
+
+  - id: "logrank_idea"
+    narration: >
+      log-rank 在問一個很單純的問題：假設兩組的存活曲線其實一模一樣，
+      那我們實際觀察到的死亡分布，會不會剛好長成這樣？這就是虛無假設。
+      而且它比的是「整條曲線」，不是某一天，所以就算中位存活一樣，只要形狀不同也可能顯著。
+    animation: "show_logrank_idea"
+    pause_after: 0.5
+
+  - id: "two_curves"
+    narration: >
+      來看這兩條線。上面藍色那條掉得慢、下面橘色那條掉得快，中間張開一道明顯的距離。
+      眼睛說「有差」，但這道距離到底是真的，還是碰巧？這個問號，就是 log-rank 要回答的。
+    animation: "show_two_curves"
+    pause_after: 0.5
+
+  - id: "logrank_code"
+    narration: >
+      程式記得餵四樣東西：兩組各自的時間，加上兩組各自的 event 旗標，缺一不可。
+      logrank_test 會回傳一個結果物件，你要的答案就在 result.p_value 裡。
+      這裡我們比 severe 組和非 severe 組。
+    animation: "show_logrank_code"
+    code: |
+      from lifelines.statistics import logrank_test
+
+      result = logrank_test(
+          severe["time"], non_severe["time"],
+          event_observed_A=severe["event"],
+          event_observed_B=non_severe["event"],
+      )
+      print(f"log-rank p = {result.p_value:.4f}")
+    pause_after: 0.5
+
+  - id: "pvalue_read"
+    narration: >
+      怎麼讀 p 值？p 小於 0.05，拒絕虛無假設，代表兩組存活曲線有統計顯著差異，那道差距不太像是運氣。
+      p 大於等於 0.05，證據不足，還不能說有差。
+      但要記住 log-rank 有個天花板：它只告訴你「有沒有差」，不告訴你「差多少」——想量化，得靠 Cox 迴歸。
+    animation: "show_pvalue_read"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三個重點打包。一，log-rank 在問「這道差距是真的還是運氣」。
+      二，一定要餵四樣：兩組時間、兩組 event。
+      三，它只說「有沒有差」，要知道「差多少」請用下一章的 Cox 迴歸。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：登革熱新藥的雙臂試驗！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue"
+    narration: >
+      假設有一個登革熱新藥試驗，病人隨機分成用藥組和安慰劑組，追蹤「幾天內退燒」。
+      把兩組的天數和退燒旗標餵進 logrank_test，一個 p 值就能告訴你：
+      新藥讓病人退燒得比較快，這差距是真的，還是只是巧合。同一招，換個場景照樣好用。
+    animation: "show_extra_dengue"
+    code: |
+      arm_a = trial[trial["arm"] == "drug"]
+      arm_b = trial[trial["arm"] == "placebo"]
+      res = logrank_test(arm_a["days"], arm_b["days"],
+                         arm_a["fever"], arm_b["fever"])
+      print(res.p_value)
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Log-rank 三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：只餵兩組的時間，忘了餵 event 旗標。
+      少了事件旗標，log-rank 沒辦法分辨誰是死亡、誰是設限，結果會整個錯掉。
+      時間兩份、event 兩份，四樣缺一不可。
+    animation: "show_blindspot_missing_events"
+    error_code: "logrank_test(a.time, b.time)"
+    correct_code: "logrank_test(a.t, b.t, a.e, b.e)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：把 p 值當成效應大小，以為 p 越小差距就越大。
+      p 值只回答「有沒有差」，它跟「差多少」是兩回事。
+      想知道差幾倍風險，請算 Cox 迴歸的風險比 HR，別叫 p 值做它不會的事。
+    animation: "show_blindspot_p_as_effect"
+    error_code: "effect_size = result.p_value"
+    correct_code: "# p tells if, not how much: use Cox"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：一口氣對很多組兩兩做 log-rank，卻不校正。
+      比的次數越多，純靠運氣冒出一個顯著的機率就越高。
+      多重比較記得校正顯著水準，例如把 alpha 除以比較次數。
+    animation: "show_blindspot_multiple_tests"
+    error_code: "logrank_test(a,b); logrank_test(a,c)"
+    correct_code: "# adjust alpha for many comparisons"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      log-rank 幫你把「看起來有差」變成「真的有差」，但它止步於「有沒有」。
+      想更進一步問「差幾倍、哪個因子最致命」，就要走進 Cox 比例風險迴歸的世界。
+      存活分析的推論到這裡告一段落，我們下集見！
+    animation: "show_outro"
+    pause_after: 1.0

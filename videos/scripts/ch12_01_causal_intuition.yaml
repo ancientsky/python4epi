@@ -1,0 +1,125 @@
+meta:
+  chapter: "12"
+  concept: "causal_intuition"
+  title: "因果偵探超白話：如果重來一次，還會生病嗎？"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch12_01_causal_intuition"
+  scene_class: "Ch12CausalIntuitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      覺得「因果推論」「DAG」「反事實」這些詞聽起來超硬？別怕。
+      這一集我把整套因果推論，換成推理劇裡你最愛看的橋段——偵探辦案。
+      看完你會發現：喔，原來每個嚇人的名詞，偵探老早就在用了。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "crime_scene"
+    narration: >
+      先進案發現場。一個好偵探，絕不會看到「兩件事同時發生」就直接結案。
+      氣象新聞常報：冰淇淋賣越好的月份，溺水的人也越多。
+      你會因此指控冰淇淋是溺水的兇手嗎？當然不會。
+      真兇另有其人，就是背後那個「夏天」——天氣一熱，大家既愛吃冰、又愛下水。
+    animation: "show_crime_scene"
+    pause_after: 0.5
+
+  - id: "counterfactual_spell"
+    narration: >
+      真正的因果偵探，破案靠一句咒語：
+      「如果重來一次，把這個嫌疑犯拿掉，事情還會發生嗎？」
+      想像同一個人、同一個情境，唯一差別只有「有沒有暴露」，
+      再比較這兩個平行世界的結果。這句咒語，正式名稱就叫反事實 counterfactual。
+    animation: "show_counterfactual_spell"
+    pause_after: 0.5
+
+  - id: "three_traps"
+    narration: >
+      辦案時要提防三種容易帶錯方向的角色。
+      干擾，就是藏在背後、同時牽動暴露和結果的真兇，像那個夏天。
+      中介，是案情往下傳的傳話筒，錯把它當犯人抓走，反而看不到真正的效果。
+      對撞，是只看送驗案件才冒出來的假象，這種角色絕對不能校正。
+    animation: "show_three_traps"
+    pause_after: 0.5
+
+  - id: "glossary"
+    narration: >
+      把偵探手冊翻成因果推論的術語，一格一格對照。
+      兩件事同時發生，是關聯，不代表因果；「拿掉還會不會發生」，就是反事實。
+      背後真兇是干擾因子，該抓出來校正；傳話筒是中介變項，別亂調；
+      選樣造成的假象是對撞因子，絕對不能調。記住這張表，你就是因果偵探了。
+    animation: "show_glossary"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      整段特別篇，一句話打包。
+      第一，關聯不等於因果，一起變動不代表誰造成誰。
+      第二，永遠先問反事實：如果沒發生這件事，同一群人會不會有不一樣的結果。
+      第三，隨時提防三個陷阱：干擾、中介、對撞。
+      後面幾集的 DAG 和公式，其實都是把這句咒語變成能實際計算的工具。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：咖啡真的會「致癌」嗎？
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_coffee"
+    narration: >
+      這是流病史上有名的一樁「冤案」。早年研究發現，愛喝咖啡的人胰臟癌比較多，
+      一度讓咖啡背上黑鍋。但偵探一追就發現：重度咖啡族，往往同時也是老菸槍。
+      真兇其實是抽菸這個干擾因子——把抽菸校正掉之後，咖啡跟胰臟癌的關聯幾乎整個消失。
+      看吧，同一招反事實加找真兇，換個場景照樣破案。
+    animation: "show_extra_coffee"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      因果偵探三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：把「一起變動」直接當成「誰造成誰」。
+      冰淇淋漲、溺水也漲，就寫下 cause 等於一，這是最經典的誤判。
+      正確做法是先問一句：背後有沒有共同原因，像那個夏天，在偷偷牽線？
+    animation: "show_blindspot_corr_is_cause"
+    error_code: "if ice_cream_up and drown_up: cause=1"
+    correct_code: "check_common_cause(summer)  # confounder"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：只看到一條關聯就急著結案，忘了問反事實。
+      看到「有淋浴的人比較容易生病」就一槌定音，很危險。
+      真正的偵探會多問一句：如果把淋浴拿掉，同一個人還會不會生病？
+    animation: "show_blindspot_no_counterfactual"
+    error_code: "close_case('shower is the killer')"
+    correct_code: "ask('remove it, still sick?')  # cf"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：忘了找背後的藏鏡人，直接把暴露定罪。
+      沒校正干擾因子就下結論，很容易冤枉好人、放走真兇。
+      正確做法是先把可能的干擾因子校正掉，再回頭看暴露到底有沒有效果。
+    animation: "show_blindspot_forget_confounder"
+    error_code: "blame(exposure)  # ignored confounders"
+    correct_code: "blame(exposure, after_adjust=conf)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      因果偵探的直覺就先建立到這。
+      下一集我們把這句咒語寫得正式一點：關聯到底怎麼變成因果，
+      反事實又該怎麼用數學寫出來，還會帶到一個真實的滷雞腿食物中毒疫調故事。
+      準備好接上正式版了嗎？我們下一集見！
+    animation: "show_outro"
+    pause_after: 1.0

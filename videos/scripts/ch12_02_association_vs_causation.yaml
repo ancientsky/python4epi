@@ -1,0 +1,127 @@
+meta:
+  chapter: "12"
+  concept: "association_vs_causation"
+  title: "關聯 ≠ 因果：反事實的正式定義與滷雞腿疫調"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch12_02_association_vs_causation"
+  scene_class: "Ch12AssociationScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集用偵探帶你抓到直覺，這一集我們把它寫得正式一點。
+      院長辦公室問的那句「淋浴真的『導致』感染嗎」，
+      問的根本不是「有沒有關聯」，而是「拿掉會不會不一樣」。
+      這就是關聯跟因果最核心的差別，我們一步步拆開來看。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "assoc_vs_causation"
+    narration: >
+      先把兩個詞分清楚。關聯，是兩個變數「一起變動」——
+      不管相關係數多高、p 值多小，它都只是關聯，如此而已。
+      因果，是問一句更狠的話：如果拿掉這個暴露，結果會不會不一樣？
+      能回答這一句，護理之家才敢決定要不要砸大錢去消毒水系統。
+    animation: "show_assoc_vs_causation"
+    pause_after: 0.5
+
+  - id: "counterfactual_def"
+    narration: >
+      因果真正想知道的，是同一個人的兩個平行世界。
+      世界一，這個人有淋浴，記作 Y_i(1)；世界零，同一個人沒淋浴，記作 Y_i(0)。
+      兩者相減，就是他的個人因果效應。
+      但問題來了：同一個人不可能同時活在兩個世界，我們永遠只看得到一個——
+      這就叫因果推論的基本問題。
+    animation: "show_counterfactual_def"
+    pause_after: 0.5
+
+  - id: "epi_solution"
+    narration: >
+      既然同一個人的兩個世界比不了，流行病學就退一步：改比「兩群條件相似的人」。
+      用暴露組的平均結果，去逼近「如果未暴露這群人也暴露了會怎樣」這個反事實。
+      重點是想辦法讓兩組除了暴露與否之外盡量一樣——
+      這正是第五章分層、第六章迴歸校正在做的事。
+    animation: "show_epi_solution"
+    pause_after: 0.5
+
+  - id: "chicken_case"
+    narration: >
+      舉一個真實情境幫你記住：一起校園滷雞腿食物中毒事件。
+      第一步，先看到關聯：吃滷雞腿的學生更容易腹瀉腹痛。
+      第二步，小心干擾和回憶偏差——生病的人往往更容易記得自己吃了什麼。
+      第三步，加上實驗室證據，檢體裡驗出產氣莢膜梭菌。三者疊在一起，才敢說因果。
+    animation: "show_chicken_case"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      這一節三個重點。
+      第一，光有統計關聯，哪怕 p 值再小，都不足以宣告因果。
+      第二，因果的靈魂是反事實：如果拿掉暴露，同一群人會不會不一樣。
+      第三，真實疫調永遠需要關聯、加上實驗室或生物學證據、再加上排除其他解釋。
+      想清楚要比的反事實，比算出一個漂亮數字重要太多了。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：冰淇淋與溺水，經典的假關聯。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_icecream"
+    narration: >
+      冰淇淋銷量上升，溺水人數也上升，相關明顯到不行。
+      但只要反事實一問：把冰淇淋全收掉，溺水會變少嗎？當然不會。
+      真正的共同原因是「夏天」這個干擾因子，一手同時牽動吃冰和游泳。
+      這是干擾，不是因果——把資料分季節來看，假關聯立刻現形。
+    animation: "show_extra_icecream"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      關聯不等於因果，三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：把統計顯著直接講成因果。
+      p 小於零點零五，只代表「不太像巧合」，不代表 A 造成 B。
+      正確做法是回到 DAG 檢查干擾、中介、對撞，再結合實驗室與機制證據，才敢談因果。
+    animation: "show_blindspot_p_is_cause"
+    error_code: "causal = (p_value < 0.05)"
+    correct_code: "causal = assoc and lab and dag_ok"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：兩組直接相除就下結論，沒校正干擾。
+      暴露組除以未暴露組算出來的是粗風險比，兩組本來就不一樣時會被誤導。
+      正確做法是先分層、用 Mantel-Haenszel 之類的方法校正干擾，再看調整後的結果。
+    animation: "show_blindspot_no_adjust"
+    error_code: "rr = risk_exposed / risk_unexposed"
+    correct_code: "rr = mantel_haenszel(exp, out, strata)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：忽略時間順序，把果當成因。
+      因果的前提是「因在果之前」，把發生在感染之後才出現的變項拿來當暴露，就是倒果為因。
+      正確做法是確認每個候選暴露的發生時間，一定要早於結果才行。
+    animation: "show_blindspot_reverse_causation"
+    error_code: "x = df['measured_after_onset']"
+    correct_code: "assert exposure_date < onset_date"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      關聯跟因果的分界，我們算是說清楚了。
+      但光靠嘴巴講「這是干擾、那是中介」還不夠，得把它畫出來。
+      下一集我們就用 DAG，有向無環圖，把因果結構老老實實畫在紙上——
+      三種結構，兩套完全相反的規則，超級實用。我們下一集見！
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,147 @@
+meta:
+  chapter: "10"
+  concept: "model_zoo_shap"
+  title: "模型動物園、集成與 SHAP：把黑盒解釋給醫師聽"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch10_08_model_zoo_shap"
+  scene_class: "Ch10ModelZooScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      歡迎來到 Part B，資料變大、訊號變強，終於輪到 ML 大顯身手！
+      這一集我們逛一圈模型動物園，玩玩集思廣益的集成，
+      最後學一招殺手級技能——SHAP，把黑盒模型的每一條理由，
+      好好講給醫師聽。準備好了嗎？出發！
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "model_zoo"
+    narration: >
+      先認識四隻常見的模型，每隻配一個臨床比喻。
+      決策樹像急診檢傷分流圖，一路問是非題；隨機森林像多科會診投票；
+      XGBoost 像錯題本補習班，專攻上一棒的錯題；
+      LASSO 像行李限重打包，逼不重要的係數歸零，只留關鍵因子。
+    animation: "show_model_zoo"
+    pause_after: 0.5
+
+  - id: "ensemble"
+    narration: >
+      這些模型可以「集思廣益」，這就是集成。
+      Bagging 是多棵樹平行投票、降變異，讓結果更穩，就是隨機森林。
+      Boosting 是接力補課、專攻殘差、降偏差，讓結果更準，就是 XGBoost。
+      Stacking 更高竿：找個總指揮，學什麼情況該多聽哪位專家。
+    animation: "show_ensemble"
+    pause_after: 0.5
+
+  - id: "stacking_code"
+    narration: >
+      Stacking 寫成程式長這樣：把森林、XGBoost、LASSO 當基層專家，
+      再放一個 final_estimator 當總指揮，通常用簡單的 logistic。
+      總指揮不自己看病人，而是學怎麼加權整合大家的機率。
+      這就是流病文獻常說的 Super Learner。
+    animation: "show_stacking_code"
+    code: |
+      from sklearn.ensemble import StackingClassifier
+
+      stack = StackingClassifier(
+          estimators=[("rf", rf), ("xgb", xgb), ("lasso", lasso)],
+          final_estimator=LogisticRegression(),
+      )
+    pause_after: 0.5
+
+  - id: "shap_intuition"
+    narration: >
+      模型越強，越像黑盒——醫師會問：你憑什麼說他高風險？
+      SHAP 用賽局理論的 Shapley value，就像年終公平分紅，
+      問「少了這個特徵，預測差多少」，把每個特徵加入與不加入的
+      邊際貢獻對所有順序平均。於是它能替單一病人算出每條理由的分數。
+    animation: "show_shap_intuition"
+    pause_after: 0.5
+
+  - id: "shap_contributions"
+    narration: >
+      看這位病人為什麼被判高風險：SHAP 把理由一條條攤開。
+      免疫低下加 0.30、用水暴露加 0.20、年齡 80 加 0.15，
+      而沒有慢性病則往下拉 0.10。
+      正號往上推、負號往下拉，這正是解釋黑盒給醫師的語言。
+    animation: "show_shap_contributions"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      進階 ML 三個重點打包。
+      一，模型動物園：樹、森林、XGBoost、LASSO 各有脾氣。
+      二，集成集思廣益：bagging 求穩、boosting 求準、stacking 找總指揮整合。
+      三，SHAP 把黑盒每條理由量化，講給醫師聽——但 ML 是工具，不是取代判斷。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：跟醫師解釋一個心臟風險分數！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_doctor"
+    narration: >
+      假設你做了一個預測心臟事件的風險模型，醫師問憑什麼。
+      用 shap 的 TreeExplainer 算出這位病人的 shap 值，
+      再畫一張 waterfall 圖，每條理由的正負貢獻一目瞭然。
+      這比丟一個 0.82 的機率，更能說服臨床端相信你的模型。
+    animation: "show_extra_doctor"
+    code: |
+      import shap
+
+      explainer = shap.TreeExplainer(model)
+      sv = explainer.shap_values(one_patient)
+      shap.plots.waterfall(sv[0])
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      進階 ML 與 SHAP，三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：資料才幾百筆就硬上複雜模型。
+      280 筆撐不起 XGBoost，它會死背，訓練漂亮、上線崩盤。
+      小資料寧可用簡單模型加交叉驗證，穩得多。
+    animation: "show_blindspot_complex_small"
+    error_code: "XGBClassifier().fit(X280, y)"
+    correct_code: "LogisticRegression().fit(X280, y)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：AUC 很高就直接拿機率去分床。
+      會排序不等於機率準——模型說 70% 的那群，實際可能只有 40% 發病。
+      要把機率當數字用之前，先看校準 calibration。
+    animation: "show_blindspot_auc_calibration"
+    error_code: "assign_bed(proba)  # AUC is high"
+    correct_code: "calibration_curve(y, proba)  # first"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：把 SHAP 的重要特徵直接當介入標的。
+      SHAP 解釋的是模型「怎麼預測」，不是「怎麼致病」。
+      想動手介入前，一樣要回到 Ch12 的因果推論做驗證。
+    animation: "show_blindspot_shap_causal"
+    error_code: "intervene(shap_top)  # so change it"
+    correct_code: "explain_only(shap_top)  # Ch12"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      模型動物園逛完、集成玩過、SHAP 也上手了，機器學習這一章就此收工！
+      記住一句話：ML 能預測，但它是工具，不是取代流病判斷。
+      下一章 Ch11，我們挑戰 PyTorch 深度學習，
+      同時聊聊何時該用、何時不該用。我們下次見！
+    animation: "show_outro"
+    pause_after: 1.0

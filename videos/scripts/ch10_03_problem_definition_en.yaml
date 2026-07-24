@@ -1,0 +1,141 @@
+meta:
+  chapter: "10"
+  concept: "problem_definition"
+  title: "Defining the Problem: turn the boss's vague question into a 0/1 label"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch10_03_problem_definition"
+  scene_class: "Ch10ProblemDefinitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode the data got split; this one tackles a step that looks trivial but is the easiest to gloss over, defining the problem.
+      The boss tosses you "can you predict who'll get infected," which sounds crystal clear, but to machine learning that sentence is total gibberish.
+      Why? Because the model only knows zero and one.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "boss_question"
+    narration: >
+      Machine learning won't swallow a vague sentence like "predict who gets sick"; it needs one clean, unambiguous column of 0/1 labels.
+      Zero means it didn't happen, one means it did.
+      So your very first job is to translate the words coming out of the boss's mouth into a single column in your table where every answer is either zero or one.
+    animation: "show_boss_question"
+    pause_after: 0.5
+
+  - id: "label_code"
+    narration: >
+      Let's look at the code. The first task, infected: as long as the clinical severity isn't "not ill," mark it one, meaning infected.
+      The second task, severe: if either hospitalized or died is true, mark it one, meaning a severe outcome.
+      And that astype int at the end really matters; it turns True and False into clean ones and zeros.
+    animation: "show_label_code"
+    code: |
+      import pandas as pd
+
+      df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
+      sev = df["clinical_severity"]
+      df["infected"] = (sev != "not_ill").astype(int)
+      df["severe"] = (
+          (df["hospitalized"] == 1) | (df["outcome"] == "dead")
+      ).astype(int)
+    pause_after: 0.5
+
+  - id: "two_tasks"
+    narration: >
+      Now we have two well-defined prediction tasks.
+      Task A predicts infection: of 280 residents, 121 got infected, so positives are forty-three percent, fairly balanced.
+      Task B predicts a severe outcome: only 68 cases, positives just twenty-four percent.
+      Keep that word "imbalanced" in the back of your mind, because in a moment it decides which metric we grade with.
+    animation: "show_two_tasks"
+    pause_after: 0.5
+
+  - id: "label_defines_cheating"
+    narration: >
+      Defining the label carries a hidden bonus point: the moment you fix the label, you also fix which columns count as cheating.
+      Infected is computed from clinical_severity, so the "outcome-side" columns, clinical severity, symptoms, hospitalization, death, can never be used as features;
+      they're literally part of the answer. Predicting the answer from the answer makes your AUC gorgeous and fake.
+    animation: "show_label_defines_cheating"
+    pause_after: 0.5
+
+  - id: "class_imbalance"
+    narration: >
+      Back to that twenty-four percent. Suppose your model gets lazy and guesses "won't be severe" for every single patient;
+      its accuracy is still seventy-six percent, sounds high, right? But it caught exactly zero severe patients, completely useless.
+      That's the class-imbalance trap. So for rare events, we read AUC, not accuracy.
+    animation: "show_class_imbalance"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways, packaged.
+      One, translate the boss's vague question into one column of 0/1 labels, and don't forget astype int.
+      Two, once the label's fixed, the outcome-side columns are cheating, so kick them all out of the features.
+      Three, on imbalanced data don't get fooled by accuracy; AUC is the honest one.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: switch the disease, a 0/1 label for severe dengue!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue"
+    narration: >
+      Switch the disease to dengue. The World Health Organization defines patients with warning signs, or those needing intensive care, as severe dengue.
+      Turned into a label, that's: if either warning signs or ICU is true, mark it one.
+      See, it looks almost exactly like the Legionnaires' severe label; the logic of defining the problem carries over to any disease.
+    animation: "show_extra_dengue"
+    code: |
+      # 登革熱重症標籤：警示徵象或需要加護
+      df["dengue_severe"] = (
+          (df["warning_signs"] == 1) | (df["icu"] == 1)
+      ).astype(int)
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots in defining the problem!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_leak_feature"
+    narration: >
+      Blind spot number one: sneaking an outcome-side column into your features.
+      Using clinical_severity or symptoms to predict infected is like handing over the answer key as a hint; your AUC rockets to 0.99,
+      and then on go-live day you don't even have symptom data yet, so the model face-plants. Features may only use clues you'd know the moment the resident moves in.
+    animation: "show_blindspot_leak_feature"
+    error_code: 'X = df[["clinical_severity"]]  # answer'
+    correct_code: 'X = df[["age", "shower_use"]]  # ok'
+    pause_after: 0.5
+
+  - id: "blindspot_raw_label"
+    narration: >
+      Blind spot number two: forgetting to convert the label into a clean 0/1 and just tossing raw strings or booleans at the model.
+      The outcome column holds words like "dead" and "survived," which the model can't read.
+      Remember to use a comparison plus astype int to turn it into an integer column that's strictly zero or one.
+    animation: "show_blindspot_raw_label"
+    error_code: 'y = df["outcome"]  # strings dead/alive'
+    correct_code: 'y = (df["outcome"] == "dead").astype(int)'
+    pause_after: 0.5
+
+  - id: "blindspot_accuracy"
+    narration: >
+      Blind spot number three: grading imbalanced data with accuracy.
+      Severe is only twenty-four percent, so guessing "fine" for everyone still scores seventy-six percent accuracy, a pretty number that's utterly worthless.
+      Switch to roc_auc_score, which measures the eye for ranking patients and can't be padded by the majority class.
+    animation: "show_blindspot_accuracy"
+    error_code: "score = accuracy_score(y_test, pred)"
+    correct_code: "score = roc_auc_score(y_test, proba)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Label defined, cheating columns swept out, and the intern finally knows what the exam is about.
+      But the chart still says things like "male" and "wing A," which the model can't understand.
+      Next episode we do feature engineering, translating a messy chart into numbers the model can eat. See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

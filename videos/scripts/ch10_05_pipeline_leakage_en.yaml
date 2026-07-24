@@ -1,0 +1,141 @@
+meta:
+  chapter: "10"
+  concept: "pipeline_leakage"
+  title: "Pipeline & Data Leakage: bind preprocessing to the model, and stop cheating"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch10_05_pipeline_leakage"
+  scene_class: "Ch10PipelineLeakageScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Feature engineering's done, the data has obediently turned into a pile of numbers, ready to feed the model.
+      But hold on! This episode first teaches you machine learning's number-one killer, data leakage,
+      and the secret weapon against it, sklearn's Pipeline.
+      Master this move and your model won't "ace the mock exam, then crash on go-live."
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "leakage_problem"
+    narration: >
+      Let's be clear about what data leakage is: the instant any test-set information sneaks into training,
+      the model "scores high, then flops in the real world," because it actually peeked at the answers.
+      Memorize the three cardinal sins: standardizing or running SMOTE before splitting,
+      using part of the outcome as a feature, and using future information. All three are cheating.
+    animation: "show_leakage_problem"
+    pause_after: 0.5
+
+  - id: "pipeline_idea"
+    narration: >
+      The most elegant way to fight leakage is to bind preprocessing and the model "into one chain."
+      A Pipeline is like a conveyor belt: numeric columns go in and get standardized,
+      categorical columns get one-hot, binary columns pass straight through, and the model hooks on at the end.
+      The whole chain fits and predicts together, so you'll never again slip and compute a mean too early.
+    animation: "show_pipeline_idea"
+    pause_after: 0.5
+
+  - id: "pipeline_code"
+    narration: >
+      In code, first use ColumnTransformer to send the three column types down three roads,
+      then use Pipeline to chain that preprocessing and the model into a single object.
+      Look closely: the entire preprocessing and the LogisticRegression are packed into one clf.
+      This bundle is the star you'll drop into cross-validation later.
+    animation: "show_pipeline_code"
+    code: |
+      from sklearn.pipeline import Pipeline
+      from sklearn.compose import ColumnTransformer
+
+      preprocess = ColumnTransformer([
+          ("num", StandardScaler(), num_cols),
+          ("cat", OneHotEncoder(), cat_cols),
+          ("bin", "passthrough", bin_cols),
+      ])
+      clf = Pipeline([("prep", preprocess), ("model", lr)])
+    pause_after: 0.5
+
+  - id: "fold_safety"
+    narration: >
+      Why does wrapping it in a Pipeline prevent leakage? The key is that inside every cross-validation fold,
+      the mean and standard deviation used for scaling are learned only from that fold's training data,
+      and the test fold takes no part in the computation. It's like never sneaking a look at the answer sheet before grading.
+      The Pipeline holds that line for you, ironclad.
+    animation: "show_fold_safety"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Pipeline plus anti-leakage, three takeaways, packaged.
+      One, bind preprocessing and model into one chain, fitting and predicting together.
+      Two, the scaling mean is learned only from the training fold; the test fold never joins in.
+      Three, later, swapping models means changing only the model cell, super convenient, and the next episode puts it to use.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: switch the scene, scaling leakage in a COVID lab-value model!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid"
+    narration: >
+      Suppose you want to predict severe COVID from lab values like white blood cell count and C-reactive protein.
+      These ranges vary wildly, so they absolutely need standardizing, but never compute the overall mean before splitting!
+      Wrap it in a Pipeline the same way, drop StandardScaler inside,
+      and during cross-validation the scaling only eats the training fold; the same move blocks the leak.
+    animation: "show_extra_covid"
+    code: |
+      covid_clf = Pipeline([
+          ("scale", StandardScaler()),
+          ("model", LogisticRegression(max_iter=500)),
+      ])
+      scores = cross_val_score(covid_clf, X, y, cv=5)
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Pipeline and data leakage, three beginner blind spots!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: scaler.fit on the whole dataset before splitting.
+      This one's the sneakiest, because the mean already has the test set's information mixed in.
+      The right move: put the scaler inside a Pipeline so it fits separately within each fold.
+    animation: "show_blindspot_scale_before_split"
+    error_code: "scaler.fit(X); split(X)  # leaked!"
+    correct_code: "Pipeline([scaler, model])  # safe"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: running SMOTE to oversample before splitting.
+      Generating synthetic samples on the whole dataset lets the test fold glimpse neighbors it shouldn't see.
+      The right move: use imblearn's Pipeline so SMOTE also runs only within the fold.
+    animation: "show_blindspot_smote_before_split"
+    error_code: "X, y = SMOTE().fit_resample(X, y)"
+    correct_code: "Pipeline([SMOTE(), model])  # in fold"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: secretly using part of the outcome as a feature.
+      Predict infection from symptoms like fever and cough and your AUC turns a gorgeous 0.99,
+      but on go-live day you don't even have symptom data yet. Keep only the clues you'd know the moment they moved in.
+    animation: "show_blindspot_outcome_feature"
+    error_code: "X = df[['age', 'fever', 'cough']]"
+    correct_code: "X = df[['age', 'shower_use']]"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      The Pipeline is packaged and leakage is blocked, so we can finally grade with confidence.
+      Next episode we'll nail down cross-validation and AUC:
+      k-fold lets every single row take a turn as the exam,
+      and that AUC report card, what exactly is it comparing? Stay tuned!
+    animation: "show_outro"
+    pause_after: 1.0

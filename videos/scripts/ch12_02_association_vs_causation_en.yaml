@@ -1,0 +1,127 @@
+meta:
+  chapter: "12"
+  concept: "association_vs_causation"
+  title: "Association != Causation: The Counterfactual's Formal Definition and a Braised-Chicken Investigation"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch12_02_association_vs_causation"
+  scene_class: "Ch12AssociationScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode the detective handed you the intuition; this episode we write it a bit more formally.
+      When the director's office asks "does showering really cause infection,"
+      it isn't asking "is there an association," it's asking "would it be different if you took it away."
+      That's the very core difference between association and causation, and we'll take it apart step by step.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "assoc_vs_causation"
+    narration: >
+      First, keep the two words straight. Association is two variables "moving together";
+      no matter how high the correlation coefficient or how tiny the p-value, it's still just association, nothing more.
+      Causation asks a harsher question: if you removed this exposure, would the outcome be different?
+      Only by answering that can the nursing home decide whether to spend big money disinfecting its water system.
+    animation: "show_assoc_vs_causation"
+    pause_after: 0.5
+
+  - id: "counterfactual_def"
+    narration: >
+      What causation really wants to know is one person's two parallel worlds.
+      World one: this person showers, written Y_i of one. World zero: the same person doesn't shower, written Y_i of zero.
+      Subtract the two and you get their individual causal effect.
+      But here's the catch: one person can't live in both worlds at once, and we only ever get to see one of them.
+      That's called the fundamental problem of causal inference.
+    animation: "show_counterfactual_def"
+    pause_after: 0.5
+
+  - id: "epi_solution"
+    narration: >
+      Since we can't compare one person's two worlds, epidemiology takes a step back and compares "two groups of similar people" instead.
+      We use the exposed group's average outcome to approximate the counterfactual of "what would have happened if the unexposed group had been exposed too."
+      The key is to make the two groups as alike as possible apart from exposure status,
+      which is exactly what Chapter 5's stratification and Chapter 6's regression adjustment are doing.
+    animation: "show_epi_solution"
+    pause_after: 0.5
+
+  - id: "chicken_case"
+    narration: >
+      Here's a real scenario to help you remember: a campus braised-chicken food-poisoning outbreak.
+      Step one, spot the association: students who ate the braised chicken had more diarrhea and cramps.
+      Step two, watch for confounding and recall bias, since the sick tend to remember what they ate more clearly.
+      Step three, add lab evidence: Clostridium perfringens was found in the samples. Stack all three together, and only then dare you claim causation.
+    animation: "show_chicken_case"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways for this section.
+      First, statistical association alone, no matter how tiny the p-value, isn't enough to declare causation.
+      Second, the soul of causation is the counterfactual: if you removed the exposure, would the same group be different?
+      Third, a real investigation always needs association, plus lab or biological evidence, plus ruling out other explanations.
+      Thinking clearly about which counterfactual to compare matters far more than computing one pretty number.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: ice cream and drownings, the classic spurious association.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_icecream"
+    narration: >
+      Ice cream sales go up, drownings go up, and the correlation is impossible to miss.
+      But just ask the counterfactual: if we pulled all the ice cream, would drownings drop? Of course not.
+      The real common cause is "summer," a confounder, pulling both the cold-treat string and the swimming string at once.
+      That's confounding, not causation; split the data by season and the spurious association shows itself instantly.
+    animation: "show_extra_icecream"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Association isn't causation: three beginner blind spots!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: turning statistical significance straight into causation.
+      A p below zero point zero five only means "not very likely a fluke," not that A causes B.
+      The right move is to go back to the DAG, check confounders, mediators, and colliders, then combine lab and mechanism evidence before you talk causation.
+    animation: "show_blindspot_p_is_cause"
+    error_code: "causal = (p_value < 0.05)"
+    correct_code: "causal = assoc and lab and dag_ok"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: dividing the two groups directly and concluding, without adjusting for confounding.
+      Exposed risk divided by unexposed risk gives a crude risk ratio, which misleads you when the two groups were different to begin with.
+      The right move is to stratify first, adjust for confounding with something like Mantel-Haenszel, then read the adjusted result.
+    animation: "show_blindspot_no_adjust"
+    error_code: "rr = risk_exposed / risk_unexposed"
+    correct_code: "rr = mantel_haenszel(exp, out, strata)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: ignoring the time order and mistaking effect for cause.
+      Causation requires "cause before effect"; using a variable that only appeared after infection as your exposure is putting the cart before the horse.
+      The right move is to confirm the timing of each candidate exposure and make sure it comes before the outcome.
+    animation: "show_blindspot_reverse_causation"
+    error_code: "x = df['measured_after_onset']"
+    correct_code: "assert exposure_date < onset_date"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      We've now drawn a clear line between association and causation.
+      But just saying out loud "this is a confounder, that's a mediator" isn't enough; you have to draw it out.
+      Next episode we use a DAG, a directed acyclic graph, to honestly draw the causal structure on paper:
+      three shapes, two completely opposite rules, incredibly practical. See you next episode!
+    animation: "show_outro"
+    pause_after: 1.0

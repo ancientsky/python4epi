@@ -1,0 +1,140 @@
+meta:
+  chapter: "09"
+  concept: "kaplan_meier"
+  title: "The Kaplan-Meier Curve: a Line That Walks Down a Staircase"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch09_03_kaplan_meier"
+  scene_class: "Ch09KaplanMeierScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      The data is tidy now, with time, event, and censoring all in place. This episode we
+      turn it into a single line, the Kaplan-Meier survival curve. It looks like a
+      staircase heading downward, and once you can read it, you can read exactly how the
+      whole group of patients falls off over time.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "km_idea"
+    narration: >
+      Let's start with the intuition. At the very beginning every infected resident is
+      still alive, so the survival fraction is 100 percent and the line starts right at
+      the top. Each death takes the line one step down; on days when nobody dies, the line
+      runs flat. So the whole Kaplan-Meier curve is a staircase of the fraction still
+      alive, walking downward over time.
+    animation: "show_km_idea"
+    pause_after: 0.5
+
+  - id: "staircase"
+    narration: >
+      Let's take a closer look at this staircase. The vertical axis is the fraction still
+      alive, the horizontal axis is days after onset. Each step down means someone died on
+      that day; that little plus mark on the line is a censored patient, taken out of the
+      picture that day, so the line does not step down there. The moment the line crosses
+      that dashed 50 percent line is the median survival time.
+    animation: "show_staircase"
+    pause_after: 0.5
+
+  - id: "read_curve"
+    narration: >
+      Four things to read on a KM curve. A step down means a death; a little plus tick
+      means censoring, and it doesn't change the height. The line crossing 50 percent is
+      the median survival time. And that shaded band at the tail that keeps getting wider
+      is the confidence interval, because as fewer and fewer people remain, the estimate
+      gets less and less certain.
+    animation: "show_read_curve"
+    pause_after: 0.5
+
+  - id: "km_code"
+    narration: >
+      The code is super short. Build a KaplanMeierFitter, put time first, put event into
+      event_observed, then tell it to plot the survival function. Finally print
+      median_survival_time_, which is the median survival time. lifelines works out the
+      censored people fully automatically.
+    animation: "show_km_code"
+    code: |
+      from lifelines import KaplanMeierFitter
+
+      kmf = KaplanMeierFitter()
+      kmf.fit(cases["time_to_event"], event_observed=cases["event"])
+      kmf.plot_survival_function()
+      print(kmf.median_survival_time_)
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways, packaged up. One, the KM curve is the fraction still alive walking
+      down a staircase over time, and steeper is worse. Two, a little plus is censoring,
+      and it won't step the line down. Three, median survival time is the day the line
+      crosses 50 percent; and if it prints inf, that's good news, it means more than half
+      the people never died during the observation period.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: tracking post-op wound infection!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_postop"
+    narration: >
+      For patients who've had surgery, we want to know how many days until a wound
+      infection shows up. The event is infection, the time is days after surgery. Anyone
+      discharged safely with no infection yet is censored. Same KaplanMeierFitter, swap
+      death for infection, and it draws the same descending staircase; and a flatter curve
+      means your infection control is doing well.
+    animation: "show_extra_postop"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for Kaplan-Meier!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: forgetting to pass event_observed when you fit. Do that and
+      lifelines treats everyone as a death event, so every censored row is counted as an
+      actual death and the survival curve drops way too fast. Always remember to put the
+      event column in.
+    animation: "show_blindspot_no_event"
+    error_code: 'kmf.fit(cases["time"])'
+    correct_code: 'kmf.fit(t, event_observed=cases.event)'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: feeding raw dates straight into fit. The time column has to
+      be a number like a count of days, not the original date. Compute the end date minus
+      the onset date in days first, then feed that in, otherwise the whole result falls
+      apart.
+    animation: "show_blindspot_date_not_duration"
+    error_code: 'kmf.fit(cases["death_date"], e)'
+    correct_code: 'kmf.fit(cases["time_days"], e)'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: seeing median_survival_time_ print inf and assuming your
+      code is broken. It's not! inf means more than half the people never died during the
+      observation period, so the median was never crossed, and that's actually good news,
+      don't scare yourself.
+    animation: "show_blindspot_inf_median"
+    error_code: "bad = kmf.median_survival_time_ == inf"
+    correct_code: "# inf median = over half never died"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      You can read the descending line now, and median survival makes sense too! But one
+      single line for everyone can't tell you who has the worse prognosis. Next episode we
+      split patients by severity and stack several lines on one plot to compare them. See
+      you next time!
+    animation: "show_outro"
+    pause_after: 1.0

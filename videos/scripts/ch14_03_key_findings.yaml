@@ -1,0 +1,113 @@
+meta:
+  chapter: "14"
+  concept: "key_findings"
+  title: "主要發現摘要：把整場調查濃縮成長官最想看的幾個數字"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch14_03_key_findings"
+  scene_class: "Ch14KeyFindingsScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      骨架搭好了，現在要填進最關鍵的一段——主要發現摘要。
+      這一段是整份報告的心臟：長官很忙，可能只讀這幾行。
+      你的任務，是把整場調查濃縮成他最想看的那幾個數字。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "what_key_findings"
+    narration: >
+      主要發現摘要，就是把一整場疫調濃縮成一段「重點數字」。
+      不是把所有分析結果倒出來，而是精挑幾個能撐起結論的關鍵數字：
+      規模多大、多嚴重、最可疑的暴露是什麼。
+    animation: "show_what_key_findings"
+    pause_after: 0.5
+
+  - id: "the_numbers"
+    narration: >
+      來看松柏護理之家這場群聚的關鍵數字。280 位住民，121 人感染，侵襲率 43.2%；
+      19 人死亡，致死率 15.7%；主要危險因子是淋浴使用。
+      六個數字，一張表就講完整場疫情的骨幹。
+    animation: "show_the_numbers"
+    pause_after: 0.5
+
+  - id: "context_matters"
+    narration: >
+      但數字光擺著沒有靈魂。43.2% 算高嗎？致死率 15.7% 呢？
+      每個關鍵數字都要附上比較基準——退伍軍人症一般致死率大約 10%，
+      我們這場 15.7% 偏高，這時候數字才「說得出故事」。
+    animation: "show_context_matters"
+    pause_after: 0.5
+
+  - id: "one_line_conclusion"
+    narration: >
+      最後把這幾個數字收成一句話。流行曲線指向共同暴露源，空間熱點落在特定樓層，
+      淋浴暴露校正後勝算比仍然顯著——結論：淋浴供水系統為最可能的感染源。
+      一句話，長官就能拍板決定。
+    animation: "show_one_line_conclusion"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三個重點。一，主要發現是精挑的關鍵數字，不是全部倒出來。
+      二，每個數字都要有比較基準才有意義。三，最後收成一句可行動的結論。
+      這段寫好，整份報告就有了靈魂。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：給長官的一頁摘要投影片！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_boss_slide"
+    narration: >
+      想像 COVID-19 疫情中，長官只給你一張投影片的空間，你會放什麼？
+      當日新增、七日平均、陽性率、重症佔比，加上一句「趨勢上升，建議加開篩檢站」。
+      四個數字加一句建議——這就是主要發現摘要的精神：少即是多。
+    animation: "show_extra_boss_slide"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      主要發現三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：只丟數字，不給比較基準。「致死率 15.7%」單獨看沒感覺，
+      要寫成「15.7%，高於一般的 10%」。有基準，數字才有份量。
+    animation: "show_blindspot_no_context"
+    error_code: 'show(f"CFR {cfr:.1%}")'
+    correct_code: 'show(f"CFR {cfr:.1%} vs {natl:.1%}")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：分母搞錯。致死率的分母是「感染人數」，不是「總住民數」；
+      侵襲率才是用總人數當分母。分母錯一格，數字整個變樣。
+    animation: "show_blindspot_wrong_denominator"
+    error_code: "cfr = deaths / n_total"
+    correct_code: "cfr = deaths / n_infected"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：挑對自己有利的數字，把還沒校正的粗勝算比當成結論。
+      要用校正干擾因子後的 adjusted OR，結論才站得住腳。
+    animation: "show_blindspot_cherry_pick"
+    error_code: "finding = crude_or"
+    correct_code: "finding = adjusted_or  # ctrl confounders"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      主要發現寫好了，結論也有了。但長官要看的通常不是 notebook——
+      下一集我們教你用 python-pptx，一鍵把這些圖表和數字輸出成簡報。下集見！
+    animation: "show_outro"
+    pause_after: 1.0

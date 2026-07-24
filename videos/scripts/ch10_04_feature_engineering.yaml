@@ -1,0 +1,140 @@
+meta:
+  chapter: "10"
+  concept: "feature_engineering"
+  title: "特徵工程：把雜亂病歷翻譯成模型看得懂的數字"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch10_04_feature_engineering"
+  scene_class: "Ch10FeatureEngineeringScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      標籤定好了，實習醫師知道要考什麼，這一集我們處理最實作的一步——特徵工程。
+      翻成白話就是：把一張雜亂的病歷，整理成模型看得懂的數字。
+      這是一堆人卡關的地方，我們一步一步把它拆開來看。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_features"
+    narration: >
+      為什麼要做特徵工程？因為模型骨子裡只會算數學，
+      它看不懂「男」「女」「A 棟」這種字，也不知道「年齡 85」和「floor 3」根本不是同一個尺度。
+      特徵工程就是幫實習醫師把雜亂的病歷，整理成一張全是數字、而且尺度一致的表。
+    animation: "show_why_features"
+    pause_after: 0.5
+
+  - id: "three_types"
+    narration: >
+      實務上，欄位分成三種，各走各的路。
+      數值欄位像年齡，要標準化；
+      類別欄位像性別、棟別，要 one-hot 編碼；
+      二元欄位像有沒有用淋浴，本來就是 0 跟 1，直接放行。
+    animation: "show_three_types"
+    pause_after: 0.5
+
+  - id: "onehot"
+    narration: >
+      重點講一下類別欄位為什麼要 one-hot。
+      假設 wing 有 A、B、C 三棟，新手常直接編成 1、2、3——
+      但這樣模型會以為 C 棟大於 B 棟大於 A 棟，可是棟別根本沒有大小之分！
+      one-hot 的做法是拆成三個平等的開關：這位住民在 B 棟，就只有 wing_B 亮 1，其他都是 0。
+    animation: "show_onehot"
+    pause_after: 0.5
+
+  - id: "scaling_missing"
+    narration: >
+      數值欄位為什麼要標準化？因為年齡從 20 到 100，其他欄位都是 0 跟 1；
+      不縮放的話，模型會被年齡那個「數字比較大」騙，誤以為它比較重要，logistic 也會收斂變慢。
+      標準化就是減平均、除標準差，把大家拉到同一個尺度。
+      順帶一提，如果病歷有缺值，別直接丟給模型，要用 SimpleImputer 補起來，一樣包進 Pipeline。
+    animation: "show_scaling_missing"
+    pause_after: 0.5
+
+  - id: "columntransformer_code"
+    narration: >
+      這三條路怎麼一次搞定？用 ColumnTransformer。
+      對數值欄位套 StandardScaler、對類別欄位套 OneHotEncoder、二元欄位直接 passthrough。
+      這樣一個物件就把三種欄位分別處理好，之後再串進 Pipeline，防洩漏、又乾淨。
+    animation: "show_columntransformer_code"
+    code: |
+      from sklearn.compose import ColumnTransformer
+      from sklearn.preprocessing import StandardScaler, OneHotEncoder
+
+      preprocess = ColumnTransformer([
+          ("num", StandardScaler(), num_cols),
+          ("cat", OneHotEncoder(drop="first"), cat_cols),
+          ("bin", "passthrough", bin_cols),
+      ])
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三個重點打包。
+      一，三種欄位三種處理：數值標準化、類別 one-hot、二元直接放行。
+      二，類別別用 1、2、3 編碼，會被當成大小順序，要用 one-hot 拆成平等開關。
+      三，缺值要補、標準化要做，而且全部包進 Pipeline，才不會洩漏。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：換個場景，結核病登記檔的風險特徵！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tb"
+    narration: >
+      換個場景，結核病防治登記檔。同一套三分法照樣好用：
+      年齡是數值，要標準化；居住地都會或偏鄉、職業類別是類別，要 one-hot；
+      有沒有 HIV、有沒有糖尿病、有沒有接觸史是二元，直接放行。
+      換一個疾病登記檔，特徵工程的三條路完全不用重學。
+    animation: "show_extra_tb"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      特徵工程三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_label_encode"
+    narration: >
+      第一個地雷：把沒有順序的類別，硬編成 1、2、3。
+      用 LabelEncoder 把 wing 變成整數，模型就會誤以為那是大小關係。
+      沒有順序的類別，一律用 OneHotEncoder 拆成獨立的 0/1 欄。
+    animation: "show_blindspot_label_encode"
+    error_code: 'X["wing"] = LabelEncoder().fit_transform(w)'
+    correct_code: 'OneHotEncoder().fit_transform(X[["wing"]])'
+    pause_after: 0.5
+
+  - id: "blindspot_forgot_scale"
+    narration: >
+      第二個地雷：忘記縮放數值欄位，直接把年齡跟一堆 0/1 欄混在一起丟進去。
+      年齡動輒幾十，數字最大，模型會誤把它當成最重要的線索，logistic 也更難收斂。
+      數值欄位記得先 StandardScaler。
+    animation: "show_blindspot_forgot_scale"
+    error_code: 'X = df[["age"] + bin_cols]  # no scaling'
+    correct_code: 'StandardScaler().fit_transform(X[["age"]])'
+    pause_after: 0.5
+
+  - id: "blindspot_missing"
+    narration: >
+      第三個地雷：病歷有缺值，卻直接丟給模型，很多模型會當場報錯或亂算。
+      正確做法是用 SimpleImputer 把缺值補起來——連續值常用中位數——
+      而且一樣包進 Pipeline，在每一折內部才補，才不會洩漏。
+    animation: "show_blindspot_missing"
+    error_code: "model.fit(X, y)  # X still has NaN"
+    correct_code: 'SimpleImputer(strategy="median")  # in pipe'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      病歷翻成數字、尺度也對齊了，實習醫師終於能開始上課學公式。
+      到這裡，機器學習工作流的前三站——切分、定義、特徵工程——你都走過一遍了。
+      之後就是把它們用 Pipeline 串起來、丟進交叉驗證看 AUC。
+      恭喜你，已經掌握了做對機器學習最關鍵的地基！
+    animation: "show_outro"
+    pause_after: 1.0
