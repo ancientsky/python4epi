@@ -1,0 +1,152 @@
+meta:
+  chapter: "13"
+  concept: "seed_determinism"
+  title: "Seed Determinism: Random, but Consistently Random"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch13_05_seed_determinism"
+  scene_class: "Ch13SeedScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      The last step was all deterministic computation, so every run came out the same.
+      But the moment "randomness" appears in the analysis, the story changes. Splitting
+      train and test sets, initializing model weights, any np.random sampling: without a
+      locked seed, each run is a different experiment. This episode your teacher uses a
+      ten-line minimal demo to prove it to you: one and the same seed makes randomness
+      "consistently random."
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "the_problem"
+    narration: >
+      First, feel the problem. As soon as your code has steps like train_test_split,
+      np.random, or torch.manual_seed, leaving the seed unset means reshuffling the deck
+      on every run. The same code produces two different accuracies across two runs, and
+      you think the code is broken, when really you just forgot to fix the randomness.
+    animation: "show_the_problem"
+    pause_after: 0.5
+
+  - id: "seed_code"
+    narration: >
+      Look at this minimal demo. We write a sample function that builds an independent
+      random generator with np.random.default_rng. Same seed produces the same sequence
+      of random numbers; give no seed and it initializes from the system entropy source,
+      different every time. Then we call it twice with seed 42, and deliberately call it
+      once with no seed, and the output later will reveal the truth.
+    animation: "show_seed_code"
+    code: |
+      import numpy as np
+
+      def sample(seed=None):
+          rng = np.random.default_rng(seed)
+          return rng.integers(0, 100, 5)
+
+      print("seed=42:", sample(42), sample(42))
+      print("no seed:", sample())
+    pause_after: 0.5
+
+  - id: "seed_output"
+    narration: >
+      Run it, and here's the crux. Seed 42's first call and second call give five numbers
+      that are completely identical, and that's reproducibility. And the no-seed call
+      gives a whole different set of five, with yet another set next run. Same seed, same
+      sequence of random numbers; no seed, different every time. Carve that sentence into
+      your brain.
+    animation: "show_seed_output"
+    pause_after: 0.5
+
+  - id: "determinism_strips"
+    narration: >
+      Draw that output as a picture and it hits home even more. The top two strips are
+      the sequences from seed 42, five cells, not a single digit off, green light go,
+      meaning reproducible. The bottom strip is from no seed, a whole different set of
+      numbers, red-light warning, meaning not reproducible. That's the magic of the seed.
+    animation: "show_determinism_strips"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways on the main thread. One, any step using randomness, unseeded, is a
+      different experiment every time. Two, a fixed seed makes randomness "consistently
+      random," so same seed, same result. Three, lock the seed switches across every
+      library together: np.random.default_rng(42), random_state=42,
+      torch.manual_seed(42).
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a reproducible bootstrap confidence interval!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_bootstrap"
+    narration: >
+      Here's a practical one: use the bootstrap to estimate a 95 percent confidence
+      interval for the case fatality rate. The bootstrap resamples two thousand times,
+      packed full of randomness, and without a locked seed the interval's lower and upper
+      bounds drift every time you compute them. Just lock default_rng(42) right at the
+      top, and this confidence interval becomes reproducible, so others who re-run get the
+      exact same interval.
+    animation: "show_extra_bootstrap"
+    code: |
+      rng = np.random.default_rng(42)  # lock seed
+      boot = [rng.choice(cfr, len(cfr)).mean()
+              for _ in range(2000)]
+      lo, hi = np.percentile(boot, [2.5, 97.5])
+      print(f"95% CI = ({lo:.1%}, {hi:.1%})")
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for random seeds!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: splitting train and test sets with no random_state at all.
+      No seed means every split differs, and the model accuracy jumps up and down along
+      with it. The fix is one tiny move: add random_state equals 42.
+    animation: "show_bs_split"
+    error_code: "train_test_split(X, y)"
+    correct_code: "train_test_split(X, y, random_state=42)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: forcing it with the old-school global np.random.seed. A
+      global seed is fragile: any snippet of code that quietly draws one random number
+      scrambles the state for everything after it. The right move is to build an
+      independent generator with default_rng, each minding its own business, none
+      interfering with the others.
+    animation: "show_bs_global_seed"
+    error_code: "np.random.seed(42)  # global, fragile"
+    correct_code: "rng = np.random.default_rng(42)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: training a deep learning model and forgetting to lock
+      torch's seed. Weight initialization is itself random, so without a locked seed the
+      same code gives different accuracies across two runs. The right move is to call
+      torch.manual_seed(42) before training, pinning down PyTorch's randomness too.
+    animation: "show_bs_torch"
+    error_code: "model = train(data)  # torch unseeded"
+    correct_code: "torch.manual_seed(42); model = train(data)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      This episode, using a minimal demo, we witnessed it with our own eyes: with one and
+      the same seed, randomness can be "consistently random" too. The environment is
+      locked, the summary is fixed, the seed is pinned, and reproducibility is just one
+      last line of defense away. Next episode your teacher shows you how to write a schema
+      contract, catching errors before the upstream data changes ever get through. Stay
+      tuned!
+    animation: "show_outro"
+    pause_after: 1.0

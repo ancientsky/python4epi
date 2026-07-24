@@ -1,0 +1,142 @@
+meta:
+  chapter: "13"
+  concept: "why_different_results"
+  title: "Why Do I Get Different Results on Re-run? Three Landmines vs Three Pillars"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch13_02_why_different_results"
+  scene_class: "Ch13WhyDifferentScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      "Last time it came out to 121 infected and 19 deaths, so why does re-running give
+      me different numbers this time?" That spooky event usually isn't your analysis
+      logic breaking, it's stepping on one of three common landmines. This episode, your
+      teacher helps you recognize these three landmines, then match each one to a pillar,
+      so your results settle firmly back onto the same answer.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "the_complaint"
+    narration: >
+      First, let's feel the pain point. Same data, same code, you changed nothing, yet
+      the numbers drift on re-run. You start questioning your whole life: is the program
+      broken? Did someone touch the data? Relax, ninety-nine times out of a hundred it's
+      not a logic error, it's some "hidden variable" quietly changing the result behind
+      the scenes.
+    animation: "show_the_complaint"
+    pause_after: 0.5
+
+  - id: "three_landmines"
+    narration: >
+      Three landmines, let's recognize them all at once. Number one, unpinned package
+      versions: bump pandas from 2.0 to 2.2 and the defaults for missing values or
+      sorting quietly shift. Number two, no fixed random seed: the moment you have a
+      random step like train_test_split or np.random, leaving the seed unset means
+      reshuffling the deck every single run. Number three, hand-editing notebook data
+      with no record: next time, those hands have already forgotten which rows they
+      deleted.
+    animation: "show_three_landmines"
+    pause_after: 0.5
+
+  - id: "landmine_pillars"
+    narration: >
+      The good news is, every landmine has a matching pillar to defuse it. Unpinned
+      versions? Use uv.lock to pin every package, and uv sync guarantees a consistent
+      environment. No seed? Set a seed on every random step, so randomness becomes
+      "consistently random." Hand-edited data? Write every transform as one visible line
+      of code. Landmine to pillar, one for one, all defused clean.
+    animation: "show_landmine_pillars"
+    pause_after: 0.5
+
+  - id: "drift_note"
+    narration: >
+      Let me paint you a mental picture here: landmines make your results slowly "drift"
+      with each re-run, spreading wider and wider; the three pillars act like three
+      guide-lines, pulling every re-run back to the same answer. What reproducible
+      research does is remove every factor that lets results drift, one by one.
+    animation: "show_drift_note"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's package the main thread into three takeaways. One, if the numbers drift on
+      re-run, think of the three landmines first: environment, randomness, data drift.
+      Two, each landmine has its own pillar: uv.lock, a fixed seed, transforms written
+      into code. Three, reproducibility isn't mysticism, it's pinning down hidden
+      variables one by one. Learn this and you can say with a straight face, "my results
+      reproduce."
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a colleague can't reproduce your dengue case counts!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue"
+    narration: >
+      Switch scenes. You compute 340 dengue cases this week for some county, but your
+      colleague re-runs it on their machine and gets 337. Three-step triage: first
+      confirm both of you have the same uv.lock, then confirm any sampling or splitting
+      is seeded, and finally confirm all the cleaning rules are written into code. Ninety
+      percent of "can't reproduce" cases, chased to the end, turn out to be one of these
+      three landmines, and the same triage logic works just as well on a different
+      disease.
+    animation: "show_extra_dengue"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for reproducibility mismatches!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: manually pip-upgrading a package, overwriting the version
+      uv.lock pinned. One "pip install dash U" and your environment has split off from
+      the original author's. The right move is to always uv sync, obediently respecting
+      the versions locked in uv.lock.
+    animation: "show_bs_env"
+    error_code: "pip install -U pandas"
+    correct_code: "uv sync  # respect uv.lock"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: splitting train and test sets without giving a
+      random_state. No seed means every split is different, the model accuracy jumps
+      around, and it fools you into thinking the code is broken. The fix is dead simple:
+      add random_state equals 42, and the randomness is pinned down.
+    animation: "show_bs_seed"
+    error_code: "train_test_split(X, y)"
+    correct_code: "train_test_split(X, y, random_state=42)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: deleting a few "weird-looking" rows by hand in a notebook
+      without writing it as code. This is called data drift, and next time you re-run,
+      those hands don't remember touching anything at all. The right move is to write the
+      filter condition as one line of query, so the logic for dropping data is itself the
+      documentation.
+    animation: "show_bs_data_drift"
+    error_code: "df = df.drop(bad_rows)  # by hand"
+    correct_code: 'df = df.query("age >= 0")  # in code'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      This episode we caught the culprit behind "different on re-run": the three
+      landmines of environment, randomness, and data drift, paired with three pillars.
+      But knowing the landmines isn't enough. Next episode your teacher gets you
+      hands-on, starting from a clean environment and using three commands to produce a
+      minimal reproducible report. Others copy-paste and reproduce your numbers. Stay
+      tuned!
+    animation: "show_outro"
+    pause_after: 1.0

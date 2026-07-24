@@ -1,0 +1,155 @@
+meta:
+  chapter: "13"
+  concept: "schema_contract"
+  title: "The Schema Contract: Catch Data Changes Before They Corrupt Results"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch13_06_schema_contract"
+  scene_class: "Ch13SchemaScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      The environment is locked, the summary is fixed, the seed is pinned, and
+      reproducibility is just one last line of defense away. If one day the health
+      department system renames a column, the severity gains a new category, or a
+      negative number sneaks into age, then all the downstream analysis quietly computes
+      wrong, without even raising an error. This episode your teacher shows you how to
+      write a schema contract to stop them at the door.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "the_risk"
+    narration: >
+      First, the risk. Reproducibility isn't just "it re-runs this time," it also has to
+      guarantee "the data structure stays the same later." The scariest thing isn't an
+      error being thrown, it's no error at all: a column gets renamed, a value range
+      slips, and the analysis runs to completion just fine, only every number is quietly
+      wrong. This kind of bug is the hardest to catch, because it never raises its hand to
+      say "I'm broken."
+    animation: "show_the_risk"
+    pause_after: 0.5
+
+  - id: "schema_code"
+    narration: >
+      Look at the code. We read the raw data again from scratch, not relying on any
+      transform done earlier. Then we use assert to spell out "my three assumptions about
+      this data": the required columns must be present, the category values must fall
+      within the known set, and age must land between 0 and 120. If any one of these
+      fails, we halt immediately, rather than letting bad data quietly flow into the
+      summary.
+    animation: "show_schema_code"
+    code: |
+      REQUIRED = {"case_id", "age", "clinical_severity"}
+      VALID_SEV = {"not_ill", "mild", "moderate", "severe"}
+
+      raw = pd.read_csv(path)
+      assert not (REQUIRED - set(raw.columns))
+      assert set(raw["clinical_severity"]) <= VALID_SEV
+      assert raw["age"].between(0, 120).all()
+    pause_after: 0.5
+
+  - id: "schema_output"
+    narration: >
+      When the data is fine, the three asserts quietly pass, it prints schema pass, and
+      the analysis carries on. But the moment someone renames a column or slips in an
+      unknown severity category, the assert immediately raises an AssertionError, halting
+      the whole pipeline before the error can contaminate the results. That's the value of
+      the contract: failing early beats silently computing wrong.
+    animation: "show_schema_output"
+    pause_after: 0.5
+
+  - id: "contract_gate"
+    narration: >
+      Think of this mechanism as a gate and it clicks. For raw data to come in, it first
+      has to pass through the checkpoint of the schema contract. Columns, types, and value
+      ranges all correct, green light, and only then does the data get into the Step 2
+      summary; if even one thing is wrong, red light, blocked, halting straight away with
+      an AssertionError.
+    animation: "show_contract_gate"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways on the main thread. One, the most dangerous data bug is the one that
+      throws no error, and the schema contract is built to catch exactly this kind. Two,
+      use assert to write down three assumptions: columns, types, value ranges, assuming
+      the data will break first, then writing assertions to confirm. Three, always
+      validate the raw data, catching problems before any transform. In a real project you
+      can automate it with pandera.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: guarding a surveillance pipeline against a renamed column!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_surveillance"
+    narration: >
+      Switch scenes: you have an infectious-disease surveillance pipeline that runs
+      automatically every week, feeding on a CSV exported by an upstream system. One day
+      an engineer slips and renames the county column to city; your pipeline runs along
+      just fine, but the by-region statistics all go empty. Add one schema contract that
+      uses set difference to check the required columns, and the moment a column is
+      renamed it errors immediately, saving your life.
+    animation: "show_extra_surveillance"
+    code: |
+      EXPECTED = {"county", "week", "cases"}
+      missing = EXPECTED - set(df.columns)
+      assert not missing, f"renamed? missing {missing}"
+      # e.g. "county" renamed to "city" -> caught here
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for the schema contract!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: doing no checks at all, trusting the data unconditionally the
+      moment you read it in. Let the upstream touch a single hair and your analysis
+      quietly computes wrong, with no culprit to be found. The right move is at least one
+      line of assert, confirming the required columns are all there.
+    animation: "show_bs_no_check"
+    error_code: "df = pd.read_csv(path)  # trust it"
+    correct_code: "assert set(REQUIRED) <= set(df.columns)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: using in to check whether just one column exists, staying
+      oblivious when other columns go missing. Verifying one column at a time, you'll
+      never catch them all. The right move is to use set difference to list every missing
+      column at once, so what's missing is plain to see.
+    animation: "show_bs_one_col"
+    error_code: 'if "age" in df: pass  # only one col'
+    correct_code: "assert not (REQUIRED - set(df.columns))"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: validating only after cleaning the data. Once you've
+      already changed, dropped, and filled in values, what you're validating isn't the
+      upstream's true face at all. The right move is to validate the raw data, standing
+      guard before any transform, so the contract can actually hold back upstream changes.
+    animation: "show_bs_after_transform"
+    error_code: "validate(df_after_cleaning)"
+    correct_code: "validate(raw)  # check before use"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! Environment, summary, seed, contract, all four defenses in place,
+      and you're now able to deliver a truly reproducible report. This whole chapter, we
+      broke reproducibility into four ingredients, then added the schema contract as one
+      more line of defense, so the instant the data changes it's caught. Next chapter, we
+      integrate all these skills into one complete case study, the outbreak-investigation
+      SitRep. See you next chapter!
+    animation: "show_outro"
+    pause_after: 1.0

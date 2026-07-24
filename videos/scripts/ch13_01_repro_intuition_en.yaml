@@ -1,0 +1,140 @@
+meta:
+  chapter: "13"
+  concept: "repro_intuition"
+  title: "Reproducible Research, Plain and Simple: Write Your Analysis as a Good Recipe"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch13_01_repro_intuition"
+  scene_class: "Ch13ReproIntuitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      "Reproducible research" sounds so serious and academic, right? Don't worry,
+      in this episode let's think about it a different way: reproducible research is
+      really just a recipe written in enough detail. Same ingredients, same steps,
+      and anyone who follows along plates up the exact same dish. Today your teacher
+      will use a cake-baking metaphor to make the whole idea crystal clear in one go.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "recipe_scenario"
+    narration: >
+      Picture this: a friend tastes your cake, is completely blown away, goes home
+      wanting the exact same flavor, and asks you for the recipe. What do you give her?
+      A recipe written in enough detail, of course, not "add sugar to taste," but
+      "120 grams of sugar." That's the whole spirit of reproducible research: same data,
+      same code, and even with a different person on a different machine, you still bake
+      out the same answer.
+    animation: "show_recipe_scenario"
+    pause_after: 0.5
+
+  - id: "four_ingredients"
+    narration: >
+      To reproduce a cake, you need four things ready. The recipe is your code, every
+      step written as clear, re-runnable code. The ingredients are your data, the same
+      raw data, never secretly changed halfway through. The kitchen setup is your
+      environment, using uv.lock to pin the package versions, so everyone bakes in the
+      same oven. And rigging the dice ahead of time is your seed, locking the seed on
+      any random step. Get all four ready, and anyone can bake the same cake.
+    animation: "show_four_ingredients"
+    pause_after: 0.5
+
+  - id: "mapping"
+    narration: >
+      Translate the metaphor back into the formal terms and everything lines up
+      one-for-one. Recipe maps to code, ingredients to data, kitchen setup to
+      environment, rigging the dice to seed, and the cake at the end is your
+      reproducible result. Memorize this little mapping table and you've got the
+      skeleton of reproducible research.
+    animation: "show_mapping"
+    pause_after: 0.5
+
+  - id: "definition"
+    narration: >
+      Let me nail down the key point here: reproducibility isn't asking "did it come
+      out right this time," it's asking "if a different person on a different machine
+      runs it, do they still get the same answer." At the end of the day, it means
+      someone else can take your code, data, environment, and seed, and copy your result
+      exactly, no more and no less.
+    animation: "show_definition"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's wrap up the main thread. One, the recipe metaphor breaks into four things:
+      code, data, environment, seed. Two, with all four ready, anyone on any machine can
+      bake the same cake. Three, the point is always "copyable," never "happened to be
+      right this time." Next episode, we go hunting for the culprit: why do my results
+      change when I re-run?
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: switch scenes, and reproduce a COVID-19 analysis!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid"
+    narration: >
+      Say you spot a COVID-19 analysis paper and want to re-run it on your own computer
+      to check it out. The authors were kind enough to ship the code, the data, the
+      requirements, and they even fixed the seed. All you do is uv sync to set up the
+      environment, lock the seed, and run the same script, and you get numbers identical
+      to the paper's. Only when you can pull that off does the study truly count as
+      reproducible, and switch the disease, the same recipe spirit still applies.
+    animation: "show_extra_covid"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for reproducible research!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: sharing only the result chart, not the code and the
+      ingredients. If your friend only gets a photo of the cake, there's no way she can
+      bake the same one. The right move is to hand over code, data, environment, and
+      seed together, so others can actually reproduce it.
+    animation: "show_bs_share_only"
+    error_code: "share(result_png_only)"
+    correct_code: "share(code, data, env, seed)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: hand-editing data in a notebook from memory and leaving no
+      record. You click around and delete a few rows that "look weird," and next time
+      you re-run, those hands have long forgotten what they tampered with. The right move
+      is to write every transformation as one visible line of code, so the rule itself is
+      the documentation.
+    animation: "show_bs_manual_edit"
+    error_code: "df = df.drop([3, 7])  # by hand"
+    correct_code: "df = df[df.age >= 0]  # rule in code"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: not pinning package versions, just pip installing
+      whatever comes to mind. Your machine runs a new pandas, mine runs an old one, and
+      the same recipe can bake out different cakes. The right move is to always use
+      uv sync, letting uv.lock set every oven to the same temperature.
+    animation: "show_bs_no_lock"
+    error_code: "pip install pandas"
+    correct_code: "uv sync  # locked by uv.lock"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      This episode, we used the cake recipe to lock in the four ingredients of
+      reproducible research all at once: code, data, environment, seed. But you've surely
+      hit that spooky moment where "I didn't touch the code, yet the numbers changed on
+      re-run." Next episode we go catch the culprit, matching three common landmines to
+      three pillars one by one. Stay tuned!
+    animation: "show_outro"
+    pause_after: 1.0
