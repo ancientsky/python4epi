@@ -35,6 +35,37 @@ class Ch04PersonScene(EpiBaseScene):
 
     total_steps: int = 15
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "描述流行病學（人）",
+            "title_sub": "感染者的臉譜",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. 先篩選確診個案再做描述統計",
+            "summary_p2": "2. describe() 快速看年齡分布",
+            "summary_p3": "3. pd.cut() 建立年齡組別",
+            "summary_p4": "4. value_counts() 統計性別與共病",
+            "summary_p5": "5. 人的描述 = 年齡 + 性別 + 共病 + 功能狀態",
+            "extra_banner_title": "額外範例：登革熱年齡性別分析",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：流行曲線",
+            "outro_sub": "用長條圖畫出疫情隨時間的變化！",
+        },
+        "en": {
+            "title_main": "Descriptive Epidemiology (Person)",
+            "title_sub": "A portrait of the infected",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. Filter to confirmed cases before describing them",
+            "summary_p2": "2. describe() gives a quick look at the age spread",
+            "summary_p3": "3. pd.cut() builds the age groups",
+            "summary_p4": "4. value_counts() tallies sex and comorbidities",
+            "summary_p5": "5. Person = age + sex + comorbidities + functional status",
+            "extra_banner_title": "Extra example: dengue age-sex analysis",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: the epidemic curve",
+            "outro_sub": "Draw how the outbreak changes over time with a bar chart!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -44,7 +75,7 @@ class Ch04PersonScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the Person lesson."""
-        self.show_title_card("描述流行病學（人）", "感染者的臉譜", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_filter_cases(self, duration: float = 6.0, **kwargs) -> None:
         """Show filtering confirmed cases."""
@@ -152,18 +183,18 @@ class Ch04PersonScene(EpiBaseScene):
         self.show_step_indicator(5, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. 先篩選確診個案再做描述統計", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. describe() 快速看年齡分布", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. pd.cut() 建立年齡組別", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("4. value_counts() 統計性別與共病", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("5. 人的描述 = 年齡 + 性別 + 共病 + 功能狀態", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p5"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.40).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -177,7 +208,7 @@ class Ch04PersonScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：登革熱年齡性別分析")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_dengue(self, duration: float = 6.0, **kwargs) -> None:
@@ -207,7 +238,7 @@ class Ch04PersonScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_mean_age(self, duration: float = 5.0, **kwargs) -> None:
@@ -240,14 +271,14 @@ class Ch04PersonScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：流行曲線",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "用長條圖畫出疫情隨時間的變化！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

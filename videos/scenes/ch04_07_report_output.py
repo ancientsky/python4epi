@@ -35,6 +35,37 @@ class Ch04ReportOutputScene(EpiBaseScene):
 
     total_steps: int = 16
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "專業報告輸出",
+            "title_sub": "Dashboard、Word、PPT、PDF 一次搞定",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. BytesIO 讓圖片在記憶體中傳遞，不需存檔",
+            "summary_p2": "2. Plotly Dashboard 適合互動式報告",
+            "summary_p3": "3. python-docx 產生 Word 報告",
+            "summary_p4": "4. python-pptx 產生簡報投影片",
+            "summary_p5": "5. PdfPages 可將多張圖合併成一份 PDF",
+            "extra_banner_title": "額外範例：自動寄信附報告",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "Chapter 04 完結！",
+            "outro_sub": "你已經學會從 Line List 產出完整 SitRep！",
+        },
+        "en": {
+            "title_main": "Professional Report Output",
+            "title_sub": "Dashboard, Word, PPT, PDF - all in one go",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. BytesIO passes images in memory, no file needed",
+            "summary_p2": "2. A Plotly dashboard suits interactive reports",
+            "summary_p3": "3. python-docx generates a Word report",
+            "summary_p4": "4. python-pptx generates presentation slides",
+            "summary_p5": "5. PdfPages merges multiple figures into one PDF",
+            "extra_banner_title": "Extra example: auto-emailing the report",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Chapter 04 complete!",
+            "outro_sub": "You can now turn a line list into a full SitRep!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -44,7 +75,7 @@ class Ch04ReportOutputScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the Report Output lesson."""
-        self.show_title_card("專業報告輸出", "Dashboard、Word、PPT、PDF 一次搞定", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_bytesio_concept(self, duration: float = 6.0, **kwargs) -> None:
         """Show BytesIO for in-memory file handling."""
@@ -165,18 +196,18 @@ class Ch04ReportOutputScene(EpiBaseScene):
         self.show_step_indicator(6, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. BytesIO 讓圖片在記憶體中傳遞，不需存檔", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. Plotly Dashboard 適合互動式報告", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. python-docx 產生 Word 報告", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("4. python-pptx 產生簡報投影片", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("5. PdfPages 可將多張圖合併成一份 PDF", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p5"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.40).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -190,7 +221,7 @@ class Ch04ReportOutputScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：自動寄信附報告")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_email(self, duration: float = 6.0, **kwargs) -> None:
@@ -224,7 +255,7 @@ class Ch04ReportOutputScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_seek(self, duration: float = 5.0, **kwargs) -> None:
@@ -257,14 +288,14 @@ class Ch04ReportOutputScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "Chapter 04 完結！",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "你已經學會從 Line List 產出完整 SitRep！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

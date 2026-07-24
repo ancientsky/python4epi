@@ -1,0 +1,219 @@
+meta:
+  chapter: "04"
+  concept: "report_output"
+  title: "Professional Report Output: Dashboard, Word, PPT, PDF in One Go"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch04_07_report_output"
+  scene_class: "Ch04ReportOutputScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: four report formats
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! This is the final chapter of the SitRep workflow.
+      In the last few videos you've saved your analysis results into a dictionary, but the boss can't read a Python dict.
+      What they want is a polished report.
+      Today I'll show you four formats for wrapping that dict into professional output:
+      an interactive dashboard, a Word document, a PPT deck, and a formal PDF report.
+      One set of data, four formats, all generated automatically.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "bytesio_concept"
+    narration: >
+      Before we start, meet a magic tool: BytesIO.
+      You've already used fig.savefig to save the epi curve as a PNG, but saving to disk is a hassle.
+      BytesIO is like a "fake file in memory,"
+      behaving exactly like a real file, but the data lives only in RAM.
+      Save the figure into a BytesIO, and both DOCX and PPTX add_picture can eat it directly.
+      No need to delete it afterward, because it takes up no disk space.
+      The one thing to watch: seek to zero before each read, to rewind the cursor to the start.
+    animation: "show_bytesio_concept"
+    code: |
+      from io import BytesIO
+      buf = BytesIO()
+      fig.savefig(buf, format="png", dpi=150)
+      buf.seek(0)  # rewind before each read
+    pause_after: 0.5
+
+  - id: "plotly_dashboard"
+    narration: >
+      Format one: a Plotly interactive dashboard.
+      make_subplots creates a 2-by-2 panel of subplots.
+      specs sets each cell's type: indicator is a big-number KPI display, xy is a regular chart.
+      Top-left holds the case count and attack rate, top-right holds the deaths and CFR.
+      Bottom-left is the epi curve, bottom-right is a horizontal bar chart of attack rate by wing.
+      In Jupyter it's interactive, with zoom and hover. On a static Jupyter Book page it auto-converts to a screenshot.
+    animation: "show_plotly_dashboard"
+    code: |
+      from plotly.subplots import make_subplots
+      dashboard = make_subplots(rows=2, cols=2,
+          specs=[[{"type":"indicator"},{"type":"indicator"}],
+                 [{"type":"xy"},{"type":"xy"}]])
+      dashboard.add_trace(go.Indicator(...), row=1, col=1)
+      dashboard.show()
+    pause_after: 0.5
+
+  - id: "docx_report"
+    narration: >
+      Format two: a Word document.
+      Watch out for a super-confusing gotcha: to install you type pip install python-docx,
+      but to import you write from docx import Document, with no python prefix.
+      Document creates a blank file, add_heading adds a title,
+      add_table adds a table, add_picture embeds an image.
+      The image can eat a BytesIO object directly, and width is set with Inches.
+      Finally, save it to the output folder and you're done.
+    animation: "show_docx_report"
+    code: |
+      from docx import Document
+      from docx.shared import Inches
+      doc = Document()
+      doc.add_heading("SitRep", level=1)
+      doc.add_table(rows=6, cols=2)
+      buf.seek(0)
+      doc.add_picture(buf, width=Inches(6))
+      doc.save("output/sitrep.docx")
+    pause_after: 0.5
+
+  - id: "pptx_slides"
+    narration: >
+      Format three: a PPT deck.
+      python-pptx's logic is: pick a layout first, then add content.
+      slide_layouts index zero is the title page, index five is a blank page.
+      On a blank page, use add_textbox to freely position text, add_picture to embed an image.
+      Position and size are both set with Inches.
+      Four slides, title, KPIs, epi curve, and wing table, make a complete deck.
+    animation: "show_pptx_slides"
+    code: |
+      from pptx import Presentation
+      from pptx.util import Inches, Pt
+      prs = Presentation()
+      slide = prs.slides.add_slide(prs.slide_layouts[5])
+      slide.shapes.add_textbox(Inches(1), Inches(0.5), ...)
+      buf.seek(0)
+      slide.shapes.add_picture(buf, Inches(0.5), ...)
+      prs.save("output/sitrep.pptx")
+    pause_after: 0.5
+
+  - id: "pdf_report"
+    narration: >
+      Format four: a formal PDF report.
+      Use fpdf2, pure Python, no extra system packages needed.
+      But one big point: fpdf2 doesn't support Chinese by default.
+      You must find a CJK font file yourself and embed it with add_font.
+      The CI environment has fonts-noto-cjk installed, so scanning /usr/share/fonts finds it.
+      Also, fpdf2's image only takes a file path, not a BytesIO.
+      The workaround is to save a temp file, embed it, then delete it. A bit of a hassle, but only two extra lines of code.
+    animation: "show_pdf_report"
+    code: |
+      from fpdf import FPDF
+      pdf = FPDF()
+      pdf.add_page()
+      pdf.add_font("CJK", "", font_path)
+      pdf.set_font("CJK", size=16)
+      pdf.cell(0, 12, text="SitRep", align="C",
+               new_x="LMARGIN", new_y="NEXT")
+      pdf.output("output/sitrep.pdf")
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Recap! The four report formats each suit a scenario:
+      A Plotly dashboard suits real-time team discussion.
+      Word suits emailing to the boss.
+      PPT suits presenting at an investigation meeting.
+      PDF suits formal archiving and printing.
+      BytesIO is the magic tool for sharing images, but seek to zero before every read.
+      Now your SitRep isn't just numbers, it comes in four polished wrappers.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: auto-emailing the daily report
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at an advanced application.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_email"
+    narration: >
+      Imagine you've automated report generation; the next step is auto-sending.
+      Python's smtplib can send email.
+      You can attach the DOCX or PDF,
+      put a text version of the summary metrics in the email body,
+      and set the recipients to your boss and relevant colleagues.
+      Pair it with a scheduler, and you don't even have to open your computer: at nine every morning the boss gets the latest report.
+      That's the evolution path from manual to fully automatic.
+    animation: "show_extra_email"
+    code: |
+      import smtplib
+      from email.mime.multipart import MIMEMultipart
+      from email.mime.base import MIMEBase
+      # Attach output/sitrep.pdf
+      # Subject: SitRep 2026-01-20
+      # Recipient: supervisor@health.gov.tw
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Blind-spot time! Three traps that are super easy to hit when generating reports.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: forgetting to seek zero on BytesIO.
+      After you read a BytesIO, the cursor sits at the end.
+      Read again without seeking to zero and you get empty data.
+      The result is a blank image embedded in the Word doc and a blank one in the PDF too.
+      Before every BytesIO read, seek to zero. Make it muscle memory.
+    animation: "show_blindspot_seek"
+    error_code: "doc.add_picture(buf)  # cursor at end"
+    correct_code: "buf.seek(0); doc.add_picture(buf)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: writing import docx as import python_docx.
+      The install name is python-docx, but the import name is docx.
+      Many people naturally write import python_docx and get a ModuleNotFoundError.
+      A similar trap: python-pptx imports as pptx.
+      Remember: the install name and the import name aren't always the same.
+    animation: "show_blindspot_import"
+    error_code: "import python_docx  # ModuleNotFoundError"
+    correct_code: "from docx import Document  # correct!"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: Chinese turns into boxes or garbage in the PDF.
+      fpdf2 has only English fonts by default. Without an embedded CJK font,
+      Chinese characters all become little boxes, technically called tofu.
+      The fix is add_font to embed a Noto Sans CJK or WenQuanYi font.
+      On Colab or CI, remember to install fonts-noto-cjk first.
+    animation: "show_blindspot_cjk"
+    error_code: 'pdf.set_font("Helvetica")  # CJK = tofu'
+    correct_code: 'pdf.add_font("CJK", "", font_path)'
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      Congratulations on completing the full SitRep workflow journey!
+      From reading a CSV to producing four report formats, every step is automated with Python.
+      In the final video, we'll show you how to set up a scheduler so the computer runs this pipeline daily.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

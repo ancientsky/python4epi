@@ -35,6 +35,37 @@ class Ch04ClassificationScene(EpiBaseScene):
 
     total_steps: int = 14
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "個案分類",
+            "title_sub": "確診、可能和非個案的分層統計",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. value_counts() 快速看各分類人數",
+            "summary_p2": "2. groupby + agg 可同時算多個指標",
+            "summary_p3": "3. lambda 讓你在 agg 裡自訂計算邏輯",
+            "summary_p4": "4. 致死率的分母是確診個案數，不是全體",
+            "summary_p5": "5. 個案分類是分層分析的重要基礎",
+            "extra_banner_title": "額外範例：結核病個案分類統計",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：函式化",
+            "outro_sub": "把 SitRep 包成函式，一鍵更新！",
+        },
+        "en": {
+            "title_main": "Case Classification",
+            "title_sub": "Stratified stats for confirmed, probable, and non-cases",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. value_counts() shows counts per classification fast",
+            "summary_p2": "2. groupby + agg computes several metrics at once",
+            "summary_p3": "3. lambda lets you customize the logic inside agg",
+            "summary_p4": "4. CFR's denominator is confirmed cases, not everyone",
+            "summary_p5": "5. Case classification is the backbone of stratified analysis",
+            "extra_banner_title": "Extra example: TB case-classification stats",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: wrapping it in a function",
+            "outro_sub": "Package the SitRep into a function for one-click updates!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -44,7 +75,7 @@ class Ch04ClassificationScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the Classification lesson."""
-        self.show_title_card("個案分類", "確診、可能和非個案的分層統計", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_groupby_classification(self, duration: float = 6.0, **kwargs) -> None:
         """Show groupby on case_classification."""
@@ -125,18 +156,18 @@ class Ch04ClassificationScene(EpiBaseScene):
         self.show_step_indicator(4, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. value_counts() 快速看各分類人數", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. groupby + agg 可同時算多個指標", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. lambda 讓你在 agg 裡自訂計算邏輯", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("4. 致死率的分母是確診個案數，不是全體", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("5. 個案分類是分層分析的重要基礎", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p5"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.40).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -150,7 +181,7 @@ class Ch04ClassificationScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：結核病個案分類統計")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_tb(self, duration: float = 6.0, **kwargs) -> None:
@@ -183,7 +214,7 @@ class Ch04ClassificationScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_definition(self, duration: float = 5.0, **kwargs) -> None:
@@ -216,14 +247,14 @@ class Ch04ClassificationScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：函式化",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "把 SitRep 包成函式，一鍵更新！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

@@ -1,0 +1,193 @@
+meta:
+  chapter: "04"
+  concept: "person"
+  title: "Descriptive Epidemiology (Person): A Portrait of the Infected"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch04_02_person"
+  scene_class: "Ch04PersonScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: person descriptive stats
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Today we tackle the first descriptive section of a SitRep: person.
+      One of the core questions in an outbreak investigation is: "What do the sick people have in common?"
+      Is a certain age group especially likely to get hit? Are men or women more affected?
+      Are people with chronic conditions at higher risk?
+      The answers are all hiding in the demographic columns of the line list.
+      Today I'll show you how to dig them out with Python.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "filter_cases"
+    narration: >
+      Step one, filter out the infected.
+      Put a condition inside df's square brackets, and that's boolean indexing.
+      df bracket "infected" equals 1 produces a whole column of True and False,
+      and only the True rows are kept.
+      This is pandas' most fundamental filtering trick, and you'll use it in nearly every analysis.
+      The filtered "cases" is a brand-new DataFrame containing only the 121 infected residents.
+    animation: "show_filter_cases"
+    code: |
+      cases = df[df["infected"] == 1]
+      print(f"Total cases: {len(cases)}")
+    output: |
+      Total cases: 121
+    pause_after: 0.5
+
+  - id: "age_sex"
+    narration: >
+      With the "cases" subset in hand, let's look at age and sex.
+      The median describes age better than the mean because it isn't swayed by extreme values.
+      For the male proportion, here's a neat trick: sex equals M produces True and False,
+      then mean gives you the fraction of Trues, which is the share of males.
+      This "mean on a boolean" trick is incredibly useful, so lock it in.
+    animation: "show_age_sex"
+    code: |
+      print(f"Median age: {cases['age'].median():.0f}")
+      print(f"Range: {cases['age'].min()}-{cases['age'].max()}")
+      print(f"Male: {(cases['sex']=='M').mean():.1%}")
+    output: |
+      Median age: 79
+      Range: 60-99
+      Male: 52.1%
+    pause_after: 0.5
+
+  - id: "age_group"
+    narration: >
+      Next, the age-group distribution.
+      value_counts tallies how often each category appears, but by default it sorts by count.
+      Add sort_index, and it lines up by age group instead: 60 to 69, 70 to 79, and so on.
+      to_string keeps pandas from silently truncating the middle rows when there's a lot of data.
+      Chain these three methods and you've got the universal formula for category tabulation.
+    animation: "show_age_group"
+    code: |
+      print(cases["age_group"]
+            .value_counts()
+            .sort_index()
+            .to_string())
+    output: |
+      60-69    18
+      70-79    34
+      80-89    46
+      90+      23
+    pause_after: 0.5
+
+  - id: "comorbidity"
+    narration: >
+      Finally, the comorbidity distribution.
+      We have five comorbidity columns, all zeros and ones.
+      Use a for loop over each column: sum gives the number of people with that condition,
+      and dividing by the total number infected gives the proportion.
+      The string replace and upper just make the printed labels look nicer.
+      comorbidity_chf becomes an uppercase CHF, clean and crisp.
+    animation: "show_comorbidity"
+    code: |
+      for col in comorbidity_cols:
+          label = col.replace("comorbidity_", "").upper()
+          n = cases[col].sum()
+          print(f"  {label}: {n} ({n/len(cases):.1%})")
+    output: |
+        CHF: 28 (23.1%)
+        DM: 44 (36.4%)
+        CANCER: 19 (15.7%)
+        COPD: 22 (18.2%)
+        IMMUNOSUPPRESSED: 33 (27.3%)
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Quick recap! The "person" section of descriptive epidemiology answers three questions:
+      age distribution, using the median and interquartile range, not the mean.
+      Sex ratio, using the mean-on-a-boolean trick.
+      Comorbidity distribution, using a for loop that sums the zero-one columns.
+      Write these numbers into the SitRep so readers instantly see the profile of the infected group.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: dengue age-group analysis
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at the age-group analysis of a Taiwan dengue outbreak.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue"
+    narration: >
+      In 2015, Tainan had a massive dengue outbreak, over twenty thousand confirmed cases.
+      The analysis found that people 65 and older had a strikingly high fatality rate, several times that of younger people.
+      That finding pushed the health department to prioritize spraying and education in communities where the elderly cluster.
+      See? Just a simple age-stratified analysis
+      can reshape the entire priority order of a control strategy.
+      That's the power of descriptive epidemiology: let the numbers do the talking.
+    animation: "show_extra_dengue"
+    code: |
+      # 2015 Tainan dengue: age-stratified CFR
+      dengue.groupby("age_group").agg(
+          cases=("case_id", "size"),
+          deaths=("outcome", lambda x: (x=="dead").sum()),
+      )
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Blind-spot time! The three traps beginners hit most when doing person descriptive stats.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: describing age with the mean.
+      Age distributions are usually skewed, especially in a nursing home.
+      If there's one 100-year-old, the mean gets dragged way up, but the median stays put.
+      The epidemiology convention is to describe age with the median plus a range or interquartile range.
+      Remember: for skewed data, use the median, not the mean.
+    animation: "show_blindspot_mean_age"
+    error_code: "print(f'Mean age: {cases.age.mean():.0f}')"
+    correct_code: "print(f'Median age: {cases.age.median():.0f}')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: analyzing all 280 people instead of just the infected.
+      The person section of a SitRep describes the traits of the "infected," not "all residents."
+      If you forget to filter to cases first, the median age and sex ratio you compute
+      are for all residents, not the infected, and that means something completely different.
+      Always do the boolean-index filter first!
+    animation: "show_blindspot_no_filter"
+    error_code: "median_age = df['age'].median()"
+    correct_code: "cases = df[df['infected']==1]; cases['age'].median()"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: value_counts without sort_index.
+      value_counts sorts by count in descending order by default,
+      so 80 to 89 might land first and 60 to 69 dead last.
+      Show the boss a jumbled table like that and they'll frown for sure.
+      Add sort_index, and the age groups line up obediently in order.
+    animation: "show_blindspot_sort"
+    error_code: "cases['age_group'].value_counts()"
+    correct_code: "cases['age_group'].value_counts().sort_index()"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      Done! You can now describe the demographic traits of the infected with Python.
+      Next time we move into "time": the epidemic curve, the most eye-catching chart in any investigation report.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0
