@@ -1,0 +1,163 @@
+meta:
+  chapter: "08"
+  concept: "attack_rate_map"
+  title: "Floor x Wing Attack Rate: from crosstab to heatmap"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch08_02_attack_rate_map"
+  scene_class: "Ch08AttackRateMapScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Welcome back! Last episode we used a classroom seating chart to build the intuition for spatial epi.
+      This time we get our hands dirty for real: we open the map of the Pine and Cypress nursing home.
+      Three floors, two wings, A and B, with 280 residents in total.
+      We'll use groupby and pivot to compute the attack rate for each floor-and-wing cell,
+      draw it as a heatmap, and find out where the danger is highest.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "setup_flags"
+    narration: >
+      Step one: build two zero-one flag columns, infected and died.
+      If clinical_severity is anything other than not_ill, the person is infected, and astype int turns True into 1 and False into 0.
+      If outcome is dead, the person died, using the exact same trick.
+      These two flag columns are the foundation for every grouped statistic that follows, so let's set them up first.
+    animation: "show_setup_flags"
+    code: |
+      df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)
+      df["died"]     = (df["outcome"] == "dead").astype(int)
+    pause_after: 0.5
+
+  - id: "groupby_agg"
+    narration: >
+      With the flags ready, one line of groupby and agg gives us three numbers for each floor-wing cell:
+      total residents, number infected, and number died.
+      count tallies the rows, and sum adds up the flags, and summing zeros and ones is exactly counting "how many are 1."
+      Then a quick division: attack_rate is the attack rate, and cfr is the case fatality rate.
+      Run it and you'll see a six-row table, three floors times two wings.
+    animation: "show_groupby_agg"
+    code: |
+      spatial = df.groupby(["floor", "wing"]).agg(
+          total    = ("case_id",  "count"),
+          infected = ("infected", "sum"),
+          died     = ("died",     "sum"),
+      ).reset_index()
+      spatial["attack_rate"] = (spatial["infected"] / spatial["total"] * 100).round(1)
+      spatial["cfr"]         = (spatial["died"] / spatial["infected"] * 100).round(1)
+    pause_after: 0.5
+
+  - id: "pivot_heatmap"
+    narration: >
+      A long table makes hotspots hard to see, so we reshape it into a matrix with pivot:
+      index is floor, columns is wing, and values is attack_rate.
+      Hand that to seaborn heatmap, with annot to show the numbers and cmap set to yellow-orange-red,
+      where redder means a higher attack rate, so one glance tells you which floor-wing is worst.
+      Whenever two categorical variables naturally form a matrix like this, a heatmap is the most intuitive choice.
+    animation: "show_pivot_heatmap"
+    code: |
+      heatmap_ar = spatial.pivot(index="floor", columns="wing", values="attack_rate")
+      sns.heatmap(heatmap_ar, annot=True, fmt=".1f", cmap="YlOrRd",
+                  cbar_kws={"label": "%"})
+    pause_after: 0.5
+
+  - id: "sorted_bar"
+    narration: >
+      A heatmap shows blocks; a sorted bar chart shows the ranking.
+      Combine floor and wing into a readable label like 1F-A, sort by attack rate from low to high,
+      and draw a horizontal bar chart so the highest-risk wing floats naturally to the top.
+      Then a list comprehension checks each one: over fifty percent goes red, everything else goes blue,
+      and your environmental-sampling priority order is told in a single picture.
+    animation: "show_sorted_bar"
+    code: |
+      spatial["label"] = spatial["floor"].astype(str) + "F-" + spatial["wing"]
+      spatial_sorted = spatial.sort_values("attack_rate", ascending=True)
+      ax.barh(spatial_sorted["label"], spatial_sorted["attack_rate"],
+              color=["#e34a33" if ar > 50 else "#2c7fb8"
+                     for ar in spatial_sorted["attack_rate"]])
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's package today's four-step recipe.
+      One, build flags: infected and died, two zero-one columns.
+      Two, groupby and agg: compute total, infected, and died all at once.
+      Three, pivot into a matrix and feed it to heatmap.
+      Four, sorted bar chart plus conditional coloring to find which wing to tackle first.
+      Master these four steps and next episode's spatial weights will feel much more natural.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: change the scene, a factory COVID-19 cluster!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid"
+    narration: >
+      A factory has a COVID-19 outbreak. It still has floors, plus one extra dimension: shift, early, late, and overnight.
+      It's the exact same set of moves: groupby floor and shift, agg to compute the attack rate,
+      pivot into a matrix, and color the heatmap.
+      Whether it's the wings of a nursing home or the shifts of a factory,
+      "crosstab two categorical variables into an attack rate" is always the heart of this trick.
+    animation: "show_extra_covid"
+    code: |
+      spatial2 = factory_df.groupby(["floor", "shift"]).agg(
+          total    = ("worker_id", "count"),
+          infected = ("infected",  "sum"),
+      ).reset_index()
+      spatial2["attack_rate"] = (spatial2["infected"] / spatial2["total"] * 100).round(1)
+      heat2 = spatial2.pivot(index="floor", columns="shift", values="attack_rate")
+      sns.heatmap(heat2, annot=True, fmt=".1f", cmap="YlOrRd")
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for attack-rate maps!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: clinical_severity is a text category, you can't just take its mean.
+      You have to build the Step 1 flag column first,
+      then compute infected divided by total, which is the real attack rate.
+    animation: "show_blindspot_no_flag"
+    error_code: "spatial['attack_rate'] = df['clinical_severity'].mean()"
+    correct_code: "spatial['attack_rate'] = spatial['infected'] / spatial['total'] * 100"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: forgetting reset_index after groupby and agg.
+      The grouping keys are still stuck in the index, so the later pivot either errors out or produces something bizarre.
+      Make it a habit: always follow groupby and agg with a reset_index.
+    animation: "show_blindspot_no_reset_index"
+    error_code: "spatial = df.groupby(['floor','wing']).agg(n=('case_id','count'))"
+    correct_code: "spatial = df.groupby(['floor','wing']).agg(n=('case_id','count')).reset_index()"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: ranking attack rates without looking at the headcount.
+      A room with only one person hits one hundred percent the moment that person is infected,
+      and that number is completely unreliable, so you can't put it next to a fifty-person wing.
+      Before ranking, filter out the groups whose sample size is too small.
+    animation: "show_blindspot_small_n"
+    error_code: "rank_by_attack_rate(spatial)"
+    correct_code: "rank_by_attack_rate(spatial[spatial['total'] >= 10])"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      The floor-by-wing attack-rate map is done and dusted!
+      Next episode we go one layer deeper:
+      how to formally define "neighbors" for each unit on the map,
+      Queen adjacency versus KNN, and what row-standardizing is actually being fair about.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

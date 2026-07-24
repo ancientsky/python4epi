@@ -1,0 +1,164 @@
+meta:
+  chapter: "08"
+  concept: "lisa"
+  title: "Local LISA Quadrants: where is the hotspot core really hiding?"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch08_05_lisa"
+  scene_class: "Ch08LisaScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi, and welcome back to the spatial epi classroom. Last episode we used global Moran's I
+      to give all of Taiwan one overall score, telling us whether there's a cluster at all.
+      But the boss will inevitably follow up: "So where is it worst?"
+      The global index can't answer that, because it only gives the whole island one number.
+      This episode stars local LISA, which zooms in and asks each county, one at a time:
+      "What's the relationship between you and your neighbors?"
+      And this episode hides the most easily-misremembered trap in the whole chapter, so are you ready?
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "lisa_vs_global"
+    narration: >
+      Let's get the difference straight. Global Moran's I is "the whole class's average score," just one number.
+      Local LISA is "each student's individual report card,"
+      with nineteen counties, each getting its own score and its own p-value.
+      The global formula is really just all the local scores summed and divided by a constant.
+      So LISA is the microscope version of Moran's I, broken apart piece by piece.
+    animation: "show_lisa_vs_global"
+    pause_after: 0.5
+
+  - id: "quadrant_diagram"
+    narration: >
+      LISA looks at two things at once: the x-axis is "your own rate," the y-axis is "your neighbors' average rate."
+      Four quadrants, four personalities.
+      Top right, self high and neighbors high too, the epicenter, running a fever right alongside its neighbors.
+      Bottom left, self low and neighbors low, the safe zone.
+      Those two are the good kids, on the same team as their neighbors.
+      The really interesting ones are the other two cells: bottom right, self high but neighbors low, the lone spark,
+      very possibly a new imported case;
+      top left, self low but neighbors high, the eye of the storm, calm for now but already surrounded by high risk, so stay alert.
+    animation: "show_quadrant_diagram"
+    pause_after: 0.5
+
+  - id: "q_encoding_warning"
+    narration: >
+      Here's the main event, the most easily-triggered trap in the whole chapter.
+      The esda package stores the four quadrants in a field called dot q, using the numbers 1 through 4.
+      Your gut says 1234 must go in order, HH, HL, LL, LH, right? Wrong!
+      The official encoding is 1 equals HH, 2 equals LH, 3 equals LL, 4 equals HL.
+      Look closely, the LH eye of the storm is 2, not 3!
+      This ordering is completely counterintuitive, and the only defense is: don't fill it in by feel, dutifully copy from the table.
+    animation: "show_q_encoding"
+    pause_after: 0.5
+
+  - id: "code_lisa"
+    narration: >
+      Here's what the actual code looks like. From esda.moran, import Moran_Local,
+      feed it the rate, the neighbor weights w we just computed, plus 999 shuffles and a fixed seed for reproducibility.
+      Once you have the lisa object, use a dictionary to translate 1234 into labels,
+      then a list comprehension checks each county's shuffle p-value first,
+      where p greater than or equal to 0.05 is marked not significant, and only the significant ones get looked up as HH, LH, LL, or HL.
+    animation: "show_code_lisa"
+    code: |
+      from esda.moran import Moran_Local
+
+      lisa = Moran_Local(main["rate"].values, w,
+                          permutations=999, seed=8)
+      # esda 編碼：1=HH, 2=LH, 3=LL, 4=HL
+      labels = {1: "HH", 2: "LH", 3: "LL", 4: "HL"}
+      main["lisa"] = [
+          "not_sig" if p >= 0.05 else labels[q]
+          for q, p in zip(lisa.q, lisa.p_sim)
+      ]
+    pause_after: 0.5
+
+  - id: "reading_result"
+    narration: >
+      Applied to the all-Taiwan dengue data, the answer paints a vivid picture.
+      Tainan, Kaohsiung, and Chiayi, those southern counties, sit firmly in the top right, the HH epicenter, no surprise they're on the list every year.
+      Most northern counties land in the bottom left, the LL safe zone.
+      And if some county isn't high itself yet is surrounded by a ring of HH, turning it into an LH eye of the storm,
+      that's your top priority to watch, deploy resources early, don't wait until it actually catches fire.
+    animation: "show_reading_result"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's tidy up today's key points.
+      One, LISA is the local microscope version of global Moran's I, with each region getting its own score and p-value.
+      Two, the quadrants read two axes: your own rate and your neighbors' average rate.
+      Three, and most important, the dot q encoding is always 1 HH, 2 LH, 3 LL, 4 HL, and getting it backwards is super dangerous.
+      Four, always check whether p_sim is significant first, and never interpret the ones that aren't.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example, this time we zoom the camera in from all of Taiwan back to our familiar Legionnaires' disease world.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_nursing_homes"
+    narration: >
+      Suppose a single county has a dozen or so care facilities, and we feed each one's Legionnaires' attack rate into LISA.
+      The result: three facilities adjacent to one another all land in HH, very likely sharing the same regional water supply,
+      or the same plumbing contractor, a strong signal of a common water source.
+      Meanwhile one facility, high all by itself with everything low around it, becomes an HL spark,
+      so you prioritize checking its own showers and hot water tanks, most likely not community spread but an in-house problem.
+      The same trick, shrunk from the national scale down to the building scale of a single city, works just as well.
+    animation: "show_extra_nursing_homes"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Ready? The three blind spots beginners trip over most, all revealed at once!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_encoding"
+    narration: >
+      Blind spot number one, which is exactly the main event from before: guessing the dot q encoding order by gut,
+      assuming 1234 is HH, HL, LL, LH.
+      The result is that the eye of the storm and the spark get labeled backwards, and the report you hand the boss points in the wrong direction.
+      The right move: always keep a lookup table on hand, 1 HH, 2 LH, 3 LL, 4 HL.
+    animation: "show_blindspot_encoding"
+    error_code: "labels = {1: 'HH', 2: 'HL', 3: 'LL', 4: 'LH'}"
+    correct_code: "labels = {1: 'HH', 2: 'LH', 3: 'LL', 4: 'HL'}"
+    pause_after: 0.5
+
+  - id: "blindspot_no_pfilter"
+    narration: >
+      Blind spot number two: grabbing dot q and plotting straight away, without ever checking p_sim.
+      The result is that a pile of counties that were really just random noise get slapped with HH or HL labels,
+      and the map looks lively and busy while it's all false alarms.
+      The right move: any region with p_sim greater than or equal to 0.05 is marked not significant and painted gray, no interpretation.
+    animation: "show_blindspot_no_pfilter"
+    error_code: "main['lisa'] = [labels[q] for q in lisa.q]"
+    correct_code: "main['lisa'] = [labels[q] if p < .05 else 'ns' for q, p in zip(lisa.q, lisa.p_sim)]"
+    pause_after: 0.5
+
+  - id: "blindspot_islands"
+    narration: >
+      Blind spot number three: forgetting to handle the islands. Under Queen adjacency, Kinmen, Penghu, and Lienchiang have no neighbors at all,
+      and forcing them into Moran_Local means the neighbor average can't be computed, so the code either errors out or produces garbage.
+      The right move: filter the islands out first and run LISA only on the connected mainland counties,
+      leaving the islands to be handled separately later with KNN or smoothing.
+    animation: "show_blindspot_islands"
+    error_code: "lisa = Moran_Local(gdf['rate'].values, w_all, permutations=999)"
+    correct_code: "lisa = Moran_Local(main['rate'].values, w_mainland, permutations=999)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Local LISA is done, and you now know how to pick out the "epicenter" and the "contrarian outliers" on a map.
+      Next episode we switch to a thermal imaging camera, using Getis-Ord Gi star
+      to draw a hotspot map you can hand straight to the boss.
+      And I'll tell you why you absolutely cannot judge by whether the Z-score crosses 1.96 alone.
+      See you next episode!
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,146 @@
+meta:
+  chapter: "08"
+  concept: "morans_i"
+  title: "Global Moran's I: one birds-of-a-feather index for the whole map"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch08_04_morans_i"
+  scene_class: "Ch08MoransIScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      The neighbor roster is built and the spatial weights W are ready.
+      This episode is the grand finale of Part One of this chapter: global Moran's I.
+      It hands you a single number that tells the boss whether Taiwan really has a cluster,
+      and the soul behind that number is something you actually already learned back in episode one.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_switch"
+    narration: >
+      First, let me explain something: the Pine and Cypress nursing home is just one building,
+      and using its six floor-wing cells for county-level spatial statistics is too small a sample to qualify.
+      So for this segment we switch to a classic Taiwanese spatial-epi application: dengue across all of Taiwan's counties.
+      The weights matrix w we built last episode carries over and gets used right here.
+    animation: "show_why_switch"
+    pause_after: 0.5
+
+  - id: "moran_intuition"
+    narration: >
+      Moran's I means exactly the same thing as the shuffle test from episode one's seating chart,
+      it just swaps in a formula, and it works across the whole island.
+      When I approaches positive one, high clusters with high and low with low, so the zoning is very clear.
+      When I approaches zero, it's random scatter, about the same as slapping labels on at random.
+      When I approaches negative one, highs and lows alternate, and this checkerboard situation is fairly rare.
+    animation: "show_moran_intuition"
+    pause_after: 0.5
+
+  - id: "moran_code"
+    narration: >
+      In code, the star of the show is the Moran class from the esda package.
+      Feed it three things: each county's dengue incidence, the weights w we just made,
+      and 999 shuffles, in exactly the same spirit as the shuffle test from episode one.
+      Out come Moran's I and the p-value from the shuffling.
+    animation: "show_moran_code"
+    code: |
+      from esda.moran import Moran
+
+      moran = Moran(main["rate"].values, w, permutations=999)
+      print(f"Moran's I = {moran.I:.3f}, p = {moran.p_sim:.4f}")
+    pause_after: 0.5
+
+  - id: "moran_output"
+    narration: >
+      Run it, and Moran's I comes out around 0.50 with a p-value below 0.05,
+      meaning dengue incidence across Taiwan really does have significant spatial clustering.
+      On the synthetic data, Tainan, Kaohsiung, and Chiayi jump out as the hotspot core,
+      while the north is one big low-incidence safe zone; the southern dengue hotspot is now nailed down with statistics.
+    animation: "show_moran_output"
+    pause_after: 0.5
+
+  - id: "pvalue_caution"
+    narration: >
+      One reminder: just seeing I equal to 0.5 looks a lot like clustering,
+      but you must rely on the shuffle p-value to prove this 0.5 isn't a number random data would also produce.
+      Only when I is significant is it worth going deeper into local analysis to find which county is the hotspot core,
+      and that advanced move is called LISA, which we'll save for a later episode.
+    animation: "show_pvalue_caution"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways on global Moran's I, all packaged up.
+      One, the sign and size of I: plus one clustered, zero random, minus one checkerboard.
+      Two, the shuffle p_sim is what proves it's "not a fluke."
+      Three, only a significant global result is worth breaking down each county's role.
+      Congratulations, Part One of spatial epi is complete, and you can now answer "where is it worst!"
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: switch the disease, the spatial clustering of TB!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tb"
+    narration: >
+      TB also shows clear spatial clustering in certain Taiwanese counties.
+      With the exact same code, just swap rate for the TB incidence,
+      and the Moran class, 999 shuffles, computing I and p_sim, not a single character needs to change.
+      That's the most charming thing about spatial statistics: switch the disease, and the same weapon still works.
+    animation: "show_extra_tb"
+    code: |
+      moran_tb = Moran(main["tb_rate"].values, w, permutations=999)
+      print(f"TB Moran's I = {moran_tb.I:.3f}, p = {moran_tb.p_sim:.4f}")
+      # 示意：I 顯著為正 → 結核病同樣有空間群聚傾向
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for Moran's I!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: reading only the value of I and concluding without ever looking at p_sim.
+      An I of 0.5 sounds a lot like clustering, but if p_sim isn't below 0.05,
+      that 0.5 might just be a number random data would spit out too, so never rush to a conclusion.
+    animation: "show_blindspot_i_without_p"
+    error_code: "if moran.I > 0.3: cluster = True"
+    correct_code: "cluster = moran.I > 0.3 and moran.p_sim < 0.05"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: trying only one neighbor definition and treating the result as iron law.
+      Switch to KNN or change k, and Moran's I can flip entirely,
+      which is called weight sensitivity, so before any formal report always cross-check with another definition.
+    animation: "show_blindspot_weight_sensitivity"
+    error_code: "w = Queen.from_dataframe(gdf)  # only tested once"
+    correct_code: "w2 = KNN.from_dataframe(gdf, k=5)  # check robustness too"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: feeding small-population counties' raw, unsmoothed rates straight into Moran's I.
+      Lienchiang County has only thirteen thousand people, so one extra case makes the rate explode,
+      and that kind of unstable rate contaminates the whole statistic.
+      The right move is to exclude the islands or apply Bayesian smoothing first, then put it into Moran's I.
+    animation: "show_blindspot_small_pop_raw_rate"
+    error_code: "moran = Moran(raw_rate, w)"
+    correct_code: "moran = Moran(main_only_rate, w)  # exclude islands or smooth"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      That wraps up Part One of spatial epi!
+      From the seating-chart intuition, to the floor-and-wing heatmap, to the formal definition of neighbors,
+      all the way to global Moran's I, you can now answer "where is it worst, and is it real."
+      In the second half we'll dig into local hotspots with LISA and Getis-Ord Gi star, so stay tuned!
+    animation: "show_outro"
+    pause_after: 1.0

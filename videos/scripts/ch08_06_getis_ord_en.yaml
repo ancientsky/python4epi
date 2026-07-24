@@ -1,0 +1,154 @@
+meta:
+  chapter: "08"
+  concept: "getis_ord"
+  title: "Getis-Ord Gi* Hotspots: the map you hand straight to the boss"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch08_06_getis_ord"
+  scene_class: "Ch08GetisOrdScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi, back in the spatial epi classroom. LISA helped us find the epicenter and the outliers,
+      but the boss usually has no time to hear you explain four quadrants; they just want one sentence:
+      "Where's the hotspot, and where do we go spray disinfectant right now?"
+      This episode's star, Getis-Ord Gi star, exists precisely to answer that,
+      with a temperature map from red to blue, and it hides the most easily-misused statistical trap in the whole chapter:
+      that innocent-looking threshold, a Z-score above 1.96.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "gi_vs_lisa"
+    narration: >
+      How is Gi star different from LISA?
+      LISA asks "do you resemble your neighbors," and it also flags the contrarian outliers.
+      Gi star doesn't care about resemblance at all; it asks just one thing:
+      draw a circle around you and your neighbors, and how hot is that whole circle?
+      Its output is a Z-score, where positive is hotter than the overall average and negative is colder.
+      It has no outlier categories, only one continuous temperature spectrum,
+      which happens to be perfect for making a nice hotspot map.
+    animation: "show_gi_vs_lisa"
+    pause_after: 0.5
+
+  - id: "binary_weights"
+    narration: >
+      First key detail: Gi star needs binary weights, not row-standardized ones.
+      Why? Because Gi star computes "the summed heat of this circle,"
+      so more neighbors means more firepower, and if you row-standardize first, dividing each neighbor by the neighbor count,
+      you actually wash out the very information that there are many neighbors.
+      So the weights matrix should set transform equal to a capital B, binary,
+      where a neighbor is 1 and a non-neighbor is 0, clean and simple.
+    animation: "show_binary_weights"
+    code: |
+      w_b = Queen.from_dataframe(main, use_index=False)
+      w_b.transform = "B"   # binary，不做 row-standardize
+    pause_after: 0.5
+
+  - id: "star_meaning"
+    narration: >
+      Second detail, the meaning of the star.
+      star equals True means Gi star, which counts the focal county itself inside the circle too;
+      without the star, it counts only the neighbors, not itself.
+      Spatial epi almost always uses the starred version,
+      because you are inherently part of your own circle, so there's no reason to exclude yourself.
+    animation: "show_star_meaning"
+    code: |
+      from esda.getisord import G_Local
+
+      gi = G_Local(main["rate"].values, w_b,
+                   permutations=999, seed=8, star=True)
+    pause_after: 0.5
+
+  - id: "significance_rule"
+    narration: >
+      Now for the single most important sentence in this whole video.
+      To judge whether a hotspot is significant, you absolutely cannot look only at whether the Z-score crosses 1.96.
+      Why? There are only nineteen counties, and with a sample that small the normal-distribution approximation is simply inaccurate.
+      The right move is to look at the p_sim from 999 shuffles, and only below 0.05 counts as significant,
+      then use the sign of the Z-score to tell hot from cold: positive is a hotspot, negative is a cold spot.
+      Both conditions must hold at once, and neither can be missing.
+    animation: "show_significance_rule"
+    code: |
+      hot = main.loc[(gi.p_sim < 0.05) & (gi.Zs > 0), "COUNTYNAME"]
+      cold = main.loc[(gi.p_sim < 0.05) & (gi.Zs < 0), "COUNTYNAME"]
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Wrapping up with five key points.
+      One, Gi star answers "how hot is this circle," with no outlier categories.
+      Two, the weights matrix must be binary, not row-standardized.
+      Three, star equals True counts yourself inside the circle.
+      Four, significance is p_sim below 0.05, not Z above 1.96.
+      Five, hot versus cold is the sign of Zs. Memorize those five and you'll hand in a solid hotspot map every time.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: enterovirus 71 daycare hotspots.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_enterovirus"
+    narration: >
+      Change the scene to enterovirus 71.
+      Feed each district's daycare cluster rate into Gi star,
+      and the hotspots that pop out often land in districts dense with childcare centers and fast at reporting,
+      not because the virus itself is fiercer, but because clusters there get caught earlier and more completely.
+      This is the old reminder of spatial analysis: finding a hotspot is only a signpost to the problem,
+      and the underlying cause needs further investigation, whether it's a reporting gap or genuinely faster spread.
+    animation: "show_extra_enterovirus"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three Gi star blind spots, all revealed at once!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_zscore_threshold"
+    narration: >
+      Blind spot number one, also the most common: filtering hotspots directly with Z-score above 1.96.
+      With a small sample, that rule of thumb falls apart entirely, missing places that are truly significant
+      and possibly mistaking noise for a hotspot.
+      The right move: always look at the p_sim computed from shuffling.
+    animation: "show_blindspot_zscore_threshold"
+    error_code: "hot = main.loc[gi.Zs > 1.96, 'COUNTYNAME']"
+    correct_code: "hot = main.loc[gi.p_sim < 0.05, 'COUNTYNAME']"
+    pause_after: 0.5
+
+  - id: "blindspot_row_standardized"
+    narration: >
+      Blind spot number two: forgetting to switch the weights matrix to binary, and reusing that row-standardized w from LISA.
+      The result is that the "heat" Gi star computes gets diluted by the neighbor count, and the whole hotspot map goes haywire.
+      The right move: Gi star needs a separate set of weights with transform equal to B,
+      which is a totally different thing from the weights you used for LISA.
+    animation: "show_blindspot_row_standardized"
+    error_code: "gi = G_Local(main['rate'].values, w_row_std, star=True)"
+    correct_code: "gi = G_Local(main['rate'].values, w_binary, star=True)"
+    pause_after: 0.5
+
+  - id: "blindspot_ignore_sign"
+    narration: >
+      Blind spot number three: filtering only on a significant p_sim, without checking the sign of Zs,
+      so cold spots get labeled as "hotspots" too and land on the priority list together, throwing resource allocation into chaos.
+      The right move: after p_sim is significant, you must also confirm Zs is positive before calling it a hotspot,
+      because negative is a cold spot, and the two mean completely opposite things.
+    animation: "show_blindspot_ignore_sign"
+    error_code: "hot = main.loc[gi.p_sim < 0.05, 'COUNTYNAME']"
+    correct_code: "hot = main.loc[(gi.p_sim<0.05)&(gi.Zs>0), 'COUNTYNAME']"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Gi star is done, and you now have a hotspot map you can report straight to the boss,
+      plus you know how to dodge three fatal misuses.
+      Next episode we return to the choropleth, this time a formal map of Legionnaires' incidence per hundred thousand across Taiwan,
+      and I'll demonstrate a tiny trap that's super easy to overlook yet leaves the map blank:
+      the mismatched glyphs of the two ways of writing "Tai." See you next episode!
+    animation: "show_outro"
+    pause_after: 1.0

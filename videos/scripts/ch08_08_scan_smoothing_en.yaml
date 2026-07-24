@@ -1,0 +1,145 @@
+meta:
+  chapter: "08"
+  concept: "scan_smoothing"
+  title: "Concept Extension: the Kulldorff scan statistic and Bayesian smoothing"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch08_08_scan_smoothing"
+  scene_class: "Ch08ScanSmoothingScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi, the final episode of spatial epi, and this time it's a concept extension.
+      Two advanced weapons: one is the Kulldorff scan statistic, which moves around the map on its own to hunt for hotspots,
+      and the other is Bayesian smoothing, which specifically cures small-county rates from exploding.
+      This episode leans conceptual, since most of the tooling lives in R or dedicated software,
+      but you must understand the logic, because it decides whether your map can be trusted at all.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "small_pop_problem"
+    narration: >
+      Let's start with the pain point. Lienchiang County has only thirteen thousand people, so if it had zero cases last year
+      and one more case this year, the incidence jumps straight from zero to seven point seven per hundred thousand, exploding to a shocking level.
+      This isn't Lienchiang suddenly becoming dangerous, it's the denominator being too small,
+      so any tiny change gets blown up into a dramatic number.
+      This kind of small-population rate whipsawing up and down makes the real spatial pattern impossible to see.
+    animation: "show_small_pop_problem"
+    pause_after: 0.5
+
+  - id: "bayesian_smoothing"
+    narration: >
+      The logic of Bayesian smoothing is a lot like borrowing something from a neighbor in a pinch.
+      For a county with a small population and few cases, its own rate is unreliable,
+      so it borrows a bit of information from its neighbors to stabilize the estimate, so the rate no longer explodes over one or two cases.
+      Empirical Bayes is the simple version, shrinking toward the global average;
+      the more advanced BYM model borrows from both the spatial neighbors and the global average at once,
+      using both sources of information together, so the estimated risk is more stable and closer to the truth.
+    animation: "show_bayesian_smoothing"
+    code: |
+      from esda.smoothing import Empirical_Bayes
+
+      eb = Empirical_Bayes(main["cases"], main["pop"])
+      main["rate_smoothed"] = eb.r  # 向鄰居/全域借資訊後的穩定率
+    pause_after: 0.5
+
+  - id: "kulldorff_scan"
+    narration: >
+      Switch weapons. The concept of the Kulldorff scan statistic is to take an invisible circle
+      and move it across the map cell by cell, growing and shrinking as it goes,
+      asking at each position: "Is the number of cases inside the circle significantly higher than outside?"
+      After trying every possible position and size, it picks the most anomalous circle and reports it as the most likely cluster.
+      Unlike manually chosen administrative boundaries, it isn't constrained by the shape of any district,
+      so it can catch an irregular cluster spanning several townships.
+    animation: "show_kulldorff_scan"
+    pause_after: 0.5
+
+  - id: "scan_significance"
+    narration: >
+      Judging significance for the scan statistic can't use a plain chi-square table p-value,
+      because you tested thousands of candidate circle positions at once, so the classic asymptotic-distribution assumption completely breaks down.
+      The right move is Monte Carlo simulation: randomly redistribute the cases across the map many times, say 999 times,
+      rerunning the same scan each time to find the "most anomalous circle" statistic in each simulation,
+      then compare the largest statistic from the real data against those 999 simulated values to get a simulated p-value.
+      This is exactly what SaTScan software does for you built in.
+    animation: "show_scan_significance"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Wrapping up. One, rates in small-population areas explode because of the small denominator, so you can't map or rank them raw.
+      Two, Bayesian smoothing, whether Empirical Bayes or BYM, trades stability by borrowing information from neighbors and the global average.
+      Three, the Kulldorff scan statistic uses a moving circle to find irregular clusters, unconstrained by administrative boundaries.
+      Four, the scan statistic's significance is judged by the Monte Carlo simulated p-value, not the textbook chi-square p-value.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a TB cross-township cluster scan.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tb_scan"
+    narration: >
+      Change the disease to TB, which often shows irregular clusters spanning townships,
+      because the chain of transmission may spread along commuting routes or through particular social-welfare facilities, not stopping neatly at administrative borders.
+      Scanning with the Kulldorff scan statistic often catches a high-risk band that straddles two or three adjacent townships
+      in a completely irregular shape,
+      a pattern you absolutely cannot see from a traditional map that looks only at a single administrative district.
+    animation: "show_extra_tb_scan"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three scan-and-smoothing blind spots, all revealed at once!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_raw_small_pop"
+    narration: >
+      Blind spot number one: taking a small county's raw rate straight to a map or a ranking, with no smoothing at all.
+      Lienchiang might rocket to number one in the country this year over a single case,
+      and the boss actually sends resources there first, when it was only statistical noise.
+      The right move: do Bayesian smoothing first, then use the smoothed rate to map or rank.
+    animation: "show_blindspot_raw_small_pop"
+    error_code: "top3 = df.sort_values('raw_rate', ascending=False).head(3)"
+    correct_code: "top3 = df.sort_values('smoothed_rate', ascending=False).head(3)"
+    pause_after: 0.5
+
+  - id: "blindspot_naive_pvalue"
+    narration: >
+      Blind spot number two: the scan statistic spits out a likelihood-ratio statistic, and you plug it straight into a standard chi-square distribution to look up a p-value.
+      Because you tested countless candidate circles at once, the classic assumption doesn't hold,
+      so the p-value you get is badly distorted and usually misjudged as a false alarm.
+      The right move: you must use the p-value produced by Monte Carlo simulation.
+    animation: "show_blindspot_naive_pvalue"
+    error_code: "p = chi2.sf(llr_stat, df=1)"
+    correct_code: "p = monte_carlo_pvalue(llr_stat, n_sim=999)"
+    pause_after: 0.5
+
+  - id: "blindspot_admin_boundary_only"
+    narration: >
+      Blind spot number three: hunting for clusters using only fixed administrative boundaries,
+      assuming disease spread will obediently follow the county and township lines.
+      In the real world the chain of transmission often straddles several administrative districts,
+      and comparing only the numbers within a single county or township completely misses the cross-border irregular clusters.
+      The right move: use a boundary-free method like the scan statistic, paired with a smoothed map to look at together.
+    animation: "show_blindspot_admin_boundary_only"
+    error_code: "cluster = df.groupby('county')['cases'].sum().idxmax()"
+    correct_code: "cluster = kulldorff_scan(df, max_radius_km=50)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      The scan statistic and Bayesian smoothing are both done, and the whole spatial epi series wraps up right here.
+      From the heatmap and the spot map, to the choropleth,
+      then Moran's I, LISA, and Gi star, and finally the scan statistic and smoothing,
+      you now have a complete arsenal of spatial weapons.
+      Next chapter we leave space behind and dig into the core question of survival analysis together:
+      after onset, who lives longer, and which factors shape survival time behind the scenes. See you next chapter!
+    animation: "show_outro"
+    pause_after: 1.0

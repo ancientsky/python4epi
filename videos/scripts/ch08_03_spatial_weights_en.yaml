@@ -1,0 +1,148 @@
+meta:
+  chapter: "08"
+  concept: "spatial_weights"
+  title: "Spatial Weights: defining neighbors, Queen vs KNN"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch08_03_spatial_weights"
+  scene_class: "Ch08SpatialWeightsScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode we drew a heatmap of attack rates by floor and wing.
+      This time we take one step forward: if we want the formal version of the shuffle test from episode one of Chapter 8,
+      that is, Moran's I, the computer first needs one thing spelled out in black and white:
+      exactly who is whose neighbor. That's the problem spatial weights solve.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_neighbors"
+    narration: >
+      Tobler's law says "near things are more alike," but how near is near?
+      Does the room next door count as a neighbor? What about across a hallway? What about a floor away?
+      The stats software won't guess for you, so we have to build a roster of "who neighbors whom" first,
+      and in the world of spatial statistics that roster has a formal name: the spatial weights matrix W.
+    animation: "show_why_neighbors"
+    pause_after: 0.5
+
+  - id: "queen_definition"
+    narration: >
+      The most common neighbor definition is Queen adjacency:
+      a chess queen can move in eight directions,
+      so as long as the borders touch, even at a single corner, it counts as a neighbor.
+      Look at this diagram: the county in the middle is connected by a line to every neighbor whose border it touches.
+    animation: "show_queen_definition"
+    pause_after: 0.5
+
+  - id: "queen_code"
+    narration: >
+      In code it's just one line: libpysal's Queen.from_dataframe.
+      Feed it the map's GeoDataFrame and it automatically computes the whole neighbor roster for you.
+      But print islands and you'll see a few counties with no neighbors at all,
+      Kinmen, Penghu, Lienchiang; they sit out in the sea, and Queen adjacency can't touch anyone.
+    animation: "show_queen_code"
+    code: |
+      from libpysal.weights import Queen, KNN
+
+      w_all = Queen.from_dataframe(gdf, use_index=False)
+      print(w_all.islands)   # 金門、澎湖、連江：0 個鄰居
+    pause_after: 0.5
+
+  - id: "islands_knn"
+    narration: >
+      With no neighbors, the islands make Moran's I simply go on strike.
+      Fix one: focus the analysis on the nineteen connected mainland counties, and handle the islands later with smoothing.
+      Fix two: switch to KNN, which ignores whether borders touch and just grabs the k geographically nearest counties as neighbors,
+      crossing the sea just fine, so the islands instantly have neighbors.
+    animation: "show_islands_knn"
+    pause_after: 0.5
+
+  - id: "row_standardize"
+    narration: >
+      With the neighbor list defined, there's one last step: row-standardize.
+      Set w.transform to r so each county's neighbor weights add up to one.
+      Why do this? Because a county with many neighbors shouldn't automatically speak "louder" than one with few,
+      and this is the idea of fair voting, where each neighbor gets one over k of the vote.
+    animation: "show_row_standardize"
+    code: |
+      main = gdf[~gdf["is_inset"]].reset_index(drop=True)
+      w = Queen.from_dataframe(main, use_index=False)
+      w.transform = "r"   # row-standardized：鄰居權重加總 = 1
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's package the three takeaways on spatial weights.
+      One, Queen adjacency: touching borders, corner included, means neighbor.
+      Two, solve the zero-neighbor island problem with KNN or by focusing on the mainland.
+      Three, row-standardize so neighbor weights are shared fairly and sum to one.
+      This weights matrix W is the raw material for next episode's Moran's I.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: how to define neighbors for COVID-19 alert zones!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid_zones"
+    narration: >
+      The districts of a major city can use the exact same logic.
+      When drawing an alert map for COVID-19 investigations, you likewise use Queen.from_dataframe to build the adjacency,
+      helping you judge "this district is heating up, should the district next door get ready early?"
+      Pick the right neighbor definition and your response resources won't miss the one district that truly needs attention.
+    animation: "show_extra_covid_zones"
+    code: |
+      w_district = Queen.from_dataframe(district_gdf, use_index=False)
+      w_district.transform = "r"
+      alert_neighbors = w_district.neighbors["信義區"]
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for spatial weights!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: building the weights and diving straight into computation without ever checking islands.
+      Zero-neighbor islands make the later Moran's I give weird results or throw errors,
+      so you must print islands and check first.
+    animation: "show_blindspot_ignore_islands"
+    error_code: "w = Queen.from_dataframe(gdf)"
+    correct_code: "w = Queen.from_dataframe(gdf); print(w.islands)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: forgetting to row-standardize.
+      A county with many neighbors has larger total weights by nature, so it "talks especially loud" in the later statistic,
+      and forgetting transform equals r makes the comparison unfair.
+    animation: "show_blindspot_no_row_standardize"
+    error_code: "w = Queen.from_dataframe(gdf)  # binary weights only"
+    correct_code: "w.transform = 'r'  # row-standardize for fair voting"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: when using KNN, picking a k value at random and just running with it.
+      Too small a k means too few neighbors and instability, while too large a k drags in unrelated counties,
+      so try at least a few values of k and check whether the results stay stable.
+    animation: "show_blindspot_random_k"
+    error_code: "w = KNN.from_dataframe(gdf, k=1)"
+    correct_code: "w = KNN.from_dataframe(gdf, k=5)  # try a few k values"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      The neighbors are defined and the weights matrix W is built!
+      Next episode is the main event: we feed W into Moran's I
+      and use a single number to tell the boss whether Taiwan really has a cluster.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0
