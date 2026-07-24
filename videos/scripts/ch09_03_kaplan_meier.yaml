@@ -1,0 +1,120 @@
+meta:
+  chapter: "09"
+  concept: "kaplan_meier"
+  title: "Kaplan-Meier 曲線：一條會下樓梯的線"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch09_03_kaplan_meier"
+  scene_class: "Ch09KaplanMeierScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      資料整理好了，時間、event、設限都到位。這一集我們要把它畫成一條線——
+      Kaplan-Meier 存活曲線。它長得像一座往下走的樓梯，看懂它，你就看懂了「全體病人隨時間怎麼掉」。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "km_idea"
+    narration: >
+      先講直覺。一開始所有感染住民都還活著，存活比例是百分之百，線從最上面出發。
+      每死一個人，線就往下踏一階；沒人死的日子，線就平平地走。
+      所以整條 Kaplan-Meier 曲線，就是「還活著的比例」隨時間往下走的一座樓梯。
+    animation: "show_km_idea"
+    pause_after: 0.5
+
+  - id: "staircase"
+    narration: >
+      來仔細看這座樓梯。縱軸是還活著的比例，橫軸是發病後天數。
+      每一階往下，就代表那一天有人死亡；線上那個小小的加號記號，是設限的病人——
+      那一天他被收走了，所以線在那裡不會往下踏。線穿過百分之五十那條虛線的時間，就是中位存活時間。
+    animation: "show_staircase"
+    pause_after: 0.5
+
+  - id: "read_curve"
+    narration: >
+      讀 KM 曲線記四件事。階梯下降，代表有人死亡；小加號 tick，代表設限、不影響高度。
+      線穿過百分之五十，就是中位存活時間。而尾端那圈越來越寬的陰影帶，是信賴區間——
+      人越來越少，估計就越來越不確定。
+    animation: "show_read_curve"
+    pause_after: 0.5
+
+  - id: "km_code"
+    narration: >
+      程式超短。建一台 KaplanMeierFitter，把時間放前面、event 放進 event_observed，再叫它畫存活曲線。
+      最後印出 median_survival_time_，就是中位存活時間。設限的人 lifelines 全自動幫你算好。
+    animation: "show_km_code"
+    code: |
+      from lifelines import KaplanMeierFitter
+
+      kmf = KaplanMeierFitter()
+      kmf.fit(cases["time_to_event"], event_observed=cases["event"])
+      kmf.plot_survival_function()
+      print(kmf.median_survival_time_)
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三個重點打包。一，KM 曲線是「還活著的比例」隨時間下樓梯，越陡越糟。
+      二，小加號是設限，不會讓線往下踏。
+      三，中位存活時間是穿過百分之五十的那天；如果它印出 inf，是好消息，代表超過一半的人在觀察期內都沒死。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：術後傷口感染的追蹤！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_postop"
+    narration: >
+      開完刀的病人，我們想知道「幾天內會發生傷口感染」。事件就是感染、時間就是術後天數。
+      平安出院、還沒感染的人就是設限。同一台 KaplanMeierFitter，把死亡換成感染，一條下樓梯的線照樣畫出來，
+      而且平坦的曲線代表你的感染管制做得好。
+    animation: "show_extra_postop"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Kaplan-Meier 三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：fit 的時候忘了給 event_observed。
+      這樣 lifelines 會把每個人都當成死亡事件，設限全被當成真的死掉，存活曲線會掉得太快。
+      一定要記得把 event 這一欄放進去。
+    animation: "show_blindspot_no_event"
+    error_code: 'kmf.fit(cases["time"])'
+    correct_code: 'kmf.fit(t, event_observed=cases.event)'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：把日期直接餵給 fit。時間欄位一定要是「天數」這種數字，不是原始的日期。
+      要先算好結束日減發病日的天數，再餵進去，不然結果整個亂掉。
+    animation: "show_blindspot_date_not_duration"
+    error_code: 'kmf.fit(cases["death_date"], e)'
+    correct_code: 'kmf.fit(cases["time_days"], e)'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：看到 median_survival_time_ 印出 inf 就以為程式壞了。
+      沒壞！inf 代表超過一半的人在觀察期內都沒死，中位數還沒被跨過，這其實是好消息，別嚇自己。
+    animation: "show_blindspot_inf_median"
+    error_code: "bad = kmf.median_survival_time_ == inf"
+    correct_code: "# inf median = over half never died"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      下樓梯的線你會讀了，中位存活也懂了！
+      但全體一條線看不出「誰預後比較差」。下一集我們把病人照嚴重度分組，
+      在同一張圖上疊好幾條線來比一比。我們下集見！
+    animation: "show_outro"
+    pause_after: 1.0

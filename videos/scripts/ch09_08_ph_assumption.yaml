@@ -1,0 +1,150 @@
+meta:
+  chapter: "09"
+  concept: "ph_assumption"
+  title: "比例風險假設：那些漂亮的 HR，先過這一關"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch09_08_ph_assumption"
+  scene_class: "Ch09PHAssumptionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      前兩集我們算出一堆 HR、還畫成漂亮的森林圖。
+      但這裡有個殘酷的真相：那些 HR 全都建立在一個沒明講的假設上。
+      這一集就是來把這個假設攤開來檢查——比例風險假設。
+      過了這一關，你前面的分析才真正算數；沒過，那些 HR 就得打個大問號。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "what_is_ph"
+    narration: >
+      Cox 迴歸有個關鍵前提叫比例風險假設，PH。
+      它假設兩組之間的 hazard 比值，在整段追蹤期間都保持常數，
+      白話說就是：那個 HR「從頭到尾都不隨時間變」。
+      成立的樣子是暴露組一路都比對照組快 1.5 倍；
+      違反的樣子是前期快得要命、後期反而追平甚至變慢。
+    animation: "show_what_is_ph"
+    pause_after: 0.5
+
+  - id: "ph_curves"
+    narration: >
+      有個很好用的視覺檢查：把每一組畫成 log 負 log S 曲線。
+      如果 PH 成立，這兩條曲線會大致平行，永遠保持一樣的間距——像左邊這張。
+      如果 PH 違反，這兩條曲線會交叉，代表誰快誰慢在中途翻盤了——像右邊這張。
+      看到交叉，心裡就要響警報：這個因子的效應會隨時間變。
+    animation: "show_ph_curves"
+    pause_after: 0.5
+
+  - id: "check_code"
+    narration: >
+      不想只靠肉眼？lifelines 幫你把檢定包成一行 check_assumptions。
+      注意要餵「同一份」訓練用的 cox_df 進去，
+      它會對每個變項做 Schoenfeld 殘差檢定，印出各自的 p 值，
+      還會貼心地把違反的變項列出來、附上建議。show_plots 設 False 就只印文字結論。
+    animation: "show_check_code"
+    code: |
+      # same cox_df used to fit the model
+      cph.check_assumptions(cox_df, show_plots=False)
+      # prints a Schoenfeld test p-value per variable
+      # lists any variable that violates PH + advice
+    pause_after: 0.5
+
+  - id: "read_check"
+    narration: >
+      結果怎麼讀？如果印出 No violation detected，恭喜，全部通過，前面的 HR 可以放心用。
+      如果某個變項的 p 值小於 0.05，代表它違反了 PH，它的 HR 會隨時間變化。
+      要是你有畫圖，Schoenfeld 殘差對時間出現明顯趨勢，也是違反的訊號。
+      提醒一句：事件少的時候檢定力本來就低，沒偵測到違反不代表一定沒事，務必搭配分組 KM 曲線一起看。
+    animation: "show_read_check"
+    pause_after: 0.5
+
+  - id: "remedies"
+    narration: >
+      萬一真的違反了，別慌，有四帖藥可以救。
+      第一帖，把違反的變項拿去分層，用 strata，讓它的 baseline hazard 自由變化。
+      第二帖，改用時變係數，讓那個變項的效應隨時間改變。
+      第三帖，在模型裡加一個「該變項與時間的交互作用」項。
+      第四帖，乾脆拆時間段分開跑，或者整個改用繞開 PH 的 AFT 模型。
+    animation: "show_remedies"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      PH 假設三個重點收尾。
+      一，Cox 的 HR 押在「比值不隨時間變」這個前提上，這是它的命根子。
+      二，驗證要 check_assumptions 加上分組 KM 有沒有交叉，兩個一起看才安心。
+      三，一旦違反，就分層、時變係數、或加上與時間的交互作用去補救。
+      恭喜你，存活分析的完整武器包，正式到手！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：結核病長期追蹤，風險會隨時間變！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tb"
+    narration: >
+      結核病最適合示範 PH 違反。病人一追蹤就是好幾年，
+      早期跟晚期的死亡風險結構根本不一樣——治療早期危險、後期又是另一回事。
+      把資料丟進 check_assumptions，很可能就跳出違反。
+      這時候把像 HIV 狀態這種會隨時間翻盤的變項拿去 strata 分層，模型才站得住腳。
+    animation: "show_extra_tb"
+    code: |
+      # TB followed for years: risk changes over time
+      cph.fit(tb, "years", "death")
+      cph.check_assumptions(tb, show_plots=False)  # PH violated
+      cph.fit(tb, "years", "death", strata=["hiv_status"])
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      PH 假設三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_never_check"
+    narration: >
+      第一個地雷：fit 完 Cox 就直接拿 HR 去報告，從來沒檢查過 PH。
+      這就像蓋房子不驗地基，HR 看起來再漂亮都可能是假的。
+      養成習慣：fit 完馬上 check_assumptions，
+      把地基驗過再談上面的數字，這是存活分析的基本禮貌。
+    animation: "show_blindspot_never_check"
+    error_code: 'cph.fit(df, "t", "e")  # HR trusted'
+    correct_code: 'cph.check_assumptions(df)  # check!'
+    pause_after: 0.5
+
+  - id: "blindspot_wrong_df"
+    narration: >
+      第二個地雷：check_assumptions 餵錯資料，丟進去一份不一樣的 DataFrame。
+      這個檢定必須用「當初訓練模型的同一份資料」，殘差才對得上。
+      餵成另一份、或欄位對不起來的資料，檢定結果根本沒意義。
+      記得：fit 用哪份、check 就用哪份。
+    animation: "show_blindspot_wrong_df"
+    error_code: 'cph.check_assumptions(new_df)'
+    correct_code: 'cph.check_assumptions(train_df)  # same'
+    pause_after: 0.5
+
+  - id: "blindspot_report_constant_hr"
+    narration: >
+      第三個地雷：檢定明明說某變項違反了，你還是照樣報一個「單一固定 HR」。
+      違反的意思就是它的效應會隨時間變，硬報一個常數 HR 等於在騙人。
+      正確做法是先補救——把它拿去 strata 分層，或改成時變係數——
+      再去解讀模型，這樣的 HR 才誠實。
+    animation: "show_blindspot_report_constant_hr"
+    error_code: 'hr = cph.summary["exp(coef)"]  # violated'
+    correct_code: 'cph.fit(df, "t", "e", strata=["sev"])'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      描述、推論、迴歸、診斷——存活分析這四步，你從第一集一路走到這裡，全走過一遍了！
+      現在你不只會畫 KM、跑 log-rank、算 Cox 的 HR、畫森林圖，
+      還會驗證 PH 假設、在它違反時出手補救。這一整套武器，都是你的了。
+      第四幕存活分析，正式完結，我們下一章再會！
+    animation: "show_outro"
+    pause_after: 1.0

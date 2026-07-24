@@ -1,0 +1,129 @@
+meta:
+  chapter: "09"
+  concept: "censoring"
+  title: "設限資料：碼表還在跑，觀察就結束了"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch09_02_censoring"
+  scene_class: "Ch09CensoringScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集我們用手機電池搞懂了存活分析的直覺。這一集要把最關鍵、也最容易搞砸的一招講清楚：設限資料。
+      學會它，你就不會把一半的資料白白丟掉，這在流行病學裡可是價值連城的一課。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "stopwatch"
+    narration: >
+      先想像你在每個病人身邊放一個碼表。發病那天按下 start，死亡那天按下 stop，
+      中間跑掉的天數，就是「存活時間」。start 到 stop，就這麼簡單。
+      在本案，start 是發病日，stop 就是死亡日。
+    animation: "show_stopwatch"
+    pause_after: 0.5
+
+  - id: "event_flag"
+    narration: >
+      但不是每個人都會按到 stop。所以我們用一個旗標 event 記錄結局：
+      死亡就寫 1，代表我們在等的事件真的發生了；還活著就寫 0，代表事件還沒發生，我們只看到一半。
+      這個 1 跟 0，是整個存活分析的命根子，千萬別填反。
+    animation: "show_event_flag"
+    pause_after: 0.5
+
+  - id: "censor_timeline"
+    narration: >
+      來看三個病人。第一位發病後死亡，碼表有按到 stop，event 填 1。
+      第二位撐到我們觀察結束都還活著，event 填 0，這叫「右設限」。
+      第三位中途失聯，我們也只知道他至少撐到那天，一樣是設限。
+      重點是——設限不是遺漏值，它帶著「至少撐了這麼久」的寶貴資訊。
+    animation: "show_censor_timeline"
+    pause_after: 0.5
+
+  - id: "build_code"
+    narration: >
+      寫成程式就三行。第一行做 event 旗標：outcome 是 dead 就是 1。
+      第二行算時間：結束日減發病日的天數。第三行餵給 KaplanMeierFitter，時間放前面，event 放進 event_observed。
+      設限的人 lifelines 會自動幫你顧好，你什麼都不用多做。
+    animation: "show_build_code"
+    code: |
+      cases["event"] = (cases["outcome"] == "dead").astype(int)
+      cases["time"] = (end_date - onset_date).dt.days
+      kmf.fit(cases["time"], event_observed=cases["event"])
+    pause_after: 0.5
+
+  - id: "why_not_drop"
+    narration: >
+      很多新手會想：活著的人沒發生事件，乾脆丟掉不是比較乾淨嗎？千萬不要！
+      丟掉設限，等於把撐最久的好體質全刪光，存活時間會被嚴重低估，還會生出選擇偏差。
+      記住這句話：設限資料是資產，不是垃圾。
+    animation: "show_why_not_drop"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三個重點收工。一，存活資料要三樣東西：時間、事件旗標、還有誰是設限。
+      二，event 死亡填 1、存活填 0，別填反。
+      三，設限一定要留、一定要餵進去，一個都不能丟。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：結核病的治療世代研究！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tb"
+    narration: >
+      結核病要吃半年以上的藥，追蹤期很長，中途搬家、換醫院、失去聯絡是家常便飯。
+      這些失聯的病人不是治療失敗，我們只是沒看到結局——他們就是最典型的設限。
+      同一套邏輯：event 填 0、時間照算，一個病人都不浪費。
+    animation: "show_extra_tb"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      設限資料三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：把存活者的時間直接填 0。
+      這等於說他發病當天就結束，存活時間會被壓到谷底。
+      正解是填「實際觀察到的天數」，也就是觀察結束日減發病日。
+    animation: "show_blindspot_zero_time"
+    error_code: 'cases.loc[alive, "time"] = 0'
+    correct_code: 'cases.loc[alive, "time"] = obs_days'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：event 旗標填反了，把死亡當 0、存活當 1。
+      這一反，整條 KM 曲線的意義就整個顛倒。
+      記住：event 等於 1 永遠是「我們在等的那個事件」，也就是死亡。
+    animation: "show_blindspot_flag_reversed"
+    error_code: 'event = (outcome != "dead").astype(int)'
+    correct_code: 'event = (outcome == "dead").astype(int)'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：乾脆把設限的人整列刪掉。
+      這是最貴的錯誤，撐最久的人被你刪光，結論全歪。
+      正確是連時間帶 event 一起餵進 fit，設限自然被納入。
+    animation: "show_blindspot_drop_censored"
+    error_code: "cases = cases[cases.event == 1]"
+    correct_code: "kmf.fit(cases.time, cases.event)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      碼表、event 旗標、設限，三件事你都拿捏住了！
+      下一集我們正式把資料畫成 Kaplan-Meier 曲線，看那條會下樓梯的線到底怎麼讀。
+      我們下集見！
+    animation: "show_outro"
+    pause_after: 1.0
