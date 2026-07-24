@@ -1,0 +1,144 @@
+meta:
+  chapter: "14"
+  concept: "export_pptx"
+  title: "Export a PPTX Deck in One Click: python-pptx Drops Charts into Slides"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch14_04_export_pptx"
+  scene_class: "Ch14ExportPptxScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      The analysis is done and the conclusion is written, but what the boss wants to see usually
+      isn't a notebook, it's a deck they can present as is. The traditional approach is screenshotting
+      the charts one by one and pasting them into PowerPoint, and the moment the data updates you
+      have to redo the whole set. This episode teaches you to use python-pptx to drop a chart into a
+      slide with a single line of code.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_export"
+    narration: >
+      Why export programmatically? Because manually screenshotting and pasting into slides has three
+      pain points: it's slow, it's easy to paste the wrong version, and a data update means redoing it.
+      With python-pptx you assemble the deck directly, no copy-paste at all, and it's reproducible.
+      Rerun the notebook once, and the deck is regenerated with the latest data.
+    animation: "show_why_export"
+    pause_after: 0.5
+
+  - id: "bytesio"
+    narration: >
+      Step one is the key magic: save the matplotlib figure to a "PNG in memory," never touching the
+      disk. Use io.BytesIO to open an in-memory buffer, fig.savefig writes into it, then buf.seek(0)
+      rewinds the cursor back to the start. That buf can drop straight into a slide, no need to write
+      to disk first.
+    animation: "show_bytesio"
+    code: |
+      import io
+      buf = io.BytesIO()
+      fig.savefig(buf, format="png", dpi=150)
+      plt.close(fig)
+      buf.seek(0)   # rewind before reading
+    pause_after: 0.5
+
+  - id: "pptx_code"
+    narration: >
+      Then comes the main act of python-pptx. Presentation opens a new deck, add_slide with layout 0
+      makes a title slide and layout 5 makes a blank slide, then shapes.add_picture pastes that
+      in-memory PNG right on, and finally prs.save writes it out as a pptx.
+    animation: "show_pptx_code"
+    code: |
+      from pptx import Presentation
+      from pptx.util import Inches
+      prs = Presentation()
+      t = prs.slides.add_slide(prs.slide_layouts[0])
+      t.shapes.title.text = "Legionella cluster SitRep"
+      s = prs.slides.add_slide(prs.slide_layouts[5])
+      s.shapes.add_picture(buf, Inches(0.5), Inches(1.2))
+      prs.save("legionella_sitrep.pptx")
+    pause_after: 0.5
+
+  - id: "slide_mockup"
+    narration: >
+      Once it runs, here's what you get: one title slide, plus a content slide holding a shower
+      versus attack rate bar chart with a little key-numbers table beside it. Data changed? Rerun it
+      once, this slide updates automatically, and the numbers stay forever in sync with the analysis.
+    animation: "show_slide_mockup"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways. One, io.BytesIO lets the chart drop into the deck without ever hitting disk.
+      Two, python-pptx's add_slide plus add_picture are the two core moves. Three, programmatic
+      export means one rerun, consistent format, and zero hand-made errors.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: an auto-generated weekly flu SitRep deck!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_auto_deck"
+    narration: >
+      Wrap the export in a function, feed it a list of figures, and it auto-builds the whole deck,
+      one figure per slide. Every week the flu surveillance data updates, a scheduler runs this
+      function once, and a consistently formatted situation-report deck grows itself. This is the
+      prototype of an automated situation report.
+    animation: "show_extra_auto_deck"
+    code: |
+      def build_sitrep(figs):
+          prs = Presentation()
+          for fig in figs:
+              s = prs.slides.add_slide(prs.slide_layouts[5])
+              s.shapes.add_picture(to_png(fig), Inches(0.5))
+          prs.save("weekly_flu_sitrep.pptx")
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for PPTX export!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: forgetting buf.seek(0) before inserting the picture. A BytesIO can only
+      be read once, and after the last read the cursor sits at the end of the file; forget to rewind,
+      and the slide inserts a blank image. Always seek(0) before inserting the figure.
+    animation: "show_blindspot_forgot_seek"
+    error_code: "slide.shapes.add_picture(buf)"
+    correct_code: "buf.seek(0); slide.shapes.add_picture(buf)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: still manually screenshotting to a file and then inserting it. The whole
+      point of python-pptx is not touching the disk. Save straight into BytesIO with fig.savefig and
+      skip the screenshot step entirely.
+    animation: "show_blindspot_manual_screenshot"
+    error_code: 'img = screenshot("chart.png")'
+    correct_code: 'fig.savefig(buf, format="png")'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: forgetting plt.close(fig) after drawing the chart. When batch-producing
+      lots of figures, unclosed figures keep eating memory and it blows up halfway through. Once you've
+      saved the figure, remember to close it.
+    animation: "show_blindspot_forgot_close"
+    error_code: "fig.savefig(buf)"
+    correct_code: "fig.savefig(buf); plt.close(fig)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      The deck is handled! But for official filing, the boss still wants a Word report. Next episode
+      we use python-docx to take the same charts and numbers and assemble them into a formal report
+      document with headings, a table, and an embedded figure. See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,128 @@
+meta:
+  chapter: "14"
+  concept: "report_structure"
+  title: "The Eight Report Sections: Each One Maps to a Chapter's Skill"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch14_02_report_structure"
+  scene_class: "Ch14ReportStructureScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode we threaded the whole toolbox into one narrative line. This episode we fit that
+      line into a "standard format": the eight sections of a cluster investigation report. With a
+      fixed structure, you won't drop anything, and the boss can spot exactly what they're after at
+      a glance.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_structure"
+    narration: >
+      Why fix the structure? Because an investigation report is an official document meant to be
+      "followed," not a diary entry. With the standard eight-section format, every report you
+      produce has a consistent layout, readers know which section holds what, and you yourself never
+      drop a key section like the "action items."
+    animation: "show_why_structure"
+    pause_after: 0.5
+
+  - id: "eight_paragraphs"
+    narration: >
+      Let's look at the skeleton of this report. Eight sections: it starts with background and
+      notification, moves to methods and the line list, then descriptive epidemiology, analytic
+      epidemiology, on to time and space analysis and advanced analysis, the second-to-last section
+      is causal assessment and advice, and the final section is the conclusion and action items.
+      Behind every one of them is a concrete tool taught in some earlier chapter.
+    animation: "show_eight_paragraphs"
+    pause_after: 0.5
+
+  - id: "section_chapter_map"
+    narration: >
+      Map them back one by one. Background and notification is the case definition from Chapter 0
+      and Chapter 4; the methods section is line-list cleaning from Chapter 2; descriptive
+      epidemiology uses the person-place-time distribution from Chapters 2 through 4; analytic
+      epidemiology brings out the 2x2 tables, stratified analysis, and adjusted odds ratios from
+      Chapters 3, 5, and 6; and the time-and-space section is Chapters 7 and 8.
+    animation: "show_section_chapter_map"
+    pause_after: 0.5
+
+  - id: "consistency"
+    narration: >
+      The biggest win of a fixed format is that it's "reproducible and easy to compare." This
+      report and the next one look the same, so the boss flips through them fast; and when comparing
+      across cases, you can match them section by section. This is exactly the extension of that line
+      from Chapter 13: same menu, same result no matter who cooks.
+    animation: "show_consistency"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways. One, a standard investigation report has eight fixed sections. Two, each
+      section maps to a skill from some earlier chapter. Three, a fixed format makes the report
+      reproducible, comparable, and complete. The skeleton is set, so next we just fill in the
+      numbers.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: pour a foodborne cluster report into these eight sections!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_foodborne"
+    narration: >
+      Switch to a year-end banquet food poisoning. The background section writes "many diarrhea
+      reports after the banquet"; the methods section is the line list; the descriptive section
+      draws the onset-time curve; the analytic section runs food-specific attack rate 2x2 tables to
+      catch which dish; the time-and-space section looks at the incubation-period distribution; and
+      the causal section points to that plate of sashimi. Same eight sections, not one of them
+      missing.
+    animation: "show_extra_foodborne"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for report structure!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: no fixed structure, just writing whatever comes to mind. Readers can't
+      find the point, and you easily drop a section yourself. Use the standard eight sections in a
+      fixed order, and anyone can read it smoothly.
+    animation: "show_blindspot_no_structure"
+    error_code: "write(sections_in_random_order)"
+    correct_code: "write(SITREP_8_SECTIONS)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: the report only has background, methods, and results, and it's missing
+      the most important "conclusion and action items" section. With no recommendations, the boss
+      finishes reading and just "notes it," but has no idea what to do next.
+    animation: "show_blindspot_no_action_section"
+    error_code: "sections = [bg, methods, results]"
+    correct_code: "sections += [conclusion, actions]"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: blending descriptive and analytic epidemiology into one mush. Lay
+      out the person-place-time distribution clearly first, then move into the 2x2 tables and
+      regression. Describe first, analyze second, so the reader can follow the logic.
+    animation: "show_blindspot_mix_desc_analytic"
+    error_code: "mix(descriptive, analytic)"
+    correct_code: "describe_first(); then_analyze()"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      We've got the skeleton, and the sections map to the chapters. Next episode we drill into the
+      most crucial section of all, the key-findings summary, and teach you how to distill an entire
+      investigation into the few numbers the boss most wants to see. See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

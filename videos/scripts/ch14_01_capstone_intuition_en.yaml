@@ -1,0 +1,142 @@
+meta:
+  chapter: "14"
+  concept: "capstone_intuition"
+  title: "Plain-Language Capstone: Assemble the Whole Toolbox into One Submittable Report"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch14_01_capstone_intuition"
+  scene_class: "Ch14CapstoneIntuitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Congratulations, you've reached the very last chapter of the book! This episode is a
+      plain-language capstone recap. We won't learn a single new trick. Instead, we lay every
+      tool from the past thirteen chapters out on the table and assemble them into an outbreak
+      investigation report you could send straight to the boss. Ready to plate that whole toolbox
+      into a full-course meal?
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "detective_recap"
+    narration: >
+      An investigation is really just detective work. First, like in Chapter 2, you tidy messy
+      data into a clean line list, then compute attack rates and draw the epidemic curve to sketch
+      the outline of the case, and next rule out confounders, those false witnesses, to pin down
+      the time and the place. What this chapter is about is the final act of the detective movie:
+      laying all the evidence out on the conference table, telling the full story, and stating the
+      verdict.
+    animation: "show_detective_recap"
+    pause_after: 0.5
+
+  - id: "toolbox_meal"
+    narration: >
+      Here's the key: a box of tools sitting there never turns itself into a meal.
+      Someone has to decide which dish goes with which sauce and serve up a spread that's actually
+      fit to present. An investigation report works the same way: each chapter's skill is an
+      ingredient or a utensil, and this chapter's job is to assemble them, plate them, and serve
+      them up.
+    animation: "show_toolbox_meal"
+    pause_after: 0.5
+
+  - id: "tool_mapping"
+    narration: >
+      Let's run through the menu. Line-list cleaning is prepping the ingredients, attack rate is
+      the appetizer that gives the overview first, stratified analysis debones the case to pick out
+      the confounders, logistic regression is the chef's special sauce that adjusts for several
+      factors at once, spatial analysis handles the plating and marks the hotspots, and causal
+      inference is the chef's signature, turning "there's an association" into "we have reason to
+      believe it's the cause."
+    animation: "show_tool_mapping"
+    pause_after: 0.5
+
+  - id: "narrative_thread"
+    narration: >
+      The most important mindset: these numbers aren't independent islands, they're links on the
+      same narrative thread. The shape of the epidemic curve points to a common source, the spatial
+      hotspot points to the water pipes on a specific floor, the exposure analysis rules out
+      competing hypotheses, and finally the causal call ties the whole thread up into a single
+      sentence you can write into the report.
+    animation: "show_narrative_thread"
+    pause_after: 0.5
+
+  - id: "actionable"
+    narration: >
+      One more reminder: no pile of charts and no fancy model will make a report persuasive on its
+      own. A report's real value is that every number carries context and every conclusion carries
+      an action item. Don't dump a stack of charts on the boss, give them an answer they can make a
+      decision from.
+    animation: "show_actionable"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways, all packaged up. One, this chapter teaches no new tricks; it threads the
+      first thirteen chapters into one narrative line. Two, the toolbox needs someone to assemble
+      and plate it before it becomes a meal. Three, a good report equals numbers with context plus
+      actionable recommendations. Congratulations, you can now produce a complete investigation
+      report!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: switch the scenario and write a full measles cluster report!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_measles"
+    narration: >
+      Suppose measles breaks out at an elementary school. The exact same workflow carries over
+      untouched: clean the line list, compute the attack rate, draw the epidemic curve to check for
+      a single source, use vaccination history for the stratified analysis, map out the hotspots by
+      class, and finally let the causal call point to some index case. See? Switch the disease, and
+      you don't have to swap out a single tool.
+    animation: "show_extra_measles"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for investigation reports!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: listing numbers with no context. You write "attack rate 43%," and the
+      boss asks, "Is that high?" Every number needs a comparison baseline, like the national case
+      fatality or last year's attack rate, before it means anything.
+    animation: "show_blindspot_no_context"
+    error_code: 'slide.add(f"attack rate = {ar:.1%}")'
+    correct_code: 'slide.add(f"{ar:.1%} vs natl {base:.1%}")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: cramming in every chart with no focus. It's not "if you computed it,
+      throw it in." Pick three to five key charts, each with a clear conclusion; putting in too many
+      actually dilutes the point.
+    animation: "show_blindspot_too_many_charts"
+    error_code: "for fig in all_figs: deck.add(fig)"
+    correct_code: "for fig in key_figs[:5]: deck.add(fig)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: finishing the analysis and calling it a day, with no action items.
+      A report should let people "act on it," not just "note it." You must have a concrete
+      intervention recommendation; that's the whole reason the report exists.
+    animation: "show_blindspot_no_action"
+    error_code: "report = findings"
+    correct_code: "report = findings + action_items"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      This episode threaded the whole toolbox into one narrative line. Next episode we'll fit that
+      line into a standard format, the eight sections of an investigation report, and see which
+      chapter's skill each section maps to. See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,123 @@
+meta:
+  chapter: "14"
+  concept: "key_findings"
+  title: "The Key-Findings Summary: Distill the Whole Investigation into the Numbers the Boss Wants"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch14_03_key_findings"
+  scene_class: "Ch14KeyFindingsScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      The skeleton is built, and now we fill in the most crucial section of all: the key-findings
+      summary. This section is the heart of the whole report, because the boss is busy and might
+      read only these few lines. Your job is to distill the entire investigation into the handful of
+      numbers they most want to see.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "what_key_findings"
+    narration: >
+      A key-findings summary condenses a whole investigation into one paragraph of "key numbers."
+      It's not dumping out every analysis result; it's hand-picking a few key numbers that can hold
+      up the conclusion: how big the scale is, how severe it is, and what the most suspicious
+      exposure is.
+    animation: "show_what_key_findings"
+    pause_after: 0.5
+
+  - id: "the_numbers"
+    narration: >
+      Let's look at the key numbers for this nursing home cluster. 280 residents, 121 infected, an
+      attack rate of 43.2%; 19 deaths, a case fatality of 15.7%; and the main risk factor is shower
+      use. Six numbers, one table, and you've laid out the backbone of the whole outbreak.
+    animation: "show_the_numbers"
+    pause_after: 0.5
+
+  - id: "context_matters"
+    narration: >
+      But numbers just sitting there have no soul. Is 43.2% high? What about a case fatality of
+      15.7%? Every key number needs a comparison baseline: Legionnaires' disease usually has a case
+      fatality of about 10%, and our 15.7% here is on the high side, and only then does the number
+      "tell a story."
+    animation: "show_context_matters"
+    pause_after: 0.5
+
+  - id: "one_line_conclusion"
+    narration: >
+      Finally, gather these numbers into a single sentence. The epidemic curve points to a common
+      source, the spatial hotspot lands on a specific floor, and the adjusted odds ratio for shower
+      exposure is still significant. Conclusion: the shower water supply system is the most likely
+      source of infection. One sentence, and the boss can make the call.
+    animation: "show_one_line_conclusion"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways. One, the key findings are hand-picked key numbers, not everything dumped out.
+      Two, every number needs a comparison baseline to mean anything. Three, land it on a single
+      actionable conclusion. Write this section well, and the whole report gets a soul.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a one-slide summary for the boss!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_boss_slide"
+    narration: >
+      Imagine a COVID-19 outbreak, and the boss gives you the space of just one slide. What would you
+      put on it? Daily new cases, the seven-day average, the positivity rate, the share of severe
+      cases, plus one line: "trend rising, recommend opening more testing sites." Four numbers and one
+      recommendation: that's the spirit of a key-findings summary, less is more.
+    animation: "show_extra_boss_slide"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for key findings!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: tossing out a number with no comparison baseline. "Case fatality 15.7%"
+      on its own gives no feel; write it as "15.7%, higher than the usual 10%." With a baseline, the
+      number carries weight.
+    animation: "show_blindspot_no_context"
+    error_code: 'show(f"CFR {cfr:.1%}")'
+    correct_code: 'show(f"CFR {cfr:.1%} vs {natl:.1%}")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: getting the denominator wrong. The denominator for case fatality is
+      "the number infected," not "the total number of residents"; the attack rate is the one that
+      uses the total headcount as its denominator. Get the denominator off by one, and the number
+      changes completely.
+    animation: "show_blindspot_wrong_denominator"
+    error_code: "cfr = deaths / n_total"
+    correct_code: "cfr = deaths / n_infected"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: cherry-picking the numbers that favor you and treating an uncorrected
+      crude odds ratio as the conclusion. Use the adjusted odds ratio after controlling for
+      confounders, and only then does the conclusion hold up.
+    animation: "show_blindspot_cherry_pick"
+    error_code: "finding = crude_or"
+    correct_code: "finding = adjusted_or  # ctrl confounders"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      The key findings are written and the conclusion is in place. But what the boss usually wants to
+      see isn't a notebook. Next episode we'll teach you to use python-pptx to export all these charts
+      and numbers into a deck in one click. See you next time!
+    animation: "show_outro"
+    pause_after: 1.0
