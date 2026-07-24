@@ -1,0 +1,135 @@
+meta:
+  chapter: "12"
+  concept: "dag"
+  title: "Drawing Causation with a DAG: Confounder, Mediator, Collider - Three Shapes"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch12_03_dag"
+  scene_class: "Ch12DAGScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode we kept saying out loud "this is a confounder, that's a mediator,"
+      but causal inference's most powerful move is to "draw" these relationships out.
+      This episode's star arrives: the DAG, the directed acyclic graph.
+      Understand the difference between its three shapes and you've learned the single most important lesson in causal inference.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "dag_basics"
+    narration: >
+      First, get to know the tool. A DAG is a directed acyclic graph.
+      Arrows show "who affects whom," and the direction of the arrow is the direction of causation.
+      "Acyclic" means you can't loop back around to yourself, because a cause can never be its own effect.
+      A reminder: the hard part of drawing a DAG is never picking the software, it's "thinking clearly about who affects whom before you draw."
+    animation: "show_dag_basics"
+    pause_after: 0.5
+
+  - id: "fork"
+    narration: >
+      The first shape, the confounder, looks like a fork.
+      C has arrows pointing to both A and Y, meaning it's the "common cause" of exposure and outcome, the culprit hiding in the background.
+      Here, that dashed association between A and Y is fake.
+      How to handle it: you must adjust for it, by stratifying or by regression adjustment, exactly what we did in Chapters 5 and 6.
+    animation: "show_fork_confounder"
+    pause_after: 0.5
+
+  - id: "chain"
+    narration: >
+      The second shape, the mediator, looks like a chain.
+      A affects M first, then M affects Y; M sits right in the middle of the causal path from exposure to outcome, it's the messenger.
+      The rule is the exact opposite of the confounder: when you want the "total effect," never adjust for M,
+      because adjusting shuts the path off and underestimates the effect; only when you want the "direct effect" alone do you adjust for M.
+    animation: "show_chain_mediator"
+    pause_after: 0.5
+
+  - id: "collider"
+    narration: >
+      The third shape, the collider, has two arrows "crashing" into the same point at once.
+      A points to K and Y also points to K, so K is pointed to by both exposure and outcome; it's a classic selection trap.
+      The rule is the most absolute of all: never adjust for K, and never analyze only some subset of K either.
+      Why so strict? Next episode's Berkson's paradox will show you just how frightening it is.
+    animation: "show_collider"
+    pause_after: 0.5
+
+  - id: "nursing_home_map"
+    narration: >
+      Now map the three shapes back onto the nursing home.
+      Confounder: functional status affects both shower use and infection, the one we caught and adjusted for in Chapter 5.
+      Mediator: water-system contamination can only affect infection through the shower aerosol, and that aerosol is the mediator.
+      Collider: hospitalization is pointed to by both severity and other factors, a classic collider, so don't analyze only the hospitalized.
+    animation: "show_nursing_home_map"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Lock in all three shapes at once.
+      Confounder fork, C points to A and Y: do adjust.
+      Mediator chain, A to M to Y: don't adjust when you want the total effect.
+      Collider, A and Y both point to K: never adjust.
+      It's the same extra third variable, but change the arrow direction and the handling flips completely.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: the smoking, tar, lung-cancer mediator chain.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_smoking"
+    narration: >
+      This is the epi textbook's favorite mediator example. Smoking produces tar, tar deposits in the lungs and then triggers lung cancer,
+      a beautiful causal chain: smoking to tar to lung cancer. Tar is precisely the mediator.
+      If you want to assess "smoking's overall harm to the lungs" but get itchy fingers and adjust for tar too,
+      you've forcibly shut off this causal path and will badly underestimate smoking's total effect.
+    animation: "show_extra_smoking"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three DAG blind spots!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: adjusting away a mediator as if it were a confounder.
+      Tossing one more m into the regression looks careful, but it actually shuts off the causal path, and the total effect gets underestimated.
+      The right move is to draw the DAG first, sort out who the mediator is, and leave M outside when you want the total effect.
+    animation: "show_blindspot_adjust_mediator"
+    error_code: "smf.ols('y ~ a + m')  # m is mediator"
+    correct_code: "smf.ols('y ~ a')  # total effect"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: dumping every variable you've got into the regression without ever drawing a DAG.
+      More adjustment isn't necessarily cleaner; if a mediator or collider is hiding in there, you actually manufacture bias.
+      The right move is to draw the DAG first, then pick out just the variables you "should adjust for" based on the structure.
+    animation: "show_blindspot_no_dag"
+    error_code: "smf.ols('y ~ a + b + c + d + e')"
+    correct_code: "controls = pick_from_dag(my_dag)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: adjusting for a collider too.
+      Put a collider like hospitalized, pointed to by both sides, into your regression, and you open up a fake association.
+      The right move is to use the DAG to recognize the collider and keep it far, far away from your regression.
+    animation: "show_blindspot_adjust_collider"
+    error_code: "smf.ols('y ~ a + hospitalized')"
+    correct_code: "smf.ols('y ~ a')  # keep collider out"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Three shapes, two opposite rules, and you've now got the map of causal inference in hand.
+      The most treacherous of them, the one most likely to sink you, is the collider.
+      Next episode we'll devote a whole episode to it, using Berkson's paradox plus a Sanxia dengue DAG sketch,
+      to let you watch with your own eyes how "analyzing only hospitalized patients" gives birth to a fake association. See you next episode!
+    animation: "show_outro"
+    pause_after: 1.0

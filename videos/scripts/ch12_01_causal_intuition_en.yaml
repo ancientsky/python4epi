@@ -1,0 +1,125 @@
+meta:
+  chapter: "12"
+  concept: "causal_intuition"
+  title: "The Causal Detective, Plain and Simple: If We Ran It Again, Would They Still Get Sick?"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch12_01_causal_intuition"
+  scene_class: "Ch12CausalIntuitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Do words like "causal inference," "DAG," and "counterfactual" sound impossibly hard? Don't worry.
+      In this episode I'm swapping the whole toolkit of causal inference for your favorite scene in any mystery show: a detective cracking a case.
+      By the end you'll realize, oh, every scary-sounding term is something the detective was already using all along.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "crime_scene"
+    narration: >
+      Step onto the crime scene first. A good detective never closes a case just because "two things happened at the same time."
+      The weather report loves to say: in the months when ice cream sells best, more people drown too.
+      Would you charge ice cream as the killer behind those drownings? Of course not.
+      The real culprit is someone else entirely, the "summer" hiding in the background: when it gets hot, everyone loves both cold treats and jumping in the water.
+    animation: "show_crime_scene"
+    pause_after: 0.5
+
+  - id: "counterfactual_spell"
+    narration: >
+      A true causal detective cracks the case with one magic spell:
+      "If we ran it again and took this suspect away, would it still happen?"
+      Picture the same person, the same setting, with the only difference being whether they were exposed,
+      then compare the outcomes of those two parallel worlds. That spell has a formal name: the counterfactual.
+    animation: "show_counterfactual_spell"
+    pause_after: 0.5
+
+  - id: "three_traps"
+    narration: >
+      While working a case, watch out for three roles that love to lead you astray.
+      A confounder is the real culprit hiding in the background, nudging both exposure and outcome, just like that summer.
+      A mediator is the messenger passing the story downstream; arrest it by mistake and you'll miss the real effect entirely.
+      A collider is an illusion that only appears among the cases that got tested, and this role must never be adjusted for.
+    animation: "show_three_traps"
+    pause_after: 0.5
+
+  - id: "glossary"
+    narration: >
+      Now translate the detective's handbook into causal-inference terms, one cell at a time.
+      Two things happening together is association, not causation; "would it still happen if you removed it" is the counterfactual.
+      The hidden culprit is the confounder, which you should adjust for; the messenger is the mediator, so don't over-adjust it;
+      and the illusion from selection is the collider, which you must never adjust for. Memorize this table and you're a causal detective.
+    animation: "show_glossary"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let me pack this whole special into a single breath.
+      First, association isn't causation; moving together doesn't mean one causes the other.
+      Second, always ask the counterfactual first: if this thing hadn't happened, would the same group have a different outcome?
+      Third, stay alert for the three traps at all times: confounder, mediator, and collider.
+      The DAGs and formulas in the next few episodes are really just tools that turn this spell into something you can actually compute.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: does coffee really "cause" cancer?
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_coffee"
+    narration: >
+      This is a famous "wrongful conviction" in the history of epidemiology. Early studies found that coffee lovers had more pancreatic cancer,
+      and for a while coffee took the blame. But the moment a detective dug in, they found it: heavy coffee drinkers were often heavy smokers too.
+      The real culprit was smoking, a confounder; once you adjust for smoking, the link between coffee and pancreatic cancer almost completely vanishes.
+      See? The same move, counterfactual plus find-the-real-culprit, cracks the case in a brand-new setting too.
+    animation: "show_extra_coffee"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for the causal detective!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: taking "moving together" directly as "one causes the other."
+      Ice cream rises, drownings rise, so you write down cause equals one; that's the most classic misjudgment.
+      The right move is to ask first: is there a common cause behind it, like that summer, secretly pulling the strings?
+    animation: "show_blindspot_corr_is_cause"
+    error_code: "if ice_cream_up and drown_up: cause=1"
+    correct_code: "check_common_cause(summer)  # confounder"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: rushing to close the case on a single association and forgetting the counterfactual.
+      Seeing "people who showered got sick more often" and banging the gavel right there is dangerous.
+      A real detective asks one more question: if we took the shower away, would the same person still get sick?
+    animation: "show_blindspot_no_counterfactual"
+    error_code: "close_case('shower is the killer')"
+    correct_code: "ask('remove it, still sick?')  # cf"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: forgetting to find the hidden hand and convicting the exposure straight away.
+      Concluding without adjusting for confounders easily frames the innocent and lets the real culprit walk.
+      The right move is to adjust for the possible confounders first, then look back at whether the exposure actually has an effect.
+    animation: "show_blindspot_forget_confounder"
+    error_code: "blame(exposure)  # ignored confounders"
+    correct_code: "blame(exposure, after_adjust=conf)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      That's the causal detective's intuition, built up and ready.
+      Next episode we'll write that spell a bit more formally: how association actually turns into causation,
+      how to write the counterfactual out in math, and we'll walk through a real braised-chicken food-poisoning investigation.
+      Ready to level up to the formal version? See you next episode!
+    animation: "show_outro"
+    pause_after: 1.0

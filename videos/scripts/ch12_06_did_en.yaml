@@ -1,0 +1,139 @@
+meta:
+  chapter: "12"
+  concept: "did"
+  title: "Difference-in-Differences (DiD): Cases Dropped After the Intervention - Was It Really You?"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch12_06_did"
+  scene_class: "Ch12DiDScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode we computed "how many people we could save," but that all rested on the assumption that causation holds.
+      This episode we play for real: the ace of policy evaluation, difference-in-differences, or DiD for short.
+      It cures one super-common illusion: if the numbers drop after an intervention, was it really the intervention's doing?
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_not_before_after"
+    narration: >
+      First, let's bust an intuitive trap: many people evaluate a policy by comparing only case counts "before" and "after."
+      But that's extremely dangerous; maybe the outbreak was already fading, the season was already changing, or the reporting workflow just got adjusted.
+      Comparing only before and after, you simply can't tell whether it was the policy's doing or just time marching on by itself.
+    animation: "show_why_not_before_after"
+    pause_after: 0.5
+
+  - id: "did_diagram"
+    narration: >
+      DiD's move is brilliant: find a control group that "wasn't intervened on but was originally trending the same way as you."
+      Look at this chart, the treated and control groups move in parallel before the intervention; after the intervention, if nothing had been done,
+      the treated group should have continued along that dashed counterfactual extension line.
+      The gap between the actual line and the counterfactual extension is the intervention's true effect.
+    animation: "show_did_diagram"
+    pause_after: 0.5
+
+  - id: "nursing_scenario"
+    narration: >
+      Back to the nursing-home story. On January 25th, the facility carried out emergency disinfection of wing B on floors 2 to 3, which had the highest attack rate and sat closest to the contamination source,
+      with the other floors and wings as the control group.
+      Reshape the cases into a "group by day" panel dataset, and you can run the DiD regression.
+    animation: "show_nursing_scenario"
+    pause_after: 0.5
+
+  - id: "did_code"
+    narration: >
+      The program is really just one regression. Use statsmodels' ols,
+      with the formula daily_cases against treated plus post plus treated times post.
+      Keep your eyes glued to the interaction term treated colon post; that coefficient is the DiD estimate itself.
+      Remember to add cov_type equals HC3 for robust standard errors, so panel data doesn't leave your p-values overly optimistic.
+    animation: "show_did_code"
+    code: |
+      import statsmodels.formula.api as smf
+
+      model = smf.ols(
+          "daily_cases ~ treated + post + treated:post",
+          data=panel,
+      ).fit(cov_type="HC3")
+      did = model.params["treated:post"]   # DiD 估計值
+    pause_after: 0.5
+
+  - id: "did_table"
+    narration: >
+      Why is DiD called "difference-in-differences"? This table makes it clear.
+      The treated group drops from 8 to 3, a change of minus 5; the control group drops from 5 to 4, a change of minus 1.
+      Subtract the two changes: minus 5 minus minus 1 equals minus 4;
+      that "difference of differences" has subtracted out the part due to time marching on by itself, and what's left is the intervention's net effect.
+    animation: "show_did_table"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways on DiD. One, don't just compare before and after; you must have a control group.
+      Two, the answer hides in the interaction term treated colon post, not treated, not post.
+      Three, remember to use HC3 robust standard errors.
+      One honest note: because this book's synthetic data has an observation window of only three or four days and too small a sample,
+      the DiD estimate comes out nearly zero and not at all significant. That doesn't mean the intervention was useless, only that this data can't hold up a conclusion.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a mask mandate plus a control region!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_mask"
+    narration: >
+      Switch scenes: suppose county A imposes an indoor mask mandate while neighboring county B doesn't, which conveniently serves as the control.
+      treated marks whether it's county A, post marks whether it's after the policy took effect, and again you watch the treated colon post interaction term.
+      It subtracts out both "the original difference between the two counties" and "everyone changing over this period,"
+      and what's left is the cases the mask mandate truly pushed down.
+    animation: "show_extra_mask"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three DiD blind spots!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: computing only the before-after difference, with no control group.
+      Without a control group, you simply can't subtract out the part due to "time marching on," and seasonality will spin you around in circles.
+      The soul of DiD is that second difference.
+    animation: "show_blindspot_no_control"
+    error_code: "effect = after.mean() - before.mean()"
+    correct_code: "effect = did_treated - did_control"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: reading the wrong coefficient and taking the post or treated main effect as the intervention effect.
+      treated is just the two groups' original fixed difference, post is just the time trend,
+      and the real answer is always the interaction term treated colon post.
+    animation: "show_blindspot_wrong_coef"
+    error_code: "effect = model.params['post']"
+    correct_code: "effect = model.params['treated:post']"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: forgetting robust standard errors and turning it in with a plain fit.
+      Panel data often has unequal variances, and default standard errors make your p-values overly optimistic, with fake significance everywhere.
+      Add cov_type equals HC3, and only then does your conclusion stand up.
+    animation: "show_blindspot_no_robust"
+    error_code: "smf.ols(f, data=panel).fit()"
+    correct_code: "smf.ols(f, data=panel).fit(cov_type='HC3')"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      With DiD in hand, you can now honestly answer "did the intervention actually work?"
+      But this whole weapon has one weak spot, and once it collapses, no matter how pretty your DiD is, it's all fake: the parallel-trends assumption.
+      Next episode we'll devote it entirely to taking apart this lifeblood of DiD!
+    animation: "show_outro"
+    pause_after: 1.0

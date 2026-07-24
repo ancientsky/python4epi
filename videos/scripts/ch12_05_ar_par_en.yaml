@@ -1,0 +1,146 @@
+meta:
+  chapter: "12"
+  concept: "ar_par"
+  title: "Attributable Risk AR and Population AR (PAR): Turning 'Associated With' into 'How Many Can We Save'"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch12_05_ar_par"
+  scene_class: "Ch12ARPARScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Welcome back to the causal-inference classroom! For eleven chapters we kept saying "showering is associated with infection,"
+      and this episode we turn "associated with" into a number you can actually spend money on to make decisions.
+      There are two stars: attributable risk AR, and population attributable risk PAR.
+      One asks "how much extra risk the exposed group carries," the other asks "how many cases the whole population could avoid by removing this exposure."
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "ar_vs_rr"
+    narration: >
+      First, the part people mix up most: AR subtracts, it doesn't divide!
+      The risk ratio RR we computed back in Chapter 3 "divides," answering how many times the risk changes;
+      attributable risk AR "subtracts," answering how many percentage points more the exposed group carries than the unexposed.
+      Same data, two ways of asking, and for public-health decisions the meaning is completely different.
+    animation: "show_ar_vs_rr"
+    pause_after: 0.5
+
+  - id: "two_by_two"
+    narration: >
+      The nursing home has only 280 records and a somewhat weak signal, so let's switch to a clean set of teaching numbers to practice.
+      A classic 2x2 table: exposed and ill, 120 people; exposed and fine, 280; unexposed but ill, 25; unexposed and fine, 375.
+      The exposed group's risk is thirty percent, the unexposed group's just over six; you can see the big difference at a glance.
+    animation: "show_two_by_two"
+    pause_after: 0.5
+
+  - id: "ar_code"
+    narration: >
+      Now feed the 2x2 into Python. Exposed risk equals a over a plus b, unexposed risk equals c over c plus d.
+      Attributable risk AR is the two subtracted, and I'll stress it again, it's a minus sign!
+      The risk ratio RR is the divide. These two lines differ by a single symbol, but the meaning is worlds apart.
+    animation: "show_ar_code"
+    code: |
+      a, b, c, d = 120, 280, 25, 375
+      risk_exp = a / (a + b)      # 0.300
+      risk_unexp = c / (c + d)    # 0.0625
+      AR = risk_exp - risk_unexp  # 相減，不是相除！
+      RR = risk_exp / risk_unexp  # 這才是相除
+    pause_after: 0.5
+
+  - id: "par_paf"
+    narration: >
+      Next, switch to the population view. Population attributable risk PAR swaps the denominator from "the exposed group" to "the whole population,"
+      showing how much risk this exposure contributes to everyone. Its percentage version is the population attributable fraction PAF,
+      which you can compute with Levin's formula: give it just two numbers, the exposure prevalence Pe and the risk ratio RR, and it falls out.
+    animation: "show_par_paf"
+    code: |
+      risk_total = (a + c) / (a + b + c + d)     # 0.181
+      Pe = (a + b) / (a + b + c + d)             # 暴露盛行率 0.5
+      PAR = risk_total - risk_unexp              # 族群歸因風險
+      PAF = Pe * (RR - 1) / (1 + Pe * (RR - 1))  # Levin 公式
+    pause_after: 0.5
+
+  - id: "ar_output"
+    narration: >
+      Run it, and AR equals 0.2375, so the exposed group carries a full 23.7 percentage points more;
+      RR equals 4.8, the risk is 4.8 times; and PAF is about 65.5 percent.
+      In plain terms: if this really is causal, completely eliminating the exposure could in theory cut sixty-five percent of the cases,
+      a number the boss loves to hear, but hold on, the blind-spot section will tell you why you can't throw it around.
+    animation: "show_ar_output"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Pack up three takeaways on AR and PAR.
+      One, AR subtracts and RR divides; they differ by one symbol, so don't mix them up.
+      Two, PAR and PAF are the population view, with the denominator swapped to everyone.
+      Three, PAF can only be used to estimate "how many people we could save" when causation actually holds.
+      Remember these three and you can translate association into decision numbers.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: the population attribution of smoking to lung disease!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_smoking"
+    narration: >
+      Take that same Levin formula and carry it to public health's most classic battlefield: smoking and lung disease.
+      Suppose the population smoking prevalence is 25 percent and the lung-disease risk ratio is as high as 10 times; plug into Levin's formula and PAF is about 69 percent.
+      That means nearly seventy percent of lung disease in the whole population is attributable to smoking.
+      Same formula, swap the exposure, and it still conquers the field.
+    animation: "show_extra_smoking"
+    code: |
+      Pe, RR = 0.25, 10        # 吸菸盛行率、肺病風險比
+      PAF = Pe * (RR - 1) / (1 + Pe * (RR - 1))
+      print(f"PAF = {PAF:.0%}")   # PAF = 69%
+      # 全族群近七成肺病可歸因於吸菸
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for AR and PAR!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: writing AR as a division. Dividing gives you the risk ratio RR, not attributable risk.
+      AR is always the exposed risk "minus" the unexposed risk; get that one minus sign wrong and your whole interpretation crashes.
+    animation: "show_blindspot_subtract_not_divide"
+    error_code: "AR = risk_exp / risk_unexp"
+    correct_code: "AR = risk_exp - risk_unexp"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: thinking the risk ratio RR alone can speak to population impact.
+      No matter how big the RR, if few people are exposed, the cases you can actually prevent are limited too.
+      At the population level you must use Levin's formula and factor in the exposure prevalence Pe; that's what PAF is.
+    animation: "show_blindspot_rr_alone"
+    error_code: "pop_impact = RR"
+    correct_code: "PAF = Pe*(RR-1) / (1 + Pe*(RR-1))"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: blindly multiplying PAF by the case count and calling it "preventable people."
+      PAF only holds when exposure and disease are truly causally related;
+      if a confounder is secretly hiding behind it, removing the exposure won't save these cases at all. Confirm causation first, then multiply.
+    animation: "show_blindspot_paf_causal"
+    error_code: "saved = total_cases * PAF"
+    correct_code: "if causal: saved = total_cases * PAF"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      With the three siblings AR, PAR, and PAF in hand, you can now translate "there's an association" into the decision language of "how many people we can save."
+      But don't forget, the soul of all these numbers rests entirely on those two words: causation.
+      Next episode we use difference-in-differences, DiD, to face head-on the question "did the intervention actually work?"
+    animation: "show_outro"
+    pause_after: 1.0
