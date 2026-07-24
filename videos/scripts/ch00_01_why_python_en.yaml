@@ -1,0 +1,164 @@
+meta:
+  chapter: "00"
+  concept: "why_python"
+  title: "Why Python: The Epidemiologist's Superpower"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch00_01_why_python"
+  scene_class: "Ch00WhyPythonScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: why use Python
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, and welcome to the Python for Epidemiology classroom!
+      Picture this: you're an outbreak investigator, and at three in the morning your phone suddenly rings.
+      A Legionella cluster has broken out at the Pine and Cypress nursing home, and data for all 280 residents is already in the system.
+      Your supervisor wants a complete investigation report on their desk by eight tomorrow morning.
+      You open your laptop, and then... which tool do you reach for?
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "excel_limit"
+    narration: >
+      Most people's first instinct is to open Excel.
+      But think about it: 280 records, 32 columns, and just filtering makes your clicking finger sore.
+      Worse, your boss says, run last week's analysis again, but group it differently this time.
+      So you redo every step by hand, terrified of clicking the wrong cell.
+      And three months later, nobody remembers how you got those numbers.
+      Excel is like a Swiss army knife: it can do a bit of everything, but every single task is a struggle.
+    animation: "show_excel_limit"
+    pause_after: 0.5
+
+  - id: "python_power"
+    narration: >
+      Now switch to Python. One line of code computes the attack rate.
+      attack_rate equals infected divided by total_residents, done.
+      Want to regroup? Change one parameter and rerun in three seconds.
+      Even better, your code IS your analysis record,
+      and anyone who gets the same script can reproduce your results exactly.
+      That's what we call reproducible research, and it's a basic requirement of modern epidemiology.
+    animation: "show_python_power"
+    code: |
+      attack_rate = infected / total_residents
+      print(f"侵襲率：{attack_rate:.1%}")
+    output: "侵襲率：43.2%"
+    pause_after: 0.5
+
+  - id: "python_vs_r"
+    narration: >
+      Someone always asks: isn't R really powerful too?
+      Absolutely, R is genuinely excellent for statistical analysis.
+      But Python's edge is this: from data cleaning and statistics,
+      all the way to machine learning and deep learning, it handles the whole pipeline end to end.
+      Python also writes automation scripts, builds websites, and connects to APIs.
+      And in the job market, Python is one of the most in-demand languages right now.
+      In short, learning Python gives you an especially high return on investment.
+    animation: "show_python_vs_r"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's sum up why we pick Python.
+      First, automation: let the code do the repetitive grunt work.
+      Second, reproducibility: your code is the best analysis record you'll ever have.
+      Third, a powerful ecosystem: from statistics to deep learning, one language covers it all.
+      Remember these three words: automation, reproducibility, all-in-one.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: COVID-19 large-scale investigation
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Next, let's look at a real-world example
+      and feel just how mighty Python is in a large-scale investigation.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      During COVID-19, one Taiwanese county reported a hundred thousand confirmed cases in a single day.
+      Open that in Excel and it takes five minutes just to load, and filtering freezes the whole thing.
+      But with Python's pandas library, reading and analyzing takes only seconds.
+      A single for loop batch-processes every day's data,
+      automatically producing daily summaries, epidemic curves, and attack rates by district.
+      You grab a coffee, come back, and the report is already done.
+      That's the power of automation, and the most practical reason to learn Python.
+    animation: "show_extra_example"
+    code: |
+      import pandas as pd
+      df = pd.read_csv("covid_cases.csv")  # 十萬筆，秒讀
+      daily = df.groupby("report_date").size()
+      print(daily.tail())
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Finally, let's bust the three most common myths.
+      Every beginner has had these thoughts, but there's really nothing to worry about.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Myth one: I'm bad at math, can I even learn to code?
+      Here's a secret: ninety percent of the math in epidemiology
+      is just addition, subtraction, multiplication, and division. Attack rate? Division. Case fatality rate? Still division.
+      If you can use a calculator, you can write Python.
+      The parts that truly need heavy math are handled by libraries; you just call the function.
+      So relax, weak math is absolutely not a problem.
+    animation: "show_blindspot_math"
+    error_code: "# 迷思：需要很強的數學底子"
+    correct_code: |
+      # 事實：大部分只需要加減乘除
+      attack_rate = 121 / 280  # 就是除法而已！
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Myth two: I have to finish learning all of Python before I can start analyzing.
+      Wrong, it's exactly the opposite. Learning by doing is the most effective way.
+      This course is designed so you copy and paste the example code,
+      tweak the numbers, and instantly see results.
+      Copy-pasting is nothing to be ashamed of; even senior engineers copy-paste from Stack Overflow every single day.
+      Use it enough, and it clicks.
+    animation: "show_blindspot_learn_first"
+    error_code: "# 迷思：要先把 Python 從頭學完"
+    correct_code: |
+      # 事實：邊做邊學，copy-paste 就是學習
+      # 先跑起來，再慢慢理解
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Myth three: which version of Python do I install, and what about package conflicts?
+      It used to be a real headache, but now we have a magic tool called uv.
+      uv automatically installs the right Python version and manages all your packages.
+      You only need one command: uv sync, and your environment is ready.
+      The whole course uses uv, so version problems are simply not your concern.
+    animation: "show_blindspot_version"
+    error_code: |
+      # 迷思：手動裝 Python、pip install 搞半天
+      pip install pandas  # 版本衝突 💥
+    correct_code: |
+      # 事實：uv 一行搞定
+      uv sync  # 自動安裝 Python + 所有套件
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Alright, today we learned why epidemiologists need Python.
+      Remember the three keywords: automation, reproducibility, all-in-one.
+      In the next video, we'll actually install the Python environment and build your first project with uv.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

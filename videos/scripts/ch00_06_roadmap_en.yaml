@@ -1,0 +1,132 @@
+meta:
+  chapter: "00"
+  concept: "roadmap"
+  title: "Course Roadmap: An 18-Chapter Learning Guide"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch00_06_roadmap"
+  scene_class: "Ch00RoadmapScene"
+
+segments:
+  # ── [A] Main lesson ──────────────────────────────────────────────
+
+  - id: "intro"
+    narration: >
+      Hi, and welcome to the Python for Epidemiology classroom!
+      Before we start coding for real, let's take a look at the big picture of this course.
+      A full 18 chapters, sounds like a lot, right? Don't worry, they all weave together into one story.
+      What story? A nursing home where Legionnaires' disease breaks out, 280 residents, 121 infected, 19 dead.
+      We start from receiving the notification and go all the way to the final investigation report, super immersive!
+    animation: "show_title"
+    pause_after: 0.8
+
+  - id: "five_acts"
+    narration: >
+      These 18 chapters are split into five acts, just like a TV drama.
+      Act one, Reported, Chapters 00 to 02, teaches you to install the tools and learn Python basics and data wrangling.
+      Act two, Descriptive Analysis, Chapters 03 to 04, where you start computing attack rates, building 2 by 2 tables, and running cluster investigations.
+      Act three, Deeper Analysis, Chapters 05 to 08, moving into stratified analysis, regression, time series, and spatial epi.
+      Act four, Advanced Modeling, Chapters 09 to 12, survival analysis, machine learning, deep learning, and causal inference, hearty main courses.
+      Act five, Wrap-up and Practice, Chapters 13 to 17, teaching reproducible reports, real-world cases, plus exercises and solutions.
+    animation: "show_five_acts"
+    pause_after: 0.8
+
+  - id: "must_do"
+    narration: >
+      So how should you read it? First, Chapters 00 to 04 are the required path, so please read them in order.
+      These five chapters are the foundation, and every advanced topic later builds on them.
+      Chapter 00 teaches you to set up the environment, Chapter 01 teaches Python basics, Chapter 02 teaches pandas and visualization.
+      Chapter 03 starts descriptive statistics, and Chapter 04 walks you through a complete cluster investigation.
+      Finish these five and you can already do a basic outbreak analysis on your own, quite a bargain, right?
+    animation: "show_must_do"
+    pause_after: 0.5
+
+  - id: "choose_path"
+    narration: >
+      After the first five chapters, congratulations, you've unlocked free elective mode!
+      The advanced topics in Chapters 05 to 14 can be picked according to your interests or job needs.
+      Interested in statistical modeling? Jump straight to Chapter 05 stratified analysis and Chapter 06 logistic regression.
+      Want to forecast outbreaks? Check out Chapter 07 time series. Want to draw maps? Chapter 08 spatial epi awaits you.
+      And of course, if you're hardcore, reading everything from start to finish is very welcome and will massively boost your skills!
+    animation: "show_choose_path"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's sum up the learning tips. First, take the first five chapters in order, don't skip.
+      Second, every chapter has exercises in Chapter 16; do them, then check against the solutions in Chapter 17 for the best effect.
+      Third, all the code can be copied and pasted and run directly, no need to type from scratch.
+      Fourth, make good use of Google Colab, zero installation to run, great for beginners or those without a local setup.
+      Remember, the most important thing in learning to code is doing it hands-on; you can't learn by watching alone!
+    animation: "show_main_summary"
+    pause_after: 1.0
+
+  # ── [B] Extra example ────────────────────────────────────────────
+
+  - id: "extra_banner"
+    narration: >
+      Next, let's look at an extra example: learning paths for different roles.
+      Because not everyone needs to read all 18 chapters, you can have different focuses based on your job role.
+    animation: "show_extra_banner"
+    pause_after: 0.5
+
+  - id: "extra_example"
+    narration: >
+      If you're an infection control nurse at a hospital, Chapters 03 to 04 are your core; learning to compute attack rates, case fatality rates, and run cluster investigations is plenty.
+      If you're an outbreak investigator at a health bureau, beyond the basics I recommend adding Chapter 07 time series and Chapter 08 spatial epi,
+      so you can forecast outbreak trends and draw beautiful outbreak maps.
+      If you're a data scientist or want to move into public health data analysis, then read everything!
+      Especially Chapter 10 machine learning, Chapter 11 deep learning, and Chapter 12 causal inference, these three will make your resume shine.
+      So you see, the same course can customize a learning path to your needs, pretty flexible, right?
+    animation: "show_extra_example"
+    pause_after: 1.0
+
+  # ── [C] Blind spots ──────────────────────────────────────────────
+
+  - id: "blindspot_banner"
+    narration: >
+      Finally, let's talk about the three questions beginners ask most, in other words, blind spot time!
+      I've been asked these more than a hundred times, and today I'll answer them all at once.
+    animation: "show_blindspot_banner"
+    pause_after: 0.5
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot one: which chapter do I even start with?
+      Many people want to jump straight to machine learning or deep learning because it seems cooler.
+      But! If you can't even operate a pandas DataFrame, the later chapters will be painful.
+      The right approach: start with Chapter 00 to set up the environment, Chapter 01 for Python basics, and Chapter 02 for pandas.
+      These three might take you a weekend, but afterward your learning speed shoots up, sharpening the axe never delays the woodcutting!
+    animation: "show_blindspot_where_start"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot two: can I skip chapters?
+      Please don't skip Chapters 00 to 04; they're sequential, and skipping is like watching a movie starting from the third installment, confusing.
+      But after Chapter 05 you can jump freely! The start of every chapter tells you what prerequisites you need.
+      So if you only care about spatial epi, finish the first five chapters and jump straight to Chapter 08, no problem at all.
+      Flexible learning is the key to adult education!
+    animation: "show_blindspot_skip"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot three: what's the difference between Google Colab and a local environment?
+      Colab's advantage is zero installation; open a browser and go, plus free GPU, great for a quick start.
+      But Colab has limits, like reinstalling packages every new session, and files aren't saved locally by default.
+      A local environment installs once with uv sync and you're set, and it's more stable for large datasets.
+      My advice: start with Colab to test the waters, and once you're serious, spend ten minutes setting up a local environment, best of both worlds!
+    animation: "show_blindspot_colab"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations on finishing the course roadmap! Now you know what these 18 chapters cover and how to plan your learning order.
+      Next, head to Chapter 01 and write your first line of Python code!
+      Remember, the best way to learn is to open the notebook and run the code.
+      See you in Chapter 01, you've got this!
+    animation: "show_outro"
+    pause_after: 1.0

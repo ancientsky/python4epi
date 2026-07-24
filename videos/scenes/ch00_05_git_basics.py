@@ -75,6 +75,63 @@ class Ch00GitBasicsScene(EpiBaseScene):
 
     total_steps: int = 12
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "Git 版本控制",
+            "title_sub": "程式碼的時光機",
+            "what_heading": "Git 就像程式碼的時光機",
+            "what_v1": "v1\n初始版本",
+            "what_v2": "v2\n新增分析",
+            "what_v3": "v3\n修正錯誤",
+            "what_caption": "每次 commit = 一張快照，隨時可以回到過去",
+            "areas_heading": "Git 的三個區域",
+            "workflow_heading": "每日工作流程",
+            "workflow_commit_card": 'git commit\n-m "描述"',
+            "workflow_caption": "修改 → 暫存 → 提交 → 推到遠端",
+            "summary_heading": "最常用的 5 個指令",
+            "summary_cmd1": "git status      查看目前狀態",
+            "summary_cmd2": "git add         暫存變更",
+            "summary_cmd3": "git commit      提交快照",
+            "summary_cmd4": "git push        推到遠端",
+            "summary_cmd5": "git pull        拉取最新",
+            "extra_banner_title": "額外範例：多人協作寫疫調報告",
+            "extra_heading": "多人協作：分支與合併",
+            "extra_main_card": "main\n疫調報告",
+            "extra_branch_a": "你的分支\n描述性分析",
+            "extra_branch_b": "同事的分支\n空間分析",
+            "extra_merged": "合併後\n完整報告",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：課程地圖與學習路線",
+        },
+        "en": {
+            "title_main": "Git Version Control",
+            "title_sub": "A time machine for your code",
+            "what_heading": "Git Is Like a Time Machine for Code",
+            "what_v1": "v1\nInitial version",
+            "what_v2": "v2\nAdd analysis",
+            "what_v3": "v3\nFix bugs",
+            "what_caption": "Each commit = a snapshot; jump back in time anytime",
+            "areas_heading": "Git's Three Areas",
+            "workflow_heading": "Daily Workflow",
+            "workflow_commit_card": 'git commit\n-m "message"',
+            "workflow_caption": "edit -> stage -> commit -> push to remote",
+            "summary_heading": "The 5 Most-Used Commands",
+            "summary_cmd1": "git status      check current state",
+            "summary_cmd2": "git add         stage changes",
+            "summary_cmd3": "git commit      save a snapshot",
+            "summary_cmd4": "git push        push to remote",
+            "summary_cmd5": "git pull        fetch the latest",
+            "extra_banner_title": "Extra example: co-authoring an outbreak report",
+            "extra_heading": "Collaboration: branches and merging",
+            "extra_main_card": "main\noutbreak report",
+            "extra_branch_a": "your branch\ndescriptive analysis",
+            "extra_branch_b": "colleague's branch\nspatial analysis",
+            "extra_merged": "after merge\ncomplete report",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: course roadmap and learning path",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -84,23 +141,23 @@ class Ch00GitBasicsScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the Git basics lesson."""
-        self.show_title_card("Git 版本控制", "程式碼的時光機", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_what_is_git(self, duration: float = 6.0, **kwargs) -> None:
         """Time-machine metaphor: timeline with snapshot cards v1→v2→v3."""
         self.show_step_indicator(1, self.total_steps)
 
         heading = Text(
-            "Git 就像程式碼的時光機",
+            self.t("what_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ManimColor(TEXT_PRIMARY),
         ).to_edge(UP, buff=0.8)
 
         # Timeline: three version snapshot cards
-        v1 = _flow_card("v1\n初始版本", width=2.6, height=1.4, fill=BG_CARD_ALT)
-        v2 = _flow_card("v2\n新增分析", width=2.6, height=1.4, fill=BG_CARD_ALT)
-        v3 = _flow_card("v3\n修正錯誤", width=2.6, height=1.4, fill=BG_CARD_ALT)
+        v1 = _flow_card(self.t("what_v1"), width=2.6, height=1.4, fill=BG_CARD_ALT)
+        v2 = _flow_card(self.t("what_v2"), width=2.6, height=1.4, fill=BG_CARD_ALT)
+        v3 = _flow_card(self.t("what_v3"), width=2.6, height=1.4, fill=BG_CARD_ALT)
 
         versions = VGroup(v1, v2, v3).arrange(RIGHT, buff=1.8).move_to(ORIGIN)
 
@@ -114,7 +171,7 @@ class Ch00GitBasicsScene(EpiBaseScene):
         )
 
         caption = Text(
-            "每次 commit = 一張快照，隨時可以回到過去",
+            self.t("what_caption"),
             font=FONT_CJK,
             font_size=22,
             color=ManimColor(TEXT_SECONDARY),
@@ -136,7 +193,7 @@ class Ch00GitBasicsScene(EpiBaseScene):
         self.show_step_indicator(2, self.total_steps)
 
         heading = Text(
-            "Git 的三個區域",
+            self.t("areas_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ManimColor(TEXT_PRIMARY),
@@ -181,7 +238,7 @@ class Ch00GitBasicsScene(EpiBaseScene):
         self.show_step_indicator(3, self.total_steps)
 
         heading = Text(
-            "每日工作流程",
+            self.t("workflow_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ManimColor(TEXT_PRIMARY),
@@ -189,7 +246,7 @@ class Ch00GitBasicsScene(EpiBaseScene):
 
         card_add = _flow_card('git add .', width=3.0, height=1.2, fill=BG_CARD_ALT,
                               label_color=ACCENT_ORANGE, font_size=20)
-        card_commit = _flow_card('git commit\n-m "描述"', width=3.0, height=1.2,
+        card_commit = _flow_card(self.t("workflow_commit_card"), width=3.0, height=1.2,
                                  fill=BG_CARD_ALT, label_color=ACCENT_ORANGE, font_size=20)
         card_push = _flow_card('git push', width=3.0, height=1.2, fill=BG_CARD_ALT,
                                label_color=ACCENT_ORANGE, font_size=20)
@@ -206,7 +263,7 @@ class Ch00GitBasicsScene(EpiBaseScene):
         )
 
         caption = Text(
-            "修改 → 暫存 → 提交 → 推到遠端",
+            self.t("workflow_caption"),
             font=FONT_CJK,
             font_size=22,
             color=ManimColor(TEXT_SECONDARY),
@@ -229,22 +286,22 @@ class Ch00GitBasicsScene(EpiBaseScene):
         self.show_step_indicator(4, self.total_steps)
 
         heading = Text(
-            "最常用的 5 個指令",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ManimColor(ACCENT_ORANGE),
         ).to_edge(UP, buff=0.8)
 
         commands = VGroup(
-            Text("git status      查看目前狀態", font=FONT_MONO, font_size=22,
+            Text(self.t("summary_cmd1"), font=FONT_MONO, font_size=22,
                  color=ManimColor(TEXT_PRIMARY)),
-            Text("git add         暫存變更", font=FONT_MONO, font_size=22,
+            Text(self.t("summary_cmd2"), font=FONT_MONO, font_size=22,
                  color=ManimColor(TEXT_PRIMARY)),
-            Text("git commit      提交快照", font=FONT_MONO, font_size=22,
+            Text(self.t("summary_cmd3"), font=FONT_MONO, font_size=22,
                  color=ManimColor(TEXT_PRIMARY)),
-            Text("git push        推到遠端", font=FONT_MONO, font_size=22,
+            Text(self.t("summary_cmd4"), font=FONT_MONO, font_size=22,
                  color=ManimColor(TEXT_PRIMARY)),
-            Text("git pull        拉取最新", font=FONT_MONO, font_size=22,
+            Text(self.t("summary_cmd5"), font=FONT_MONO, font_size=22,
                  color=ManimColor(TEXT_PRIMARY)),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.4).next_to(heading, DOWN, buff=0.6)
 
@@ -259,7 +316,7 @@ class Ch00GitBasicsScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：多人協作寫疫調報告")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 7.0, **kwargs) -> None:
@@ -267,26 +324,26 @@ class Ch00GitBasicsScene(EpiBaseScene):
         self.show_step_indicator(6, self.total_steps)
 
         heading = Text(
-            "多人協作：分支與合併",
+            self.t("extra_heading"),
             font=FONT_CJK,
             font_size=30,
             color=ManimColor(TEXT_PRIMARY),
         ).to_edge(UP, buff=0.8)
 
         # Main branch
-        main_card = _flow_card("main\n疫調報告", width=2.8, height=1.2, fill=BG_CARD_ALT)
+        main_card = _flow_card(self.t("extra_main_card"), width=2.8, height=1.2, fill=BG_CARD_ALT)
         main_card.move_to(LEFT * 4 + UP * 0.2)
 
         # Two branches
-        branch_a = _flow_card("你的分支\n描述性分析", width=3.0, height=1.2,
+        branch_a = _flow_card(self.t("extra_branch_a"), width=3.0, height=1.2,
                               fill=BG_CARD, label_color=ACCENT_ORANGE)
-        branch_b = _flow_card("同事的分支\n空間分析", width=3.0, height=1.2,
+        branch_b = _flow_card(self.t("extra_branch_b"), width=3.0, height=1.2,
                               fill=BG_CARD, label_color=ACCENT_BLUE)
         branch_a.move_to(RIGHT * 0.5 + UP * 1.5)
         branch_b.move_to(RIGHT * 0.5 + DOWN * 1.0)
 
         # Merged result
-        merged = _flow_card("合併後\n完整報告", width=2.8, height=1.2,
+        merged = _flow_card(self.t("extra_merged"), width=2.8, height=1.2,
                             fill=ACCENT_GREEN, label_color="#FFFFFF")
         merged.move_to(RIGHT * 4.5 + UP * 0.2)
 
@@ -323,7 +380,7 @@ class Ch00GitBasicsScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_git_add(self, duration: float = 5.0, **kwargs) -> None:
@@ -356,7 +413,7 @@ class Ch00GitBasicsScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：課程地圖與學習路線",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ManimColor(ACCENT_ORANGE),
