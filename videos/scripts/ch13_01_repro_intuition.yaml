@@ -1,0 +1,122 @@
+meta:
+  chapter: "13"
+  concept: "repro_intuition"
+  title: "可重現研究超白話：把分析寫成一份好食譜"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch13_01_repro_intuition"
+  scene_class: "Ch13ReproIntuitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      「可重現研究」聽起來很嚴肅、很學術對不對？別怕，這一集我們換個方式想：
+      所謂可重現研究，其實就是一份寫得夠仔細的食譜。
+      同樣的材料、同樣的步驟，任何人照著做，都端出同一盤菜。
+      今天師傅就用做蛋糕的比喻，把整個觀念一次講清楚。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "recipe_scenario"
+    narration: >
+      想像一下：朋友吃到你做的蛋糕驚為天人，回家想做出一模一樣的味道，跟你要食譜。
+      你會給她什麼？當然是一份寫得夠仔細的食譜——不是「憑感覺加糖」，是「一百二十克糖」。
+      可重現研究就是這個精神：同一份資料、同一份程式碼，換人換機器，還是烤出同一個答案。
+    animation: "show_recipe_scenario"
+    pause_after: 0.5
+
+  - id: "four_ingredients"
+    narration: >
+      要複製一顆蛋糕，你得備齊四樣東西。
+      食譜就是你的 code，每一步驟都寫成看得懂、能重跑的程式；
+      食材就是 data，同一份原始資料，不會做到一半偷偷改掉；
+      廚房設定就是 environment，用 uv.lock 把套件版本鎖死，等於大家用同一台烤箱；
+      骰子先喬好就是 seed，任何隨機的步驟都先鎖種子。四樣到齊，任何人都烤出同一顆蛋糕。
+    animation: "show_four_ingredients"
+    pause_after: 0.5
+
+  - id: "mapping"
+    narration: >
+      把比喻翻回正式名詞，其實一一對得上。
+      食譜對 code、食材對 data、廚房設定對 environment、骰子先喬好對 seed，最後的蛋糕就是可重現結果。
+      記住這張對照表，你就抓到可重現研究的骨架了。
+    animation: "show_mapping"
+    pause_after: 0.5
+
+  - id: "definition"
+    narration: >
+      這裡要幫大家把重點釘死：可重現，問的不是「這次算對了沒」，
+      而是「換一個人、換一台機器跑，是不是還是同一個答案」。
+      說到底，就是別人拿你的 code、data、environment、seed，能複製出一模一樣的結果，不多不少。
+    animation: "show_definition"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      主線收個尾。第一，食譜比喻拆成四樣：code、data、environment、seed。
+      第二，四樣備齊，任何人任何機器都能烤出同一顆蛋糕。
+      第三，重點永遠是「可複製」，不是「這次剛好對」。
+      下一集我們就來抓兇手：為什麼我重跑結果會不一樣？
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：換個場景，重現一篇 COVID-19 的分析！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid"
+    narration: >
+      假設你看到一篇 COVID-19 的分析論文，想在自己電腦上重跑一遍驗證看看。
+      作者很貼心，附上了 code、data、requirements，還固定了種子。
+      你只要 uv sync 把環境裝好、鎖好種子、跑同一支腳本，就能拿到跟論文一模一樣的數字。
+      能做到這一步，這篇研究才真正稱得上可重現——換個疾病，同一套食譜精神照樣通用。
+    animation: "show_extra_covid"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      可重現研究三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：只分享結果圖，不分享程式跟材料。
+      朋友只拿到一張蛋糕照片，是沒辦法做出同樣蛋糕的。
+      正確做法是把 code、data、environment、seed 一起交出去，別人才複製得出來。
+    animation: "show_bs_share_only"
+    error_code: "share(result_png_only)"
+    correct_code: "share(code, data, env, seed)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：在 notebook 裡憑印象手動改資料，卻沒留紀錄。
+      滑鼠點一點刪掉幾列「看起來怪怪的」資料，下次重跑那雙手早忘了動過什麼手腳。
+      正確做法是把每個轉換寫成程式碼裡看得見的一行，規則本身就是文件。
+    animation: "show_bs_manual_edit"
+    error_code: "df = df.drop([3, 7])  # by hand"
+    correct_code: "df = df[df.age >= 0]  # rule in code"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：不鎖套件版本，直接 pip install 想到什麼裝什麼。
+      你家用新版 pandas、我家用舊版，同一份食譜也可能烤出不同蛋糕。
+      正確做法是一律用 uv sync，讓 uv.lock 幫你把每台烤箱調到同一個溫度。
+    animation: "show_bs_no_lock"
+    error_code: "pip install pandas"
+    correct_code: "uv sync  # locked by uv.lock"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      這一集我們用蛋糕食譜，把可重現研究的四樣材料一次記牢：code、data、environment、seed。
+      但你一定遇過「我明明沒改程式，重跑數字卻不一樣」的靈異事件。
+      下一集就來抓兇手，把三顆常見地雷跟三根支柱一一對上，敬請期待！
+    animation: "show_outro"
+    pause_after: 1.0

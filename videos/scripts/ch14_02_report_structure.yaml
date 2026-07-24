@@ -1,0 +1,117 @@
+meta:
+  chapter: "14"
+  concept: "report_structure"
+  title: "疫調報告的八個段落 ↔ 每段對應一章技能"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch14_02_report_structure"
+  scene_class: "Ch14ReportStructureScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集我們把整箱工具串成一條敘事線。這一集要把這條線裝進「標準格式」——
+      一份群聚調查報告的八個段落。有了固定架構，你就不會漏東漏西，
+      長官也一眼就找得到他要的東西。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_structure"
+    narration: >
+      為什麼要固定架構？因為疫調報告是要給人「照著做」的公文，不是隨筆。
+      用標準的八段落格式，每次產出的排版都一致，讀者知道第幾段找什麼，
+      你自己也不會漏掉「行動建議」這種關鍵段落。
+    animation: "show_why_structure"
+    pause_after: 0.5
+
+  - id: "eight_paragraphs"
+    narration: >
+      來看這份報告的骨架。八個段落，從背景與通報開始，接方法與 line list，
+      然後是描述性流行病學、分析性流行病學，再到時間空間分析、進階分析，
+      倒數第二段是因果研判與建議，最後一段是結論與行動建議。
+      每一段背後，都是前面某一章教過的具體工具。
+    animation: "show_eight_paragraphs"
+    pause_after: 0.5
+
+  - id: "section_chapter_map"
+    narration: >
+      一段一段對回去。背景與通報是 Ch00 和 Ch04 的個案定義；
+      方法段是 Ch02 的 line list 清理；描述性流病用 Ch02 到 04 的人時地分布；
+      分析性流病搬出 Ch03、05、06 的 2x2 表、分層分析和校正後勝算比；
+      時間空間段是 Ch07、08。
+    animation: "show_section_chapter_map"
+    pause_after: 0.5
+
+  - id: "consistency"
+    narration: >
+      固定格式最大的好處，是「可重現又好比較」。
+      這次的報告和下次的報告長得一樣，長官翻起來很快；
+      跨案件比較時，也能一段對一段。這正是 Ch13 那句話的延伸：同一張菜單，誰做都一樣。
+    animation: "show_consistency"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三個重點。一，標準疫調報告有八個固定段落。二，每一段對應到前面某一章的技能。
+      三，固定格式讓報告可重現、好比較、不漏段。
+      骨架搭好了，接下來就是把數字填進去。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：把一份食因性群聚報告，塞進這八個段落！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_foodborne"
+    narration: >
+      換成一場尾牙食物中毒。背景段寫「宴會後多人腹瀉通報」；方法段是 line list；
+      描述段畫發病時間曲線；分析段做食物別侵襲率的 2x2 表，揪出哪一道菜；
+      時間空間段看潛伏期分布；因果段指向那盤生魚片。同樣八段，一段都不少。
+    animation: "show_extra_foodborne"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      報告架構三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：沒有固定架構，每次想到哪寫到哪。
+      讀者找不到重點，你自己也容易漏段。
+      用標準的八段落，順序固定，誰讀都順。
+    animation: "show_blindspot_no_structure"
+    error_code: "write(sections_in_random_order)"
+    correct_code: "write(SITREP_8_SECTIONS)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：報告只有背景、方法、結果，缺了最重要的「結論與行動建議」段落。
+      沒有建議，長官讀完只會「知道了」，卻不知道接下來要幹嘛。
+    animation: "show_blindspot_no_action_section"
+    error_code: "sections = [bg, methods, results]"
+    correct_code: "sections += [conclusion, actions]"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：把描述性和分析性流病混成一團。
+      先講清楚人時地分布，再進到 2x2 表和迴歸——
+      描述在前、分析在後，讀者才跟得上邏輯。
+    animation: "show_blindspot_mix_desc_analytic"
+    error_code: "mix(descriptive, analytic)"
+    correct_code: "describe_first(); then_analyze()"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      骨架有了，段落也對上章節了。下一集我們鑽進最關鍵的那一段——主要發現摘要，
+      教你怎麼把整場調查濃縮成長官最想看的那幾個數字。下集見！
+    animation: "show_outro"
+    pause_after: 1.0

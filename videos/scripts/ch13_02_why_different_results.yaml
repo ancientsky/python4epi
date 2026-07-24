@@ -1,0 +1,119 @@
+meta:
+  chapter: "13"
+  concept: "why_different_results"
+  title: "為什麼我重跑結果不一樣？三顆地雷 vs 三根支柱"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch13_02_why_different_results"
+  scene_class: "Ch13WhyDifferentScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      「上次跑出來是 121 人感染、19 人死亡，這次重跑怎麼變成別的數字？」
+      這種靈異事件，多半不是你的分析邏輯壞了，而是踩到三顆常見地雷的其中一顆。
+      這一集師傅帶你認清這三顆地雷，再一一對上三根支柱，把結果穩穩收斂回同一個答案。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "the_complaint"
+    narration: >
+      先感受一下這個痛點。同一份資料、同一份程式碼，你什麼都沒動，重跑數字卻飄了。
+      你開始懷疑人生：是不是程式壞了？是不是資料被人動過？
+      別急，九成九不是邏輯錯，而是有些「隱形變因」偷偷在背後改結果。
+    animation: "show_the_complaint"
+    pause_after: 0.5
+
+  - id: "three_landmines"
+    narration: >
+      三顆地雷，一次認清楚。
+      第一顆，未鎖套件版本——pandas 從 2.0 升到 2.2，缺值或排序的預設處理悄悄變了。
+      第二顆，沒固定亂數種子——只要有 train_test_split、np.random 這種隨機步驟，沒鎖種子等於每次都重洗一次牌。
+      第三顆，notebook 手動改資料沒記錄——那雙手下次早忘了自己刪過哪幾列。
+    animation: "show_three_landmines"
+    pause_after: 0.5
+
+  - id: "landmine_pillars"
+    narration: >
+      好消息是，三顆地雷都有對應的支柱可以拆。
+      未鎖版本？用 uv.lock 把每個套件鎖死，uv sync 保證環境一致。
+      沒鎖種子？每個隨機步驟都指定 seed，隨機才會「隨機地一致」。
+      手動改資料？所有轉換都寫成程式碼裡看得見的一行。地雷對支柱，一顆對一根，全部拆乾淨。
+    animation: "show_landmine_pillars"
+    pause_after: 0.5
+
+  - id: "drift_note"
+    narration: >
+      這裡幫大家建立一個畫面感：地雷會讓你每次重跑的結果慢慢「漂移」，越跑越發散；
+      三根支柱則像三條校正線，把每次重跑都拉回同一個答案。
+      可重現研究要做的，就是把所有會讓結果漂移的因素，一個一個拿掉。
+    animation: "show_drift_note"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      主線打包三重點。第一，重跑數字飄了，先想三顆地雷：環境、隨機、資料漂移。
+      第二，三顆地雷各有一根支柱：uv.lock、固定 seed、轉換寫進程式。
+      第三，可重現不是玄學，是把隱形變因逐一鎖死。學會這個，你就能理直氣壯說「我的結果重跑得出來」。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：同事重現不出你的登革熱病例數！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue"
+    narration: >
+      換個場景。你算出某縣市登革熱本週 340 例，同事在他電腦上重跑卻變成 337 例。
+      三步驟排查：先確認兩人 uv.lock 一致，再確認抽樣或切分有沒有鎖種子，最後確認清理規則有沒有全寫進程式。
+      九成的「重現不出來」，追到最後都是這三顆地雷之一——同樣的排查邏輯，換個疾病照樣好用。
+    animation: "show_extra_dengue"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      重現不一致三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：手動 pip 升級套件，蓋掉 uv.lock 鎖定的版本。
+      一 pip install dash U，你的環境就跟原作者分家了。
+      正確做法是一律 uv sync，乖乖尊重 uv.lock 裡鎖好的版本。
+    animation: "show_bs_env"
+    error_code: "pip install -U pandas"
+    correct_code: "uv sync  # respect uv.lock"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：切訓練測試集沒給 random_state。
+      沒鎖種子，每次切分都不一樣，模型準確率跟著跳，害你以為程式壞了。
+      正確做法很簡單，補上 random_state 等於 42，隨機就固定下來了。
+    animation: "show_bs_seed"
+    error_code: "train_test_split(X, y)"
+    correct_code: "train_test_split(X, y, random_state=42)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：在 notebook 裡用手刪掉「怪怪的」幾列，卻沒寫成程式。
+      這叫資料漂移，下次重跑那雙手根本不記得動過什麼。
+      正確做法是把篩選條件寫成一行 query，讓刪資料的邏輯本身就是文件。
+    animation: "show_bs_data_drift"
+    error_code: "df = df.drop(bad_rows)  # by hand"
+    correct_code: 'df = df.query("age >= 0")  # in code'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      這一集我們把「重跑不一樣」的兇手抓出來：環境、隨機、資料漂移三顆地雷，配上三根支柱。
+      但光知道地雷還不夠，下一集師傅要帶你動手，從乾淨環境出發，用三行指令產出一份最小可重跑報告。
+      別人複製貼上就能重現你的數字，敬請期待！
+    animation: "show_outro"
+    pause_after: 1.0

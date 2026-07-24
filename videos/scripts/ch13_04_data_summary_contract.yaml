@@ -1,0 +1,133 @@
+meta:
+  chapter: "13"
+  concept: "data_summary_contract"
+  title: "讀資料、產出摘要：唯一的標準答案"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch13_04_data_summary_contract"
+  scene_class: "Ch13DataSummaryScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      三行指令跑起來之後，報告裡的數字到底怎麼來的？這一集鑽進 Step 2。
+      師傅要教你把原始資料，變成一份「唯一的標準答案」摘要——
+      同一份資料、同一份程式，跑幾次都給你一模一樣的一組數字，不多不少。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "the_idea"
+    narration: >
+      先講核心觀念：這一步的產出，是一個 summary 字典，裡面裝著這次分析所有關鍵數字。
+      感染人數、死亡人數、侵襲率、致死率，全部收進同一個 dict，當作「唯一的標準答案」。
+      為什麼能這麼有把握？因為這一步用到的全是確定性運算，沒有半點隨機。
+    animation: "show_the_idea"
+    pause_after: 0.5
+
+  - id: "summary_code"
+    narration: >
+      看程式碼。先用固定路徑讀進 CSV，這一步完全可預期，沒有任何隨機成分。
+      接著用一條固定規則衍生 infected 欄位：臨床嚴重度不是 not_ill 就算感染。
+      規則寫在程式碼裡，不是憑印象手動標記。最後把關鍵數字全收進 summary 字典。
+    animation: "show_summary_code"
+    code: |
+      df = pd.read_csv(path)
+      sev = df["clinical_severity"]
+      df["infected"] = (sev != "not_ill").astype(int)
+
+      summary = {
+          "n_infected": int(df["infected"].sum()),
+          "n_deaths": int((df["outcome"] == "dead").sum()),
+      }
+    pause_after: 0.5
+
+  - id: "summary_output"
+    narration: >
+      跑出來，就是這一組數字：感染 121 人、死亡 19 人、侵襲率 43.2%、致死率 15.7%。
+      這組數字就是這次分析「唯一的標準答案」。
+      下次重跑，一個字都不該變——變了，就代表有地雷混進來了。
+    animation: "show_summary_output"
+    pause_after: 0.5
+
+  - id: "why_deterministic"
+    narration: >
+      為什麼要一直強調「確定性」？因為 groupby、sum、mean 這些都是純數學運算。
+      它們跟亂數、多執行緒排序、時區這些隱形變因完全無關，同輸入永遠同輸出。
+      可重現研究追求的，就是把所有會讓「同程式、同資料」兩次跑不一樣的因素，通通拿掉。
+    animation: "show_why_deterministic"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      主線三重點。第一，摘要是一個 summary 字典，是這次分析唯一的標準答案。
+      第二，衍生欄位用固定規則寫在程式碼裡，不靠手動標記。
+      第三，這一步全是確定性運算，跑幾次都一樣。把摘要存成檔案，下次重跑就能 diff 比對。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：一份標準的病例計數表！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_case_count"
+    narration: >
+      換個常見產出：各樓層翼區的病例計數表。
+      用 groupby 把 infected 加總，得到每個區的病例數，再存成一張 CSV。
+      這張表就是「唯一標準表」，任何人重跑都得到同一張——標準摘要不只可以是數字，也可以是一張表。
+    animation: "show_extra_case_count"
+    code: |
+      counts = (
+          df.groupby(["floor", "wing"])["infected"]
+            .sum()
+            .rename("cases")
+      )
+      counts.to_csv("case_counts.csv")  # one table
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      標準答案三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：把摘要 print 到螢幕上就結束，沒存進檔案。
+      螢幕一關，這次的標準答案就消失了，下次重跑根本沒得比對。
+      正確做法是把 summary 存成 JSON 或 CSV，之後才能 diff 出哪裡變了。
+    animation: "show_bs_not_saved"
+    error_code: "print(summary)  # only on screen"
+    correct_code: 'json.dump(summary, open("s.json","w"))'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：用手動標記的 labels 當 infected 欄位。
+      手動貼標籤沒有規則、沒有紀錄，換個人就標得不一樣。
+      正確做法是把判斷寫成一條明確規則：不是 not_ill 就算感染，規則本身就是文件。
+    animation: "show_bs_manual_label"
+    error_code: 'df["inf"] = manual_labels'
+    correct_code: 'df["inf"] = df.sev != "not_ill"'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：在摘要裡偷偷混進隨機抽樣。
+      用 df.sample 抽 100 筆來估人數，沒鎖種子的話每次結果都不一樣，標準答案就不標準了。
+      要算總數，就老老實實用 len，這是百分之百的確定性運算。
+    animation: "show_bs_nondeterministic"
+    error_code: "n = df.sample(100).shape[0]"
+    correct_code: "n = len(df)  # deterministic count"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      這一集我們把資料煉成一份「唯一的標準答案」摘要，靠的全是確定性運算。
+      但只要分析裡出現「隨機」，故事就不一樣了。
+      下一集師傅要證明給你看：隨機也能「隨機地一致」，關鍵就在那顆隨機種子 seed。敬請期待！
+    animation: "show_outro"
+    pause_after: 1.0

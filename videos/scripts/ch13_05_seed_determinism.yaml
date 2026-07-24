@@ -1,0 +1,132 @@
+meta:
+  chapter: "13"
+  concept: "seed_determinism"
+  title: "seed 決定論：隨機也要「隨機地一致」"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch13_05_seed_determinism"
+  scene_class: "Ch13SeedScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一步全是確定性運算，所以每次跑都一樣。但只要分析裡出現「隨機」，故事就變了。
+      切訓練測試集、初始化模型權重、任何 np.random 抽樣，沒鎖種子就等於每次都是不同的實驗。
+      這一集師傅用一個十行的最小範例證明給你看：同一顆種子，就能讓隨機「隨機地一致」。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "the_problem"
+    narration: >
+      先感受問題。只要程式裡有 train_test_split、np.random、torch.manual_seed 這類步驟，
+      沒設種子，等於每次執行都重新洗一次牌。
+      同一份程式碼兩次跑出不同的準確率，你還以為程式壞了，其實只是忘記固定亂數。
+    animation: "show_the_problem"
+    pause_after: 0.5
+
+  - id: "seed_code"
+    narration: >
+      看這個最小範例。我們寫一個 sample 函式，用 np.random.default_rng 建立獨立的亂數產生器。
+      seed 相同，就會產生同一串亂數序列；不給 seed，它就用系統熵源初始化，每次都不同。
+      然後我們用種子 42 連呼叫兩次，再故意呼叫一次不給種子，等下看輸出見真章。
+    animation: "show_seed_code"
+    code: |
+      import numpy as np
+
+      def sample(seed=None):
+          rng = np.random.default_rng(seed)
+          return rng.integers(0, 100, 5)
+
+      print("seed=42:", sample(42), sample(42))
+      print("no seed:", sample())
+    pause_after: 0.5
+
+  - id: "seed_output"
+    narration: >
+      跑出來，關鍵就在這裡。種子 42 的第一次跟第二次，五個數字完完全全一樣，這就是可重現。
+      而不給種子那次，五個數字整組不同，下次跑又是另一組。
+      同一顆種子、同一串亂數；不設種子、每次都不同——這句話請刻進腦子裡。
+    animation: "show_seed_output"
+    pause_after: 0.5
+
+  - id: "determinism_strips"
+    narration: >
+      把剛剛的輸出畫成圖你會更有感。
+      上面兩條是種子 42 跑出來的序列，五個格子的數字一格不差，綠燈通行，代表可重現。
+      最下面那條是沒設種子跑出來的，數字整組不一樣，紅燈警告，代表不可重現。這就是 seed 的魔法。
+    animation: "show_determinism_strips"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      主線三重點。第一，任何用到隨機的步驟，沒鎖種子就每次是不同實驗。
+      第二，固定 seed 讓隨機「隨機地一致」，同種子同結果。
+      第三，各家套件的種子開關要一起鎖：np.random.default_rng(42)、random_state=42、torch.manual_seed(42)。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：可重現的自助法信賴區間！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_bootstrap"
+    narration: >
+      來個實用的：用自助法 bootstrap 估致死率的 95% 信賴區間。
+      自助法要重複抽樣兩千次，滿滿都是隨機，不鎖種子的話，每次算出來的信賴區間上下限都會飄。
+      只要在最前面鎖好 default_rng(42)，這條信賴區間就變成可重現的——別人重跑也是同一個區間。
+    animation: "show_extra_bootstrap"
+    code: |
+      rng = np.random.default_rng(42)  # lock seed
+      boot = [rng.choice(cfr, len(cfr)).mean()
+              for _ in range(2000)]
+      lo, hi = np.percentile(boot, [2.5, 97.5])
+      print(f"95% CI = ({lo:.1%}, {hi:.1%})")
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      隨機種子三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：切訓練測試集完全沒給 random_state。
+      沒鎖種子，每次切分都不一樣，模型準確率跟著上下跳。
+      正確做法就一個小動作：補上 random_state 等於 42。
+    animation: "show_bs_split"
+    error_code: "train_test_split(X, y)"
+    correct_code: "train_test_split(X, y, random_state=42)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：用老派的全域 np.random.seed 硬鎖。
+      全域種子很脆弱，任何一段程式偷偷抽一次亂數，就把後面的狀態打亂了。
+      正確做法是用 default_rng 建立獨立的產生器，各管各的，互不干擾。
+    animation: "show_bs_global_seed"
+    error_code: "np.random.seed(42)  # global, fragile"
+    correct_code: "rng = np.random.default_rng(42)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：訓練深度學習模型，忘了鎖 torch 的種子。
+      權重初始化本身就是隨機的，沒鎖種子，同一份程式跑兩次準確率就不一樣。
+      正確做法是在訓練前先 torch.manual_seed(42)，把 PyTorch 的隨機也一起釘死。
+    animation: "show_bs_torch"
+    error_code: "model = train(data)  # torch unseeded"
+    correct_code: "torch.manual_seed(42); model = train(data)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      這一集我們用最小範例親眼見證：同一顆種子，隨機也能「隨機地一致」。
+      環境鎖好了、摘要確定了、種子也釘死了，可重現只差最後一道防線。
+      下一集師傅要教你寫一份 schema 契約，搶在上游資料改動之前把錯誤攔下來，敬請期待！
+    animation: "show_outro"
+    pause_after: 1.0
