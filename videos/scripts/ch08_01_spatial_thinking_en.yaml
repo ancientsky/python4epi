@@ -1,0 +1,173 @@
+meta:
+  chapter: "08"
+  concept: "spatial_thinking"
+  title: "Spatial Epi, Plain and Simple: a sea of red is not a real cluster"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch08_01_spatial_thinking"
+  scene_class: "Ch08SpatialThinkingScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi, and welcome to Chapter 8, spatial epidemiology!
+      This chapter answers the question every boss loves to ask: "So where exactly did this thing break out?"
+      Before we open any mapping software, we're going to spend a whole episode
+      explaining what spatial epi is really doing, using one picture everyone gets: a classroom seating chart.
+      Nail this one trick, and the maps and Moran's I coming later are just supersized versions of it.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "seating_scenario"
+    narration: >
+      Picture a classroom. One day the teacher suddenly notices
+      that a little cluster of kids in the back-right corner are all coughing.
+      The teacher gets an uneasy feeling: is this a chain of infection, one kid passing it to the next,
+      or did everyone just happen to catch it separately and happen to sit close together?
+      That's exactly what spatial epi is here to answer:
+      turning "it feels crowded" into "it's statistically crowded."
+    animation: "show_seating_scenario"
+    pause_after: 0.5
+
+  - id: "toblers_law"
+    narration: >
+      Before we touch any code, memorize geography's version of gravity: Tobler's First Law.
+      "Near things are more alike."
+      Your neighbor's cold, the water pipes in the room next door,
+      those resemble you far more than someone across the street or a floor away.
+      For a contagious disease, the sick naturally cluster together in space.
+      So "where" is never just filler; it hides the clues to how something spread.
+    animation: "show_toblers_law"
+    pause_after: 0.5
+
+  - id: "pattern_trap"
+    narration: >
+      But the human brain has one very dangerous bad habit: seeing constellations.
+      We take randomly scattered stars and stubbornly connect them into Orion.
+      Staring at a colored map is exactly the same. Your brain will absolutely "see" a cluster,
+      even when it's really just colors that happened to land in a random arrangement.
+      So eyeballing "a sea of red" alone is not enough to say "there's a real outbreak here."
+    animation: "show_pattern_trap"
+    pause_after: 0.5
+
+  - id: "shuffle_intuition"
+    narration: >
+      So how do we tell real from fake? Epidemiologists have a move that's brutally simple but brilliant: the shuffle test.
+      Snip the "coughing" labels off the seats, shuffle them randomly, stick them back on, and repeat two hundred times.
+      On the left is the real seating chart, coughs clumped together. On the right is a shuffled version, all spread out.
+      If the real map is far more crowded than the random versions, that's a genuine cluster.
+      If it looks about the same as random, then it was just your brain filling in a pattern.
+    animation: "show_shuffle_intuition"
+    pause_after: 0.5
+
+  - id: "shuffle_code"
+    narration: >
+      That intuition is just a few lines of code.
+      First we count the pairs of adjacent seats where both kids are coughing; that's the real map's score.
+      Then we shuffle the cough labels two hundred times, recounting the pairs each time, as our comparison group.
+    animation: "show_shuffle_code"
+    code: |
+      import numpy as np
+
+      # 教室座位 5x5；有咳嗽的同學標 1
+      seats = np.zeros((5, 5), dtype=int)
+      for r, c in [(3, 3), (3, 4), (4, 3), (4, 4), (2, 4), (4, 2)]:
+          seats[r, c] = 1
+
+      def adjacent_cough_pairs(grid):
+          pairs = 0
+          for r in range(5):
+              for c in range(5):
+                  if grid[r, c] == 1:
+                      if c + 1 < 5 and grid[r, c + 1] == 1: pairs += 1
+                      if r + 1 < 5 and grid[r + 1, c] == 1: pairs += 1
+          return pairs
+    pause_after: 0.5
+
+  - id: "shuffle_result"
+    narration: >
+      Run it, and here comes the moment of truth!
+      The real map has six adjacent coughing pairs.
+      Two hundred shuffles average just two point one pairs, and the max is only five.
+      The p-value comes out close to zero, meaning the real map is way more crowded than random.
+      This isn't a coincidence; it's a genuine cluster!
+    animation: "show_shuffle_result"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's package up today's core ideas.
+      One, Tobler's law: near things are more alike.
+      Two, your eyes fill in patterns, so constellation-style clusters can't be trusted.
+      Three, the shuffle test turns a feeling into evidence.
+      And a little secret: this shuffle test is the very soul of Moran's I.
+      It just swaps in a prettier formula, which we'll introduce properly in episode four of this chapter.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: from the classroom straight onto the map of Taiwan!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue"
+    narration: >
+      Swap "classroom seats" for "Taiwan counties,"
+      swap "coughing" for "dengue incidence,"
+      and swap "the kid next to you" for "the county next door,"
+      and every move you just learned, rate first, shuffle test, cluster isn't cause,
+      transfers over completely untouched.
+      That's exactly why the dengue hotspots in the south can be caught, year after year, with this same logic.
+    animation: "show_extra_dengue"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots in spatial thinking!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: comparing case counts instead of attack rates.
+      Places with more people naturally have more cases,
+      which is the same "don't forget the denominator" lesson from the Chapter 3 barbecue, just moved onto a map.
+      Always compute the rate first, then compare.
+    animation: "show_blindspot_count_vs_rate"
+    error_code: "if cases_wing_a > cases_wing_b: risky = 'A'"
+    correct_code: "if rate_wing_a > rate_wing_b: risky = 'A'"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: finding a hotspot and thinking you've found the cause.
+      That's the ecological fallacy; a hotspot only answers "where," never "why."
+      Once you spot a cluster, you still have to go back and do the exposure analysis
+      to know whether the culprit is a shared water source or just coincidence.
+    animation: "show_blindspot_ecological_fallacy"
+    error_code: "if cluster_found: cause = 'shared_water_pipe'"
+    correct_code: "if cluster_found: investigate_exposures(cluster)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: judging a cluster with your eyes alone.
+      Seeing a sea of red and rushing to a conclusion is exactly the constellation trap.
+      The right move is to run a shuffle test or Moran's I first,
+      and only claim "this is real" once the p-value is significant.
+    animation: "show_blindspot_eyeball_only"
+    error_code: "cluster = looks_clustered(heatmap)"
+    correct_code: "cluster = shuffle_test(heatmap, n=1000) < 0.05"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Your spatial thinking is now switched on!
+      Next episode we actually open the nursing home's map,
+      using groupby and pivot to compute floor-by-wing attack rates, then draw it as a heatmap.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

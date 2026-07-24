@@ -1,0 +1,175 @@
+meta:
+  chapter: "08"
+  concept: "choropleth"
+  title: "Per-100k Choropleth: the complete guide to merge and ID alignment"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch08_07_choropleth"
+  scene_class: "Ch08ChoroplethScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi, and welcome to map time! This episode we draw a proper choropleth,
+      a map of Legionnaires' disease incidence per hundred thousand across Taiwan, from real government open data.
+      But the choropleth world has one super-classic trap that leaves the map blank
+      and never once throws an error, and in a moment I'll have you step on that landmine by hand, then defuse it by hand.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "what_is_choropleth"
+    narration: >
+      A choropleth is a graded shaded map, where each county gets a color and the depth of color shows how high the value is.
+      Drawing one needs two datasets: a boundary shapefile for the map, and your outbreak numbers,
+      joined together by the shared column of county name with a merge.
+      Sounds simple, and the trap hides right inside that "join by name."
+    animation: "show_what_is_choropleth"
+    pause_after: 0.5
+
+  - id: "tai_trap"
+    narration: >
+      The trap is Taiwan's own two ways of writing "Tai," the informal one versus the official one.
+      Official government documents use the formal character: Taipei, Taichung, Tainan, Taitung,
+      those four have a formal-character version; but the data you download might spell them with the informal, everyday character.
+      When strings are compared, informal Taipei does not equal official Taipei, so the merge can't find it,
+      and that county turns into a blank patch on the map, and it never once pops up an error message.
+    animation: "show_tai_trap"
+    pause_after: 0.5
+
+  - id: "normalize_code"
+    narration: >
+      The fix is to write a normalization dictionary that maps the informal Taipei, Taichung, Tainan, and Taitung
+      onto the official Taipei, Taichung, Tainan, and Taitung,
+      and even handles old, already-merged county names like the former Taipei County along the way.
+      Using the get method, it converts when it finds a match and keeps the original string when it doesn't,
+      so counties like New Taipei and Taoyuan, which never had the Tai mismatch, don't get harmed.
+      You have to apply this function to both the shapefile and your outbreak data; do it on only one side and you'll still get burned.
+    animation: "show_normalize_code"
+    code: |
+      TAI_NORMALIZE = {
+          "台北市": "臺北市", "台中市": "臺中市",
+          "台南市": "臺南市", "台東縣": "臺東縣",
+      }
+      def normalize_county(name):
+          return TAI_NORMALIZE.get(str(name).strip(), str(name).strip())
+    pause_after: 0.5
+
+  - id: "id_diff_check"
+    narration: >
+      Once normalization is done, don't rush into the merge; do one thing first:
+      take the set of county names in the shapefile, subtract the set of county names in the outbreak data, and then subtract the other way around.
+      Both set differences should come out empty.
+      If either prints something, it means some county name doesn't line up,
+      so catch it and fix it now, rather than waiting for a blank patch on the map before you go back to debug.
+    animation: "show_id_diff_check"
+    code: |
+      shp_counties = set(gdf["county"].apply(normalize_county))
+      data_counties = set(df["county"].unique())
+      print("只在地圖:", sorted(shp_counties - data_counties))
+      print("只在資料:", sorted(data_counties - shp_counties))
+    pause_after: 0.5
+
+  - id: "rate_per_100k"
+    narration: >
+      Only after the IDs are aligned does it become time to crunch the numbers.
+      Populous counties naturally have more cases, so you can't compare raw counts,
+      you must convert to a rate per hundred thousand: cases divided by county population, times a hundred thousand.
+      That way Taipei with two point five three million people and Lienchiang with thirteen thousand
+      can be measured fairly on the same ruler.
+    animation: "show_rate_per_100k"
+    code: |
+      annual = df.groupby(["year", "county"])["cases"].sum().reset_index()
+      annual["rate_per_100k"] = (
+          annual["cases"] / annual["county"].map(COUNTY_POP) * 100_000
+      )
+    pause_after: 0.5
+
+  - id: "plot_choropleth"
+    narration: >
+      The last step, merge and color.
+      Use the normalized county names to merge the map's GeoDataFrame with the incidence table,
+      with how set to left, keeping every county on the map so none vanishes even without matching data.
+      Then call the GeoDataFrame's plot method, set column to rate_per_100k,
+      set cmap to Reds, turn legend on, and in one line of code the map is colored in.
+    animation: "show_plot_choropleth"
+    code: |
+      gdf_merged = gdf.merge(latest, left_on="county_norm",
+                              right_on="county", how="left")
+      gdf_merged.plot(column="rate_per_100k", cmap="Reds",
+                       legend=True, ax=ax)
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Five steps in summary.
+      One, a choropleth joins map and data by county name.
+      Two, the Tai mismatch is the number-one trap, so normalize first.
+      Three, before merging, print the set differences and confirm with your own eyes that they match perfectly.
+      Four, always convert to a rate per hundred thousand, never compare raw case counts.
+      Five, merge with how equal to left to preserve every map boundary.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a dengue township incidence map.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue_township"
+    narration: >
+      Change the scale: dengue is usually mapped down to the township level, finer than counties.
+      The logic is exactly the same, only the ID-alignment pitfalls multiply,
+      because duplicate township names are more common than county names, for instance several counties each have a "Zhongshan District" or a "Datong District,"
+      so when merging you must use a combined county-plus-township field as the key,
+      and matching on township name alone is guaranteed to line up the wrong places.
+    animation: "show_extra_dengue"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three choropleth blind spots, all revealed at once!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_no_normalize"
+    narration: >
+      Blind spot number one: merging directly without doing the Tai normalization.
+      Taipei, Taichung, Tainan, and Taitung turn into grayish blank patches on the map,
+      and the program never once errors, so you might not find out until you're on stage presenting.
+    animation: "show_blindspot_no_normalize"
+    error_code: "gdf.merge(df, left_on='county', right_on='county')"
+    correct_code: "gdf.merge(df, left_on='county_norm', right_on='county_norm')"
+    pause_after: 0.5
+
+  - id: "blindspot_raw_count"
+    narration: >
+      Blind spot number two: coloring the map by raw case counts instead of the rate.
+      Taipei, with over two million people, naturally has larger case numbers, so the map looks bright red,
+      but its incidence may not actually be higher than a small county's, misleading the boss into sending resources to the wrong place.
+    animation: "show_blindspot_raw_count"
+    error_code: "gdf_merged.plot(column='cases', cmap='Reds')"
+    correct_code: "gdf_merged.plot(column='rate_per_100k', cmap='Reds')"
+    pause_after: 0.5
+
+  - id: "blindspot_no_diff_check"
+    narration: >
+      Blind spot number three: plotting straight after the merge and skipping the set-difference check.
+      The result is a blank patch on the map and you have no idea whether the data is genuinely missing or the names just don't line up,
+      wasting time guessing.
+      The right habit: before merging, always print the difference of the two sets and eyeball it once before moving on.
+    animation: "show_blindspot_no_diff_check"
+    error_code: "merged = gdf.merge(df, how='left'); merged.plot()"
+    correct_code: "print(shp_set - data_set); merged = gdf.merge(df, how='left')"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      The choropleth guide is done, and you now know how to dodge the Tai landmine
+      and how to use the set-difference check to catch merge problems.
+      Next episode is a conceptual extension of this series, where we talk about the Kulldorff scan statistic and Bayesian smoothing,
+      what to do when your map runs into small-county rates whipsawing up and down. See you next episode!
+    animation: "show_outro"
+    pause_after: 1.0
