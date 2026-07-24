@@ -50,6 +50,47 @@ class Ch00HelloEpiScene(EpiBaseScene):
 
     total_steps: int = 13
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "第一支程式 Hello Epi",
+            "title_sub": "十分鐘跑完你的第一個流病分析",
+            "browser_title": "Jupyter Lab — 檔案瀏覽器",
+            "result_heading": "分析結果",
+            "stat1_label": "侵襲率 (Attack Rate)",
+            "stat2_label": "致死率 (CFR)",
+            "result_caption": "280 位住民中 121 人感染、19 人死亡",
+            "summary_heading": "你剛剛完成了什麼？",
+            "summary_p1": "1. git clone 把教材複製到本機",
+            "summary_p2": "2. uv sync 安裝所有相依套件",
+            "summary_p3": "3. 用 pandas 讀取 CSV 資料",
+            "summary_p4": "4. 計算侵襲率與致死率",
+            "extra_banner_title": "額外範例：用同樣流程分析腸病毒資料",
+            "extra_output": "侵襲率: 28.3%",
+            "blindspot_banner_title": "初學者常見地雷 3 選 1",
+            "outro_heading": "下一集：Git 基礎版本控制",
+            "outro_sub": "學會追蹤你的分析程式碼！",
+        },
+        "en": {
+            "title_main": "Your First Program: Hello Epi",
+            "title_sub": "Run your first epi analysis in ten minutes",
+            "browser_title": "Jupyter Lab - File Browser",
+            "result_heading": "Analysis Results",
+            "stat1_label": "Attack Rate",
+            "stat2_label": "Case Fatality Rate (CFR)",
+            "result_caption": "Of 280 residents, 121 infected and 19 died",
+            "summary_heading": "What Did You Just Do?",
+            "summary_p1": "1. git clone copied the materials to your machine",
+            "summary_p2": "2. uv sync installed all dependencies",
+            "summary_p3": "3. Read the CSV data with pandas",
+            "summary_p4": "4. Computed the attack rate and CFR",
+            "extra_banner_title": "Extra example: analyze enterovirus data with the same workflow",
+            "extra_output": "Attack rate: 28.3%",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: Git version control basics",
+            "outro_sub": "Learn to track your analysis code!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -60,8 +101,8 @@ class Ch00HelloEpiScene(EpiBaseScene):
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the Hello Epi lesson."""
         self.show_title_card(
-            "第一支程式 Hello Epi",
-            "十分鐘跑完你的第一個流病分析",
+            self.t("title_main"),
+            self.t("title_sub"),
             duration=duration,
         )
 
@@ -114,7 +155,7 @@ class Ch00HelloEpiScene(EpiBaseScene):
         ).shift(DOWN * 1.0)
 
         browser_title = Text(
-            "Jupyter Lab — 檔案瀏覽器",
+            self.t("browser_title"),
             font=FONT_CJK,
             font_size=18,
             color=ManimColor(TEXT_SECONDARY),
@@ -171,19 +212,19 @@ class Ch00HelloEpiScene(EpiBaseScene):
         self.show_step_indicator(4, self.total_steps)
 
         heading = Text(
-            "分析結果",
+            self.t("result_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ManimColor(ACCENT_ORANGE),
         ).to_edge(UP, buff=0.8)
 
         cards = VGroup(
-            self._make_stat_card("43.2%", "侵襲率 (Attack Rate)", ACCENT_ORANGE),
-            self._make_stat_card("15.7%", "致死率 (CFR)", ERROR_RED),
+            self._make_stat_card("43.2%", self.t("stat1_label"), ACCENT_ORANGE),
+            self._make_stat_card("15.7%", self.t("stat2_label"), ERROR_RED),
         ).arrange(RIGHT, buff=1.2).move_to(ORIGIN)
 
         caption = Text(
-            "280 位住民中 121 人感染、19 人死亡",
+            self.t("result_caption"),
             font=FONT_CJK,
             font_size=22,
             color=ManimColor(TEXT_SECONDARY),
@@ -200,17 +241,17 @@ class Ch00HelloEpiScene(EpiBaseScene):
         self.show_step_indicator(5, self.total_steps)
 
         heading = Text(
-            "你剛剛完成了什麼？",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ManimColor(ACCENT_ORANGE),
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. git clone 把教材複製到本機", font=FONT_CJK, font_size=24, color=ManimColor(TEXT_PRIMARY)),
-            Text("2. uv sync 安裝所有相依套件", font=FONT_CJK, font_size=24, color=ManimColor(TEXT_PRIMARY)),
-            Text("3. 用 pandas 讀取 CSV 資料", font=FONT_CJK, font_size=24, color=ManimColor(TEXT_PRIMARY)),
-            Text("4. 計算侵襲率與致死率", font=FONT_CJK, font_size=24, color=ManimColor(TEXT_PRIMARY)),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=24, color=ManimColor(TEXT_PRIMARY)),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=24, color=ManimColor(TEXT_PRIMARY)),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=24, color=ManimColor(TEXT_PRIMARY)),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=24, color=ManimColor(TEXT_PRIMARY)),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -224,7 +265,7 @@ class Ch00HelloEpiScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：用同樣流程分析腸病毒資料")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
@@ -245,7 +286,7 @@ class Ch00HelloEpiScene(EpiBaseScene):
             "print(f'侵襲率: {attack_rate:.1f}%')  # 28.3%"
         )
 
-        output_text = "侵襲率: 28.3%"
+        output_text = self.t("extra_output")
 
         code_panel = self.show_code(
             code_lines,
@@ -264,7 +305,7 @@ class Ch00HelloEpiScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選 1")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_git_clone(self, duration: float = 5.0, **kwargs) -> None:
@@ -297,14 +338,14 @@ class Ch00HelloEpiScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：Git 基礎版本控制",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ManimColor(ACCENT_ORANGE),
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "學會追蹤你的分析程式碼！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=ManimColor(TEXT_SECONDARY),

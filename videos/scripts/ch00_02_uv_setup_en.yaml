@@ -1,0 +1,179 @@
+meta:
+  chapter: "00"
+  concept: "uv_setup"
+  title: "uv & Environment Setup: One Line to Master Python Packages"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch00_02_uv_setup"
+  scene_class: "Ch00UvSetupScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: uv and virtual environments
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Today we're tackling a nightmare every Python beginner runs into: package management.
+      Ever had this happen? You install one package, and suddenly another one breaks.
+      That's the legendary dependency hell.
+      Don't worry, after learning uv today, you'll manage every package with a single command,
+      and never struggle in the pip install swamp again.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "what_is_venv"
+    narration: >
+      Before we fix the problem, let's understand one concept: the virtual environment.
+      Think of a virtual environment as its own separate toolbox.
+      Say you're building a dengue surveillance report and a COVID vaccination dashboard at the same time.
+      The dengue report needs pandas 1.5, while the COVID dashboard needs pandas 2.0.
+      Without virtual environments, the two versions fight and your setup crashes.
+      With them, each project has its own toolbox, undisturbed, and everyone lives in peace.
+    animation: "show_venv_metaphor"
+    pause_after: 0.5
+
+  - id: "install_uv"
+    narration: >
+      So how do you install uv? Super simple.
+      On macOS or Linux, open a terminal, paste this curl command, and you're done.
+      Windows friends, don't worry, just paste the matching PowerShell command.
+      After installing, remember to open a fresh terminal window so the system recognizes the uv command.
+    animation: "show_install_uv"
+    code: |
+      # macOS / Linux
+      curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      # Windows PowerShell
+      powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+    pause_after: 0.5
+
+  - id: "uv_workflow"
+    narration: >
+      Once uv is installed, the daily workflow is just three steps, and it's super easy to remember.
+      Step one, uv init, creates a new project and automatically generates pyproject.toml.
+      Step two, uv add, brings in the packages you need, like pandas and matplotlib.
+      Step three, uv run, executes your program inside the virtual environment.
+      Three steps, three commands, ridiculously simple.
+    animation: "show_uv_workflow"
+    code: |
+      uv init my-epi-project        # 步驟一：建立專案
+      uv add pandas matplotlib      # 步驟二：安裝套件
+      uv run python analysis.py     # 步驟三：執行程式
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Finally, a quick comparison so you instantly get the difference between pip and uv.
+      With pip, you manually create the virtual environment, manually activate it, and manually manage requirements.txt.
+      uv does it all automatically: auto-creates the environment, locks versions, and installs over ten times faster.
+      In short, pip is a bicycle and uv is a bullet train.
+      This whole course uses uv, so say goodbye to dependency hell!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: two outbreak projects at once
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Next, let's use a real scenario
+      to see how important virtual environments are in actual public health work.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Suppose you're a data analyst at the CDC juggling two projects at once.
+      The first is a weekly dengue surveillance report using pandas 1.5 and an older folium.
+      The second is a COVID vaccination coverage dashboard using pandas 2.1 and the latest plotly.
+      If both projects share one environment, the pandas versions will definitely clash.
+      But with uv, each project has its own dot venv folder, fully isolated.
+      Run uv run inside the dengue project and it automatically uses pandas 1.5;
+      switch to the COVID project and uv run automatically uses pandas 2.1. Just that elegant.
+    animation: "show_extra_example"
+    code: |
+      # 專案 A：登革熱監測報告
+      cd dengue-report/
+      uv run python weekly_report.py    # pandas 1.5
+
+      # 專案 B：COVID 疫苗儀表板
+      cd covid-dashboard/
+      uv run python dashboard.py        # pandas 2.1
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Finally, let's look at the three traps beginners most often fall into when setting up their environment.
+      I've fallen into all three myself, so if you do too, no shame, just learn and move on.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: after installing uv, you type uv and get command not found.
+      Don't panic, it's not broken.
+      The install script put uv under your home directory in dot cargo slash bin,
+      but your current terminal doesn't know that path yet.
+      The fix is easy: close the terminal and open a new one.
+      Or manually source your shell config file.
+    animation: "show_blindspot_not_found"
+    error_code: |
+      $ uv
+      command not found: uv
+    correct_code: |
+      # 關掉終端機重開，或執行：
+      source ~/.bashrc   # bash 用戶
+      source ~/.zshrc    # zsh 用戶
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: not understanding why you use uv run instead of just typing python.
+      Typing python directly uses the global system Python, outside the virtual environment.
+      uv run means: first enter this project's virtual environment, then run the command that follows.
+      So uv run python equals activate the virtual environment plus run python, two steps in one.
+      Make it a habit to prefix every command with uv run and you won't hit problems.
+    animation: "show_blindspot_uv_run"
+    error_code: |
+      $ python analysis.py
+      ModuleNotFoundError: No module named 'pandas'
+    correct_code: |
+      $ uv run python analysis.py
+      分析完成！結果已儲存。
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: what's the difference between pyproject.toml and requirements.txt?
+      requirements.txt is the old way, listing only package names with no version locking, which causes trouble.
+      pyproject.toml is the Python community's new standard, and besides packages
+      it records the project name, Python version, and dev tool settings, all in one file.
+      uv automatically generates pyproject.toml and uv.lock,
+      and uv.lock pins the exact version of every package so your environment matches your colleague's exactly.
+      So go ahead and embrace pyproject.toml, it's the future.
+    animation: "show_blindspot_pyproject"
+    error_code: |
+      # requirements.txt（舊方法）
+      pandas
+      matplotlib
+      # 沒有鎖版本，每次裝可能不同
+    correct_code: |
+      # pyproject.toml（新標準）+ uv.lock
+      [project]
+      dependencies = ["pandas>=2.0", "matplotlib>=3.8"]
+      # uv.lock 精確鎖定每個版本
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Awesome! You've learned to manage Python environments with uv.
+      From now on, no matter how many public health projects land on your desk, you'll never fear package clashes.
+      In the next video, we'll open Jupyter Lab and officially start writing code!
+      See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

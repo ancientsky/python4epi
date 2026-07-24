@@ -1,0 +1,159 @@
+meta:
+  chapter: "00"
+  concept: "git_basics"
+  title: "Git Version Control: A Time Machine for Your Code"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch00_05_git_basics"
+  scene_class: "Ch00GitBasicsScene"
+
+segments:
+  # ── A. Main Lesson ──────────────────────────────────────────────
+
+  - id: "intro"
+    narration: >
+      Hi, and welcome back to the Python for Epidemiology classroom! Today we're talking about a tool that has saved countless engineers and researchers: Git.
+      Have you ever seen a file on your desktop named analysis_report_final_v2_the_real_final.py?
+      Edited over and over, until you have no idea which one is correct, sheer version hell.
+      Don't worry, Git is here to end that nightmare.
+    animation: "show_title"
+    pause_after: 0.8
+
+  - id: "what_is_git"
+    narration: >
+      Think of Git as a time machine. Every time you save, Git takes a snapshot, fully recording the state of all your files at that moment.
+      Want to go back to the version from three days ago? No problem, one command and you travel back.
+      Want to see exactly what changed last week? Git compares it line by line, crystal clear.
+      No more manually copying a pile of backup_0325 folders.
+    animation: "show_what_is_git"
+    pause_after: 0.5
+
+  - id: "three_areas"
+    narration: >
+      Git's world has three important areas, and understanding them gives you eighty percent of the skill.
+      The first is the working directory, where you normally edit your code.
+      The second is the staging area, where you use git add to place your edited files, like putting things on a conveyor belt.
+      The third is the repository, where you use git commit to officially save the staging area's contents, like pressing the save snapshot button on the time machine.
+      Remember this flow: working directory, staging area, repository, three stops from start to finish.
+    animation: "show_three_areas"
+    pause_after: 0.8
+
+  - id: "daily_workflow"
+    narration: >
+      Let's look at the workflow you'll use every day. After writing your code, first use git add to add the files you want to save to the staging area.
+      Then use git commit with a message to officially record this change.
+      Finally, use git push to send your local record to a remote server, like GitHub.
+      These three steps are the core rhythm of daily development: add, commit, push, simple and solid.
+    animation: "show_daily_workflow"
+    code: |
+      git add analysis.py
+      git commit -m "feat: add attack rate calculation"
+      git push origin main
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Finally, let's review the five most-used Git commands. git init creates a new repository.
+      git status shows which files have been modified. git add adds files to the staging area.
+      git commit saves and records your changes. git push sends the record to the remote.
+      These five commands handle over ninety percent of everyday situations, so just memorize them first!
+    animation: "show_main_summary"
+    code: |
+      git init
+      git status
+      git add <file>
+      git commit -m "message"
+      git push origin main
+    pause_after: 1.0
+
+  # ── B. Extra Example ────────────────────────────────────────────
+
+  - id: "extra_banner"
+    narration: >
+      Next, an extra example: the scenario of co-authoring an outbreak report as a team.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Imagine the nursing home's Legionella investigation report is due soon.
+      You handle the descriptive analysis, while your colleague Mei handles the spatial epidemiology maps.
+      If you both edit the same file and swap USB drives, sooner or later things get mixed up.
+      With Git, you open a branch called feat/descriptive, and Mei opens one called feat/spatial.
+      Each of you works on your own branch, and when done you open a pull request; once the review passes, it merges into the main line.
+      This way you don't interfere with each other, you keep a full record of changes, and team collaboration flows smoothly.
+    animation: "show_extra_example"
+    code: |
+      git checkout -b feat/descriptive
+      # ... 完成描述性分析 ...
+      git push origin feat/descriptive
+      # 在 GitHub 上發 Pull Request
+    pause_after: 0.8
+
+  # ── C. Blind Spots ──────────────────────────────────────────────
+
+  - id: "blindspot_banner"
+    narration: >
+      Finally, let's look at the three traps beginners most often fall into; learning to dodge them saves you a lot of wasted effort.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: mindlessly using git add dot to throw everything in.
+      You accidentally push your .env password file and a few hundred megabytes of dataset up to GitHub, super dangerous.
+      The correct approach is to first create a .gitignore file and list everything that shouldn't be tracked.
+      Then specify filenames when you git add; don't be lazy with the dot, build a good habit.
+    animation: "show_blindspot_git_add"
+    code: |
+      # 錯誤示範
+      git add .
+
+      # 正確做法
+      echo ".env" >> .gitignore
+      echo "data/large_file.csv" >> .gitignore
+      git add analysis.py epi_curve.py
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: your commit message just says update or fix.
+      Three months later you come back and have no idea what you changed, basically amnesia.
+      A good commit message spells out what you did and why. For example, feat: add attack rate by floor.
+      Future you will thank present you for spending an extra ten seconds writing a good message, trust me.
+    animation: "show_blindspot_commit_msg"
+    code: |
+      # 錯誤示範
+      git commit -m "update"
+
+      # 正確做法
+      git commit -m "feat: add attack rate calculation by floor"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: git push gets rejected and you're left with a puzzled face.
+      This usually means a colleague pushed a new commit before you, so the remote is ahead of you.
+      The fix is simple: first git pull to bring the remote changes back and merge, then push again.
+      If there's a conflict, Git marks it so you can resolve it by hand, don't panic, look carefully and edit.
+    animation: "show_blindspot_push_rejected"
+    code: |
+      # push 被拒絕
+      git push origin main
+      # error: rejected - remote contains work you do not have
+
+      # 正確做法
+      git pull origin main
+      # 解決衝突（如果有的話）
+      git push origin main
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations, you've learned the basics of Git! With version control, your code will never get lost again.
+      In the next episode we'll walk through the whole course roadmap, so you know all the exciting things coming up.
+      See you next time, bye-bye!
+    animation: "show_outro"
+    pause_after: 1.0

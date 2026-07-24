@@ -1,0 +1,163 @@
+meta:
+  chapter: "00"
+  concept: "jupyter"
+  title: "Getting Started with Jupyter Lab: Write and See Results Live"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch00_03_jupyter"
+  scene_class: "Ch00JupyterScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: Jupyter Lab basics
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, and welcome back to the Python for Epidemiology classroom!
+      Today we're introducing a tool that data scientists all over the world adore: Jupyter Lab.
+      Think of it as a digital lab notebook.
+      You write a bit of code, see the result instantly, and add text explanations right beside it.
+      It's like running experiments and taking notes at the same time, except your lab lives in your browser.
+      When investigating an outbreak, writing your analysis while watching the charts appear is incredibly convenient!
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "launch"
+    narration: >
+      Launching Jupyter Lab is very simple.
+      Open a terminal, type uv run jupyter lab, and press Enter.
+      Your browser pops open an interface, with a file explorer on the left and your workspace on the right.
+      If the browser doesn't open automatically, the terminal shows a web address, just copy and paste it.
+      Congratulations, your digital lab is open for business!
+    animation: "show_launch"
+    code: "uv run jupyter lab"
+    pause_after: 0.5
+
+  - id: "cells"
+    narration: >
+      The core concept in Jupyter is the cell.
+      There are two kinds: a Code cell for writing code, and a Markdown cell for writing text explanations.
+      Think of the Code cell as the get-stuff-done box, and the Markdown cell as the take-notes box.
+      Alternate between them, and your analysis report will have both code and clear explanations, easy to follow at a glance.
+      Switching is easy: just pick Code or Markdown from the dropdown menu at the top.
+    animation: "show_cells"
+    pause_after: 0.5
+
+  - id: "run_cell"
+    narration: >
+      Once you've written your code, how do you run it? The most-used shortcut is Shift plus Enter.
+      Press it, and Python obediently runs that cell's code, with the result shown right below.
+      Notice the square brackets on the left; the number inside shows the execution order.
+      The first cell you run shows 1, the second shows 2, and so on.
+      That number is really important, and we'll come back to it during the blind spots section.
+    animation: "show_run_cell"
+    code: "print('Hello, 疫調人員！')"
+    output: "Hello, 疫調人員！"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's pull together the key points.
+      First, launch the environment with uv run jupyter lab.
+      Second, Code cells for code, Markdown cells for notes.
+      Third, Shift plus Enter runs a cell and shows the result instantly.
+      Master these three moves and you're ready to start analyzing with Jupyter!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: writing an outbreak weekly report in Jupyter
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Next, let's look at a super practical use case.
+      See how Jupyter helps you write a professional, polished outbreak weekly report.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Suppose you're an investigator at the health bureau who files a weekly dengue surveillance report.
+      In the first Markdown cell you write the title and summary,
+      something like: 12 new local dengue cases this week, concentrated in Qianzhen District.
+      Then in the next Code cell you plot the epidemic curve, and the chart embeds right in the notebook.
+      Finally, add another Markdown cell for conclusions and recommendations.
+      This way, text, code, and charts all live in one document,
+      your boss opens it and reads it, fully reproducible, and you never again battle pasting images into Word!
+    animation: "show_extra_example"
+    code: |
+      # Markdown cell 寫標題：
+      # # 登革熱監測週報 — 第 12 週
+
+      # Code cell 畫圖：
+      import matplotlib.pyplot as plt
+      weeks = [8, 9, 10, 11, 12]
+      cases = [3, 5, 7, 9, 12]
+      plt.bar(weeks, cases)
+      plt.title("本土登革熱週報趨勢")
+      plt.xlabel("週次")
+      plt.ylabel("病例數")
+      plt.show()
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Finally, let's look at the three biggest traps Jupyter beginners fall into.
+      I've fallen into these too, and once you know them, you'll never waste time debugging them again.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: a cell's execution order is not the same as its position on the page!
+      Many people assume Jupyter runs top to bottom automatically. It doesn't.
+      You can absolutely run the third cell first, then the first cell, and everything gets scrambled.
+      For example, you define cases equals 121 in the second cell, but you skip it and run print cases in the third,
+      and Python tells you: I don't know who this cases is!
+      Build a good habit: when the analysis is done, click the Kernel menu, choose Restart Kernel and Run All,
+      so every cell runs from top to bottom and the order is guaranteed correct.
+    animation: "show_blindspot_order"
+    error_code: "# 跳過定義就執行 → NameError\nprint(cases)"
+    correct_code: "# Kernel → Restart & Run All\n# 從頭到尾依序執行，萬無一失"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: you installed a package but the import fails.
+      You pip install a new package in one cell,
+      then import it in the next, and Python says it can't find it?
+      That's because the package is installed, but the kernel's memory is still stuck in the old state.
+      The fix is simple: after installing, go to the Kernel menu and hit Restart Kernel,
+      restart the core, and the import works fine.
+    animation: "show_blindspot_kernel"
+    error_code: "!pip install some_package\nimport some_package  # ModuleNotFoundError!"
+    correct_code: "# 裝完後 → Restart Kernel\n# 重啟核心再 import\nimport some_package  # 成功！"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: an asterisk appears next to a cell and just keeps spinning.
+      An asterisk in the square brackets means it's still running,
+      but if you've waited forever and it's still an asterisk, there are usually only two reasons.
+      One, your code has an infinite loop, like a while True that forgot its break.
+      Two, the program is waiting for you to type something, but Jupyter's input box isn't very obvious.
+      The fix: press the black square stop button in the toolbar to force an interrupt,
+      then go back and check your code, fix it, and rerun.
+    animation: "show_blindspot_stuck"
+    error_code: "# [*] 一直轉...\nwhile True:\n    pass  # 無窮迴圈！"
+    correct_code: "# 按 ■ 停止按鈕中斷\n# 修正程式碼後重新執行\nfor i in range(10):\n    print(i)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! You can now use Jupyter Lab.
+      Remember: Code cells do the work, Markdown cells take the notes, and Shift plus Enter runs them.
+      In the next video, we'll write the first Python program of your life: Hello Epi!
+      See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

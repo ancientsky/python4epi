@@ -1,0 +1,142 @@
+meta:
+  chapter: "14"
+  concept: "export_docx"
+  title: "Export a Formal DOCX Report: python-docx Headings, Tables, Embedded Figures"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch14_05_export_docx"
+  scene_class: "Ch14ExportDocxScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      A deck is great for presenting on stage, but for official filing and paperwork the boss wants a
+      Word report. This episode we use python-docx to take the same charts and numbers and assemble
+      them into a formal report document with headings, paragraphs, and an embedded figure. The good
+      news is the raw material is exactly the same, we're just swapping the export tool.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_docx"
+    narration: >
+      Why bother with DOCX too? Because a deck is for the eye to skim, while a formal report is for
+      people to read word by word, archive, and sign off on. A Word report has proper heading levels,
+      paragraphs, and table styles, which suits it as a closing document for the file. And just like
+      the PPTX, it's produced programmatically and reproducibly.
+    animation: "show_why_docx"
+    pause_after: 0.5
+
+  - id: "docx_code"
+    narration: >
+      Let's look at the main act of python-docx. Document opens a new document, add_heading adds a
+      heading, where level 0 is the document's main title and level 1 is a subsection heading;
+      add_paragraph writes a body paragraph; add_picture embeds the epidemic curve from memory right
+      in; and finally doc.save writes it out as a docx.
+    animation: "show_docx_code"
+    code: |
+      from docx import Document
+      from docx.shared import Inches as DInches
+      doc = Document()
+      doc.add_heading("Legionella cluster report", level=0)
+      doc.add_heading("Summary", level=1)
+      doc.add_paragraph(f"AR {ar:.1%}, CFR {cfr:.1%}")
+      doc.add_picture(buf, width=DInches(5.5))
+      doc.save("legionella_report.docx")
+    pause_after: 0.5
+
+  - id: "doc_mockup"
+    narration: >
+      Once it runs, here's what you get: at the very top is the document's main title, below it the
+      "Summary" subsection with a paragraph on the case count and case fatality, and then the
+      "Epidemic curve" subsection with that figure embedded. The heading hierarchy is crystal clear,
+      and the boss can open Word and read it, print it, and sign it straight away.
+    animation: "show_doc_mockup"
+    pause_after: 0.5
+
+  - id: "reproducible"
+    narration: >
+      This echoes the reproducibility spirit of Chapter 13: the report isn't typed by hand, it's grown
+      by code. When the data updates or the conclusion is revised, rerun the same code once and the
+      Word report is regenerated with the latest numbers, so there's never any doubt like "which
+      version of the chart did this report use?"
+    animation: "show_reproducible"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways. One, add_heading's level controls the heading hierarchy, level 0 the main title
+      and level 1 a subsection. Two, add_paragraph adds body text and add_picture embeds the in-memory
+      figure. Three, DOCX and PPTX share the same raw material, swap the tool without swapping the data.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a formal report on a norovirus hospital cluster!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_formal_report"
+    narration: >
+      Suppose a hospital has a norovirus in-facility cluster. Store the titles and body text of the
+      eight sections as a list, run a loop over it, add_heading for each section's title and
+      add_paragraph for its body, and finally embed the epidemic curve and save. A consistently
+      formatted, clearly sectioned formal closing report grows itself, just like that.
+    animation: "show_extra_formal_report"
+    code: |
+      doc = Document()
+      doc.add_heading("Norovirus outbreak report", level=0)
+      for sec in REPORT_8_SECTIONS:
+          doc.add_heading(sec.title, level=1)
+          doc.add_paragraph(sec.body)
+      doc.add_picture(epi_curve, width=DInches(6))
+      doc.save("norovirus_report.docx")
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for DOCX export!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: reusing the same BytesIO figure for DOCX after PPTX already used it, without
+      seek(0). The cursor sits at the end of the file, and Word inserts a blank image. When you share the
+      same figure, seek(0) before every insert.
+    animation: "show_blindspot_forgot_seek"
+    error_code: "doc.add_picture(buf)"
+    correct_code: "buf.seek(0); doc.add_picture(buf)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: an Inches name clash. Both pptx.util and docx.shared have Inches, and
+      importing them at the same time overwrites each other. On the docx side, remember to give it an
+      alias, like Inches as DInches, so you don't use the wrong unit.
+    animation: "show_blindspot_inches_clash"
+    error_code: "from pptx.util import Inches"
+    correct_code: "from docx.shared import Inches as D"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: wanting a heading but faking it by hammering bold text with
+      add_paragraph. The right way is add_heading with a level, so it applies Word's built-in heading
+      style and can later auto-generate a table of contents.
+    animation: "show_blindspot_heading_as_paragraph"
+    error_code: 'doc.add_paragraph("Summary")  # as title'
+    correct_code: 'doc.add_heading("Summary", level=1)'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! You've walked the entire investigation workflow, from receiving the notification,
+      cleaning the data, descriptive analysis, statistical inference, and space-time modeling, all the way
+      to the causal call, and finally exporting it in one click as a deck and a Word report. This chapter
+      is also the series finale of these videos. You are now an investigation analyst who can stand on your
+      own!
+    animation: "show_outro"
+    pause_after: 1.0

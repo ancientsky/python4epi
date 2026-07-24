@@ -60,6 +60,81 @@ class Ch00WhyPythonScene(EpiBaseScene):
 
     total_steps: int = 12
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "為什麼用 Python",
+            "title_sub": "流行病學家的超級工具",
+            "excel_heading": "Excel 的三大痛點",
+            "pain1_title": "資料量上限",
+            "pain1_desc": "最多 104 萬行\n大型疫調容易爆掉",
+            "pain2_title": "手動重複操作",
+            "pain2_desc": "每次分析都要\n重新點選設定",
+            "pain3_title": "無法重現",
+            "pain3_desc": "別人無法精確\n複製你的步驟",
+            "power_heading": "Python 一行搞定",
+            "power_note": "可重現、可自動化、可分享",
+            "vs_heading": "Python vs R — 選哪個？",
+            "python_points": [
+                "泛用型語言",
+                "ML / DL 生態系最強",
+                "自動化、網頁、API 都行",
+                "學一次用到處",
+            ],
+            "r_points": [
+                "統計學起家",
+                "ggplot2 繪圖超美",
+                "生物統計套件多",
+                "學術論文常見",
+            ],
+            "vs_note": "兩個都好！本課程選 Python 因為泛用性更高",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. Excel 有行數上限、不可重現",
+            "summary_p2": "2. Python 可自動化分析、處理大數據",
+            "summary_p3": "3. 寫程式 = 寫分析紀錄，天然可重現",
+            "extra_banner_title": "額外範例：COVID-19 大規模疫調",
+            "extra_heading": "十萬筆資料？Python 幾秒搞定",
+            "blindspot_banner_title": "初學者常見盲點 3 選",
+            "outro_heading": "下一集：安裝 uv 與建立開發環境",
+            "outro_sub": "三分鐘搞定 Python 環境，馬上開始寫程式！",
+        },
+        "en": {
+            "title_main": "Why Python?",
+            "title_sub": "The epidemiologist's superpower",
+            "excel_heading": "Excel's Three Big Pain Points",
+            "pain1_title": "Row limit",
+            "pain1_desc": "Caps at ~1.04M rows\nbig investigations blow up",
+            "pain2_title": "Manual repetition",
+            "pain2_desc": "Every analysis means\nre-clicking every setting",
+            "pain3_title": "Not reproducible",
+            "pain3_desc": "Others can't precisely\nreplay your steps",
+            "power_heading": "Python does it in one line",
+            "power_note": "Reproducible, automatable, shareable",
+            "vs_heading": "Python vs R — which one?",
+            "python_points": [
+                "General-purpose language",
+                "Strongest ML / DL ecosystem",
+                "Automation, web, APIs too",
+                "Learn once, use everywhere",
+            ],
+            "r_points": [
+                "Born from statistics",
+                "Gorgeous ggplot2 graphics",
+                "Tons of biostat packages",
+                "Common in academic papers",
+            ],
+            "vs_note": "Both are great! This course picks Python for its versatility",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. Excel has row limits and isn't reproducible",
+            "summary_p2": "2. Python automates analysis and handles big data",
+            "summary_p3": "3. Code = your analysis record, reproducible by nature",
+            "extra_banner_title": "Extra example: COVID-19 large-scale investigation",
+            "extra_heading": "100k records? Python handles it in seconds",
+            "blindspot_banner_title": "3 Common Beginner Blind Spots",
+            "outro_heading": "Next up: install uv and set up your dev environment",
+            "outro_sub": "Python environment ready in three minutes - start coding now!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -69,23 +144,23 @@ class Ch00WhyPythonScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the Why Python lesson."""
-        self.show_title_card("為什麼用 Python", "流行病學家的超級工具", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_excel_limit(self, duration: float = 6.0, **kwargs) -> None:
         """Show Excel pain points as three cards."""
         self.show_step_indicator(1, self.total_steps)
 
         heading = Text(
-            "Excel 的三大痛點",
+            self.t("excel_heading"),
             font=FONT_CJK,
             font_size=32,
             color=TEXT_PRIMARY,
         ).to_edge(UP, buff=0.8)
 
         cards = VGroup(
-            self._make_pain_card("1", "資料量上限", "最多 104 萬行\n大型疫調容易爆掉"),
-            self._make_pain_card("2", "手動重複操作", "每次分析都要\n重新點選設定"),
-            self._make_pain_card("3", "無法重現", "別人無法精確\n複製你的步驟"),
+            self._make_pain_card("1", self.t("pain1_title"), self.t("pain1_desc")),
+            self._make_pain_card("2", self.t("pain2_title"), self.t("pain2_desc")),
+            self._make_pain_card("3", self.t("pain3_title"), self.t("pain3_desc")),
         ).arrange(RIGHT, buff=0.5).move_to(ORIGIN + DOWN * 0.2)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -98,7 +173,7 @@ class Ch00WhyPythonScene(EpiBaseScene):
         self.show_step_indicator(2, self.total_steps)
 
         heading = Text(
-            "Python 一行搞定",
+            self.t("power_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ACCENT_ORANGE,
@@ -114,7 +189,7 @@ class Ch00WhyPythonScene(EpiBaseScene):
         ).move_to(ORIGIN + UP * 0.2)
 
         note = Text(
-            "可重現、可自動化、可分享",
+            self.t("power_note"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,
@@ -131,7 +206,7 @@ class Ch00WhyPythonScene(EpiBaseScene):
         self.show_step_indicator(3, self.total_steps)
 
         heading = Text(
-            "Python vs R — 選哪個？",
+            self.t("vs_heading"),
             font=FONT_CJK,
             font_size=32,
             color=TEXT_PRIMARY,
@@ -140,27 +215,17 @@ class Ch00WhyPythonScene(EpiBaseScene):
         python_card = self._make_compare_card(
             "Python",
             ACCENT_ORANGE,
-            [
-                "泛用型語言",
-                "ML / DL 生態系最強",
-                "自動化、網頁、API 都行",
-                "學一次用到處",
-            ],
+            self.t("python_points"),
         ).shift(LEFT * 3.2)
 
         r_card = self._make_compare_card(
             "R",
             ACCENT_BLUE,
-            [
-                "統計學起家",
-                "ggplot2 繪圖超美",
-                "生物統計套件多",
-                "學術論文常見",
-            ],
+            self.t("r_points"),
         ).shift(RIGHT * 3.2)
 
         note = Text(
-            "兩個都好！本課程選 Python 因為泛用性更高",
+            self.t("vs_note"),
             font=FONT_CJK,
             font_size=20,
             color=TEXT_SECONDARY,
@@ -177,7 +242,7 @@ class Ch00WhyPythonScene(EpiBaseScene):
         self.show_step_indicator(4, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
@@ -185,15 +250,15 @@ class Ch00WhyPythonScene(EpiBaseScene):
 
         points = VGroup(
             Text(
-                "1. Excel 有行數上限、不可重現",
+                self.t("summary_p1"),
                 font=FONT_CJK, font_size=24, color=TEXT_PRIMARY,
             ),
             Text(
-                "2. Python 可自動化分析、處理大數據",
+                self.t("summary_p2"),
                 font=FONT_CJK, font_size=24, color=TEXT_PRIMARY,
             ),
             Text(
-                "3. 寫程式 = 寫分析紀錄，天然可重現",
+                self.t("summary_p3"),
                 font=FONT_CJK, font_size=24, color=TEXT_PRIMARY,
             ),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
@@ -209,7 +274,7 @@ class Ch00WhyPythonScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：COVID-19 大規模疫調")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
@@ -230,7 +295,7 @@ class Ch00WhyPythonScene(EpiBaseScene):
         )
 
         heading = Text(
-            "十萬筆資料？Python 幾秒搞定",
+            self.t("extra_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_BLUE,
@@ -251,7 +316,7 @@ class Ch00WhyPythonScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見盲點 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_math(self, duration: float = 5.0, **kwargs) -> None:
@@ -284,14 +349,14 @@ class Ch00WhyPythonScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：安裝 uv 與建立開發環境",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "三分鐘搞定 Python 環境，馬上開始寫程式！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

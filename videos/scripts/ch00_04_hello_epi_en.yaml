@@ -1,0 +1,175 @@
+meta:
+  chapter: "00"
+  concept: "hello_epi"
+  title: "Your First Program, Hello Epi: Run Your First Epi Analysis in Ten Minutes"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch00_04_hello_epi"
+  scene_class: "Ch00HelloEpiScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: your first epi analysis program
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, and welcome to the Python for Epidemiology classroom!
+      Today, in under ten minutes, we'll run the very first epidemiology analysis program of your life.
+      That's right, ten minutes, faster than cooking a bowl of instant noodles.
+      You need zero programming background; just follow my steps,
+      copy, paste, press Enter, and you'll compute the attack rate and the case fatality rate.
+      Ready? Let's go!
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "clone_repo"
+    narration: >
+      Step one, download the materials to your computer.
+      Open a terminal, type git clone followed by our repo URL,
+      then enter the folder and run uv sync to install every package.
+      It's like buying all your ingredients at the supermarket, and then you're ready to cook.
+      The whole thing takes a minute or two, depending on your connection.
+    animation: "show_clone_repo"
+    code: |
+      git clone https://github.com/user/python4epi.git
+      cd python4epi
+      uv sync
+    pause_after: 0.5
+
+  - id: "open_notebook"
+    narration: >
+      Once installed, type uv run jupyter lab to launch Jupyter.
+      Your browser pops open an interface with a file list on the left.
+      Find the notebooks folder, click in, and open the first notebook.
+      Jupyter is your epidemiology analysis kitchen, and all the analysis happens right here.
+    animation: "show_open_notebook"
+    code: "uv run jupyter lab"
+    pause_after: 0.5
+
+  - id: "run_analysis"
+    narration: >
+      Okay, here's the main event! We only need three steps.
+      First, use pandas' read_csv to load the Legionella line list.
+      Second, call attack_rate to compute the attack rate.
+      Third, use plot_epi_curve to draw the epidemic curve.
+      Three lines of code, three actions, and that's it.
+      Isn't that a lot simpler than you imagined?
+    animation: "show_run_analysis"
+    code: |
+      import pandas as pd
+      from epi_learning import attack_rate
+      from epi_learning.viz import plot_epi_curve
+
+      df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
+      ar = attack_rate(infected=121, total=280)
+      plot_epi_curve(df, date_col="symptom_onset_date")
+    pause_after: 0.5
+
+  - id: "see_result"
+    narration: >
+      The results are in! The attack rate is 43.2 percent, and the case fatality rate is 15.7 percent.
+      Of the 280 residents, 121 were infected and 19 sadly died.
+      You also get a beautiful epidemic curve,
+      clearly showing the onset peak around mid to late January.
+      These numbers will be the core of the investigation report you'll write later.
+    animation: "show_see_result"
+    output: |
+      侵襲率 (Attack Rate): 43.2%
+      致死率 (CFR): 15.7%
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's recap what you just did.
+      First, you downloaded the materials with git clone and set up the environment with uv sync.
+      Second, you opened the notebook in Jupyter.
+      Third, in three lines of code you read the data, computed the metrics, and drew the chart.
+      Congratulations! You've completed your first epidemiological data analysis.
+      From now on, you're an epi person who codes!
+    animation: "show_main_summary"
+    pause_after: 0.8
+
+  # ========================================
+  # [B] Extra public-health example: enterovirus data
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Next, let's change the scene.
+      Same workflow, a different dataset, and let's see if it runs just the same.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Suppose you receive a CSV file for an enterovirus cluster at a kindergarten.
+      Same three steps: read_csv to load, attack_rate to compute, plot_epi_curve to plot.
+      You just swap the filename and change the numbers to 180 children, 52 infected.
+      The attack rate becomes 28.9 percent, and the epidemic curve has a different shape too.
+      The key point: the same code structure, just a different CSV, analyzes a completely different outbreak.
+      That's the power of code, learn it once, use it for life.
+    animation: "show_extra_example"
+    code: |
+      df_ev = pd.read_csv("enterovirus_outbreak.csv")
+      ar_ev = attack_rate(infected=52, total=180)
+      plot_epi_curve(df_ev, date_col="onset_date")
+    output: "侵襲率 (Attack Rate): 28.9%"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Finally, let's look at the three spots where beginners most often get stuck.
+      Every cohort hits these, so a little vaccination now means you won't panic later.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: git clone fails.
+      The most common reason is that git isn't installed on your computer, or your school network blocks GitHub.
+      Don't panic! You can go straight to the GitHub page, click the green button in the top right, and choose Download ZIP.
+      Unzip it and the effect is exactly the same.
+      Remember: all roads lead to Rome; the point is to get the materials.
+    animation: "show_blindspot_git_clone"
+    error_code: "fatal: git is not recognized as a command"
+    correct_code: "# 替代方案：到 GitHub 頁面點 Download ZIP"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: uv sync runs for a long time and you think it's broken.
+      The first time you run it, uv downloads every package,
+      and pandas, matplotlib, and plotly together aren't small.
+      Relax, this is normal, and it's usually done in a minute or two.
+      After the first time, uv uses a cache and finishes in seconds, so fast you'll question reality.
+    animation: "show_blindspot_uv_sync"
+    error_code: "# uv sync 卡在 Downloading... 好久好久"
+    correct_code: "# 正常！第一次需要下載，之後秒速完成"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: red or orange warning text appears on screen and you get scared.
+      A Warning is a warning, not an Error, and those two are very different.
+      Only an Error stops the program; a Warning is just nagging at you.
+      It's like your mom saying eat less fried chicken, you can still keep eating.
+      As long as a result comes out at the end, a Warning can usually be safely ignored.
+    animation: "show_blindspot_warnings"
+    error_code: |
+      UserWarning: Matplotlib font fallback...
+      FutureWarning: DataFrame.groupby...
+    correct_code: "# Warning ≠ Error，有結果就 OK！"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations on finishing your first epidemiology analysis program!
+      In the next video we'll learn Git version control,
+      so your analysis can be tracked, reproduced, and never lost.
+      See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

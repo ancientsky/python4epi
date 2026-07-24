@@ -62,6 +62,95 @@ class Ch00RoadmapScene(EpiBaseScene):
 
     total_steps: int = 12
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "課程地圖",
+            "title_sub": "18 章學習攻略",
+            "acts_heading": "五幕劇結構",
+            "act1_label": "第一幕：接獲通報",
+            "act2_label": "第二幕：描述性分析",
+            "act3_label": "第三幕：深入分析",
+            "act4_label": "第四幕：進階建模",
+            "act5_label": "第五幕：收尾與實戰",
+            "mustdo_heading": "必修路線：Ch00 → Ch04",
+            "mustdo_ch0": "導讀與工具",
+            "mustdo_ch1": "Python 基礎",
+            "mustdo_ch2": "資料處理",
+            "mustdo_ch3": "描述性統計",
+            "mustdo_ch4": "群聚調查",
+            "choose_heading": "選修路線：依需求自由選擇",
+            "elec_ch5": "分層分析",
+            "elec_ch6": "邏輯斯迴歸",
+            "elec_ch7": "時間序列",
+            "elec_ch8": "空間流病",
+            "elec_ch9": "存活分析",
+            "elec_ch10": "機器學習",
+            "elec_ch11": "深度學習",
+            "elec_ch12": "因果推論",
+            "elec_ch13": "可重現研究",
+            "elec_ch14": "實戰案例",
+            "choose_note": "完成 Ch00-04 後，可依興趣跳選",
+            "summary_heading": "學習攻略",
+            "summary_p1": "1. Ch00-04 是必修，打好基礎再往下",
+            "summary_p2": "2. Ch05-14 可依角色與需求自由選修",
+            "summary_p3": "3. 所有章節共用同一個退伍軍人症資料集",
+            "extra_banner_title": "額外範例：不同角色的學習路線",
+            "extra_heading": "依角色選擇學習路線",
+            "role1_name": "感控護理師",
+            "role1_desc": "Ch00-04\n重點：Ch03-04",
+            "role2_name": "疫調人員",
+            "role2_desc": "Ch00-04\n重點：Ch07-08",
+            "role3_name": "Data Scientist",
+            "role3_desc": "全修 Ch00-14\n重點：Ch10-12",
+            "blindspot_banner_title": "初學者常見盲點 3 選",
+            "outro_heading": "恭喜！課程地圖到手",
+            "outro_sub": "下一站：Ch01 Python 基礎，開始寫程式吧！",
+        },
+        "en": {
+            "title_main": "Course Roadmap",
+            "title_sub": "An 18-Chapter Learning Guide",
+            "acts_heading": "Five-Act Structure",
+            "act1_label": "Act 1: Reported",
+            "act2_label": "Act 2: Descriptive Analysis",
+            "act3_label": "Act 3: Deeper Analysis",
+            "act4_label": "Act 4: Advanced Modeling",
+            "act5_label": "Act 5: Wrap-up & Practice",
+            "mustdo_heading": "Required Path: Ch00 -> Ch04",
+            "mustdo_ch0": "Intro & Tools",
+            "mustdo_ch1": "Python Basics",
+            "mustdo_ch2": "Data Wrangling",
+            "mustdo_ch3": "Descriptive Stats",
+            "mustdo_ch4": "Cluster Investigation",
+            "choose_heading": "Elective Path: choose freely as needed",
+            "elec_ch5": "Stratified Analysis",
+            "elec_ch6": "Logistic Regression",
+            "elec_ch7": "Time Series",
+            "elec_ch8": "Spatial Epi",
+            "elec_ch9": "Survival Analysis",
+            "elec_ch10": "Machine Learning",
+            "elec_ch11": "Deep Learning",
+            "elec_ch12": "Causal Inference",
+            "elec_ch13": "Reproducible Research",
+            "elec_ch14": "Real-World Cases",
+            "choose_note": "After finishing Ch00-04, jump around by interest",
+            "summary_heading": "Learning Strategy",
+            "summary_p1": "1. Ch00-04 are required - build the foundation first",
+            "summary_p2": "2. Ch05-14 are electives by role and need",
+            "summary_p3": "3. Every chapter shares the same Legionella dataset",
+            "extra_banner_title": "Extra example: learning paths for different roles",
+            "extra_heading": "Pick a Learning Path by Role",
+            "role1_name": "Infection Control Nurse",
+            "role1_desc": "Ch00-04\nFocus: Ch03-04",
+            "role2_name": "Outbreak Investigator",
+            "role2_desc": "Ch00-04\nFocus: Ch07-08",
+            "role3_name": "Data Scientist",
+            "role3_desc": "All Ch00-14\nFocus: Ch10-12",
+            "blindspot_banner_title": "3 Common Beginner Blind Spots",
+            "outro_heading": "Congrats! You've got the roadmap",
+            "outro_sub": "Next stop: Ch01 Python Basics - let's start coding!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -71,32 +160,32 @@ class Ch00RoadmapScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the Course Roadmap lesson."""
-        self.show_title_card("課程地圖", "18 章學習攻略", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_five_acts(self, duration: float = 6.0, **kwargs) -> None:
         """Five-act structure visualization as a vertical column of cards."""
         self.show_step_indicator(1, self.total_steps)
 
         heading = Text(
-            "五幕劇結構",
+            self.t("acts_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ManimColor(TEXT_PRIMARY),
         ).to_edge(UP, buff=0.6)
 
         acts = [
-            ("第一幕", "接獲通報", "Ch00-02", ACCENT_ORANGE),
-            ("第二幕", "描述性分析", "Ch03-04", ACCENT_ORANGE),
-            ("第三幕", "深入分析", "Ch05-08", ACCENT_BLUE),
-            ("第四幕", "進階建模", "Ch09-12", ACCENT_BLUE),
-            ("第五幕", "收尾與實戰", "Ch13-14", ACCENT_GREEN),
+            (self.t("act1_label"), "Ch00-02", ACCENT_ORANGE),
+            (self.t("act2_label"), "Ch03-04", ACCENT_ORANGE),
+            (self.t("act3_label"), "Ch05-08", ACCENT_BLUE),
+            (self.t("act4_label"), "Ch09-12", ACCENT_BLUE),
+            (self.t("act5_label"), "Ch13-14", ACCENT_GREEN),
         ]
 
         act_cards = VGroup()
-        for act_num, act_name, chapters, accent in acts:
+        for act_label, chapters, accent in acts:
             card = _card(8.0, 0.7)
             label = Text(
-                f"{act_num}：{act_name}",
+                act_label,
                 font=FONT_CJK,
                 font_size=22,
                 color=ManimColor(accent),
@@ -122,18 +211,18 @@ class Ch00RoadmapScene(EpiBaseScene):
         self.show_step_indicator(2, self.total_steps)
 
         heading = Text(
-            "必修路線：Ch00 → Ch04",
+            self.t("mustdo_heading"),
             font=FONT_CJK,
             font_size=30,
             color=ManimColor(ACCENT_ORANGE),
         ).to_edge(UP, buff=0.8)
 
         chapter_names = [
-            ("Ch00", "導讀與工具"),
-            ("Ch01", "Python 基礎"),
-            ("Ch02", "資料處理"),
-            ("Ch03", "描述性統計"),
-            ("Ch04", "群聚調查"),
+            ("Ch00", self.t("mustdo_ch0")),
+            ("Ch01", self.t("mustdo_ch1")),
+            ("Ch02", self.t("mustdo_ch2")),
+            ("Ch03", self.t("mustdo_ch3")),
+            ("Ch04", self.t("mustdo_ch4")),
         ]
 
         boxes = VGroup()
@@ -179,23 +268,23 @@ class Ch00RoadmapScene(EpiBaseScene):
         self.show_step_indicator(3, self.total_steps)
 
         heading = Text(
-            "選修路線：依需求自由選擇",
+            self.t("choose_heading"),
             font=FONT_CJK,
             font_size=30,
             color=ManimColor(ACCENT_BLUE),
         ).to_edge(UP, buff=0.8)
 
         electives = [
-            ("Ch05", "分層分析"),
-            ("Ch06", "邏輯斯迴歸"),
-            ("Ch07", "時間序列"),
-            ("Ch08", "空間流病"),
-            ("Ch09", "存活分析"),
-            ("Ch10", "機器學習"),
-            ("Ch11", "深度學習"),
-            ("Ch12", "因果推論"),
-            ("Ch13", "可重現研究"),
-            ("Ch14", "實戰案例"),
+            ("Ch05", self.t("elec_ch5")),
+            ("Ch06", self.t("elec_ch6")),
+            ("Ch07", self.t("elec_ch7")),
+            ("Ch08", self.t("elec_ch8")),
+            ("Ch09", self.t("elec_ch9")),
+            ("Ch10", self.t("elec_ch10")),
+            ("Ch11", self.t("elec_ch11")),
+            ("Ch12", self.t("elec_ch12")),
+            ("Ch13", self.t("elec_ch13")),
+            ("Ch14", self.t("elec_ch14")),
         ]
 
         grid = VGroup()
@@ -222,7 +311,7 @@ class Ch00RoadmapScene(EpiBaseScene):
         full_grid = VGroup(row1, row2).arrange(DOWN, buff=0.25).move_to(ORIGIN + DOWN * 0.2)
 
         note = Text(
-            "完成 Ch00-04 後，可依興趣跳選",
+            self.t("choose_note"),
             font=FONT_CJK,
             font_size=20,
             color=ManimColor(TEXT_SECONDARY),
@@ -239,7 +328,7 @@ class Ch00RoadmapScene(EpiBaseScene):
         self.show_step_indicator(4, self.total_steps)
 
         heading = Text(
-            "學習攻略",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ManimColor(ACCENT_ORANGE),
@@ -247,15 +336,15 @@ class Ch00RoadmapScene(EpiBaseScene):
 
         points = VGroup(
             Text(
-                "1. Ch00-04 是必修，打好基礎再往下",
+                self.t("summary_p1"),
                 font=FONT_CJK, font_size=24, color=ManimColor(TEXT_PRIMARY),
             ),
             Text(
-                "2. Ch05-14 可依角色與需求自由選修",
+                self.t("summary_p2"),
                 font=FONT_CJK, font_size=24, color=ManimColor(TEXT_PRIMARY),
             ),
             Text(
-                "3. 所有章節共用同一個退伍軍人症資料集",
+                self.t("summary_p3"),
                 font=FONT_CJK, font_size=24, color=ManimColor(TEXT_PRIMARY),
             ),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
@@ -271,7 +360,7 @@ class Ch00RoadmapScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：不同角色的學習路線")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
@@ -279,16 +368,16 @@ class Ch00RoadmapScene(EpiBaseScene):
         self.show_step_indicator(5, self.total_steps)
 
         heading = Text(
-            "依角色選擇學習路線",
+            self.t("extra_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ManimColor(ACCENT_BLUE),
         ).to_edge(UP, buff=0.8)
 
         roles = [
-            ("感控護理師", "Ch00-04\n重點：Ch03-04", ACCENT_ORANGE),
-            ("疫調人員", "Ch00-04\n重點：Ch07-08", ACCENT_BLUE),
-            ("Data Scientist", "全修 Ch00-14\n重點：Ch10-12", ACCENT_GREEN),
+            (self.t("role1_name"), self.t("role1_desc"), ACCENT_ORANGE),
+            (self.t("role2_name"), self.t("role2_desc"), ACCENT_BLUE),
+            (self.t("role3_name"), self.t("role3_desc"), ACCENT_GREEN),
         ]
 
         role_cards = VGroup()
@@ -323,7 +412,7 @@ class Ch00RoadmapScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見盲點 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_where_start(self, duration: float = 5.0, **kwargs) -> None:
@@ -356,14 +445,14 @@ class Ch00RoadmapScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "恭喜！課程地圖到手",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ManimColor(ACCENT_ORANGE),
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "下一站：Ch01 Python 基礎，開始寫程式吧！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=ManimColor(TEXT_SECONDARY),

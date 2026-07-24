@@ -1,0 +1,147 @@
+meta:
+  chapter: "13"
+  concept: "min_reproducible_report"
+  title: "The Minimal Reproducible Report: Three Commands, Clean Environment to Report"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch13_03_min_reproducible_report"
+  scene_class: "Ch13MinReportScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode we recognized the three landmines; this episode we get hands-on. Your
+      teacher will show you how to assemble a "minimal reproducible report": starting
+      from a clean machine and relying on just three fixed commands, you produce numbers
+      identical to the original author's. Zero manual steps, and that's exactly the
+      spirit of the single-command workflow.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "the_goal"
+    narration: >
+      First, the goal. Between "a piece of raw data" and "a report," there should be no
+      manual step that exists only in your head. The ideal state is: someone else clones
+      your repo, runs a few fixed commands, and gets the same output as you. No need to
+      ask you "what else do I install, what else do I change," just copy, paste,
+      reproduce.
+    animation: "show_the_goal"
+    pause_after: 0.5
+
+  - id: "three_commands"
+    narration: >
+      The key is just these three commands, not one line more. Line one, uv sync,
+      rebuilds the entire virtual environment according to uv.lock, so the package
+      versions match exactly. Line two, uv run pytest, runs the unit tests in that
+      freshly built environment, confirming the environment is alive and the code is
+      right. Line three, uv run python runs the analysis script, reading the line list,
+      computing the case fatality rate and attack rate, and outputting the report. Three
+      lines, done.
+    animation: "show_three_commands"
+    code: |
+      uv sync
+      uv run pytest
+      uv run python notebooks/run_sitrep.py
+    pause_after: 0.5
+
+  - id: "command_breakdown"
+    narration: >
+      Let's break down what each of these three lines does a bit more clearly. uv sync
+      handles rebuilding the environment, so no matter which machine you run it on, the
+      installed packages come out the same. uv run pytest handles verification, so only
+      when the tests pass do you know the environment and the code are both fine. uv run
+      python is what actually runs the analysis once and produces the report. Install,
+      verify, run, three steps in one smooth motion.
+    animation: "show_command_breakdown"
+    pause_after: 0.5
+
+  - id: "why_single_command"
+    narration: >
+      Why insist on "one command"? Because manual steps are reproducibility's number-one
+      killer. The moment one step like "remember to change some setting first" relies on
+      human memory, others can't reproduce it, and a few months later even you will
+      forget. Writing every step as a fixed command is like outsourcing your memory to
+      code, and that's what traceability means.
+    animation: "show_why_single_command"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways on the main thread. One, a minimal reproducible report equals
+      clean environment plus fixed commands plus fixed code. Two, the three commands have
+      clear roles: uv sync builds the environment, uv run pytest verifies, uv run python
+      produces the report. Three, zero manual steps is the whole essence, so others
+      copy-paste and reproduce. This report is the front face of your reproducible
+      research.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: one command to produce a flu weekly report!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_flu"
+    narration: >
+      Bring the same spirit over to flu surveillance. Every week you have to submit a flu
+      weekly report, and you don't want to manually click through ten steps each time. So
+      you wrap reading the data, computing the visit rate, drawing the epidemic curve,
+      and exporting the PDF all into a single script. From then on, each week you just run
+      this one line, uv run python, and the weekly report grows itself, with no need to
+      recall how you did it last week.
+    animation: "show_extra_flu"
+    code: |
+      uv run python notebooks/flu_weekly.py
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for the single command!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: writing the key step in a comment, in your head, anywhere
+      but into the commands. A reminder like "remember to set PATH first," and three
+      months later even you forget. The right move is to let uv sync get you there in one
+      shot, zero manual steps.
+    animation: "show_bs_manual_steps"
+    error_code: "# remember to set PATH first"
+    correct_code: "uv sync  # zero manual steps"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: installing requirements.txt with pip, bypassing uv.lock's
+      pinning. requirements usually only lists rough versions, so the environment you
+      install may not match the original author's. The right move is uv sync, letting
+      uv.lock pin you down to the exact patch version.
+    animation: "show_bs_pip_vs_uv"
+    error_code: "pip install -r requirements.txt"
+    correct_code: "uv sync  # uses uv.lock"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: only getting it to run on your own machine, never
+      verifying it runs in a clean environment. Your computer might be hiding some
+      package that never made it into the lock, and it blows up on another machine. The
+      right move is to verify with uv run pytest first, then run the script, and CI
+      guards it in this same order.
+    animation: "show_bs_no_clean_env"
+    error_code: "python run_sitrep.py  # my machine"
+    correct_code: "uv run pytest && uv run run_sitrep.py"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Three commands upgrade "it runs on my computer" into "it runs on anyone's
+      computer." But how exactly are the numbers in the report computed? Next episode we
+      drill into Step 2, and see how to turn raw data into a single "one canonical
+      answer" summary. Stay tuned!
+    animation: "show_outro"
+    pause_after: 1.0

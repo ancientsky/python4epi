@@ -51,6 +51,43 @@ class Ch00JupyterScene(EpiBaseScene):
 
     total_steps: int = 12
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "Jupyter Lab 入門",
+            "title_sub": "邊寫邊看結果的神器",
+            "cells_heading": "Notebook 有兩種 Cell",
+            "cells_md_body": "# 疫情調查報告\n本次群聚共 121 例感染",
+            "run_cell_hint": "= 執行目前 Cell 並跳到下一格",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. uv run jupyter lab 啟動環境",
+            "summary_p2": "2. Code Cell 寫程式，Markdown Cell 寫說明",
+            "summary_p3": "3. Shift+Enter 執行 Cell",
+            "summary_p4": "4. Ctrl+S 隨時存檔",
+            "extra_banner_title": "額外範例：用 Jupyter 寫疫情週報",
+            "extra_md_text": "# 2026 年第 4 週疫情週報",
+            "blindspot_banner_title": "初學者常見地雷 3 選 1",
+            "outro_heading": "下一集：Hello Epi — 第一支流行病學程式",
+            "outro_sub": "用 Python 算出侵襲率！",
+        },
+        "en": {
+            "title_main": "Getting Started with Jupyter Lab",
+            "title_sub": "Write and see results at the same time",
+            "cells_heading": "A Notebook Has Two Cell Types",
+            "cells_md_body": "# Outbreak Investigation Report\nThis cluster: 121 infections",
+            "run_cell_hint": "= run the current cell and jump to the next",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. uv run jupyter lab starts the environment",
+            "summary_p2": "2. Code Cell for code, Markdown Cell for notes",
+            "summary_p3": "3. Shift+Enter runs a cell",
+            "summary_p4": "4. Ctrl+S saves anytime",
+            "extra_banner_title": "Extra example: write an outbreak weekly report in Jupyter",
+            "extra_md_text": "# Week 4, 2026 Outbreak Weekly Report",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: Hello Epi - your first epidemiology program",
+            "outro_sub": "Compute the attack rate with Python!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -60,7 +97,7 @@ class Ch00JupyterScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the Jupyter Lab lesson."""
-        self.show_title_card("Jupyter Lab 入門", "邊寫邊看結果的神器", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_launch(self, duration: float = 5.0, **kwargs) -> None:
         """Show terminal launching Jupyter Lab."""
@@ -89,7 +126,7 @@ class Ch00JupyterScene(EpiBaseScene):
         self.show_step_indicator(2, self.total_steps)
 
         heading = Text(
-            "Notebook 有兩種 Cell",
+            self.t("cells_heading"),
             font=FONT_CJK,
             font_size=30,
             color=ManimColor(TEXT_PRIMARY),
@@ -123,7 +160,7 @@ class Ch00JupyterScene(EpiBaseScene):
             color=ManimColor(ACCENT_BLUE),
         ).move_to(md_card.get_top() + DOWN * 0.3)
         md_body = Text(
-            "# 疫情調查報告\n本次群聚共 121 例感染",
+            self.t("cells_md_body"),
             font=FONT_CJK, font_size=18,
             color=ManimColor(TEXT_PRIMARY),
         ).move_to(md_card.get_center() + DOWN * 0.1)
@@ -148,7 +185,7 @@ class Ch00JupyterScene(EpiBaseScene):
         ).to_edge(UP, buff=1.0)
 
         hint = Text(
-            "= 執行目前 Cell 並跳到下一格",
+            self.t("run_cell_hint"),
             font=FONT_CJK,
             font_size=22,
             color=ManimColor(TEXT_SECONDARY),
@@ -194,20 +231,20 @@ class Ch00JupyterScene(EpiBaseScene):
         self.show_step_indicator(4, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ManimColor(ACCENT_ORANGE),
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. uv run jupyter lab 啟動環境", font=FONT_CJK, font_size=24,
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=24,
                  color=ManimColor(TEXT_PRIMARY)),
-            Text("2. Code Cell 寫程式，Markdown Cell 寫說明", font=FONT_CJK, font_size=24,
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=24,
                  color=ManimColor(TEXT_PRIMARY)),
-            Text("3. Shift+Enter 執行 Cell", font=FONT_CJK, font_size=24,
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=24,
                  color=ManimColor(TEXT_PRIMARY)),
-            Text("4. Ctrl+S 隨時存檔", font=FONT_CJK, font_size=24,
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=24,
                  color=ManimColor(TEXT_PRIMARY)),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
@@ -222,7 +259,7 @@ class Ch00JupyterScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：用 Jupyter 寫疫情週報")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
@@ -236,7 +273,7 @@ class Ch00JupyterScene(EpiBaseScene):
             stroke_color=ManimColor(BORDER_LIGHT), stroke_width=2,
         )
         md_text = Text(
-            "# 2026 年第 4 週疫情週報",
+            self.t("extra_md_text"),
             font=FONT_CJK, font_size=20,
             color=ManimColor(TEXT_PRIMARY),
         ).move_to(md_card.get_center())
@@ -280,7 +317,7 @@ class Ch00JupyterScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選 1")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_order(self, duration: float = 5.0, **kwargs) -> None:
@@ -313,14 +350,14 @@ class Ch00JupyterScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：Hello Epi — 第一支流行病學程式",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ManimColor(ACCENT_ORANGE),
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "用 Python 算出侵襲率！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=ManimColor(TEXT_SECONDARY),

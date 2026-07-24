@@ -1,0 +1,151 @@
+meta:
+  chapter: "13"
+  concept: "data_summary_contract"
+  title: "Read Data, Produce the Summary: The One Canonical Answer"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch13_04_data_summary_contract"
+  scene_class: "Ch13DataSummaryScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Once the three commands are running, where exactly do the numbers in the report
+      come from? This episode drills into Step 2. Your teacher will show you how to turn
+      raw data into a single "one canonical answer" summary: same data, same code, and
+      however many times you run it, you get the exact same set of numbers, no more and
+      no less.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "the_idea"
+    narration: >
+      First the core idea: the output of this step is a summary dictionary, holding every
+      key number from this analysis. Number infected, number of deaths, attack rate, case
+      fatality rate, all collected into one dict, treated as the "one canonical answer."
+      Why can we be so confident? Because everything this step uses is deterministic
+      computation, without a shred of randomness.
+    animation: "show_the_idea"
+    pause_after: 0.5
+
+  - id: "summary_code"
+    narration: >
+      Look at the code. First we read in the CSV from a fixed path, and this step is
+      completely predictable, with no random component. Then we derive the infected
+      column with one fixed rule: any clinical severity that isn't not_ill counts as
+      infected. The rule lives in the code, not in hand-labeling from memory. Finally, we
+      collect all the key numbers into the summary dictionary.
+    animation: "show_summary_code"
+    code: |
+      df = pd.read_csv(path)
+      sev = df["clinical_severity"]
+      df["infected"] = (sev != "not_ill").astype(int)
+
+      summary = {
+          "n_infected": int(df["infected"].sum()),
+          "n_deaths": int((df["outcome"] == "dead").sum()),
+      }
+    pause_after: 0.5
+
+  - id: "summary_output"
+    narration: >
+      Run it, and out comes this set of numbers: 121 infected, 19 deaths, an attack rate
+      of 43.2 percent, a case fatality rate of 15.7 percent. This set of numbers is this
+      analysis's "one canonical answer." Re-run it next time, and not a single digit
+      should change, and if it does, that means a landmine has snuck in.
+    animation: "show_summary_output"
+    pause_after: 0.5
+
+  - id: "why_deterministic"
+    narration: >
+      Why keep hammering on "determinism"? Because groupby, sum, and mean are all pure
+      math operations. They have nothing to do with hidden variables like random numbers,
+      multi-thread ordering, or timezones, so same input always gives same output. What
+      reproducible research chases is removing every factor that could make "same code,
+      same data" run differently twice.
+    animation: "show_why_deterministic"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways on the main thread. One, the summary is a dictionary, this
+      analysis's one canonical answer. Two, derived columns use a fixed rule written into
+      the code, not hand-labeling. Three, this step is all deterministic computation, the
+      same result however many times you run it. Save the summary to a file, and next
+      time you re-run you can diff against it.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a canonical case-count table!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_case_count"
+    narration: >
+      Switch to a common output: a case-count table per floor and wing. Use groupby to
+      sum up infected, get the case count for each zone, and save it as a CSV. This table
+      is the "one canonical table," and anyone who re-runs gets the exact same one. A
+      canonical summary doesn't have to be just numbers, it can be a table too.
+    animation: "show_extra_case_count"
+    code: |
+      counts = (
+          df.groupby(["floor", "wing"])["infected"]
+            .sum()
+            .rename("cases")
+      )
+      counts.to_csv("case_counts.csv")  # one table
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for the canonical answer!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: printing the summary to the screen and calling it done,
+      never saving it to a file. Close the screen and this run's canonical answer is
+      gone, leaving nothing to compare against next time. The right move is to save the
+      summary as JSON or CSV, so later you can diff out what changed.
+    animation: "show_bs_not_saved"
+    error_code: "print(summary)  # only on screen"
+    correct_code: 'json.dump(summary, open("s.json","w"))'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: using hand-assigned labels as the infected column.
+      Hand-labeling has no rule and no record, so a different person labels it
+      differently. The right move is to write the judgment as one explicit rule: anything
+      that isn't not_ill counts as infected, so the rule itself is the documentation.
+    animation: "show_bs_manual_label"
+    error_code: 'df["inf"] = manual_labels'
+    correct_code: 'df["inf"] = df.sev != "not_ill"'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: secretly mixing random sampling into the summary. Using
+      df.sample to draw 100 rows to estimate a count means that, without a locked seed,
+      the result differs every time, and your canonical answer is no longer canonical. To
+      count a total, just honestly use len, which is a hundred-percent deterministic
+      operation.
+    animation: "show_bs_nondeterministic"
+    error_code: "n = df.sample(100).shape[0]"
+    correct_code: "n = len(df)  # deterministic count"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      This episode we refined data into a single "one canonical answer" summary, relying
+      entirely on deterministic computation. But the moment "randomness" appears in the
+      analysis, the story changes. Next episode your teacher will prove it to you:
+      randomness can be "consistently random" too, and the key is that one random seed.
+      Stay tuned!
+    animation: "show_outro"
+    pause_after: 1.0
