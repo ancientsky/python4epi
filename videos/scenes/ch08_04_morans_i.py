@@ -289,7 +289,7 @@ class Ch08MoransIScene(EpiBaseScene):
         self.show_step_indicator(9, self.total_steps)
         panel = self.show_error_vs_correct(
             kwargs.get("error_code", "w = Queen.from_dataframe(gdf)  # only tested once"),
-            kwargs.get("correct_code", "w2 = KNN.from_dataframe(gdf, k=5)  # check robustness too"),
+            kwargs.get("correct_code", "w2 = KNN.from_dataframe(gdf, k=5)  # recheck"),
             duration=duration,
         )
         self.play(FadeOut(panel), run_time=0.5)
@@ -299,7 +299,7 @@ class Ch08MoransIScene(EpiBaseScene):
         panel = self.show_error_vs_correct(
             kwargs.get("error_code", "moran = Moran(raw_rate, w)"),
             kwargs.get(
-                "correct_code", "moran = Moran(main_only_rate, w)  # exclude islands or smooth"
+                "correct_code", "moran = Moran(main_rate, w)  # drop islands"
             ),
             duration=duration,
         )

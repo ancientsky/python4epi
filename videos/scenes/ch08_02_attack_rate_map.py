@@ -279,10 +279,10 @@ class Ch08AttackRateMapScene(EpiBaseScene):
     def show_blindspot_no_flag(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(7, self.total_steps)
         panel = self.show_error_vs_correct(
-            kwargs.get("error_code", "spatial['attack_rate'] = df['clinical_severity'].mean()"),
+            kwargs.get("error_code", "ar = grp['clinical_severity'].mean()  # wrong"),
             kwargs.get(
                 "correct_code",
-                "spatial['attack_rate'] = spatial['infected'] / spatial['total'] * 100",
+                "ar = grp['infected'] / grp['total'] * 100",
             ),
             duration=duration,
         )
@@ -292,11 +292,11 @@ class Ch08AttackRateMapScene(EpiBaseScene):
         self.show_step_indicator(8, self.total_steps)
         panel = self.show_error_vs_correct(
             kwargs.get(
-                "error_code", "spatial = df.groupby(['floor','wing']).agg(n=('case_id','count'))"
+                "error_code", "g = grp.size()  # floor/wing stay as index"
             ),
             kwargs.get(
                 "correct_code",
-                "spatial = df.groupby(['floor','wing']).agg(n=('case_id','count')).reset_index()",
+                "g = grp.size().reset_index()  # cols back",
             ),
             duration=duration,
         )

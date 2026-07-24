@@ -106,8 +106,8 @@ segments:
       and the boss actually sends resources there first, when it was only statistical noise.
       The right move: do Bayesian smoothing first, then use the smoothed rate to map or rank.
     animation: "show_blindspot_raw_small_pop"
-    error_code: "top3 = df.sort_values('raw_rate', ascending=False).head(3)"
-    correct_code: "top3 = df.sort_values('smoothed_rate', ascending=False).head(3)"
+    error_code: "top3 = df.nlargest(3, 'raw_rate')  # noisy"
+    correct_code: "top3 = df.nlargest(3, 'smooth_rate')  # stable"
     pause_after: 0.5
 
   - id: "blindspot_naive_pvalue"

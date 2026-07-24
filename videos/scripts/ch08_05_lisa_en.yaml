@@ -139,7 +139,7 @@ segments:
       The right move: any region with p_sim greater than or equal to 0.05 is marked not significant and painted gray, no interpretation.
     animation: "show_blindspot_no_pfilter"
     error_code: "main['lisa'] = [labels[q] for q in lisa.q]"
-    correct_code: "main['lisa'] = [labels[q] if p < .05 else 'ns' for q, p in zip(lisa.q, lisa.p_sim)]"
+    correct_code: "main.loc[lisa.p_sim >= .05, 'lisa'] = 'ns'"
     pause_after: 0.5
 
   - id: "blindspot_islands"
@@ -149,8 +149,8 @@ segments:
       The right move: filter the islands out first and run LISA only on the connected mainland counties,
       leaving the islands to be handled separately later with KNN or smoothing.
     animation: "show_blindspot_islands"
-    error_code: "lisa = Moran_Local(gdf['rate'].values, w_all, permutations=999)"
-    correct_code: "lisa = Moran_Local(main['rate'].values, w_mainland, permutations=999)"
+    error_code: "lisa = Moran_Local(gdf.rate, w_all)"
+    correct_code: "lisa = Moran_Local(main.rate, w_land)"
     pause_after: 0.5
 
   - id: "outro"

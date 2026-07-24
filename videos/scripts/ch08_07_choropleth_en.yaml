@@ -140,8 +140,8 @@ segments:
       Taipei, Taichung, Tainan, and Taitung turn into grayish blank patches on the map,
       and the program never once errors, so you might not find out until you're on stage presenting.
     animation: "show_blindspot_no_normalize"
-    error_code: "gdf.merge(df, left_on='county', right_on='county')"
-    correct_code: "gdf.merge(df, left_on='county_norm', right_on='county_norm')"
+    error_code: "gdf.merge(df, on='county')  # raw names"
+    correct_code: "gdf.merge(df, on='county_norm')  # cleaned"
     pause_after: 0.5
 
   - id: "blindspot_raw_count"
@@ -162,7 +162,7 @@ segments:
       The right habit: before merging, always print the difference of the two sets and eyeball it once before moving on.
     animation: "show_blindspot_no_diff_check"
     error_code: "merged = gdf.merge(df, how='left'); merged.plot()"
-    correct_code: "print(shp_set - data_set); merged = gdf.merge(df, how='left')"
+    correct_code: "print(shp_ids - data_ids)  # diff first"
     pause_after: 0.5
 
   - id: "outro"
