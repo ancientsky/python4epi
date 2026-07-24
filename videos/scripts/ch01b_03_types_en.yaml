@@ -1,0 +1,174 @@
+meta:
+  chapter: "01b"
+  concept: "types"
+  title: "Types and Conversion: Numbers, Text, Booleans"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch01b_03_types"
+  scene_class: "Ch01bTypesScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: types
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Today we get to know Python's types.
+      Put simply, every value in Python carries an ID card.
+      121's ID card says int, an integer,
+      "Pine and Cypress Nursing Home" says str, a string,
+      and True says bool, a boolean.
+      Mix up the ID cards, and Python won't know how to handle your data.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "type_function"
+    narration: >
+      So how do you check the ID card? With the type function.
+      Put a value inside type's parentheses and it tells you the type.
+      int is integer, float is decimal, str is text, bool is boolean.
+      These four are the ones you'll meet most in data analysis.
+    animation: "show_type_function"
+    code: |
+      print(type(121))
+      print(type(43.2))
+      print(type("Legionella"))
+      print(type(True))
+    output: "<class 'int'>\n<class 'float'>\n<class 'str'>\n<class 'bool'>"
+    pause_after: 0.3
+
+  - id: "type_conversion"
+    narration: >
+      Sometimes you need to swap a value's ID card.
+      For instance, the case count read from a CSV comes in as the text "121",
+      and you must use int to turn it into a number before you can do math.
+      int converts to integer, float to decimal, str to text.
+      That's type conversion.
+    animation: "show_conversion"
+    code: |
+      raw = "121"
+      cases = int(raw)
+      print(cases + 1)
+    output: "122"
+    pause_after: 0.3
+
+  - id: "boolean_basics"
+    narration: >
+      A boolean has only two values: True and False.
+      Comparison operators return booleans:
+      121 greater than 100 is True,
+      19 double-equals 0 is False.
+      This becomes crucial later for if checks and data filtering.
+    animation: "show_boolean"
+    code: |
+      infected = 121
+      print(infected > 100)
+      print(infected == 0)
+    output: "True\nFalse"
+    pause_after: 0.3
+
+  - id: "logical_ops"
+    narration: >
+      Booleans can also combine with and, or, and not.
+      and means both must be True to get True.
+      or means either one True gives True.
+      not flips it.
+      In epidemiology, a common one: age over 80 AND a comorbidity means high risk.
+    animation: "show_logical_ops"
+    code: |
+      age = 85
+      has_copd = True
+      high_risk = age > 80 and has_copd
+      print(f"high risk: {high_risk}")
+    output: "high risk: True"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's sum up!
+      The type function checks a value's type ID.
+      int, float, str, bool are the four core types.
+      int(), float(), str() do type conversion.
+      and, or, not combine boolean conditions.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: cleaning enterovirus age fields
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Let's see a real scenario: cleaning the text-that-looks-like-numbers on an enterovirus report.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      The health department receives an Excel-exported report,
+      and the age field is entirely in text format.
+      You need to convert them to numbers before you can compute the mean age.
+      Use int to convert each one, and now you can do arithmetic.
+      This kind of type conversion comes up every single day in data cleaning.
+    animation: "show_extra_example"
+    code: |
+      raw_ages = ["3", "5", "2", "4", "6"]
+      ages = []
+      for a in raw_ages:
+          ages.append(int(a))
+      avg = sum(ages) / len(ages)
+      print(f"mean age: {avg}")
+    output: "mean age: 4.0"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Here come three type landmines.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Landmine one: text-numbers can't be added directly.
+      "121" plus "19" equals "12119", not 140!
+      Because both sides are strings, the plus sign becomes join-them-together.
+      Remember to convert with int first.
+    animation: "show_blindspot_str_add"
+    error_code: 'print("121" + "19")  # "12119"'
+    correct_code: "print(int('121') + int('19'))  # 140"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Landmine two: True and "True" are not the same.
+      Capital-T True is a boolean,
+      while quoted "True" is a string.
+      In an if check, a string is always truthy, no matter what's inside it.
+    animation: "show_blindspot_bool_str"
+    error_code: 'flag = "False"\nif flag: print("oops")'
+    correct_code: "flag = False\nif flag: print('yes')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Landmine three: int conversion fails.
+      If the string isn't purely digits, like "N/A",
+      int throws a ValueError on the spot.
+      The fix: check first, or protect it with try except.
+    animation: "show_blindspot_invalid_int"
+    error_code: 'int("N/A")  # ValueError!'
+    correct_code: 'val = "N/A"\nif val.isdigit(): int(val)'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Nice! You've now got types and conversion figured out.
+      The next video is the main event: teaching you to read Python's error messages.
+      You'll never fear the big red text again!
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

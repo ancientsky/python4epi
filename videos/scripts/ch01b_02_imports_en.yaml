@@ -1,0 +1,165 @@
+meta:
+  chapter: "01b"
+  concept: "imports"
+  title: "import: Borrow Other People's Tools"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch01b_02_imports"
+  scene_class: "Ch01bImportsScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: import
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Today we learn a super-practical skill: import.
+      Python has thousands of packages, tools other people already wrote,
+      and a single import line lets you borrow them.
+      It's like an investigation where you don't make your own test kits; the lab already prepared them for you.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "import_basic"
+    narration: >
+      The simplest form: import plus the package name.
+      For example, import math brings the whole math toolbox over.
+      To use a tool inside it, you write math dot sqrt.
+      math is the toolbox name, and sqrt is the square-root tool inside it.
+    animation: "show_import_basic"
+    code: |
+      import math
+      print(math.sqrt(121))
+    output: "11.0"
+    pause_after: 0.3
+
+  - id: "from_import"
+    narration: >
+      If you only want one tool and don't need the whole box,
+      use from math import sqrt.
+      Then you can write sqrt of 121 directly, no math dot needed.
+      It's like borrowing just a screwdriver instead of hauling the entire toolbox.
+    animation: "show_from_import"
+    code: |
+      from math import sqrt
+      print(sqrt(121))
+    output: "11.0"
+    pause_after: 0.3
+
+  - id: "import_as"
+    narration: >
+      The most common advanced form: import pandas as pd.
+      as means give it a nickname. pandas is long, so everyone agrees to call it pd.
+      It's like a coworker named Christopher whom everyone in the office just calls Chris.
+      Similarly: numpy becomes np, and matplotlib.pyplot becomes plt.
+    animation: "show_import_as"
+    code: |
+      import pandas as pd
+      import numpy as np
+      import matplotlib.pyplot as plt
+    pause_after: 0.5
+
+  - id: "import_order"
+    narration: >
+      Imports should go at the top of the file; that's the Python convention.
+      The order is: standard library first, then third-party packages, then your own modules last.
+      It's like the structure of an outbreak report: background first, then methods, then results.
+      Build the habit, and others can read your code at a glance.
+    animation: "show_import_order"
+    code: |
+      # 1. standard library
+      import math
+      import datetime
+      # 2. third-party
+      import pandas as pd
+      # 3. local
+      from epi_learning import attack_rate
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's sum up!
+      import brings the whole toolbox.
+      from X import Y borrows just one tool.
+      import X as Y gives it a nickname, and you follow the agreed-upon shorthand.
+      And imports go at the top of the file.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: counting onset days with datetime
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Let's see a real example, using import to borrow a tool and count days from onset to admission.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      A Legionella case has symptom onset on January fifteenth and admission on January eighteenth.
+      We import the datetime module, store the dates as date objects,
+      and subtract one date from the other to get the number of days.
+      Look! Three days. That's the power of import:
+      someone already wrote the date math for you, and you just borrow it.
+    animation: "show_extra_example"
+    code: |
+      from datetime import date
+      onset = date(2026, 1, 15)
+      admitted = date(2026, 1, 18)
+      delay = (admitted - onset).days
+      print(f"onset-to-admission: {delay} days")
+    output: "onset-to-admission: 3 days"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Now let's look at three common import landmines.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Landmine one: importing a package that isn't installed.
+      You wrote import pandas, but the environment doesn't have pandas at all.
+      Python throws a ModuleNotFoundError.
+      The fix: install it first with uv add pandas, then import.
+    animation: "show_blindspot_not_installed"
+    error_code: "import pandas  # ModuleNotFoundError"
+    correct_code: "# uv add pandas  (install first)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Landmine two: putting imports in the middle of your code.
+      Python won't error, but it's a bad habit.
+      Your colleagues won't be able to find which packages you used.
+      Build the good habit: keep them all at the top.
+    animation: "show_blindspot_import_middle"
+    error_code: "x = 10\nimport math\nprint(math.sqrt(x))"
+    correct_code: "import math\nx = 10\nprint(math.sqrt(x))"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Landmine three: using from-import but still writing the full name.
+      Say you wrote from math import sqrt,
+      but then you use math dot sqrt; Python says it can't find math.
+      Because you only borrowed the sqrt tool, you never brought over the whole math box.
+    animation: "show_blindspot_wrong_ref"
+    error_code: "from math import sqrt\nprint(math.sqrt(9))  # NameError"
+    correct_code: "from math import sqrt\nprint(sqrt(9))  # 3.0"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Fantastic! Now you know how to borrow other people's tools.
+      In the next video we'll talk types and conversion, sorting out the difference between numbers and text.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

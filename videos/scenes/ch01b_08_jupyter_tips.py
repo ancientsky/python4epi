@@ -41,6 +41,79 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
 
     total_steps: int = 14
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "Jupyter 實用密技",
+            "title_sub": "讓你的效率翻倍",
+            "shell_heading": "! 驚嘆號 — 在 Jupyter 裡執行終端指令",
+            "shell_note": "不用另開終端機，直接在 notebook 裡執行 shell 指令",
+            "install_heading": "在 Jupyter 裡安裝套件",
+            "install_step1": "1. !uv add seaborn          # 安裝套件",
+            "install_step2": "2. Kernel > Restart Kernel   # 重啟核心",
+            "install_step3": "3. import seaborn as sns     # 匯入使用",
+            "install_note": "裝完一定要 Restart Kernel！",
+            "qmark_heading": "? 問號 — 查看函式說明",
+            "qmark_note": "一個 ? 看說明，兩個 ?? 看原始碼",
+            "tab_heading": "Tab 自動完成 — 忘記方法名稱的救星",
+            "tab_step1": "1. 打 df. 然後按 Tab",
+            "tab_step2": "2. 看到所有可用的方法和屬性",
+            "tab_step3": "3. 選擇你要的方法，按 Enter",
+            "summary_heading": "Jupyter 五大密技",
+            "summary_p1": "1. ! 執行 shell 指令",
+            "summary_p2": "2. !uv add 安裝套件 + Restart Kernel",
+            "summary_p3": "3. ? 查說明、?? 看原始碼",
+            "summary_p4": "4. Tab 自動完成方法名稱",
+            "summary_p5": "5. %timeit 測量效能",
+            "extra_banner_title": "額外範例：快速探索疫調資料",
+            "extra_heading": "拿到新 CSV 的前 2 分鐘",
+            "extra_step1": "1. !head -2 data.csv   # 看欄位名稱",
+            "extra_step2": "2. !wc -l data.csv     # 看有多少筆",
+            "extra_step3": "3. df = pd.read_csv('data.csv')",
+            "extra_step4": "4. df.info()           # 看型別和遺漏",
+            "extra_step5": "5. df.describe()       # 看數值摘要",
+            "extra_note": "這就是老手的工作節奏！",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "Ch01b 全部完成！",
+            "outro_sub": "你的 Python 開發者工具箱已經備齊",
+            "outro_next": "下一章 Ch02：用 pandas 處理真正的疫調資料！",
+        },
+        "en": {
+            "title_main": "Practical Jupyter Tips",
+            "title_sub": "Double your efficiency",
+            "shell_heading": "! bang — run terminal commands inside Jupyter",
+            "shell_note": "No separate terminal needed — run shell commands right in the notebook",
+            "install_heading": "Install packages inside Jupyter",
+            "install_step1": "1. !uv add seaborn          # install the package",
+            "install_step2": "2. Kernel > Restart Kernel   # restart the kernel",
+            "install_step3": "3. import seaborn as sns     # import and use",
+            "install_note": "Always Restart Kernel after installing!",
+            "qmark_heading": "? question mark — view a function's docs",
+            "qmark_note": "One ? shows docs, two ?? shows source code",
+            "tab_heading": "Tab autocomplete — the savior when you forget a method name",
+            "tab_step1": "1. Type df. then press Tab",
+            "tab_step2": "2. See every available method and attribute",
+            "tab_step3": "3. Pick the method you want, press Enter",
+            "summary_heading": "Jupyter's Five Tricks",
+            "summary_p1": "1. ! runs shell commands",
+            "summary_p2": "2. !uv add installs packages + Restart Kernel",
+            "summary_p3": "3. ? for docs, ?? for source code",
+            "summary_p4": "4. Tab autocompletes method names",
+            "summary_p5": "5. %timeit measures performance",
+            "extra_banner_title": "Extra example: quickly explore outbreak data",
+            "extra_heading": "The first 2 minutes with a new CSV",
+            "extra_step1": "1. !head -2 data.csv   # see column names",
+            "extra_step2": "2. !wc -l data.csv     # see how many rows",
+            "extra_step3": "3. df = pd.read_csv('data.csv')",
+            "extra_step4": "4. df.info()           # see types and missing",
+            "extra_step5": "5. df.describe()       # see numeric summary",
+            "extra_note": "This is the rhythm of a seasoned pro!",
+            "blindspot_banner_title": "3 Common Beginner Pitfalls",
+            "outro_heading": "Ch01b fully complete!",
+            "outro_sub": "Your Python developer toolbox is ready",
+            "outro_next": "Next chapter Ch02: use pandas on real outbreak data!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -49,13 +122,13 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
-        self.show_title_card("Jupyter 實用密技", "讓你的效率翻倍", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_shell_commands(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(1, self.total_steps)
 
         heading = Text(
-            "! 驚嘆號 — 在 Jupyter 裡執行終端指令",
+            self.t("shell_heading"),
             font=FONT_CJK, font_size=26, color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
@@ -63,7 +136,7 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
         code_panel = CodePanel(code_text, title="Jupyter Cell", width=9.0, height=2.4).next_to(heading, DOWN, buff=0.5)
 
         note = Text(
-            "不用另開終端機，直接在 notebook 裡執行 shell 指令",
+            self.t("shell_note"),
             font=FONT_CJK, font_size=20, color=TEXT_SECONDARY,
         ).next_to(code_panel, DOWN, buff=0.4)
 
@@ -77,18 +150,18 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
         self.show_step_indicator(2, self.total_steps)
 
         heading = Text(
-            "在 Jupyter 裡安裝套件",
+            self.t("install_heading"),
             font=FONT_CJK, font_size=28, color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         steps = VGroup(
-            Text("1. !uv add seaborn          # 安裝套件", font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
-            Text("2. Kernel > Restart Kernel   # 重啟核心", font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
-            Text("3. import seaborn as sns     # 匯入使用", font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
+            Text(self.t("install_step1"), font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
+            Text(self.t("install_step2"), font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
+            Text(self.t("install_step3"), font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.4).next_to(heading, DOWN, buff=0.6)
 
         note = Text(
-            "裝完一定要 Restart Kernel！",
+            self.t("install_note"),
             font=FONT_CJK, font_size=22, color="#D94452",
         ).next_to(steps, DOWN, buff=0.5)
 
@@ -102,7 +175,7 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
         self.show_step_indicator(3, self.total_steps)
 
         heading = Text(
-            "? 問號 — 查看函式說明",
+            self.t("qmark_heading"),
             font=FONT_CJK, font_size=28, color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
@@ -110,7 +183,7 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
         code_panel = CodePanel(code_text, title="Jupyter Cell", width=7.0, height=2.0).next_to(heading, DOWN, buff=0.5)
 
         note = Text(
-            "一個 ? 看說明，兩個 ?? 看原始碼",
+            self.t("qmark_note"),
             font=FONT_CJK, font_size=22, color=TEXT_SECONDARY,
         ).next_to(code_panel, DOWN, buff=0.4)
 
@@ -124,14 +197,14 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
         self.show_step_indicator(4, self.total_steps)
 
         heading = Text(
-            "Tab 自動完成 — 忘記方法名稱的救星",
+            self.t("tab_heading"),
             font=FONT_CJK, font_size=26, color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         steps = VGroup(
-            Text("1. 打 df. 然後按 Tab", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("2. 看到所有可用的方法和屬性", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("3. 選擇你要的方法，按 Enter", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("tab_step1"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("tab_step2"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("tab_step3"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.4).next_to(heading, DOWN, buff=0.6)
 
         note = Text(
@@ -157,13 +230,13 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
 
     def show_main_summary(self, duration: float = 4.0, **kwargs) -> None:
         self.show_step_indicator(6, self.total_steps)
-        heading = Text("Jupyter 五大密技", font=FONT_CJK, font_size=34, color=ACCENT_ORANGE).to_edge(UP, buff=0.8)
+        heading = Text(self.t("summary_heading"), font=FONT_CJK, font_size=34, color=ACCENT_ORANGE).to_edge(UP, buff=0.8)
         points = VGroup(
-            Text("1. ! 執行 shell 指令", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("2. !uv add 安裝套件 + Restart Kernel", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("3. ? 查說明、?? 看原始碼", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("4. Tab 自動完成方法名稱", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("5. %timeit 測量效能", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p5"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.35).next_to(heading, DOWN, buff=0.5)
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.2), run_time=1.2)
@@ -175,27 +248,27 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
-        banner = ExtraExampleBanner("額外範例：快速探索疫調資料")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(7, self.total_steps)
 
         heading = Text(
-            "拿到新 CSV 的前 2 分鐘",
+            self.t("extra_heading"),
             font=FONT_CJK, font_size=26, color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         steps = VGroup(
-            Text("1. !head -2 data.csv   # 看欄位名稱", font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
-            Text("2. !wc -l data.csv     # 看有多少筆", font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
-            Text("3. df = pd.read_csv('data.csv')", font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
-            Text("4. df.info()           # 看型別和遺漏", font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
-            Text("5. df.describe()       # 看數值摘要", font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
+            Text(self.t("extra_step1"), font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
+            Text(self.t("extra_step2"), font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
+            Text(self.t("extra_step3"), font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
+            Text(self.t("extra_step4"), font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
+            Text(self.t("extra_step5"), font=FONT_MONO, font_size=18, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.3).next_to(heading, DOWN, buff=0.5)
 
         note = Text(
-            "這就是老手的工作節奏！",
+            self.t("extra_note"),
             font=FONT_CJK, font_size=20, color=ACCENT_GREEN,
         ).next_to(steps, DOWN, buff=0.4)
 
@@ -210,7 +283,7 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_no_restart(self, duration: float = 5.0, **kwargs) -> None:
@@ -238,15 +311,15 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
     def show_outro(self, duration: float = 3.0, **kwargs) -> None:
         self.show_step_indicator(self.total_steps, self.total_steps)
         heading = Text(
-            "Ch01b 全部完成！",
+            self.t("outro_heading"),
             font=FONT_CJK, font_size=32, color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.8)
         sub = Text(
-            "你的 Python 開發者工具箱已經備齊",
+            self.t("outro_sub"),
             font=FONT_CJK, font_size=24, color=TEXT_PRIMARY,
         ).next_to(heading, DOWN, buff=0.3)
         next_ch = Text(
-            "下一章 Ch02：用 pandas 處理真正的疫調資料！",
+            self.t("outro_next"),
             font=FONT_CJK, font_size=22, color=TEXT_SECONDARY,
         ).next_to(sub, DOWN, buff=0.3)
         self.play(FadeIn(heading), run_time=0.6)

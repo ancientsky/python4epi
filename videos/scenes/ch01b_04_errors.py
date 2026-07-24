@@ -41,6 +41,41 @@ class Ch01bErrorsScene(EpiBaseScene):
 
     total_steps: int = 15
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "讀懂錯誤訊息",
+            "title_sub": "traceback 不是天書",
+            "anatomy_heading": "Traceback 怎麼看？從最後一行開始！",
+            "anatomy_arrow": "^ 從這裡開始看！",
+            "summary_heading": "五大常見錯誤",
+            "summary_p1": "1. NameError — 打錯變數名稱",
+            "summary_p2": "2. TypeError — 型別不對",
+            "summary_p3": "3. KeyError — 字典找不到 key",
+            "summary_p4": "4. IndexError — 列表超出範圍",
+            "summary_p5": "5. FileNotFoundError — 檔案路徑錯誤",
+            "extra_banner_title": "額外範例：批次讀取通報檔案",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：try/except 優雅處理意外",
+            "outro_sub": "讓程式碰到壞資料也不會崩潰！",
+        },
+        "en": {
+            "title_main": "Reading Error Messages",
+            "title_sub": "traceback is not hieroglyphics",
+            "anatomy_heading": "How to read a Traceback? Start from the last line!",
+            "anatomy_arrow": "^ Start reading here!",
+            "summary_heading": "Five Common Errors",
+            "summary_p1": "1. NameError — misspelled variable name",
+            "summary_p2": "2. TypeError — wrong type",
+            "summary_p3": "3. KeyError — dict can't find the key",
+            "summary_p4": "4. IndexError — list index out of range",
+            "summary_p5": "5. FileNotFoundError — wrong file path",
+            "extra_banner_title": "Extra example: batch-reading notification files",
+            "blindspot_banner_title": "3 Common Beginner Pitfalls",
+            "outro_heading": "Next up: try/except handles surprises gracefully",
+            "outro_sub": "Keep your program from crashing on bad data!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -49,13 +84,13 @@ class Ch01bErrorsScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
-        self.show_title_card("讀懂錯誤訊息", "traceback 不是天書", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_traceback_anatomy(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(1, self.total_steps)
 
         heading = Text(
-            "Traceback 怎麼看？從最後一行開始！",
+            self.t("anatomy_heading"),
             font=FONT_CJK, font_size=28, color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
@@ -66,7 +101,7 @@ class Ch01bErrorsScene(EpiBaseScene):
             Text("NameError: name 'infceted' is not defined", font=FONT_MONO, font_size=18, color="#D94452"),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.25).next_to(heading, DOWN, buff=0.6)
 
-        arrow = Text("^ 從這裡開始看！", font=FONT_CJK, font_size=20, color=ACCENT_ORANGE).next_to(lines[-1], DOWN, buff=0.3)
+        arrow = Text(self.t("anatomy_arrow"), font=FONT_CJK, font_size=20, color=ACCENT_ORANGE).next_to(lines[-1], DOWN, buff=0.3)
 
         self.play(FadeIn(heading), run_time=0.4)
         self.play(FadeIn(lines, lag_ratio=0.2), run_time=1.2)
@@ -126,13 +161,13 @@ class Ch01bErrorsScene(EpiBaseScene):
 
     def show_main_summary(self, duration: float = 4.0, **kwargs) -> None:
         self.show_step_indicator(7, self.total_steps)
-        heading = Text("五大常見錯誤", font=FONT_CJK, font_size=34, color=ACCENT_ORANGE).to_edge(UP, buff=0.8)
+        heading = Text(self.t("summary_heading"), font=FONT_CJK, font_size=34, color=ACCENT_ORANGE).to_edge(UP, buff=0.8)
         points = VGroup(
-            Text("1. NameError — 打錯變數名稱", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("2. TypeError — 型別不對", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("3. KeyError — 字典找不到 key", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("4. IndexError — 列表超出範圍", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("5. FileNotFoundError — 檔案路徑錯誤", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p5"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.35).next_to(heading, DOWN, buff=0.5)
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.2), run_time=1.2)
@@ -144,7 +179,7 @@ class Ch01bErrorsScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
-        banner = ExtraExampleBanner("額外範例：批次讀取通報檔案")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
@@ -159,7 +194,7 @@ class Ch01bErrorsScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_read_wrong(self, duration: float = 5.0, **kwargs) -> None:
@@ -187,10 +222,10 @@ class Ch01bErrorsScene(EpiBaseScene):
     def show_outro(self, duration: float = 3.0, **kwargs) -> None:
         self.show_step_indicator(self.total_steps, self.total_steps)
         heading = Text(
-            "下一集：try/except 優雅處理意外",
+            self.t("outro_heading"),
             font=FONT_CJK, font_size=28, color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
-        sub = Text("讓程式碰到壞資料也不會崩潰！", font=FONT_CJK, font_size=22, color=TEXT_SECONDARY).next_to(heading, DOWN, buff=0.4)
+        sub = Text(self.t("outro_sub"), font=FONT_CJK, font_size=22, color=TEXT_SECONDARY).next_to(heading, DOWN, buff=0.4)
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
         self.wait(duration - 1.1)

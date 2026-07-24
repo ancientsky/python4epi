@@ -1,0 +1,172 @@
+meta:
+  chapter: "01b"
+  concept: "try_except"
+  title: "try/except: Handle Surprises Gracefully"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch01b_05_try_except"
+  scene_class: "Ch01bTryExceptScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: try/except
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Last time we learned to read error messages.
+      But some errors are predictable, like missing values in your data.
+      In those cases we don't want the program to crash outright;
+      we want to handle it gracefully and keep running.
+      That's what try except is for.
+      It's like an investigation where you hit one incomplete report form,
+      and instead of tossing the whole stack, you skip that one and keep going.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "basic_syntax"
+    narration: >
+      The basic syntax is simple.
+      try colon, and below it goes the code that might fail.
+      except plus an error type colon, and below it goes what to do when it fails.
+      Python first tries to run the code inside try,
+      and if it fails, it jumps into the except block.
+      It's like first trying to phone a case, and if it doesn't connect, switching to a text message.
+    animation: "show_basic_syntax"
+    code: |
+      try:
+          result = int("N/A")
+      except ValueError:
+          result = 0
+          print("bad value, using 0")
+    output: "bad value, using 0"
+    pause_after: 0.3
+
+  - id: "real_scenario"
+    narration: >
+      Let's see an investigation scenario.
+      You have a column of ages, but some fields are blank or say "unknown".
+      Wrap it in try except, skip bad data when you hit it,
+      and the rest of the data still gets processed.
+      At the end it tells you how many were skipped.
+    animation: "show_real_scenario"
+    code: |
+      raw = ["72", "85", "N/A", "68", ""]
+      ages = []
+      skipped = 0
+      for val in raw:
+          try:
+              ages.append(int(val))
+          except ValueError:
+              skipped += 1
+      print(f"valid: {len(ages)}, skipped: {skipped}")
+    output: "valid: 3, skipped: 2"
+    pause_after: 0.5
+
+  - id: "multiple_except"
+    narration: >
+      You can use several excepts to handle different error types.
+      For example, opening a file, the file might not exist, or you might lack permission.
+      Handle FileNotFoundError and PermissionError separately,
+      giving the user a different message for each.
+    animation: "show_multiple_except"
+    code: |
+      try:
+          f = open("report.csv")
+      except FileNotFoundError:
+          print("file not found!")
+      except PermissionError:
+          print("no permission!")
+    pause_after: 0.3
+
+  - id: "main_summary"
+    narration: >
+      Let's sum up!
+      Put risky code inside try.
+      Add an error type to except to handle a specific error.
+      Don't write a bare except with nothing after it; that swallows every error.
+      Only use try except for external data, don't treat it as a cure-all.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: cleaning noisy vaccination records
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Let's see another scenario: cleaning up noisy vaccination records.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      In a school's COVID-19 vaccination records,
+      some people's vaccination-date field is blank or says "not vaccinated".
+      Protect the date parsing with try except,
+      and if parsing fails, mark it as not vaccinated while the program keeps running.
+      In practice, your data will never be perfect,
+      and try except is your safety net for dirty data.
+    animation: "show_extra_example"
+    code: |
+      from datetime import date
+      raw_dates = ["2025-03-15", "", "N/A"]
+      for d in raw_dates:
+          try:
+              parsed = date.fromisoformat(d)
+              print(f"vaccinated: {parsed}")
+          except ValueError:
+              print(f"skipped: {d!r}")
+    output: "vaccinated: 2025-03-15\nskipped: ''\nskipped: 'N/A'"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Three common try except landmines.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Landmine one: a bare except with nothing written.
+      except colon, and below it just pass.
+      This silently swallows every error, and you never know what went wrong.
+      The right way: always name the error type you want to catch.
+    animation: "show_blindspot_bare_except"
+    error_code: "try:\n    x = bad()\nexcept:\n    pass"
+    correct_code: "try:\n    x = bad()\nexcept ValueError:\n    print('bad!')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Landmine two: putting a whole block of code inside try.
+      try should only wrap the line that might fail,
+      not a hundred lines of code.
+      Too broad, and you won't know which line broke.
+    animation: "show_blindspot_too_broad"
+    error_code: "try:\n    # 100 lines here\nexcept: ..."
+    correct_code: "# only wrap risky line\ntry:\n    val = int(x)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Landmine three: using try except to hide a bug.
+      If your code itself is wrong, like a misspelled variable name,
+      you shouldn't fix it with try except;
+      you should fix the bug directly.
+      try except is for handling uncontrollable external data.
+    animation: "show_blindspot_hide_bug"
+    error_code: "try:\n    print(infceted)\nexcept: pass"
+    correct_code: "infected = 121\nprint(infected)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Excellent! You now have a safety net for error handling.
+      In the next video we'll learn string methods and advanced loop tricks.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

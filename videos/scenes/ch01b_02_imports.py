@@ -41,6 +41,41 @@ class Ch01bImportsScene(EpiBaseScene):
 
     total_steps: int = 14
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "import",
+            "title_sub": "借用別人的工具",
+            "import_as_heading": "import X as Y — 取個好記的綽號",
+            "import_as_note": "pd, np, plt — 全世界 Python 使用者共同的約定",
+            "import_order_heading": "import 的排列順序",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. import X — 搬整個工具箱",
+            "summary_p2": "2. from X import Y — 只借一個工具",
+            "summary_p3": "3. import X as Y — 取綽號",
+            "summary_p4": "4. import 放在檔案最上面",
+            "extra_banner_title": "額外範例：用 datetime 算發病天數",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：型別與轉換",
+            "outro_sub": "搞清楚數字和文字的差別！",
+        },
+        "en": {
+            "title_main": "import",
+            "title_sub": "Borrow other people's tools",
+            "import_as_heading": "import X as Y — give it a memorable nickname",
+            "import_as_note": "pd, np, plt — the shared convention of Python users worldwide",
+            "import_order_heading": "The order of your imports",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. import X — bring the whole toolbox",
+            "summary_p2": "2. from X import Y — borrow just one tool",
+            "summary_p3": "3. import X as Y — give it a nickname",
+            "summary_p4": "4. Put imports at the top of the file",
+            "extra_banner_title": "Extra example: count onset-to-admission days with datetime",
+            "blindspot_banner_title": "3 Common Beginner Pitfalls",
+            "outro_heading": "Next up: types and conversion",
+            "outro_sub": "Sort out the difference between numbers and text!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -49,7 +84,7 @@ class Ch01bImportsScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
-        self.show_title_card("import", "借用別人的工具", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_import_basic(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(1, self.total_steps)
@@ -73,7 +108,7 @@ class Ch01bImportsScene(EpiBaseScene):
         self.show_step_indicator(3, self.total_steps)
 
         heading = Text(
-            "import X as Y — 取個好記的綽號",
+            self.t("import_as_heading"),
             font=FONT_CJK, font_size=28, color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
@@ -81,7 +116,7 @@ class Ch01bImportsScene(EpiBaseScene):
         code_panel = CodePanel(code_text, title="aliases.py", width=8.0, height=2.8).next_to(heading, DOWN, buff=0.5)
 
         note = Text(
-            "pd, np, plt — 全世界 Python 使用者共同的約定",
+            self.t("import_as_note"),
             font=FONT_CJK, font_size=20, color=TEXT_SECONDARY,
         ).next_to(code_panel, DOWN, buff=0.4)
 
@@ -99,7 +134,7 @@ class Ch01bImportsScene(EpiBaseScene):
             "# 3. local\nfrom epi_learning import attack_rate")
 
         heading = Text(
-            "import 的排列順序",
+            self.t("import_order_heading"),
             font=FONT_CJK, font_size=28, color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
@@ -112,12 +147,12 @@ class Ch01bImportsScene(EpiBaseScene):
 
     def show_main_summary(self, duration: float = 4.0, **kwargs) -> None:
         self.show_step_indicator(5, self.total_steps)
-        heading = Text("重點整理", font=FONT_CJK, font_size=34, color=ACCENT_ORANGE).to_edge(UP, buff=0.8)
+        heading = Text(self.t("summary_heading"), font=FONT_CJK, font_size=34, color=ACCENT_ORANGE).to_edge(UP, buff=0.8)
         points = VGroup(
-            Text("1. import X — 搬整個工具箱", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("2. from X import Y — 只借一個工具", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("3. import X as Y — 取綽號", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("4. import 放在檔案最上面", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.25), run_time=1.2)
@@ -129,7 +164,7 @@ class Ch01bImportsScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
-        banner = ExtraExampleBanner("額外範例：用 datetime 算發病天數")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
@@ -149,7 +184,7 @@ class Ch01bImportsScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_not_installed(self, duration: float = 5.0, **kwargs) -> None:
@@ -177,10 +212,10 @@ class Ch01bImportsScene(EpiBaseScene):
     def show_outro(self, duration: float = 3.0, **kwargs) -> None:
         self.show_step_indicator(self.total_steps, self.total_steps)
         heading = Text(
-            "下一集：型別與轉換",
+            self.t("outro_heading"),
             font=FONT_CJK, font_size=28, color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
-        sub = Text("搞清楚數字和文字的差別！", font=FONT_CJK, font_size=22, color=TEXT_SECONDARY).next_to(heading, DOWN, buff=0.4)
+        sub = Text(self.t("outro_sub"), font=FONT_CJK, font_size=22, color=TEXT_SECONDARY).next_to(heading, DOWN, buff=0.4)
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
         self.wait(duration - 1.1)
