@@ -1,0 +1,177 @@
+meta:
+  chapter: "02"
+  concept: "missing"
+  title: "The Missing-Value Detective Agency: NaN, NaT, None Demystified"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch02_05_missing"
+  scene_class: "Ch02MissingScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: handling missing values
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, welcome back! Today we play detective and investigate a band of mysterious suspects, missing values.
+      Real-world data is never perfect, just like your takeout order is always missing a pair of chopsticks.
+      In epidemiological data analysis, missing values are an everyday thing.
+      Learn to handle them and you can dig real clues out of data full of holes.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "nan_nat_none"
+    narration: >
+      Missing values come as three brothers, each with their own turf.
+      The eldest, NaN, Not a Number, occupies numeric columns, an unfilled age is him.
+      The second, NaT, Not a Time, seizes date columns, an unfilled onset date is him.
+      The youngest, None, Python's native null master, can appear anywhere.
+      The three brothers look different, but they all mean "no data in this cell."
+    animation: "show_nan_nat_none"
+    code: |
+      import numpy as np
+      import pandas as pd
+      print(np.nan)        # NaN - numeric missing
+      print(pd.NaT)        # NaT - datetime missing
+      print(None)           # None - Python native null
+    pause_after: 0.5
+
+  - id: "isnull_sum"
+    narration: >
+      To detect how many missing values there are, just one incantation.
+      df dot isnull dot sum, boom, every column's missing count in one look.
+      Like sweeping a crime scene with a metal detector, beep beep beep, every hole reveals itself.
+      In the Pine and Cypress data, onset date is missing 159 records, and death date is missing 261.
+    animation: "show_isnull_sum"
+    code: "df.isnull().sum()"
+    output: |
+      age                  3
+      symptom_onset_date  159
+      death_date          261
+    pause_after: 0.5
+
+  - id: "structural_vs_error"
+    narration: >
+      But! Missing values aren't always a bad thing.
+      There's a kind called structural missing, which is normal and completely expected.
+      For example, of 280 residents, 159 weren't infected, so of course they have no onset date!
+      261 are still alive, so of course they have no death date! That's structural missing.
+      But if a confirmed case's age is blank, that's a real data error.
+      Confuse these two and you'll wrongly accuse good data.
+    animation: "show_structural_vs_error"
+    pause_after: 0.5
+
+  - id: "loc_filter"
+    narration: >
+      How do you verify it's structural missing? Use loc to filter and cross-check.
+      Filter residents whose infection status is 0 and see whether their onset date has a value.
+      If notna returns 0, it means uninfected people truly all lack an onset date.
+      Case closed! Structural missing is acquitted.
+    animation: "show_loc_filter"
+    code: 'df.loc[df["infected"]==0, "symptom_onset_date"].notna().sum()'
+    output: "0"
+    pause_after: 0.5
+
+  - id: "fillna_dropna"
+    narration: >
+      There are two great moves for handling missing values: fillna to fill and dropna to drop.
+      fillna is like a filling, find a reasonable value and plug the hole.
+      dropna is like an extraction, just throw out the whole problem row.
+      Low missing rate with a reasonable fill? Use fillna.
+      A column missing too much or with no reasonable value? Use dropna to drop.
+      Remember: a filling beats an extraction, save it if you can!
+    animation: "show_fillna_dropna"
+    code: |
+      df["age"].fillna(df["age"].median(), inplace=True)
+      df_clean = df.dropna(subset=["symptom_onset_date"])
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Detective agency case report!
+      NaN, NaT, None are the three missing-value brothers.
+      isnull plus sum sweeps all missing in one line.
+      Structural missing is normal, only data errors need handling.
+      fillna to fill, dropna to drop, prescribe the right cure.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: vaccination records
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Let's switch scenes to train!
+      This time let's see how to handle missing values in vaccination records.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Vaccination records are a disaster zone for missing values.
+      Someone got dose one and vanished, so of course the dose-two date is blank, that's structural missing.
+      But if even the national ID is missing, then the data-entry person forgot to fill it in.
+      The handling is identical: sweep with isnull plus sum first,
+      then cross-check with loc filtering, sorting out which are normal and which are errors.
+      A missing-value detective's skills work everywhere you go!
+    animation: "show_extra_example"
+    code: |
+      vax = pd.read_csv("vaccination.csv")
+      vax.isnull().sum()
+      vax.loc[vax["dose1_date"].isna(), "person_id"]
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Finally, the three classic landmines of missing values.
+      I promise you'll step on at least one of these, so see them now and take one less hit.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Landmine one: comparing NaN with double equals.
+      age equals-equals None? Always returns False!
+      Because NaN is an oddball, it isn't even equal to itself.
+      Like asking someone with amnesia "are you you," and they just shake their head.
+      The right way: use the isnull method to detect it.
+    animation: "show_blindspot_nan_compare"
+    error_code: 'df["age"] == None'
+    correct_code: 'df["age"].isnull()'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Landmine two: dropna without arguments, way too destructive.
+      Without specifying subset, any row with a missing value in any column gets deleted.
+      280 records might instantly drop to 50, and your supervisor will think you lost the data.
+      The right way: use the subset argument to specify the columns you actually care about.
+    animation: "show_blindspot_dropna_aggressive"
+    error_code: "df.dropna()"
+    correct_code: 'df.dropna(subset=["age"])'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Landmine three: filling missing age with 0.
+      Zero years old? Does the nursing home house infants? This fill will make the average age plummet.
+      Filling numeric columns with 0 severely distorts your statistics.
+      The right way: fill with the median or mean, at least it won't drift too far off.
+    animation: "show_blindspot_fillna_zero"
+    error_code: 'df["age"].fillna(0)'
+    correct_code: 'df["age"].fillna(df["age"].median())'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! You're now an official member of the Missing-Value Detective Agency.
+      In the next episode we'll learn groupby aggregation,
+      grouping data by floor and wing to compute each area's attack rate.
+      The agency keeps working the case, see you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

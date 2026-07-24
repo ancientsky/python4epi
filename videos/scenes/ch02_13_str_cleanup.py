@@ -39,6 +39,47 @@ class Ch02StrCleanupScene(EpiBaseScene):
 
     total_steps: int = 15
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "文字清理三板斧",
+            "title_sub": "str + drop_duplicates + rename",
+            "dirty_heading": "現實世界的資料長這樣…",
+            "messy1": 'wing: " A", "a", "A"  → 三種寫法！',
+            "messy2": 'hospital: "NTU", "ntu", "Ntu Hospital"',
+            "messy3": "case_id: A001 (x3) → 重複通報",
+            "dirty_warning": "不先清理 → groupby 分錯組 → 分析結果報廢",
+            "replace_note": "str.replace 可以串接：一行解決多種寫法",
+            "summary_heading": "三板斧總整理",
+            "summary_p1": "1. str：strip / upper / lower / contains / replace",
+            "summary_p2": "2. drop_duplicates：去重，subset 指定 key 欄位",
+            "summary_p3": "3. rename + nlargest：改名 + 快速排名",
+            "summary_p4": "先洗再分析，養成好習慣！",
+            "extra_banner_title": "額外範例：流感監測資料清理",
+            "blindspot_banner_title": "資料清理三大翻車現場",
+            "outro_heading": "Ch02 完成！",
+            "outro_sub": "下一章 Ch03：2×2 表、RR、OR、卡方檢定",
+        },
+        "en": {
+            "title_main": "Three Moves for Text Cleanup",
+            "title_sub": "str + drop_duplicates + rename",
+            "dirty_heading": "Real-world data looks like this…",
+            "messy1": 'wing: " A", "a", "A"  → three spellings!',
+            "messy2": 'hospital: "NTU", "ntu", "Ntu Hospital"',
+            "messy3": "case_id: A001 (x3) → duplicate reports",
+            "dirty_warning": "Skip cleanup → groupby splits wrong → analysis is ruined",
+            "replace_note": "str.replace chains: fix many spellings in one line",
+            "summary_heading": "The Three Moves, Summarized",
+            "summary_p1": "1. str: strip / upper / lower / contains / replace",
+            "summary_p2": "2. drop_duplicates: dedupe, subset names the key column",
+            "summary_p3": "3. rename + nlargest: rename + quick ranking",
+            "summary_p4": "Clean first, analyze second - build the habit!",
+            "extra_banner_title": "Extra example: cleaning influenza surveillance data",
+            "blindspot_banner_title": "3 Data-Cleaning Wipeouts",
+            "outro_heading": "Ch02 complete!",
+            "outro_sub": "Next chapter Ch03: 2×2 tables, RR, OR, chi-square test",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -48,27 +89,27 @@ class Ch02StrCleanupScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the string cleanup lesson."""
-        self.show_title_card("文字清理三板斧", "str + drop_duplicates + rename", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_dirty_data_reality(self, duration: float = 7.0, **kwargs) -> None:
         """Step 1: show messy real-world data."""
         self.show_step_indicator(1, self.total_steps)
 
         heading = Text(
-            "現實世界的資料長這樣…",
+            self.t("dirty_heading"),
             font=FONT_CJK,
             font_size=30,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         messy_examples = VGroup(
-            Text('wing: " A", "a", "A"  → 三種寫法！', font=FONT_MONO, font_size=20, color=TEXT_PRIMARY),
-            Text('hospital: "NTU", "ntu", "Ntu Hospital"', font=FONT_MONO, font_size=20, color=TEXT_PRIMARY),
-            Text("case_id: A001 (x3) → 重複通報", font=FONT_MONO, font_size=20, color=TEXT_PRIMARY),
+            Text(self.t("messy1"), font=FONT_MONO, font_size=20, color=TEXT_PRIMARY),
+            Text(self.t("messy2"), font=FONT_MONO, font_size=20, color=TEXT_PRIMARY),
+            Text(self.t("messy3"), font=FONT_MONO, font_size=20, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.4).next_to(heading, DOWN, buff=0.6)
 
         warning = Text(
-            "不先清理 → groupby 分錯組 → 分析結果報廢",
+            self.t("dirty_warning"),
             font=FONT_CJK,
             font_size=22,
             color=ACCENT_ORANGE,
@@ -149,7 +190,7 @@ class Ch02StrCleanupScene(EpiBaseScene):
         code_panel = self.show_code(code_text, title="str_replace.py")
 
         note = Text(
-            "str.replace 可以串接：一行解決多種寫法",
+            self.t("replace_note"),
             font=FONT_CJK,
             font_size=20,
             color=TEXT_SECONDARY,
@@ -217,17 +258,17 @@ class Ch02StrCleanupScene(EpiBaseScene):
         self.show_step_indicator(7, self.total_steps)
 
         heading = Text(
-            "三板斧總整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. str：strip / upper / lower / contains / replace", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("2. drop_duplicates：去重，subset 指定 key 欄位", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("3. rename + nlargest：改名 + 快速排名", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("先洗再分析，養成好習慣！", font=FONT_CJK, font_size=22, color=ACCENT_ORANGE),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=22, color=ACCENT_ORANGE),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.42).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -241,7 +282,7 @@ class Ch02StrCleanupScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：流感監測資料清理")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 7.0, **kwargs) -> None:
@@ -272,7 +313,7 @@ class Ch02StrCleanupScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("資料清理三大翻車現場")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_na_false(self, duration: float = 5.0, **kwargs) -> None:
@@ -305,14 +346,14 @@ class Ch02StrCleanupScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "Ch02 完成！",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "下一章 Ch03：2×2 表、RR、OR、卡方檢定",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

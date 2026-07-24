@@ -1,0 +1,194 @@
+meta:
+  chapter: "02"
+  concept: "epicurve"
+  title: "Draw an Investigation-Grade Epidemic Curve with matplotlib"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch02_07_epicurve"
+  scene_class: "Ch02EpiCurveScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: matplotlib epidemic curve
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, welcome back! The chart we're drawing today is every epidemiologist's soulwork, the epidemic curve.
+      From the shape of the epi curve, you can infer whether it's a point-source outbreak, continuous transmission, or person-to-person spread.
+      Just as a doctor knows from a heartbeat whether something's wrong, an investigator reads the curve to catch the outbreak's pulse.
+      Today we'll use matplotlib to draw a CDC-grade epidemic curve.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "fig_ax"
+    narration: >
+      Drawing in matplotlib has a fixed opening stance: fig comma ax equals plt dot subplots.
+      fig is the whole sheet of paper, ax is the canvas on it.
+      Picture fig as an A4 page and ax as the frame drawn on the page.
+      Every plot goes onto ax, while fig only controls the paper size and saving.
+      Remember this duo, and every chart you draw from now on starts here.
+    animation: "show_fig_ax"
+    code: |
+      import matplotlib.pyplot as plt
+      fig, ax = plt.subplots(figsize=(10, 5))
+    pause_after: 0.5
+
+  - id: "bar_basic"
+    narration: >
+      The body of an epidemic curve is a bar chart.
+      The x-axis is the date, the y-axis is the number of new cases each day.
+      ax dot bar, pass daily's index as x and daily's values as y.
+      Here's the key: set width to 1.0 so there's no gap between bars!
+      Because each bar of an epi curve represents one day, there shouldn't be a gap between them.
+      That's a CDC rule, no cutting corners.
+    animation: "show_bar_basic"
+    code: |
+      daily = df.groupby("symptom_onset_date").size()
+      ax.bar(daily.index, daily.values, width=1.0,
+             color="#D97757", edgecolor="white")
+    pause_after: 0.5
+
+  - id: "date_format"
+    narration: >
+      If you leave the date axis alone, it shows a bunch of long, ugly timestamps.
+      Use mdates dot DateFormatter to format the dates as month slash day.
+      Then use AutoDateLocator to let matplotlib decide how many ticks to place.
+      Finally fig dot autofmt_xdate rotates the date labels a bit,
+      otherwise the dates crowd together like sardines and you can't read them at all.
+    animation: "show_date_format"
+    code: |
+      import matplotlib.dates as mdates
+      ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
+      ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+      fig.autofmt_xdate()
+    pause_after: 0.5
+
+  - id: "reindex_zero"
+    narration: >
+      Sometimes a few days have no cases at all, so groupby won't produce data for those days.
+      But on an epi curve those days should show 0, you can't just skip them.
+      Use reindex with a full date range to fill the missing days with 0.
+      That way the chart is continuous and won't suddenly break, making people think it's a bug.
+    animation: "show_reindex_zero"
+    code: |
+      date_range = pd.date_range("2026-01-12", "2026-01-28")
+      daily = daily.reindex(date_range, fill_value=0)
+    pause_after: 0.5
+
+  - id: "cdc_style"
+    narration: >
+      Want your epi curve to look as professional as a CDC report? Three little tricks.
+      First: turn off the gridlines, ax dot grid parentheses False, an epi curve doesn't need gridlines.
+      Second: remove the top and right borders, use spines to set them invisible.
+      Third: start the y-axis at 0, set ylim's bottom to 0.
+      Three moves and your chart jumps from amateur to professional grade.
+    animation: "show_cdc_style"
+    code: |
+      ax.grid(False)
+      ax.spines["top"].set_visible(False)
+      ax.spines["right"].set_visible(False)
+      ax.set_ylim(bottom=0)
+    pause_after: 0.5
+
+  - id: "title_labels"
+    narration: >
+      The last step is also the most important: the title and axis labels.
+      A good title has three elements: disease name, place, and time.
+      For example, "Legionellosis cases, Pine and Cypress nursing home, January 2026."
+      That way, even if the image is pulled out on its own, others still understand what it's about.
+      For investigation reports, every chart must stand alone, not depend on context.
+    animation: "show_title_labels"
+    code: |
+      ax.set_title("Legionellosis cases, Songbai NH, Jan 2026")
+      ax.set_xlabel("Date of symptom onset")
+      ax.set_ylabel("Number of cases")
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      The six-step recipe for drawing an epi curve!
+      fig ax opening stance, bar to draw bars, format the dates,
+      reindex to fill zeros, CDC-style polish, and don't skip the title and labels.
+      Six steps done, and you have a professional epi curve ready for an investigation report.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: measles cluster
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Switch scenes! Let's draw an epidemic curve for a measles cluster.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Say a measles cluster breaks out at an elementary school and you get notification data for 45 cases.
+      The method is exactly the same: use groupby to count cases per day,
+      reindex to fill zeros, bar to draw bars, CDC-style polish.
+      But measles has an incubation period of 10 to 14 days, so the curve is more spread out than Legionnaires' disease.
+      See two peaks? That suggests two waves of transmission, the second being person-to-person.
+      Same drawing technique, a different outbreak story, and the curve speaks for itself.
+    animation: "show_extra_example"
+    code: |
+      measles_daily = measles.groupby("onset_date").size()
+      full_range = pd.date_range("2026-02-01", "2026-03-15")
+      measles_daily = measles_daily.reindex(full_range, fill_value=0)
+      ax.bar(measles_daily.index, measles_daily.values, width=1.0)
+      ax.set_title("Measles cases, XX Elementary, Feb-Mar 2026")
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Three classic slip-up moments for epi curves! Learn them and save yourself a lot of detours.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: show before savefig, and the saved image is blank!
+      Because plt dot show clears everything on the canvas.
+      Like pressing the shutter after you've finished taking the photo, you capture nothing.
+      The correct order: savefig to save first, then show to display.
+    animation: "show_blindspot_save_order"
+    error_code: 'plt.show(); plt.savefig("f.png")'
+    correct_code: 'plt.savefig("f.png"); plt.show()'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: the bar chart's width isn't set to 1.0, leaving gaps in between.
+      An epi curve's bars represent continuous time units, there shouldn't be blank space between them.
+      With gaps it looks like an ordinary bar chart, not an epi curve.
+      The CDC style guide clearly requires: no gaps between bars. width equals 1.0, remember it!
+    animation: "show_blindspot_bar_width"
+    error_code: "ax.bar(x, y)"
+    correct_code: "ax.bar(x, y, width=1.0)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: forgetting to set DPI and cropping when saving.
+      The default DPI is only 100, and it turns into mush in a report.
+      Plus by default it won't crop the whitespace, leaving big blank margins around the image.
+      Add dpi equals 300 and bbox_inches equals tight,
+      and your chart comes out crisp and compact, great for slides or reports.
+    animation: "show_blindspot_dpi"
+    error_code: 'fig.savefig("f.png")'
+    correct_code: 'fig.savefig("f.png", dpi=300, bbox_inches="tight")'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      The epi curve is drawn! You can now produce CDC-grade investigation charts.
+      In the next episode we'll introduce seaborn and plotly,
+      letting you draw flashier charts with less code, and even build interactive visualizations.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,210 @@
+meta:
+  chapter: "02"
+  concept: "datetime"
+  title: "The Date-Time Boss Battle: The Complete to_datetime Playbook"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch02_03_datetime"
+  scene_class: "Ch02DatetimeScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: date-time handling
+  # ========================================
+  - id: "intro"
+    narration: >
+      Welcome back! Today we take on the boss that Python beginners all agree on, date and time.
+      Why do dates matter so much? Because the soul of epidemiology is time.
+      When symptoms started, when a case was reported, how many days the incubation lasted,
+      these all need dates to compute.
+      But dates come in wildly different formats, slashes, dashes, and all sorts of year-month-day orders.
+      Don't worry, follow along and today we tame this boss!
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "to_datetime"
+    narration: >
+      Dates that pandas reads in are text by default, not real dates.
+      You can't subtract two pieces of text, right?
+      So the first step is to use pd.to_datetime to turn text into date objects.
+      One line of code, and the whole column of 280 dates goes from text to real timestamps.
+      It's like scanning a pile of handwritten date slips into a format the computer can calculate with.
+    animation: "show_to_datetime"
+    code: |
+      df["symptom_onset_date"] = pd.to_datetime(
+          df["symptom_onset_date"]
+      )
+      print(df["symptom_onset_date"].dtype)
+    output: "datetime64[ns]"
+    pause_after: 0.5
+
+  - id: "errors_coerce"
+    narration: >
+      But what if the data has a mistyped date?
+      Say someone's hand slipped and turned 2026 into 20x6, then pd.to_datetime blows up entirely.
+      That's when you add errors equals coerce, like fitting it with an airbag.
+      Values it can't convert become NaT, that's Not a Time, and the program won't crash.
+      Let it finish running first, then come back to handle those few problem records.
+    animation: "show_errors_coerce"
+    code: |
+      df["onset"] = pd.to_datetime(
+          df["symptom_onset_date"], errors="coerce"
+      )
+      print(df["onset"].isna().sum())
+    pause_after: 0.5
+
+  - id: "dt_accessor"
+    narration: >
+      Date objects have a wonderfully handy toolbox called the dt accessor.
+      dt dot year gets the year, dt dot month gets the month,
+      dt dot day gets the day, dt dot dayofweek gets the weekday.
+      Monday is 0, Sunday is 6.
+      It's like a Swiss army knife, one tool that pulls out all kinds of parts.
+      In the Pine and Cypress case, everyone got sick in January 2026.
+    animation: "show_dt_accessor"
+    code: |
+      df["onset_month"] = df["onset"].dt.month
+      df["onset_dow"] = df["onset"].dt.dayofweek
+      print(df[["onset", "onset_month", "onset_dow"]].head(3))
+    pause_after: 0.5
+
+  - id: "timedelta"
+    narration: >
+      The most powerful feature of dates is that you can subtract them!
+      Subtracting two dates gives a Timedelta, a time difference.
+      For example, hospitalization date minus onset date is the days from onset to hospitalization.
+      Remember to use dt dot days to turn a Timedelta into whole days.
+      At Pine and Cypress, we can see how many days each person took from onset to hospitalization.
+    animation: "show_timedelta"
+    code: |
+      df["delay"] = (
+          df["hospitalization_date"] - df["onset"]
+      ).dt.days
+      print(df["delay"].describe())
+    pause_after: 0.5
+
+  - id: "epi_week"
+    narration: >
+      Epidemiology has a special time unit called the epidemiological week,
+      epi week or ISO week in English.
+      Get it with dt dot isocalendar in parentheses dot week.
+      When drawing epidemic curves, we often group by week instead of by day,
+      because daily case counts swing too much, and weekly trends are smoother.
+      The Pine and Cypress cluster was mainly concentrated in weeks 3 and 4.
+    animation: "show_epi_week"
+    code: |
+      df["epi_week"] = df["onset"].dt.isocalendar().week
+      print(df["epi_week"].value_counts().sort_index())
+    pause_after: 0.5
+
+  - id: "strftime"
+    narration: >
+      Last move: turn a date back into a string.
+      When do you need that? When you export a report, save to CSV, or put it in a chart title.
+      Use dt dot strftime with the format you want in the parentheses.
+      Capital Y is the four-digit year, lowercase m is the month, lowercase d is the day.
+      It's like dressing the date in the outfit you choose, whatever format you want, that's what it wears.
+    animation: "show_strftime"
+    code: |
+      df["onset_str"] = df["onset"].dt.strftime("%Y-%m-%d")
+      print(df["onset_str"].head(3))
+    output: |
+      0    2026-01-15
+      1    2026-01-13
+      2    2026-01-18
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Congratulations, you've tamed the date-time boss!
+      to_datetime turns text into dates, errors coerce prevents blowups.
+      dt accessor breaks out year-month-day, Timedelta computes time differences.
+      isocalendar gets the epidemiological week, strftime converts back to string.
+      Six moves learned, and you're a date-handling master!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: COVID-19 incubation period
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Switch scenes! This time let's compute the incubation period of COVID-19.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      The incubation period is the days from exposure to onset, one of epidemiology's most important indicators.
+      Say you have a COVID-19 dataset with two columns, exposure_date and onset_date.
+      First use to_datetime to convert both columns to date format.
+      Then onset minus exposure, take the days with dt dot days, and you have the incubation period.
+      You can also use describe to see the median and interquartile range.
+      Same move, from Legionnaires' disease to COVID-19, it all applies!
+    animation: "show_extra_example"
+    code: |
+      covid = pd.read_csv("covid_cases.csv")
+      covid["exposure_date"] = pd.to_datetime(covid["exposure_date"])
+      covid["onset_date"] = pd.to_datetime(covid["onset_date"])
+      covid["incubation"] = (covid["onset_date"] - covid["exposure_date"]).dt.days
+      print(covid["incubation"].describe())
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      The date boss is beaten, but there are still three landmines on the ground!
+      The three date traps beginners hit most, let's defuse them one by one.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Landmine one: comparing a string directly against a date.
+      df square-bracket date greater-than quote 2026-01-15.
+      It looks like it works, but you're actually doing a string comparison, not a date comparison.
+      String comparison uses alphabetical order, and the result can be completely wrong.
+      The right way is to use pd.Timestamp to turn the right side into a date object too.
+    animation: "show_blindspot_string_compare"
+    error_code: 'df["date"] > "2026-01-15"'
+    correct_code: 'df["date"] > pd.Timestamp("2026-01-15")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Landmine two: mixing up month and day order.
+      01 slash 15 slash 2026, is that January 15th, or month 15, day 1?
+      The American format puts the month first, the European format puts the day first.
+      pd.to_datetime defaults to the American format, so 01 slash 15 is read as January 15th.
+      If your data has the day first, remember to add dayfirst equals True.
+      Get it mixed up and every date past the 13th goes haywire.
+    animation: "show_blindspot_dayfirst"
+    error_code: 'pd.to_datetime("15/01/2026")'
+    correct_code: 'pd.to_datetime("15/01/2026", dayfirst=True)'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Landmine three: forgetting dt when taking days on a Series.
+      After subtracting two date columns, the result is a whole column of Timedeltas.
+      If you go straight to dot days, Python tells you it can't find that attribute,
+      because that's a Series, not a single Timedelta.
+      The right way is dt dot days, accessing through the dt accessor first.
+      A single value uses dot days, a whole column uses dt dot days, remember the difference!
+    animation: "show_blindspot_dt_days"
+    error_code: '(d2 - d1).days  # AttributeError on Series'
+    correct_code: '(d2 - d1).dt.days  # use .dt accessor'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      You've tamed the date-time boss, congratulations!
+      In the next video we'll learn four moves for derived variables,
+      teaching you how to conjure new information out of existing columns.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

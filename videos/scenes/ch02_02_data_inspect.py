@@ -41,6 +41,53 @@ class Ch02DataInspectScene(EpiBaseScene):
 
     total_steps: int = 13
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "一分鐘看懂你的資料",
+            "title_sub": "info() 與 describe()",
+            "dtypes_heading": "常見資料型別（dtype）",
+            "dtypes_p1": "• int64    — 整數（如 age, floor）",
+            "dtypes_p2": "• float64  — 浮點數（如 temperature）",
+            "dtypes_p3": "• object   — 文字 / 混合型（如 sex, outcome）",
+            "dtypes_p4": "• datetime64 — 日期時間（需要轉換才會出現）",
+            "interpret_heading": "describe() 怎麼看？",
+            "interpret_p1": "• count — 有多少筆非空值（檢查遺漏）",
+            "interpret_p2": "• mean / std — 平均值與標準差（看分布）",
+            "interpret_p3": "• min, 25%, 50%, 75%, max — 五數摘要",
+            "interpret_p4": "• min vs max 差太大？可能有離群值",
+            "summary_heading": "資料品質快篩三招",
+            "summary_p1": "1. df.info()  — 看型別、看缺值",
+            "summary_p2": "2. df.describe() — 看分布、抓離群值",
+            "summary_p3": "3. df['col'].value_counts() — 看類別分布",
+            "extra_banner_title": "額外範例：結核病接觸者追蹤",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：日期時間大魔王",
+            "outro_sub": "把 object 轉成 datetime64，時間計算不再卡關！",
+        },
+        "en": {
+            "title_main": "Understand Your Data in One Minute",
+            "title_sub": "info() and describe()",
+            "dtypes_heading": "Common Data Types (dtype)",
+            "dtypes_p1": "• int64    — integers (e.g. age, floor)",
+            "dtypes_p2": "• float64  — floats (e.g. temperature)",
+            "dtypes_p3": "• object   — text / mixed (e.g. sex, outcome)",
+            "dtypes_p4": "• datetime64 — date-time (shows up only after conversion)",
+            "interpret_heading": "How Do You Read describe()?",
+            "interpret_p1": "• count — how many non-null values (check for missing)",
+            "interpret_p2": "• mean / std — mean and standard deviation (see the spread)",
+            "interpret_p3": "• min, 25%, 50%, 75%, max — the five-number summary",
+            "interpret_p4": "• min vs max gap too big? Possible outliers",
+            "summary_heading": "Three Quick Data-Quality Checks",
+            "summary_p1": "1. df.info()  — check dtypes, check missing values",
+            "summary_p2": "2. df.describe() — check the spread, catch outliers",
+            "summary_p3": "3. df['col'].value_counts() — check category distribution",
+            "extra_banner_title": "Extra example: TB contact tracing",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: the date-time boss battle",
+            "outro_sub": "Turn object into datetime64 and time math stops fighting back!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -50,7 +97,7 @@ class Ch02DataInspectScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the data inspection lesson."""
-        self.show_title_card("一分鐘看懂你的資料", "info() 與 describe()", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_info(self, duration: float = 6.0, **kwargs) -> None:
         """Show df.info() code and sample output."""
@@ -91,17 +138,17 @@ class Ch02DataInspectScene(EpiBaseScene):
         self.show_step_indicator(2, self.total_steps)
 
         heading = Text(
-            "常見資料型別（dtype）",
+            self.t("dtypes_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("• int64    — 整數（如 age, floor）", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• float64  — 浮點數（如 temperature）", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• object   — 文字 / 混合型（如 sex, outcome）", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• datetime64 — 日期時間（需要轉換才會出現）", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("dtypes_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("dtypes_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("dtypes_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("dtypes_p4"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -147,17 +194,17 @@ class Ch02DataInspectScene(EpiBaseScene):
         self.show_step_indicator(4, self.total_steps)
 
         heading = Text(
-            "describe() 怎麼看？",
+            self.t("interpret_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("• count — 有多少筆非空值（檢查遺漏）", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("• mean / std — 平均值與標準差（看分布）", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("• min, 25%, 50%, 75%, max — 五數摘要", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("• min vs max 差太大？可能有離群值", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("interpret_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("interpret_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("interpret_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("interpret_p4"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.42).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -205,16 +252,16 @@ class Ch02DataInspectScene(EpiBaseScene):
         self.show_step_indicator(6, self.total_steps)
 
         heading = Text(
-            "資料品質快篩三招",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. df.info()  — 看型別、看缺值", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("2. df.describe() — 看分布、抓離群值", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("3. df['col'].value_counts() — 看類別分布", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -228,7 +275,7 @@ class Ch02DataInspectScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：結核病接觸者追蹤")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
@@ -258,7 +305,7 @@ class Ch02DataInspectScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_no_parens(self, duration: float = 5.0, **kwargs) -> None:
@@ -291,14 +338,14 @@ class Ch02DataInspectScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：日期時間大魔王",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "把 object 轉成 datetime64，時間計算不再卡關！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

@@ -1,0 +1,196 @@
+meta:
+  chapter: "02"
+  concept: "value_counts"
+  title: "Frequency Tables, Fast: value_counts + crosstab"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch02_09_value_counts"
+  scene_class: "Ch02ValueCountsScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: value_counts + crosstab
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Welcome back. Today I'll teach you two super-practical frequency-table tricks: value_counts and crosstab.
+      When you get a dataset, the first thing to do isn't drawing charts or fitting models, it's checking the distribution!
+      It's like receiving a big bag of mail; you'd sort it into piles first to see which pile is biggest, right?
+      A frequency table is exactly that sort-and-count move, simple but incredibly important.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_frequency"
+    narration: >
+      Why is a frequency table the first step in an investigation? Because it lets you grasp the whole dataset in one second.
+      Take this Legionella outbreak at the Pine and Cypress nursing home: of the 280 residents, how many are mild, how many severe?
+      You can't read row by row, but a frequency table sorts the piles for you in a second.
+      It's like listing what you need before a grocery run; knowing what's missing from the fridge keeps you from buying at random.
+      Make it a habit: the moment you get data, run value_counts. Nothing matters more.
+    animation: "show_why_frequency"
+    pause_after: 0.5
+
+  - id: "value_counts_basic"
+    narration: >
+      Let's look at the most basic usage. df, bracket clinical_severity, dot value_counts.
+      One line, and pandas counts how many people fall in each severity level.
+      The result is sorted from most to least, so you instantly see mild is largest and severe is smallest.
+      Something this simple, yet so many people forget it and jump straight to regression.
+      Check the distribution before you analyze; that's the iron rule!
+    animation: "show_value_counts_basic"
+    code: 'df["clinical_severity"].value_counts()'
+    output: |
+      mild        52
+      moderate    38
+      severe      18
+      not_ill     13
+      Name: clinical_severity, dtype: int64
+    pause_after: 0.5
+
+  - id: "value_counts_normalize"
+    narration: >
+      Sometimes counts alone aren't intuitive; you want the proportions.
+      Add normalize equals True and value_counts computes the percentages for you.
+      But watch a hidden landmine: by default, value_counts silently ignores missing values!
+      If your data has NaN and you don't add dropna equals False, those missing values vanish like invisible people.
+      The scariest thing in an investigation is losing data, so remember to use both parameters together.
+    animation: "show_value_counts_normalize"
+    code: |
+      # 比例 + 顯示缺失值
+      df["clinical_severity"].value_counts(
+          normalize=True, dropna=False
+      )
+    output: |
+      mild            0.429
+      moderate        0.314
+      severe          0.149
+      not_ill         0.107
+      NaN             0.000
+      Name: clinical_severity, dtype: float64
+    pause_after: 0.5
+
+  - id: "crosstab_intro"
+    narration: >
+      What if you want the joint distribution of two variables? That's when crosstab steps in.
+      pd dot crosstab, put two Series inside, say sex and whether infected.
+      The result is a neat cross table, rows are sex, columns are infection status, and the cells hold the counts.
+      Add margins equals True and it computes row and column subtotals for you.
+      This is a sneak preview of the Chapter 3 two-by-two table; just a shadow for now, we'll go deep later.
+    animation: "show_crosstab_intro"
+    code: |
+      pd.crosstab(
+          df["sex"], df["infected"],
+          margins=True
+      )
+    output: |
+      infected  False  True   All
+      sex
+      F           82    58   140
+      M           77    63   140
+      All        159   121   280
+    pause_after: 0.5
+
+  - id: "crosstab_vs_pivot"
+    narration: >
+      A lot of students ask: how is crosstab different from pivot_table?
+      Simply put, crosstab defaults to counting; just toss in two Series.
+      pivot_table needs you to specify a DataFrame and set aggfunc, a bit more fuss.
+      So if you just want a quick cross count, crosstab is the least effort.
+      Need more complex aggregation? Hand it to pivot_table.
+      Each has its place, like chopsticks versus a fork, depending on what you're eating.
+    animation: "show_crosstab_vs_pivot"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Quick review!
+      value_counts builds a one-column frequency table in one line; add normalize for proportions.
+      Always add dropna equals False to keep missing values from quietly vanishing.
+      crosstab shows the joint distribution of two variables; add margins for automatic subtotals.
+      And the first thing to do with new data: run a frequency table and check the distribution, don't rush off to fit a model!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: enterovirus school cluster
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's see how value_counts and crosstab work in an enterovirus school cluster investigation.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Suppose an elementary school has an enterovirus cluster, and you get a notification roster.
+      Step one: use value_counts to see how many cases each class has.
+      You immediately spot that class 2-3 has the most, eight cases, while other classes have two or three.
+      Next, use crosstab to cross grade against severity.
+      The result shows the lower grades have a clearly higher severe-case proportion than the upper grades.
+      That's why the health bureau prioritizes lower grades for a class-suspension assessment; the data speaks!
+    animation: "show_extra_example"
+    code: |
+      # 各班病例數
+      ev["class"].value_counts()
+      # 年級 x 嚴重程度
+      pd.crosstab(ev["grade"], ev["severity"])
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Here come the three beginner traps of value_counts! I guarantee at least one person around you has hit one.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: forgetting dropna equals False.
+      By default value_counts drops NaN automatically, so the result looks perfectly normal,
+      but you may have undercounted a whole pile of people!
+      The scariest thing in an investigation is a wrong denominator; vanishing missing values means a shrunken denominator.
+      The fix is simple: add dropna equals False so missing values have nowhere to hide.
+    animation: "show_blindspot_dropna"
+    error_code: 'df["col"].value_counts()'
+    correct_code: 'df["col"].value_counts(dropna=False)'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: running value_counts directly on a continuous numeric column.
+      Take age; everyone's is a bit different, so you get fifty-something distinct values.
+      Each value has only one or two people, and the table shows no pattern at all.
+      It's like counting a pile of sand grain by grain; what's the point?
+      The right way: first use pd dot cut to split into a few bins, then run value_counts.
+    animation: "show_blindspot_continuous"
+    error_code: 'df["age"].value_counts()'
+    correct_code: 'pd.cut(df["age"], bins=4).value_counts()'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: mixing up the parameters of crosstab and pivot_table.
+      crosstab takes two Series; just pass df, bracket, column name.
+      But some people pass the whole DataFrame and then add a values parameter, and it blows up.
+      crosstab's first and second arguments are simply the two columns you want to cross, that easy.
+      Get it wrong, and Python throws an error right in your face.
+    animation: "show_blindspot_crosstab"
+    error_code: 'pd.crosstab(df, values="infected")'
+    correct_code: 'pd.crosstab(df["sex"], df["infected"])'
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      Congratulations! You can now use value_counts and crosstab to quickly size up what your data looks like.
+      Next time we'll teach pivot_table and take grouped statistics to a more advanced level.
+      When you practice, remember to run the frequency table before analyzing; build the good habit.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

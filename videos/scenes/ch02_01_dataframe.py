@@ -41,6 +41,45 @@ class Ch02DataFrameScene(EpiBaseScene):
 
     total_steps: int = 14
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "DataFrame 是什麼？",
+            "title_sub": "從 CSV 到表格的第一步",
+            "analogy_p1": "• 每一列（row）= 一筆資料（一位個案）",
+            "analogy_p2": "• 每一欄（column）= 一個欄位（年齡、性別…）",
+            "analogy_p3": "• 每欄只能有一種資料型別（數字 or 文字）",
+            "series_note": "單一欄位 = Series（一維），整張表 = DataFrame（二維）",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. pd.read_csv() 讀取 CSV 成 DataFrame",
+            "summary_p2": "2. .shape 看維度，.head() 看前幾列",
+            "summary_p3": "3. df['col'] 取一欄 → Series",
+            "summary_p4": "4. iloc 用位置，loc 用標籤",
+            "summary_p5": "5. df[布林條件] 篩選符合條件的列",
+            "extra_banner_title": "額外範例：登革熱監測資料",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：info 和 describe 驗貨神器",
+            "outro_sub": "讀完資料第一步：先做品質檢查！",
+        },
+        "en": {
+            "title_main": "What Is a DataFrame?",
+            "title_sub": "Your first step from CSV to table",
+            "analogy_p1": "• Each row = one record (one case)",
+            "analogy_p2": "• Each column = one field (age, sex...)",
+            "analogy_p3": "• Each column holds one data type (numbers OR text)",
+            "series_note": "One column = Series (1D), the whole table = DataFrame (2D)",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. pd.read_csv() loads a CSV into a DataFrame",
+            "summary_p2": "2. .shape shows dimensions, .head() peeks at the top rows",
+            "summary_p3": "3. df['col'] grabs one column → Series",
+            "summary_p4": "4. iloc selects by position, loc selects by label",
+            "summary_p5": "5. df[boolean condition] filters the matching rows",
+            "extra_banner_title": "Extra example: dengue surveillance data",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: info and describe, your QC power tools",
+            "outro_sub": "First step after loading data: run a quality check!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -50,7 +89,7 @@ class Ch02DataFrameScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the DataFrame lesson."""
-        self.show_title_card("DataFrame 是什麼？", "從 CSV 到表格的第一步", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_excel_analogy(self, duration: float = 5.0, **kwargs) -> None:
         """Show the DataFrame vs Excel analogy with bullet points."""
@@ -64,9 +103,9 @@ class Ch02DataFrameScene(EpiBaseScene):
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("• 每一列（row）= 一筆資料（一位個案）", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• 每一欄（column）= 一個欄位（年齡、性別…）", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• 每欄只能有一種資料型別（數字 or 文字）", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("analogy_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("analogy_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("analogy_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -139,7 +178,7 @@ class Ch02DataFrameScene(EpiBaseScene):
         )
 
         note = Text(
-            "單一欄位 = Series（一維），整張表 = DataFrame（二維）",
+            self.t("series_note"),
             font=FONT_CJK,
             font_size=20,
             color=TEXT_SECONDARY,
@@ -210,18 +249,18 @@ class Ch02DataFrameScene(EpiBaseScene):
         self.show_step_indicator(7, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. pd.read_csv() 讀取 CSV 成 DataFrame", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. .shape 看維度，.head() 看前幾列", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. df['col'] 取一欄 → Series", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("4. iloc 用位置，loc 用標籤", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("5. df[布林條件] 篩選符合條件的列", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p5"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.40).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -235,7 +274,7 @@ class Ch02DataFrameScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：登革熱監測資料")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
@@ -265,7 +304,7 @@ class Ch02DataFrameScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_case(self, duration: float = 5.0, **kwargs) -> None:
@@ -298,14 +337,14 @@ class Ch02DataFrameScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：info 和 describe 驗貨神器",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "讀完資料第一步：先做品質檢查！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

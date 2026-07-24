@@ -1,0 +1,227 @@
+meta:
+  chapter: "02"
+  concept: "method_chaining"
+  title: "Write Your Analysis in One Line: Method Chaining Pipelines"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch02_11_method_chaining"
+  scene_class: "Ch02MethodChainingScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: Method Chaining Pipelines
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Welcome back! Today I'll teach you a killer trick that makes your code shorter, cleaner, and more readable.
+      It's called method chaining, and I like to call it the assembly line.
+      Picture a factory line: raw material goes in one end, gets cut, assembled, and packaged,
+      and the finished product comes out the other end, with no hauling things back and forth in between.
+      pandas method chaining is exactly this idea: data goes in, analysis comes out, all in one smooth flow!
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "problem_with_temps"
+    narration: >
+      First let's see what the world looks like without method chaining.
+      You want to find the number of infections on each floor from the Pine and Cypress nursing home data.
+      Line one: filter the infected, save to df_infected.
+      Line two: group by floor, save to grouped.
+      Line three: count each group, save to counts.
+      Line four: reset the index, save to result.
+      Line five: sort, save to final.
+      Every line needs a variable name, naming them until your brain explodes!
+      And these intermediate variables are thrown away after one use, a genuine disposable-naming contest.
+    animation: "show_problem_with_temps"
+    code: |
+      df_infected = df[df["infected"] == 1]
+      grouped = df_infected.groupby("floor")
+      counts = grouped.size()
+      result = counts.reset_index(name="n_cases")
+      final = result.sort_values("n_cases", ascending=False)
+    pause_after: 0.5
+
+  - id: "chaining_basic"
+    narration: >
+      Now look at the method chaining version.
+      Same logic, wrap the whole expression in parentheses,
+      chain each method with a dot, line after line, just like an assembly line.
+      query to filter, groupby to group, size to count, reset_index to tidy, sort_values to sort.
+      Raw material in, finished product out, with no throwaway variables in between.
+      The code goes from five variables to zero intermediates, clean and crisp!
+    animation: "show_chaining_basic"
+    code: |
+      result = (
+          df
+          .query("infected == 1")
+          .groupby("floor")
+          .size()
+          .reset_index(name="n_cases")
+          .sort_values("n_cases", ascending=False)
+      )
+    pause_after: 0.5
+
+  - id: "query_intro"
+    narration: >
+      The first station on the line is usually query, a powerful tool for filtering data.
+      Write conditions as a string, and it reads as naturally as an English sentence.
+      infected equals 1 and age greater than or equal to 70, crystal clear.
+      Note: inside query use and, or, not, not the ampersand and pipe.
+      If you have an external variable to bring in, just put an at sign in front.
+      For example, threshold equals 70, and inside query you write at threshold, and pandas substitutes it for you automatically.
+    animation: "show_query_intro"
+    code: |
+      threshold = 70
+      result = (
+          df
+          .query("infected == 1 and age >= @threshold")
+      )
+    pause_after: 0.5
+
+  - id: "assign_intro"
+    narration: >
+      Another good friend on the line is assign, which lets you add new columns right on the line.
+      The syntax is assign, then a lambda function defining how the new column is computed.
+      lambda d stands for the DataFrame currently on the line,
+      so d bracket infected divided by d bracket n times 100 is the attack rate.
+      The key point: you don't have to step off the line, you don't have to write a separate line of df bracket attack_rate equals something.
+      Process it right on the line, one station does it all!
+    animation: "show_assign_intro"
+    code: |
+      result = (
+          df
+          .groupby("floor")
+          .agg(n=("case_id", "count"),
+               infected=("infected", "sum"))
+          .assign(attack_rate=lambda d: d["infected"] / d["n"] * 100)
+      )
+    pause_after: 0.5
+
+  - id: "full_pipeline"
+    narration: >
+      Okay, now let's combine all the moves and look at a complete analysis pipeline.
+      Starting from the Pine and Cypress nursing home's raw data:
+      station one, query filters residents aged seventy and up;
+      station two, groupby groups by floor;
+      station three, agg computes the count, infections, and deaths at once;
+      station four, assign computes the attack rate and case fatality rate;
+      finally, sort_values sorts from high to low.
+      From raw data to a complete analysis report, all in one breath, with zero throwaway variables in between.
+      That's the power of method chaining!
+    animation: "show_full_pipeline"
+    code: |
+      report = (
+          df
+          .query("age >= 70")
+          .groupby("floor")
+          .agg(n=("case_id", "count"),
+               infected=("infected", "sum"),
+               deaths=("outcome", lambda x: (x == "dead").sum()))
+          .assign(
+              attack_rate=lambda d: d["infected"] / d["n"] * 100,
+              cfr=lambda d: d["deaths"] / d["infected"] * 100,
+          )
+          .sort_values("attack_rate", ascending=False)
+      )
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's recap.
+      The core spirit of method chaining: data flows like an assembly line, station after station.
+      query to filter, groupby to group, agg to summarize, assign to process, sort_values to sort.
+      Wrap it in parentheses to break lines, one method per line, clear and readable.
+      But! A chain over eight lines, consider splitting it; readability always beats showing off.
+      Remember: the pipeline is to make code more readable, not to write something nobody can understand.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: tuberculosis contact tracing
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Let's see method chaining applied in another setting: tuberculosis contact tracing.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      TB contact tracing is the daily work of public-health nurses.
+      After an index case is confirmed, you need to trace all close contacts and give them a tuberculin skin test.
+      Suppose you get a list of contacts and want to analyze the positive-conversion rate at each exposure setting.
+      Use method chaining: first query the TST-positive contacts,
+      then groupby exposure setting, size to count, reset_index to tidy, sort_values to sort.
+      One pipeline reveals which setting has the highest transmission risk, so you can target prevention resources precisely.
+    animation: "show_extra_example"
+    code: |
+      high_risk = (
+          contacts
+          .query("tst_result == 'positive'")
+          .groupby("exposure_setting")
+          .size()
+          .reset_index(name="n_positive")
+          .sort_values("n_positive", ascending=False)
+      )
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Finally, the three method chaining wipeouts, which almost every beginner hits.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: forgetting to wrap a multi-line chain in parentheses.
+      If you just add a backslash at the end of a line to continue and then chain a dot, Python sometimes gets confused about what you're doing.
+      More commonly, you forget any continuation marker entirely, and Python throws a SyntaxError.
+      The right way: wrap the whole expression in parentheses,
+      and Python knows it's one expression until the parentheses close, so break lines however you like.
+      Parentheses are the seatbelt of method chaining, always buckle up!
+    animation: "show_blindspot_parens"
+    error_code: 'df.query("x > 1").groupby("a")  # no parens'
+    correct_code: '(df.query("x > 1").groupby("a"))  # wrapped'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: using inplace equals True inside a chain.
+      inplace equals True means modify the original DataFrame directly and return nothing new.
+      But the essence of method chaining is that each method returns a new DataFrame,
+      then passes it to the next station.
+      If you use inplace equals True, it returns None, and the pipeline breaks right there.
+      None dot head? Python tells you AttributeError, None has no head method.
+      Never use inplace inside a chain!
+    animation: "show_blindspot_inplace"
+    error_code: 'df.sort_values("a", inplace=True).head()'
+    correct_code: 'df.sort_values("a").head()  # no inplace'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: using the ampersand instead of and inside query.
+      In ordinary pandas boolean filtering, you do use the ampersand,
+      but query uses string syntax, so inside you write and, or, not, just like writing English.
+      Writing the ampersand won't error, but the behavior may not match what you expect, super sneaky.
+      Remember: inside query it's and, or, not, three English words and you're done.
+    animation: "show_blindspot_query_syntax"
+    error_code: 'df.query("age > 70 & infected == 1")'
+    correct_code: 'df.query("age > 70 and infected == 1")'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations, you've learned the method chaining pipeline!
+      From today, your pandas code will get shorter, cleaner, and more readable.
+      Remember three keys: wrap in parentheses, don't use inplace, use and inside query.
+      Next time we'll learn merge, combining different tables together,
+      like joining two assembly lines end to end for double the power!
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

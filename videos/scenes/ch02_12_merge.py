@@ -40,6 +40,67 @@ class Ch02MergeScene(EpiBaseScene):
 
     total_steps: int = 14
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "合併資料表",
+            "title_sub": "merge 就是你的 VLOOKUP",
+            "why_heading": "疫調資料散落各處",
+            "tbl1": "個案名冊",
+            "tbl2": "實驗室報告",
+            "tbl3": "住院紀錄",
+            "why_arrow": "merge() → 一行搞定合併",
+            "how_heading": "how 參數：四種合併方式",
+            "join_left_desc": "保留左表所有列",
+            "join_left_note": "VLOOKUP（疫調首選）",
+            "join_inner_desc": "只保留兩邊都有",
+            "join_inner_note": "pandas 預設，小心！",
+            "join_outer_desc": "兩邊全部保留",
+            "join_outer_note": "完整合併",
+            "join_right_desc": "保留右表所有列",
+            "join_right_note": "比較少用",
+            "diff_keys_note": "欄位名不同？left_on + right_on 解決！",
+            "validate_note": "validate 幫你抓蟲：預期的關係 vs 實際的資料",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. merge = Python 版 VLOOKUP，更強更不易出錯",
+            "summary_p2": '2. how="left" 是疫調首選，不遺漏任何個案',
+            "summary_p3": "3. 欄位名不同就用 left_on + right_on",
+            "summary_p4": "4. 用 validate 檢查預期的對應關係",
+            "extra_banner_title": "額外範例：疫苗接種紀錄連結",
+            "blindspot_banner_title": "merge 三大翻車現場",
+            "outro_heading": "下一集：文字清理三板斧",
+            "outro_sub": "str + drop_duplicates + rename，把髒資料變乾淨！",
+        },
+        "en": {
+            "title_main": "Joining Data Tables",
+            "title_sub": "merge is your VLOOKUP",
+            "why_heading": "Investigation data is scattered everywhere",
+            "tbl1": "Case roster",
+            "tbl2": "Lab reports",
+            "tbl3": "Hospital records",
+            "why_arrow": "merge() → joins them in one line",
+            "how_heading": "The how parameter: four ways to join",
+            "join_left_desc": "keeps every row of the left table",
+            "join_left_note": "VLOOKUP (top pick for investigations)",
+            "join_inner_desc": "keeps only rows in both",
+            "join_inner_note": "pandas default, watch out!",
+            "join_outer_desc": "keeps all rows from both",
+            "join_outer_note": "full merge",
+            "join_right_desc": "keeps every row of the right table",
+            "join_right_note": "less common",
+            "diff_keys_note": "Different column names? left_on + right_on solves it!",
+            "validate_note": "validate catches bugs: expected relationship vs actual data",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. merge = Python's VLOOKUP, stronger and less error-prone",
+            "summary_p2": '2. how="left" is the go-to for investigations, drops no case',
+            "summary_p3": "3. Different column names? Use left_on + right_on",
+            "summary_p4": "4. Use validate to check the expected relationship",
+            "extra_banner_title": "Extra example: linking vaccination records",
+            "blindspot_banner_title": "3 merge Wipeouts",
+            "outro_heading": "Next up: three moves for text cleanup",
+            "outro_sub": "str + drop_duplicates + rename to turn dirty data clean!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -49,27 +110,27 @@ class Ch02MergeScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the merge lesson."""
-        self.show_title_card("合併資料表", "merge 就是你的 VLOOKUP", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_why_merge(self, duration: float = 7.0, **kwargs) -> None:
         """Step 1: why merge is essential in epidemiology."""
         self.show_step_indicator(1, self.total_steps)
 
         heading = Text(
-            "疫調資料散落各處",
+            self.t("why_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         tables = VGroup(
-            self._make_table_card("個案名冊", "case_id, age, sex...", ACCENT_ORANGE),
-            self._make_table_card("實驗室報告", "case_id, ct_value...", ACCENT_BLUE),
-            self._make_table_card("住院紀錄", "patient_id, icu...", ACCENT_GREEN),
+            self._make_table_card(self.t("tbl1"), "case_id, age, sex...", ACCENT_ORANGE),
+            self._make_table_card(self.t("tbl2"), "case_id, ct_value...", ACCENT_BLUE),
+            self._make_table_card(self.t("tbl3"), "patient_id, icu...", ACCENT_GREEN),
         ).arrange(RIGHT, buff=0.5).next_to(heading, DOWN, buff=0.6)
 
         arrow_text = Text(
-            "merge() → 一行搞定合併",
+            self.t("why_arrow"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,
@@ -111,17 +172,17 @@ class Ch02MergeScene(EpiBaseScene):
         self.show_step_indicator(3, self.total_steps)
 
         heading = Text(
-            "how 參數：四種合併方式",
+            self.t("how_heading"),
             font=FONT_CJK,
             font_size=30,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         rows = VGroup(
-            self._make_join_row("left", "保留左表所有列", "VLOOKUP（疫調首選）"),
-            self._make_join_row("inner", "只保留兩邊都有", "pandas 預設，小心！"),
-            self._make_join_row("outer", "兩邊全部保留", "完整合併"),
-            self._make_join_row("right", "保留右表所有列", "比較少用"),
+            self._make_join_row("left", self.t("join_left_desc"), self.t("join_left_note")),
+            self._make_join_row("inner", self.t("join_inner_desc"), self.t("join_inner_note")),
+            self._make_join_row("outer", self.t("join_outer_desc"), self.t("join_outer_note")),
+            self._make_join_row("right", self.t("join_right_desc"), self.t("join_right_note")),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.35).next_to(heading, DOWN, buff=0.5)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -148,7 +209,7 @@ class Ch02MergeScene(EpiBaseScene):
         code_panel = self.show_code(code_text, title="different_keys.py")
 
         note = Text(
-            "欄位名不同？left_on + right_on 解決！",
+            self.t("diff_keys_note"),
             font=FONT_CJK,
             font_size=20,
             color=TEXT_SECONDARY,
@@ -176,7 +237,7 @@ class Ch02MergeScene(EpiBaseScene):
         code_panel = self.show_code(code_text, title="validate.py")
 
         note = Text(
-            "validate 幫你抓蟲：預期的關係 vs 實際的資料",
+            self.t("validate_note"),
             font=FONT_CJK,
             font_size=20,
             color=ACCENT_ORANGE,
@@ -191,17 +252,17 @@ class Ch02MergeScene(EpiBaseScene):
         self.show_step_indicator(6, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text('1. merge = Python 版 VLOOKUP，更強更不易出錯', font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text('2. how="left" 是疫調首選，不遺漏任何個案', font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("3. 欄位名不同就用 left_on + right_on", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("4. 用 validate 檢查預期的對應關係", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.42).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -215,7 +276,7 @@ class Ch02MergeScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：疫苗接種紀錄連結")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 7.0, **kwargs) -> None:
@@ -243,7 +304,7 @@ class Ch02MergeScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("merge 三大翻車現場")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_duplicate_keys(self, duration: float = 5.0, **kwargs) -> None:
@@ -276,14 +337,14 @@ class Ch02MergeScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：文字清理三板斧",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "str + drop_duplicates + rename，把髒資料變乾淨！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

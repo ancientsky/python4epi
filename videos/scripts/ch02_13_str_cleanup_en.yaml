@@ -1,0 +1,213 @@
+meta:
+  chapter: "02"
+  concept: "str_cleanup"
+  title: "Three Moves for Text Cleanup: str + drop_duplicates + rename"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch02_13_str_cleanup"
+  scene_class: "Ch02StrCleanupScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: three moves for text cleanup
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Today I'll teach you the three moves of data cleanup: str string methods, drop_duplicates for deduping, and rename for renaming.
+      Master these three and you can turn the messy chaos of real-world data into clean, analysis-ready tables.
+      Don't underestimate data cleanup; everyone doing investigations knows eighty percent of the time goes into cleaning data.
+      Okay, let's begin!
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "dirty_data_reality"
+    narration: >
+      In an ideal world, data is neat and tidy, every field filled in, formats consistent.
+      Reality? The same hospital name has three spellings, addresses have inconsistent casing, and duplicate reports are everywhere.
+      In the Pine and Cypress nursing home investigation data, the wing column alone might show an uppercase A, a lowercase a, and an A with a leading space.
+      If you don't clean first, groupby splits one group into three and your analysis is ruined.
+      So remember: before any analysis, clean the data first!
+    animation: "show_dirty_data_reality"
+    pause_after: 0.5
+
+  - id: "str_basic"
+    narration: >
+      First move: str string methods. A pandas Series has a magical str attribute
+      that lets you run string operations on a whole column without writing a loop.
+      str.upper turns everything uppercase, str.lower everything lowercase, str.strip removes leading and trailing whitespace.
+      Look at this example: the wing column has a spaced A, a lowercase a, and a normal A,
+      and one str.strip plus one str.upper turns all three spellings into a unified uppercase A.
+      That easy, solved in one line.
+    animation: "show_str_basic"
+    code: |
+      df["wing"] = df["wing"].str.strip().str.upper()
+      print(df["wing"].value_counts())
+    output: |
+      A    142
+      B    138
+    pause_after: 0.5
+
+  - id: "str_contains"
+    narration: >
+      First part of the second move: str.contains, a text search filter.
+      A hundred times stronger than Excel's Control-F, because it can use regular expressions!
+      Want to find all severe cases? str.contains, put in severe, add na equals False to avoid errors on missing values.
+      The result is a boolean Series, ready to use for filtering.
+      Super useful in investigations, like searching symptom descriptions for mentions of fever or cough.
+    animation: "show_str_contains"
+    code: |
+      severe = df["clinical_severity"].str.contains(
+          "severe", na=False
+      )
+      print(df[severe].shape[0], "severe cases")
+    output: |
+      23 severe cases
+    pause_after: 0.5
+
+  - id: "str_replace"
+    narration: >
+      Second part of the second move: str.replace, batch text substitution.
+      The most common problem in investigation data is the same thing spelled different ways.
+      Take hospital names: some write it one way, some another, some use an English abbreviation.
+      Use str.replace to substitute line by line and unify all the spellings.
+      This move is especially handy when cleaning addresses, institution names, and drug names.
+    animation: "show_str_replace"
+    code: |
+      df["hospital"] = (
+          df["hospital"]
+          .str.replace("NTU Hospital", "NTUH")
+          .str.replace("ntu hospital", "NTUH")
+      )
+    pause_after: 0.5
+
+  - id: "drop_duplicates"
+    narration: >
+      Second move: drop_duplicates, removing duplicate data.
+      Duplicate reports are super common in investigation practice; the same patient may be reported two or three times.
+      Dedupe before every analysis, or the case count gets inflated.
+      Use drop_duplicates, subset to specify which column judges duplicates, keep equals first to keep the first record.
+      In the nursing home data, dedupe using case_id as the key to ensure each resident appears only once.
+    animation: "show_drop_duplicates"
+    code: |
+      df = df.drop_duplicates(
+          subset="case_id", keep="first"
+      )
+      print(f"Unique cases: {len(df)}")
+    output: |
+      Unique cases: 280
+    pause_after: 0.5
+
+  - id: "rename_nlargest"
+    narration: >
+      Third move: rename to change column names, plus a bonus nlargest to find the top few.
+      A report goes to the boss, so the column names had better be clear and easy to read.
+      rename's columns parameter takes a dictionary, old name to new name, one line does it.
+      Then nlargest quickly finds the top N, like the three floors with the highest attack rates.
+      Combine these two moves and weekly reports get super fast.
+    animation: "show_rename_nlargest"
+    code: |
+      df = df.rename(columns={"wing": "Wing"})
+      top3 = df.nlargest(3, "attack_rate")
+      print(top3[["floor", "attack_rate"]])
+    output: |
+      floor  attack_rate
+        3       0.55
+        2       0.44
+        1       0.39
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's sum up the three moves!
+      First move, str: strip to remove whitespace, upper or lower to unify casing, contains to search and filter, replace for batch substitution.
+      Second move, drop_duplicates: remove duplicate data, subset to specify the key column.
+      Third move, rename plus nlargest: change column names so the report reads well, nlargest to quickly find the top few.
+      These three are the standard opening move for every investigation data preprocessing; clean first, analyze second, build the good habit!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: cleaning influenza surveillance data
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's see how text cleanup comes in handy with influenza surveillance data.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Suppose you get some influenza surveillance data and the hospital name column is a mess.
+      NTU Hospital written three different ways all refer to the same one.
+      If you groupby directly, it becomes three different groups and all the statistics are wrong.
+      The fix is to use str.replace to unify all the spellings, then analyze.
+      Real investigation data cleanup takes up eighty percent of the time, seriously, this is no joke.
+      So practice these three moves until they're as natural as breathing!
+    animation: "show_extra_example"
+    code: |
+      flu["hospital"] = (
+          flu["hospital"]
+          .str.strip()
+          .str.replace("NTU Hospital", "NTUH")
+          .str.replace("ntu hospital", "NTUH")
+      )
+      print(flu["hospital"].value_counts())
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      The three data-cleaning wipeouts arrive! Each one is a lesson written in blood and tears.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Wipeout one: str.contains forgetting na equals False.
+      If the column has missing values, NaN, using str.contains directly returns NaN instead of a boolean.
+      Take that result for filtering and it throws a ValueError, crashing the whole program.
+      The fix is dead simple: add na equals False, and missing values automatically become False, safely passing through.
+      Build the habit; every time you use str.contains, add na equals False and save yourself the wipeout.
+    animation: "show_blindspot_na_false"
+    error_code: 'df["col"].str.contains("text")  # NaN crash'
+    correct_code: 'df["col"].str.contains("text", na=False)'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Wipeout two: case sensitivity.
+      You run value_counts and see Male, male, MALE as three categories.
+      They're all male, but Python thinks they're three different strings.
+      The fix: before any statistics, use str.lower or str.upper to unify the casing.
+      This is the most basic and most easily forgotten cleanup step.
+    animation: "show_blindspot_case_sensitive"
+    error_code: 'df["sex"].value_counts()  # Male, male, MALE'
+    correct_code: 'df["sex"].str.lower().value_counts()'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Wipeout three: using inplace equals True everywhere.
+      Many tutorials teach you to use inplace equals True to modify a DataFrame in place.
+      But then you can't chain methods, and you can't finish multiple steps in one line.
+      Worse, when debugging you don't know at which step the DataFrame got changed.
+      The best practice is explicit assignment, df equals df dot drop_duplicates, clear and safe.
+    animation: "show_blindspot_inplace"
+    error_code: 'df.drop_duplicates(inplace=True)  # no chain'
+    correct_code: 'df = df.drop_duplicates()  # explicit assign'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! All the Chapter 2 pandas skills are taught!
+      You've gone from zero to a Python user who can handle real investigation data.
+      From building a DataFrame, inspecting data, handling dates, deriving columns, missing values, groupby,
+      epidemic curves, and visualization, all the way to today's three moves for text cleanup, all in the bag.
+      Next chapter, Ch03, enters statistical inference: the two-by-two table, risk ratio, odds ratio, and chi-square test,
+      upgrading your analysis from description to statistical inference. Keep it up!
+    animation: "show_outro"
+    pause_after: 1.0

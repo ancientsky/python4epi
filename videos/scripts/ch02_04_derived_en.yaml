@@ -1,0 +1,226 @@
+meta:
+  chapter: "02"
+  concept: "derived"
+  title: "Four Moves for Derived Variables: cut, axis, astype, dt"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch02_04_derived"
+  scene_class: "Ch02DerivedScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: derived variables
+  # ========================================
+  - id: "intro"
+    narration: >
+      Welcome back! Today I'll teach you a super-practical skill, conjuring new columns yourself.
+      What if the columns in your raw data aren't enough? Compute your own!
+      Bin ages into groups, total up comorbidities, turn booleans into 0 and 1, compute days from dates.
+      Learn these four moves and your data-analysis skills level up instantly.
+      Like a chef who has ingredients but still needs to season them, data needs processing too.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "pd_cut"
+    narration: >
+      Move one: pd.cut, slicing continuous numbers into groups.
+      Residents at Pine and Cypress range from 60 to 99 years old.
+      If you want to analyze them in ten-year bands, use pd.cut.
+      bins holds the cut points, labels holds the labels.
+      Boom, everyone gets sorted into their own age group.
+      Like sorting a box of colorful candy into different bowls by color.
+    animation: "show_pd_cut"
+    code: |
+      df["age_group"] = pd.cut(
+          df["age"],
+          bins=[59, 69, 79, 89, 100],
+          labels=["60-69", "70-79", "80-89", "90+"]
+      )
+      print(df["age_group"].value_counts().sort_index())
+    pause_after: 0.5
+
+  - id: "sum_axis1"
+    narration: >
+      Move two: sum with axis equals 1, summing across rows.
+      The Pine and Cypress data has several comorbidity columns, heart failure, diabetes, cancer, chronic lung disease.
+      Each column is 0 or 1, whether they have that disease.
+      If you want to know how many comorbidities each person has, sum these columns across rows.
+      axis equals 0 is vertical, adding down a column.
+      axis equals 1 is horizontal, adding across a row.
+      If you can't remember, picture axis 1 as walking to the right, adding up the numbers in the same row.
+    animation: "show_sum_axis"
+    code: |
+      comorbidity_cols = [
+          "comorbidity_chf", "comorbidity_dm",
+          "comorbidity_cancer", "comorbidity_copd"
+      ]
+      df["n_comorbidities"] = df[comorbidity_cols].sum(axis=1)
+      print(df["n_comorbidities"].value_counts().sort_index())
+    pause_after: 0.5
+
+  - id: "astype"
+    narration: >
+      Move three: astype, converting booleans to 0 and 1.
+      Sometimes you need a 0-and-1 flag column,
+      like whether someone got sick.
+      clinical_severity not equal to not_ill gives you True or False.
+      But statistical models usually eat numbers, not booleans, so use astype int to convert.
+      True becomes 1, False becomes 0, clean and crisp.
+      Like translating a switch's on and off into 1 and 0.
+    animation: "show_astype"
+    code: |
+      df["is_ill"] = (
+          df["clinical_severity"] != "not_ill"
+      ).astype(int)
+      print(df["is_ill"].value_counts())
+    output: |
+      1    121
+      0    159
+    pause_after: 0.5
+
+  - id: "dt_days"
+    narration: >
+      Move four: computing days by subtracting dates.
+      This move came up in the last video, but it's especially handy for derived variables.
+      Hospitalization date minus onset date is the delay in days from onset to hospitalization.
+      Remember to use dt dot days to turn the Timedelta into an integer.
+      This delay helps you judge how fast the healthcare system responds.
+    animation: "show_dt_days"
+    code: |
+      df["hosp_delay"] = (
+          pd.to_datetime(df["hospitalization_date"])
+          - pd.to_datetime(df["symptom_onset_date"])
+      ).dt.days
+      print(df["hosp_delay"].describe())
+    pause_after: 0.5
+
+  - id: "isocalendar"
+    narration: >
+      Bonus move! Use isocalendar to get the epidemiological week of onset.
+      This is super handy for drawing epidemic curves, pooling daily cases into weekly views.
+      The Pine and Cypress cluster erupted in week 3 and peaked in week 4.
+      A brand-new epi_week column is born just like that.
+    animation: "show_isocalendar"
+    code: |
+      df["epi_week"] = pd.to_datetime(
+          df["symptom_onset_date"]
+      ).dt.isocalendar().week
+      print(df["epi_week"].value_counts().sort_index())
+    pause_after: 0.5
+
+  - id: "assign"
+    narration: >
+      The syntax for all new columns is the same:
+      df square-bracket new column name equals the computed result.
+      The left of the equals is the name you pick, the right is the value you computed.
+      Like adding a column in Excel and filling in a formula.
+      But we do it in one line of code, no dragging formulas around.
+    animation: "show_assign"
+    code: |
+      df["new_column"] = some_calculation
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      The four moves for derived variables, recapped!
+      pd.cut to bin, sum axis 1 to add across rows,
+      astype int to turn booleans into numbers, dt.days to compute days.
+      Combine these four and you can conjure endless new columns from raw data.
+      This is where the creativity of data analysis lives!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: dengue severity and care delay
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Let's switch scenes to practice! This time we'll try derived variables with dengue data.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Say you have a dengue notification dataset.
+      First use pd.cut to split age into three groups: child, adult, elderly.
+      Then compute each person's delay in days from onset to seeking care.
+      onset_date minus visit_date, using dt dot days.
+      Finally use astype to turn whether they're severe into a 0-and-1 flag.
+      Three kinds of derived variables, all practiced at once.
+      See, whether it's Legionnaires' disease or dengue, the moves are the same!
+    animation: "show_extra_example"
+    code: |
+      dengue = pd.read_csv("dengue_notifications.csv")
+      dengue["age_group"] = pd.cut(
+          dengue["age"], bins=[0, 18, 65, 100],
+          labels=["child", "adult", "elderly"]
+      )
+      dengue["visit_delay"] = (
+          pd.to_datetime(dengue["visit_date"])
+          - pd.to_datetime(dengue["onset_date"])
+      ).dt.days
+      dengue["is_severe"] = (dengue["severity"] == "severe").astype(int)
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Derived variables look simple, but there are three classic traps.
+      I guarantee you'll hit them sooner or later, so learn them now to avoid detours.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: getting the axis direction backwards.
+      axis equals 0 sums vertically, each column on its own.
+      axis equals 1 sums horizontally, adding the numbers in each row together.
+      You want to count each person's comorbidities but you used axis 0,
+      and you get the total across all residents for each comorbidity, not at all what you wanted.
+      Remember: for anything per-person, use axis equals 1.
+    animation: "show_blindspot_axis"
+    error_code: 'df[cols].sum(axis=0)  # sums each column'
+    correct_code: 'df[cols].sum(axis=1)  # sums each row'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: pd.cut using equal-width bins instead of custom cut points.
+      bins equals 4 slices age into 4 equal-width groups,
+      but nursing-home ages cluster between 70 and 89.
+      Equal-width bins might put 60 to 69 and 90 to 100 each in their own group, but with hardly anyone in them.
+      A better approach is to specify the cut points yourself so every group has enough samples.
+      Custom bins reflect your analytic purpose.
+    animation: "show_blindspot_bins"
+    error_code: 'pd.cut(df["age"], bins=4)  # equal-width'
+    correct_code: 'pd.cut(df["age"], bins=[59,69,79,89,100])'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: forgetting astype to turn booleans into integers.
+      df square-bracket x greater-than 5 gives you True and False.
+      Some functions can eat booleans, but many statistical models only eat numbers.
+      And when you want a total, True plus True does equal 2,
+      but it's not intuitive to read, 0 and 1 are clearer.
+      Build the habit, always astype int your boolean flags.
+    animation: "show_blindspot_astype"
+    error_code: 'df["flag"] = df["x"] > 5  # bool column'
+    correct_code: 'df["flag"] = (df["x"] > 5).astype(int)'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      That's all four moves for derived variables done!
+      Now you can not only read data, inspect data, and handle dates,
+      you can conjure new columns yourself too.
+      All of Chapter 2's core weapons are assembled!
+      In the next video we'll learn to handle missing values,
+      because real-world data is never perfect.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0
