@@ -1,0 +1,281 @@
+meta:
+  chapter: "04"
+  concept: "pii_protection"
+  title: "PII Protection: The Very First Thing to Do with a Line List"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch04_08_pii_protection"
+  scene_class: "Ch04PiiProtectionScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: five PII de-identification techniques
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, and welcome back. Before we rush off to draw epi curves and compute attack rates,
+      today we first talk about a topic that's often overlooked but incredibly important:
+      protecting personal data, Personally Identifiable Information, PII for short.
+      Picture this: the health department just dropped a line list into your inbox, with names, national IDs, phones, and addresses.
+      You think, great, let's start analyzing! But wait, the moment the data lands on your computer,
+      from that second on, the responsibility to protect it is yours.
+      Today I'll walk you hands-on through five de-identification moves in Python, to protect the residents and yourself.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_it_matters"
+    narration: >
+      Why be so careful? Let's look at a classic study.
+      American scholar Sweeney found in 2002 that
+      just three columns, ZIP code, birth date, and sex,
+      are enough to re-identify 87 percent of the entire US population.
+      You heard that right, 87 percent.
+      What does that mean? Even if you strip out names and national IDs,
+      leave these seemingly harmless columns in place,
+      and a determined person can still piece together who this case is.
+      So "de-identification" is not as simple as just deleting the name.
+    animation: "show_sweeney"
+    pause_after: 0.5
+
+  - id: "three_categories"
+    narration: >
+      PII splits into three types.
+      One, direct identifiers: name, national ID, phone, address, medical record number.
+      These reveal who someone is at a glance, so handle them first.
+      Two, quasi-identifiers: age, sex, birth date, ZIP code, workplace.
+      Harmless alone, but combined they can piece a person together.
+      Three, sensitive attributes: HIV status, psychiatric diagnosis, genetic info, income.
+      Even if they don't identify a person, leaking them causes harm.
+      Protect all three, but with different methods.
+    animation: "show_three_categories"
+    pause_after: 0.5
+
+  - id: "technique_1_suppression"
+    narration: >
+      Move one, Suppression: delete it outright.
+      This is the simplest and most thorough method.
+      Use pandas' drop function to toss out the name, national ID, phone, and address columns.
+      Add the parameter errors equals ignore, so it won't error even if a column doesn't exist,
+      making your code reusable across different datasets.
+      Remember, delete whatever you can, don't keep it. Personal data the analysis doesn't need, just don't keep it.
+    animation: "show_suppression"
+    code: |
+      pii_columns = [
+          "name", "national_id",
+          "phone", "address",
+      ]
+      df_safe = df.drop(
+          columns=pii_columns,
+          errors="ignore",
+      )
+    pause_after: 0.5
+
+  - id: "technique_2_pseudonymization"
+    narration: >
+      Move two, Pseudonymization: fake names.
+      Sometimes you need a "tracking number" to link data, but you can't use the real national ID.
+      What to do? Generate a set of pseudonymous IDs.
+      Here we use a list comprehension with zfill for zero-padding,
+      turning 1 through N into formats like CASE underscore 001, CASE underscore 002.
+      Note: the mapping table between these new IDs and real identities must be stored separately, under lock and key,
+      never alongside the de-identified data.
+    animation: "show_pseudonymization"
+    code: |
+      df_safe["case_id"] = [
+          "CASE_" + str(i).zfill(3)
+          for i in range(1, len(df_safe)+1)
+      ]
+    pause_after: 0.5
+
+  - id: "technique_3_hashing"
+    narration: >
+      Move three, Hashing.
+      If you need to link two datasets by the same person but don't want to keep the original national ID,
+      use a SHA-256 hash.
+      Here's the key: you must add a salt.
+      Why? Because a Taiwan national ID is only ten characters,
+      so if you hash it directly, an attacker can hash every possible ID
+      and build a lookup dictionary, breaking your hashes. This is called a rainbow-table attack.
+      Add a salt, like adding salt to soup, and every institution's hashes differ, so the dictionary is useless.
+      And read the salt from an environment variable, never hard-code it in your script.
+    animation: "show_hashing"
+    code: |
+      import hashlib, os
+      SALT = os.environ["PII_SALT"]
+      def hash_id(raw_id):
+          combined = (SALT + str(raw_id)).encode()
+          h = hashlib.sha256(combined).hexdigest()
+          return "H_" + h[:12]
+    pause_after: 0.5
+
+  - id: "technique_4_generalization"
+    narration: >
+      Move four, Generalization.
+      Remember the Sweeney study? Precise birth dates are dangerous, so don't use precise ones.
+      Use pd.cut to slice ages into ten-year groups: 60 to 69, 70 to 79.
+      Now even if someone knows the victim is a 75-year-old grandma,
+      they can't match her to a single record, because she hides among a whole group of people in their seventies.
+      Same for dates: use epi weeks, not exact dates. And addresses: keep only the wing, not the room number.
+      The beauty of generalization: the statistical meaning stays, but the identifying power drops sharply.
+    animation: "show_generalization"
+    code: |
+      df_safe["age_group"] = pd.cut(
+          df["age"],
+          bins=[59, 69, 79, 89, 120],
+          labels=["60-69","70-79","80-89","90+"],
+      )
+      df_safe["epi_week"] = (
+          df["symptom_onset_date"].dt.isocalendar().week
+      )
+    pause_after: 0.5
+
+  - id: "technique_5_masking"
+    narration: >
+      Move five, Masking.
+      Sometimes you must keep the format of some original info, like a phone's area code, for later reconciliation.
+      Then use masking.
+      Write a function that splits the phone into three parts, keeps the front, and covers the middle and back with asterisks.
+      Display it as 0912 star-star-star star-star-star, so people can tell it's a Taiwan mobile format,
+      but can't see the full number. Same for national IDs: keep only the first two characters.
+      The spirit of masking: keep the form, hide the content.
+    animation: "show_masking"
+    code: |
+      def mask_phone(phone):
+          parts = str(phone).split("-")
+          if len(parts) == 3:
+              return f"{parts[0]}-***-***"
+          return "***"
+    pause_after: 0.5
+
+  - id: "k_anonymity"
+    narration: >
+      Five moves done, but how do you know it's enough? Self-check with k-anonymity.
+      It means: any combination of quasi-identifier columns must map to at least k records.
+      Pull out age group, sex, and wing, groupby, and see how many people are in each group.
+      If any group has fewer than five, someone might be too unique and re-identifiable.
+      Then generalize further, or delete those records entirely.
+      Common industry thresholds are k equals five, ten, even twenty; the more sensitive the data, the bigger the k.
+    animation: "show_k_anonymity"
+    code: |
+      quasi_ids = ["age_group", "sex", "wing"]
+      sizes = (
+          df_safe.groupby(quasi_ids, observed=True)
+                 .size()
+      )
+      risky = sizes[sizes < 5]
+      print(f"Risky groups: {len(risky)}")
+    output: |
+      Risky groups: 2
+    pause_after: 0.5
+
+  - id: "three_tier_workflow"
+    narration: >
+      In practice, we recommend a three-tier folder structure.
+      Tier one, raw underscore restricted: original data only you and your supervisor can see, stored encrypted, added to gitignore.
+      Tier two, scripts slash deidentify.py: a standalone Python script that runs these five de-identification moves.
+      Tier three, deidentified: the clean, processed data, the only tier a notebook may read, share, or upload to Colab.
+      Never, ever read the original file directly in a notebook,
+      because notebooks save intermediate results, and one slip writes personal data into the .ipynb file.
+    animation: "show_workflow"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Quick recap! Five de-identification moves:
+      Suppression, delete it; Pseudonymization, swap in fake names; Hashing, salted hash;
+      Generalization, coarser bins; Masking, keep the format.
+      When done, use k-anonymity to check for anyone slipping through the net.
+      Use a three-tier folder to fully isolate the raw data, the de-identification script, and the clean data.
+      Lock in these five moves and they'll serve you for life.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at a real-world personal-data protection case.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid_trace"
+    narration: >
+      During COVID-19, Taiwan rolled out an SMS check-in system where everyone scanned a QR code to log where they'd been.
+      How did the CDC protect personal data?
+      First, phone numbers were stored only as SHA hashes in the database, never the raw number.
+      Second, the retention period was at most twenty-eight days, auto-purged when time was up.
+      Third, only during an investigation, with supervisor approval, could it be unlocked.
+      Fourth, once unlocked, it could only match specific times and places, not be pulled out wholesale.
+      Map today's five moves onto it: Hashing, Suppression, access control, all present and accounted for.
+      Personal-data protection isn't a single function, it's a whole process and system.
+    animation: "show_extra_covid"
+    code: |
+      # Taiwan 1922 SMS contact tracing
+      # Phone -> SHA256(phone + salt)
+      # Auto-purge after 28 days
+      # Access: outbreak investigation only
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Next up, the three mistakes beginners make most! Each one could expose a resident's privacy.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: thinking that deleting the name makes it safe.
+      This is exactly the point Professor Sweeney called everyone out on.
+      Leaving a precise birth date, ZIP code, and sex looks innocent, right?
+      But 87 percent of people can be re-identified.
+      The right approach: delete the name of course, generalize the birth date into an age group, keep only the wing or district for the address.
+      Quasi-identifiers are far more dangerous than you think.
+    animation: "show_blindspot_quasi_id"
+    error_code: "df.drop(columns=['name'])"
+    correct_code: "df.drop(columns=['name','dob','zip'])"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: hashing without a salt.
+      Many beginners think, "I ran SHA-256, that's safe, right?"
+      Wrong! A Taiwan national ID is only ten characters, so a laptop can hash every possible combination in a few hours.
+      That's the rainbow-table attack. Add a salt, a secret string only you know,
+      and the attacker's dictionary is useless. And remember, read the salt from an environment variable, don't hard-code it.
+    animation: "show_blindspot_no_salt"
+    error_code: "hashlib.sha256(id.encode()).hexdigest()"
+    correct_code: "hashlib.sha256((SALT+id).encode()).hexdigest()"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: committing the raw CSV into git.
+      This is the scariest, because git history keeps the file,
+      so even if your next commit deletes it, it's still in the history.
+      Once pushed to a public GitHub, the whole world can see it.
+      The fix: create a .gitignore and exclude the entire raw underscore restricted folder.
+      Also, never paste the first few rows of raw data in Colab or Jupyter,
+      because the notebook records it.
+    animation: "show_blindspot_git"
+    error_code: "git add data/line_list_raw.csv"
+    correct_code: "echo 'data/raw_restricted/' >> .gitignore"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      Congratulations on mastering the basics of personal-data protection!
+      Remember one line: the data isn't yours, the residents entrusted it to you.
+      Protecting it isn't a one-time action, it's the default action of every analysis you do.
+      Next time we return to the SitRep main line and start producing the first situation report.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

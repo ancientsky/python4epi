@@ -44,6 +44,39 @@ class Ch01DictionariesScene(EpiBaseScene):
 
     total_steps: int = 11
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "字典",
+            "title_sub": "把資料打包成一張資料卡",
+            "create_dict_explanation": "字典 = 一張有欄位的資料卡，每個欄位有名稱（鍵）和內容（值）",
+            "access_dict_formula": "字典名稱['鍵']  →  取出對應的值",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. 字典用 {} 建立，鍵值對用 : 分隔",
+            "summary_p2": "2. 鍵（key）通常是字串，要加引號",
+            "summary_p3": "3. 用 dict['key'] 存取，方括號不能換成圓括號",
+            "summary_p4": "4. 一個字典 = 一筆資料卡，適合儲存個案資料",
+            "extra_banner_title": "額外範例：腸病毒個案資料卡",
+            "blindspot_banner_title": "初學者常見地雷 3 選 1",
+            "outro_heading": "下一集：用串列儲存多位個案",
+            "outro_sub": "把字典放進串列，就是迷你資料庫！",
+        },
+        "en": {
+            "title_main": "Dictionaries",
+            "title_sub": "Pack data into a single data card",
+            "create_dict_explanation": "A dict = a data card with fields; each field has a name (key) and content (value)",
+            "access_dict_formula": "dict_name['key']  →  fetch the matching value",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. Build a dict with {}, separate key-value pairs with :",
+            "summary_p2": "2. Keys are usually strings, so add quotes",
+            "summary_p3": "3. Access with dict['key']; square brackets, not parentheses",
+            "summary_p4": "4. One dict = one data card, great for storing a case",
+            "extra_banner_title": "Extra example: enterovirus case card",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: store many cases with lists",
+            "outro_sub": "Put dicts in a list and you've got a mini database!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -53,14 +86,14 @@ class Ch01DictionariesScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the dictionaries lesson."""
-        self.show_title_card("字典", "把資料打包成一張資料卡", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_create_dict(self, duration: float = 7.0, **kwargs) -> None:
         """Show dictionary creation with the labeled-box metaphor."""
         self.show_step_indicator(1, self.total_steps)
 
         explanation = Text(
-            "字典 = 一張有欄位的資料卡，每個欄位有名稱（鍵）和內容（值）",
+            self.t("create_dict_explanation"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_PRIMARY,
@@ -120,7 +153,7 @@ class Ch01DictionariesScene(EpiBaseScene):
         output_text = "C001\n82\n此個案為確診"
 
         formula = Text(
-            "字典名稱['鍵']  →  取出對應的值",
+            self.t("access_dict_formula"),
             font=FONT_CJK,
             font_size=24,
             color=ACCENT_ORANGE,
@@ -138,17 +171,17 @@ class Ch01DictionariesScene(EpiBaseScene):
         self.show_step_indicator(3, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. 字典用 {} 建立，鍵值對用 : 分隔", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. 鍵（key）通常是字串，要加引號", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. 用 dict['key'] 存取，方括號不能換成圓括號", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("4. 一個字典 = 一筆資料卡，適合儲存個案資料", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.42).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -162,7 +195,7 @@ class Ch01DictionariesScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：腸病毒個案資料卡")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 7.0, **kwargs) -> None:
@@ -198,7 +231,7 @@ class Ch01DictionariesScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選 1")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_key_quotes(self, duration: float = 5.0, **kwargs) -> None:
@@ -251,14 +284,14 @@ class Ch01DictionariesScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：用串列儲存多位個案",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "把字典放進串列，就是迷你資料庫！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

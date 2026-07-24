@@ -1,0 +1,179 @@
+meta:
+  chapter: "04"
+  concept: "classification"
+  title: "Case Classification: Stratified Stats for Confirmed, Probable, and Non-Cases"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch04_05_classification"
+  scene_class: "Ch04ClassificationScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: stratifying by case classification
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Today we cover a very important but easily overlooked section of a SitRep: stratifying by case classification.
+      In an investigation, not everyone is "confirmed."
+      Some have symptoms but haven't been tested, classified as "probable."
+      Some are perfectly healthy, classified as "non-case."
+      The boss will ask: "How many of the confirmed were hospitalized? What's the fatality rate among the probable?"
+      You must stratify the stats by classification to answer these questions.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "groupby_classification"
+    narration: >
+      Just like the place stratification earlier, use groupby plus agg.
+      This time the grouping key is case_classification,
+      with three values: confirmed, probable, and not_a_case.
+      Inside agg we compute four metrics: count, hospitalizations, ICU admissions, and deaths.
+      Note that we deliberately skip reset_index here,
+      leaving case_classification in the index so the printed table is more intuitive.
+    animation: "show_groupby_classification"
+    code: |
+      classification = df.groupby(
+          "case_classification"
+      ).agg(
+          n=("case_id", "size"),
+          hospitalized=("hospitalized", "sum"),
+          icu=("icu_admission", "sum"),
+          deaths=("outcome",
+                  lambda x: (x=="dead").sum()),
+      )
+    pause_after: 0.5
+
+  - id: "hosp_rate"
+    narration: >
+      The hospitalization rate is hospitalizations divided by the total in that classification, times a hundred.
+      round with 1 keeps one decimal place.
+      Add this column back into the classification DataFrame,
+      print it, and you get a complete stratified summary table.
+      to_string with no arguments shows the classification names directly as the index.
+    animation: "show_hosp_rate"
+    code: |
+      classification["hosp_rate"] = (
+          classification["hospitalized"]
+          / classification["n"] * 100
+      ).round(1)
+      print(classification.to_string())
+    output: |
+      confirmed    91  82  19  17  90.1
+      not_a_case  159   0   0   0   0.0
+      probable     30  25   4   2  83.3
+    pause_after: 0.5
+
+  - id: "lambda_trick"
+    narration: >
+      Let me explain that lambda inside agg.
+      lambda x, then a colon, then an expression, where x is the entire Series for that group.
+      x equals equals dead produces True and False, and sum totals the number of Trues.
+      Why not just use sum directly? Because the outcome column holds strings, survived and dead,
+      not zeros and ones, so you compare first and then sum.
+      A lambda is your on-the-spot mini-function, use it and toss it.
+    animation: "show_lambda_trick"
+    code: |
+      # lambda breakdown:
+      # x = the "outcome" Series for each group
+      # (x == "dead") -> True/False Series
+      # .sum() -> count of True = death count
+      deaths=("outcome", lambda x: (x=="dead").sum())
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Recap! The keys to stratifying by case classification:
+      One, groupby on case_classification.
+      Two, agg to compute all the metrics at once.
+      Three, lambda for custom aggregation of non-numeric columns.
+      Four, whether or not to use reset_index depends on how you want it printed.
+      This stratified table is the heart of a SitRep, and it holds the numbers the boss loves to ask about.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: TB case classification
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's see how case classification works for tuberculosis.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tb"
+    narration: >
+      TB case classification is more complex: a confirmed case needs a positive sputum culture,
+      a clinical case has only imaging abnormalities plus symptoms, and a suspect case has only a contact history plus a positive skin test.
+      The three classifications have completely different treatment strategies.
+      With the same groupby plus agg, you can compute each classification's count,
+      sputum conversion rate, and treatment completion rate. The logic is exactly the same,
+      only the grouping key and metrics differ. Learn it once, use it for life.
+    animation: "show_extra_tb"
+    code: |
+      # TB case classification
+      tb.groupby("classification").agg(
+          n=("case_id", "size"),
+          smear_neg=("smear_result",
+                     lambda x: (x=="negative").sum()),
+          completed=("treatment_outcome",
+                     lambda x: (x=="completed").sum()),
+      )
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Blind-spot time! The three most common mistakes in stratified classification.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: counting non-cases in the numerator of the attack rate.
+      Some beginners see the infected column is 1 and assume the person is a case.
+      But if their case_classification is not_a_case,
+      they should not be counted among the confirmed or probable.
+      Always confirm the case definition before you calculate.
+    animation: "show_blindspot_definition"
+    error_code: "infected = df['infected'].sum()  # includes all"
+    correct_code: "confirmed = (df['case_classification']=='confirmed').sum()"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: forgetting .sum() inside the lambda.
+      Write only x equals equals dead and it returns a whole True-False Series,
+      not a single number. pandas errors out or produces strange results.
+      Remember, a lambda must contain an aggregating function like sum or mean.
+    animation: "show_blindspot_lambda"
+    error_code: 'deaths=("outcome", lambda x: x=="dead")'
+    correct_code: 'deaths=("outcome", lambda x: (x=="dead").sum())'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: getting the CFR denominator wrong.
+      CFR is the Case Fatality Rate, and its denominator is the number infected, not all residents.
+      Divide by all residents and you get the "mortality rate," not the case fatality rate,
+      a much smaller number that means something completely different.
+      The confirmed CFR's denominator is the confirmed count, and the probable CFR's denominator is the probable count.
+    animation: "show_blindspot_cfr_denominator"
+    error_code: "cfr = deaths / total_residents"
+    correct_code: "cfr = deaths / confirmed_cases"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      Nice! You can now do stratified stats by case classification.
+      Next time is the main event: wrapping every step into a single function,
+      so your SitRep updates with one click.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

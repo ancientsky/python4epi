@@ -42,6 +42,29 @@ class Ch01ListsScene(EpiBaseScene):
 
     total_steps: int = 3
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "列表",
+            "title_sub": "存放一組同類資料的好幫手",
+            "summary_p1": "列表用方括號 [] 建立",
+            "summary_p2": "索引從 0 開始，不是 1",
+            "summary_p3": "max() / min() / .index() 快速分析",
+            "summary_p4": "平行列表：相同索引代表同一個對象",
+            "outro_title": "小結",
+            "outro_sub": "列表讓你一次管理多筆資料，記住索引從 0 開始！",
+        },
+        "en": {
+            "title_main": "Lists",
+            "title_sub": "Your go-to for a group of similar data",
+            "summary_p1": "Build a list with square brackets []",
+            "summary_p2": "Indexing starts at 0, not 1",
+            "summary_p3": "max() / min() / .index() for quick analysis",
+            "summary_p4": "Parallel lists: the same index means the same subject",
+            "outro_title": "Recap",
+            "outro_sub": "Lists let you manage many records at once — remember, indexing starts at 0!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -51,8 +74,8 @@ class Ch01ListsScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         self.show_title_card(
-            "列表",
-            "存放一組同類資料的好幫手",
+            self.t("title_main"),
+            self.t("title_sub"),
             duration=duration,
         )
 
@@ -96,10 +119,10 @@ class Ch01ListsScene(EpiBaseScene):
     def show_main_summary(self, duration: float = 4.0, **kwargs) -> None:
         step = self.show_step_indicator(3)
         points = VGroup(
-            Text("列表用方括號 [] 建立", font=FONT_CJK, font_size=28, color=TEXT_PRIMARY),
-            Text("索引從 0 開始，不是 1", font=FONT_CJK, font_size=28, color=ACCENT_ORANGE),
-            Text("max() / min() / .index() 快速分析", font=FONT_MONO, font_size=26, color=TEXT_PRIMARY),
-            Text("平行列表：相同索引代表同一個對象", font=FONT_CJK, font_size=28, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=28, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=28, color=ACCENT_ORANGE),
+            Text(self.t("summary_p3"), font=FONT_MONO, font_size=26, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=28, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.4)
         points.move_to([0, 0, 0])
         self.play(FadeIn(points), run_time=0.6)
@@ -183,7 +206,7 @@ class Ch01ListsScene(EpiBaseScene):
 
     def show_outro(self, duration: float = 3.0, **kwargs) -> None:
         self.show_title_card(
-            "小結",
-            "列表讓你一次管理多筆資料，記住索引從 0 開始！",
+            self.t("outro_title"),
+            self.t("outro_sub"),
             duration=duration,
         )

@@ -39,6 +39,77 @@ class Ch03FisherTestScene(EpiBaseScene):
 
     total_steps: int = 16
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "Fisher Exact Test",
+            "title_sub": "小樣本也能做假設檢定",
+            "chisq_lim_heading": "卡方檢定的限制",
+            "chisq_lim_p1": "• 卡方檢定是「近似」方法（大樣本才準）",
+            "chisq_lim_p2": "• 當期望值 < 5 → 近似不可靠",
+            "chisq_lim_p3": "• 需要一個「精確」的替代方案",
+            "idea_heading": "Fisher Exact Test 的想法",
+            "idea_p1": "• 列出所有可能的 2x2 表格排列",
+            "idea_p2": "• 計算每種排列出現的機率",
+            "idea_p3": "• p = 觀察到的結果（或更極端）的機率總和",
+            "idea_p4": "• 不需要大樣本近似 → 「精確」檢定",
+            "check_note": "有格子 < 5 → 改用 Fisher exact test!",
+            "compare_heading": "Chi-square vs Fisher 比一比",
+            "compare_p1": "• Chi-square p = 0.2059（近似，不可靠）",
+            "compare_p2": "• Fisher p = 0.3348（精確）",
+            "compare_p3": "• 小樣本時兩者可能差很多！",
+            "compare_p4": "• 結論：p > 0.05，無顯著關聯",
+            "flow_heading": "選擇檢定流程",
+            "flow_p1": "1. 建立 2x2 交叉表",
+            "flow_p2": "2. 計算期望值 (chi2_contingency)",
+            "flow_p3": "3. 所有期望值 >= 5？",
+            "flow_p4": "   Yes → 卡方檢定",
+            "flow_p5": "   No  → Fisher exact test",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. 期望值 < 5 → 卡方近似不可靠",
+            "summary_p2": "2. Fisher exact test 不需大樣本假設",
+            "summary_p3": "3. scipy fisher_exact() 回傳 OR 和 p",
+            "summary_p4": "4. 先檢查期望值，再決定用哪種檢定",
+            "extra_banner_title": "額外範例：罕見疫苗不良事件",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：森林圖 Forest Plot",
+            "outro_sub": "一張圖看懂多個暴露因子的效果！",
+        },
+        "en": {
+            "title_main": "Fisher's Exact Test",
+            "title_sub": "Hypothesis testing that works on small samples",
+            "chisq_lim_heading": "Limits of the Chi-square Test",
+            "chisq_lim_p1": "• Chi-square is an approximation (accurate only with large samples)",
+            "chisq_lim_p2": "• When expected < 5 → the approximation is unreliable",
+            "chisq_lim_p3": "• We need an exact alternative",
+            "idea_heading": "The Idea Behind Fisher's Exact Test",
+            "idea_p1": "• List every possible arrangement of the 2x2 table",
+            "idea_p2": "• Compute the probability of each arrangement",
+            "idea_p3": "• p = the summed probability of the observed result (or more extreme)",
+            "idea_p4": "• No large-sample approximation needed → an exact test",
+            "check_note": "A cell < 5 → switch to Fisher's exact test!",
+            "compare_heading": "Chi-square vs Fisher: head to head",
+            "compare_p1": "• Chi-square p = 0.2059 (approximate, unreliable)",
+            "compare_p2": "• Fisher p = 0.3348 (exact)",
+            "compare_p3": "• With small samples the two can differ a lot!",
+            "compare_p4": "• Conclusion: p > 0.05, no significant association",
+            "flow_heading": "Choosing Your Test",
+            "flow_p1": "1. Build the 2x2 crosstab",
+            "flow_p2": "2. Compute expected values (chi2_contingency)",
+            "flow_p3": "3. Are all expected values >= 5?",
+            "flow_p4": "   Yes → chi-square test",
+            "flow_p5": "   No  → Fisher's exact test",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. Expected < 5 → chi-square approximation is unreliable",
+            "summary_p2": "2. Fisher's exact test needs no large-sample assumption",
+            "summary_p3": "3. scipy fisher_exact() returns OR and p",
+            "summary_p4": "4. Check expected values first, then pick the test",
+            "extra_banner_title": "Extra example: a rare vaccine adverse event",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: Forest Plot",
+            "outro_sub": "One chart to see the effect of many exposures at once!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -48,23 +119,23 @@ class Ch03FisherTestScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the Fisher exact test lesson."""
-        self.show_title_card("Fisher Exact Test", "小樣本也能做假設檢定", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_chisq_limitation(self, duration: float = 5.0, **kwargs) -> None:
         """Explain when chi-square fails."""
         self.show_step_indicator(1, self.total_steps)
 
         heading = Text(
-            "卡方檢定的限制",
+            self.t("chisq_lim_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("• 卡方檢定是「近似」方法（大樣本才準）", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• 當期望值 < 5 → 近似不可靠", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• 需要一個「精確」的替代方案", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("chisq_lim_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("chisq_lim_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("chisq_lim_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -77,17 +148,17 @@ class Ch03FisherTestScene(EpiBaseScene):
         self.show_step_indicator(2, self.total_steps)
 
         heading = Text(
-            "Fisher Exact Test 的想法",
+            self.t("idea_heading"),
             font=FONT_MONO,
             font_size=30,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("• 列出所有可能的 2x2 表格排列", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• 計算每種排列出現的機率", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• p = 觀察到的結果（或更極端）的機率總和", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• 不需要大樣本近似 → 「精確」檢定", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("idea_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("idea_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("idea_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("idea_p4"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.40).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -143,7 +214,7 @@ class Ch03FisherTestScene(EpiBaseScene):
         )
 
         note = Text(
-            "有格子 < 5 → 改用 Fisher exact test!",
+            self.t("check_note"),
             font=FONT_CJK,
             font_size=22,
             color=ACCENT_ORANGE,
@@ -187,17 +258,17 @@ class Ch03FisherTestScene(EpiBaseScene):
         self.show_step_indicator(6, self.total_steps)
 
         heading = Text(
-            "Chi-square vs Fisher 比一比",
+            self.t("compare_heading"),
             font=FONT_CJK,
             font_size=30,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("• Chi-square p = 0.2059（近似，不可靠）", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• Fisher p = 0.3348（精確）", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• 小樣本時兩者可能差很多！", font=FONT_CJK, font_size=24, color=ACCENT_ORANGE),
-            Text("• 結論：p > 0.05，無顯著關聯", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("compare_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("compare_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("compare_p3"), font=FONT_CJK, font_size=24, color=ACCENT_ORANGE),
+            Text(self.t("compare_p4"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.40).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -210,18 +281,18 @@ class Ch03FisherTestScene(EpiBaseScene):
         self.show_step_indicator(7, self.total_steps)
 
         heading = Text(
-            "選擇檢定流程",
+            self.t("flow_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. 建立 2x2 交叉表", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. 計算期望值 (chi2_contingency)", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. 所有期望值 >= 5？", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("   Yes → 卡方檢定", font=FONT_CJK, font_size=23, color=ACCENT_GREEN),
-            Text("   No  → Fisher exact test", font=FONT_CJK, font_size=23, color=ACCENT_ORANGE),
+            Text(self.t("flow_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("flow_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("flow_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("flow_p4"), font=FONT_CJK, font_size=23, color=ACCENT_GREEN),
+            Text(self.t("flow_p5"), font=FONT_CJK, font_size=23, color=ACCENT_ORANGE),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.35).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -234,17 +305,17 @@ class Ch03FisherTestScene(EpiBaseScene):
         self.show_step_indicator(8, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. 期望值 < 5 → 卡方近似不可靠", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. Fisher exact test 不需大樣本假設", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. scipy fisher_exact() 回傳 OR 和 p", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("4. 先檢查期望值，再決定用哪種檢定", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.40).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -258,7 +329,7 @@ class Ch03FisherTestScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：罕見疫苗不良事件")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
@@ -290,7 +361,7 @@ class Ch03FisherTestScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_always_chisq(self, duration: float = 5.0, **kwargs) -> None:
@@ -323,14 +394,14 @@ class Ch03FisherTestScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：森林圖 Forest Plot",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "一張圖看懂多個暴露因子的效果！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

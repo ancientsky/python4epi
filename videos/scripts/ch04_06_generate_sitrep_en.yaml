@@ -1,0 +1,191 @@
+meta:
+  chapter: "04"
+  concept: "generate_sitrep"
+  title: "Wrapping It in a Function: Package Your SitRep into a One-Click Update"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch04_06_generate_sitrep"
+  scene_class: "Ch04GenerateSitrepScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: wrapping it in a function
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! In the last few videos you've learned person, time, and place analysis.
+      But here's the problem: the boss wants the SitRep updated before nine every morning.
+      Are you really going to rerun the whole notebook and change the date by hand every day?
+      Today I'll teach you a lifesaver: wrap every step into a single function.
+      From now on, one call to generate_sitrep and the entire report updates itself.
+      That's the power of "functionizing," and a key step up from beginner.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "function_design"
+    narration: >
+      The design principle for a function: minimal input, maximal output.
+      generate_sitrep needs just one argument, the path to the CSV file.
+      Inside it does three things: read the data, clean the data, compute the metrics.
+      Finally it returns a dictionary with every number a SitRep needs.
+      Why return a dictionary? Because a dict feeds straight into the Word, PPT, and PDF generators.
+      One set of data, many formats, no repeated calculation.
+    animation: "show_function_design"
+    code: |
+      def generate_sitrep(csv_path):
+          """From CSV to SitRep dict."""
+          df = pd.read_csv(csv_path)
+          # 1. Clean dates
+          # 2. Derive columns
+          # 3. Calculate metrics
+          return {"infected": ..., "cfr": ...}
+    pause_after: 0.5
+
+  - id: "int_casting"
+    narration: >
+      An easily missed little trap: pandas' sum returns a numpy.int64,
+      not a native Python int.
+      Most of the time it doesn't matter, but if you convert the dict to JSON,
+      say to send to an API or save to a file, numpy.int64 blows up.
+      The JSON encoder doesn't recognize it. The fix is dead simple: wrap it in int().
+      Build the habit: always wrap the numbers in your dict with int() and float().
+    animation: "show_int_casting"
+    code: |
+      infected = int(df["infected"].sum())
+      deaths = int((df["outcome"] == "dead").sum())
+      # numpy.int64 -> Python int
+      # Safe for JSON serialization
+    pause_after: 0.5
+
+  - id: "guard_clause"
+    narration: >
+      Another safety trick: what if the number infected is zero?
+      CFR equals deaths divided by number infected, and zero infected triggers a ZeroDivisionError.
+      A simple if-else prevents it.
+      If infected is True, compute; else, return zero.
+      This kind of safeguard is called a guard clause in English, so build the habit of adding a line of defense before every division.
+    animation: "show_guard_clause"
+    code: |
+      return {
+          "cfr": round(deaths/infected*100, 1)
+                 if infected else 0,
+          "hospitalized": int(df["hospitalized"].sum()),
+      }
+    pause_after: 0.5
+
+  - id: "call_function"
+    narration: >
+      The function is written, and calling it takes just one line.
+      CSV updated tomorrow? Just swap the path and call again.
+      Want to compare yesterday's and today's SitRep? Call it twice, save two dicts,
+      then compare the difference for each key.
+      That's the beauty of functionizing: write the logic once, use it countless times.
+    animation: "show_call_function"
+    code: |
+      sitrep = generate_sitrep(
+          "data/synthetic/legionella_outbreak.csv"
+      )
+      print(sitrep)
+    output: |
+      {'total_residents': 280, 'infected': 121,
+       'attack_rate': 43.2, 'deaths': 19,
+       'cfr': 15.7, 'hospitalized': 107, 'icu': 23}
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Recap! The four keys to functionizing:
+      One, input a path, output a dictionary.
+      Two, wrap numpy numbers in int() to avoid JSON serialization issues.
+      Three, add a guard clause before division to prevent divide-by-zero.
+      Four, a dict feeds straight into many output formats.
+      From today on, your SitRep updates with a single line.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: automated vaccine-coverage report
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at another real-world use of functionizing.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_vaccine"
+    narration: >
+      Every year after Taiwan's flu vaccine rollout, the CDC publishes coverage rates weekly.
+      Compute them by hand each week and errors creep in easily.
+      But write a generate_vaccine_report function,
+      feed it the latest vaccination CSV, and it outputs coverage by age group and by county.
+      Just call it once a week, and the report updates itself.
+      Functionizing isn't only a good coding habit, it's a survival skill in public-health practice.
+    animation: "show_extra_vaccine"
+    code: |
+      def generate_vaccine_report(csv_path):
+          df = pd.read_csv(csv_path)
+          return {
+              "total_doses": int(df["doses"].sum()),
+              "coverage_65+": round(..., 1),
+              "by_county": county_stats.to_dict(),
+          }
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Blind-spot time! The three most common traps when writing a SitRep function.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: using an external variable inside the function.
+      You define df outside the function, then use df inside it too.
+      The first run works, because the outer df is still in memory.
+      But move the function to another file, or run it on a schedule, and df is nowhere to be found.
+      All the data inside a function should come in through parameters, no sneaking in outer variables.
+    animation: "show_blindspot_global_var"
+    error_code: "def sitrep(): return df['infected'].sum()"
+    correct_code: "def sitrep(csv): df = pd.read_csv(csv); ..."
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: returning a DataFrame instead of a dict.
+      DataFrames are great, but they don't drop straight into JSON,
+      and they don't pass cleanly as input from one function to another.
+      A dict is Python's most basic data structure, and JSON, APIs, and template engines can eat it directly.
+      A SitRep's metrics are a fixed set of key-value pairs, so a dict is the most fitting format.
+    animation: "show_blindspot_return_df"
+    error_code: "return classification  # a DataFrame"
+    correct_code: 'return {"infected": 121, "cfr": 15.7}'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: no docstring.
+      Three months later you open this function and forget what format of CSV it needs.
+      A docstring is like a note left for your future self.
+      At a minimum, write: what the function does, what the parameters are, what it returns.
+      A three-line investment saves three hours of confusion.
+    animation: "show_blindspot_no_docstring"
+    error_code: "def generate_sitrep(path):"
+    correct_code: 'def generate_sitrep(path): """CSV to SitRep dict."""'
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      Congratulations! Your SitRep workflow is now functionized.
+      Next time is the final stretch: turning the numbers in that dict into a polished report.
+      Dashboard, Word, PPT, PDF, all four formats in one go.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

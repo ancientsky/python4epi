@@ -1,0 +1,149 @@
+meta:
+  chapter: "01"
+  concept: "arithmetic"
+  title: "Computing Metrics: Get Rates by Division"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch01_02_arithmetic"
+  scene_class: "Ch01ArithmeticScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: computing metrics
+  # ========================================
+  - id: "intro"
+    narration: >
+      Welcome back! Last lesson we learned to store numbers in variables.
+      Now it's time for some real epidemiology math.
+      Your supervisor wants three metrics: the attack rate, the case fatality rate, and the hospitalization rate.
+      Sounds fancy? It's really just grade-school division with a little formatting on top!
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "attack_rate"
+    narration: >
+      First up is the attack rate.
+      The formula is simple: infected divided by the total number of people.
+      infected divided by total_residents, and we store the result in attack_rate.
+      Then we use print with an f-string to show it.
+      See that attack_rate colon point two percent inside the curly braces?
+      It means show it as a percentage, keeping two decimal places.
+      The answer is 43.21%.
+    animation: "show_attack_rate"
+    code: |
+      attack_rate = infected / total_residents
+      print(f"侵襲率 (Attack rate): {attack_rate:.2%}")
+    output: "侵襲率 (Attack rate): 43.21%"
+    pause_after: 0.5
+
+  - id: "cfr"
+    narration: >
+      Next is the case fatality rate, or CFR.
+      Careful - the denominator is the number infected, not the total residents.
+      This is where beginners get tripped up most.
+      deaths divided by infected gives 15.70%.
+    animation: "show_cfr"
+    code: |
+      cfr = deaths / infected
+      print(f"致死率 (CFR): {cfr:.2%}")
+    output: "致死率 (CFR): 15.70%"
+    pause_after: 0.5
+
+  - id: "hosp_rate"
+    narration: >
+      Last is the hospitalization rate: hospitalized divided by infected.
+      Same f-string to display it: 56.20%.
+      And just like that, all three metrics are done!
+    animation: "show_hosp_rate"
+    code: |
+      hosp_rate = hospitalized / infected
+      print(f"住院率: {hosp_rate:.2%}")
+    output: "住院率: 56.20%"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Quick recap: division computes the ratio, and the f-string formats the output.
+      Colon point two percent is your formatting magic wand.
+      Epidemiology metrics really are just arithmetic this simple!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: dengue community prevalence
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      New scene! This time we'll compute the community prevalence of dengue.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Suppose a community has 45,000 residents, and 312 of them are diagnosed with dengue.
+      The prevalence is simply dengue_cases divided by population.
+      Same f-string to display it: 0.69%.
+      Whether it's Legionnaires', dengue, or COVID,
+      the formula is always cases divided by the population - only the definitions of numerator and denominator change.
+    animation: "show_extra_example"
+    code: |
+      population = 45000
+      dengue_cases = 312
+      prevalence = dengue_cases / population
+      print(f"社區盛行率: {prevalence:.2%}")
+    output: "社區盛行率: 0.69%"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Let's look at the three traps beginners fall into most!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: division in Python 3 automatically gives you a decimal.
+      121 divided by 280 is 0.432, it won't collapse to 0.
+      But if you're coming from another language, you might habitually worry about integer division.
+      In Python 3 there's nothing to fear - a single slash is float division.
+    animation: "show_blindspot_division"
+    error_code: "# 不用擔心！\n121 // 280  # 這才是整數除法 → 0"
+    correct_code: "# Python 3 自動浮點\n121 / 280   # → 0.432..."
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: forgetting the f on an f-string.
+      Look at the left: inside print there are only quotes, no f.
+      So the curly braces get printed literally, with no substitution at all!
+      That f in front of the string is like a switch - leave it off and Python won't plug in your variable's value.
+    animation: "show_blindspot_fstring"
+    error_code: 'print("CFR: {cfr:.2%}")\n# 印出 CFR: {cfr:.2%}'
+    correct_code: 'print(f"CFR: {cfr:.2%}")\n# 印出 CFR: 15.70%'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: what does colon point two percent actually mean?
+      Let me break it down.
+      The colon is where formatting begins,
+      point two means keep two decimal places,
+      and the percent sign multiplies by 100 and appends a percent sign.
+      So 0.157 becomes 15.70%.
+      Memorize this pattern - it's a lifesaver when you write reports!
+    animation: "show_blindspot_format_spec"
+    code: "{cfr:.2%}  →  : 開始格式 / .2 兩位小數 / % 乘 100 加 %"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Awesome! You can now compute epidemiology metrics in Python.
+      Next lesson we'll learn dictionaries and organize our data far more neatly.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

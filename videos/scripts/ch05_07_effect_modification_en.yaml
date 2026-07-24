@@ -1,0 +1,161 @@
+meta:
+  chapter: "05"
+  concept: "effect_modification"
+  title: "Effect Modification: The Exposure's Effect Varies by Person"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch05_07_effect_modification"
+  scene_class: "Ch05EffectModificationScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi! Today we tackle a concept students mix up all the time:
+      effect modification, and how it differs from confounding.
+      Put simply, confounding is an illusion, and it disappears once you control for it.
+      Effect modification is a real phenomenon: "the exposure's effect differs across groups."
+      Confuse these two and your conclusions go completely sideways.
+      Today, with a spicy-hotpot story, I'll make this crystal clear.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "hotpot_metaphor"
+    narration: >
+      Here's a scenario. You want to study whether eating spicy hotpot causes diarrhea.
+      Split 100 people into two groups: strong stomachs and weak stomachs.
+      Strong stomachs: the RR of eating spicy hotpot is 1.2.
+      Weak stomachs: the RR of eating spicy hotpot is 4.5.
+      Such a big gap? This isn't confounding, it's interaction!
+      The effect of spicy hotpot differs by the state of your stomach.
+      Here you absolutely cannot report a single pooled RR;
+      you must say it separately: strong stomachs are fine, weak stomachs should never touch it.
+    animation: "show_hotpot_metaphor"
+    pause_after: 0.5
+
+  - id: "confounding_vs_interaction"
+    narration: >
+      The difference between confounding and interaction fits neatly into one table.
+      Confounding: the strata RRs are close to each other, but the crude RR differs a lot from the adjusted RR.
+      Interaction: the strata RRs differ a lot from each other, and it's not a question of one inflating another.
+      Confounding calls for reporting the adjusted value; interaction calls for reporting by stratum.
+      Both can be present at once, or you might have only one of them.
+      Diagnose it right, and only then can you report it right.
+    animation: "show_comparison_table"
+    pause_after: 0.5
+
+  - id: "homogeneity_test"
+    narration: >
+      How do you decide whether interaction is present? Run a homogeneity test.
+      Simplified version: look at the maximum minus the minimum of the strata RRs.
+      If the gap is greater than 0.5, effect modification may be present.
+      Rigorous version: use the Breslow-Day test, or check whether the strata confidence intervals overlap.
+      You can also add an interaction term to a regression model and see whether the coefficient is significant.
+    animation: "show_homogeneity_test"
+    code: |
+      rr_values = results_df["RR"].values
+      rr_range = rr_values.max() - rr_values.min()
+      print(f"RR range: {rr_range:.3f}")
+      if rr_range > 0.5:
+          print("Possible effect modification")
+          print("Report stratum-specific RRs")
+      else:
+          print("Homogeneous, MH pooling OK")
+    pause_after: 0.5
+
+  - id: "when_to_report_stratified"
+    narration: >
+      When interaction is present, the report should look like this.
+      First, a summary line: "the effect of showering varies by functional status."
+      Then list by stratum:
+      ambulatory's RR is 1.5, wheelchair's is 1.3, bedridden's is 1.2.
+      Absolutely do not put a pooled RR of 2.8 alongside it,
+      because that would mislead the boss into thinking "everyone is 2.8."
+      Reporting by stratum is the honest approach.
+    animation: "show_report_format"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Quick recap. Confounding vs interaction.
+      Confounding is an illusion: strata RRs are close, crude and adjusted differ a lot, so report the adjusted RR.
+      Interaction is real: strata RRs differ a lot, so report by stratum.
+      Decide with a homogeneity test or the RR range.
+      Remember it in one line: pool confounding, stratify interaction.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at a COVID-vaccine case of interaction.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_vaccine"
+    narration: >
+      In COVID-19 vaccine effectiveness research, the immunocompromised are a textbook case of effect modification.
+      The immunocompetent: vaccine effectiveness 90 percent, strong protection.
+      The immunocompromised: vaccine effectiveness only 50 percent, protection cut in half.
+      If you only report the pooled effectiveness of 85 percent, the immunocompromised will wrongly think they're protected too.
+      The right approach is to report each group's effectiveness separately,
+      so the immunocompromised know they still need extra precautions.
+      That's exactly why the CDC always reports vaccine effectiveness by stratum.
+    animation: "show_extra_vaccine"
+    code: |
+      # COVID-19 vaccine effectiveness
+      # Immunocompetent: VE = 90%
+      # Immunocompromised: VE = 50%
+      # Report separately, not pooled 85%!
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Coming up, the three most common misjudgments about interaction!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: treating interaction as confounding.
+      You see the strata RRs differ a lot and assume some variable wasn't controlled well,
+      so you pile on more variables to adjust.
+      Wrong! The strata RRs are supposed to differ; this is a real phenomenon, not a bias.
+      Adjustment won't remove it, it will only erase real information.
+    animation: "show_blindspot_confuse"
+    error_code: "model.adjust_for(['age', 'sex', 'more_vars'])"
+    correct_code: "report_stratified_results(by='effect_modifier')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: seeing CIs overlap and declaring no difference.
+      Overlapping confidence intervals do not mean the difference is not significant.
+      This is especially true in small samples: two strata with RRs of 1.5 and 3.0 may have CIs that overlap simply because n is small.
+      A better approach is to run a formal interaction test,
+      or add an interaction term in a regression and look at the coefficient.
+    animation: "show_blindspot_ci_overlap"
+    error_code: "if ci_overlap: no_interaction = True"
+    correct_code: "run_interaction_test_in_regression_model()"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: skipping stratification and just reporting the average.
+      A lazy analyst grabs the data, does a straight groupby mean, and never considers whether to stratify.
+      If interaction is truly present, the average hides crucial subgroup information.
+      Make it a habit: when you get the data, first draw a stratified plot by the key variable,
+      and check whether each group's trend is consistent. If it isn't, report by stratum.
+    animation: "show_blindspot_no_strat"
+    error_code: "df.groupby('exposure')['outcome'].mean()"
+    correct_code: "df.groupby(['exposure','modifier'])['outcome'].mean()"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations, you've sorted out confounding versus interaction!
+      In the next and final video of the chapter, we extend stratified analysis to case-control studies,
+      and see how to compute the MH-adjusted OR.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

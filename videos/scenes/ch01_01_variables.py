@@ -46,6 +46,51 @@ class Ch01VariablesScene(EpiBaseScene):
 
     total_steps: int = 13
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "數值變數",
+            "title_sub": "先把數字存起來",
+            "scenario_heading": "松柏護理之家 — 退伍軍人症群聚",
+            "stat_total_label": "總住民人數",
+            "stat_infected_label": "感染人數",
+            "stat_deaths_label": "死亡人數",
+            "scenario_caption": "這些數字需要存下來，才能在程式裡計算！",
+            "first_var_explanation": "變數就像一個貼了標籤的盒子，裡面裝著數值",
+            "first_var_arrow": "← 把 280 放進盒子",
+            "remaining_note": "整數、字串都可以存進變數",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. 變數 = 貼標籤的盒子，用 = 賦值",
+            "summary_p2": "2. 名稱用英文小寫 + 底線（snake_case）",
+            "summary_p3": "3. 整數直接寫數字，字串加引號",
+            "summary_p4": "4. print() 可以把值印出來確認",
+            "extra_banner_title": "額外範例：COVID-19 學校群聚",
+            "blindspot_banner_title": "初學者常見地雷 3 選 1",
+            "outro_heading": "下一集：用 Python 計算侵襲率與致死率",
+            "outro_sub": "把變數拿來做算術運算！",
+        },
+        "en": {
+            "title_main": "Numeric Variables",
+            "title_sub": "Store your numbers first",
+            "scenario_heading": "Pine & Cypress Nursing Home — Legionnaires' cluster",
+            "stat_total_label": "Total residents",
+            "stat_infected_label": "Infected",
+            "stat_deaths_label": "Deaths",
+            "scenario_caption": "We need to store these numbers to compute with them in code!",
+            "first_var_explanation": "A variable is like a labeled box that holds a value",
+            "first_var_arrow": "← put 280 into the box",
+            "remaining_note": "Integers and strings can both go into variables",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. Variable = a labeled box; assign with =",
+            "summary_p2": "2. Name it lowercase English + underscores (snake_case)",
+            "summary_p3": "3. Integers are bare numbers; strings need quotes",
+            "summary_p4": "4. print() shows the value so you can check it",
+            "extra_banner_title": "Extra example: COVID-19 school cluster",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: compute attack rate and case fatality rate in Python",
+            "outro_sub": "Put your variables to work with arithmetic!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -55,27 +100,27 @@ class Ch01VariablesScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the variables lesson."""
-        self.show_title_card("數值變數", "先把數字存起來", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_scenario(self, duration: float = 5.0, **kwargs) -> None:
         """Show the outbreak numbers as the motivating context."""
         self.show_step_indicator(1, self.total_steps)
 
         heading = Text(
-            "松柏護理之家 — 退伍軍人症群聚",
+            self.t("scenario_heading"),
             font=FONT_CJK,
             font_size=32,
             color=TEXT_PRIMARY,
         ).to_edge(UP, buff=0.8)
 
         numbers = VGroup(
-            self._make_stat_card("280", "總住民人數", ACCENT_ORANGE),
-            self._make_stat_card("121", "感染人數", "#6A9BCC"),
-            self._make_stat_card("19", "死亡人數", "#D94452"),
+            self._make_stat_card("280", self.t("stat_total_label"), ACCENT_ORANGE),
+            self._make_stat_card("121", self.t("stat_infected_label"), "#6A9BCC"),
+            self._make_stat_card("19", self.t("stat_deaths_label"), "#D94452"),
         ).arrange(RIGHT, buff=0.6).move_to(ORIGIN)
 
         caption = Text(
-            "這些數字需要存下來，才能在程式裡計算！",
+            self.t("scenario_caption"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,
@@ -94,7 +139,7 @@ class Ch01VariablesScene(EpiBaseScene):
         code_text = kwargs.get("code", "total_residents = 280")
 
         explanation = Text(
-            "變數就像一個貼了標籤的盒子，裡面裝著數值",
+            self.t("first_var_explanation"),
             font=FONT_CJK,
             font_size=24,
             color=TEXT_PRIMARY,
@@ -115,7 +160,7 @@ class Ch01VariablesScene(EpiBaseScene):
         ).shift(RIGHT * 2.8 + UP * 0.3)
 
         arrow_label = Text(
-            "← 把 280 放進盒子",
+            self.t("first_var_arrow"),
             font=FONT_CJK,
             font_size=20,
             color=ACCENT_ORANGE,
@@ -148,7 +193,7 @@ class Ch01VariablesScene(EpiBaseScene):
         ).shift(LEFT * 1.2 + UP * 0.2)
 
         note = Text(
-            "整數、字串都可以存進變數",
+            self.t("remaining_note"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,
@@ -184,17 +229,17 @@ class Ch01VariablesScene(EpiBaseScene):
         self.show_step_indicator(5, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. 變數 = 貼標籤的盒子，用 = 賦值", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("2. 名稱用英文小寫 + 底線（snake_case）", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("3. 整數直接寫數字，字串加引號", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("4. print() 可以把值印出來確認", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -208,7 +253,7 @@ class Ch01VariablesScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：COVID-19 學校群聚")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
@@ -240,7 +285,7 @@ class Ch01VariablesScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選 1")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_string_vs_int(self, duration: float = 5.0, **kwargs) -> None:
@@ -273,14 +318,14 @@ class Ch01VariablesScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：用 Python 計算侵襲率與致死率",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "把變數拿來做算術運算！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

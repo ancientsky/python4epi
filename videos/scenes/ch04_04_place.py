@@ -35,6 +35,37 @@ class Ch04PlaceScene(EpiBaseScene):
 
     total_steps: int = 15
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "地點比較",
+            "title_sub": "哪個翼區最危險？",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. groupby + agg 同時算多個統計量",
+            "summary_p2": "2. 侵襲率 = 個案數 / 該區總人數",
+            "summary_p3": "3. 比較各翼區找出高風險地點",
+            "summary_p4": "4. reset_index() 讓 groupby 結果變回 DataFrame",
+            "summary_p5": "5. 地點分析是擬定防治策略的關鍵依據",
+            "extra_banner_title": "額外範例：COVID-19 各縣市侵襲率",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：個案分類",
+            "outro_sub": "確診、可能、非個案——分層統計怎麼做？",
+        },
+        "en": {
+            "title_main": "Comparing Places",
+            "title_sub": "Which wing is the most dangerous?",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. groupby + agg computes several stats at once",
+            "summary_p2": "2. Attack rate = cases / total residents in that area",
+            "summary_p3": "3. Compare wings to find the high-risk locations",
+            "summary_p4": "4. reset_index() turns the groupby result back into a DataFrame",
+            "summary_p5": "5. Place analysis is the key basis for control strategy",
+            "extra_banner_title": "Extra example: COVID-19 attack rate by county",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: case classification",
+            "outro_sub": "Confirmed, probable, non-case - how do we stratify?",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -44,7 +75,7 @@ class Ch04PlaceScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the Place lesson."""
-        self.show_title_card("地點比較", "哪個翼區最危險？", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_groupby_agg(self, duration: float = 6.0, **kwargs) -> None:
         """Show groupby + agg to compute wing-level stats."""
@@ -136,18 +167,18 @@ class Ch04PlaceScene(EpiBaseScene):
         self.show_step_indicator(5, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. groupby + agg 同時算多個統計量", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. 侵襲率 = 個案數 / 該區總人數", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. 比較各翼區找出高風險地點", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("4. reset_index() 讓 groupby 結果變回 DataFrame", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("5. 地點分析是擬定防治策略的關鍵依據", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p5"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.40).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -161,7 +192,7 @@ class Ch04PlaceScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：COVID-19 各縣市侵襲率")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_covid_county(self, duration: float = 6.0, **kwargs) -> None:
@@ -194,7 +225,7 @@ class Ch04PlaceScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_reset(self, duration: float = 5.0, **kwargs) -> None:
@@ -227,14 +258,14 @@ class Ch04PlaceScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：個案分類",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "確診、可能、非個案——分層統計怎麼做？",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

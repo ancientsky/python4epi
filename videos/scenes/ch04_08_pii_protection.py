@@ -36,6 +36,91 @@ class Ch04PiiProtectionScene(EpiBaseScene):
 
     total_steps: int = 15
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "個資保護",
+            "title_sub": "拿到 Line List 的第一件事",
+            "sweeney_heading": "Sweeney 2002 的經典警告",
+            "sweeney_sub": "僅憑 郵遞區號 + 生日 + 性別",
+            "sweeney_caption": "就能重新識別全美 87% 的人",
+            "three_cat_heading": "PII 三大類",
+            "three_cat_lines": [
+                "1. 直接識別：姓名、身分證、電話、地址",
+                "2. 準識別：年齡、性別、生日、郵遞區號",
+                "3. 敏感屬性：HIV、精神科、基因、收入",
+                "三種都要保護，但方法不同。",
+            ],
+            "suppression_heading": "① Suppression — 直接刪除",
+            "pseudonymization_heading": "② Pseudonymization — 假名化",
+            "hashing_heading": "③ Hashing — 加鹽雜湊",
+            "generalization_heading": "④ Generalization — 泛化組距",
+            "masking_heading": "⑤ Masking — 遮罩",
+            "k_anonymity_heading": "自我檢查：k-anonymity (k ≥ 5)",
+            "workflow_heading": "三層資料夾工作流",
+            "workflow_lines": [
+                "raw_restricted/       ← 原始資料，加密 + .gitignore",
+                "scripts/deidentify.py ← 去識別化腳本",
+                "deidentified/         ← 乾淨資料，可進 notebook",
+                "規則：notebook 只能讀最底層 deidentified/",
+            ],
+            "summary_heading": "重點整理：五招去識別化",
+            "summary_lines": [
+                "① Suppression：能刪就刪",
+                "② Pseudonymization：換成 CASE_001",
+                "③ Hashing：SHA-256 + salt",
+                "④ Generalization：年齡組、流行週",
+                "⑤ Masking：留形式、藏內容",
+                "最後用 k-anonymity 自我檢查",
+            ],
+            "extra_banner_title": "額外範例：台灣 COVID-19 實聯制",
+            "extra_covid_heading": "實聯制的四道防線",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：SitRep 摘要指標",
+            "outro_sub": "資料不是你的，是住民託付給你的。",
+        },
+        "en": {
+            "title_main": "PII Protection",
+            "title_sub": "The very first thing to do with a line list",
+            "sweeney_heading": "Sweeney 2002's Classic Warning",
+            "sweeney_sub": "With just ZIP code + birth date + sex",
+            "sweeney_caption": "you can re-identify 87% of the US population",
+            "three_cat_heading": "The Three Types of PII",
+            "three_cat_lines": [
+                "1. Direct: name, national ID, phone, address",
+                "2. Quasi: age, sex, birth date, ZIP code",
+                "3. Sensitive: HIV, psychiatric, genetic, income",
+                "Protect all three - but with different methods.",
+            ],
+            "suppression_heading": "① Suppression — delete it outright",
+            "pseudonymization_heading": "② Pseudonymization — fake names",
+            "hashing_heading": "③ Hashing — salted hash",
+            "generalization_heading": "④ Generalization — coarser bins",
+            "masking_heading": "⑤ Masking — hide the content",
+            "k_anonymity_heading": "Self-check: k-anonymity (k ≥ 5)",
+            "workflow_heading": "Three-Tier Folder Workflow",
+            "workflow_lines": [
+                "raw_restricted/       ← raw data, encrypted + .gitignore",
+                "scripts/deidentify.py ← the de-identification script",
+                "deidentified/         ← clean data, safe for notebooks",
+                "Rule: notebooks may only read the bottom deidentified/",
+            ],
+            "summary_heading": "Recap: Five De-identification Moves",
+            "summary_lines": [
+                "① Suppression: delete whatever you can",
+                "② Pseudonymization: swap in CASE_001",
+                "③ Hashing: SHA-256 + salt",
+                "④ Generalization: age groups, epi weeks",
+                "⑤ Masking: keep the form, hide the content",
+                "Finally, self-check with k-anonymity",
+            ],
+            "extra_banner_title": "Extra example: Taiwan's COVID-19 SMS check-in",
+            "extra_covid_heading": "The Four Lines of Defense in SMS Check-in",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: SitRep summary metrics",
+            "outro_sub": "The data isn't yours - residents entrusted it to you.",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -80,8 +165,8 @@ class Ch04PiiProtectionScene(EpiBaseScene):
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the PII protection lesson."""
         self.show_title_card(
-            "個資保護",
-            "拿到 Line List 的第一件事",
+            self.t("title_main"),
+            self.t("title_sub"),
             duration=duration,
         )
 
@@ -90,7 +175,7 @@ class Ch04PiiProtectionScene(EpiBaseScene):
         self.show_step_indicator(1, self.total_steps)
 
         heading = Text(
-            "Sweeney 2002 的經典警告",
+            self.t("sweeney_heading"),
             font=FONT_CJK,
             font_size=30,
             color=ACCENT_ORANGE,
@@ -104,14 +189,14 @@ class Ch04PiiProtectionScene(EpiBaseScene):
         ).next_to(heading, DOWN, buff=0.6)
 
         sub = Text(
-            "僅憑 郵遞區號 + 生日 + 性別",
+            self.t("sweeney_sub"),
             font=FONT_CJK,
             font_size=26,
             color=TEXT_PRIMARY,
         ).next_to(big_stat, DOWN, buff=0.4)
 
         caption = Text(
-            "就能重新識別全美 87% 的人",
+            self.t("sweeney_caption"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,
@@ -129,13 +214,8 @@ class Ch04PiiProtectionScene(EpiBaseScene):
         """Three categories of PII."""
         self.show_step_indicator(2, self.total_steps)
         self._bullet_list(
-            "PII 三大類",
-            [
-                "1. 直接識別：姓名、身分證、電話、地址",
-                "2. 準識別：年齡、性別、生日、郵遞區號",
-                "3. 敏感屬性：HIV、精神科、基因、收入",
-                "三種都要保護，但方法不同。",
-            ],
+            self.t("three_cat_heading"),
+            self.t("three_cat_lines"),
             duration,
         )
 
@@ -158,7 +238,7 @@ class Ch04PiiProtectionScene(EpiBaseScene):
         )
 
         heading = Text(
-            "① Suppression — 直接刪除",
+            self.t("suppression_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
@@ -184,7 +264,7 @@ class Ch04PiiProtectionScene(EpiBaseScene):
         )
 
         heading = Text(
-            "② Pseudonymization — 假名化",
+            self.t("pseudonymization_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
@@ -212,7 +292,7 @@ class Ch04PiiProtectionScene(EpiBaseScene):
         )
 
         heading = Text(
-            "③ Hashing — 加鹽雜湊",
+            self.t("hashing_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
@@ -242,7 +322,7 @@ class Ch04PiiProtectionScene(EpiBaseScene):
         )
 
         heading = Text(
-            "④ Generalization — 泛化組距",
+            self.t("generalization_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
@@ -269,7 +349,7 @@ class Ch04PiiProtectionScene(EpiBaseScene):
         )
 
         heading = Text(
-            "⑤ Masking — 遮罩",
+            self.t("masking_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
@@ -300,7 +380,7 @@ class Ch04PiiProtectionScene(EpiBaseScene):
         output_text = kwargs.get("output", "Risky groups: 2")
 
         heading = Text(
-            "自我檢查：k-anonymity (k ≥ 5)",
+            self.t("k_anonymity_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
@@ -317,13 +397,8 @@ class Ch04PiiProtectionScene(EpiBaseScene):
         """Three-tier folder workflow."""
         self.show_step_indicator(9, self.total_steps)
         self._bullet_list(
-            "三層資料夾工作流",
-            [
-                "raw_restricted/       ← 原始資料，加密 + .gitignore",
-                "scripts/deidentify.py ← 去識別化腳本",
-                "deidentified/         ← 乾淨資料，可進 notebook",
-                "規則：notebook 只能讀最底層 deidentified/",
-            ],
+            self.t("workflow_heading"),
+            self.t("workflow_lines"),
             duration,
             heading_font_size=30,
             bullet_font_size=22,
@@ -333,15 +408,8 @@ class Ch04PiiProtectionScene(EpiBaseScene):
         """Summarise key points about PII protection."""
         self.show_step_indicator(10, self.total_steps)
         self._bullet_list(
-            "重點整理：五招去識別化",
-            [
-                "① Suppression：能刪就刪",
-                "② Pseudonymization：換成 CASE_001",
-                "③ Hashing：SHA-256 + salt",
-                "④ Generalization：年齡組、流行週",
-                "⑤ Masking：留形式、藏內容",
-                "最後用 k-anonymity 自我檢查",
-            ],
+            self.t("summary_heading"),
+            self.t("summary_lines"),
             duration,
             heading_font_size=32,
             bullet_font_size=22,
@@ -353,7 +421,7 @@ class Ch04PiiProtectionScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：台灣 COVID-19 實聯制")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_covid(self, duration: float = 7.0, **kwargs) -> None:
@@ -371,7 +439,7 @@ class Ch04PiiProtectionScene(EpiBaseScene):
         )
 
         heading = Text(
-            "實聯制的四道防線",
+            self.t("extra_covid_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
@@ -388,7 +456,7 @@ class Ch04PiiProtectionScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_quasi_id(self, duration: float = 6.0, **kwargs) -> None:
@@ -432,14 +500,14 @@ class Ch04PiiProtectionScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：SitRep 摘要指標",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "資料不是你的，是住民託付給你的。",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

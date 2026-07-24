@@ -35,6 +35,37 @@ class Ch04TimeScene(EpiBaseScene):
 
     total_steps: int = 16
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "流行曲線",
+            "title_sub": "用長條圖抓住疫情的脈搏",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. groupby + size() 計算每日個案數",
+            "summary_p2": "2. reindex() 補上沒有個案的日期（填 0）",
+            "summary_p3": "3. bar chart 是流行曲線的標準畫法",
+            "summary_p4": "4. DateFormatter 讓日期標籤更易讀",
+            "summary_p5": "5. idxmax() 快速找到高峰日",
+            "extra_banner_title": "額外範例：腸病毒每週流行曲線",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：地點比較",
+            "outro_sub": "哪個翼區的侵襲率最高？用數據來說話！",
+        },
+        "en": {
+            "title_main": "The Epidemic Curve",
+            "title_sub": "Catch the outbreak's pulse with a bar chart",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. groupby + size() counts cases per day",
+            "summary_p2": "2. reindex() fills in the case-free dates (with 0)",
+            "summary_p3": "3. A bar chart is the standard epi-curve style",
+            "summary_p4": "4. DateFormatter makes date labels easy to read",
+            "summary_p5": "5. idxmax() quickly finds the peak day",
+            "extra_banner_title": "Extra example: weekly enterovirus epi curve",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: comparing places",
+            "outro_sub": "Which wing has the highest attack rate? Let the data speak!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -44,7 +75,7 @@ class Ch04TimeScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the Time lesson."""
-        self.show_title_card("流行曲線", "用長條圖抓住疫情的脈搏", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_groupby_size(self, duration: float = 6.0, **kwargs) -> None:
         """Show groupby + size to count cases per day."""
@@ -171,18 +202,18 @@ class Ch04TimeScene(EpiBaseScene):
         self.show_step_indicator(6, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. groupby + size() 計算每日個案數", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. reindex() 補上沒有個案的日期（填 0）", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. bar chart 是流行曲線的標準畫法", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("4. DateFormatter 讓日期標籤更易讀", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("5. idxmax() 快速找到高峰日", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p5"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.40).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -196,7 +227,7 @@ class Ch04TimeScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：腸病毒每週流行曲線")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_enterovirus(self, duration: float = 6.0, **kwargs) -> None:
@@ -225,7 +256,7 @@ class Ch04TimeScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_gap(self, duration: float = 5.0, **kwargs) -> None:
@@ -258,14 +289,14 @@ class Ch04TimeScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：地點比較",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "哪個翼區的侵襲率最高？用數據來說話！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

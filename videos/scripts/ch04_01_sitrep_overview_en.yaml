@@ -1,0 +1,202 @@
+meta:
+  chapter: "04"
+  concept: "sitrep_overview"
+  title: "SitRep Crash Course: Ship a Situation Report in Two Hours"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch04_01_sitrep_overview"
+  scene_class: "Ch04SitrepOverviewScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: the whole SitRep workflow
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, and welcome back! Today we go into battle mode for real.
+      Your supervisor walks over, stone-faced, and says: "I want the first situation report on my desk in two hours. The SitRep."
+      What's a SitRep? It's short for Situation Report, an outbreak status briefing.
+      It's the single most important communication tool on the ground during an investigation. One a day,
+      so your boss, your colleagues, and even other agencies can grasp the whole picture at a glance.
+      Today I'll show you how to auto-generate a standard SitRep with Python.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "five_sections"
+    narration: >
+      A standard SitRep has at least five sections.
+      One, the key metrics: cumulative numbers to date, KPIs like attack rate and case fatality rate.
+      Two, person: distribution of age, sex, and comorbidities.
+      Three, time: the epidemic curve, to see whether the outbreak is heating up or cooling down.
+      Four, place: which area is hit hardest, comparing attack rates.
+      Five, recommended actions: a first read of the situation based on the data.
+      The next few videos will walk you through building every one of these sections.
+    animation: "show_five_sections"
+    pause_after: 0.5
+
+  - id: "data_prep"
+    narration: >
+      Well begun is half done, and step one is always reading and tidying the data.
+      Use pd.read_csv to load the line list, then do three things.
+      First, convert the date columns from strings to datetime, so you can compute day differences.
+      Second, build the "infected" column of zeros and ones, which makes later stats a breeze.
+      Third, use pd.cut to slice ages into bins for an age-group breakdown.
+      Sounds like a lot? Don't worry, each step is a single line of code.
+    animation: "show_data_prep"
+    code: |
+      df = pd.read_csv("legionella_outbreak.csv")
+      df["symptom_onset_date"] = pd.to_datetime(
+          df["symptom_onset_date"], errors="coerce"
+      )
+      df["infected"] = (
+          df["clinical_severity"] != "not_ill"
+      ).astype(int)
+    pause_after: 0.5
+
+  - id: "kpi_metrics"
+    narration: >
+      With the data ready, let's compute the summary metrics right away.
+      The number infected is just the sum of the "infected" column, because it's zeros and ones, so summing gives the case count.
+      The attack rate equals infected divided by the total number of residents.
+      The case fatality rate, CFR, equals deaths divided by the number infected.
+      Hospitalization rate and ICU rate follow the exact same logic.
+      Notice the f-string formatting trick: colon, dot, one, percent auto-multiplies by a hundred and adds the percent sign.
+      Like magic, 0.432 instantly becomes 43.2 percent.
+    animation: "show_kpi_metrics"
+    code: |
+      infected = df["infected"].sum()
+      total = len(df)
+      deaths = (df["outcome"] == "dead").sum()
+      print(f"Attack Rate: {infected/total:.1%}")
+      print(f"CFR: {deaths/infected:.1%}")
+    output: |
+      Attack Rate: 43.2%
+      CFR: 15.7%
+    pause_after: 0.5
+
+  - id: "workflow_diagram"
+    narration: >
+      Let's string the whole pipeline together.
+      The CSV comes in, gets cleaned, then splits into three descriptive analyses: person, time, and place,
+      each producing tables and charts, all finally gathered into one structured SitRep dictionary.
+      That dictionary is your data layer. Boss wants Word? Feed it to python-docx.
+      Wants PowerPoint? Feed it to python-pptx. Wants PDF? Use fpdf2.
+      One set of data, four formats, all generated automatically.
+    animation: "show_workflow_diagram"
+    pause_after: 0.5
+
+  - id: "generate_sitrep"
+    narration: >
+      The heart of it all is this function, generate_sitrep.
+      Hand it a CSV path and it returns a dictionary with every metric inside.
+      Why a function? Because your boss wants a fresh update every single day.
+      If your code is scattered across notebook cells, every update means running the whole thing by hand.
+      But wrap it in a function, and a single call does the job.
+      Better yet, you can schedule it and let the computer run it for you, which we'll cover later.
+    animation: "show_generate_sitrep"
+    code: |
+      def generate_sitrep(csv_path):
+          df = pd.read_csv(csv_path)
+          # ... data cleaning ...
+          return {
+              "infected": infected,
+              "attack_rate": round(infected/total*100, 1),
+              "deaths": deaths,
+              "cfr": round(deaths/infected*100, 1),
+          }
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Quick recap! The five sections of a SitRep: key metrics, person, time, place, and recommended actions.
+      Every metric is computed from the zero-one columns of the line list.
+      Wrap the pipeline in the generate_sitrep function, and rerunning it once a day gives you a fresh update.
+      The next few videos dig into the Python for each section.
+      Now let's get our hands dirty!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: COVID-19 global SitRep
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at a real-world SitRep example.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_who_sitrep"
+    narration: >
+      During COVID-19, the WHO published a global SitRep every day.
+      What's in it? Cumulative confirmed cases worldwide, new cases, region-stratified tables,
+      the epidemic curve, and attack-rate comparisons across countries. Isn't that exactly the same five sections we just learned?
+      The only difference is scale: the WHO's denominator is eight billion people on the planet.
+      But the analytical logic is identical. Learn the SitRep for the Pine and Cypress nursing home,
+      and you've learned the skeleton of a global outbreak report. The only difference is the size of the data.
+    animation: "show_extra_who_sitrep"
+    code: |
+      # WHO COVID-19 SitRep structure:
+      # 1. Key metrics (total, new, deaths)
+      # 2. Epi curve by region
+      # 3. Country-level attack rates
+      # Same logic, bigger dataset!
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Next up, the three mistakes beginners make most often! Each one could get your report bounced back.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: forgetting the data cutoff time.
+      A SitRep's numbers change every day, and if you don't state "data as of this date and time,"
+      the reader has no idea whether this report is fresh or stale.
+      Worse, when the boss compares yesterday's report with today's and sees different numbers,
+      they'll assume you made a mistake. Build the habit: put a timestamp on the very first line.
+    animation: "show_blindspot_timestamp"
+    error_code: 'print("Total cases:", infected)'
+    correct_code: 'print(f"As of {report_time}: {infected}")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: comparing case counts directly instead of attack rates.
+      Wing A has 30 infected, Wing B only 10. So Wing A is worse?
+      Not necessarily! If Wing A has 200 residents and Wing B only 15,
+      then Wing B's attack rate is a whopping 66 percent, far above Wing A's 15 percent.
+      Raw numbers lie; the attack rate is the fair basis for comparison.
+    animation: "show_blindspot_no_denominator"
+    error_code: "print(f'Wing A: {30} cases')"
+    correct_code: "print(f'Wing A AR: {30/200:.1%}')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: charts only, no tables.
+      The epidemic curve is pretty, but what the boss wants are numbers they can audit.
+      "How many on day three? How many confirmed? How many probable?"
+      If your report has only a chart, the boss has to ask you for every single number, which is painfully slow.
+      Charts give the big picture, tables give the audit trail. You need both.
+    animation: "show_blindspot_no_table"
+    error_code: "plt.show()  # only chart, no table"
+    correct_code: "plt.show(); print(df.to_string())"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      Congratulations, you've got the big picture of a SitRep!
+      Next time we go deep on the "person" section:
+      how to analyze the age, sex, and comorbidity distribution of the infected with Python.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

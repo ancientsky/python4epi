@@ -35,6 +35,37 @@ class Ch04GenerateSitrepScene(EpiBaseScene):
 
     total_steps: int = 14
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "函式化",
+            "title_sub": "把 SitRep 包成一鍵更新",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. 用函式封裝 SitRep 邏輯，方便重複使用",
+            "summary_p2": "2. int() 把 numpy int64 轉成 Python int",
+            "summary_p3": "3. guard clause 在函式開頭檢查輸入",
+            "summary_p4": "4. 回傳 dict 讓下游程式容易取用",
+            "summary_p5": "5. 加 docstring 讓同事看得懂你的函式",
+            "extra_banner_title": "額外範例：疫苗覆蓋率函式",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：專業報告輸出",
+            "outro_sub": "Dashboard、Word、PPT、PDF 一次搞定！",
+        },
+        "en": {
+            "title_main": "Wrapping It in a Function",
+            "title_sub": "Package the SitRep into a one-click update",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. Wrap SitRep logic in a function for easy reuse",
+            "summary_p2": "2. int() converts numpy int64 into a Python int",
+            "summary_p3": "3. A guard clause checks inputs at the top of the function",
+            "summary_p4": "4. Returning a dict makes downstream code easy to consume",
+            "summary_p5": "5. A docstring lets colleagues understand your function",
+            "extra_banner_title": "Extra example: a vaccine-coverage function",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: professional report output",
+            "outro_sub": "Dashboard, Word, PPT, PDF - all in one go!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -44,7 +75,7 @@ class Ch04GenerateSitrepScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the Generate SitRep lesson."""
-        self.show_title_card("函式化", "把 SitRep 包成一鍵更新", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_function_design(self, duration: float = 6.0, **kwargs) -> None:
         """Show function signature and docstring."""
@@ -147,18 +178,18 @@ class Ch04GenerateSitrepScene(EpiBaseScene):
         self.show_step_indicator(5, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. 用函式封裝 SitRep 邏輯，方便重複使用", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. int() 把 numpy int64 轉成 Python int", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. guard clause 在函式開頭檢查輸入", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("4. 回傳 dict 讓下游程式容易取用", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("5. 加 docstring 讓同事看得懂你的函式", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p5"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.40).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -172,7 +203,7 @@ class Ch04GenerateSitrepScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：疫苗覆蓋率函式")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_vaccine(self, duration: float = 6.0, **kwargs) -> None:
@@ -204,7 +235,7 @@ class Ch04GenerateSitrepScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_global_var(self, duration: float = 5.0, **kwargs) -> None:
@@ -237,14 +268,14 @@ class Ch04GenerateSitrepScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：專業報告輸出",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "Dashboard、Word、PPT、PDF 一次搞定！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

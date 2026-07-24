@@ -1,0 +1,146 @@
+meta:
+  chapter: "01"
+  concept: "dictionaries"
+  title: "Dictionaries: Keep Data on One Topic Together"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch01_03_dictionaries"
+  scene_class: "Ch01DictionariesScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: dictionaries
+  # ========================================
+  - id: "intro"
+    narration: >
+      Welcome back! So far we've used several separate variables to store outbreak data.
+      But as loose variables pile up, they get easy to mix up.
+      Is there a way to keep data on the same topic together?
+      Yes! It's Python's dictionary.
+      Picture a dictionary as a storage box with many compartments, each with its own label -
+      you grab whatever you want by its label.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "create_dict"
+    narration: >
+      Let's organize the cluster data into one dictionary.
+      Wrap it in curly braces, and each entry is a key and a value.
+      facility maps to the Pine and Cypress nursing home,
+      pathogen maps to Legionella pneumophila,
+      total_residents maps to 280, and so on.
+      Now all the data lives inside a single outbreak variable.
+    animation: "show_create_dict"
+    code: |
+      outbreak = {
+          "facility": "松柏護理之家",
+          "pathogen": "Legionella pneumophila",
+          "total_residents": 280,
+          "infected": 121,
+          "confirmed": 89,
+          "deaths": 19,
+      }
+    pause_after: 0.5
+
+  - id: "access_dict"
+    narration: >
+      To pull a value out of a dictionary, use square brackets with the key name.
+      outbreak bracket deaths gives you 19.
+      Then use it directly to compute the case fatality rate.
+      Handy, right? The data is centrally managed, and the calculation is clearer too.
+    animation: "show_access_dict"
+    code: |
+      cfr = outbreak["deaths"] / outbreak["infected"]
+      print(f"{outbreak['facility']} CFR: {cfr:.2%}")
+    output: "松柏護理之家 CFR: 15.70%"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      The key points: build a dictionary with curly braces, and fetch values with square brackets.
+      Keeping related data together makes your code easier to read and less error-prone.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: reported enterovirus case
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      New scene! This time we'll look at a reported enterovirus case.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Every time you report a case, you're really filling in a dictionary!
+      This case_card dictionary records the case ID, the age, the pathogen, the severity, and the notification date.
+      An f-string stitches the dictionary's values into a one-line report summary.
+      From now on, whenever a notification form lands on your desk,
+      your brain will automatically go: this is just a dictionary!
+    animation: "show_extra_example"
+    code: |
+      case_card = {
+          "id": "EV-2026-0042",
+          "age": 3,
+          "pathogen": "Enterovirus 71",
+          "severity": "重症",
+          "notification_date": "2026-03-15",
+      }
+      print(f"個案 {case_card['id']}，"
+            f"{case_card['age']} 歲，"
+            f"{case_card['severity']}")
+    output: "個案 EV-2026-0042，3 歲，重症"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Here come the three common dictionary traps!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: forgetting quotes on a key.
+      If you write facility colon and the name without quotes,
+      Python treats facility as a variable name to look up.
+      When it can't find one, it errors out.
+      Remember, dictionary keys are usually strings, so add quotes.
+    animation: "show_blindspot_key_quotes"
+    error_code: '# key 沒加引號\n{facility: "松柏"}\n# NameError!'
+    correct_code: '# key 要加引號\n{"facility": "松柏"}\n# 正確！'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: using round parentheses to fetch a value.
+      outbreak paren deaths? Nope!
+      Parentheses mean call a function, while square brackets mean open the box and take something out.
+      To read from a dictionary, always use square brackets.
+    animation: "show_blindspot_bracket_type"
+    error_code: 'outbreak("deaths")\n# TypeError: 不能呼叫字典'
+    correct_code: 'outbreak["deaths"]\n# → 19 ✓'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: accessing a key that doesn't exist.
+      If you write outbreak bracket cure, but the dictionary has no cure key at all,
+      Python rummages through every compartment and, finding nothing, throws a KeyError.
+      It's like searching your storage box for a label that was never there - of course you won't find it.
+    animation: "show_blindspot_key_error"
+    error_code: 'outbreak["cure"]\n# KeyError: 找不到此鍵'
+    correct_code: 'outbreak.get("cure", "未知")\n# → "未知"（安全取值）'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Dictionaries: mastered! Next lesson we'll learn lists and see how to store a whole row of data.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

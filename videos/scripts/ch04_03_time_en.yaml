@@ -1,0 +1,210 @@
+meta:
+  chapter: "04"
+  concept: "time"
+  title: "The Epidemic Curve: Catch the Outbreak's Pulse with a Bar Chart"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch04_03_time"
+  scene_class: "Ch04TimeScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: the epi curve
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Today we draw the most iconic chart in epidemiology: the epidemic curve.
+      It's a bar chart with "onset date" on the x-axis and "number of cases" on the y-axis.
+      A good epidemic curve lets you see at a glance:
+      When did the outbreak start? When did it peak? Is it rising or falling right now?
+      It's like the outbreak's electrocardiogram, alive and with a rhythm.
+      Today I'll walk you through drawing a professional-grade epi curve with matplotlib.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "groupby_size"
+    narration: >
+      Step one, count the cases for each day.
+      Use groupby to group by onset date, then size to count the rows in each group.
+      groupby plus size is the equivalent of SQL's GROUP BY plus COUNT.
+      Notice we use size, not count.
+      The difference: count excludes NaN, size does not.
+      For counting cases, size is the better fit because we want "how many records per day."
+    animation: "show_groupby_size"
+    code: |
+      daily = cases.groupby(
+          "symptom_onset_date"
+      ).size().rename("cases")
+      print(daily.head())
+    output: |
+      2026-01-12    3
+      2026-01-13    5
+      2026-01-14    8
+      2026-01-15   11
+      2026-01-16   14
+    pause_after: 0.5
+
+  - id: "reindex_fill"
+    narration: >
+      But here's a trap: if a day has no cases, the groupby result simply won't have that day.
+      Say nobody fell ill on January 11th, so the result jumps straight from the 10th to the 12th.
+      The bar chart then has holes and looks very strange.
+      The fix is reindex with a complete date range,
+      and fill_value equals 0 fills the missing dates with zero.
+      Now every day gets a bar, even if it's zero, crystal clear.
+    animation: "show_reindex_fill"
+    code: |
+      date_range = pd.date_range(
+          daily.index.min() - pd.Timedelta(days=3),
+          daily.index.max() + pd.Timedelta(days=1),
+          freq="D",
+      )
+      daily = daily.reindex(date_range, fill_value=0)
+    pause_after: 0.5
+
+  - id: "bar_chart"
+    narration: >
+      With the data ready, let's draw.
+      plt.subplots creates the canvas fig and the drawing area ax at once.
+      fig controls the overall figure size, ax controls what's drawn inside it.
+      ax.bar draws the bars, and width equals 1 makes them touch each other,
+      which is the standard for an epi curve: there must be no gaps.
+      Because each day's case count is a continuous time series, gaps cause misreadings.
+    animation: "show_bar_chart"
+    code: |
+      fig, ax = plt.subplots(figsize=(10, 4))
+      ax.bar(daily.index, daily.values,
+             width=1.0, color="#2c7fb8",
+             edgecolor="white", linewidth=0.5)
+      ax.set_title("Epi Curve - Legionella")
+      plt.show()
+    pause_after: 0.5
+
+  - id: "date_formatting"
+    narration: >
+      Formatting the date axis is the part beginners struggle with most.
+      matplotlib's dates module has two great helpers:
+      DateFormatter controls the display format, percent m slash percent d means month slash day.
+      DayLocator controls the tick spacing, interval equals 2 means one tick every two days.
+      Finally, autofmt_xdate auto-rotates the labels 45 degrees so the text doesn't overlap.
+      These three lines are standard equipment for time-series charts, just memorize them.
+    animation: "show_date_formatting"
+    code: |
+      import matplotlib.dates as mdates
+      ax.xaxis.set_major_formatter(
+          mdates.DateFormatter("%m/%d"))
+      ax.xaxis.set_major_locator(
+          mdates.DayLocator(interval=2))
+      fig.autofmt_xdate(rotation=45)
+    pause_after: 0.5
+
+  - id: "peak_day"
+    narration: >
+      After drawing, answer the question the boss cares about most: "Which day was the peak?"
+      idxmax finds the index of the maximum value, that is, the day with the most cases.
+      Note that idxmax returns the index, the date, not the number.
+      For the number, you need max.
+      Use both together and you can report precisely: "The peak was January 19th, with 18 cases that day."
+    animation: "show_peak_day"
+    code: |
+      peak = daily.idxmax()
+      print(f"Peak: {peak.date()} ({daily.max()} cases)")
+    output: |
+      Peak: 2026-01-19 (18 cases)
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Recap! The workflow for building an epi curve:
+      One, groupby plus size to count cases per day.
+      Two, reindex to fill the blank dates.
+      Three, bar with width equals 1 for gapless bars.
+      Four, DateFormatter and DayLocator to format the date axis.
+      Five, idxmax to find the peak day.
+      Five steps, and a professional-grade epi curve is done.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: enterovirus outbreak
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at the epi curve of a Taiwan enterovirus outbreak.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_enterovirus"
+    narration: >
+      Enterovirus is every Taiwanese parent's summer nightmare.
+      If you draw a full-year epi curve from insurance data, you'll see a super-obvious hill:
+      it climbs around May and June, peaks in July and August, and only tapers off after September.
+      This kind of seasonal curve is called a propagated curve, signaling sustained person-to-person spread.
+      It's very different from the sharp point-source curve of our Pine and Cypress nursing home.
+      Just from the shape of the curve, you can infer the mode of transmission. Cool, right?
+    animation: "show_extra_enterovirus"
+    code: |
+      # Enterovirus: seasonal propagated curve
+      # Point-source: sharp peak, short duration
+      # Propagated: gradual rise, multiple peaks
+      ev_weekly = ev.resample("W").size()
+      ev_weekly.plot(kind="bar")
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Blind-spot time! The three mistakes beginners make most when drawing an epi curve.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: gaps between the bars.
+      With the default bar settings, there's white space between the bars.
+      That's wrong for an epi curve, because each day is continuous and shouldn't be broken up.
+      The fix is dead simple: set width to 1.0.
+      One parameter, and the professionalism level is worlds apart.
+    animation: "show_blindspot_gap"
+    error_code: "ax.bar(x, y)  # default width=0.8"
+    correct_code: "ax.bar(x, y, width=1.0)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: not filling in the blank dates.
+      If January 15th has no cases, the chart skips that day entirely.
+      Readers will think the bar next to January 14th is the 15th,
+      when it's actually the 16th. The whole time axis is thrown off.
+      Always use reindex to fill with zeros!
+    animation: "show_blindspot_missing_dates"
+    error_code: "daily = cases.groupby('date').size()"
+    correct_code: "daily = daily.reindex(date_range, fill_value=0)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: using notification date instead of onset date.
+      The notification date is when the health authority received the report, which can be days after onset.
+      Draw the epi curve with notification dates and the peak shifts to the right,
+      so you might think the outbreak is still rising when it actually peaked long ago.
+      Always use the symptom onset date!
+    animation: "show_blindspot_wrong_date"
+    error_code: "cases.groupby('notification_date').size()"
+    correct_code: "cases.groupby('symptom_onset_date').size()"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      Nice! You can now draw a professional epi curve.
+      Next time we handle "place": which wing is worst, comparing attack rates across areas with numbers.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

@@ -42,6 +42,29 @@ class Ch01ConditionalsScene(EpiBaseScene):
 
     total_steps: int = 3
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "條件判斷",
+            "title_sub": "讓程式依情況做不同的事",
+            "summary_p1": "if / elif / else 依序檢查條件",
+            "summary_p2": "條件為 True 則執行該區塊，其餘跳過",
+            "summary_p3": "比較運算子：==  !=  >  <  >=  <=",
+            "summary_p4": "縮排（4 格空白）決定程式區塊範圍",
+            "outro_title": "小結",
+            "outro_sub": "條件判斷讓程式有「判斷力」，記得冒號和縮排！",
+        },
+        "en": {
+            "title_main": "Conditionals",
+            "title_sub": "Let your program act differently by situation",
+            "summary_p1": "if / elif / else check conditions in order",
+            "summary_p2": "A True condition runs its block; the rest are skipped",
+            "summary_p3": "Comparison operators: ==  !=  >  <  >=  <=",
+            "summary_p4": "Indentation (4 spaces) defines the code block",
+            "outro_title": "Recap",
+            "outro_sub": "Conditionals give your program 'judgment' — don't forget the colon and indentation!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -51,8 +74,8 @@ class Ch01ConditionalsScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         self.show_title_card(
-            "條件判斷",
-            "讓程式依情況做不同的事",
+            self.t("title_main"),
+            self.t("title_sub"),
             duration=duration,
         )
 
@@ -82,10 +105,10 @@ class Ch01ConditionalsScene(EpiBaseScene):
     def show_main_summary(self, duration: float = 4.0, **kwargs) -> None:
         step = self.show_step_indicator(2)
         points = VGroup(
-            Text("if / elif / else 依序檢查條件", font=FONT_CJK, font_size=28, color=TEXT_PRIMARY),
-            Text("條件為 True 則執行該區塊，其餘跳過", font=FONT_CJK, font_size=28, color=TEXT_PRIMARY),
-            Text("比較運算子：==  !=  >  <  >=  <=", font=FONT_MONO, font_size=26, color=ACCENT_ORANGE),
-            Text("縮排（4 格空白）決定程式區塊範圍", font=FONT_CJK, font_size=28, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=28, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=28, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_MONO, font_size=26, color=ACCENT_ORANGE),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=28, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.4)
         points.move_to([0, 0, 0])
         self.play(FadeIn(points), run_time=0.6)
@@ -172,7 +195,7 @@ class Ch01ConditionalsScene(EpiBaseScene):
 
     def show_outro(self, duration: float = 3.0, **kwargs) -> None:
         self.show_title_card(
-            "小結",
-            "條件判斷讓程式有「判斷力」，記得冒號和縮排！",
+            self.t("outro_title"),
+            self.t("outro_sub"),
             duration=duration,
         )

@@ -1,0 +1,226 @@
+meta:
+  chapter: "03"
+  concept: "two_by_two"
+  title: "2x2 Contingency Tables: Turning Outbreak Data Into Four Cells"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch03_01_two_by_two"
+  scene_class: "Ch03TwoByTwoScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: the 2x2 contingency table
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, and welcome back! Today we learn the most classic, most versatile tool in all of epidemiology: the 2x2 contingency table.
+      Think of it as the Swiss army knife of the field; it shows up in almost every outbreak report you'll ever read.
+      This tiny four-cell table holds only four numbers, but it answers one hugely important question:
+      "Is exposure actually related to getting sick, or not?"
+      Today we'll use the Legionella data from the Pine and Cypress nursing home and build this table from scratch.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "concept_layout"
+    narration: >
+      First, let's get to know what a 2x2 table looks like. Picture a tic-tac-toe grid, but with only four cells.
+      The columns are the outcome: sick or not sick.
+      The rows are the exposure: exposed or unexposed.
+      The top-left cell is called a, the people who were exposed and got sick; the top-right is b, exposed but not sick.
+      The bottom-left is c, unexposed but sick; the bottom-right is d, unexposed and not sick.
+      Just those four letters, a, b, c, and d. Remember their positions and you're already halfway there.
+    animation: "show_concept_layout"
+    pause_after: 0.5
+
+  - id: "legionella_context"
+    narration: >
+      Back to the Pine and Cypress case. Two hundred eighty residents, one hundred twenty-one infected with Legionnaires' disease.
+      The investigation found that some residents used the showers often and some didn't.
+      We suspect shower exposure is linked to infection, so we'll build a 2x2 table with shower_use as the exposure
+      and infected as the outcome.
+      Sounds complicated? Relax, Python does it in one line.
+    animation: "show_legionella_context"
+    pause_after: 0.5
+
+  - id: "crosstab_basic"
+    narration: >
+      pd.crosstab is your best friend here. The first argument is the exposure, the second is the outcome.
+      Watch the order! The first argument becomes the rows, the horizontal layout of the table;
+      the second becomes the columns, the vertical layout.
+      Run it and out pops a beautiful 2x2 table.
+      It's like ordering a drink: you say the size first, then the flavor. The order can't be scrambled.
+    animation: "show_crosstab_basic"
+    code: |
+      table = pd.crosstab(
+          df["shower_use"],
+          df["infected"],
+      )
+      print(table)
+    output: |
+      infected      0    1
+      shower_use
+      0            72   38
+      1            87   83
+    pause_after: 0.5
+
+  - id: "extract_abcd"
+    narration: >
+      The table is built; now we pull out the four numbers a, b, c, and d.
+      We locate them with iloc: row zero, column zero is the top-left cell, and so on.
+      But be careful! By default pandas crosstab sorts by value,
+      so you must confirm which row is the exposed group and which is the unexposed group.
+      Once you've pulled the numbers, you can start computing attack rates, risk ratios, and odds ratios. Super handy.
+    animation: "show_extract_abcd"
+    code: |
+      a = table.iloc[1, 1]  # exposed + sick
+      b = table.iloc[1, 0]  # exposed + well
+      c = table.iloc[0, 1]  # unexposed + sick
+      d = table.iloc[0, 0]  # unexposed + well
+      print(f"a={a}, b={b}, c={c}, d={d}")
+    output: |
+      a=83, b=87, c=38, d=72
+    pause_after: 0.5
+
+  - id: "attack_rate"
+    narration: >
+      With a, b, c, and d in hand, let's compute the attack rate right away.
+      The exposed group's attack rate equals a divided by a plus b, meaning "of the exposed people, what fraction got sick."
+      The unexposed group's attack rate equals c divided by c plus d.
+      At the Pine and Cypress home, the shower-exposed group has an attack rate of about forty-nine percent;
+      the unexposed group is about thirty-five percent.
+      The exposed group is clearly higher! But how much higher? That's exactly what next episode's risk ratio will answer.
+    animation: "show_attack_rate"
+    code: |
+      ar_exposed = a / (a + b)
+      ar_unexposed = c / (c + d)
+      print(f"Exposed AR: {ar_exposed:.1%}")
+      print(f"Unexposed AR: {ar_unexposed:.1%}")
+    output: |
+      Exposed AR: 48.8%
+      Unexposed AR: 34.5%
+    pause_after: 0.5
+
+  - id: "margins_totals"
+    narration: >
+      When you write the report, your boss will always ask: "Where are the totals?"
+      Add margins equals True, and crosstab automatically computes the subtotal for every row and column.
+      Now the table has complete row and column totals, ready to paste straight into the report and look professional.
+      It's like an exam paper: you're not done until you've written the total score at the bottom.
+    animation: "show_margins"
+    code: |
+      table_m = pd.crosstab(
+          df["shower_use"],
+          df["infected"],
+          margins=True,
+          margins_name="Total",
+      )
+      print(table_m)
+    output: |
+      infected      0    1  Total
+      shower_use
+      0            72   38    110
+      1            87   83    170
+      Total       159  121    280
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Quick recap! A 2x2 table is just four cells, a, b, c, and d.
+      In pd.crosstab the first argument is the rows and the second is the columns, so remember the order.
+      Use iloc to pull the four numbers out for your calculations.
+      Add margins equals True to get the totals.
+      This little table is the foundation for risk ratio, odds ratio, and the chi-square test coming up, so master it well.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: school norovirus cluster
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at a school norovirus cluster case.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      An elementary school had a gastroenteritis cluster, and investigators suspected the school lunch was the culprit.
+      Of the two hundred students, one hundred fifty ate the school lunch and fifty did not.
+      Among the lunch eaters, ninety came down with vomiting and diarrhea; among the non-eaters, only ten did.
+      Run crosstab and you get a equals ninety, b equals sixty, c equals ten, d equals forty.
+      The lunch group's attack rate is sixty percent, the non-lunch group only twenty percent.
+      That's a huge gap, so the school lunch is a prime suspect! Next we compute the risk ratio to quantify this association.
+    animation: "show_extra_example"
+    code: |
+      noro = pd.crosstab(
+          lunch_df["ate_lunch"],
+          lunch_df["sick"],
+          margins=True,
+      )
+      print(noro)
+    output: |
+      sick         0    1  All
+      ate_lunch
+      0           40   10   50
+      1           60   90  150
+      All        100  100  200
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Next up are the three traps beginners fall into most! Everyone has cried over one of these in the field, so let's prevent rather than cure.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: swapping the rows and columns in crosstab.
+      Many people instinctively put the outcome first and the exposure second, and the whole table ends up transposed.
+      Remember the mantra: "exposure first, outcome second." The first argument is the exposure, the second is the outcome.
+      It's like a doctor's intake: first "what were you exposed to," then "where does it hurt."
+    animation: "show_blindspot_row_col"
+    error_code: 'pd.crosstab(df["infected"], df["shower_use"])'
+    correct_code: 'pd.crosstab(df["shower_use"], df["infected"])'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: forgetting to add margins equals True.
+      You painstakingly build your table, and the boss says: "Where are the totals?"
+      So you add a total row by hand, and you get the arithmetic wrong.
+      Add margins equals True from the start and you're set for good.
+      Don't wait for the boss to ask; a good investigator anticipates.
+    animation: "show_blindspot_margins"
+    error_code: "pd.crosstab(exposure, outcome)"
+    correct_code: "pd.crosstab(exposure, outcome, margins=True)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: mixing up the positions of a, b, c, and d.
+      In some textbooks, a in the top-left is "exposed and sick," but others arrange it differently.
+      If you use the wrong position, your risk ratio comes out as the reciprocal, completely backwards.
+      The safest approach is to print the table first and confirm with your eyes which cell is which group,
+      then use iloc to grab the values. Don't rely on memory; verify with your eyes.
+    animation: "show_blindspot_abcd"
+    error_code: "a = table.iloc[0, 0]"
+    correct_code: "print(table); a = table.iloc[1, 1]"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      Congratulations, you've learned the 2x2 contingency table! This is the bedrock of epidemiological calculation.
+      With these four numbers you can compute attack rates, risk ratios, and odds ratios;
+      almost every descriptive-epidemiology measure starts right here.
+      Next episode we officially enter the world of the risk ratio, RR, and I'll teach you to measure exposure risk with a single number.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

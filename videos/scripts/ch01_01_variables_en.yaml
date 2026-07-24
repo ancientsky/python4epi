@@ -1,0 +1,156 @@
+meta:
+  chapter: "01"
+  concept: "variables"
+  title: "Numeric Variables: Store Your Numbers First"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch01_01_variables"
+  scene_class: "Ch01VariablesScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: numeric variables
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, and welcome back to the Python for Epidemiology classroom!
+      Today's very first, super-important concept is the variable.
+      Picture a variable as a labeled box: we drop a number inside,
+      and we can pull it back out whenever we need it.
+      It's just like the labels on your fridge - one says milk,
+      and you instantly know what's inside.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "scenario"
+    narration: >
+      Here's our story.
+      A Legionnaires' disease cluster has broken out at the Pine and Cypress nursing home.
+      Of its 280 residents, 121 are infected and, sadly, 19 have died.
+      Your supervisor wants you to work out a few key numbers.
+      So first, let's store these numbers in Python variables.
+    animation: "show_scenario"
+    pause_after: 0.5
+
+  - id: "assign_total"
+    narration: >
+      First, we write total_residents equals 280.
+      Careful here - this equals sign is not the equals of math.
+      It means take the value on the right and assign it to the box on the left.
+      So 280 gets placed into the box named total_residents.
+    animation: "show_first_variable"
+    code: "total_residents = 280       # 住民總數"
+    pause_after: 0.3
+
+  - id: "assign_rest"
+    narration: >
+      Next we put the number infected, the confirmed cases, and the deaths,
+      each into its own box.
+      Notice that every variable name is in English, joined with underscores.
+      That's Python's naming convention, and it's called snake_case.
+    animation: "show_remaining_variables"
+    code: |
+      infected = 121              # 感染人數
+      confirmed = 89              # 確診個案
+      probable = 25               # 可能個案
+      hospitalized = 68           # 住院人數
+      icu = 23                    # ICU 人數
+      deaths = 19                 # 死亡人數
+    pause_after: 0.3
+
+  - id: "print_demo"
+    narration: >
+      Want to see what's inside a box? Just use print.
+      Look - 280 obediently prints out.
+      It's really that simple, right?
+    animation: "show_print"
+    code: "print(total_residents)"
+    output: "280"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Congratulations! You've just learned the most basic move in Python:
+      using the equals sign to store a value in a variable.
+      Remember: equals means assign, not equals!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: COVID-19 campus cluster
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Now let's switch scenes and practice.
+      Watch how the same move comes in handy in a completely different outbreak investigation.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Say a university has a COVID-19 campus cluster.
+      Out of its 1,200 students, 86 test positive and 210 are traced into home isolation.
+      Same approach: store the numbers in variables.
+      students equals 1200, covid_cases equals 86, quarantined equals 210.
+      Same trick, new scene, still works beautifully!
+    animation: "show_extra_example"
+    code: |
+      students = 1200        # 全校學生數
+      covid_cases = 86       # 確診人數
+      quarantined = 210      # 居家隔離人數
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Finally, let's look at the three pitfalls beginners fall into most.
+      These mistakes are super common, but once you know why they happen, you'll never make them again.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: wrapping a number in quotes.
+      cases equals quote 86 quote - it looks like a number, but it's actually text.
+      The box now holds a slip of paper that reads 86, not a real number.
+      Try to add with it? Boom, Python blows up.
+      The right way: cases equals 86, with no quotes.
+    animation: "show_blindspot_string_vs_int"
+    error_code: 'cases = "86"  # 這是文字！'
+    correct_code: "cases = 86    # 這才是數字"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: getting the capitalization wrong.
+      Python is case-sensitive.
+      Capital-C Cases and lowercase-c cases are two completely different boxes in Python's eyes.
+      So be careful - keep your variable names all lowercase and you'll be fine.
+    animation: "show_blindspot_case_sensitive"
+    error_code: "Cases = 86   # 大寫 C"
+    correct_code: "cases = 86   # 小寫 c"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: writing the assignment backwards.
+      280 equals total_residents?
+      Python says: I can't stuff something into the number 280!
+      Remember, the left of the equals is always the variable name, and the value goes on the right.
+      The box on the left, and what goes into it on the right.
+    animation: "show_blindspot_reversed_assignment"
+    error_code: "280 = total_residents  # 反了！"
+    correct_code: "total_residents = 280  # 對了"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Alright, congratulations on finishing your very first concept!
+      In the next part, we'll use these variables to compute the attack rate and case fatality rate.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

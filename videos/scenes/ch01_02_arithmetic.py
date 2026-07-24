@@ -44,6 +44,49 @@ class Ch01ArithmeticScene(EpiBaseScene):
 
     total_steps: int = 12
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "計算指標",
+            "title_sub": "用 Python 算出侵襲率與致死率",
+            "attack_rate_formula": "侵襲率 = 感染人數 ÷ 總住民人數",
+            "cfr_formula": "致死率 = 死亡人數 ÷ 感染人數",
+            "hosp_rate_formula": "住院率 = 住院人數 ÷ 感染人數",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. / 是浮點除法，// 是整數除法（取商）",
+            "summary_p2": "2. f-string：f'文字 {變數:.2%}' 格式化輸出",
+            "summary_p3": "3. :.2% 自動乘以 100、加 % 號、保留兩位小數",
+            "summary_p4": "4. 侵襲率、致死率、住院率都只是「除法」！",
+            "extra_banner_title": "額外範例：登革熱盛行率調查",
+            "blindspot_banner_title": "初學者常見地雷 3 選 1",
+            "format_spec_heading": ":.2% 格式說明",
+            "format_spec_p1": ": 開始格式指定符",
+            "format_spec_p2": ".2 保留兩位小數",
+            "format_spec_p3": "% 自動 × 100 並加上 % 號",
+            "outro_heading": "下一集：用字典整理多欄位資料",
+            "outro_sub": "把多個變數打包成一張「資料卡」！",
+        },
+        "en": {
+            "title_main": "Computing Metrics",
+            "title_sub": "Compute attack rate and CFR in Python",
+            "attack_rate_formula": "Attack rate = infected ÷ total residents",
+            "cfr_formula": "Case fatality rate = deaths ÷ infected",
+            "hosp_rate_formula": "Hospitalization rate = hospitalized ÷ infected",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. / is float division, // is integer division (quotient)",
+            "summary_p2": "2. f-string: f'text {var:.2%}' formats the output",
+            "summary_p3": "3. :.2% auto-multiplies by 100, adds %, keeps two decimals",
+            "summary_p4": "4. Attack rate, CFR, hospitalization rate are all just 'division'!",
+            "extra_banner_title": "Extra example: dengue prevalence survey",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "format_spec_heading": "The :.2% format, explained",
+            "format_spec_p1": ": starts the format specifier",
+            "format_spec_p2": ".2 keeps two decimal places",
+            "format_spec_p3": "% auto ×100 and appends the % sign",
+            "outro_heading": "Next up: organize multi-field data with dictionaries",
+            "outro_sub": "Pack several variables into one 'data card'!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -53,7 +96,7 @@ class Ch01ArithmeticScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the arithmetic lesson."""
-        self.show_title_card("計算指標", "用 Python 算出侵襲率與致死率", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_attack_rate(self, duration: float = 7.0, **kwargs) -> None:
         """Show attack rate (侵襲率) calculation with code and output."""
@@ -72,7 +115,7 @@ class Ch01ArithmeticScene(EpiBaseScene):
         output_text = "侵襲率: 43.21%"
 
         formula = Text(
-            "侵襲率 = 感染人數 ÷ 總住民人數",
+            self.t("attack_rate_formula"),
             font=FONT_CJK,
             font_size=24,
             color=ACCENT_ORANGE,
@@ -102,7 +145,7 @@ class Ch01ArithmeticScene(EpiBaseScene):
         output_text = "致死率: 15.70%"
 
         formula = Text(
-            "致死率 = 死亡人數 ÷ 感染人數",
+            self.t("cfr_formula"),
             font=FONT_CJK,
             font_size=24,
             color=ACCENT_ORANGE,
@@ -132,7 +175,7 @@ class Ch01ArithmeticScene(EpiBaseScene):
         output_text = "住院率: 35.54%"
 
         formula = Text(
-            "住院率 = 住院人數 ÷ 感染人數",
+            self.t("hosp_rate_formula"),
             font=FONT_CJK,
             font_size=24,
             color=ACCENT_ORANGE,
@@ -150,17 +193,17 @@ class Ch01ArithmeticScene(EpiBaseScene):
         self.show_step_indicator(4, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. / 是浮點除法，// 是整數除法（取商）", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. f-string：f'文字 {變數:.2%}' 格式化輸出", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. :.2% 自動乘以 100、加 % 號、保留兩位小數", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("4. 侵襲率、致死率、住院率都只是「除法」！", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.42).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -174,7 +217,7 @@ class Ch01ArithmeticScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：登革熱盛行率調查")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 7.0, **kwargs) -> None:
@@ -208,7 +251,7 @@ class Ch01ArithmeticScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選 1")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_division(self, duration: float = 5.0, **kwargs) -> None:
@@ -242,16 +285,16 @@ class Ch01ArithmeticScene(EpiBaseScene):
         self.show_step_indicator(8, self.total_steps)
 
         heading = Text(
-            ":.2% 格式說明",
+            self.t("format_spec_heading"),
             font=FONT_CJK,
             font_size=30,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         parts = VGroup(
-            Text(": 開始格式指定符", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text(".2 保留兩位小數", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("% 自動 × 100 並加上 % 號", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("format_spec_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("format_spec_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("format_spec_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.4).next_to(heading, DOWN, buff=0.5)
 
         example = Text(
@@ -276,14 +319,14 @@ class Ch01ArithmeticScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：用字典整理多欄位資料",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "把多個變數打包成一張「資料卡」！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

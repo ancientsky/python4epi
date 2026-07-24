@@ -37,6 +37,63 @@ class Ch03ForestPlotScene(EpiBaseScene):
 
     total_steps: int = 18
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "Forest Plot 森林圖",
+            "title_sub": "一張圖比較所有風險比",
+            "anatomy_heading": "Forest Plot 的三大元素",
+            "anatomy_p1": "• 點估計（point estimate）= RR 的位置",
+            "anatomy_p2": "• 信賴區間（CI）= 水平誤差線的長度",
+            "anatomy_p3": "• 虛線 RR=1（null line）= 無效果基準",
+            "interpret_heading": "如何判讀森林圖",
+            "interpret_p1": "• CI 完全在 1 右邊 → 暴露增加風險",
+            "interpret_p2": "• CI 跨過 1 → 統計上不顯著",
+            "interpret_p3": "• 點離 1 越遠 → 效果越強",
+            "interpret_p4": "• CI 越窄 → 估計越精確",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. 迴圈計算多組 RR + 95% CI",
+            "summary_p2": "2. 結果存成 DataFrame 方便繪圖",
+            "summary_p3": "3. plt.errorbar() 畫點估計 + 誤差線",
+            "summary_p4": "4. axvline(x=1) 畫 null line",
+            "summary_p5": "5. CI 不跨 1 才算有統計顯著意義",
+            "extra_banner_title": "額外範例：COVID-19 疫苗保護力比較",
+            "extra_heading": "情境：比較不同疫苗的 RR",
+            "extra_p1": "• 三種疫苗 vs 未接種，結局 = 重症住院",
+            "extra_p2": "• 同一張森林圖一次比較三組 RR",
+            "extra_p3": "• CI 全在 1 左邊 → 疫苗有保護力",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：分層分析與干擾因子",
+            "outro_sub": "Crude RR 不夠用？我們來校正干擾！",
+        },
+        "en": {
+            "title_main": "Forest Plot",
+            "title_sub": "One chart to compare every risk ratio",
+            "anatomy_heading": "The Three Parts of a Forest Plot",
+            "anatomy_p1": "• Point estimate = where the RR sits",
+            "anatomy_p2": "• Confidence interval (CI) = length of the horizontal error bar",
+            "anatomy_p3": "• Dashed RR=1 (null line) = the no-effect baseline",
+            "interpret_heading": "How to Read a Forest Plot",
+            "interpret_p1": "• CI entirely right of 1 → exposure raises risk",
+            "interpret_p2": "• CI crosses 1 → not statistically significant",
+            "interpret_p3": "• The farther the dot from 1 → the stronger the effect",
+            "interpret_p4": "• Narrower CI → more precise estimate",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. Loop to compute multiple RRs + 95% CIs",
+            "summary_p2": "2. Store results in a DataFrame for easy plotting",
+            "summary_p3": "3. plt.errorbar() draws point estimates + error bars",
+            "summary_p4": "4. axvline(x=1) draws the null line",
+            "summary_p5": "5. Only a CI that doesn't cross 1 is statistically significant",
+            "extra_banner_title": "Extra example: comparing COVID-19 vaccine efficacy",
+            "extra_heading": "Scenario: comparing the RR of different vaccines",
+            "extra_p1": "• Three vaccines vs unvaccinated, outcome = severe hospitalization",
+            "extra_p2": "• One forest plot compares all three RRs at once",
+            "extra_p3": "• All CIs left of 1 → the vaccines are protective",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: Stratified Analysis and Confounders",
+            "outro_sub": "Crude RR not enough? Let's adjust for confounding!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -46,23 +103,23 @@ class Ch03ForestPlotScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the forest plot lesson."""
-        self.show_title_card("Forest Plot 森林圖", "一張圖比較所有風險比", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_anatomy(self, duration: float = 6.0, **kwargs) -> None:
         """Explain the anatomy of a forest plot."""
         self.show_step_indicator(1, self.total_steps)
 
         heading = Text(
-            "Forest Plot 的三大元素",
+            self.t("anatomy_heading"),
             font=FONT_MONO,
             font_size=32,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("• 點估計（point estimate）= RR 的位置", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• 信賴區間（CI）= 水平誤差線的長度", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• 虛線 RR=1（null line）= 無效果基準", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("anatomy_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("anatomy_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("anatomy_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -206,17 +263,17 @@ class Ch03ForestPlotScene(EpiBaseScene):
         self.show_step_indicator(8, self.total_steps)
 
         heading = Text(
-            "如何判讀森林圖",
+            self.t("interpret_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("• CI 完全在 1 右邊 → 暴露增加風險", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• CI 跨過 1 → 統計上不顯著", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• 點離 1 越遠 → 效果越強", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• CI 越窄 → 估計越精確", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("interpret_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("interpret_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("interpret_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("interpret_p4"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.40).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -229,18 +286,18 @@ class Ch03ForestPlotScene(EpiBaseScene):
         self.show_step_indicator(9, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. 迴圈計算多組 RR + 95% CI", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. 結果存成 DataFrame 方便繪圖", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. plt.errorbar() 畫點估計 + 誤差線", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("4. axvline(x=1) 畫 null line", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("5. CI 不跨 1 才算有統計顯著意義", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p5"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.40).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -254,7 +311,7 @@ class Ch03ForestPlotScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：COVID-19 疫苗保護力比較")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_context(self, duration: float = 6.0, **kwargs) -> None:
@@ -262,16 +319,16 @@ class Ch03ForestPlotScene(EpiBaseScene):
         self.show_step_indicator(10, self.total_steps)
 
         heading = Text(
-            "情境：比較不同疫苗的 RR",
+            self.t("extra_heading"),
             font=FONT_CJK,
             font_size=30,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("• 三種疫苗 vs 未接種，結局 = 重症住院", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("• 同一張森林圖一次比較三組 RR", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("• CI 全在 1 左邊 → 疫苗有保護力", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("extra_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("extra_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("extra_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -314,7 +371,7 @@ class Ch03ForestPlotScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_sort(self, duration: float = 5.0, **kwargs) -> None:
@@ -347,14 +404,14 @@ class Ch03ForestPlotScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：分層分析與干擾因子",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "Crude RR 不夠用？我們來校正干擾！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

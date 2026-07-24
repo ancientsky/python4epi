@@ -1,0 +1,206 @@
+meta:
+  chapter: "03"
+  concept: "risk_ratio"
+  title: "Risk Ratio: Did Exposure Actually Raise the Risk?"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch03_02_risk_ratio"
+  scene_class: "Ch03RiskRatioScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: risk ratio (RR)
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Last episode we learned the 2x2 table and got our four numbers a, b, c, and d.
+      But numbers alone aren't enough; we need a single measure that quantifies "how strong is the link between exposure and getting sick."
+      Today's star is the risk ratio, called Risk Ratio in English, RR for short.
+      Think of RR as a magnifying glass: it tells you how many times higher the exposed group's risk is compared to the unexposed group.
+      It's a simple idea, but a hugely important one, and almost every outbreak report computes it.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "formula"
+    narration: >
+      The RR formula looks like this: the exposed group's attack rate, divided by the unexposed group's attack rate.
+      The numerator is a divided by a plus b, the denominator is c divided by c plus d.
+      You're simply comparing the "probability of getting sick" between the two groups.
+      It's like comparing the food-poisoning odds of two restaurants: one division and you know which one is riskier.
+    animation: "show_formula"
+    code: |
+      risk_exposed = a / (a + b)
+      risk_unexposed = c / (c + d)
+      rr = risk_exposed / risk_unexposed
+    pause_after: 0.5
+
+  - id: "legionella_calc"
+    narration: >
+      Back to the Pine and Cypress home. Last episode we found the shower-exposed group's attack rate was about 48.8 percent,
+      and the unexposed group about 34.5 percent.
+      RR equals 0.488 divided by 0.345, roughly 1.41.
+      That means "residents who used the showers had 1.41 times the risk of Legionnaires' disease compared to those who didn't."
+      Notice I said "1.41 times," not "1.41 times more." That difference is exactly what we'll dig into in the blind-spots section.
+    animation: "show_legionella_calc"
+    code: |
+      rr = (83 / 170) / (38 / 110)
+      print(f"Risk Ratio = {rr:.2f}")
+    output: |
+      Risk Ratio = 1.41
+    pause_after: 0.5
+
+  - id: "interpretation_1"
+    narration: >
+      What does RR equals 1 mean? It means the exposed and unexposed groups have identical risk, no association.
+      It's like two people eating at different restaurants and ending up equally likely to get diarrhea; you can't blame the restaurant.
+      RR equals 1 is our baseline, also called the null value.
+    animation: "show_interpretation_null"
+    pause_after: 0.5
+
+  - id: "interpretation_2"
+    narration: >
+      What about RR greater than 1? It means the exposed group's risk is higher, so this exposure may be a risk factor.
+      RR equals 2 means "the exposed group's risk is 2 times the unexposed group's."
+      RR equals 5 is 5 times; the bigger the number, the stronger the association.
+      But remember, association is not causation! A large RR only says there's a statistical association;
+      you can't jump straight to "this exposure caused it." You still need more evidence.
+    animation: "show_interpretation_above"
+    pause_after: 0.5
+
+  - id: "interpretation_3"
+    narration: >
+      And what does RR less than 1 mean? It means the exposed group's risk is actually lower!
+      In that case the exposure is a protective factor.
+      The classic example is a vaccine: people who got the vaccine have lower infection risk than those who didn't.
+      RR equals 0.3 means the vaccinated group's risk is only thirty percent of the unvaccinated group's, a strong protective effect.
+    animation: "show_interpretation_below"
+    pause_after: 0.5
+
+  - id: "python_function"
+    narration: >
+      Let's write a complete Python function.
+      It takes the four numbers a, b, c, and d and returns the risk ratio.
+      Add a little safety check: if the denominator is zero, we can't compute it, so return None.
+      From now on, for any outbreak data, just build the 2x2 table, pull the numbers, and drop them into this function. Done.
+    animation: "show_python_function"
+    code: |
+      def calc_risk_ratio(a, b, c, d):
+          risk_exp = a / (a + b)
+          risk_unexp = c / (c + d)
+          if risk_unexp == 0:
+              return None
+          return risk_exp / risk_unexp
+
+      rr = calc_risk_ratio(83, 87, 38, 72)
+      print(f"RR = {rr:.2f}")
+    output: |
+      RR = 1.41
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Key takeaways! RR equals the exposed group's attack rate divided by the unexposed group's attack rate.
+      RR equals 1 means no association, greater than 1 is a risk factor, less than 1 is a protective factor.
+      RR is about "how many times," not "how many times more."
+      And RR only applies to cohort or cross-sectional studies; case-control studies can't use it, they use OR.
+      These are all crucial concepts; mix them up and a reviewer will send your report right back.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: measles vaccine efficacy
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's see how RR is used to evaluate vaccine efficacy.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_context"
+    narration: >
+      A kindergarten had a measles cluster involving one hundred children.
+      Sixty of them had received the MMR vaccine, and forty had not.
+      Among the vaccinated, six got infected; among the unvaccinated, twenty got infected.
+      Let's compute the RR!
+    animation: "show_extra_context"
+    pause_after: 0.5
+
+  - id: "extra_calc"
+    narration: >
+      The vaccinated group's attack rate is six divided by sixty, which is ten percent.
+      The unvaccinated group is twenty divided by forty, which is fifty percent.
+      RR equals 0.1 divided by 0.5, which equals 0.2.
+      RR less than 1! That means the vaccine is a protective factor.
+      The vaccinated group's infection risk is only twenty percent of the unvaccinated group's, an eighty percent reduction in risk.
+      That eighty percent is the concept of vaccine efficacy, VE: VE equals 1 minus RR.
+    animation: "show_extra_calc"
+    code: |
+      rr_vaccine = (6 / 60) / (20 / 40)
+      ve = 1 - rr_vaccine
+      print(f"RR = {rr_vaccine:.2f}")
+      print(f"VE = {ve:.0%}")
+    output: |
+      RR = 0.20
+      VE = 80%
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Blind-spot time! These three mistakes trip up even master's students, so pay close attention.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: RR equals 2, and many people say "the risk is 2 times more."
+      Wrong! RR equals 2 means "the risk is 2 times," which is "1 times more."
+      It's like your height being 180 centimeters and mine 90; you're 2 times my height, not 2 times more.
+      Two times more would make you 270 centimeters, which is a giant.
+      The correct phrasing is "2 times as likely," not "2 times more likely."
+    animation: "show_blindspot_times"
+    error_code: 'print("2 times MORE likely")'
+    correct_code: 'print("2 times AS likely")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: RR greater than 1 and immediately shouting "there's a causal relationship."
+      Not so fast! RR can only tell you there's a statistical association; it can't prove causation.
+      A confounder might be at work. For instance, residents who used the showers might be more mobile,
+      so they also wander into common areas more often. Is it the shower or the common area causing the infection?
+      To prove causation you need stratified analysis or a regression model to adjust for confounders.
+    animation: "show_blindspot_causation"
+    error_code: "rr = 1.41  # shower CAUSES infection"
+    correct_code: "rr = 1.41  # shower ASSOCIATED with infection"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: computing RR in a case-control study.
+      A case-control study first finds the patients and the healthy people, then asks about exposure history afterward.
+      Because you artificially decided how many patients and how many healthy people to include, the denominator isn't the natural population proportion.
+      So the attack rate you compute is fake, and the RR is fake too!
+      Case-control studies can only compute the odds ratio, OR, which we'll teach next episode.
+      Remember the mantra: "cohort studies use RR, case-control studies use OR."
+    animation: "show_blindspot_study_design"
+    error_code: "rr = risk_cases / risk_controls  # case-control"
+    correct_code: "or_val = (a * d) / (b * c)  # case-control"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      Fantastic! You can now compute the risk ratio, RR, and you know how to interpret it correctly.
+      RR greater than 1 is a risk factor, less than 1 is protective, equal to 1 is no association.
+      But if your study is a case-control design, you can't use RR; you switch to the odds ratio, OR.
+      Next episode I'll teach you exactly how to compute OR and how it differs from RR.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

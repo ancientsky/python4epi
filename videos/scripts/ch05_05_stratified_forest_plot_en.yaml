@@ -1,0 +1,174 @@
+meta:
+  chapter: "05"
+  concept: "stratified_forest_plot"
+  title: "The Forest Plot: See Every Stratum's RR at a Glance"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch05_05_forest_plot"
+  scene_class: "Ch05ForestPlotScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi! Last time we used a for loop to compute the RR and confidence interval for three strata.
+      But a wall of numbers isn't intuitive, so how do you let the boss see each stratum's difference at a glance?
+      The answer is the forest plot.
+      It plots each stratum's RR as a dot, draws the confidence interval as a horizontal error bar,
+      and adds a reference line at RR equals 1.
+      Today I'll walk you through, step by step, drawing a forest plot that speaks for itself with matplotlib.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "forest_concept"
+    narration: >
+      Why is a forest plot called a forest?
+      Because each stratum is like a tree,
+      the dot is the tree's trunk, and the error bar is its branches.
+      Draw three strata and it looks like a little forest, with the overall trend clear at a glance.
+      You'll instantly see which strata show an effect, and which have confidence intervals crossing 1 and aren't significant.
+      A picture beats a thousand words.
+    animation: "show_forest_concept"
+    pause_after: 0.5
+
+  - id: "errorbar_code"
+    narration: >
+      The core is matplotlib's errorbar function.
+      The x values are the RRs, and the y values are the strata positions.
+      The xerr parameter takes the left and right errors, and it must be a list of two lists:
+      the left error equals RR minus the CI lower bound, and the right error equals the CI upper bound minus RR.
+      fmt equals o draws round dots, and capsize gives the error bars little caps on the ends, which looks nicer.
+    animation: "show_errorbar_code"
+    code: |
+      fig, ax = plt.subplots(figsize=(8, 4))
+      y_pos = range(len(results_df))
+      ax.errorbar(
+          results_df["RR"], y_pos,
+          xerr=[results_df["RR"] - results_df["CI_lower"],
+                results_df["CI_upper"] - results_df["RR"]],
+          fmt="o", color="#2c7fb8", capsize=4,
+      )
+    pause_after: 0.5
+
+  - id: "reference_lines"
+    narration: >
+      Add two reference lines to make the plot meaningful.
+      Line one, axvline at x equals 1, the dashed line for RR equals 1.
+      Any error bar that crosses this line means its 95 percent confidence interval includes 1, so it's not significant.
+      Line two, axvline at x equals crude RR, a red dotted line marking the crude-RR baseline.
+      Now you can compare each stratum's adjusted RR against the crude RR at a single glance.
+    animation: "show_reference_lines"
+    code: |
+      ax.axvline(x=1, color="gray",
+                 linestyle="--", alpha=0.5)
+      ax.axvline(x=crude_rr, color="red",
+                 linestyle=":", alpha=0.7,
+                 label=f"Crude RR={crude_rr:.2f}")
+      ax.legend()
+    pause_after: 0.5
+
+  - id: "axis_labels"
+    narration: >
+      Finally, add the axis labels and title.
+      set yticks sets the tick positions on the y-axis,
+      set yticklabels places the stratum names: ambulatory, wheelchair, bedridden.
+      set xlabel writes Risk Ratio.
+      set title gives an informative title that names the stratifying variable.
+      tight layout auto-adjusts the margins so labels don't get cut off.
+    animation: "show_axis_labels"
+    code: |
+      ax.set_yticks(y_pos)
+      ax.set_yticklabels(results_df["stratum"])
+      ax.set_xlabel("Risk Ratio (RR)")
+      ax.set_title(
+          "分層分析森林圖：淋浴 → 感染"
+      )
+      plt.tight_layout()
+      plt.show()
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Quick recap. The five forest-plot elements.
+      First, errorbar draws the dots and error bars.
+      Second, the reference line at RR equals 1.
+      Third, the crude-RR reference line for comparison.
+      Fourth, stratum names on the y-axis.
+      Fifth, an informative title.
+      Draw this plot well and the boss grasps your analysis in five seconds.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at the most famous kind of forest plot in the real world.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_meta_analysis"
+    narration: >
+      Meta-analysis is the classic home turf of the forest plot.
+      Gather a dozen or so studies, and treat each study as a stratum.
+      Each study's RR or OR is a tree,
+      and at the bottom a diamond shows the weighted pooled total effect across all studies.
+      This kind of plot is everywhere in research on COVID vaccine effectiveness, mask efficacy, and mRNA outcomes.
+      Learn to draw one stratum and you can draw ten; the principle is exactly the same.
+    animation: "show_extra_meta"
+    code: |
+      # Meta-analysis forest plot
+      studies = ["Study A", "Study B", "Study C",
+                 "Study D", "Pooled (MH)"]
+      # Same errorbar + axvline pattern
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Coming up, the three most common mistakes when drawing a forest plot!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: forgetting the reference line at RR equals 1.
+      Viewers see a pile of error bars and can't tell which ones are significant.
+      Add a single axvline at x equals 1 and the plot instantly becomes easier to read.
+      This line is the soul of a forest plot; never leave it out.
+    animation: "show_blindspot_no_ref"
+    error_code: "ax.errorbar(rr, y, xerr=ci); plt.show()"
+    correct_code: "ax.axvline(x=1, linestyle='--'); plt.show()"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: using a linear scale on the x-axis.
+      RR equals 0.5 and RR equals 2 should be symmetric; both mean "a doubling of effect."
+      But on a linear scale, 0.5 is squeezed into a tiny slot on the left while 2 hogs a big stretch on the right.
+      Visually, that misleads people.
+      The right move is set xscale log,
+      so 0.5 and 2 sit equidistant on the log scale and the visual is fair.
+    animation: "show_blindspot_linear"
+    error_code: "ax.set_xscale('linear')"
+    correct_code: "ax.set_xscale('log')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: not labeling the sample sizes.
+      Looking at three error bars, how do you know which stratum has 200 people and which has 20?
+      A piece of information is missing.
+      Add the counts to the y-axis labels, or make the dot size proportional to the square root of n.
+      Then whoever reads the plot can judge which stratum's result is more reliable.
+    animation: "show_blindspot_no_n"
+    error_code: "ax.set_yticklabels(['Group A', 'Group B'])"
+    correct_code: "ax.set_yticklabels(['Group A (n=200)', 'Group B (n=20)'])"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations, you've drawn a forest plot that speaks for itself!
+      In the next video we'll learn Mantel-Haenszel weighting,
+      pooling the three strata's RRs into a single adjusted total effect.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

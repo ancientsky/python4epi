@@ -1,0 +1,193 @@
+meta:
+  chapter: "04"
+  concept: "place"
+  title: "Comparing Places: Which Wing Is the Most Dangerous?"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch04_04_place"
+  scene_class: "Ch04PlaceScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: place descriptive stats
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Today we build the third section of a SitRep: place.
+      The Pine and Cypress nursing home has several wings, and the boss wants to know: "Which wing is worst?"
+      Your gut might say look at which wing has the most cases, but that isn't fair:
+      big wings have more residents, so naturally more cases.
+      The right approach is to compute each wing's attack rate, that is, the proportion infected.
+      Today I'll show you how to compare places in one line with groupby plus agg.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "groupby_agg"
+    narration: >
+      groupby plus agg is pandas' most powerful aggregation tool.
+      We group by floor and wing in two levels, then use agg to compute three metrics at once.
+      residents equals case_id with size, counting the rows in each group, which is the resident count.
+      infected equals infected with sum, because it's zeros and ones, so summing gives the case count.
+      deaths uses a lambda that counts how many "dead" appear in the outcome column.
+      Three metrics, one line. That's the power of agg.
+    animation: "show_groupby_agg"
+    code: |
+      wing_stats = df.groupby(["floor", "wing"]).agg(
+          residents=("case_id", "size"),
+          infected=("infected", "sum"),
+          deaths=("outcome", lambda x: (x=="dead").sum()),
+      ).reset_index()
+    pause_after: 0.5
+
+  - id: "attack_rate_calc"
+    narration: >
+      With cases and residents in hand, the attack rate is just division times a hundred.
+      round with 1 keeps one decimal place.
+      The case fatality rate follows the same logic: deaths divided by cases.
+      Finally, combine floor and wing into a label, like 1A, 1B, 2A.
+      astype str is needed because floor is an integer, so you convert it to a string before adding the letter.
+    animation: "show_attack_rate_calc"
+    code: |
+      wing_stats["AR%"] = (
+          wing_stats["infected"] / wing_stats["residents"]
+          * 100
+      ).round(1)
+      wing_stats["label"] = (
+          wing_stats["floor"].astype(str) + wing_stats["wing"]
+      )
+    pause_after: 0.5
+
+  - id: "print_table"
+    narration: >
+      to_string with index equals False prints a table without that left-hand column of index numbers.
+      Now the boss sees the wing name, residents, infected, and attack rate directly, all crystal clear.
+      Remember, a SitRep must have a numeric table, not just charts.
+      Tables can be audited; charts only aid understanding.
+    animation: "show_print_table"
+    code: |
+      print(wing_stats[["label", "residents",
+                         "infected", "AR%"]]
+            .to_string(index=False))
+    output: |
+      label  residents  infected   AR%
+         1A         47        23  48.9
+         1B         46        19  41.3
+         2A         48        22  45.8
+         2B         45        16  35.6
+         3A         47        21  44.7
+         3B         47        20  42.6
+    pause_after: 0.5
+
+  - id: "reset_index"
+    narration: >
+      By the way, why append reset_index after agg?
+      After groupby, the grouping keys become the index, not ordinary columns.
+      Without reset_index, you can't grab values with wing_stats bracket floor.
+      reset_index "kicks the index back out" into ordinary columns.
+      It's the standard finishing move for the groupby family of operations.
+    animation: "show_reset_index"
+    code: |
+      # Without reset_index:
+      #   floor and wing are in the INDEX
+      # With reset_index:
+      #   floor and wing are regular COLUMNS
+      wing_stats = df.groupby(...).agg(...).reset_index()
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Recap! The four steps of comparing places:
+      One, groupby plus agg for two-level grouped aggregation.
+      Two, compute the attack rate and case fatality rate.
+      Three, reset_index to turn the grouping keys back into columns.
+      Four, to_string to print a tidy table.
+      Remember: always compare with attack rates, never raw case counts.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: COVID-19 county comparison
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's compare COVID-19 attack rates across counties.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid_county"
+    narration: >
+      When Taiwan's local outbreak flared in 2021, the media reported county case counts every single day.
+      Taipei City had hundreds a day, Taitung County single digits. Sounds like Taipei is far worse?
+      But if you compute the attack rate, hundreds of cases among Taipei's three million people,
+      the attack rate in the Wanhua district might actually be far higher than Taipei City overall.
+      So outbreak analysis must always look at rates, not just raw numbers.
+      This is the real-world application of the agg-plus-attack-rate we just learned.
+    animation: "show_extra_covid_county"
+    code: |
+      # COVID-19 Taiwan: county-level AR
+      county_stats = covid.groupby("county").agg(
+          pop=("pop", "first"),
+          cases=("case_id", "size"),
+      )
+      county_stats["AR_per_100k"] = (
+          county_stats["cases"] / county_stats["pop"] * 100000
+      )
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Blind-spot time! The three traps beginners fall into most when comparing places.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: forgetting reset_index.
+      You compute the attack rate straight after groupby, then find you can't grab values by column name.
+      pandas throws a KeyError and leaves you scratching your head.
+      Build the habit: always append reset_index after groupby plus agg.
+    animation: "show_blindspot_reset"
+    error_code: "stats = df.groupby('wing').agg(...)"
+    correct_code: "stats = df.groupby('wing').agg(...).reset_index()"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: mixing up size and count inside agg.
+      size counts the rows in each group, NaN or not.
+      count only counts the non-NaN values.
+      If your data has missing values, count undercounts.
+      Use size to count residents, and count for columns where you want filled values.
+    animation: "show_blindspot_size_count"
+    error_code: 'residents=("case_id", "count")  # skips NaN'
+    correct_code: 'residents=("case_id", "size")  # counts all rows'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: comparing case counts directly.
+      We said this at the very start, but beginners still slip.
+      30 cases in Wing A and 10 in Wing B does not mean Wing A is worse.
+      You must divide by the denominator and compute the attack rate for a fair comparison.
+      A number without a denominator is like a thermometer with no scale: you can't tell high from low.
+    animation: "show_blindspot_no_rate"
+    error_code: "print(f'Wing A: {30} cases')"
+    correct_code: "print(f'Wing A: {30/200:.1%} AR')"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      Excellent! You've now learned all three descriptive sections: person, time, and place.
+      Next time we teach stratified summaries by case classification,
+      counting confirmed, probable, and non-cases separately.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

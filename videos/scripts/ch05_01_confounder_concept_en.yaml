@@ -1,0 +1,129 @@
+meta:
+  chapter: "05"
+  concept: "confounder_concept"
+  title: "The Three Criteria for a Confounder: Who Counts as an Accomplice?"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch05_01_confounder_concept"
+  scene_class: "Ch05ConfounderConceptScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi, and welcome to Chapter Five: stratified analysis.
+      Before we rush off to write code, let me ask you one thing.
+      People who wear raincoats catch colds more often, so does that mean the raincoat made you sick?
+      Of course not! It's the rainy day. Rain makes you put on a raincoat, and rain also makes you catch a chill.
+      That rainy day is the mastermind hiding behind the scenes, muddling your judgment. In epidemiology we call it a confounder.
+      In today's video, I'll walk you through, step by step, what truly counts as a confounder.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "raincoat_metaphor"
+    narration: >
+      Look at this relationship diagram. The raincoat and the cold appear linked; that's what you observe.
+      But the real causation is this: a rainy day, the common cause, drives both the raincoat and the cold at the same time.
+      If you only look at the correlation between raincoat and cold, and never control for the rain,
+      you'll reach a false conclusion: that wearing a raincoat gives you a cold.
+      In the world of epidemiology, this trap is absolutely everywhere.
+    animation: "show_raincoat"
+    pause_after: 0.5
+
+  - id: "three_criteria"
+    narration: >
+      So how do you decide whether a variable is a confounder? The epidemiology textbook gives you three conditions.
+      First, it must be associated with the exposure.
+      Second, it must be associated with the outcome.
+      Third, it must not be a mediator between the exposure and the outcome.
+      Miss any one and it doesn't qualify. Like a detective cracking a case: motive, opportunity, evidence, all three are required.
+    animation: "show_three_criteria"
+    pause_after: 0.5
+
+  - id: "legionella_example"
+    narration: >
+      Let's look at our Legionella case.
+      The exposure is shower use, and the outcome is infection.
+      A seasoned investigator suspects that functional status is a confounder, so let's test it one criterion at a time.
+      Criterion one: is functional status linked to showering? Yes, only mobile residents can walk into the shower room.
+      Criterion two: is functional status linked to infection? Yes, mobile residents roam more widely and meet more water mist.
+      Criterion three: is functional status a mediator? No, nobody became mobile because they showered first; the causal direction is wrong.
+      All three hold, so functional status really is a confounder.
+    animation: "show_legionella_case"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Quick recap. The confounder's three criteria, all required.
+      First, associated with the exposure.
+      Second, associated with the outcome.
+      Third, not a mediator.
+      In the next video we'll draw this relationship out as a DAG, so you can see the causal paths at a single glance.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at a public-health example from a night-market food stall.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_night_market"
+    narration: >
+      One summer, a night-market fried-chicken stall had a run of acute gastroenteritis, and the health station suspected the fried chicken.
+      But when you compare eating fried chicken with having diarrhea, they look strongly linked.
+      Wait! Hot weather drives two things at once: one, everyone loves the night market; and two, food spoils easily and causes diarrhea.
+      Here, temperature is the confounder.
+      The right move is to stratify by temperature, or restrict the analysis to a single temperature range,
+      so you can see whether the fried chicken itself is truly to blame.
+      Same three-criteria logic, a brand-new scene, and it fits perfectly.
+    animation: "show_extra_night_market"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Coming up, the three traps beginners step on most often!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: seeing a correlation and calling it a confounder.
+      Statistical correlation does not equal causation.
+      It could be pure coincidence, or even reverse causation.
+      Always finish checking all three conditions, especially the third, not a mediator, before you call it a confounder.
+    animation: "show_blindspot_correlation"
+    error_code: "if corr(C, E) > 0.3: confounders.append(C)"
+    correct_code: "if passes_three_criteria(C, E, D): confounders.append(C)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: treating a mediator as a confounder and controlling for it. That's called over-adjustment.
+      For example, smoking causes reduced lung function, and reduced lung function causes lung cancer.
+      If you control for lung function as if it were a confounder, you erase smoking's true causal effect.
+      A mediator calls for path analysis, not control.
+    animation: "show_blindspot_mediator"
+    error_code: "model.adjust_for(['smoking', 'lung_function'])"
+    correct_code: "model.adjust_for(['age', 'sex'])  # NOT mediators"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: drawing a conclusion after checking just one condition.
+      You see C is correlated with the exposure, and you immediately declare C a confounder.
+      Wrong! If C is not associated with the outcome, it can't create a spurious link, so it's not a confounder.
+      The three conditions work together; every one must be checked, it's not pick-one-of-three.
+    animation: "show_blindspot_one_criterion"
+    error_code: "if chi2(C, exposure).pvalue < 0.05: confound = True"
+    correct_code: "check_all_three_criteria(C, exposure, outcome)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations, you've mastered the three criteria for a confounder!
+      In the next video we'll draw a DAG, a directed acyclic graph, so you can literally sketch out every confounding path hiding in the shadows.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0
