@@ -1,0 +1,174 @@
+meta:
+  chapter: "06"
+  concept: "change_in_estimate"
+  title: "The 10% Rule: Picking Variables with Change-in-Estimate"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch06_08_change_in_estimate"
+  scene_class: "Ch06ChangeInEstimateScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      The final episode of Chapter Six!
+      We already know how to run multivariable models, but there are more than a dozen candidate variables. Put them all in and you overfit,
+      drop too many and you leave confounding behind. So which ones should you pick?
+      Today I'll introduce epidemiology's most practical variable-selection method: change-in-estimate,
+      CIE for short, paired with the 10% rule, to decide your model's variable set honestly and scientifically.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "what_is_cie"
+    narration: >
+      The CIE concept is super intuitive.
+      First run a simple model with "only the exposure factor" and record the RR.
+      Then add one candidate adjustment factor at a time and watch how much the exposure's RR moves.
+      If it moves by 10% or more, that factor is a confounder and should stay.
+      If it moves by less than 10%, it has no effect on the exposure and can be dropped.
+      This is the 10% rule.
+    animation: "show_what_is_cie"
+    pause_after: 0.5
+
+  - id: "why_10_percent"
+    narration: >
+      Why pick 10%?
+      Because it's a value accumulated from experience in the epidemiology field:
+      below 10% usually means random fluctuation, unrelated to the exposure.
+      Above 10% is worth noticing, that variable really did change the effect estimate.
+      It's not a sacred number, but it's a widely accepted threshold that's conservative and practical enough.
+    animation: "show_why_10_percent"
+    pause_after: 0.5
+
+  - id: "code_demo"
+    narration: >
+      Let's look at the code.
+      First run the minimal model: infected tilde shower_use, and get rr_min.
+      In a for loop over the candidate variables: each time add one to the formula, run Modified Poisson, and get rr_adj.
+      Compute CIE = (rr_min minus rr_adj) over rr_adj times 100, the percent change.
+      Those over 10 stay, forming the final_vars list.
+    animation: "show_code_demo"
+    code: |
+      base = smf.glm("infected ~ shower_use", data=df,
+                     family=sm.families.Poisson()).fit(cov_type="HC0")
+      rr_min = np.exp(base.params["shower_use"])
+
+      keepers = []
+      for cand in candidates:
+          m = smf.glm(f"infected ~ shower_use + {cand}", data=df,
+                      family=sm.families.Poisson()).fit(cov_type="HC0")
+          rr_adj = np.exp(m.params["shower_use"])
+          cie = abs(rr_min - rr_adj) / rr_adj * 100
+          if cie > 10:
+              keepers.append(cand)
+    pause_after: 0.5
+
+  - id: "final_model"
+    narration: >
+      Finally assemble the parsimonious model.
+      infected tilde shower_use plus join keepers, for example age plus immunosuppressed plus functional_score.
+      Compared with the big model that started with 15 variables, now only the 3 to 5 that truly matter remain.
+      The model gets cleaner, the CI gets narrower, and the interpretation gets clearer.
+      That's the value of scientific variable selection.
+    animation: "show_final_model"
+    pause_after: 0.5
+
+  - id: "aic_complement"
+    narration: >
+      The CIE 10% rule is the first choice, but you can complement it with AIC.
+      AIC stands for the Akaike Information Criterion, and smaller means a better model.
+      Use the "ordering food" metaphor: order too much and you waste (a complexity penalty), too little and you're still hungry (underfitting),
+      and AIC finds the sweet spot between the two extremes.
+      Practical workflow: CIE selects the candidates, then AIC fine-tunes whether to add a borderline variable.
+    animation: "show_aic_complement"
+    code: |
+      full_model = smf.glm("infected ~ shower_use + age + "
+                           "immunosuppressed + functional_score",
+                           ...).fit(cov_type="HC0")
+      reduced_model = smf.glm("infected ~ shower_use + age "
+                              "+ immunosuppressed",
+                              ...).fit(cov_type="HC0")
+      print(full_model.aic, reduced_model.aic)
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      CIE in three steps.
+      One: run the minimal model and record the exposure RR.
+      Two: in a for loop, add one candidate variable at a time and compute the percent change.
+      Three: keep those over 10% and assemble the parsimonious model.
+      Complemented by AIC, that's the complete variable-selection workflow.
+      Compared with just dumping in every variable, this is the more responsible approach.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: tuberculosis contact tracing!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tb"
+    narration: >
+      A tuberculosis contact-tracing study: household contact and infection risk.
+      crude RR 3.5, with 15 candidate adjustment factors.
+      Running CIE reveals that three variables, BCG vaccine, HIV, and nutritional status, have a CIE over 10%,
+      while age, sex, and socioeconomic status change by less than 5%.
+      The parsimonious model keeps only three adjustment factors, and the adjusted RR is still 2.8, a robust conclusion.
+      This is the kind of rigorous analytical workflow that can get published in the Lancet.
+    animation: "show_extra_tb"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      The three mistakes people make most often with CIE!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: using the wrong denominator.
+      The CIE formula is "the absolute change over the adjusted RR", not over the original RR.
+      Using the original RR as the denominator underestimates the change and misses true confounders.
+      Get the definition right.
+    animation: "show_blindspot_denom"
+    error_code: "cie = abs(rr_min - rr_adj) / rr_min * 100"
+    correct_code: "cie = abs(rr_min - rr_adj) / rr_adj * 100"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: selecting variables by p-value alone.
+      Some people only include a variable if its univariate p is under 0.05, and end up missing true confounders.
+      Because a confounder isn't necessarily significant with the outcome, but it does change the exposure's RR.
+      The point of CIE is "does the variable change the RR", not "is the variable itself significant".
+      Remember: CIE beats a p-value-driven approach.
+    animation: "show_blindspot_p_only"
+    error_code: "if model.pvalues[var] < 0.05: keep.append(var)"
+    correct_code: "if cie_percent(var) > 10: keep.append(var)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: candidate variables should be pre-filtered from a DAG.
+      CIE isn't a cure-all: if you throw a collider into the test, its CIE might exceed 10%,
+      but you should never control for a collider (it actually introduces bias).
+      Before running CIE, draw a DAG to clarify the paths, and only bring confounder candidates into the CIE.
+      That's the complete causal-inference workflow.
+    animation: "show_blindspot_collider"
+    error_code: "candidates = all_available_vars"
+    correct_code: "candidates = confounders_from_dag_analysis"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! You've completed the full Chapter Six on multivariable analysis!
+      From RR vs OR, the logit three-step ladder, Modified Poisson, formula syntax,
+      the univariate loop, the multivariable Table 2, the forest plot, all the way to CIE variable selection,
+      you now command the complete toolkit for epidemiological multivariable analysis.
+      In the next chapter, Chapter Seven, we pivot to "time series and forecasting",
+      and see how to use Python to predict how many cases there will be tomorrow!
+      See you in the next chapter!
+    animation: "show_outro"
+    pause_after: 1.0

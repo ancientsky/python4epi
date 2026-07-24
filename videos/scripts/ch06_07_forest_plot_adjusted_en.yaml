@@ -1,0 +1,155 @@
+meta:
+  chapter: "06"
+  concept: "forest_plot_adjusted"
+  title: "Adjusted RR Forest Plot: See the True Risk Factors at a Glance"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch06_07_forest_plot_adjusted"
+  scene_class: "Ch06ForestPlotAdjustedScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      You handed in Table 2, but your boss glances at the numbers and can't grab the point.
+      This is when you pull out a forest plot!
+      One glance reveals: which factor's dot is to the right of 1 (dangerous), which is to the left (protective),
+      which bar is thin (narrow CI, well estimated), and which bar is thick (wide CI, poorly estimated).
+      In Chapter Five we drew the crude RR version; this episode we draw the adjusted RR version,
+      the numbers that have actually been adjusted.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "what_to_plot"
+    narration: >
+      What does a forest plot show?
+      Y axis: one row per variable, arranged top to bottom.
+      X axis: the RR on a log scale, that's the key!
+      Each variable gets one black dot plus a horizontal bar: the dot is the aRR, the bar is the 95% CI.
+      Most important: draw a dashed line down the middle at RR equals 1.
+      Dot on the left = protective, on the right = dangerous, touching 1 = not significant.
+    animation: "show_what_to_plot"
+    pause_after: 0.5
+
+  - id: "why_log_x"
+    narration: >
+      Why use a log scale on the X axis?
+      Because the RR effect is multiplicative: an RR of 0.5 and an RR of 2 are "equal strength" effects,
+      just in opposite directions.
+      An ordinary linear axis squishes 0.5 up against 1 and stretches 2 far away, which looks terribly asymmetric.
+      A log scale puts 0.5 and 2 the same distance from 1.
+      Build the habit: an epi forest plot must always use xscale log.
+    animation: "show_why_log_x"
+    pause_after: 0.5
+
+  - id: "code_demo"
+    narration: >
+      The matplotlib code skeleton.
+      Step one: pull variable, aRR, and CI from table2.
+      Step two: use errorbar to draw the dots plus bars, where xerr is the CI minus the aRR.
+      Step three: use axvline to draw the dashed line at x equals 1.
+      Step four: set xscale to log.
+      Step five: title, xlabel, yticks.
+      Done.
+    animation: "show_code_demo"
+    code: |
+      fig, ax = plt.subplots(figsize=(8, 6))
+      ax.errorbar(
+          table2["aRR"], range(len(table2)),
+          xerr=[table2["aRR"] - table2["CI_lo"],
+                table2["CI_hi"] - table2["aRR"]],
+          fmt="o", color="#D97757", ecolor="#6A9BCC",
+      )
+      ax.axvline(1.0, ls="--", color="gray")
+      ax.set_xscale("log")
+      ax.set_yticks(range(len(table2)))
+      ax.set_yticklabels(table2["variable"])
+      ax.set_xlabel("Adjusted RR (log scale)")
+    pause_after: 0.5
+
+  - id: "interpret_plot"
+    narration: >
+      Three moves to read the plot.
+      One: find those touching the dashed line at 1, statistically not significant, set them aside for now.
+      Two: find those entirely to the right with bars not touching 1, significant risk factors that need intervention.
+      Three: find those entirely to the left with bars not touching 1, significant protective factors worth promoting.
+      One plot, and the priorities are crystal clear.
+    animation: "show_interpret_plot"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Five things about forest plots.
+      One: Y axis variables, X axis RR on a log scale.
+      Two: the dot is the aRR, the bar is the 95% CI.
+      Three: draw the dashed line at RR equals 1.
+      Four: brand colors, dark dots and light CI bars.
+      Five: interpretation, touching 1 not significant, far from 1 strong effect, thin bar well estimated.
+      This is epidemiology's most popular visualization.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: the meta-analysis forest plot!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_meta"
+    narration: >
+      The place you'll most often see a forest plot in epidemiology is meta-analysis, which pools multiple studies.
+      Each row is "one study", not "one variable".
+      The bottom row is the weighted pooled effect, shown as a diamond.
+      The statistical tool is different, a random-effects model, but the plot is read exactly the same way:
+      see how far the dot is from 1, how wide the CI is, and whether the diamond touches 1.
+      Generalize this, and you can read the plots of every effect size with this same trick.
+    animation: "show_extra_meta"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three common forest plot pitfalls!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: forgetting the log axis.
+      A default linear axis makes RR 0.5 and 2 look terribly asymmetric, and the interpretation gets distorted.
+      Remember: always xscale log!
+    animation: "show_blindspot_no_log"
+    error_code: "ax.set_xscale('linear')"
+    correct_code: "ax.set_xscale('log')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: plotting the intercept along with everything else.
+      The exp of the intercept is not an RR, and it isn't on the same scale as the other variables,
+      so plotting it blows up the whole x axis.
+      Before plotting, drop the intercept row first.
+    animation: "show_blindspot_intercept"
+    error_code: "plot_forest(table2)  # includes Intercept"
+    correct_code: "plot_forest(table2.loc[1:])  # drop intercept"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: not drawing the dashed line at x equals 1.
+      Without that line, readers have to compare against the x-axis ticks themselves, which is tiring.
+      One axvline, and readers distinguish "significant vs not significant" in a single second.
+      A tiny dashed line, off-the-charts thoughtfulness.
+    animation: "show_blindspot_no_vline"
+    error_code: "# no reference line drawn"
+    correct_code: "ax.axvline(1.0, ls='--', color='gray')"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      The forest plot is complete!
+      Next episode is the final one of Chapter Six: change in estimate,
+      how the 10% rule picks the right adjustment variables and avoids overloading the multivariable model.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0
