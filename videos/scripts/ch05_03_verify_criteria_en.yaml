@@ -1,0 +1,173 @@
+meta:
+  chapter: "05"
+  concept: "verify_criteria"
+  title: "Verifying the Three Criteria: pd.crosstab in Action"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch05_03_verify_criteria"
+  scene_class: "Ch05VerifyCriteriaScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi! The last two videos covered the three criteria for a confounder and the DAG.
+      Today we bring the theory down to earth as code,
+      using pandas' crosstab function to verify, step by step, whether functional status is a true confounder.
+      The textbook says "three criteria," but how do you actually check them in Python? Watch this and you'll know.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "data_prep"
+    narration: >
+      Step one: read the data.
+      Use pd.read_csv to load the Legionella dataset.
+      Create an "infected" column: anyone whose clinical severity isn't "not ill" counts as infected.
+      Use astype int to turn True and False into 1 and 0, which makes the later stats easy.
+      Clean data is what lets you do a clean analysis.
+    animation: "show_data_prep"
+    code: |
+      import pandas as pd
+      df = pd.read_csv("legionella_outbreak.csv")
+      df["infected"] = (
+          df["clinical_severity"] != "not_ill"
+      ).astype(int)
+    pause_after: 0.5
+
+  - id: "criterion_1"
+    narration: >
+      Verify criterion one: is functional status associated with shower use?
+      Use pd.crosstab with functional status as the rows and shower use as the columns.
+      Add the parameter normalize equals index,
+      which means take percentages within each row, so you see the "share of showering within each functional-status group."
+      If the shower rates across the three functional-status groups differ a lot, criterion one holds.
+    animation: "show_criterion_1"
+    code: |
+      print(pd.crosstab(
+          df["functional_status"],
+          df["shower_use"],
+          normalize="index",
+      ).round(3))
+    output: |
+      shower_use               0      1
+      functional_status
+      ambulatory           0.100  0.900
+      bedridden            0.950  0.050
+      wheelchair           0.300  0.700
+    pause_after: 0.5
+
+  - id: "criterion_2"
+    narration: >
+      Verify criterion two: is functional status associated with infection?
+      Same crosstab, but this time the columns become "infected."
+      Look at whether the infection rates across the three functional-status groups differ a lot.
+      One look tells you: mobile residents have a high infection rate, bedridden ones a low rate.
+      Functional status is clearly linked to the outcome, so criterion two holds.
+    animation: "show_criterion_2"
+    code: |
+      print(pd.crosstab(
+          df["functional_status"],
+          df["infected"],
+          normalize="index",
+      ).round(3))
+    output: |
+      infected                 0      1
+      functional_status
+      ambulatory           0.450  0.550
+      bedridden            0.850  0.150
+      wheelchair           0.620  0.380
+    pause_after: 0.5
+
+  - id: "criterion_3"
+    narration: >
+      Criterion three is a logic check, no code needed.
+      Ask yourself: is functional status a middle step on the path from showering to infection?
+      No! Nobody became mobile because they showered first; the causal direction is wrong.
+      Functional status is an innate or long-term state, while showering is a moment-to-moment behavior.
+      All three conditions hold, so functional status is confirmed as a confounder, and we can move on to stratified analysis.
+    animation: "show_criterion_3"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Quick recap. The Python workflow for verifying the three criteria.
+      Criterion one, crosstab to check functional status against the exposure.
+      Criterion two, crosstab to check functional status against the outcome.
+      Criterion three, judged by causal direction and time order, which no code can decide for you.
+      All three pass, and only then do you move to the next step, stratified analysis.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at a real verification case with the COVID-19 vaccine.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_vaccine"
+    narration: >
+      COVID-19 vaccine effectiveness studies often run into age as a confounder.
+      Verify criterion one: is age associated with vaccination rate? Yes, older people are vaccinated first.
+      Verify criterion two: is age associated with severe hospitalization? Yes, older people are at higher risk.
+      Verify criterion three: is age a mediator? No, skipping the vaccine doesn't make you older.
+      All three pass, so age must be stratified or adjusted.
+      That's exactly why the vaccine effectiveness the CDC reports is always stratified by age.
+    animation: "show_extra_vaccine"
+    code: |
+      # COVID-19 vaccine effectiveness
+      pd.crosstab(df["age_group"], df["vaccinated"],
+                  normalize="index")
+      pd.crosstab(df["age_group"], df["severe"],
+                  normalize="index")
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Coming up, the three verification mistakes beginners make most often!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: looking at raw counts instead of proportions.
+      A hundred mobile residents use the shower and only five bedridden ones do,
+      but that doesn't prove functional status is linked, because there are simply more mobile residents to begin with!
+      You must use normalize equals index to see the proportions,
+      which is what reveals the relative difference between groups.
+    animation: "show_blindspot_absolute"
+    error_code: "pd.crosstab(df['fs'], df['shower'])"
+    correct_code: "pd.crosstab(df['fs'], df['shower'], normalize='index')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: eyeballing it without running a statistical test.
+      The crosstab looks like it differs by 10 percent, but is that a real difference or just sampling error?
+      Run a chi-square test to get a p-value, and now you have objective grounds.
+      Import chi2 contingency from scipy.stats, feed it the crosstab,
+      and the second value it returns is the p-value.
+    animation: "show_blindspot_no_test"
+    error_code: "if 'looks different': confound = True"
+    correct_code: "chi2, p, *_ = chi2_contingency(ct); ok = p < 0.05"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: ignoring small-count cells.
+      If any cell has fewer than five people, the chi-square p-value becomes unstable.
+      In that case, switch to Fisher's exact test.
+      Make it a habit: when you see a small cell, change methods; don't force the calculation.
+    animation: "show_blindspot_small_cell"
+    error_code: "chi2_contingency(ct)  # cell n=2"
+    correct_code: "fisher_exact(ct)  # small cell safe"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations, you've learned to verify a confounder with pandas!
+      In the next video we step right into the heart of stratified analysis:
+      using a for loop to stratify by functional status, computing an RR and confidence interval within each stratum.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

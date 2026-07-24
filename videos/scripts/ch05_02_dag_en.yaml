@@ -1,0 +1,128 @@
+meta:
+  chapter: "05"
+  concept: "dag"
+  title: "The DAG: Drawing a Causal Map"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch05_02_dag"
+  scene_class: "Ch05DagScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi! Last time we learned the three criteria for a confounder.
+      But the world of epidemiology rarely has just one variable.
+      How do you see, all at once, who affects whom? The answer is the DAG, the Directed Acyclic Graph.
+      It sounds academic, but really it's just a causal map.
+      Today I'll walk you through drawing a DAG, step by step, so no confounder can hide.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "dag_basics"
+    narration: >
+      A DAG has three rules.
+      First, a node stands for a variable, which could be the exposure, the outcome, a confounder, or a mediator.
+      Second, an arrow shows the direction of causation, pointing from cause to effect.
+      Third, there can be no cycles, meaning you can't loop back to yourself. That's exactly what "acyclic" in the name means.
+      If A points to B, B can't point back to A, because that would break the time order of cause and effect.
+    animation: "show_dag_basics"
+    pause_after: 0.5
+
+  - id: "front_vs_back_door"
+    narration: >
+      On a DAG, there are two kinds of paths to watch closely.
+      The front-door path: it points straight from exposure to outcome, and that's the true effect you want to study.
+      The back-door path: from a common cause, arrows point separately to both the exposure and the outcome, forming a sneaky path around the back.
+      The back-door path is the source of confounding. If you don't block it, the effect size gets polluted.
+      And the way to block the back door is to control the confounder sitting on that back-door path.
+    animation: "show_front_back_door"
+    pause_after: 0.5
+
+  - id: "legionella_dag"
+    narration: >
+      Let's draw our Legionella DAG.
+      Three nodes: shower use is the exposure, infection is the outcome, and functional status is the confounder.
+      Arrow one: shower use points to infection; that's the front door.
+      Arrow two: functional status points to shower use.
+      Arrow three: functional status points to infection.
+      Functional status affects both the exposure and the outcome, forming a back-door path.
+      To get a clean shower effect, you must control functional status.
+    animation: "show_legionella_dag"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Quick recap. The three ingredients of a DAG: nodes, directed arrows, and no cycles.
+      The front door is the direct effect you want to study; the back door is the confounding path.
+      Before any stratified analysis or regression, draw a DAG first,
+      and you'll know which variables to control and which ones you absolutely must not.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at a real-world DAG example.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_smoking"
+    narration: >
+      The link between smoking and lung cancer is the most classic DAG example there is.
+      Smoking points to lung cancer; that's the front door.
+      But there's a trap: yellow fingers.
+      Smoking points to yellow fingers, and lung cancer is related to yellow fingers too.
+      Someone says, "So just control for yellow fingers, right?" Completely wrong!
+      Yellow fingers aren't a common cause; they're one of smoking's effects, which makes them a collider.
+      Controlling a collider manufactures a fake association and actually biases the result more.
+      This is exactly where a DAG earns its keep: it tells you what you can control and what you can't.
+    animation: "show_extra_smoking"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Coming up, the three traps beginners hit most often when drawing a DAG!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: getting the time order backwards.
+      Treating something that happened later as the cause violates the basic logic of causation.
+      Before drawing a DAG, always think through the time order:
+      which variable comes first, which comes second? Arrows must always point from earlier to later.
+    animation: "show_blindspot_time"
+    error_code: "dag.edge('infection', 'shower_use')"
+    correct_code: "dag.edge('shower_use', 'infection')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: forgetting to draw the variables you didn't measure.
+      In the real world, there are always important variables you never measured, like genetics or immunity.
+      Even unmeasured, you should still mark them on the DAG with a dashed line or a U,
+      to remind yourself of the potential residual confounding. Pretending it isn't there won't make it disappear.
+    animation: "show_blindspot_unmeasured"
+    error_code: "dag.nodes = ['E', 'D', 'age']"
+    correct_code: "dag.nodes = ['E', 'D', 'age', 'U_genetics']"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: treating a statistical correlation as a causal arrow.
+      A DAG's arrows represent causal direction, not correlation coefficients.
+      Two correlated variables could be causal, could share a common cause, could be coincidence.
+      Before drawing a DAG, do your domain homework: read the literature, ask the experts, and lean on biological and social common sense.
+    animation: "show_blindspot_correlation"
+    error_code: "if corr > 0.5: dag.add_edge(A, B)"
+    correct_code: "if domain_knowledge_says_cause: dag.add_edge(A, B)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations, you've got the fundamentals of the DAG!
+      In the next video we head back to code and use pd.crosstab to verify the three criteria,
+      turning the DAG on paper into evidence in the data. See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

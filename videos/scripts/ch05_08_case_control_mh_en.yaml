@@ -1,0 +1,181 @@
+meta:
+  chapter: "05"
+  concept: "case_control_mh"
+  title: "Case-Control Mantel-Haenszel: Swap the Formula, Keep the Logic"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch05_08_case_control_mh"
+  scene_class: "Ch05CaseControlMhScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi! The whole chapter so far has been cohort studies, computing RR.
+      But real investigations often use case-control studies, computing OR.
+      Good news: the entire logic of stratified analysis is identical.
+      Verify the three criteria, stratify, pool with MH, the playbook never changes.
+      The only difference is the formula gets swapped, RR becomes OR.
+      This video teaches the case-control version of Mantel-Haenszel, so you can handle both study designs.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "study_design_diff"
+    narration: >
+      First, get clear on the difference between the two study designs.
+      Cohort study: you follow from exposure to outcome, you can compute the attack rate, and you get an RR.
+      Case-control: you trace back from outcome to exposure, you can only compute the odds ratio, and you get an OR.
+      Why? Because you deliberately picked the cases and controls rather than following the whole population,
+      so the attack-rate denominator is distorted.
+      What's left to compute is the OR, the exposure odds ratio.
+    animation: "show_design_diff"
+    pause_after: 0.5
+
+  - id: "or_recap"
+    narration: >
+      The OR formula: a times d, divided by b times c.
+      In plain words: the case odds in the exposed group, divided by the case odds in the control group.
+      a and d sit on one diagonal, and b and c sit on the other.
+      It's like dividing one diagonal by the other.
+      Compute a stratum OR for each stratum, exactly the same logic as stratified RR.
+    animation: "show_or_recap"
+    code: |
+      # Crude OR
+      a = ct.loc[1, 1]  # exposed cases
+      b = ct.loc[1, 0]  # exposed controls
+      c = ct.loc[0, 1]  # unexposed cases
+      d = ct.loc[0, 0]  # unexposed controls
+      crude_or = (a * d) / (b * c)
+    pause_after: 0.5
+
+  - id: "mh_or_formula"
+    narration: >
+      The MH pooled-OR formula is even simpler than the RR version.
+      Numerator: a times d, divided by the stratum's total N, summed over all strata.
+      Denominator: b times c, divided by the stratum's total N, summed over all strata.
+      Compare that to the RR version, whose numerator is a times c plus d; the two differ.
+      But the overall structure is the same: accumulate the numerator, accumulate the denominator, and divide at the end.
+    animation: "show_mh_or_formula"
+    pause_after: 0.5
+
+  - id: "mh_or_code"
+    narration: >
+      The Python looks almost identical to the RR version.
+      Two accumulators, a for loop over every stratum,
+      the numerator accumulator adds a times d divided by n,
+      and the denominator accumulator adds b times c divided by n.
+      Divide at the end to get the adjusted OR.
+      Ten lines of code handles confounding control for a case-control study.
+    animation: "show_mh_or_code"
+    code: |
+      num_or, den_or = 0, 0
+      for _, row in results_df.iterrows():
+          a, b, c, d = row[["a","b","c","d"]]
+          n = a + b + c + d
+          num_or += (a * d) / n
+          den_or += (b * c) / n
+      or_mh = num_or / den_or
+      print(f"MH adjusted OR = {or_mh:.3f}")
+    output: |
+      MH adjusted OR = 1.820
+    pause_after: 0.5
+
+  - id: "or_vs_rr_bias"
+    narration: >
+      One last important idea: when does the OR overestimate the RR?
+      Rule of thumb: the higher the attack rate, the more severely the OR overestimates the RR.
+      Below a 10 percent attack rate, the OR roughly equals the RR and they're interchangeable.
+      At a 43 percent attack rate, like our outbreak, the OR clearly overestimates the RR.
+      Chapter Six will teach you Modified Poisson regression,
+      which computes a correct adjusted RR even in high-attack-rate settings.
+    animation: "show_or_bias"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Quick recap. Cohort studies use the MH RR, case-control studies use the MH OR.
+      The whole stratifying logic is identical, just the effect measure changes.
+      The numerator and denominator accumulation formulas differ slightly, but the pattern is the same.
+      At low attack rates the OR is about equal to the RR; at high attack rates the OR overestimates.
+      Nail these details and you can apply stratified analysis flexibly.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at a classic Taiwanese case-control investigation.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_enterovirus"
+    narration: >
+      In 1998 Taiwan had a major enterovirus 71 epidemic.
+      Epidemiologists used a case-control study to find the risk factors.
+      100 severe pediatric cases, and 300 healthy children of the same age as controls.
+      Tracing back, they asked: did they attend daycare, had they been in contact with a patient, was there a sick child at home.
+      They computed the crude OR and the adjusted OR,
+      and after adjusting for the number of siblings at home and the childcare environment,
+      they confirmed that "contact with a patient" was the strongest independent risk factor.
+      Exactly the same playbook as today's code.
+    animation: "show_extra_enterovirus"
+    code: |
+      # Taiwan EV71 1998 case-control
+      # Crude OR (contact): 8.5
+      # MH adjusted (daycare, siblings): 5.2
+      # Still significant after adjustment
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Coming up, the three most common mistakes in case-control analysis!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: forcing an RR out of a case-control study.
+      Without a whole-population follow-up count, the "attack rate" you compute is fake.
+      You picked 100 cases and 300 controls, which doesn't mean the real case-to-control ratio in the world is 1 to 3.
+      Forcing an RR gives you a completely wrong risk estimate.
+      A case-control study can only compute an OR; that's an iron rule.
+    animation: "show_blindspot_wrong_metric"
+    error_code: "rr = (a/(a+b)) / (c/(c+d))  # case-control!"
+    correct_code: "or_val = (a * d) / (b * c)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: claiming OR equals RR even when the attack rate is high.
+      Many textbooks say the OR is about equal to the RR, but there's a caveat: it only holds for rare diseases.
+      Our nursing home had a 43 percent attack rate, so the OR runs much higher than the RR.
+      When you report, note the study type,
+      so readers don't wrongly interpret the OR as if it were an RR.
+    animation: "show_blindspot_rare_disease"
+    error_code: "print(f'OR approx RR = {or_val:.2f}')"
+    correct_code: "print(f'OR = {or_val:.2f} (attack rate 43%)')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: choosing the wrong control group.
+      Controls should come from the same population that "would have entered the case pool if they got sick."
+      Grabbing patients from another hospital ward as controls, when their baseline health differs,
+      introduces selection bias.
+      No matter how brilliant your MH adjustment is, it can't rescue a selection bias.
+      Choose the control group well, and only then does the analysis mean anything.
+    animation: "show_blindspot_control_select"
+    error_code: "controls = hospital_other_ward_patients"
+    correct_code: "controls = same_source_population_healthy"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations, you've finished the entire Chapter Five journey through stratified analysis!
+      From the three criteria for a confounder, the DAG, verification, for-loop stratification, and the forest plot,
+      to MH weighting, interaction, and the case-control extension,
+      you now hold the most powerful single-variable confounding-control toolkit in the investigation field.
+      In the next chapter we move into multivariable regression, adjusting a dozen variables at once.
+      See you in the next chapter!
+    animation: "show_outro"
+    pause_after: 1.0

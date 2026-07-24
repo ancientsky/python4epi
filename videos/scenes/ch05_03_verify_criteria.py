@@ -1,4 +1,9 @@
-"""Ch05-03: Verify Confounder Criteria with pd.crosstab"""
+"""Ch05-03: Verify Confounder Criteria with pd.crosstab
+
+Bilingual scene (zh/en) driven by ``EpiBaseScene.t()``. All on-screen prose is
+read from ``TEXT`` via ``self.t(key)``; code strings stay identical across
+languages.
+"""
 
 from __future__ import annotations
 
@@ -19,6 +24,61 @@ class Ch05VerifyCriteriaScene(EpiBaseScene):
     """Tutorial video scene: verify confounder criteria with pd.crosstab."""
 
     total_steps: int = 13
+
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "驗證三要件",
+            "title_sub": "pd.crosstab 實戰",
+            "data_prep_heading": "Step 1：資料準備",
+            "criterion_1_heading": "條件 ①：C ↔ E（功能狀態 × 淋浴）",
+            "criterion_2_heading": "條件 ②：C ↔ D（功能狀態 × 感染）",
+            "criterion_3_heading": "條件 ③：不是中間變項（邏輯判斷）",
+            "criterion_3_bullets": [
+                "問：洗澡 → 改變功能狀態？",
+                "答：不會。洗澡不會讓人變能走動。",
+                "→ 因果方向不對，不是中間變項",
+                "三條都通過，確認是干擾因子。",
+            ],
+            "summary_heading": "重點整理：驗證流程",
+            "summary_bullets": [
+                "① crosstab(C, E, normalize='index')",
+                "② crosstab(C, D, normalize='index')",
+                "③ 邏輯判斷：C 是不是中間變項？",
+                "三條通過 → 進入分層分析",
+            ],
+            "extra_banner_title": "額外範例：COVID-19 疫苗 × 年齡",
+            "vaccine_heading": "疫苗效力的年齡干擾",
+            "blindspot_banner_title": "驗證時的常見地雷 3 選",
+            "outro_heading": "下一集：for loop 分層算 RR",
+            "outro_sub": "把干擾因子「鎖」在每一層內部。",
+        },
+        "en": {
+            "title_main": "Verifying the Three Criteria",
+            "title_sub": "pd.crosstab in action",
+            "data_prep_heading": "Step 1: Prepare the data",
+            "criterion_1_heading": "Criterion ①: C ↔ E (functional status × shower)",
+            "criterion_2_heading": "Criterion ②: C ↔ D (functional status × infection)",
+            "criterion_3_heading": "Criterion ③: not a mediator (a logic check)",
+            "criterion_3_bullets": [
+                "Ask: does showering → change functional status?",
+                "Answer: no. A shower can't make you mobile.",
+                "→ Wrong causal direction, not a mediator",
+                "All three pass → confirmed confounder.",
+            ],
+            "summary_heading": "Recap: the verification workflow",
+            "summary_bullets": [
+                "① crosstab(C, E, normalize='index')",
+                "② crosstab(C, D, normalize='index')",
+                "③ Logic check: is C a mediator?",
+                "All three pass → move to stratified analysis",
+            ],
+            "extra_banner_title": "Extra example: COVID-19 vaccine × age",
+            "vaccine_heading": "Age confounding in vaccine effectiveness",
+            "blindspot_banner_title": "3 Common Verification Traps",
+            "outro_heading": "Next up: stratified RR with a for loop",
+            "outro_sub": "Lock the confounder inside every stratum.",
+        },
+    }
 
     def construct(self) -> None:
         self.construct_from_segments()
@@ -47,12 +107,12 @@ class Ch05VerifyCriteriaScene(EpiBaseScene):
             self.play(FadeOut(VGroup(h, panel)), run_time=0.5)
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
-        self.show_title_card("驗證三要件", "pd.crosstab 實戰", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_data_prep(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(1, self.total_steps)
         self._code_with_heading(
-            "Step 1：資料準備",
+            self.t("data_prep_heading"),
             kwargs.get("code", "import pandas as pd\ndf = pd.read_csv('legionella_outbreak.csv')"),
             duration,
         )
@@ -60,7 +120,7 @@ class Ch05VerifyCriteriaScene(EpiBaseScene):
     def show_criterion_1(self, duration: float = 7.0, **kwargs) -> None:
         self.show_step_indicator(2, self.total_steps)
         self._code_with_heading(
-            "條件 ①：C ↔ E（功能狀態 × 淋浴）",
+            self.t("criterion_1_heading"),
             kwargs.get("code", "pd.crosstab(df['functional_status'], df['shower_use'], normalize='index')"),
             duration,
             output=kwargs.get("output"),
@@ -69,7 +129,7 @@ class Ch05VerifyCriteriaScene(EpiBaseScene):
     def show_criterion_2(self, duration: float = 7.0, **kwargs) -> None:
         self.show_step_indicator(3, self.total_steps)
         self._code_with_heading(
-            "條件 ②：C ↔ D（功能狀態 × 感染）",
+            self.t("criterion_2_heading"),
             kwargs.get("code", "pd.crosstab(df['functional_status'], df['infected'], normalize='index')"),
             duration,
             output=kwargs.get("output"),
@@ -78,36 +138,26 @@ class Ch05VerifyCriteriaScene(EpiBaseScene):
     def show_criterion_3(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(4, self.total_steps)
         self._bullets(
-            "條件 ③：不是中間變項（邏輯判斷）",
-            [
-                "問：洗澡 → 改變功能狀態？",
-                "答：不會。洗澡不會讓人變能走動。",
-                "→ 因果方向不對，不是中間變項",
-                "三條都通過，確認是干擾因子。",
-            ],
+            self.t("criterion_3_heading"),
+            self.t("criterion_3_bullets"),
             duration,
         )
 
     def show_main_summary(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(5, self.total_steps)
         self._bullets(
-            "重點整理：驗證流程",
-            [
-                "① crosstab(C, E, normalize='index')",
-                "② crosstab(C, D, normalize='index')",
-                "③ 邏輯判斷：C 是不是中間變項？",
-                "三條通過 → 進入分層分析",
-            ],
+            self.t("summary_heading"),
+            self.t("summary_bullets"),
             duration,
         )
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
-        self.show_section_banner(ExtraExampleBanner("額外範例：COVID-19 疫苗 × 年齡"), duration=duration)
+        self.show_section_banner(ExtraExampleBanner(self.t("extra_banner_title")), duration=duration)
 
     def show_extra_vaccine(self, duration: float = 7.0, **kwargs) -> None:
         self.show_step_indicator(6, self.total_steps)
         self._code_with_heading(
-            "疫苗效力的年齡干擾",
+            self.t("vaccine_heading"),
             kwargs.get(
                 "code",
                 "pd.crosstab(df['age_group'], df['vaccinated'], normalize='index')\n"
@@ -117,7 +167,7 @@ class Ch05VerifyCriteriaScene(EpiBaseScene):
         )
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
-        self.show_section_banner(BlindSpotBanner("驗證時的常見地雷 3 選"), duration=duration)
+        self.show_section_banner(BlindSpotBanner(self.t("blindspot_banner_title")), duration=duration)
 
     def show_blindspot_absolute(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(7, self.total_steps)
@@ -148,8 +198,8 @@ class Ch05VerifyCriteriaScene(EpiBaseScene):
 
     def show_outro(self, duration: float = 3.0, **kwargs) -> None:
         self.show_step_indicator(self.total_steps, self.total_steps)
-        h = Text("下一集：for loop 分層算 RR", font=FONT_CJK, font_size=28, color=ACCENT_ORANGE).move_to(ORIGIN + UP * 0.5)
-        s = Text("把干擾因子「鎖」在每一層內部。", font=FONT_CJK, font_size=22, color=TEXT_SECONDARY).next_to(h, DOWN, buff=0.4)
+        h = Text(self.t("outro_heading"), font=FONT_CJK, font_size=28, color=ACCENT_ORANGE).move_to(ORIGIN + UP * 0.5)
+        s = Text(self.t("outro_sub"), font=FONT_CJK, font_size=22, color=TEXT_SECONDARY).next_to(h, DOWN, buff=0.4)
         self.play(FadeIn(h), run_time=0.6)
         self.play(FadeIn(s), run_time=0.5)
         self.wait(max(0.1, duration - 1.1))

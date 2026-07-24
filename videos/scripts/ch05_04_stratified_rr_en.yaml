@@ -1,0 +1,197 @@
+meta:
+  chapter: "05"
+  concept: "stratified_rr"
+  title: "Stratified Analysis: One RR per Stratum"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch05_04_stratified_rr"
+  scene_class: "Ch05StratifiedRrScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi! In the last few videos we verified that functional status is a true confounder.
+      Today we step into the core hands-on work of stratified analysis:
+      splitting the 280 residents into three strata by functional status, and computing an RR within each one.
+      This technique is called stratified analysis,
+      and its whole spirit is to "lock" the confounder inside each stratum,
+      so the exposure effect within a stratum isn't confounded. Let me walk you through writing the for loop.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "crude_rr_recap"
+    narration: >
+      First, compute a "crude RR" as the baseline.
+      Use crosstab to build a 2-by-2 table and pull out the four cells a, b, c, d.
+      a is showered and infected, b is showered and not infected,
+      c is no shower and infected, d is no shower and not infected.
+      The crude RR equals the exposed group's infection rate divided by the unexposed group's infection rate.
+      This value hasn't controlled for any confounding yet, and in a moment we'll compare it against the adjusted RR.
+    animation: "show_crude_rr"
+    code: |
+      ct = pd.crosstab(df["shower_use"], df["infected"])
+      a, b = int(ct.loc[1,1]), int(ct.loc[1,0])
+      c, d = int(ct.loc[0,1]), int(ct.loc[0,0])
+      crude_rr = (a/(a+b)) / (c/(c+d))
+      print(f"Crude RR = {crude_rr:.3f}")
+    output: |
+      Crude RR = 2.450
+    pause_after: 0.5
+
+  - id: "for_loop_template"
+    narration: >
+      The skeleton of stratified analysis is a for loop.
+      First, grab every unique value of functional status: ambulatory, wheelchair, bedridden.
+      Create an empty list to collect the results from each stratum.
+      Inside the loop, for each stratum, filter the data, build the 2-by-2 table, compute the RR, and compute the confidence interval.
+      Finally, assemble all the stratum results into a DataFrame.
+      This is the classic split-apply-combine pattern.
+    animation: "show_loop_template"
+    code: |
+      strata = sorted(df["functional_status"].unique())
+      results = []
+      for s in strata:
+          sub = df[df["functional_status"] == s]
+          # ... calculate RR for this stratum ...
+          results.append({...})
+      results_df = pd.DataFrame(results)
+    pause_after: 0.5
+
+  - id: "stratum_rr_calc"
+    narration: >
+      Inside each stratum, again use crosstab to build the 2-by-2 table.
+      First use an if to check the shape: if a stratum has only a single exposure group, the 2-by-2 table collapses to 2-by-1,
+      so continue straight past that stratum to avoid a KeyError.
+      Then pull out a_s, b_s, c_s, d_s and compute the stratum RR.
+      Strata with few people give unstable results, and that's exactly why we compute confidence intervals.
+    animation: "show_stratum_calc"
+    code: |
+      ct_s = pd.crosstab(sub["shower_use"], sub["infected"])
+      if ct_s.shape != (2, 2):
+          continue
+      a_s = int(ct_s.loc[1,1])
+      b_s = int(ct_s.loc[1,0])
+      c_s = int(ct_s.loc[0,1])
+      d_s = int(ct_s.loc[0,0])
+      rr_s = (a_s/(a_s+b_s)) / (c_s/(c_s+d_s))
+    pause_after: 0.5
+
+  - id: "log_ci"
+    narration: >
+      You can't build an RR confidence interval by just adding and subtracting a standard error, because the RR's distribution is asymmetric.
+      The right approach is to take the log of the RR to make it normal, compute the interval in log space,
+      then convert back with exp.
+      The standard-error formula is the square root of a sum of four reciprocals: one over a, minus one over a plus b,
+      plus one over c, minus one over c plus d.
+      Don't memorize the formula, just copy-paste it.
+    animation: "show_log_ci"
+    code: |
+      import numpy as np
+      ln_rr = np.log(rr_s)
+      se = np.sqrt(1/a_s - 1/(a_s+b_s)
+                 + 1/c_s - 1/(c_s+d_s))
+      ci_lo = np.exp(ln_rr - 1.96 * se)
+      ci_hi = np.exp(ln_rr + 1.96 * se)
+    pause_after: 0.5
+
+  - id: "results_output"
+    narration: >
+      Print the three strata side by side to compare.
+      Say ambulatory's RR is 1.5, wheelchair's is 1.3, and bedridden's is 1.2.
+      Against the crude RR of 2.45, you'll notice:
+      every stratum's RR is smaller than the crude RR.
+      That means the crude RR really was inflated by confounding,
+      and once you control for functional status, showering's true effect isn't nearly as large.
+    animation: "show_results_output"
+    output: |
+      ambulatory   RR=1.50 (CI 1.10-2.04) n=120
+      wheelchair   RR=1.30 (CI 0.85-1.98) n=80
+      bedridden    RR=1.20 (CI 0.60-2.40) n=80
+      Crude RR = 2.45
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Quick recap. Stratified analysis in four steps.
+      First, compute the crude RR as the baseline.
+      Second, stratify by the confounder using a for loop.
+      Third, compute each stratum's RR and its log-based confidence interval.
+      Fourth, compare each stratum's RR against the crude RR to see whether it was inflated.
+      In the next video we'll visualize all these numbers as a forest plot.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at a real-world large-scale stratified analysis.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_h1n1"
+    narration: >
+      During the H1N1 novel-influenza outbreak, researchers wanted to know the vaccine's effectiveness.
+      But the protection differs by hospital level,
+      because medical centers see sicker patients while local hospitals see milder ones.
+      The researchers stratified by hospital level,
+      computing one RR each for medical centers, regional hospitals, and local hospitals.
+      They found the three strata gave similar RRs, so the results could be pooled and reported together.
+      Exactly the same for loop as ours, just with a different stratifying variable.
+    animation: "show_extra_h1n1"
+    code: |
+      # H1N1 vaccine effectiveness by hospital level
+      for level in ['MC', 'Regional', 'Local']:
+          sub = df[df["hospital_level"] == level]
+          # ... same stratified RR calculation ...
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Coming up, the three traps that most often break a for-loop stratification!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: grabbing cell values without checking the shape of the 2-by-2 table.
+      Some strata may have only an exposed group or only a control group, and crosstab hands you a 2-by-1 table.
+      When you use loc to grab the 0 or 1 index, it throws a KeyError.
+      The fix: first use an if to check the shape equals 2, 2, otherwise continue past that stratum.
+    animation: "show_blindspot_shape"
+    error_code: "a = ct_s.loc[1,1]  # KeyError if missing"
+    correct_code: "if ct_s.shape != (2,2): continue"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: stratifying too finely, leaving only a handful of people per stratum.
+      For example, splitting age into one-year bins, with only 3 to 5 people each.
+      The resulting RR confidence intervals are super wide and almost meaningless.
+      Rule of thumb: at least 10 to 20 people per stratum.
+      When needed, use pd.cut to bin age into ranges, rather than one stratum per year.
+    animation: "show_blindspot_too_fine"
+    error_code: "strata = df['age'].unique()  # 60+ levels"
+    correct_code: "strata = pd.cut(df['age'], bins=[59,69,79,89,120])"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: forcing a log when a cell is 0.
+      If a or c is 0, the log becomes negative infinity and the program crashes outright.
+      In that case, apply Haldane's correction, adding 0.5 to every numerator and denominator,
+      so the calculation can proceed without changing the overall trend.
+      Or just skip that stratum, and note it in the report.
+    animation: "show_blindspot_zero_cell"
+    error_code: "ln_rr = np.log(0/(a+b) / c/(c+d))  # -inf"
+    correct_code: "a, b, c, d = [x + 0.5 for x in (a,b,c,d)]"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations, you've learned the for loop for stratified analysis!
+      In the next video we'll use matplotlib to draw a forest plot,
+      so the three strata's RRs and confidence intervals reveal their differences at a glance.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0
