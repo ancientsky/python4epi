@@ -106,8 +106,8 @@ segments:
       長官還真的把資源優先派過去，結果只是統計雜訊。
       正確做法：先做貝氏平滑，再拿平滑後的率去畫圖或排序。
     animation: "show_blindspot_raw_small_pop"
-    error_code: "top3 = df.sort_values('raw_rate', ascending=False).head(3)"
-    correct_code: "top3 = df.sort_values('smoothed_rate', ascending=False).head(3)"
+    error_code: "top3 = df.nlargest(3, 'raw_rate')  # noisy"
+    correct_code: "top3 = df.nlargest(3, 'smooth_rate')  # stable"
     pause_after: 0.5
 
   - id: "blindspot_naive_pvalue"

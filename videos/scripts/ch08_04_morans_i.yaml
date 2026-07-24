@@ -122,7 +122,7 @@ segments:
       這叫權重敏感度，正式報告前務必換一種定義做交叉檢查。
     animation: "show_blindspot_weight_sensitivity"
     error_code: "w = Queen.from_dataframe(gdf)  # only tested once"
-    correct_code: "w2 = KNN.from_dataframe(gdf, k=5)  # check robustness too"
+    correct_code: "w2 = KNN.from_dataframe(gdf, k=5)  # recheck"
     pause_after: 0.5
 
   - id: "blindspot_3"
@@ -133,7 +133,7 @@ segments:
       正確做法是先排除離島或做貝氏平滑，再放進 Moran's I。
     animation: "show_blindspot_small_pop_raw_rate"
     error_code: "moran = Moran(raw_rate, w)"
-    correct_code: "moran = Moran(main_only_rate, w)  # exclude islands or smooth"
+    correct_code: "moran = Moran(main_rate, w)  # drop islands"
     pause_after: 0.5
 
   - id: "outro"

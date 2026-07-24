@@ -317,8 +317,8 @@ class Ch08ScanSmoothingScene(EpiBaseScene):
     def show_blindspot_raw_small_pop(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(7, self.total_steps)
         panel = self.show_error_vs_correct(
-            kwargs.get("error_code", "top3 = df.sort_values('raw_rate', ascending=False).head(3)"),
-            kwargs.get("correct_code", "top3 = df.sort_values('smoothed_rate', ascending=False).head(3)"),
+            kwargs.get("error_code", "top3 = df.nlargest(3, 'raw_rate')  # noisy"),
+            kwargs.get("correct_code", "top3 = df.nlargest(3, 'smooth_rate')  # stable"),
             duration=duration,
         )
         self.play(FadeOut(panel), run_time=0.5)

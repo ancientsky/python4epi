@@ -1,0 +1,130 @@
+meta:
+  chapter: "09"
+  concept: "survival_intuition"
+  title: "存活分析超白話：手機電池大賽"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch09_01_survival_intuition"
+  scene_class: "Ch09SurvivalIntuitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      覺得存活分析四個字看起來就想睡？別怕，這一集我們把所有嚇人的名詞，
+      全部換成你天天在用的手機電池。看完再回頭看那些 KM 曲線，
+      你會忍不住說：喔～原來就這樣！
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "battery_race"
+    narration: >
+      想像全班每人拿一支充飽電的手機來比賽：看誰的手機撐最久才沒電關機。
+      存活分析在乎的不是「會不會關機」，因為每支遲早都會關機，
+      它在乎的是「撐了多久才關機」——不只看有沒有發生，還看多久之後發生，這就是它厲害的地方。
+    animation: "show_battery_race"
+    pause_after: 0.5
+
+  - id: "time_to_event"
+    narration: >
+      手機關機，就是我們在等的那個「事件」；在醫院裡，事件可能是死亡、痊癒出院或復發。
+      從充飽電撐到關機的小時數，就是「存活時間」。
+      每個人身上放一個碼表，發病按 start、死亡按 stop，中間的秒數就是我們要的資料。
+    animation: "show_time_to_event"
+    pause_after: 0.5
+
+  - id: "censoring_intuition"
+    narration: >
+      重點來了：比賽到一半下課鐘響，你得回家，這時還有幾支手機開著。你要怎麼記？
+      寫 0 小時？不對，它明明撐很久。寫壞掉沒資料？也不對，它好得很。
+      正確是：這支至少撐了 12 小時，但實際能撐多久我沒看到——這種只看到一半的故事，就叫「設限」。
+    animation: "show_censoring_intuition"
+    pause_after: 0.5
+
+  - id: "km_staircase"
+    narration: >
+      把時間放橫軸、把「現在還開著的手機比例」放縱軸，每關機一支，線就往下踏一階，
+      所以 Kaplan-Meier 曲線長得像一座往下走的樓梯。
+      樓梯越陡代表一支接一支很快關機，存活差；樓梯越平代表很耐用、撐很久，存活好。
+    animation: "show_km_staircase"
+    pause_after: 0.5
+
+  - id: "battery_code"
+    narration: >
+      寫成程式超短：建一台 KaplanMeierFitter，餵它兩欄——撐多久、有沒有關機，
+      再叫它畫存活曲線就好。設限的手機 lifelines 會自動幫你處理，一支都不會浪費。
+      恭喜，你這樣就完成一次存活分析了！
+    animation: "show_battery_code"
+    code: |
+      from lifelines import KaplanMeierFitter
+
+      kmf = KaplanMeierFitter()
+      kmf.fit(phones["hours"], event_observed=phones["died"], label="battery")
+      kmf.plot_survival_function()
+      print(kmf.median_survival_time_)  # half the phones are off by here
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三個核心概念打包帶走。一，存活分析看的是「多久之後發生」，不只是「有沒有發生」。
+      二，設限不是關機也不是壞掉，是我們只看到一半的故事，而且它算得進去。
+      三，KM 曲線就是一座下樓梯，越陡越糟、越平越好。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：把手機換成新冠肺炎的加護病房病人！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid"
+    narration: >
+      新冠重症住進加護病房，我們想知道「插管後撐多久」。
+      死亡就是關機、順利拔管出院就是設限，撐幾天就是存活時間。
+      同一套碼表思維、同一台 KaplanMeierFitter，換個疾病照樣好用。
+    animation: "show_extra_covid"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      存活分析入門三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：把還開著的手機直接丟掉，只留關機的。
+      這等於把「撐很久的好手機」全刪掉，存活時間會被嚴重低估。
+      正確做法是把設限資料一起餵進 fit，event 填 0 就好。
+    animation: "show_blindspot_drop_censored"
+    error_code: "deaths = cases[cases.event == 1]  # dropped survivors"
+    correct_code: "kmf.fit(cases.time, event_observed=cases.event)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：把 KM 曲線的縱軸看成「死亡比例」。
+      它其實是「還存活的比例」，一開始在 100，往下掉。想要死亡比例，記得用 1 減掉它。
+    animation: "show_blindspot_yaxis"
+    error_code: "pct_dead = kmf.survival_function_  # this is survival"
+    correct_code: "pct_dead = 1 - kmf.survival_function_"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：把中位存活時間理解成「大家都在這天死光」。
+      它的正確意思是「一半的人到這天還活著」，另一半才發生事件，千萬別嚇自己。
+    animation: "show_blindspot_median"
+    error_code: "everyone_dead_by = kmf.median_survival_time_"
+    correct_code: "half_still_alive_at = kmf.median_survival_time_"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      手機電池大賽玩過一輪，存活時間、設限、下樓梯曲線你都懂了！
+      下一集我們把「設限」講清楚一點：為什麼不能把設限的人丟掉，
+      還有 event 旗標 1 和 0 到底怎麼填。我們下集見！
+    animation: "show_outro"
+    pause_after: 1.0

@@ -264,8 +264,8 @@ class Ch08ChoroplethScene(EpiBaseScene):
     def show_blindspot_no_normalize(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(9, self.total_steps)
         panel = self.show_error_vs_correct(
-            kwargs.get("error_code", "gdf.merge(df, left_on='county', right_on='county')"),
-            kwargs.get("correct_code", "gdf.merge(df, left_on='county_norm', right_on='county_norm')"),
+            kwargs.get("error_code", "gdf.merge(df, on='county')  # raw names"),
+            kwargs.get("correct_code", "gdf.merge(df, on='county_norm')  # cleaned"),
             duration=duration,
         )
         self.play(FadeOut(panel), run_time=0.5)
@@ -283,7 +283,7 @@ class Ch08ChoroplethScene(EpiBaseScene):
         self.show_step_indicator(11, self.total_steps)
         panel = self.show_error_vs_correct(
             kwargs.get("error_code", "merged = gdf.merge(df, how='left'); merged.plot()"),
-            kwargs.get("correct_code", "print(shp_set - data_set); merged = gdf.merge(df, how='left')"),
+            kwargs.get("correct_code", "print(shp_ids - data_ids)  # diff first"),
             duration=duration,
         )
         self.play(FadeOut(panel), run_time=0.5)

@@ -145,6 +145,12 @@ class CodePanel(VGroup):
             code_mob.background.set_fill(ManimColor(CODE_BG), opacity=1)
             code_mob.background.round_corners(0.15)
 
+        # Guard: a long line would otherwise render past the 14.2-unit frame and
+        # get clipped at the screen edge. Scale the whole block down to fit.
+        max_w = 12.5
+        if code_mob.width > max_w:
+            code_mob.scale_to_fit_width(max_w)
+
         if title:
             title_mob = Text(
                 title,
@@ -238,71 +244,53 @@ class ErrorVsCorrect(VGroup):
         error_code: str,
         correct_code: str,
         *,
-        width: float = 5.5,
+        width: float = 6.4,
         height: float = 2.5,
     ) -> None:
         super().__init__()
 
-        # Error side
-        err_card = RoundedRectangle(
-            corner_radius=0.15, width=width, height=height,
-            fill_color=ManimColor("#FDF0F0"), fill_opacity=1,
-            stroke_color=ManimColor(ERROR_RED), stroke_width=2,
-        )
-        err_label = Text(
-            "NG",
-            font_size=24,
-            color=ManimColor(ERROR_RED),
-            weight="BOLD",
-        ).move_to(err_card.get_top() + DOWN * 0.3)
-        err_text = Text(
-            error_code,
-            font=FONT_MONO,
-            font_size=16,
-            color=ManimColor(CODE_TEXT),
-            disable_ligatures=False,
-        )
-        err_bg = RoundedRectangle(
-            corner_radius=0.1,
-            width=max(err_text.width + 0.4, width - 0.6),
-            height=max(err_text.height + 0.3, 0.6),
-            fill_color=ManimColor(CODE_BG), fill_opacity=1,
-            stroke_width=0,
-        ).move_to(err_card.get_center() + DOWN * 0.15)
-        err_text.move_to(err_bg.get_center())
-        err_group = VGroup(err_card, err_label, err_bg, err_text)
+        # Usable inner width for the code strip (card minus horizontal padding).
+        inner_w = width - 0.5
 
-        # Correct side
-        ok_card = RoundedRectangle(
-            corner_radius=0.15, width=width, height=height,
-            fill_color=ManimColor("#F0F5EC"), fill_opacity=1,
-            stroke_color=ManimColor(ACCENT_GREEN), stroke_width=2,
-        )
-        ok_label = Text(
-            "OK",
-            font_size=24,
-            color=ManimColor(ACCENT_GREEN),
-            weight="BOLD",
-        ).move_to(ok_card.get_top() + DOWN * 0.3)
-        ok_text = Text(
-            correct_code,
-            font=FONT_MONO,
-            font_size=16,
-            color=ManimColor(CODE_TEXT),
-            disable_ligatures=False,
-        )
-        ok_bg = RoundedRectangle(
-            corner_radius=0.1,
-            width=max(ok_text.width + 0.4, width - 0.6),
-            height=max(ok_text.height + 0.3, 0.6),
-            fill_color=ManimColor(CODE_BG), fill_opacity=1,
-            stroke_width=0,
-        ).move_to(ok_card.get_center() + DOWN * 0.15)
-        ok_text.move_to(ok_bg.get_center())
-        ok_group = VGroup(ok_card, ok_label, ok_bg, ok_text)
+        def _panel(code: str, accent: str, fill: str, label_text: str) -> VGroup:
+            """Build one NG/OK card whose code always fits inside the strip."""
+            card = RoundedRectangle(
+                corner_radius=0.15, width=width, height=height,
+                fill_color=ManimColor(fill), fill_opacity=1,
+                stroke_color=ManimColor(accent), stroke_width=2,
+            )
+            label = Text(
+                label_text, font_size=24, color=ManimColor(accent), weight="BOLD",
+            ).move_to(card.get_top() + DOWN * 0.35)
+            txt = Text(
+                code,
+                font=FONT_MONO,
+                font_size=17,
+                color=ManimColor(CODE_TEXT),
+                disable_ligatures=False,
+            )
+            # Scale long lines down so the code never spills past the card edge
+            # (root cause of the clipped-at-screen-edge bug for long snippets).
+            if txt.width > inner_w:
+                txt.scale_to_fit_width(inner_w)
+            strip = RoundedRectangle(
+                corner_radius=0.1,
+                width=min(txt.width + 0.4, inner_w),
+                height=max(txt.height + 0.3, 0.6),
+                fill_color=ManimColor(CODE_BG), fill_opacity=1,
+                stroke_width=0,
+            ).move_to(card.get_center() + DOWN * 0.15)
+            txt.move_to(strip.get_center())
+            return VGroup(card, label, strip, txt)
+
+        err_group = _panel(error_code, ERROR_RED, "#FDF0F0", "NG")
+        ok_group = _panel(correct_code, ACCENT_GREEN, "#F0F5EC", "OK")
 
         self.add(err_group, ok_group)
-        self.arrange(RIGHT, buff=0.5)
+        self.arrange(RIGHT, buff=0.4)
+        # Final guard: never let the whole comparison exceed the 14.2-unit frame.
+        if self.width > 13.5:
+            self.scale_to_fit_width(13.5)
 
 
 # ---------------------------------------------------------------------------

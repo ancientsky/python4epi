@@ -140,8 +140,8 @@ segments:
       臺北市、臺中市、臺南市、臺東縣這幾塊，在地圖上會變成灰灰的空白，
       而且程式完全不會報錯，你可能上台報告才被發現。
     animation: "show_blindspot_no_normalize"
-    error_code: "gdf.merge(df, left_on='county', right_on='county')"
-    correct_code: "gdf.merge(df, left_on='county_norm', right_on='county_norm')"
+    error_code: "gdf.merge(df, on='county')  # raw names"
+    correct_code: "gdf.merge(df, on='county_norm')  # cleaned"
     pause_after: 0.5
 
   - id: "blindspot_raw_count"
@@ -162,7 +162,7 @@ segments:
       正確習慣：merge 前一定先印出兩個集合的差，眼睛看過一遍再往下做。
     animation: "show_blindspot_no_diff_check"
     error_code: "merged = gdf.merge(df, how='left'); merged.plot()"
-    correct_code: "print(shp_set - data_set); merged = gdf.merge(df, how='left')"
+    correct_code: "print(shp_ids - data_ids)  # diff first"
     pause_after: 0.5
 
   - id: "outro"

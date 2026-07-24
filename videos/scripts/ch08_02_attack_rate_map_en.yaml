@@ -127,8 +127,8 @@ segments:
       You have to build the Step 1 flag column first,
       then compute infected divided by total, which is the real attack rate.
     animation: "show_blindspot_no_flag"
-    error_code: "spatial['attack_rate'] = df['clinical_severity'].mean()"
-    correct_code: "spatial['attack_rate'] = spatial['infected'] / spatial['total'] * 100"
+    error_code: "ar = grp['clinical_severity'].mean()  # wrong"
+    correct_code: "ar = grp['infected'] / grp['total'] * 100"
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -137,8 +137,8 @@ segments:
       The grouping keys are still stuck in the index, so the later pivot either errors out or produces something bizarre.
       Make it a habit: always follow groupby and agg with a reset_index.
     animation: "show_blindspot_no_reset_index"
-    error_code: "spatial = df.groupby(['floor','wing']).agg(n=('case_id','count'))"
-    correct_code: "spatial = df.groupby(['floor','wing']).agg(n=('case_id','count')).reset_index()"
+    error_code: "g = grp.size()  # floor/wing stay as index"
+    correct_code: "g = grp.size().reset_index()  # cols back"
     pause_after: 0.5
 
   - id: "blindspot_3"

@@ -127,8 +127,8 @@ segments:
       一定要先做 Step 1 的旗標欄位，
       算出 infected 除以 total，才是真正的侵襲率。
     animation: "show_blindspot_no_flag"
-    error_code: "spatial['attack_rate'] = df['clinical_severity'].mean()"
-    correct_code: "spatial['attack_rate'] = spatial['infected'] / spatial['total'] * 100"
+    error_code: "ar = grp['clinical_severity'].mean()  # wrong"
+    correct_code: "ar = grp['infected'] / grp['total'] * 100"
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -137,8 +137,8 @@ segments:
       分組鍵還卡在索引裡，後面的 pivot 會整個報錯或跑出奇怪結果。
       養成習慣，groupby agg 後面永遠接一個 reset_index。
     animation: "show_blindspot_no_reset_index"
-    error_code: "spatial = df.groupby(['floor','wing']).agg(n=('case_id','count'))"
-    correct_code: "spatial = df.groupby(['floor','wing']).agg(n=('case_id','count')).reset_index()"
+    error_code: "g = grp.size()  # floor/wing stay as index"
+    correct_code: "g = grp.size().reset_index()  # cols back"
     pause_after: 0.5
 
   - id: "blindspot_3"
