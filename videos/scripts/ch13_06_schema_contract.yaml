@@ -1,0 +1,130 @@
+meta:
+  chapter: "13"
+  concept: "schema_contract"
+  title: "schema 契約：搶在資料改動之前擋下來"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch13_06_schema_contract"
+  scene_class: "Ch13SchemaScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      環境鎖好、摘要確定、種子釘死，可重現只差最後一道防線。
+      如果哪天衛生局系統改了欄位名稱、嚴重度多了新分類、或 age 混進負數，
+      後面所有分析都會悄悄算錯，卻連個錯誤都不報。這一集師傅教你寫一份 schema 契約，把它們攔在門口。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "the_risk"
+    narration: >
+      先講風險。可重現不只是「這次能重跑」，還要保證「以後跑起來還是同一份資料結構」。
+      最可怕的不是報錯，而是不報錯——欄位被改名、值域跑掉，分析照樣跑完，只是每個數字都悄悄錯了。
+      這種錯最難抓，因為它不會舉手說「我壞了」。
+    animation: "show_the_risk"
+    pause_after: 0.5
+
+  - id: "schema_code"
+    narration: >
+      看程式碼。我們重新讀一次原始資料，不依賴前面做過的任何轉換。
+      然後用 assert 明確寫下「我對這份資料的三個假設」：必要欄位要在、類別值要在已知範圍內、age 要落在 0 到 120。
+      任何一項不成立，就立刻中斷，而不是讓錯誤資料悄悄流進摘要。
+    animation: "show_schema_code"
+    code: |
+      REQUIRED = {"case_id", "age", "clinical_severity"}
+      VALID_SEV = {"not_ill", "mild", "moderate", "severe"}
+
+      raw = pd.read_csv(path)
+      assert not (REQUIRED - set(raw.columns))
+      assert set(raw["clinical_severity"]) <= VALID_SEV
+      assert raw["age"].between(0, 120).all()
+    pause_after: 0.5
+
+  - id: "schema_output"
+    narration: >
+      資料正常時，三道 assert 靜靜通過，印出 schema 通過，分析繼續往下跑。
+      但只要有人把欄位改名，或塞進一個未知的嚴重度分類，assert 就會立刻拋出 AssertionError，
+      在錯誤汙染結果之前先把整個流程叫停。這就是契約的價值：提早失敗，好過默默算錯。
+    animation: "show_schema_output"
+    pause_after: 0.5
+
+  - id: "contract_gate"
+    narration: >
+      把這個機制想成一道閘門就懂了。
+      原始資料要進來，得先通過 schema 契約這道關卡。
+      欄位、型別、值域都對，綠燈放行，資料才進得了 Step 2 的摘要；只要有一項不對，紅燈攔下，直接 AssertionError 中斷。
+    animation: "show_contract_gate"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      主線三重點。第一，最危險的資料錯誤是不報錯的錯誤，schema 契約專門抓這種。
+      第二，用 assert 寫下欄位、型別、值域三種假設，先假設資料會壞，再寫斷言確認。
+      第三，一定要對「原始資料」驗證，趕在轉換之前攔下來。正式專案可以用 pandera 把它自動化。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：守住一條被改名欄位的監測管線！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_surveillance"
+    narration: >
+      換個場景：你有一條每週自動跑的傳染病監測管線，吃的是上游系統匯出的 CSV。
+      某天工程師手滑把 county 欄位改名成 city，你的管線照跑不誤，但分區統計全部變空。
+      加一條 schema 契約，用集合差集檢查必要欄位，欄位一被改名就立刻報錯，救你一命。
+    animation: "show_extra_surveillance"
+    code: |
+      EXPECTED = {"county", "week", "cases"}
+      missing = EXPECTED - set(df.columns)
+      assert not missing, f"renamed? missing {missing}"
+      # e.g. "county" renamed to "city" -> caught here
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      schema 契約三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：完全不做任何檢查，讀進來就無條件信任。
+      上游只要動一根寒毛，你的分析就默默算錯，還找不到兇手。
+      正確做法是至少用一行 assert，確認必要欄位都在。
+    animation: "show_bs_no_check"
+    error_code: "df = pd.read_csv(path)  # trust it"
+    correct_code: "assert set(REQUIRED) <= set(df.columns)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：只用 in 檢查一個欄位在不在，其他欄位缺了也不知道。
+      一次只驗一欄，是抓不完的。
+      正確做法是用集合差集，一次列出所有缺漏的欄位，缺哪些一目了然。
+    animation: "show_bs_one_col"
+    error_code: 'if "age" in df: pass  # only one col'
+    correct_code: "assert not (REQUIRED - set(df.columns))"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：在資料清理之後才驗證。
+      都已經改過、刪過、補過值了，你驗的根本不是上游的真面目。
+      正確做法是對「原始資料」驗證，趕在任何轉換之前把關，契約才擋得住上游的變動。
+    animation: "show_bs_after_transform"
+    error_code: "validate(df_after_cleaning)"
+    correct_code: "validate(raw)  # check before use"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜！環境、摘要、種子、契約，四道防線到齊，你已經有能力交出一份真正可重現的報告了。
+      這一整章我們把可重現拆成四樣材料，再加上 schema 契約這道防線，資料一改就立刻被抓到。
+      下一章，我們把所有技能整合成一個完整實戰案例——疫情調查 SitRep，我們下章見！
+    animation: "show_outro"
+    pause_after: 1.0
