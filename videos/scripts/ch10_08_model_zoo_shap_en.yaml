@@ -1,0 +1,147 @@
+meta:
+  chapter: "10"
+  concept: "model_zoo_shap"
+  title: "The Model Zoo, Ensembles & SHAP: explain the black box to a clinician"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch10_08_model_zoo_shap"
+  scene_class: "Ch10ModelZooScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Welcome to Part B, where the data gets bigger, the signal gets stronger, and it's finally machine learning's turn to show off!
+      This episode we take a lap around the model zoo, play with ensembles pooling their wisdom,
+      and end with a killer skill, SHAP, to explain every single reason a black-box model gives, clearly, to a doctor.
+      Ready? Let's go!
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "model_zoo"
+    narration: >
+      First, meet four common models, each with a clinical metaphor.
+      The decision tree is like an ER triage flowchart, asking yes-or-no questions all the way down. The random forest is like a multi-specialty consult voting.
+      XGBoost is like an error-log cram school, drilling exactly the questions the last round got wrong.
+      LASSO is like packing under an airline weight limit, forcing the unimportant coefficients to zero and keeping only the key factors.
+    animation: "show_model_zoo"
+    pause_after: 0.5
+
+  - id: "ensemble"
+    narration: >
+      These models can "pool their wisdom," and that's what ensembles are.
+      Bagging is many trees voting in parallel to cut variance and steady the result, that's the random forest.
+      Boosting is a relay of makeup classes attacking the residuals to cut bias and sharpen the result, that's XGBoost.
+      Stacking is even slicker: bring in a head conductor that learns which expert to listen to more in which situation.
+    animation: "show_ensemble"
+    pause_after: 0.5
+
+  - id: "stacking_code"
+    narration: >
+      Stacking in code looks like this: take the forest, XGBoost, and LASSO as your frontline experts,
+      then add a final_estimator as the head conductor, usually a simple logistic.
+      The conductor doesn't examine patients itself; it learns how to weight and blend everyone's probabilities.
+      This is what the epi literature loves to call the Super Learner.
+    animation: "show_stacking_code"
+    code: |
+      from sklearn.ensemble import StackingClassifier
+
+      stack = StackingClassifier(
+          estimators=[("rf", rf), ("xgb", xgb), ("lasso", lasso)],
+          final_estimator=LogisticRegression(),
+      )
+    pause_after: 0.5
+
+  - id: "shap_intuition"
+    narration: >
+      The stronger the model, the more it's a black box, and the doctor will ask: on what basis do you call this patient high-risk?
+      SHAP uses game theory's Shapley value, like a fair year-end bonus split,
+      asking "without this feature, how much does the prediction change," and averaging each feature's marginal
+      contribution of joining versus not joining across all orderings. That lets it compute, for a single patient, a score for every reason.
+    animation: "show_shap_intuition"
+    pause_after: 0.5
+
+  - id: "shap_contributions"
+    narration: >
+      Here's why this patient was flagged high-risk, with SHAP laying the reasons out one by one.
+      Immunosuppression adds 0.30, water exposure adds 0.20, being age 80 adds 0.15,
+      while having no chronic disease pulls it down by 0.10.
+      Positive signs push up, negative signs pull down, and this is exactly the language for explaining a black box to a doctor.
+    animation: "show_shap_contributions"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Advanced ML, three takeaways, packaged.
+      One, the model zoo: tree, forest, XGBoost, and LASSO each have their own temperament.
+      Two, ensembles pool their wisdom: bagging for stability, boosting for sharpness, stacking for a conductor to blend them.
+      Three, SHAP quantifies every reason from the black box to explain to a doctor, but ML is a tool, not a replacement for judgment.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: explaining a heart-risk score to a doctor!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_doctor"
+    narration: >
+      Suppose you built a model predicting cardiac events, and the doctor asks on what basis.
+      Use shap's TreeExplainer to compute this patient's SHAP values,
+      then draw a waterfall plot where each reason's positive or negative contribution is clear at a glance.
+      That's far more convincing to the clinical side than just tossing them a probability of 0.82.
+    animation: "show_extra_doctor"
+    code: |
+      import shap
+
+      explainer = shap.TreeExplainer(model)
+      sv = explainer.shap_values(one_patient)
+      shap.plots.waterfall(sv[0])
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Advanced ML and SHAP, three beginner blind spots!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: forcing a complex model onto just a few hundred rows.
+      280 rows can't hold up XGBoost; it memorizes, looks gorgeous in training, and crashes on go-live.
+      With small data, you're far steadier with a simple model plus cross-validation.
+    animation: "show_blindspot_complex_small"
+    error_code: "XGBClassifier().fit(X280, y)"
+    correct_code: "LogisticRegression().fit(X280, y)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: high AUC, so you go straight to assigning beds by the probability.
+      Being able to rank isn't the same as accurate probabilities; the group the model calls seventy percent might actually get sick only forty percent of the time.
+      Before you use a probability as a number, check its calibration first.
+    animation: "show_blindspot_auc_calibration"
+    error_code: "assign_bed(proba)  # AUC is high"
+    correct_code: "calibration_curve(y, proba)  # first"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: treating SHAP's important feature as an intervention target on the spot.
+      SHAP explains how the model predicts, not how disease is caused.
+      Before you actually intervene, you again have to go back to Chapter 12's causal inference to validate it.
+    animation: "show_blindspot_shap_causal"
+    error_code: "intervene(shap_top)  # so change it"
+    correct_code: "explain_only(shap_top)  # Ch12"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      The model zoo's been toured, ensembles played with, and SHAP is in hand, so the machine learning chapter wraps up right here!
+      Remember one line: ML can predict, but it's a tool, not a replacement for epi judgment.
+      Next chapter, Chapter 11, we take on PyTorch deep learning,
+      and talk about when you should use it and when you shouldn't. See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

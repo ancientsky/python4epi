@@ -1,0 +1,140 @@
+meta:
+  chapter: "10"
+  concept: "feature_engineering"
+  title: "Feature Engineering: encode the messy chart into numbers the model can read"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch10_04_feature_engineering"
+  scene_class: "Ch10FeatureEngineeringScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      The label's defined and the intern knows what the exam covers, so this episode we tackle the most hands-on step, feature engineering.
+      In plain words: tidying a messy chart into numbers the model can understand.
+      This is where a lot of people get stuck, so let's pull it apart piece by piece.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_features"
+    narration: >
+      Why bother with feature engineering? Because deep down the model only does math.
+      It can't read "male," "female," or "wing A," and it has no idea that "age 85" and "floor 3" aren't even on the same scale.
+      Feature engineering is how you tidy the intern's messy chart into a table that's all numbers, all on a consistent scale.
+    animation: "show_why_features"
+    pause_after: 0.5
+
+  - id: "three_types"
+    narration: >
+      In practice, columns fall into three types, each taking its own road.
+      Numeric columns like age get standardized.
+      Categorical columns like sex and wing get one-hot encoded.
+      Binary columns like whether they used the shower are already zero and one, so wave them right through.
+    animation: "show_three_types"
+    pause_after: 0.5
+
+  - id: "onehot"
+    narration: >
+      Let me stress why categorical columns need one-hot.
+      Say wing has three buildings, A, B, and C; beginners often just code them one, two, three.
+      But then the model thinks C is greater than B is greater than A, when wings have no order at all!
+      One-hot instead splits them into three equal switches: a resident in wing B lights up wing_B as one, and everything else is zero.
+    animation: "show_onehot"
+    pause_after: 0.5
+
+  - id: "scaling_missing"
+    narration: >
+      Why standardize numeric columns? Because age runs from twenty to a hundred while every other column is zero or one;
+      without scaling, the model gets fooled by age's "bigger number" and assumes it's more important, and logistic converges more slowly too.
+      Standardizing just means subtract the mean, divide by the standard deviation, pulling everyone onto the same scale.
+      And by the way, if the chart has missing values, don't dump them on the model raw; fill them with SimpleImputer, and wrap that in the Pipeline too.
+    animation: "show_scaling_missing"
+    pause_after: 0.5
+
+  - id: "columntransformer_code"
+    narration: >
+      How do you handle all three roads in one shot? With ColumnTransformer.
+      Apply StandardScaler to the numeric columns, OneHotEncoder to the categorical ones, and passthrough for the binary ones.
+      That single object processes all three column types separately, and later you chain it into a Pipeline, leak-proof and clean.
+    animation: "show_columntransformer_code"
+    code: |
+      from sklearn.compose import ColumnTransformer
+      from sklearn.preprocessing import StandardScaler, OneHotEncoder
+
+      preprocess = ColumnTransformer([
+          ("num", StandardScaler(), num_cols),
+          ("cat", OneHotEncoder(drop="first"), cat_cols),
+          ("bin", "passthrough", bin_cols),
+      ])
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways, packaged.
+      One, three column types, three treatments: numeric standardized, categorical one-hot, binary waved through.
+      Two, don't code categories as one, two, three, or they'll be read as an order; use one-hot to split them into equal switches.
+      Three, fill the missing values and do the scaling, and wrap it all in a Pipeline so nothing leaks.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: switch the scene, risk features from a TB registry!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tb"
+    narration: >
+      New scene: a tuberculosis control registry. The same three-way split works just as well:
+      age is numeric, so standardize it; urban-versus-rural residence and occupation type are categorical, so one-hot them;
+      whether they have HIV, diabetes, or a contact history are binary, so wave them through.
+      Change the disease registry, and you never have to relearn the three roads of feature engineering.
+    animation: "show_extra_tb"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots in feature engineering!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_label_encode"
+    narration: >
+      Blind spot number one: forcing unordered categories into one, two, three.
+      Use LabelEncoder to turn wing into integers and the model will mistake it for a size relationship.
+      Unordered categories always go through OneHotEncoder, split into independent 0/1 columns.
+    animation: "show_blindspot_label_encode"
+    error_code: 'X["wing"] = LabelEncoder().fit_transform(w)'
+    correct_code: 'OneHotEncoder().fit_transform(X[["wing"]])'
+    pause_after: 0.5
+
+  - id: "blindspot_forgot_scale"
+    narration: >
+      Blind spot number two: forgetting to scale the numeric columns and just mixing age in with a pile of 0/1 columns.
+      Age is routinely in the tens, the biggest number around, so the model mistakes it for the most important clue, and logistic struggles to converge.
+      Remember to StandardScaler the numeric columns first.
+    animation: "show_blindspot_forgot_scale"
+    error_code: 'X = df[["age"] + bin_cols]  # no scaling'
+    correct_code: 'StandardScaler().fit_transform(X[["age"]])'
+    pause_after: 0.5
+
+  - id: "blindspot_missing"
+    narration: >
+      Blind spot number three: the chart has missing values and you feed them straight to the model, where many models will error out or compute garbage.
+      The right move is SimpleImputer to fill the gaps, often the median for continuous values,
+      and wrap it in the Pipeline too, filling only within each fold so nothing leaks.
+    animation: "show_blindspot_missing"
+    error_code: "model.fit(X, y)  # X still has NaN"
+    correct_code: 'SimpleImputer(strategy="median")  # in pipe'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      The chart's translated into numbers and the scales are aligned, so the intern can finally start learning the formulas in class.
+      By now you've walked through the workflow's first three stops, split, define, and feature engineering.
+      From here it's just chaining them together with a Pipeline and dropping them into cross-validation to read the AUC.
+      Congratulations, you've mastered the most crucial groundwork for doing machine learning right!
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,144 @@
+meta:
+  chapter: "10"
+  concept: "crossval_auc"
+  title: "Cross-Validation + AUC: what does this score actually compare?"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch10_06_crossval_auc"
+  scene_class: "Ch10CrossvalAucScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      The model's packaged, and now it's time to grade, but this step is where beginners get lost most easily.
+      What is cross-validation even doing? And what on earth is AUC?
+      Don't panic; this episode uses two metaphors, "the mock exam with swapped question banks" and "the eye for ranking patients,"
+      to make both terms click once and for all.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "cv_idea"
+    narration: >
+      First, cross-validation. Slice the data into five folds; each round, train on four folds and hold one out as the exam.
+      The green fold is the test fold, the blue ones are the training folds, and the test fold rotates down the diagonal, taking a new position each time.
+      Go around five times, and every single row gets to be the exam exactly once.
+      In the end you get five AUCs, then take the mean and the standard deviation. Much fairer!
+    animation: "show_cv_idea"
+    pause_after: 0.5
+
+  - id: "cv_code"
+    narration: >
+      The code is super short: cross_val_score, pass in the packaged clf, the data,
+      cv equals five, and set scoring to roc_auc, and one line runs all five folds.
+      The key thing is it returns five scores, so we print the mean plus or minus the standard deviation.
+      Note: it isn't comparing two models; it's giving one model a more trustworthy score.
+    animation: "show_cv_code"
+    code: |
+      from sklearn.model_selection import cross_val_score
+
+      scores = cross_val_score(
+          clf_lr, X, y, cv=5, scoring="roc_auc")
+      print(f"AUC = {scores.mean():.3f} +/- {scores.std():.3f}")
+    pause_after: 0.5
+
+  - id: "cv_output"
+    narration: >
+      Run it, and logistic's five-fold average AUC comes out around 0.62 with a standard deviation of just 0.05.
+      Read two numbers: the mean tells you roughly how strong it is, the standard deviation tells you how stable.
+      A small standard deviation means the score won't collapse when you swap question banks, and that's when the score is trustworthy.
+    animation: "show_cv_output"
+    pause_after: 0.5
+
+  - id: "auc_meaning"
+    narration: >
+      So what actually is AUC? Forget that scary "area under the curve" phrasing.
+      The plainest definition: grab one person who really gets infected and one who really doesn't,
+      and the chance the model ranks the infected one's score higher is the AUC.
+      0.5 is guessing blindfolded, 0.7 passes, 0.8 is nice, 1.0 is perfect, and too high should make you suspect leakage first.
+    animation: "show_auc_meaning"
+    pause_after: 0.5
+
+  - id: "why_not_accuracy"
+    narration: >
+      Someone asks: why not just look at accuracy? Because the severe task is only twenty-four percent positive.
+      If the model mindlessly guesses "not severe" for everyone, accuracy is still seventy-six percent, sounds high,
+      but it actually caught zero patients, totally useless.
+      AUC looks at ranking and isn't swayed by the threshold, so on imbalanced data it's far more honest.
+    animation: "show_why_not_accuracy"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Cross-validation plus AUC, three takeaways, packaged.
+      One, CV gives one model a more trustworthy score; it's not a duel between two models.
+      Two, read two numbers: the mean is how strong, the standard deviation is how stable.
+      Three, AUC is the chance of ranking an infected person above a healthy one, not "how many you guessed right."
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: switch the scene, a 30-day readmission model!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_readmit"
+    narration: >
+      A hospital favorite: predicting whether a patient will be readmitted within thirty days.
+      The same ruler needs no changes at all: drop the data into cross_val_score,
+      cv equals five, scoring still roc_auc, and out comes the average AUC.
+      Infection, severity, or readmission, this grading tool handles them all.
+    animation: "show_extra_readmit"
+    code: |
+      readmit = Pipeline([("prep", prep), ("model", rf)])
+      scores = cross_val_score(
+          readmit, X, y, cv=5, scoring="roc_auc")
+      print(f"30-day readmit AUC = {scores.mean():.3f}")
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Cross-validation and AUC, three beginner blind spots!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: reading only the mean and forgetting the standard deviation.
+      A mean of 0.7 with a standard deviation of 0.2 means it collapses when you swap question banks, and that score can't be trusted.
+      Always read the mean and the standard deviation together to know whether the model is stable.
+    animation: "show_blindspot_mean_only"
+    error_code: "print(scores.mean())"
+    correct_code: "print(scores.mean(), scores.std())"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: imbalanced data with no stratified split.
+      Severe is only twenty-four percent, so a random split might leave one fold with almost no positives, and the grades bounce around.
+      The right move: use StratifiedKFold so every fold keeps the same positive ratio.
+    animation: "show_blindspot_not_stratified"
+    error_code: "cross_val_score(clf, X, y, cv=5)"
+    correct_code: "cv = StratifiedKFold(5, shuffle=True)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: using accuracy as the metric on imbalanced data.
+      Guess "no disease" for everyone and you get seventy-six percent accuracy, a number that fools you all too happily.
+      The right move: set scoring to roc_auc, which reads ranking and isn't at the mercy of the threshold.
+    animation: "show_blindspot_accuracy_metric"
+    error_code: 'scoring="accuracy"  # imbalanced!'
+    correct_code: 'scoring="roc_auc"  # rank-based'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      With cross-validation and AUC, you can already hand your model a trustworthy score.
+      Next episode, we give the intern a smarter brain, the Random Forest,
+      and ask it: out of this whole pile of clues, which single one is the most useful?
+      Feature importance, see you next time!
+    animation: "show_outro"
+    pause_after: 1.0

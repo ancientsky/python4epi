@@ -1,0 +1,137 @@
+meta:
+  chapter: "10"
+  concept: "ml_intuition"
+  title: "Machine Learning, Plain and Simple: the model as a training intern doctor"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch10_01_ml_intuition"
+  scene_class: "Ch10MLIntuitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hey there, welcome to the machine learning classroom!
+      Don't let those two scary words make your palms sweat.
+      This whole chapter hangs together on one metaphor: think of the model as an intern doctor
+      in training, studying hard to pass the licensing exam.
+      Once you see how this intern gets trained, every step that follows is just another stop on their journey.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "intern_metaphor"
+    narration: >
+      Burn this one line into your memory: the model is no genius, it's an intern doctor.
+      Everything it knows came from the case-file clues you fed it.
+      Give it bad clues and it cheats; give it messy clues and it just can't learn.
+      So all of machine learning is really the story of taking a green rookie intern
+      and training them until they can see patients on their own.
+    animation: "show_intern_metaphor"
+    pause_after: 0.5
+
+  - id: "ml_task"
+    narration: >
+      So what does the boss actually want this intern to do? One word: predict.
+      Chapter six's regression explained why someone got infected. Machine learning goes a step further:
+      the moment a resident moves in, before they're even sick, we want to predict whether they'll get infected.
+      Explaining looks backward, predicting guesses forward. Two very different skills.
+    animation: "show_ml_task"
+    pause_after: 0.5
+
+  - id: "three_exams"
+    narration: >
+      Our intern grows up through three kinds of exams.
+      The train set is class: open your books, learn the formulas slowly.
+      The validation set is the mock exam: peek at the answers, tweak your study method as you go.
+      The test set is the licensing exam: taken exactly once, and once you open it, it's spent.
+      That's the intern's real skill after they go live.
+    animation: "show_three_exams"
+    pause_after: 0.5
+
+  - id: "cross_validation"
+    narration: >
+      Here's the catch: we only have 280 rows, tiny.
+      Carve off a single mock exam and the sample's too small, the grade is pure luck; happen to test on the easy stuff and it looks falsely high.
+      So instead we use cross-validation: slice the data into five parts, take turns making one part the exam and the other four the class, and grade five times.
+      Every single row gets to be the exam exactly once, and the average tells you the real skill, plus how stable it is.
+    animation: "show_cross_validation"
+    pause_after: 0.5
+
+  - id: "auc_scorecard"
+    narration: >
+      Exam over, time to grade, and this report card is called AUC.
+      AUC isn't how many questions you got right; it's the eye for ranking patients.
+      Grab one person who really gets infected and one who doesn't, and ask: can the intern rank the infected one ahead? The chance they get it right is the AUC.
+      0.5 is a blindfolded coin flip, 0.7 passes, 0.8 is nice, and if it shoots up near 1.0, don't celebrate, they probably peeked at the answers.
+    animation: "show_auc_scorecard"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Five sentences to package this episode.
+      One, the model is an intern doctor; it eats the clues you give it.
+      Two, train is class, validation is the mock exam, test is the licensing exam, taken only once.
+      Three, small data means cross-validation, swap in five question banks and average.
+      Four, AUC is the eye for ranking patients, not how many you got right.
+      Five, a smarter brain can't conjure information out of thin clues.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: switch the scene, a sepsis early-warning score!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_sepsis"
+    narration: >
+      New scene: the ICU wants a sepsis early-warning score, catching patients a few hours before they crash.
+      The whole logic is identical: feed the vital signs as clues to the intern, split into train and test, and use AUC to judge their eye for ranking patients.
+      Same intern-training logic, different disease, still works.
+    animation: "show_extra_sepsis"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots in machine learning!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_peek_test"
+    narration: >
+      Blind spot number one: training on the licensing exam paper, which is just peeking at the answers.
+      The moment the test set joins training, it demotes from licensing exam down to mock exam,
+      you'll badly overestimate your intern's skill, and reality exposes them the instant they go live. Lock the test set away and open it only once.
+    animation: "show_blindspot_peek_test"
+    error_code: "model.fit(X_test, y_test)  # tune on test"
+    correct_code: "model.fit(X_train, y_train)  # keep test"
+    pause_after: 0.5
+
+  - id: "blindspot_train_score"
+    narration: >
+      Blind spot number two: patting yourself on the back over the training score alone.
+      The intern memorized every example from class, so of course the training score looks gorgeous, but that might just be rote memorization.
+      What you want is the cross-validation average; ace a paper they've never seen, and that's real skill.
+    animation: "show_blindspot_train_score"
+    error_code: "score = model.score(X_train, y_train)"
+    correct_code: "score = cross_val_score(model, X, y).mean()"
+    pause_after: 0.5
+
+  - id: "blindspot_complex_model"
+    narration: >
+      Blind spot number three: assuming a smarter brain automatically scores higher.
+      On just 280 rows with a thin signal, Random Forest often only ties logistic, and it memorizes even more easily.
+      When data is small, a simple model plus cross-validation is usually more honest and reliable than a flashy big one.
+    animation: "show_blindspot_complex_model"
+    error_code: "model = DeepNet(layers=50)  # data has 280"
+    correct_code: "model = LogisticRegression()  # small data"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      This episode we met the blueprint for training our intern doctor.
+      Next, we start walking through it stop by stop: the next episode covers the three-way data split,
+      learning how to divide up the exam papers, and why you must never, ever peek at the licensing exam. See you next time!
+    animation: "show_outro"
+    pause_after: 1.0
