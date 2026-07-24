@@ -1,0 +1,225 @@
+meta:
+  chapter: "03"
+  concept: "chi_square"
+  title: "The Chi-square Test: Observed vs Expected in the Ring"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch03_05_chi_square"
+  scene_class: "Ch03ChiSquareScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: the chi-square test
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, and welcome back! Today's star is the chi-square test.
+      Last episode we computed confidence intervals and learned how precise an estimate is.
+      But sometimes the boss just wants one sentence: "Is this exposure related to the disease, yes or no?"
+      The chi-square test is built to answer exactly that.
+      Its logic is super intuitive: if exposure and disease really have no relationship,
+      the numbers you observe should be close to the numbers you'd theoretically expect.
+      If they differ a lot? Then something's up!
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "h0_concept"
+    narration: >
+      First let's meet the null hypothesis, H0.
+      H0 says: exposure and disease are independent, with no relationship between them.
+      It's like rolling dice; no matter what you rolled last time, the next roll is unrelated to it.
+      The chi-square test's job is to use the data to decide whether to overturn H0.
+      If the data differ too much from H0's prediction, we reject H0 and declare that exposure and disease are related.
+      If they're close, then it's "insufficient evidence, cannot reject H0."
+      Note! We never say "accept H0," because no relationship does not mean we proved there's no relationship.
+    animation: "show_h0_concept"
+    pause_after: 0.5
+
+  - id: "expected_values"
+    narration: >
+      The core of the chi-square test is the "expected value."
+      The expected value is "if H0 is true, how many people should be in each cell."
+      The formula is super simple: the expected value equals that row's total, times that column's total, divided by the grand total.
+      With our Legionnaires' data, the exposed group has 200 people, 121 total infected, and 280 total.
+      The expected number of infections in the exposed group is 200 times 121 divided by 280, which equals 86.4.
+      In reality 100 got infected, 13.6 more than expected. That excess is exactly what chi-square measures.
+    animation: "show_expected_values"
+    code: |
+      expected = (row_total * col_total) / grand_total
+      # exposed & infected: 200 * 121 / 280 = 86.4
+    pause_after: 0.5
+
+  - id: "expected_table"
+    narration: >
+      Let's compute the expected values for all four cells.
+      Exposed infected 86.4, exposed uninfected 113.6, unexposed infected 34.6, unexposed uninfected 45.4.
+      You'll notice the row and column totals of the expected values are exactly the same as the observed ones.
+      That's guaranteed, because the expected values redistribute the counts using the independence assumption
+      while keeping the marginal totals unchanged.
+    animation: "show_expected_table"
+    code: |
+      # Observed:  [100, 100, 21, 59]
+      # Expected:  [86.4, 113.6, 34.6, 45.4]
+    pause_after: 0.5
+
+  - id: "chi2_formula"
+    narration: >
+      Now let's compute the chi-square statistic! The formula is: for each cell,
+      take the observed value O minus the expected value E, square it, then divide by E, and sum it all up.
+      Why square it? Because some cells have more people than expected and some have fewer,
+      and the pluses and minuses would cancel out. Squaring makes everything positive so you can see the total deviation.
+      Why divide by E? Because in a cell with a large expected value, a small deviation doesn't matter much;
+      in a cell with a small expected value, a small deviation has a big impact. Dividing by E is a form of weighting.
+    animation: "show_chi2_formula"
+    code: |
+      chi2 = sum((O - E)**2 / E for O, E in cells)
+    pause_after: 0.5
+
+  - id: "chi2_calculation"
+    narration: >
+      Plug in the four cells.
+      100 minus 86.4 squared divided by 86.4 equals 2.14.
+      100 minus 113.6 squared divided by 113.6 equals 1.63.
+      21 minus 34.6 squared divided by 34.6 equals 5.34.
+      59 minus 45.4 squared divided by 45.4 equals 4.07.
+      Add them all up and the chi-square statistic equals 13.18. Is that big?
+      A 2 by 2 table has 1 degree of freedom; check a table or use Python, and the p-value is less than 0.001.
+      Highly significant! Shower exposure and infection really are associated.
+    animation: "show_chi2_calculation"
+    code: |
+      from scipy.stats import chi2_contingency
+      table = [[100, 100], [21, 59]]
+      chi2, p, dof, expected = chi2_contingency(table)
+      # chi2 = 13.18, p < 0.001
+    pause_after: 0.5
+
+  - id: "p_value_interpretation"
+    narration: >
+      What does the p-value actually mean?
+      The p-value is "if H0 is true, the probability of seeing a result this extreme or more extreme."
+      p less than 0.05 means that in a world where H0 is true, this kind of result has less than a 5 percent chance of appearing.
+      That's too unusual, so we reject H0.
+      But absolutely remember: the p-value is not "the probability that H0 is true,"
+      nor is it "the probability the result was produced by chance."
+      It's simply a measure of how unusual the data are, given that H0 is true.
+    animation: "show_p_value"
+    pause_after: 0.5
+
+  - id: "fisher_exact"
+    narration: >
+      One last important thing: when can you not use chi-square?
+      If any cell in the 2 by 2 table has an expected value below 5, the chi-square approximation becomes inaccurate.
+      In that case, switch to Fisher's exact test.
+      Fisher doesn't rely on an approximation; it computes the exact p-value directly.
+      In Python you just swap chi2_contingency for fisher_exact.
+      Rule of thumb: when the sample is small or events are rare, prefer Fisher.
+    animation: "show_fisher_exact"
+    code: |
+      from scipy.stats import fisher_exact
+      odds_ratio, p = fisher_exact([[5, 15], [2, 28]])
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      A summary of the chi-square workflow!
+      First: set H0, exposure and disease are independent.
+      Second: compute the expected values, row total times column total divided by grand total.
+      Third: compute the chi-square statistic, observed minus expected squared divided by expected, then summed.
+      Fourth: look up the p-value; less than 0.05 and you reject H0.
+      Expected value below 5, switch to Fisher's exact test. Done!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: tuberculosis contact investigation
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's see the chi-square test used in a tuberculosis contact investigation.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Suppose a case of open pulmonary tuberculosis works in an office,
+      and investigators split the contacts into two groups: 30 close contacts and 50 casual contacts.
+      In the close-contact group 9 tested positive for latent infection, and in the casual-contact group 5 tested positive.
+      The close-contact infection rate is 30 percent, the casual-contact only 10 percent. Looks like a big gap, right?
+      But don't rush to conclusions; let chi-square be the referee.
+      Run chi2_contingency and chi-square equals 5.0, p equals 0.025, less than 0.05!
+      Conclusion: there really is a statistically significant association between contact intensity and latent infection.
+      The outbreak report can state: close contacts have a significantly higher infection risk than casual contacts.
+    animation: "show_extra_example"
+    code: |
+      # Close contact: 9 pos, 21 neg (n=30)
+      # Casual contact: 5 pos, 45 neg (n=50)
+      table = [[9, 21], [5, 45]]
+      chi2, p, dof, exp = chi2_contingency(table)
+      # chi2 = 5.0, p = 0.025
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Three super common chi-square pitfalls! You'll meet them on exams and in real practice.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pit one: forcing chi-square even when an expected value is below 5.
+      The chi-square test relies on a large-sample approximation, and when the expected value is too small the approximation goes off.
+      It's like using a magnifying glass to burn ants; if the lens is too small it can't focus the light and nothing burns.
+      The fix is simple: switch to Fisher's exact test.
+      In scipy the function is literally called fisher_exact, even easier to remember than chi2_contingency.
+      Rule of thumb: if any cell's expected value is below 5, use Fisher. Rock solid.
+    animation: "show_blindspot_expected_five"
+    error_code: "chi2_contingency([[3, 47], [1, 49]])"
+    correct_code: "fisher_exact([[3, 47], [1, 49]])"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pit two: assuming a tiny p-value means a large effect.
+      p equals 0.001 only means "statistically significant," not "clinically important."
+      With a sample of a hundred thousand, even a risk ratio of just 1.02 can give a p-value as small as 0.0001.
+      Does the difference truly exist? Yes. Is it big enough to care about? Not necessarily.
+      So pair the chi-square test with an effect size, like the risk ratio, odds ratio, and their confidence intervals.
+      The p-value handles "is there," the effect size handles "how big"; you need both.
+    animation: "show_blindspot_p_vs_effect"
+    error_code: "p=0.001 -> large effect!"
+    correct_code: "p=0.001 + RR=1.02 -> tiny effect"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pit three: the multiple-testing problem.
+      Suppose you test 8 exposure factors at once, each at alpha equals 0.05.
+      Even if none of them has any effect, by chance alone there's about a 1 minus 0.95 to the 8th power,
+      roughly 34 percent chance of at least one false positive!
+      It's like buying 8 scratch cards at once; your chance of a win is naturally higher than buying just 1.
+      The fix: use a Bonferroni correction, dividing alpha by the number of tests.
+      With 8 tests, each significance level drops to 0.05 divided by 8, which equals 0.00625.
+      Or, honestly report how many tests you ran and let readers judge for themselves.
+    animation: "show_blindspot_multiple_testing"
+    error_code: "8 tests at alpha=0.05 -> expect 0.4 false pos"
+    correct_code: "8 tests at alpha=0.05/8=0.00625 (Bonferroni)"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      The chi-square test, done! You can now compute expected values, compute the chi-square statistic, and judge the p-value,
+      and you know when to switch to Fisher's exact test.
+      Remember: chi-square handles "is there an association," RR and OR handle "how strong is the association,"
+      and the confidence interval handles "how precise is the estimate." Combine all three and your analysis is complete.
+      Congratulations! You've finished all the core statistical tools of chapter three.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

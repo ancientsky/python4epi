@@ -39,6 +39,63 @@ class Ch03ChiSquareScene(EpiBaseScene):
 
     total_steps: int = 16
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "卡方檢定",
+            "title_sub": "用數字判斷「有沒有關聯」",
+            "h0_heading": "虛無假設 H0",
+            "h0_p1": "• H0：暴露與疾病之間沒有關聯",
+            "h0_p2": "• H1：暴露與疾病之間有關聯",
+            "h0_p3": "• 卡方檢定：觀察值 vs 期望值的差距有多大？",
+            "exp_heading": "期望值 Expected Values",
+            "exp_p1": "• 如果 H0 為真，每個格子應該是多少？",
+            "exp_p3": "• 觀察值與期望值差越大 → 越可能有關聯",
+            "chi2f_p2": "• O = 觀察值（Observed）",
+            "chi2f_p3": "• E = 期望值（Expected）",
+            "chi2f_p4": "• 自由度 df = (rows - 1) x (cols - 1)",
+            "pval_heading": "p-value 怎麼解讀？",
+            "pval_p1": "• p < 0.05 → 拒絕 H0，有統計顯著關聯",
+            "pval_p2": "• p >= 0.05 → 無法拒絕 H0",
+            "pval_p3": "• p-value 不是「效果大小」，只是「驚訝程度」",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. 卡方檢定比較觀察值 vs 期望值",
+            "summary_p2": "2. scipy chi2_contingency() 一行搞定",
+            "summary_p3": "3. p < 0.05 → 統計顯著關聯",
+            "summary_p4": "4. 期望值 < 5 → 改用 Fisher exact test",
+            "extra_banner_title": "額外範例：腸病毒群聚與洗手設施",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：Fisher exact test 深入解析",
+            "outro_sub": "小樣本也能做假設檢定！",
+        },
+        "en": {
+            "title_main": "Chi-square Test",
+            "title_sub": "Let the numbers decide whether there's an association",
+            "h0_heading": "The Null Hypothesis H0",
+            "h0_p1": "• H0: no association between exposure and disease",
+            "h0_p2": "• H1: there is an association between exposure and disease",
+            "h0_p3": "• Chi-square: how big is the observed vs expected gap?",
+            "exp_heading": "Expected Values",
+            "exp_p1": "• If H0 is true, what should each cell be?",
+            "exp_p3": "• The bigger the observed–expected gap → the more likely an association",
+            "chi2f_p2": "• O = Observed",
+            "chi2f_p3": "• E = Expected",
+            "chi2f_p4": "• Degrees of freedom df = (rows - 1) x (cols - 1)",
+            "pval_heading": "How do we read the p-value?",
+            "pval_p1": "• p < 0.05 → reject H0, a statistically significant association",
+            "pval_p2": "• p >= 0.05 → cannot reject H0",
+            "pval_p3": "• The p-value isn't effect size — it's how surprising the data are",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. Chi-square compares observed vs expected",
+            "summary_p2": "2. scipy chi2_contingency() does it in one line",
+            "summary_p3": "3. p < 0.05 → statistically significant association",
+            "summary_p4": "4. Expected < 5 → switch to Fisher's exact test",
+            "extra_banner_title": "Extra example: an enterovirus cluster and handwashing facilities",
+            "blindspot_banner_title": "3 Common Beginner Traps",
+            "outro_heading": "Next up: a deep dive into Fisher's exact test",
+            "outro_sub": "Even small samples can do hypothesis testing!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -48,23 +105,23 @@ class Ch03ChiSquareScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the chi-square lesson."""
-        self.show_title_card("卡方檢定", "用數字判斷「有沒有關聯」", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_h0_concept(self, duration: float = 5.0, **kwargs) -> None:
         """Explain the null hypothesis concept for chi-square."""
         self.show_step_indicator(1, self.total_steps)
 
         heading = Text(
-            "虛無假設 H0",
+            self.t("h0_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("• H0：暴露與疾病之間沒有關聯", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• H1：暴露與疾病之間有關聯", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• 卡方檢定：觀察值 vs 期望值的差距有多大？", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("h0_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("h0_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("h0_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -77,16 +134,16 @@ class Ch03ChiSquareScene(EpiBaseScene):
         self.show_step_indicator(2, self.total_steps)
 
         heading = Text(
-            "期望值 Expected Values",
+            self.t("exp_heading"),
             font=FONT_MONO,
             font_size=30,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("• 如果 H0 為真，每個格子應該是多少？", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("exp_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
             Text("• E = (row total x col total) / grand total", font=FONT_MONO, font_size=22, color=TEXT_PRIMARY),
-            Text("• 觀察值與期望值差越大 → 越可能有關聯", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("exp_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -133,9 +190,9 @@ class Ch03ChiSquareScene(EpiBaseScene):
 
         points = VGroup(
             Text("X2 = sum( (O - E)^2 / E )", font=FONT_MONO, font_size=26, color=TEXT_PRIMARY),
-            Text("• O = 觀察值（Observed）", font=FONT_CJK, font_size=22, color=TEXT_SECONDARY),
-            Text("• E = 期望值（Expected）", font=FONT_CJK, font_size=22, color=TEXT_SECONDARY),
-            Text("• 自由度 df = (rows - 1) x (cols - 1)", font=FONT_CJK, font_size=22, color=TEXT_SECONDARY),
+            Text(self.t("chi2f_p2"), font=FONT_CJK, font_size=22, color=TEXT_SECONDARY),
+            Text(self.t("chi2f_p3"), font=FONT_CJK, font_size=22, color=TEXT_SECONDARY),
+            Text(self.t("chi2f_p4"), font=FONT_CJK, font_size=22, color=TEXT_SECONDARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.40).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -173,16 +230,16 @@ class Ch03ChiSquareScene(EpiBaseScene):
         self.show_step_indicator(6, self.total_steps)
 
         heading = Text(
-            "p-value 怎麼解讀？",
+            self.t("pval_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("• p < 0.05 → 拒絕 H0，有統計顯著關聯", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• p >= 0.05 → 無法拒絕 H0", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("• p-value 不是「效果大小」，只是「驚訝程度」", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("pval_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("pval_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("pval_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -218,17 +275,17 @@ class Ch03ChiSquareScene(EpiBaseScene):
         self.show_step_indicator(8, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. 卡方檢定比較觀察值 vs 期望值", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. scipy chi2_contingency() 一行搞定", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. p < 0.05 → 統計顯著關聯", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("4. 期望值 < 5 → 改用 Fisher exact test", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.40).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -242,7 +299,7 @@ class Ch03ChiSquareScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：腸病毒群聚與洗手設施")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
@@ -269,7 +326,7 @@ class Ch03ChiSquareScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_expected_five(self, duration: float = 5.0, **kwargs) -> None:
@@ -302,14 +359,14 @@ class Ch03ChiSquareScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：Fisher exact test 深入解析",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "小樣本也能做假設檢定！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

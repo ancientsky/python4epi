@@ -1,0 +1,222 @@
+meta:
+  chapter: "03"
+  concept: "odds_ratio"
+  title: "Odds Ratio: RR's Sibling — What's the Difference?"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch03_03_odds_ratio"
+  scene_class: "Ch03OddsRatioScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: odds ratio (OR)
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Last episode we learned the risk ratio, RR; today we meet its sibling, the odds ratio, OR.
+      Many beginners can't tell RR and OR apart; they look alike and the numbers come out similar.
+      But their use cases are completely different, and mixing them up will get your paper rejected without mercy.
+      Today let's make this sibling relationship crystal clear so you never confuse them again.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "odds_vs_risk"
+    narration: >
+      To understand OR, you first need to separate "risk" from "odds."
+      Risk is a probability; the denominator is everyone. Out of 100 people, 20 get sick, so the risk is 20 percent.
+      Odds are different; the denominator is "the people who did not get sick." Twenty sick and 80 not sick gives odds of 20 to 80,
+      which is 0.25.
+      Think of it like gambling. Risk is "the probability of winning"; odds are "the ratio of wins to losses."
+      Buy a scratch card, 1 win in 5, and the risk is one-fifth while the odds are 1 to 4.
+      Mathematically, odds equal p divided by 1 minus p.
+    animation: "show_odds_vs_risk"
+    code: |
+      risk = 20 / 100       # 0.20
+      odds = 20 / 80        # 0.25
+      # or equivalently:
+      odds = risk / (1 - risk)
+    pause_after: 0.5
+
+  - id: "or_formula"
+    narration: >
+      Once you know what odds are, OR is easy.
+      OR is simply the exposed group's odds divided by the unexposed group's odds.
+      There's also a faster way: a times d divided by b times c, cross-multiply and divide.
+      This formula is super memorable: it's just the diagonals of the 2x2 table, multiplied and divided.
+      Top-left times bottom-right, over top-right times bottom-left. The diagonals cross, like drawing an X.
+    animation: "show_or_formula"
+    code: |
+      # Method 1: odds ratio from odds
+      odds_exp = a / b
+      odds_unexp = c / d
+      or_val = odds_exp / odds_unexp
+
+      # Method 2: cross-product
+      or_val = (a * d) / (b * c)
+    pause_after: 0.5
+
+  - id: "legionella_calc"
+    narration: >
+      Back to the Pine and Cypress home. a equals 83, b equals 87, c equals 38, d equals 72.
+      OR equals 83 times 72 divided by 87 times 38, roughly 1.81.
+      Last episode the RR was 1.41, and OR is 1.81, quite a difference.
+      Why? Because Legionnaires' disease had an attack rate as high as 43 percent in this home, which is not a rare disease.
+      In a moment I'll show you that the more common the disease, the larger the gap between OR and RR.
+    animation: "show_legionella_calc"
+    code: |
+      or_val = (83 * 72) / (87 * 38)
+      print(f"Odds Ratio = {or_val:.2f}")
+    output: |
+      Odds Ratio = 1.81
+    pause_after: 0.5
+
+  - id: "or_interpretation"
+    narration: >
+      Reading OR is a lot like reading RR. OR equals 1 means no association.
+      OR greater than 1 means the exposed group's odds are higher, possibly a risk factor.
+      OR less than 1 means the exposure is a protective factor.
+      But be careful, OR describes "a ratio of odds," not "a ratio of risks."
+      So strictly speaking, OR equals 1.81 should be phrased as "the exposed group's odds of illness are 1.81 times the unexposed group's,"
+      not "the risk is 1.81 times." Many people say it loosely, but on an exam you must be precise.
+    animation: "show_or_interpretation"
+    pause_after: 0.5
+
+  - id: "rare_disease"
+    narration: >
+      Now the main event! When does OR approximately equal RR?
+      The answer: when the disease is rare.
+      When the incidence is below ten percent, odds and risk are nearly identical, because 1 minus p is approximately 1.
+      So OR and RR are almost equal too.
+      This is the famous "rare disease assumption."
+      But if the disease is common, like this Legionnaires' outbreak with an attack rate of 43 percent,
+      OR will exaggerate far beyond RR. Remember: the more common the disease, the more OR brags.
+    animation: "show_rare_disease"
+    code: |
+      # Rare disease (1%): OR ~ RR
+      # risk=0.01, odds=0.01/0.99=0.0101
+      # Common disease (40%): OR != RR
+      # risk=0.40, odds=0.40/0.60=0.667
+    pause_after: 0.5
+
+  - id: "when_to_use"
+    narration: >
+      So when must you use OR?
+      The answer: in a case-control study.
+      Because a case-control study first picks cases and controls, then asks about exposure history afterward,
+      you can't compute a true attack rate from the study design, so you can't compute RR.
+      In that situation you can only use OR.
+      There's one more place you'll see OR: exponentiating a logistic regression coefficient gives you an OR.
+      So OR shows up constantly in both epidemiology and statistics; you really must understand it.
+    animation: "show_when_to_use"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's do the key takeaways!
+      Odds equal p divided by 1 minus p, the ratio of getting sick to not getting sick.
+      OR equals the cross-product, a times d divided by b times c.
+      When disease is rare OR is approximately RR; when disease is common OR is larger than RR.
+      Case-control studies can only use OR, not RR.
+      And exp of beta in logistic regression is the OR.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: hepatitis A case-control study
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at a hepatitis A case-control study and feel the real-world power of OR.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_context"
+    narration: >
+      A community had a hepatitis A cluster, and investigators recruited 50 confirmed cases and 100 controls.
+      Looking back, they found that 35 of the cases had eaten raw oysters from a certain stall, while only 20 of the controls had.
+      This is a case-control design, because we found the patients first and then asked about exposure.
+      There's no complete denominator, so we can't compute an attack rate, and definitely not an RR.
+      We can only compute OR!
+    animation: "show_extra_context"
+    pause_after: 0.5
+
+  - id: "extra_calc"
+    narration: >
+      a equals 35, the exposed cases; b equals 20, the exposed controls.
+      c equals 15, the unexposed cases; d equals 80, the unexposed controls.
+      OR equals 35 times 80 divided by 20 times 15, which equals 9.33.
+      An odds ratio as high as 9.33! People who ate the raw oysters had 9.33 times the odds of hepatitis A compared to those who didn't.
+      That's a big number, a strong association, and that oyster stall is a very strong suspect.
+      Of course, you still need microbiological evidence to confirm causation.
+    animation: "show_extra_calc"
+    code: |
+      a, b, c, d = 35, 20, 15, 80
+      or_hep = (a * d) / (b * c)
+      print(f"OR = {or_hep:.2f}")
+    output: |
+      OR = 9.33
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Beginner blind-spot time! At least one person around you has made each of these three mistakes, guaranteed.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: confusing odds with probability.
+      Many people think odds are the same as probability, but they're not.
+      Probability's denominator is "everyone"; odds' denominator is "the people without the event."
+      Out of 100 people 20 got sick, so risk is 0.2 and odds are 0.25, two different things!
+      When the disease is rare the two are close, but when it's common they differ a lot.
+      If your report says "odds of 20 percent," that's wrong; odds aren't a percentage, they're a ratio.
+    animation: "show_blindspot_odds_prob"
+    error_code: "odds = sick / total"
+    correct_code: "odds = sick / (total - sick)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: interpreting OR as RR when the disease is common.
+      If the attack rate is above ten percent, OR will be clearly larger than RR.
+      Your report says "the exposed group's risk is 1.81 times the unexposed group's," but the actual RR is only 1.41.
+      A reviewer will spot the confusion instantly.
+      When you face a common disease, either emphasize that you're reporting OR rather than RR,
+      or use another method to estimate RR directly, such as log-binomial regression.
+    animation: "show_blindspot_common_disease"
+    error_code: "print(f'Risk is {or_val:.1f}x higher')"
+    correct_code: "print(f'Odds is {or_val:.1f}x higher')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: calling the OR from a logistic regression an RR.
+      Exp of beta in logistic regression is an OR, not an RR!
+      Many people finish a regression and write "the risk increased by so many times," which is wrong.
+      You should write "the odds increased by so many times."
+      If you truly need an RR, you can use Poisson regression with robust variance,
+      or log-binomial regression.
+      Lazily calling an OR an RR is one of the most common reviewer comments in epidemiology papers.
+    animation: "show_blindspot_logistic"
+    error_code: "rr = np.exp(model.params[1])  # wrong label"
+    correct_code: "or_val = np.exp(model.params[1])  # odds ratio"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      Congratulations! The 2x2 table, the risk ratio RR, and the odds ratio OR, the three great tools of descriptive statistics, are all yours now.
+      Remember three key points: odds are not risk, OR is not RR, and case-control studies can only use OR.
+      Get these three things right and your outbreak report won't get bounced.
+      Next episode we enter the outbreak investigation workflow and learn to combine all these tools
+      into a complete outbreak analysis. See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

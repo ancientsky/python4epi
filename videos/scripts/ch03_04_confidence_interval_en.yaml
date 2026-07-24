@@ -1,0 +1,250 @@
+meta:
+  chapter: "03"
+  concept: "confidence_interval"
+  title: "The 95% Confidence Interval: Why Take the Log Then exp Back?"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch03_04_confidence_interval"
+  scene_class: "Ch03ConfidenceIntervalScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: confidence intervals and the log transform
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, and welcome back! Today's topic is the seatbelt of the statistics world: the confidence interval.
+      Last episode we computed the risk ratio and the odds ratio, but giving just one number is like a weather forecast that only says "tomorrow, 25 degrees,"
+      without telling you it might swing between 20 and 30.
+      The confidence interval adds that range of uncertainty, so you know just how trustworthy your estimate really is.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "point_vs_interval"
+    narration: >
+      Let's look at our Legionnaires' data.
+      The shower-exposed group's risk ratio RR equals 2.7, which sounds alarming, right?
+      But if the confidence interval is 0.8 to 9.1, that means the true RR could be less than 1,
+      meaning the shower might not be a risk factor at all!
+      On the other hand, if the interval is 2.1 to 3.5, then it's solid; the shower is almost certainly a risk.
+      So drawing a conclusion from the point estimate alone is like judging someone's personality from a single photo. Way too hasty.
+    animation: "show_point_vs_interval"
+    code: |
+      rr = 2.7
+      ci_wide = (0.8, 9.1)   # not significant
+      ci_narrow = (2.1, 3.5) # significant
+    pause_after: 0.5
+
+  - id: "why_log"
+    narration: >
+      Next let's explain something that trips a lot of people up: why do we take the log to compute the confidence interval?
+      The risk ratio and odds ratio have an awkward property: their range is 0 to positive infinity.
+      One is the dividing line; above 1 is a risk factor, below 1 is a protective factor.
+      But here's the problem! Going from 1 to 2 and from 1 to 0.5 mean equally big things in epidemiology,
+      yet their distances on the number line are completely different. That's what we call asymmetry.
+      After taking the log? Log of 1 equals 0, log of 2 equals 0.693, log of 0.5 equals negative 0.693.
+      Look, perfectly symmetric now! Only then can you safely add and subtract 1.96 standard errors to build the interval.
+    animation: "show_why_log"
+    pause_after: 0.5
+
+  - id: "three_step_overview"
+    narration: >
+      The whole process is just three steps; I call it the "log-transform trilogy."
+      Step one: take the natural log of RR or OR, moving into the log world.
+      Step two: in the log world, add and subtract 1.96 times the standard error to get the bounds.
+      Step three: use exp to convert the bounds back to the original scale.
+      It's like going shopping in Japan: first exchange your dollars for yen, spend the yen in Japan, then convert what's left back to dollars.
+      The calculation in the middle must be done in the log world for it to be correct.
+    animation: "show_three_steps"
+    pause_after: 0.5
+
+  - id: "katz_rr_formula"
+    narration: >
+      Let's start with the confidence interval for the risk ratio RR, using the Katz method.
+      The standard error formula looks like this: SE equals the square root of
+      1 minus a over n1, all divided by a, plus 1 minus c over n0, all divided by c.
+      Here a is the number of cases in the exposed group, n1 is the total in the exposed group,
+      c is the number of cases in the unexposed group, and n0 is the total in the unexposed group.
+      The formula looks scary, but it's really just measuring "how uncertain log RR is."
+    animation: "show_katz_formula"
+    code: |
+      import numpy as np
+      se_ln_rr = np.sqrt((1 - a/n1)/a + (1 - c/n0)/c)
+    pause_after: 0.5
+
+  - id: "katz_rr_example"
+    narration: >
+      Let's try it on our Legionnaires' data.
+      In the shower-exposed group of 200 people, 100 got infected; in the unexposed group of 80, 21 got infected.
+      RR equals 100 divided by 200, then divided by 21 divided by 80, which comes out to 1.905.
+      Take the log to get 0.644, and the SE comes out to 0.199.
+      Lower bound: exp of 0.644 minus 1.96 times 0.199, equals 1.29.
+      Upper bound: exp of 0.644 plus 1.96 times 0.199, equals 2.82.
+      The confidence interval is 1.29 to 2.82, which does not include 1, so shower exposure really is a risk!
+    animation: "show_katz_example"
+    code: |
+      a, n1 = 100, 200
+      c, n0 = 21, 80
+      rr = (a/n1) / (c/n0)
+      ln_rr = np.log(rr)
+      se = np.sqrt((1 - a/n1)/a + (1 - c/n0)/c)
+      ci_low = np.exp(ln_rr - 1.96 * se)
+      ci_high = np.exp(ln_rr + 1.96 * se)
+    pause_after: 0.5
+
+  - id: "woolf_or_formula"
+    narration: >
+      The confidence interval for the odds ratio OR uses the Woolf method.
+      Its standard error formula is even simpler: SE equals the square root of 1 over a plus 1 over b plus 1 over c plus 1 over d.
+      a, b, c, and d are the four cells of the 2 by 2 table.
+      The intuition is: the fewer people in a cell, the greater the uncertainty, so the larger the SE.
+      If even one cell has an especially small count, the whole confidence interval becomes very wide.
+    animation: "show_woolf_formula"
+    code: |
+      se_ln_or = np.sqrt(1/a + 1/b + 1/c + 1/d)
+    pause_after: 0.5
+
+  - id: "woolf_or_example"
+    narration: >
+      Again using the Legionnaires' data.
+      a equals 100, b equals 100, c equals 21, d equals 59.
+      OR equals 100 times 59 divided by 100 times 21, which equals 2.81.
+      Take the log to get 1.033, and the SE equals 0.277.
+      Lower bound: exp of 1.033 minus 1.96 times 0.277, equals 1.63.
+      Upper bound: exp of 1.033 plus 1.96 times 0.277, equals 4.84.
+      The confidence interval, 1.63 to 4.84, doesn't include 1, confirming once again that the shower is a risk factor.
+    animation: "show_woolf_example"
+    code: |
+      a, b, c, d = 100, 100, 21, 59
+      odds_ratio = (a * d) / (b * c)
+      ln_or = np.log(odds_ratio)
+      se = np.sqrt(1/a + 1/b + 1/c + 1/d)
+      ci_low = np.exp(ln_or - 1.96 * se)
+      ci_high = np.exp(ln_or + 1.96 * se)
+    pause_after: 0.5
+
+  - id: "ci_interpretation"
+    narration: >
+      How do we read the confidence interval? Remember one golden rule.
+      If the confidence interval does not include 1, then at the 95 percent confidence level, the association is statistically significant.
+      If the confidence interval crosses 1, you can't rule out the possibility that "there's actually no difference."
+      Also, the width of the confidence interval matters.
+      A narrow interval means a precise estimate; a wide one means a lot of uncertainty.
+      It's like measuring with a ruler: a fine ruler and a crude ruler give you very different levels of confidence.
+    animation: "show_ci_interpretation"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's review the confidence-interval trilogy!
+      Step one: take the log, move to the symmetric world.
+      Step two: add and subtract 1.96 times SE to get the bounds.
+      Step three: exp back to the original scale.
+      Katz is for RR, Woolf is for OR; different formulas but identical logic.
+      If the confidence interval excludes 1 it's significant, if it includes 1 it's not. Clear and simple!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: COVID-19 vaccine efficacy
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's see the confidence interval applied to COVID-19 vaccine efficacy.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_ve_concept"
+    narration: >
+      The vaccine efficacy VE formula is 1 minus the risk ratio RR.
+      If the vaccinated group's infection risk is 0.05 times the unvaccinated group's, then VE is 95 percent, extremely effective.
+      But how reliable is VE equals 95 percent? That depends on the confidence interval of RR.
+      The confidence interval for VE is really just the RR interval computed in reverse.
+      The upper bound of RR becomes the lower bound of VE, and the lower bound of RR becomes the upper bound of VE.
+    animation: "show_ve_concept"
+    code: |
+      ve = 1 - rr
+      ve_ci_low = 1 - rr_ci_high
+      ve_ci_high = 1 - rr_ci_low
+    pause_after: 0.5
+
+  - id: "extra_ve_example"
+    narration: >
+      Suppose a COVID-19 vaccine trial had these results:
+      in the vaccinated group of 20,000, 8 got infected; in the placebo group of 20,000, 162 got infected.
+      RR equals 8 divided by 162, roughly 0.049. VE equals 1 minus 0.049, about 95.1 percent.
+      Using the Katz method, the 95 percent confidence interval for RR is 0.024 to 0.1.
+      So the confidence interval for VE is 1 minus 0.1 to 1 minus 0.024, which is 90 percent to 97.6 percent.
+      Even the lower bound of the interval is 90 percent, meaning this vaccine's protection is very stable.
+      That's why countries rushed to approve it, because the confidence interval tells us this wasn't just luck.
+    animation: "show_ve_example"
+    code: |
+      a, n1 = 8, 20000    # vaccinated
+      c, n0 = 162, 20000  # placebo
+      rr = (a/n1) / (c/n0)
+      ve = 1 - rr
+      # RR CI: [0.024, 0.100]
+      ve_ci = (1 - 0.100, 1 - 0.024)  # (0.900, 0.976)
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Three classic misreadings of the confidence interval! Even graduate students fall into these pits, so let's dodge them together.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pit one: thinking a 95 percent confidence interval means "there's a 95 percent chance the true value falls in this range."
+      Wrong! The true value is fixed, not random; it doesn't move around.
+      The correct interpretation is: if we repeat the sampling 100 times with the same method,
+      about 95 of the resulting confidence intervals will contain the true value.
+      It's the interval that varies, not the true value.
+      It's like throwing darts: the bullseye doesn't move, your hand shakes. The 95 percent is your hit rate, not the probability the bullseye is there.
+    animation: "show_blindspot_freq_interp"
+    error_code: "P(true value in CI) = 0.95"
+    correct_code: "P(CI covers true value) = 0.95"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pit two: computing the bounds on the log scale and then forgetting to exp back.
+      If your RR confidence interval contains a negative number, you 100 percent forgot the exp.
+      Because the range of RR and OR is 0 to positive infinity, it can never be negative.
+      When you see a negative number, sound the alarm immediately: am I still in the log world?
+      Remember, the very last step must always be exp back!
+    animation: "show_blindspot_forget_exp"
+    error_code: "ci = (ln_rr - 1.96*se, ln_rr + 1.96*se)"
+    correct_code: "ci = (np.exp(ln_rr - 1.96*se), np.exp(ln_rr + 1.96*se))"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pit three: only checking whether the confidence interval includes 1 and completely ignoring its width.
+      Suppose two studies both report RR equals 3.0 and both intervals exclude 1.
+      But study A's interval is 2.5 to 3.6, and study B's is 1.1 to 8.2.
+      Study A is precise like a laser pointer; study B is fuzzy like a flashlight.
+      Both are "significant," but how much can you trust study B's estimate?
+      A confidence interval wide enough to park a truck usually means the sample is too small and you need more data.
+    animation: "show_blindspot_ci_width"
+    error_code: "RR=3.0 CI(1.1, 8.2) -> significant!"
+    correct_code: "RR=3.0 CI(1.1, 8.2) -> significant but imprecise"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      Confidence intervals, done! You now know why you take the log first and exp back,
+      and you know how to use the Katz and Woolf methods to compute intervals for RR and OR.
+      Remember: the point estimate is the star, the confidence interval is the bodyguard; you need both to be complete.
+      Next episode we'll learn the chi-square test and watch observed and expected values face off in the ring.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

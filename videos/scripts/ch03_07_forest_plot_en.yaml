@@ -1,0 +1,256 @@
+meta:
+  chapter: "03"
+  concept: "forest_plot"
+  title: "Forest Plot: One Chart to Compare Every Suspect Factor"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch03_07_forest_plot"
+  scene_class: "Ch03ForestPlotScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: the forest plot
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, and welcome back! Today we learn a seriously powerful chart: the forest plot.
+      Earlier we analyzed risk factors one by one, computing lots of 2 by 2 tables and risk ratios.
+      But the boss reads your report and asks: "So which factor is the most suspicious?"
+      You can't make them flip through 8 tables and compare by hand, right?
+      The forest plot solves exactly this. One chart lines up every suspect factor,
+      and who has the highest risk ratio and who has the widest confidence interval is clear at a glance.
+      It's like a police lineup, everyone standing in a row for you to pick out.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "anatomy"
+    narration: >
+      First let's get to know the anatomy of a forest plot.
+      Each row represents a factor, and the horizontal direction is the risk-ratio scale.
+      The dot is the point estimate, the risk ratio you computed.
+      The horizontal line extending left and right is the 95 percent confidence interval, representing the uncertainty of the estimate.
+      Most important is that dashed line, drawn at risk ratio equals 1.
+      Risk ratio equals 1 means "no effect," exposure unrelated to disease.
+      If a confidence-interval line touches this dashed line, the result is not significant.
+      If the entire line sits to the right of the dashed line, it's a significant risk factor.
+    animation: "show_anatomy"
+    pause_after: 0.5
+
+  - id: "loop_setup"
+    narration: >
+      In the Pine and Cypress case, we have several exposure factors to examine.
+      Shower, hydrotherapy pool, smoking, immunosuppression, and more.
+      Computing each one by hand is exhausting, so we use a for loop to automate it.
+      First build a list holding the names of all the factors to test.
+      Then prepare an empty list, and after computing each one we'll store the result in it.
+    animation: "show_loop_setup"
+    code: |
+      factors = ["shower_use", "hydrotherapy_use",
+                 "smoking_history", "immunosuppressed",
+                 "comorbidity_dm", "comorbidity_copd",
+                 "comorbidity_chf", "comorbidity_cancer"]
+      results = []
+    pause_after: 0.5
+
+  - id: "loop_body"
+    narration: >
+      The body of the loop looks like this.
+      For each factor, first build the 2 by 2 table and get the four cell counts.
+      a is exposed and sick, b is exposed and not sick, c is unexposed but sick, d is neither.
+      Then compute the risk ratio with the formula: a divided by a plus b, over c divided by c plus d.
+      For the confidence interval use the log-transform method: take the log, add and subtract 1.96 standard errors, then exp back.
+      Finally store the factor name, the risk ratio, and the bounds into results.
+    animation: "show_loop_body"
+    code: |
+      for factor in factors:
+          ct = pd.crosstab(df[factor], df["sick"])
+          a, b = ct.iloc[1, 1], ct.iloc[1, 0]
+          c, d = ct.iloc[0, 1], ct.iloc[0, 0]
+          rr = (a/(a+b)) / (c/(c+d))
+          log_se = np.sqrt(1/a - 1/(a+b) + 1/c - 1/(c+d))
+          lo = np.exp(np.log(rr) - 1.96 * log_se)
+          hi = np.exp(np.log(rr) + 1.96 * log_se)
+          results.append({"factor": factor, "rr": rr,
+                          "ci_lo": lo, "ci_hi": hi})
+    pause_after: 0.5
+
+  - id: "to_dataframe"
+    narration: >
+      After the loop runs, results holds the risk ratio and confidence interval for every factor.
+      Convert it to a DataFrame for easier handling.
+      Here's an important little trick: use sort_values to sort the risk ratios from large to small.
+      That way the forest plot puts the most suspicious factor at the top, and the key point jumps out immediately.
+    animation: "show_to_dataframe"
+    code: |
+      res = pd.DataFrame(results)
+      res = res.sort_values("rr", ascending=True)
+    pause_after: 0.5
+
+  - id: "errorbar"
+    narration: >
+      The heart of drawing a forest plot is matplotlib's errorbar function.
+      Put the factor names on the y-axis and the risk ratios on the x-axis.
+      xerr needs the distance from the point estimate to the upper and lower bounds, not the bounds themselves.
+      So first compute xerr as a two-dimensional array: the first row is rr minus ci_lo, the second is ci_hi minus rr.
+      Use fmt equals o for round dots, and capsize to add little caps at the ends.
+      Now each factor appears as a dot with a horizontal line extending left and right.
+    animation: "show_errorbar"
+    code: |
+      fig, ax = plt.subplots(figsize=(8, 5))
+      xerr = np.array([res["rr"] - res["ci_lo"],
+                       res["ci_hi"] - res["rr"]])
+      ax.errorbar(res["rr"], res["factor"], xerr=xerr,
+                  fmt="o", color="#D97757", capsize=4)
+    pause_after: 0.5
+
+  - id: "null_line"
+    narration: >
+      Next let's draw that all-important dashed line, the null effect line.
+      Draw a vertical dashed line at the position risk ratio equals 1.
+      Use axvline, x equals 1, linestyle dashed, color gray.
+      This line is the reference for deciding significance.
+      Any factor whose confidence interval touches it can't be called a statistically significant association.
+    animation: "show_null_line"
+    code: |
+      ax.axvline(x=1, linestyle="--", color="gray",
+                 linewidth=1, label="Null (RR=1)")
+    pause_after: 0.5
+
+  - id: "polish"
+    narration: >
+      Finally, let's polish it up.
+      Label the x-axis Risk Ratio, and make the title clearly state which dataset's analysis this is.
+      Remove the top and right spines to make the chart look clean and crisp.
+      Add a legend to explain what the dashed line means.
+      Done! You now have a professional forest plot ready to drop into an outbreak report.
+    animation: "show_polish"
+    code: |
+      ax.set_xlabel("Risk Ratio (95% CI)")
+      ax.set_title("Forest plot: Legionella risk factors")
+      ax.spines["top"].set_visible(False)
+      ax.spines["right"].set_visible(False)
+      ax.legend()
+    pause_after: 0.5
+
+  - id: "interpret"
+    narration: >
+      How do we read this chart?
+      A dot to the right of the dashed line, with its entire confidence interval clear of the line, is a significant risk factor.
+      The farther the dot from the dashed line, the stronger the association.
+      The narrower the confidence interval, the more precise the estimate.
+      If the confidence interval straddles the dashed line, it's like a suspect with an alibi; you can't convict for now.
+      But remember! What you see here are crude risk ratios, not yet adjusted for confounders.
+      Later chapters will teach you to handle confounding with stratified analysis and regression.
+    animation: "show_interpret"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      A summary of the main lesson!
+      The forest plot in four steps: a for loop to compute every factor's risk ratio and confidence interval,
+      convert to a DataFrame and sort, errorbar to draw the chart, and axvline to draw the dashed line.
+      One chart lets the boss instantly see which factor is the most suspicious.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: food poisoning investigation
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's see how a forest plot is used in a food poisoning investigation.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_context"
+    narration: >
+      After a company year-end banquet, 60 of the 200 employees came down with vomiting and diarrhea.
+      The menu had four dishes: salad, fried chicken, corn chowder, and tiramisu.
+      There's a record of which dishes each person ate.
+      Investigators need to find out which dish was to blame.
+      Use a for loop to compute a risk ratio for each of the four dishes and build a forest plot.
+    animation: "show_extra_context"
+    code: |
+      foods = ["salad", "chicken", "soup", "tiramisu"]
+      food_results = []
+      for food in foods:
+          ct = pd.crosstab(df[food], df["ill"])
+          # ... same RR calculation ...
+          food_results.append({"food": food, "rr": rr,
+                               "ci_lo": lo, "ci_hi": hi})
+    pause_after: 0.5
+
+  - id: "extra_result"
+    narration: >
+      The result is crystal clear! The tiramisu's risk ratio is as high as 3.8, with its confidence interval entirely to the right of the dashed line.
+      The salad's risk ratio is 1.1, and its confidence interval straddles the dashed line, so it's not significant.
+      The fried chicken and chowder are also near 1.
+      So the biggest suspect is the tiramisu!
+      Later testing found Salmonella in the raw eggs of the tiramisu; case cracked.
+      The forest plot means you don't flip through table after table; one chart pins down the culprit.
+    animation: "show_extra_result"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Three classic forest-plot traps! Let's step around them.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pit one: leaving the factors unsorted, so the dots are scattered and no pattern is visible.
+      Imagine grocery shopping where the products are placed at random; finding the soy sauce takes forever.
+      A forest plot is the same; if the factors aren't sorted, the reader's eyes have to scan back and forth, which is exhausting.
+      The correct approach: use sort_values to sort by risk ratio.
+      Put the largest risk ratio at the top or bottom to give the chart a visual hierarchy.
+    animation: "show_blindspot_sort"
+    error_code: "res = pd.DataFrame(results)"
+    correct_code: "res = pd.DataFrame(results).sort_values('rr')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pit two: seeing a high risk ratio and jumping straight to "this is the cause."
+      The forest plot shows crude risk ratios, not adjusted for any confounder.
+      For example, older people are both more prone to chronic disease and more likely to develop severe illness.
+      You see a high risk ratio for chronic disease, but it might only be because of age.
+      That's confounding, and it needs stratified analysis or a regression model to handle.
+      The forest plot is a starting point, not an endpoint. It lists the suspects for you, but conviction needs more evidence.
+    animation: "show_blindspot_crude_rr"
+    error_code: "# high RR = causal factor"
+    correct_code: "# high crude RR = suspect, need adjustment"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pit three: testing a pile of factors, each at a 5 percent significance level, and ignoring the multiple-comparison problem.
+      If you test 8 factors, each at alpha equals 0.05,
+      the chance of at least one false positive is 1 minus 0.95 to the 8th power, about 34 percent.
+      A one-in-three chance of a false positive!
+      So when there are many factors, stay alert about the p-values.
+      You can use a Bonferroni correction: alpha divided by the number of comparisons, 0.05 divided by 8 is about 0.006.
+      Or at least note in the report how many factors you tested, and let readers judge for themselves.
+    animation: "show_blindspot_multiple"
+    error_code: "if p < 0.05: print('significant')"
+    correct_code: "if p < 0.05 / n_tests: print('significant')"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      The forest plot, learned!
+      A for loop plus errorbar lines up all your suspect factors, and one chart tells the whole story.
+      Remember: sorting makes the chart easier to read, a crude risk ratio is not causation, and be careful with multiple comparisons.
+      Next episode we enter chapter four and learn the outbreak investigation workflow,
+      stringing all the tools we've learned into a complete outbreak-investigation SOP.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

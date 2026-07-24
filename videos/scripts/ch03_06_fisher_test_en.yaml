@@ -1,0 +1,210 @@
+meta:
+  chapter: "03"
+  concept: "fisher_test"
+  title: "Fisher's Exact Test: The Small-Sample Lifesaver"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch03_06_fisher_test"
+  scene_class: "Ch03FisherTestScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: Fisher's exact test
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, and welcome back! Today we cover a precision weapon of statistics: Fisher's exact test.
+      Last episode we learned the chi-square test; it's fast and handy, but it has one fatal weakness.
+      It's like bringing a cannon to battle only to find the enemy hiding in a narrow alley where the cannon can't maneuver.
+      When the sample size is too small, the chi-square test breaks down.
+      That's when Fisher's exact test steps onto the stage.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "chisq_limitation"
+    narration: >
+      First let's revisit the chi-square test's minefield.
+      The chi-square test has one prerequisite: every cell's expected value must be at least 5.
+      How do you compute the expected value? It's that cell's row total times column total, divided by the grand total.
+      If any cell's expected value is below 5, the chi-square approximation formula becomes inaccurate.
+      It's like computing pi on a cheap calculator; when the precision runs out, all the later digits are garbage.
+    animation: "show_chisq_limitation"
+    code: |
+      expected = (row_total * col_total) / grand_total
+      # Rule of thumb: all expected >= 5
+    pause_after: 0.5
+
+  - id: "fisher_idea"
+    narration: >
+      The idea behind Fisher's exact test is brute-force yet elegant.
+      It doesn't use any approximation formula; it directly lists every possible 2 by 2 table,
+      computes the probability of each arrangement, and then sums the probabilities of results more extreme than the observed one.
+      Sounds crazy, right? But that's exactly why it's called the "exact" test.
+      No estimation, no approximation; every step is an exact calculation.
+      It's like a teacher grading exams, not spot-checking but carefully reviewing every single question.
+    animation: "show_fisher_idea"
+    pause_after: 0.5
+
+  - id: "legionella_small"
+    narration: >
+      Back to our Pine and Cypress nursing home.
+      Suppose we want to examine the relationship between ICU admission and hydrotherapy pool use.
+      But ICU admissions are inherently few, only single digits.
+      So the 2 by 2 table ends up with very small numbers, and the expected values might be below 5.
+      Let's first build the table with crosstab, then check the expected values.
+    animation: "show_legionella_small"
+    code: |
+      ct = pd.crosstab(df["icu_admission"], df["hydrotherapy_use"])
+      chi2, p, dof, expected = stats.chi2_contingency(ct)
+      print(expected)
+    pause_after: 0.5
+
+  - id: "check_expected"
+    narration: >
+      See it? The expected array has cells below 5.
+      If you force chi-square here, the p-value you get is unreliable.
+      It's like taking your temperature with a broken thermometer; you get a number, but you can't trust it.
+      So we need a more precise ruler: Fisher's exact test.
+    animation: "show_check_expected"
+    code: |
+      if (expected < 5).any():
+          print("Expected < 5 detected, use Fisher!")
+    pause_after: 0.5
+
+  - id: "fisher_scipy"
+    narration: >
+      Using Fisher's exact test in Python is super simple.
+      scipy dot stats dot fisher_exact, just pass in the 2 by 2 table.
+      It returns two things: the odds ratio and the p-value.
+      Note! fisher_exact takes a 2 by 2 array of raw counts, not a DataFrame.
+      So convert it to a numpy array first with values.
+    animation: "show_fisher_scipy"
+    code: |
+      from scipy.stats import fisher_exact
+      odds_ratio, p_value = fisher_exact(ct.values)
+      print(f"OR = {odds_ratio:.2f}, p = {p_value:.4f}")
+    pause_after: 0.5
+
+  - id: "compare_p"
+    narration: >
+      Here's the interesting part! Let's compute both the chi-square and Fisher p-values and compare.
+      When the sample is large enough, the two p-values are very close, almost identical.
+      But when the sample is small and expected values are low, the chi-square p-value drifts off.
+      Fisher is the true standard answer.
+      So the rule of thumb is: check the expected values first, and if any cell is below 5, use Fisher.
+    animation: "show_compare_p"
+    code: |
+      chi2, p_chi2, _, _ = stats.chi2_contingency(ct)
+      _, p_fisher = fisher_exact(ct.values)
+      print(f"Chi-square p = {p_chi2:.4f}")
+      print(f"Fisher p     = {p_fisher:.4f}")
+    pause_after: 0.5
+
+  - id: "decision_flow"
+    narration: >
+      Let's lay out a simple decision flow.
+      Take your 2 by 2 table and compute the expected values first.
+      Are all cells greater than or equal to 5? Use the chi-square test, fast and good.
+      Is any cell below 5? Dutifully use Fisher's exact test.
+      In fact, many journal papers require Fisher for small samples;
+      it's already the academic standard practice.
+    animation: "show_decision_flow"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      A summary of the main lesson!
+      The chi-square test is an approximation and becomes inaccurate when expected values are too small.
+      Fisher's exact test is exact and isn't limited by sample size.
+      scipy dot stats dot fisher_exact does it in one line.
+      Check the expected values first, then decide which test to use; that's the correct workflow.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: rare cancer cluster
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at a rare-disease cluster case.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Near a factory in a small town, 3 cases of rare angiosarcoma appeared within three years.
+      This cancer has an extremely low incidence in the general population; a small town usually sees one case every few decades.
+      The health authority rushed to investigate, comparing disease occurrence between residents near the factory and those in other areas.
+      But because there were only 3 cases, the 2 by 2 table was all single digits.
+      The smallest expected value was only 0.8. In this situation the chi-square test is completely unusable.
+      Fisher's exact test is the only choice.
+      The result: a p-value of 0.03, statistically significant!
+      This result prompted the environmental agency to investigate the factory's emissions further.
+    animation: "show_extra_example"
+    code: |
+      rare_cancer = np.array([[3, 497], [1, 4999]])
+      odds_ratio, p_value = fisher_exact(rare_cancer)
+      print(f"OR = {odds_ratio:.1f}, p = {p_value:.3f}")
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Three classic misconceptions about Fisher's exact test! Let's see if any of them caught you.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pit one: reaching straight for chi-square without ever checking the expected values.
+      Many people grab a 2 by 2 table, run chi2_contingency, get a p-value, and call it a day.
+      But if the expected values are too small, that p-value simply can't be trusted.
+      The correct approach: always check the expected array first, and if anything is below 5, switch to Fisher.
+      Build that habit and your statistical analysis will stand on solid ground.
+    animation: "show_blindspot_always_chisq"
+    error_code: "chi2, p, dof, exp = chi2_contingency(ct)"
+    correct_code: "if (exp < 5).any(): use fisher_exact(ct)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pit two: thinking Fisher is "weaker" than chi-square and less likely to reach significance.
+      This is a common misconception. Fisher isn't weaker; it's more rigorous.
+      Chi-square estimates the p-value with an approximation formula, while Fisher computes it exactly.
+      When the sample is large enough, the two p-values are almost identical.
+      When the sample is small, Fisher's result is the correct one, and chi-square is the one that's guessing.
+      So don't be afraid to use Fisher; it's the true gold standard.
+    animation: "show_blindspot_fisher_weak"
+    error_code: "# Fisher is less powerful than chi-square"
+    correct_code: "# Fisher is exact, chi-square approximates"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pit three: mixing up one-sided and two-sided tests.
+      scipy's fisher_exact defaults to a two-sided test, meaning it checks whether the odds ratio is not equal to 1.
+      But you can pass alternative equals greater or less to run a one-sided test.
+      When do you use one-sided? Only when you have a clear directional hypothesis in advance.
+      For example, you're certain the exposure can only increase risk, never decrease it.
+      Without a strong reason, use the default two-sided; it's more conservative and safer.
+    animation: "show_blindspot_one_vs_two"
+    error_code: "fisher_exact(ct, alternative='greater')"
+    correct_code: "fisher_exact(ct)  # two-sided by default"
+    pause_after: 0.5
+
+  # ========================================
+  # [D] Outro
+  # ========================================
+  - id: "outro"
+    narration: >
+      Fisher's exact test, learned!
+      Remember the mantra: expected value below 5, chi-square can't be trusted, Fisher to the rescue.
+      Next episode we'll draw a forest plot, lining up the risk ratios of all the risk factors side by side,
+      so one chart reveals who the biggest suspect is!
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0
