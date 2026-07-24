@@ -41,6 +41,45 @@ class Ch02GroupbyScene(EpiBaseScene):
 
     total_steps: int = 14
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "分組統計秘密武器",
+            "title_sub": "groupby + agg 完全攻略",
+            "sac_p1": "1. Split  — 依照分組欄位拆成小表",
+            "sac_p2": "2. Apply  — 對每組做運算（sum, mean...）",
+            "sac_p3": "3. Combine — 把結果合回一張表",
+            "reset_note": "reset_index() 把分組欄位從 index 變回普通欄位",
+            "denom_note": "分母 = 該組總人數，不是全院總人數！",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. groupby = Split-Apply-Combine 三步驟",
+            "summary_p2": "2. .agg() 可一次算多個統計量",
+            "summary_p3": "3. reset_index() 把結果攤平成 DataFrame",
+            "summary_p4": "4. 多欄 groupby 用 list: ['floor', 'sex']",
+            "extra_banner_title": "額外範例：COVID-19 各縣市統計",
+            "blindspot_banner_title": "groupby 經典陷阱 3 選",
+            "outro_heading": "下一集：matplotlib 流行曲線",
+            "outro_sub": "用圖表說故事，畫出疫情的時間趨勢！",
+        },
+        "en": {
+            "title_main": "The Secret Weapon of Group Stats",
+            "title_sub": "The complete groupby + agg playbook",
+            "sac_p1": "1. Split  — break the table into groups by the key column",
+            "sac_p2": "2. Apply  — run a calculation on each group (sum, mean...)",
+            "sac_p3": "3. Combine — stitch the results back into one table",
+            "reset_note": "reset_index() turns the grouping key from index back into a normal column",
+            "denom_note": "Denominator = that group's total, NOT the whole facility!",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. groupby = the three Split-Apply-Combine steps",
+            "summary_p2": "2. .agg() computes several statistics at once",
+            "summary_p3": "3. reset_index() flattens the result into a DataFrame",
+            "summary_p4": "4. Multi-column groupby uses a list: ['floor', 'sex']",
+            "extra_banner_title": "Extra example: COVID-19 stats by county",
+            "blindspot_banner_title": "3 Classic groupby Traps",
+            "outro_heading": "Next up: matplotlib epidemic curves",
+            "outro_sub": "Tell the story with charts, plot the outbreak's time trend!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -50,7 +89,7 @@ class Ch02GroupbyScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the groupby lesson."""
-        self.show_title_card("分組統計秘密武器", "groupby + agg 完全攻略", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_split_apply_combine(self, duration: float = 7.0, **kwargs) -> None:
         """Step 1: introduce the Split-Apply-Combine paradigm."""
@@ -64,9 +103,9 @@ class Ch02GroupbyScene(EpiBaseScene):
         ).to_edge(UP, buff=0.8)
 
         bullets = VGroup(
-            Text("1. Split  \u2014 依照分組欄位拆成小表", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. Apply  \u2014 對每組做運算（sum, mean...）", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. Combine \u2014 把結果合回一張表", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("sac_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("sac_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("sac_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
         flow = Text(
@@ -152,7 +191,7 @@ class Ch02GroupbyScene(EpiBaseScene):
         code_panel = self.show_code(code_text, title="reset_index.py")
 
         note = Text(
-            "reset_index() 把分組欄位從 index 變回普通欄位",
+            self.t("reset_note"),
             font=FONT_CJK,
             font_size=20,
             color=TEXT_SECONDARY,
@@ -183,7 +222,7 @@ class Ch02GroupbyScene(EpiBaseScene):
         code_panel = self.show_code(code_text, title="attack_rate.py")
 
         note = Text(
-            "分母 = 該組總人數，不是全院總人數！",
+            self.t("denom_note"),
             font=FONT_CJK,
             font_size=20,
             color=ACCENT_ORANGE,
@@ -218,17 +257,17 @@ class Ch02GroupbyScene(EpiBaseScene):
         self.show_step_indicator(7, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. groupby = Split-Apply-Combine 三步驟", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("2. .agg() 可一次算多個統計量", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("3. reset_index() 把結果攤平成 DataFrame", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("4. 多欄 groupby 用 list: ['floor', 'sex']", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.42).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -242,7 +281,7 @@ class Ch02GroupbyScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：COVID-19 各縣市統計")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 7.0, **kwargs) -> None:
@@ -276,7 +315,7 @@ class Ch02GroupbyScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("groupby 經典陷阱 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_agg_vs_size(self, duration: float = 5.0, **kwargs) -> None:
@@ -309,14 +348,14 @@ class Ch02GroupbyScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：matplotlib 流行曲線",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "用圖表說故事，畫出疫情的時間趨勢！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

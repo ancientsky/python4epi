@@ -44,6 +44,53 @@ class Ch02MissingScene(EpiBaseScene):
 
     total_steps: int = 13
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "遺漏值偵探社",
+            "title_sub": "NaN, NaT, None 一次搞懂",
+            "three_heading": "遺漏值三兄弟",
+            "three_p1": "NaN  — 數字欄位的遺漏值（float）",
+            "three_p2": "NaT  — 日期欄位的遺漏值（datetime）",
+            "three_p3": "None — Python 通用的空值",
+            "struct_heading": "兩種遺漏值，處理方式大不同",
+            "struct_ok": "結構性遺漏 (OK)：death_date 存活者本來就沒有",
+            "struct_ng": "資料錯誤 (NG)：symptom_onset_date 不該漏填",
+            "struct_note": "先判斷「為什麼遺漏」，再決定「怎麼處理」",
+            "fill_note": "fillna 適合可推估的欄位；dropna 適合關鍵欄位缺失時",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. NaN/NaT/None 都是遺漏值，isnull() 一網打盡",
+            "summary_p2": "2. 先用 isnull().sum() 掌握全貌",
+            "summary_p3": "3. 區分結構性遺漏 vs 資料錯誤再處理",
+            "summary_p4": "4. fillna 填補 / dropna 刪除，依情境選擇",
+            "extra_banner_title": "額外範例：疫苗接種紀錄",
+            "blindspot_banner_title": "遺漏值經典地雷 3 選",
+            "outro_heading": "下一集：groupby 分組統計",
+            "outro_sub": "把資料分組，算出每組的侵襲率與致死率！",
+        },
+        "en": {
+            "title_main": "The Missing-Value Detective Agency",
+            "title_sub": "NaN, NaT, None demystified at once",
+            "three_heading": "The Three Missing-Value Brothers",
+            "three_p1": "NaN  — missing value in numeric columns (float)",
+            "three_p2": "NaT  — missing value in date columns (datetime)",
+            "three_p3": "None — Python's all-purpose null",
+            "struct_heading": "Two Kinds of Missing, Very Different Fixes",
+            "struct_ok": "Structural missing (OK): survivors simply have no death_date",
+            "struct_ng": "Data error (NG): symptom_onset_date should never be blank",
+            "struct_note": "First ask 'why is it missing', then decide 'how to handle it'",
+            "fill_note": "fillna fits estimable columns; dropna fits missing key columns",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. NaN/NaT/None are all missing; isnull() catches them all",
+            "summary_p2": "2. Use isnull().sum() first to see the full picture",
+            "summary_p3": "3. Tell structural missing from data errors before acting",
+            "summary_p4": "4. fillna to fill / dropna to drop, pick by context",
+            "extra_banner_title": "Extra example: vaccination records",
+            "blindspot_banner_title": "3 Classic Missing-Value Traps",
+            "outro_heading": "Next up: groupby aggregation",
+            "outro_sub": "Group the data and compute each group's attack rate and CFR!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -53,7 +100,7 @@ class Ch02MissingScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the missing values lesson."""
-        self.show_title_card("遺漏值偵探社", "NaN, NaT, None 一次搞懂", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_nan_nat_none(self, duration: float = 7.0, **kwargs) -> None:
         """Step 1: introduce the three types of missing values."""
@@ -72,16 +119,16 @@ class Ch02MissingScene(EpiBaseScene):
         )
 
         heading = Text(
-            "遺漏值三兄弟",
+            self.t("three_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         bullets = VGroup(
-            Text("NaN  — 數字欄位的遺漏值（float）", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("NaT  — 日期欄位的遺漏值（datetime）", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("None — Python 通用的空值", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("three_p1"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("three_p2"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("three_p3"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.3).shift(RIGHT * 2.0 + DOWN * 0.2)
 
         code_panel = CodePanel(
@@ -130,20 +177,20 @@ class Ch02MissingScene(EpiBaseScene):
         self.show_step_indicator(3, self.total_steps)
 
         heading = Text(
-            "兩種遺漏值，處理方式大不同",
+            self.t("struct_heading"),
             font=FONT_CJK,
             font_size=30,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         ok_text = Text(
-            "結構性遺漏 (OK)：death_date 存活者本來就沒有",
+            self.t("struct_ok"),
             font=FONT_CJK,
             font_size=22,
             color=ACCENT_GREEN,
         )
         ng_text = Text(
-            "資料錯誤 (NG)：symptom_onset_date 不該漏填",
+            self.t("struct_ng"),
             font=FONT_CJK,
             font_size=22,
             color="#D94452",
@@ -154,7 +201,7 @@ class Ch02MissingScene(EpiBaseScene):
         ).next_to(heading, DOWN, buff=0.8)
 
         note = Text(
-            "先判斷「為什麼遺漏」，再決定「怎麼處理」",
+            self.t("struct_note"),
             font=FONT_CJK,
             font_size=20,
             color=TEXT_SECONDARY,
@@ -206,7 +253,7 @@ class Ch02MissingScene(EpiBaseScene):
         code_panel = self.show_code(code_text, title="fill_or_drop.py")
 
         note = Text(
-            "fillna 適合可推估的欄位；dropna 適合關鍵欄位缺失時",
+            self.t("fill_note"),
             font=FONT_CJK,
             font_size=20,
             color=TEXT_SECONDARY,
@@ -221,17 +268,17 @@ class Ch02MissingScene(EpiBaseScene):
         self.show_step_indicator(6, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. NaN/NaT/None 都是遺漏值，isnull() 一網打盡", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("2. 先用 isnull().sum() 掌握全貌", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("3. 區分結構性遺漏 vs 資料錯誤再處理", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("4. fillna 填補 / dropna 刪除，依情境選擇", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.42).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -245,7 +292,7 @@ class Ch02MissingScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：疫苗接種紀錄")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 7.0, **kwargs) -> None:
@@ -287,7 +334,7 @@ class Ch02MissingScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("遺漏值經典地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_nan_compare(self, duration: float = 5.0, **kwargs) -> None:
@@ -320,14 +367,14 @@ class Ch02MissingScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：groupby 分組統計",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "把資料分組，算出每組的侵襲率與致死率！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

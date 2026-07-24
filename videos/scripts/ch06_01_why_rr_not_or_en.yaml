@@ -1,0 +1,152 @@
+meta:
+  chapter: "06"
+  concept: "why_rr_not_or"
+  title: "Why Cohort Studies Use RR, Not OR"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch06_01_why_rr_not_or"
+  scene_class: "Ch06WhyRrNotOrScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi, and welcome to Chapter Six, multivariable analysis.
+      Before we rush off to write code, let's ask one very basic question:
+      our nursing home has a 43% attack rate, so for a cohort study like this, should we report the RR or the OR?
+      You've probably learned that the OR is roughly equal to the RR, but that comes with one crucial condition.
+      Today I'll walk you through, step by step, why missing this one thing lets your own analysis mislead you.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "rr_vs_or_definition"
+    narration: >
+      Let's review what these two terms really mean.
+      The risk ratio, RR, is the attack rate in the exposed divided by the attack rate in the unexposed: it asks "how many times the probability".
+      The odds ratio, OR, is the odds in the exposed divided by the odds in the unexposed: it asks "how many times the odds".
+      Odds is probability divided by one minus probability.
+      When the disease is rare, the two are nearly identical; but when the disease is common, the OR runs much larger than the RR.
+      The keyword is "rare", and that's the key we'll unlock today.
+    animation: "show_definition"
+    pause_after: 0.5
+
+  - id: "rare_disease_assumption"
+    narration: >
+      The textbook golden rule: when the attack rate is below 10%,
+      one minus p is roughly one, so the odds is roughly the risk, and the OR is roughly the RR.
+      The lower the attack rate, the smaller the gap between them.
+      At an attack rate of 1%, the OR and RR are almost the same.
+      At 10%, a noticeable difference appears.
+      At 43%, like our outbreak, the OR runs 1.5 to 3 times larger than the RR, depending on the effect size.
+    animation: "show_rare_assumption"
+    pause_after: 0.5
+
+  - id: "numerical_example"
+    narration: >
+      Let's look at real numbers.
+      Suppose the exposed attack rate is 0.6 and the unexposed is 0.3.
+      The RR is 0.6 divided by 0.3, exactly 2.
+      The OR is 0.6 times 0.7, divided by 0.4 times 0.3, which works out to 3.5.
+      Same data: the RR is 2, the OR is 3.5.
+      If you tell your supervisor "OR 3.5" and think that means 3.5 times the risk, you're off by 75%.
+      That's not a small gap; it's the gap between a right strategy and a wrong one.
+    animation: "show_numerical"
+    code: |
+      p_exposed = 0.60     # 60% attack rate in exposed
+      p_unexposed = 0.30   # 30% attack rate in unexposed
+      rr = p_exposed / p_unexposed
+      odds_e = p_exposed / (1 - p_exposed)
+      odds_u = p_unexposed / (1 - p_unexposed)
+      or_val = odds_e / odds_u
+      print(f"RR = {rr:.2f}, OR = {or_val:.2f}")
+    output: |
+      RR = 2.00, OR = 3.50
+    pause_after: 0.5
+
+  - id: "three_routes"
+    narration: >
+      In the world of multivariable analysis, there are three roads you can take.
+      Stratified analysis, taught in Chapter Five, controls only one factor at a time and outputs a Mantel-Haenszel adjusted RR.
+      Modified Poisson, the star of this chapter, adjusts for all factors at once and outputs an adjusted RR.
+      Logistic regression, the most widely used method in the world, gives you an adjusted OR in a cohort study, which inflates when the attack rate is high.
+      Which road? For cohort studies, choose Modified Poisson, so you keep the RR consistent all the way through.
+    animation: "show_three_routes"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      A quick recap.
+      RR answers "how many times the risk", OR answers "how many times the odds", and the two only agree when the disease is rare.
+      Our attack rate is 43%, so the OR will systematically overstate the effect.
+      For cohort studies, choose Modified Poisson regression to compute the adjusted RR.
+      That's why the backbone of Chapter Six isn't logistic regression, but Modified Poisson.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's look at a gory, real-world case of misuse.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_hrt"
+    narration: >
+      The study of hormone replacement therapy, HRT, and heart disease.
+      In the 1990s, observational studies used the OR to report that "HRT cuts heart disease risk by 40%".
+      The media ran wild with it, and doctors prescribed it heavily.
+      In 2002, the WHI randomized controlled trial revealed the truth: HRT actually increased heart disease risk.
+      One reason was that the disease prevalence in the observational studies wasn't low, so the OR and RR differed a lot,
+      and combined with healthy user bias, the conclusion flipped completely.
+      This teaches us: choosing the wrong effect measure isn't an academic problem, it's a public health disaster.
+    animation: "show_extra_hrt"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Next, the three pitfalls beginners step on most often!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: reading the OR as if it were the RR.
+      An OR of 3.5 doesn't mean 3.5 times the risk; it means 3.5 times the odds.
+      When you report to your boss or a patient, the wrong word is misleading.
+      Build the habit: when you see an OR, write "how many times the odds" explicitly, and never quietly swap in "risk".
+    animation: "show_blindspot_misinterpret"
+    error_code: "print(f'Risk is {or_val}x higher')"
+    correct_code: "print(f'Odds is {or_val}x higher')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: using logistic regression as your only tool in a cohort study.
+      Most Python textbooks teach only logistic regression for multivariable analysis, and rarely teach Modified Poisson.
+      But if your data is cohort follow-up and the disease isn't rare, you should switch to the GLM Poisson family.
+      Pick the right tool, and your results will be accurate.
+    animation: "show_blindspot_logistic_only"
+    error_code: "smf.logit('infected ~ ...', data=df).fit()"
+    correct_code: "smf.glm('infected ~ ...', family=sm.families.Poisson()).fit(cov_type='HC0')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: getting excited whenever you see a big OR.
+      "My study has an OR of 5!" Don't pop the champagne yet.
+      First check the attack rate. If it's a common disease at 50%, an OR of 5 might correspond to an RR of only 2 to 3.
+      The effect isn't as big as you thought. Look at the attack rate first, then the effect size: that's the honest analytical attitude.
+    animation: "show_blindspot_big_or"
+    error_code: "print(f'Huge effect: OR={or_val}!')"
+    correct_code: "print(f'OR={or_val}, attack_rate={ar:.0%}, check RR'"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations, you now understand the difference between RR and OR!
+      In the next episode we'll break down the core of logistic regression:
+      what exactly are the three steps of probability, odds, and logit doing?
+      Even though our backbone uses Modified Poisson, logistic is used everywhere in the world, so you must be able to read it.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

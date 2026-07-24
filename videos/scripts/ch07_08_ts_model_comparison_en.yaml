@@ -1,0 +1,161 @@
+meta:
+  chapter: "07"
+  concept: "ts_model_comparison"
+  title: "Six-Model Showdown: Which One Fits Which Scenario?"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch07_08_model_comparison"
+  scene_class: "Ch07ModelComparisonScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Chapter 7's final episode!
+      We've already learned six time-series forecasting models:
+      rolling mean, Poisson+lag, Negative Binomial,
+      Logistic threshold, ARIMA, and SARIMA.
+      Each has its own pros, cons, and use cases.
+      This episode puts all six in the ring,
+      and one table compares MAE, data requirements, whether they capture cycles, and whether they give a CI,
+      so next time you meet new data you can pick the right tool in 5 seconds.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "comparison_table"
+    narration: >
+      The comparison table has six columns.
+      Model name, dataset, MAE, minimum data requirement, whether it captures cycles, confidence interval.
+      Rolling mean: 5 days is enough, no cycle, no CI.
+      Poisson and NB plus lag: 10 days, partial cycle, has CI.
+      Logistic: 10 days, binary only, probability CI.
+      ARIMA: 30 days, weak cycle, has CI.
+      SARIMA: 60 days, strong cycle, has CI.
+      One table covers every scenario.
+    animation: "show_comparison_table"
+    pause_after: 0.5
+
+  - id: "decision_tree"
+    narration: >
+      The decision-tree mantra, four questions decide the model.
+      Only 1 to 2 weeks of data? → Rolling mean or Poisson plus lag.
+      Overdispersion (variance far greater than mean)? → Negative Binomial.
+      Predicting a yes/no alert? → Logistic threshold.
+      Mid-to-long term (over 30 days), no cycle? → ARIMA.
+      Clear cycle (weekly, monthly, yearly)? → SARIMA.
+      Answer the four questions and the model is set.
+    animation: "show_decision_tree"
+    pause_after: 0.5
+
+  - id: "mae_aic_rules"
+    narration: >
+      How do you read MAE and AIC?
+      MAE, smaller is better, meaning smaller average prediction error.
+      AIC, smaller is better, penalizing overfitting.
+      But don't look at them alone, always compare against the baseline.
+      Rule of thumb: your model's MAE should be at least 10 percent smaller than a rolling mean
+      to count as a real improvement.
+      An AIC gap of 10 or more counts as a meaningful difference.
+    animation: "show_mae_aic_rules"
+    pause_after: 0.5
+
+  - id: "complexity_vs_data"
+    narration: >
+      The golden rule of complexity and data size.
+      Little data → use a simple model.
+      Lots of data → you can consider a complex model.
+      The reason: complex models have many parameters, and short data overfits.
+      Chapter 7's nursing home, 17 days plus 121 people, simply can't run SARIMA.
+      Only the synthetic 90 days lets SARIMA show its power.
+      Don't jump to SARIMA to show off, the right tool for the right occasion.
+    animation: "show_complexity_vs_data"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Chapter 7's grand graduation summary.
+      One, short data → rolling mean, Poisson+lag.
+      Two, overdispersion → Negative Binomial.
+      Three, yes/no alert → Logistic threshold.
+      Four, mid-to-long term → ARIMA.
+      Five, has a cycle → SARIMA.
+      Five mantras to serve you for life.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: the COVID real-time forecasting contest!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid_forecast"
+    narration: >
+      In 2020 the US CDC ran the big COVID-19 Forecast Hub contest,
+      inviting research teams worldwide to forecast confirmed cases 1 to 4 weeks ahead every week.
+      The competing models spanned ARIMA, SARIMA, exponential smoothing,
+      machine-learning LSTM, deep-learning Transformer,
+      and hybrid ensemble methods.
+      The result: for short-term 1-week forecasts, classic ARIMA and SARIMA held steady near the top.
+      For long-term 4-week forecasts, hybrid ensemble models won.
+      The public-health lesson: don't worship deep learning,
+      keep it simple when it should be simple, and blend when it should blend.
+    animation: "show_extra_covid_forecast"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      The three big model-selection blind spots!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: seeing LSTM in the news and wanting to use it.
+      Machine-learning and deep-learning time series need thousands of records or more.
+      With Chapter 7's data volume, an LSTM will absolutely overfit.
+      Statistical models (ARIMA, SARIMA) actually do better when data is scarce.
+      Don't assume complex means strong.
+    animation: "show_blindspot_ml_hype"
+    error_code: "model = LSTM(hidden=128).fit(daily_17days)"
+    correct_code: "model = Poisson_with_lag.fit(daily_17days)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: picking a model by MAE alone.
+      The model with the smallest MAE isn't necessarily best.
+      You also need to weigh: does it have a CI, is it interpretable, what's the compute cost, does it capture cycles.
+      In public-health practice, "slightly worse MAE but interpretable" often wins,
+      because decision-makers need to explain their reasoning, not just cite a number.
+      Multi-dimensional evaluation is the professional approach.
+    animation: "show_blindspot_only_mae"
+    error_code: "select_model(min_mae_only=True)"
+    correct_code: "select_model(mae, ci, interp, cost, cycle)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: choosing a model and never revisiting it.
+      Epidemics change fast, and last week's best model may miss the mark next week.
+      The correct process: retrain weekly and re-compare all six models monthly.
+      A surveillance system stays alive through continuous tuning, not by slacking off after deployment.
+      That's the difference between "real-time surveillance" and "one-off analysis".
+    animation: "show_blindspot_no_retrain"
+    error_code: "# deploy once and forget"
+    correct_code: "# retrain weekly, re-evaluate monthly"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations on finishing the entire Chapter 7, Time Series and Forecasting series!
+      From the basics, the rolling mean baseline, lag features,
+      Poisson, Negative Binomial, Logistic threshold,
+      ARIMA, and SARIMA, all the way to the six-model showdown,
+      you now command the most important forecasting toolbox in public-health surveillance.
+      In the next chapter, Chapter 8, we pivot to "spatial epidemiology"
+      and see how to draw beautiful disease maps with Python!
+      See you in the next chapter!
+    animation: "show_outro"
+    pause_after: 1.0

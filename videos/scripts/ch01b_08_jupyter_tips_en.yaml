@@ -1,0 +1,184 @@
+meta:
+  chapter: "01b"
+  concept: "jupyter_tips"
+  title: "Practical Jupyter Tips: Double Your Efficiency"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch01b_08_jupyter_tips"
+  scene_class: "Ch01bJupyterTipsScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: Jupyter tips
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! This is the last video of the Ch01b toolbox.
+      I'll teach you a few Jupyter Lab tricks and shortcuts
+      to double your analysis efficiency.
+      These are the moves seasoned Python users rely on every day,
+      but hardly anyone teaches them explicitly.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "shell_commands"
+    narration: >
+      Trick one: the bang command.
+      Inside a Jupyter code cell,
+      add a bang in front and you can run terminal commands.
+      bang ls to list files, bang head to see the first few lines,
+      bang wc to count rows.
+      No need to open a separate terminal; get it done right in the notebook.
+    animation: "show_shell_commands"
+    code: |
+      !ls data/synthetic/
+      !head -3 data/synthetic/legionella_outbreak.csv
+      !wc -l data/synthetic/legionella_outbreak.csv
+    pause_after: 0.5
+
+  - id: "install_in_jupyter"
+    narration: >
+      Trick two: installing packages inside Jupyter.
+      bang uv add seaborn installs it right in a cell.
+      After installing, remember to Restart Kernel,
+      because already-loaded modules don't update automatically.
+      Just click Restart Kernel in the Kernel menu.
+    animation: "show_install_in_jupyter"
+    code: |
+      !uv add seaborn
+      # Then: Kernel > Restart Kernel
+      import seaborn as sns
+    pause_after: 0.5
+
+  - id: "question_mark"
+    narration: >
+      Trick three: the question mark for docs.
+      Add a question mark after a function name, run it, and you see its documentation.
+      Add two question marks, and you even see the source code.
+      For example, pd.read_csv question mark shows you every parameter's description.
+      No need to open a browser to look up the docs.
+    animation: "show_question_mark"
+    code: |
+      import pandas as pd
+      pd.read_csv?
+    pause_after: 0.3
+
+  - id: "tab_complete"
+    narration: >
+      Trick four: Tab autocomplete.
+      Type df dot, then press the Tab key,
+      and Jupyter lists every available method and attribute.
+      Super useful when you forget a method name.
+      Pair it with the question mark for docs, and it's your pocket dictionary.
+    animation: "show_tab_complete"
+    code: |
+      # Type: df.
+      # Then press Tab
+      # Shows: df.head, df.info, df.describe...
+    pause_after: 0.3
+
+  - id: "timeit_magic"
+    narration: >
+      Trick five: percent timeit for performance.
+      Put percent timeit in front of a line of code,
+      and Jupyter runs it many times and tells you the average time.
+      Want to know if your code is fast enough? One command does it.
+    animation: "show_timeit"
+    code: |
+      import math
+      %timeit math.sqrt(121)
+    output: "47.3 ns per loop"
+    pause_after: 0.3
+
+  - id: "main_summary"
+    narration: >
+      Let's sum up!
+      The bang runs shell commands, no terminal needed.
+      bang uv add installs packages inside Jupyter.
+      One question mark for docs, two for source code.
+      Tab autocompletes when you forget a method name.
+      percent timeit measures performance.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: quickly explore outbreak data
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Let's see a real example: using these tricks to quickly explore outbreak data.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      You've just received a new notification CSV.
+      Step one, bang head to see the first few lines and confirm the format.
+      Step two, bang wc to see how many rows there are.
+      Step three, read it in with pd.read_csv.
+      Step four, df.info question mark to see how to use it.
+      In under two minutes, you have a first grasp of the data.
+      That's the rhythm of a seasoned pro.
+    animation: "show_extra_example"
+    code: |
+      !head -2 data/synthetic/legionella_outbreak.csv
+      !wc -l data/synthetic/legionella_outbreak.csv
+    output: "281 lines (280 rows + header)"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      The last three Jupyter landmines.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Landmine one: not restarting the kernel after installing a package.
+      You bang uv add a new package, but import still fails.
+      Because the kernel is still using the old environment.
+      Remember to Restart Kernel after installing.
+    animation: "show_blindspot_no_restart"
+    error_code: "!uv add X\nimport X  # still fails!"
+    correct_code: "!uv add X\n# Restart Kernel first!"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Landmine two: using bang commands inside a Python script.
+      The bang is Jupyter-only syntax,
+      and using it in a regular .py file gives a SyntaxError.
+      If you want to run shell commands in a .py file,
+      use the subprocess module or os.system.
+    animation: "show_blindspot_bang_in_py"
+    error_code: "# in script.py:\n!ls  # SyntaxError!"
+    correct_code: "import os\nos.system('ls')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Landmine three: confusing cell execution order.
+      Jupyter remembers the order you ran cells, not the order they're arranged in.
+      If you run cell 5 first and then cell 2,
+      and cell 2 uses a variable defined in cell 5, you get an error.
+      The fix: build the habit of Restart and Run All.
+    animation: "show_blindspot_cell_order"
+    error_code: "# run cell 5, then cell 2: bug!"
+    correct_code: "# Restart + Run All: clean!"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! You've finished all eight videos of Ch01b!
+      You now have a complete Python developer toolbox.
+      Indentation, import, types, debugging, try except,
+      strings, uv package management, and Jupyter tricks.
+      Ready? In the next chapter, Ch02, we start using pandas on real outbreak data!
+      See you in Ch02!
+    animation: "show_outro"
+    pause_after: 1.0

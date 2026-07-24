@@ -41,6 +41,37 @@ class Ch01bTryExceptScene(EpiBaseScene):
 
     total_steps: int = 13
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "try / except",
+            "title_sub": "優雅處理意外",
+            "multi_heading": "多重 except — 不同錯誤不同處理",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. try 放可能出錯的程式碼",
+            "summary_p2": "2. except 指定錯誤類型來處理",
+            "summary_p3": "3. 不要 bare except（吞掉所有錯誤）",
+            "summary_p4": "4. 只包住「不可控的外部資料」",
+            "extra_banner_title": "額外範例：清洗疫苗接種紀錄",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：字串方法與迴圈進階",
+            "outro_sub": "清理疫調資料的瑞士刀！",
+        },
+        "en": {
+            "title_main": "try / except",
+            "title_sub": "Handle surprises gracefully",
+            "multi_heading": "Multiple except — different errors, different handling",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. Put risky code inside try",
+            "summary_p2": "2. except names the error type to handle",
+            "summary_p3": "3. No bare except (it swallows every error)",
+            "summary_p4": "4. Only wrap uncontrollable external data",
+            "extra_banner_title": "Extra example: cleaning vaccination records",
+            "blindspot_banner_title": "3 Common Beginner Pitfalls",
+            "outro_heading": "Next up: string methods and advanced loops",
+            "outro_sub": "The Swiss army knife for cleaning outbreak data!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -49,7 +80,7 @@ class Ch01bTryExceptScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
-        self.show_title_card("try / except", "優雅處理意外", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_basic_syntax(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(1, self.total_steps)
@@ -83,7 +114,7 @@ class Ch01bTryExceptScene(EpiBaseScene):
             '    print("file not found!")\nexcept PermissionError:\n    print("no permission!")')
 
         heading = Text(
-            "多重 except — 不同錯誤不同處理",
+            self.t("multi_heading"),
             font=FONT_CJK, font_size=26, color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
@@ -96,12 +127,12 @@ class Ch01bTryExceptScene(EpiBaseScene):
 
     def show_main_summary(self, duration: float = 4.0, **kwargs) -> None:
         self.show_step_indicator(4, self.total_steps)
-        heading = Text("重點整理", font=FONT_CJK, font_size=34, color=ACCENT_ORANGE).to_edge(UP, buff=0.8)
+        heading = Text(self.t("summary_heading"), font=FONT_CJK, font_size=34, color=ACCENT_ORANGE).to_edge(UP, buff=0.8)
         points = VGroup(
-            Text("1. try 放可能出錯的程式碼", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("2. except 指定錯誤類型來處理", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("3. 不要 bare except（吞掉所有錯誤）", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("4. 只包住「不可控的外部資料」", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.25), run_time=1.2)
@@ -113,7 +144,7 @@ class Ch01bTryExceptScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
-        banner = ExtraExampleBanner("額外範例：清洗疫苗接種紀錄")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
@@ -135,7 +166,7 @@ class Ch01bTryExceptScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_bare_except(self, duration: float = 5.0, **kwargs) -> None:
@@ -163,10 +194,10 @@ class Ch01bTryExceptScene(EpiBaseScene):
     def show_outro(self, duration: float = 3.0, **kwargs) -> None:
         self.show_step_indicator(self.total_steps, self.total_steps)
         heading = Text(
-            "下一集：字串方法與迴圈進階",
+            self.t("outro_heading"),
             font=FONT_CJK, font_size=28, color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
-        sub = Text("清理疫調資料的瑞士刀！", font=FONT_CJK, font_size=22, color=TEXT_SECONDARY).next_to(heading, DOWN, buff=0.4)
+        sub = Text(self.t("outro_sub"), font=FONT_CJK, font_size=22, color=TEXT_SECONDARY).next_to(heading, DOWN, buff=0.4)
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
         self.wait(duration - 1.1)

@@ -1,0 +1,164 @@
+meta:
+  chapter: "01b"
+  concept: "indentation"
+  title: "Indentation: Python's Must-Follow Rule"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch01b_01_indentation"
+  scene_class: "Ch01bIndentationScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: indentation
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, and welcome back!
+      Today we're talking about Python's most distinctive rule: indentation.
+      Other languages use curly braces to mark off blocks; Python uses whitespace.
+      Think of it as the etiquette of standing in line:
+      who stands behind whom, and who belongs to whom, is decided entirely by position.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_indent"
+    narration: >
+      So why four spaces?
+      Technically, Python only requires that the same level lines up.
+      But by community convention, everyone uses four spaces.
+      It's like the format of an outbreak report: once everyone agrees, it stops looking messy.
+      Two spaces will run just fine, but your colleagues will roll their eyes.
+    animation: "show_why_four_spaces"
+    pause_after: 0.5
+
+  - id: "if_indent"
+    narration: >
+      Look at this snippet.
+      if case fatality rate is greater than zero point one five, colon,
+      then the next line, indented four spaces, says print, escalate the response.
+      That indentation tells Python: this print line belongs under the if.
+      Forget to indent? Python throws an error on the spot!
+    animation: "show_if_indent"
+    code: |
+      cfr = 0.157
+      if cfr > 0.15:
+          print("CFR > 15%, alert!")
+    output: "CFR > 15%, alert!"
+    pause_after: 0.3
+
+  - id: "for_indent"
+    narration: >
+      A for loop works the same way.
+      for, plus in, plus a colon,
+      and the next line, indented four spaces, is what the loop repeats.
+      Here we list the case counts for six wings,
+      and use a for loop to print them one by one.
+    animation: "show_for_indent"
+    code: |
+      wings = ["1A", "1B", "2A", "2B", "3A", "3B"]
+      for wing in wings:
+          print(f"checking {wing}")
+    pause_after: 0.3
+
+  - id: "nested_indent"
+    narration: >
+      If there's an if nested inside the for, you indent four more, making eight.
+      It's like an org chart: the deeper in, the further down the hierarchy.
+      But generally, don't go past three levels; deeper than that gets hard to read.
+    animation: "show_nested_indent"
+    code: |
+      cases = [15, 10, 24, 25, 20, 27]
+      for count in cases:
+          if count > 20:
+              print(f"{count} - high risk!")
+    pause_after: 0.3
+
+  - id: "main_summary"
+    narration: >
+      Alright, let's sum up.
+      First, Python uses indentation, not braces, to define code blocks.
+      Second, always use four spaces.
+      Third, the colon after if, for, or def is your reminder to indent.
+      Fourth, never mix tabs and spaces, or things will break.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: dengue zone-by-zone screening
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Let's look at another public-health scenario and use indentation to write zone-by-zone logic.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      A dengue outbreak hits Tainan, and investigators must decide the spraying area by each district's case count.
+      If a district tops ten cases, it's high-risk and gets full spraying;
+      over five cases means targeted spraying; everything else gets education only.
+      See how if, elif, and else each govern their own block, all divided by indentation.
+    animation: "show_extra_example"
+    code: |
+      dengue_cases = 12
+      if dengue_cases > 10:
+          action = "full spray"
+      elif dengue_cases > 5:
+          action = "targeted spray"
+      else:
+          action = "education only"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Next, let's look at three indentation landmines.
+      Step on one once, and you'll remember it forever.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Landmine one: forgetting to indent after an if.
+      When Python sees a colon after if with no indented line below it,
+      it throws an IndentationError immediately.
+      The fix is simple: just add four spaces.
+    animation: "show_blindspot_no_indent"
+    error_code: "if cfr > 0.15:\nprint('alert')"
+    correct_code: "if cfr > 0.15:\n    print('alert')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Landmine two: mixing tabs and spaces.
+      Some people press Tab, others press space,
+      and mixed together, Python gets confused.
+      The fix: set your editor to convert Tab into four spaces automatically.
+      Jupyter Lab does this by default, so no worries.
+    animation: "show_blindspot_tab_space"
+    error_code: "if x > 0:\n\tprint(x)  # Tab!"
+    correct_code: "if x > 0:\n    print(x)  # spaces"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Landmine three: unexpected indentation.
+      There's no if or for, yet you indented anyway.
+      Python says: why is this line indented?
+      Remember: you only indent after a colon.
+    animation: "show_blindspot_unexpected"
+    error_code: "x = 10\n    print(x)  # why?"
+    correct_code: "x = 10\nprint(x)  # OK"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! You've nailed Python's most important formatting rule.
+      In the next video we'll learn import, borrowing tools other people already wrote.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

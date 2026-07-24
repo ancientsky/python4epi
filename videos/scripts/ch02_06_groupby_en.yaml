@@ -1,0 +1,190 @@
+meta:
+  chapter: "02"
+  concept: "groupby"
+  title: "The Secret Weapon of Group Stats: The Complete groupby + agg Playbook"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch02_06_groupby"
+  scene_class: "Ch02GroupbyScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: groupby + agg
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Today I'll teach you one of the strongest moves in pandas, groupby.
+      Imagine you're a teacher with a stack of the whole class's exams.
+      First you sort them into piles by class, then compute each class's average, and finally merge the results into one report card.
+      That's the essence of groupby: pile up, compute, combine. Dead simple, but immensely powerful.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "split_apply_combine"
+    narration: >
+      Behind groupby is a classic idea called Split Apply Combine.
+      Step one, Split: divide the data into groups by some column.
+      Step two, Apply: run the calculation you want on each group.
+      Step three, Combine: glue every group's result back into one table.
+      Like doing laundry: sort by color, wash separately, hang on the same line. Just remember these three steps.
+    animation: "show_split_apply_combine"
+    pause_after: 0.5
+
+  - id: "groupby_basic"
+    narration: >
+      Let's see the simplest example.
+      Pine and Cypress has 6 floors, and we want to know how many people live on each.
+      df dot groupby in parentheses floor dot size, one line does it!
+      The result tells you directly how many residents are on each floor.
+      Isn't that faster than dragging a pivot table in Excel?
+    animation: "show_groupby_basic"
+    code: 'df.groupby("floor").size()'
+    output: |
+      floor
+      1    48
+      2    52
+      3    45
+      4    47
+      5    44
+      6    44
+    pause_after: 0.5
+
+  - id: "agg_named"
+    narration: >
+      But outbreak work never computes just one thing.
+      Want each floor's headcount, infected count, and death count at once? Use agg with named aggregation!
+      Inside agg use n equals parentheses case_id comma size,
+      infected equals parentheses infected comma sum.
+      Each calculation gets its own name, and the result column is the name you gave, clean and tidy like a parade.
+    animation: "show_agg_named"
+    code: |
+      stats = df.groupby("floor").agg(
+          n=("case_id", "size"),
+          infected=("infected", "sum"),
+          deaths=("outcome_dead", "sum"),
+      )
+    pause_after: 0.5
+
+  - id: "reset_index"
+    narration: >
+      After groupby you'll notice the index goes strange, like stacked building blocks.
+      That's when you add a reset_index to flatten the index back into a normal DataFrame.
+      Like flipping an upside-down cup right-side up, and the world instantly returns to order.
+    animation: "show_reset_index"
+    code: "stats = stats.reset_index()"
+    pause_after: 0.3
+
+  - id: "attack_rate"
+    narration: >
+      With group statistics done, here's the main event, computing each floor's attack rate!
+      Attack rate equals that group's infected count divided by that group's residents, times 100.
+      Careful! The denominator must be "the residents on that floor," not the whole facility's 280!
+      This is an iron law of epidemiology, get the denominator wrong and your number is garbage.
+      Garbage in, garbage out.
+    animation: "show_attack_rate"
+    code: 'stats["attack_rate"] = stats["infected"] / stats["n"] * 100'
+    pause_after: 0.5
+
+  - id: "multiple_groupby"
+    narration: >
+      What if you want to pinpoint the hot zone more precisely?
+      Put a list inside groupby, passing both floor and wing, for double grouping.
+      Now you can see, say, that floor 3 wing A has an especially high attack rate.
+      Maybe the showerhead there is Legionella's secret base.
+      groupby isn't just a stats tool, it's an investigation-cracking device!
+    animation: "show_multiple_groupby"
+    code: |
+      detail = df.groupby(["floor", "wing"]).agg(
+          n=("case_id", "size"),
+          infected=("infected", "sum"),
+      ).reset_index()
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Key recap!
+      The core of groupby is the three Split Apply Combine steps.
+      size counts records, agg does multiple calculations, reset_index flattens the index.
+      When computing attack rate, the denominator must be each group's headcount, not the total.
+      Multi-column grouping helps you lock onto the outbreak's hot zone, that's how you crack the case.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: COVID-19 stats by county
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's see how groupby is used in national COVID-19 outbreak analysis.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Say you get COVID-19 notification data for every county in Taiwan.
+      Use groupby to group by county, and agg to compute confirmed and death counts at once.
+      Add one more line to compute each county's case fatality rate.
+      You might find some counties have a notably higher CFR,
+      perhaps tied to population aging or the distribution of medical resources.
+      The same groupby move, from a nursing home to a national outbreak, works for all.
+    animation: "show_extra_example"
+    code: |
+      covid = df.groupby("county").agg(
+          cases=("case_id", "size"),
+          deaths=("death", "sum"),
+      ).reset_index()
+      covid["cfr"] = covid["deaths"] / covid["cases"] * 100
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      The three classic groupby traps take the stage! Beginners hit them almost 100 percent of the time.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: passing the string size into agg is not the same as calling the size method directly!
+      agg parentheses size returns each column's non-null count, not the total record count you wanted.
+      Calling groupby dot size directly is what counts records per group.
+      These two look alike but mean completely different things, never mix them up.
+    animation: "show_blindspot_agg_vs_size"
+    error_code: 'df.groupby("floor").agg("size")'
+    correct_code: 'df.groupby("floor").size()'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: hardcoding the denominator as 280 when computing attack rate.
+      280 is the whole facility's headcount, not each floor's!
+      Using the total as denominator gives you not an attack rate but an overall proportion, a completely different meaning.
+      The right way: use each group's residents column as the denominator, letting every group compute its own.
+    animation: "show_blindspot_wrong_denominator"
+    error_code: 'stats["infected"] / 280 * 100'
+    correct_code: 'stats["infected"] / stats["residents"] * 100'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: calling sum right after groupby, adding up every numeric column.
+      case_id got summed? Age got summed too? What does adding those numbers even mean? Nothing.
+      Like summing the whole class's national IDs into an astronomical number, and then what?
+      The right way: use agg to specify exactly the column you want to compute, and leave the rest alone.
+    animation: "show_blindspot_sum_all"
+    error_code: 'df.groupby("floor").sum()'
+    correct_code: 'df.groupby("floor").agg(n=("infected","sum"))'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! You've mastered the secret weapon of group statistics.
+      In the next episode we'll use matplotlib to draw an investigation-grade epidemic curve,
+      turning your analysis into a beautiful chart, as professional as a CDC report.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

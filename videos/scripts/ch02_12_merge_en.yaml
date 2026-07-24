@@ -1,0 +1,187 @@
+meta:
+  chapter: "02"
+  concept: "merge"
+  title: "Joining Data Tables: merge Is Your VLOOKUP"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch02_12_merge"
+  scene_class: "Ch02MergeScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: pandas merge
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Today I'll teach you a super-practical skill: joining data tables.
+      If you've used Excel's VLOOKUP, congratulations, merge is its super-evolved form.
+      What's the difference? VLOOKUP looks up one column at a time; merge sticks a whole table onto yours.
+      And it won't blow up the moment you shuffle the column order, the way VLOOKUP does.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_merge"
+    narration: >
+      When you do epidemiological investigations, the data never sits obediently in one table.
+      The case roster is one table, the lab reports another, the hospital records yet another.
+      You can't ask some old master to manually paste all the data into one Excel sheet, right?
+      That would take forever. merge does it in one line, and it won't paste to the wrong row.
+      That's why everyone doing investigations must learn merge.
+    animation: "show_why_merge"
+    pause_after: 0.5
+
+  - id: "merge_basic"
+    narration: >
+      Let's look at the most basic usage.
+      We have the case roster, cases, and the lab reports, lab, both with a case_id column.
+      pd dot merge, pass the two tables, on equals case_id, how equals left.
+      It means: take the left case roster as the base, and paste the right test results onto it.
+      Anyone without a match is left blank, not dropped.
+      Exactly the same logic as VLOOKUP, but a hundred times cleaner syntax.
+    animation: "show_merge_basic"
+    code: |
+      merged = pd.merge(
+          cases_df, lab_df,
+          on="case_id", how="left"
+      )
+    output: "cases: 280 rows -> merged: 280 rows (lab matched: 241)"
+    pause_after: 0.5
+
+  - id: "how_parameter"
+    narration: >
+      merge's most important parameter is how, which decides the join style.
+      left join: keep all the left table's data, pair up the right where it exists, fill blanks where it doesn't. This is the most-used in investigations.
+      inner join: keep only rows in both, drop the unmatched. This is pandas' default, so be careful.
+      outer join: keep everything from both, fill blanks for the unmatched.
+      right join: the opposite of left, keep all the right table's data. Less common.
+      Remember, in investigations how equals left is your best friend, because you don't want to lose a single case.
+    animation: "show_how_parameter"
+    pause_after: 0.5
+
+  - id: "merge_different_keys"
+    narration: >
+      In the real world, column names are never unified.
+      Your case roster calls it case_id, while the lab side calls it patient_id.
+      Now use left_on and right_on to specify the key columns on each side.
+      merge pairs them just the same, totally unaffected by the different names.
+      This move is super handy when integrating data from different sources.
+    animation: "show_merge_different_keys"
+    code: |
+      merged = pd.merge(
+          cases_df, lab_df,
+          left_on="case_id",
+          right_on="patient_id",
+          how="left"
+      )
+    pause_after: 0.5
+
+  - id: "validate"
+    narration: >
+      Before you merge, always think it through: what relationship do you expect?
+      One case to one test? Or one case possibly with multiple hospital records?
+      The validate parameter lets pandas check for you.
+      one_to_one means one to one, many_to_one means many to one.
+      If the data doesn't match your expectation, pandas errors out directly, instead of silently spawning a pile of duplicate rows.
+      This habit can save you countless times; before merging, think clearly about the relationship you expect.
+    animation: "show_validate"
+    code: |
+      merged = pd.merge(
+          cases_df, lab_df,
+          on="case_id", how="left",
+          validate="one_to_one"
+      )
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's review!
+      merge is Python's VLOOKUP, but stronger and less error-prone.
+      how equals left is the most-used join in investigations, keeping every case without loss.
+      Different column names? Use left_on plus right_on.
+      After a merge, always check the result's shape to confirm the row count didn't explode.
+      Build the habit of using validate and let pandas catch the bugs.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: linking vaccination records
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's see how merge is used in a vaccination analysis.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Suppose you get a vaccination record with each resident's vaccination date and vaccine type.
+      Use merge to join the vaccination records with the case roster, how of course being left.
+      Because you want to keep every resident, whether or not they were vaccinated.
+      After merging you can analyze: for the vaccinated, are post-infection symptoms milder?
+      Is the case fatality rate lower? merge sticks the two tables together, and the follow-up analysis falls into place.
+      The same move works from Legionnaires' to flu to COVID, all universal.
+    animation: "show_extra_example"
+    code: |
+      merged = pd.merge(
+          cases_df, vaccine_df,
+          on="case_id", how="left"
+      )
+      merged["vaccinated"] = merged["vaccine_date"].notna()
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      The three merge wipeouts arrive! Beginners hit them almost a hundred percent of the time, so here's a preventive shot.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Wipeout one: the key column has duplicate values, and the row count explodes after the merge!
+      If the left table has two rows with case_id equal to A001 and the right also has two A001 rows,
+      merge produces two times two equals four rows, the Cartesian product of a many-to-many.
+      Your original 280 rows suddenly become thousands, and you don't know why.
+      The fix is to add validate equals one_to_many or one_to_one,
+      so pandas errors right when a many-to-many happens instead of silently exploding.
+    animation: "show_blindspot_duplicate_keys"
+    error_code: 'pd.merge(df1, df2, on="name")  # duplicates!'
+    correct_code: 'pd.merge(df1, df2, on="name", validate="1:m")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Wipeout two: forgetting to specify how, so it defaults to an inner join.
+      inner join keeps only rows in both, dropping all the unmatched.
+      Your original 280 cases become 241 after the merge, 39 people gone, and you haven't noticed.
+      Losing cases in an investigation is very serious, equivalent to under-reporting.
+      So every merge should explicitly write how equals left, don't rely on the default.
+    animation: "show_blindspot_inner_default"
+    error_code: 'pd.merge(cases, labs, on="id")  # inner join'
+    correct_code: 'pd.merge(cases, labs, on="id", how="left")'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Wipeout three: both tables have a same-named column, and merge auto-adds suffixes.
+      For example, both have a date column, and after merging it becomes date_x and date_y.
+      Then you write result bracket date, and boom, KeyError!
+      The fix is to use the suffixes parameter during merge to give those same-named columns meaningful names.
+      Like case underscore date and lab underscore date, so you know at a glance which is which.
+    animation: "show_blindspot_suffix_collision"
+    error_code: 'result["date"]  # KeyError: date_x / date_y'
+    correct_code: 'pd.merge(a, b, on="id", suffixes=("_case","_lab"))'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! You've learned merge's core usage and its three big traps.
+      Next time we'll handle string cleanup, teaching you how to turn messy text columns clean.
+      After all, eighty percent of data analysis time is spent cleaning data.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

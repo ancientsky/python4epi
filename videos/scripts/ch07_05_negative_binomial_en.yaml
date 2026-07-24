@@ -1,0 +1,156 @@
+meta:
+  chapter: "07"
+  concept: "negative_binomial"
+  title: "Negative Binomial: The Savior of Overdispersion"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch07_05_negative_binomial"
+  scene_class: "Ch07NegativeBinomialScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Poisson has a fatal assumption: variance equals mean.
+      But investigation data doesn't behave, once there's cluster infection the variance grows explosively,
+      far above the mean. This is called overdispersion.
+      This episode teaches Poisson's "upgrade", Negative Binomial,
+      which adds one parameter, alpha, dedicated to absorbing the "extra" variance.
+      After watching, you'll know exactly when to upgrade.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "dispersion_explained"
+    narration: >
+      Overdispersion in plain words.
+      Poisson assumes the data "spreads out steadily", mean 5, variance also 5.
+      But reality: 2 today, 0 tomorrow, then suddenly 15 the day after, variance could be 30!
+      Variance far greater than mean is overdispersion.
+      The causes: cluster infection, outbreaks, reporting delays, public-health data is overdispersed by nature.
+    animation: "show_dispersion_explained"
+    pause_after: 0.5
+
+  - id: "check_dispersion"
+    narration: >
+      Check the dispersion ratio before deciding which model to use.
+      Dispersion equals variance divided by mean.
+      Below 1.5: Poisson is fine.
+      Above 1.5: overdispersed, upgrade to Negative Binomial.
+      Above 3: severe, you may even need to consider zero-inflated or hurdle models.
+      That 1.5 is a rule of thumb, not a sacred number.
+    animation: "show_check_dispersion"
+    code: |
+      disp = ts_model["cases"].var() / ts_model["cases"].mean()
+      print(f"dispersion = {disp:.2f}")
+      # >1.5 → Negative Binomial
+    pause_after: 0.5
+
+  - id: "nb_code"
+    narration: >
+      The Negative Binomial code looks a lot like Poisson.
+      The formula is identical: cases tilde lag_1 plus lag_2 plus day_idx.
+      Just swap family from Poisson to NegativeBinomial and pass an alpha parameter.
+      Alpha is the knob that "absorbs the extra variance".
+      Use 1.0 as a default starting point, then adjust with the estimate from model.fit().
+    animation: "show_nb_code"
+    code: |
+      model_nb = smf.glm(
+          "cases ~ lag_1 + lag_2 + day_idx",
+          data=ts_model,
+          family=sm.families.NegativeBinomial(alpha=1.0),
+      ).fit()
+      pred_nb = model_nb.predict(ts_model)
+      mae_nb = mean_absolute_error(ts_model["cases"], pred_nb)
+    pause_after: 0.5
+
+  - id: "compare_mae_aic"
+    narration: >
+      How to compare Poisson and NB.
+      One, MAE: check how accurate the point estimate is.
+      Two, AIC: check the overall fit, smaller is better.
+      Three, CI width: NB's CI is usually wider than Poisson's, because it honestly admits the uncertainty is large.
+      If your NB's AIC is much lower than Poisson's (a gap over 10),
+      you must switch to NB.
+    animation: "show_compare_mae_aic"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      The three-step golden workflow.
+      One, compute dispersion equals variance divided by mean.
+      Two, above 1.5, use the NegativeBinomial family.
+      Three, compare AIC to decide which to adopt.
+      In one line: don't be lazy and default to Poisson, always look at dispersion first.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: weekly dengue reports!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue"
+    narration: >
+      Taiwan's weekly dengue reports are textbook overdispersed data.
+      Some neighborhoods might see 10 straight weeks of zero, then suddenly a week with 30 cases.
+      Variance can reach 10 times the mean!
+      In the early days the CDC used Poisson to set alert lines, but the CI came out too narrow,
+      giving frequent false alarms and exhausting the on-call staff.
+      Later they switched to Negative Binomial, the CI widened reasonably,
+      false alarms dropped by 60 percent, and real alarms were still caught.
+      That's the real meaning of overdispersion for a public-health system.
+    animation: "show_extra_dengue"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      The three big NB blind spots!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: defaulting to Poisson without checking.
+      Use Poisson without checking dispersion, and the CI comes out too narrow, looking super significant.
+      A reviewer will see in one glance that you skipped the overdispersion check.
+      One line, variance divided by mean, takes just seconds.
+    animation: "show_blindspot_no_check"
+    error_code: "smf.glm(..., family=Poisson()).fit()"
+    correct_code: "if var/mean > 1.5: family=NegativeBinomial()"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: setting alpha wildly to 0.01 or 100.
+      Alpha too small is almost the same as Poisson, losing the point of upgrading.
+      Alpha too large makes the fit blow up.
+      The conservative approach: start from alpha 1.0 and adjust with AIC.
+      Or estimate from dispersion: alpha is roughly dispersion minus 1.
+    animation: "show_blindspot_wrong_alpha"
+    error_code: "NegativeBinomial(alpha=0.01)"
+    correct_code: "NegativeBinomial(alpha=1.0)  # or estimated"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: NB still isn't enough, too many zeros.
+      If the data has lots of zeros (say 70 percent of days are zero),
+      even NB won't predict well.
+      That's when you upgrade to zero-inflated or hurdle models.
+      In plain words: "first predict whether today has any; if so, then predict how many".
+      Touch this once you have spare capacity.
+    animation: "show_blindspot_zero_inflated"
+    error_code: "NegativeBinomial()  # 70% zeros"
+    correct_code: "sm.ZeroInflatedNegativeBinomialP()  # advanced"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Continuous-number forecasting wraps up here!
+      In the next episode we switch problems: instead of predicting "how many people",
+      we predict "is tomorrow a peak day", a yes/no alert signal. That's the stage for Logistic regression.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

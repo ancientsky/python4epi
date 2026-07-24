@@ -42,6 +42,37 @@ class Ch01bTypesScene(EpiBaseScene):
 
     total_steps: int = 14
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "型別與轉換",
+            "title_sub": "數字、文字、布林值",
+            "conversion_heading": "型別轉換：幫資料換身分證",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. type() 查型別身分證",
+            "summary_p2": "2. int, float, str, bool 四大型別",
+            "summary_p3": "3. int(), float(), str() 做轉換",
+            "summary_p4": "4. and, or, not 組合布林條件",
+            "extra_banner_title": "額外範例：清理腸病毒通報年齡欄位",
+            "blindspot_banner_title": "初學者常見地雷 3 選",
+            "outro_heading": "下一集：讀懂錯誤訊息",
+            "outro_sub": "再也不怕紅色大字了！",
+        },
+        "en": {
+            "title_main": "Types and Conversion",
+            "title_sub": "Numbers, text, booleans",
+            "conversion_heading": "Type conversion: swap the data's ID card",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. type() checks a value's type ID",
+            "summary_p2": "2. int, float, str, bool — the four core types",
+            "summary_p3": "3. int(), float(), str() do the converting",
+            "summary_p4": "4. and, or, not combine boolean conditions",
+            "extra_banner_title": "Extra example: cleaning enterovirus age fields",
+            "blindspot_banner_title": "3 Common Beginner Pitfalls",
+            "outro_heading": "Next up: reading error messages",
+            "outro_sub": "Never fear the big red text again!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -50,7 +81,7 @@ class Ch01bTypesScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
-        self.show_title_card("型別與轉換", "數字、文字、布林值", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_type_function(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(1, self.total_steps)
@@ -68,7 +99,7 @@ class Ch01bTypesScene(EpiBaseScene):
         self.show_step_indicator(2, self.total_steps)
 
         heading = Text(
-            "型別轉換：幫資料換身分證",
+            self.t("conversion_heading"),
             font=FONT_CJK, font_size=28, color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
@@ -111,12 +142,12 @@ class Ch01bTypesScene(EpiBaseScene):
 
     def show_main_summary(self, duration: float = 4.0, **kwargs) -> None:
         self.show_step_indicator(5, self.total_steps)
-        heading = Text("重點整理", font=FONT_CJK, font_size=34, color=ACCENT_ORANGE).to_edge(UP, buff=0.8)
+        heading = Text(self.t("summary_heading"), font=FONT_CJK, font_size=34, color=ACCENT_ORANGE).to_edge(UP, buff=0.8)
         points = VGroup(
-            Text("1. type() 查型別身分證", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("2. int, float, str, bool 四大型別", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("3. int(), float(), str() 做轉換", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
-            Text("4. and, or, not 組合布林條件", font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=24, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.25), run_time=1.2)
@@ -128,7 +159,7 @@ class Ch01bTypesScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
-        banner = ExtraExampleBanner("額外範例：清理腸病毒通報年齡欄位")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
@@ -149,7 +180,7 @@ class Ch01bTypesScene(EpiBaseScene):
     # ------------------------------------------------------------------
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
-        banner = BlindSpotBanner("初學者常見地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_str_add(self, duration: float = 5.0, **kwargs) -> None:
@@ -177,10 +208,10 @@ class Ch01bTypesScene(EpiBaseScene):
     def show_outro(self, duration: float = 3.0, **kwargs) -> None:
         self.show_step_indicator(self.total_steps, self.total_steps)
         heading = Text(
-            "下一集：讀懂錯誤訊息",
+            self.t("outro_heading"),
             font=FONT_CJK, font_size=28, color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
-        sub = Text("再也不怕紅色大字了！", font=FONT_CJK, font_size=22, color=TEXT_SECONDARY).next_to(heading, DOWN, buff=0.4)
+        sub = Text(self.t("outro_sub"), font=FONT_CJK, font_size=22, color=TEXT_SECONDARY).next_to(heading, DOWN, buff=0.4)
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
         self.wait(duration - 1.1)

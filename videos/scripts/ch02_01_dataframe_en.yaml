@@ -1,0 +1,194 @@
+meta:
+  chapter: "02"
+  concept: "dataframe"
+  title: "What Is a DataFrame? Your First Step from CSV to Table"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch02_01_dataframe"
+  scene_class: "Ch02DataFrameScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: DataFrame basics
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi, and welcome to Chapter 2!
+      Last chapter we learned to store a number in a variable and a row of numbers in a list.
+      But when you're actually doing outbreak investigation, you face one giant table with hundreds of rows and dozens of columns.
+      That's when we call in pandas and its DataFrame.
+      Picture a DataFrame as a supercharged Excel sheet,
+      one that calculates for you, filters for you, and never crashes on you.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "excel_analogy"
+    narration: >
+      So how is a DataFrame different from Excel?
+      First, each horizontal line is called a row, one record of data.
+      Each vertical line is called a column, one field.
+      The biggest difference: in a DataFrame, each column can hold only one data type.
+      The age column is numbers, the name column is text, and you can't mix them.
+      It looks like a restriction, but it's really protecting you from computing something bizarre.
+    animation: "show_excel_analogy"
+    pause_after: 0.5
+
+  - id: "read_csv"
+    narration: >
+      How do we turn a CSV file into a DataFrame?
+      Just one line of code! pd.read_csv, with the file path in the parentheses.
+      Boom, 280 rows by 32 columns load in an instant.
+      It's like scanning a whole box of paper records into the computer in one second.
+    animation: "show_read_csv"
+    code: |
+      import pandas as pd
+      df = pd.read_csv("legionella_outbreak.csv")
+    pause_after: 0.5
+
+  - id: "shape_head"
+    narration: >
+      The data is in, and the first thing to do is see how big it is.
+      df.shape tells you there are 280 rows and 32 columns.
+      df.head, in parentheses, lets you peek at the first five records.
+      It's like getting a package: you open it first to check it's really what you ordered.
+    animation: "show_shape_head"
+    code: |
+      print(df.shape)
+      df.head()
+    output: "(280, 32)"
+    pause_after: 0.5
+
+  - id: "columns"
+    narration: >
+      Want to know which columns this table has?
+      Type df.columns and every column name is listed out.
+      case_id, age, sex, floor, wing, and so on, 32 columns in all.
+      If you only want one of them, use square brackets with the column name.
+      df square-bracket age gives you the entire age column.
+      Heads up: what comes out is called a Series, the DataFrame's little sibling.
+    animation: "show_columns"
+    code: |
+      print(df.columns.tolist())
+      ages = df["age"]
+      print(type(ages))
+    output: "<class 'pandas.core.series.Series'>"
+    pause_after: 0.5
+
+  - id: "iloc_loc"
+    narration: >
+      To grab one exact value, there are two ways.
+      df.iloc square-bracket 0 picks the first row by position, like a seat number.
+      df.loc square-bracket 0 comma age picks a value by label, like looking it up in a dictionary.
+      iloc is integer location, uses numbers. loc is label location, uses names.
+      Remember: iloc for numbers, loc for labels. These are pandas' two keys.
+    animation: "show_iloc_loc"
+    code: |
+      first_row = df.iloc[0]
+      first_age = df.loc[0, "age"]
+      print(f"第一位住民的年齡：{first_age}")
+    output: "第一位住民的年齡：72"
+    pause_after: 0.5
+
+  - id: "boolean_filter"
+    narration: >
+      Here comes the most powerful feature: boolean filtering!
+      df square-bracket, df square-bracket outcome equals-equals dead.
+      This line means: find me every fatal case.
+      Picture Excel's filter, but instead of clicking around by hand,
+      one line of code does it all.
+      19 records! Exactly matching the 19 deaths in our story.
+    animation: "show_boolean_filter"
+    code: |
+      dead = df[df["outcome"] == "dead"]
+      print(f"死亡個案數：{len(dead)}")
+    output: "死亡個案數：19"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Congratulations! You've mastered the five basics of a DataFrame.
+      read_csv to load, shape to size it up, head to peek,
+      square brackets to grab columns, boolean filtering to find data.
+      These five moves are your opening stance for data analysis, so keep them close!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: dengue surveillance
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Now let's switch scenes! This time we'll practice with dengue surveillance data.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Say you get a dengue surveillance CSV.
+      Load it with read_csv the same way, and shape shows 1500 reports.
+      Then use boolean filtering to find every severe case.
+      How many have dengue_severe equal to 1?
+      Same move, different outbreak, works just as well!
+      Whether it's Legionnaires' disease or dengue, the DataFrame operations are identical.
+    animation: "show_extra_example"
+    code: |
+      dengue = pd.read_csv("dengue_surveillance.csv")
+      print(dengue.shape)
+      severe = dengue[dengue["dengue_severe"] == 1]
+      print(f"重症個案數：{len(severe)}")
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Finally, the three traps DataFrame beginners fall into most!
+      I guarantee you'll hit all three, so learn them now and never fear them again.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: getting the column name's capitalization wrong.
+      You write df square-bracket capital-A Age, but the column in the data is lowercase age.
+      Python tells you KeyError, it can't find that column.
+      The fix is simple: check the correct names first with df.columns, then type them exactly.
+    animation: "show_blindspot_case"
+    error_code: 'df["Age"]  # KeyError!'
+    correct_code: 'df["age"]  # column names are lowercase'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: using a slice to grab the first five, but the meaning is unclear.
+      df square-bracket 0 colon 5 works, but the intent isn't explicit.
+      If your index got shuffled, slicing might not behave the way you expect.
+      Better to use df.head in parentheses or df.iloc square-bracket 0 colon 5,
+      the intent is clearer, and it's safer too.
+    animation: "show_blindspot_slice"
+    error_code: 'df[0:5]  # works but unclear intent'
+    correct_code: 'df.head()  # or df.iloc[0:5]'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: forgetting double square brackets when selecting multiple columns.
+      df square-bracket age comma sex, and Python throws an error.
+      With a single pair of brackets, Python thinks you're passing two arguments.
+      The correct way is double brackets: the outer pair is the selection syntax, the inner pair is the list of column names.
+      It's like buying two things at the convenience store, you put them in one bag.
+    animation: "show_blindspot_double_brackets"
+    error_code: 'df["age","sex"]  # TypeError!'
+    correct_code: 'df[["age","sex"]]  # double brackets'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      That's the DataFrame basics done!
+      In the next video we'll learn how to understand your data in one minute with info and describe.
+      See you soon!
+    animation: "show_outro"
+    pause_after: 1.0

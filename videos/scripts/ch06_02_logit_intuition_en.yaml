@@ -1,0 +1,164 @@
+meta:
+  chapter: "06"
+  concept: "logit_intuition"
+  title: "The Logistic Regression Three-Step Ladder: Probability, Odds, Logit"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch06_02_logit_intuition"
+  scene_class: "Ch06LogitIntuitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi! Last episode we said Modified Poisson is the top choice for cohort studies,
+      but logistic regression is still used everywhere in the world, so you absolutely must be able to read and interpret it.
+      This episode we'll fully open up the most mysterious part of logistic regression: what on earth is that "logit" doing?
+      Here's the one-line spoiler: probability, odds, and logit are just three faces of the same thing.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_not_linear"
+    narration: >
+      First, a question. To predict a 0-or-1 outcome like "infected or not",
+      why can't we use ordinary linear regression?
+      Because linear regression can spit out negative probabilities and probabilities greater than one, which makes no sense.
+      So mathematicians invented a detour:
+      first turn probability into odds, then take the log of the odds, giving a straight line that runs from negative infinity to positive infinity.
+      Only that line can be linearly combined with age, sex, and floor.
+    animation: "show_why_not_linear"
+    pause_after: 0.5
+
+  - id: "step1_probability"
+    narration: >
+      Step one: probability p.
+      The range of p is 0 to 1, like a jammed spring, rigid at both ends.
+      p equals 0.7 means 70% infected.
+      This is the number we really want to know.
+    animation: "show_step1_probability"
+    pause_after: 0.5
+
+  - id: "step2_odds"
+    narration: >
+      Step two: odds equals p divided by one minus p.
+      It's a balance scale: the weight of "infected" divided by the weight of "not infected".
+      When p equals 0.7, the odds equal 0.7 divided by 0.3, which is 2.33.
+      That means "infected is 2.33 times heavier than not infected".
+      The range of odds is 0 to infinity: jammed on the left, free on the right.
+    animation: "show_step2_odds"
+    code: |
+      p = 0.7
+      odds = p / (1 - p)
+      print(f"odds = {odds:.2f}")
+    output: |
+      odds = 2.33
+    pause_after: 0.5
+
+  - id: "step3_logit"
+    narration: >
+      Step three: logit equals the log of the odds.
+      This straightens out the spring on the scale!
+      When p equals 0.7, the logit equals log of 2.33, which is 0.85.
+      The range of the logit is negative infinity to positive infinity, completely free.
+      This line is what logistic regression is actually predicting.
+    animation: "show_step3_logit"
+    code: |
+      import numpy as np
+      p = 0.7
+      logit = np.log(p / (1 - p))
+      print(f"logit = {logit:.2f}")
+    output: |
+      logit = 0.85
+    pause_after: 0.5
+
+  - id: "beta_interpretation"
+    narration: >
+      Now we can interpret the coefficient β.
+      Suppose the β for shower_use equals 1.2.
+      That means: a shower user's logit is 1.2 higher than a non-user's.
+      To restore it to an OR, just take e to the power 1.2, which equals 3.32.
+      Interpretation: a shower user's odds of infection are 3.32 times those of a non-user.
+      Remember three words: exp, beta, OR, an iron triangle in one smooth move.
+    animation: "show_beta_interpretation"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      A quick recap.
+      Step one, probability p, jammed between 0 and 1.
+      Step two, odds, free from 0 to infinity.
+      Step three, logit, completely free from negative to positive infinity.
+      Once you climb all three steps, logistic regression is just an ordinary linear equation.
+      That's why AI and ML binary classifiers all use logistic: it's easy to compute, converges well, and its results are easy to interpret.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Time for a gritty real-world case!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid"
+    narration: >
+      COVID-19 vaccine studies often use logistic regression.
+      The study asks: does getting vaccinated lower the probability of hospitalization?
+      The model returns β equals negative 2.1; exp of negative 2.1 equals 0.12, so the OR is 0.12.
+      Interpretation: a vaccinated person's odds of hospitalization are only 12% of an unvaccinated person's, an 88% reduction.
+      Note: hospitalization is rare in this study, so the OR is roughly the RR, and you can say directly "88% lower risk".
+      But this shortcut only holds when the outcome is rare, which is exactly the big point from last episode.
+    animation: "show_extra_covid"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three logit pitfalls beginners often step on!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: reporting beta directly.
+      For example, "shower_use has a β of 1.2, so the effect is huge".
+      But β itself is on the log-odds scale, not a unit humans can read.
+      Correct: report exp of beta as the OR.
+      Build the habit: the moment you open the summary, apply np.exp.
+    animation: "show_blindspot_beta_raw"
+    error_code: "print(f'effect = {beta:.2f}')"
+    correct_code: "print(f'OR = {np.exp(beta):.2f}')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: reading the logit as a probability.
+      "The logit equals 0.85, so the infection probability is 85%!"
+      Wrong, wrong, wrong! A logit of 0.85 corresponds to a probability of 0.7, not 0.85.
+      To restore the probability you need one over one plus e to the negative logit, the sigmoid function.
+      In Python that's scipy.special.expit.
+    animation: "show_blindspot_logit_as_prob"
+    error_code: "prob = logit_value  # wrong!"
+    correct_code: "prob = 1 / (1 + np.exp(-logit_value))"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: taking the log blows up when p is near 0 or 1.
+      Computing the logit when p equals 0 gives negative infinity.
+      In practice the model reports a convergence warning.
+      The right move: check whether you have perfectly separated data, or add a bit of regularization.
+      In that case it isn't the logit's fault; the data is too extreme, and you need Firth or Bayesian methods.
+    animation: "show_blindspot_extreme_p"
+    error_code: "logit = np.log(p / (1 - p))  # p=0 or 1"
+    correct_code: "p = np.clip(p, 1e-6, 1 - 1e-6); logit = np.log(p/(1-p))"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! You now understand what the logit is really doing.
+      Next episode we'll look at Modified Poisson.
+      Why does borrowing Poisson's shell let you compute the RR?
+      It sounds like a magic trick, but it's actually rigorous mathematics.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

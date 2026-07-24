@@ -1,0 +1,202 @@
+meta:
+  chapter: "02"
+  concept: "pivot_table"
+  title: "Excel Pivot Tables: The Complete pivot_table Guide"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch02_10_pivot_table"
+  scene_class: "Ch02PivotTableScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: pivot_table
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Today I'll take you through a super-practical move: pivot_table.
+      If you've ever built an investigation report, you know Excel's pivot tables well.
+      Drag and drop with the mouse and you get a beautiful cross table, so convenient, right?
+      But have you ever thought: you do it by hand every time, and the moment the data updates, you have to redo it all.
+      Today I'll teach you to do it in one line of Python, and you can rerun it, so you never have to redo it again.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "excel_analogy"
+    narration: >
+      If you've made a pivot table in Excel, congratulations, you already know the concept behind pivot_table!
+      Recall the Excel interface: you drag fields into the Rows area, the Columns area, the Values area, then choose an aggregation.
+      In pandas, the Rows area is index, the Columns area is columns, the Values area is values,
+      and the aggregation is aggfunc.
+      Just those four parameters, mapping exactly to Excel's four zones.
+      Learn this mapping and you'll instantly understand every pivot_table parameter.
+    animation: "show_excel_analogy"
+    pause_after: 0.5
+
+  - id: "pivot_basic"
+    narration: >
+      Let's look at the first example.
+      The Pine and Cypress nursing home has different floors and wings, and we want the average infection situation for each floor and wing.
+      pd dot pivot_table, values is infected, index is wing, columns is floor,
+      aggfunc is mean. One line, done!
+      The result is a neat two-dimensional table, floors across, wings down, and each cell holds the average infection rate.
+      This takes ages of dragging in Excel; in Python it's one line.
+    animation: "show_pivot_basic"
+    code: |
+      pd.pivot_table(
+          df,
+          values="infected",
+          index="wing",
+          columns="floor",
+          aggfunc="mean",
+      )
+    output: |
+      floor      1      2      3
+      wing
+      A       0.38   0.42   0.50
+      B       0.40   0.45   0.48
+    pause_after: 0.5
+
+  - id: "margins"
+    narration: >
+      Excel pivot tables have a subtotal feature, and pandas does too!
+      Just add margins equals True and it automatically computes the total for each row and column.
+      You can also use margins_name to customize the label of that subtotal row, like writing the word for total.
+      It's like the subtotal row that appears with one checkbox in Excel, but here you control it with code, more precise and easier to trace.
+    animation: "show_margins"
+    code: |
+      pd.pivot_table(
+          df,
+          values="infected",
+          index="wing",
+          columns="floor",
+          aggfunc="mean",
+          margins=True,
+          margins_name="合計",
+      )
+    pause_after: 0.5
+
+  - id: "multiple_aggfunc"
+    narration: >
+      What if you want the mean, the sum, and the count all at once?
+      aggfunc can take a list! Put in mean, sum, count, and compute all three in one go.
+      The result becomes multi-level columns, with the aggregation on top and the original columns below.
+      One table gives you three statistics, no need to write three lines, efficiency off the charts.
+      But note: multiple aggfuncs produce MultiIndex columns, and the blind-spot section coming up will teach you how to read them.
+    animation: "show_multiple_aggfunc"
+    code: |
+      pd.pivot_table(
+          df,
+          values="infected",
+          index="wing",
+          columns="floor",
+          aggfunc=["mean", "sum", "count"],
+      )
+    pause_after: 0.5
+
+  - id: "pivot_vs_groupby"
+    narration: >
+      You might ask: what exactly is the difference between groupby and pivot_table?
+      Simply put, groupby suits one-dimensional aggregation, computing and then doing more work, like a pipeline.
+      pivot_table suits a two-dimensional cross table, displaying results directly, like a table for a report.
+      If you're writing it into a report for the boss, use pivot_table;
+      if you're going to do more data processing next, use groupby.
+      Both are great tools; just pick by the situation.
+    animation: "show_pivot_vs_groupby"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's recap!
+      pivot_table's four core parameters, index, columns, values, aggfunc,
+      map exactly to Excel pivot table's Rows area, Columns area, Values area, and aggregation.
+      margins adds subtotals, and aggfunc can take a list to compute several statistics at once.
+      groupby suits pipeline computation, pivot_table suits two-dimensional report display.
+      Remember these and your investigation report efficiency doubles instantly.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: dengue by district and month
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Scene change! Let's see how pivot_table shines in a dengue outbreak analysis.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Suppose you get some dengue notification data with district and month of onset.
+      Use pivot_table, index is district, columns is month, values is cases,
+      aggfunc is sum.
+      One table shows which district in which month had the worst outbreak.
+      For instance, Qianzhen District's August case count spikes, possibly linked to uncleaned water containers there.
+      This kind of cross table is extremely common in weekly investigation reports, and pivot_table produces it for you in seconds.
+    animation: "show_extra_example"
+    code: |
+      dengue_pivot = pd.pivot_table(
+          dengue_df,
+          values="cases",
+          index="district",
+          columns="month",
+          aggfunc="sum",
+          fill_value=0,
+      )
+      print(dengue_pivot)
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Here come the three beginner traps of pivot_table! Almost every beginner hits at least one.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: forgetting to specify aggfunc.
+      If you don't write aggfunc, pandas defaults to mean and computes averages for you.
+      But you actually wanted a count! You end up seeing a bunch of decimals and think the program is broken.
+      Always specify aggfunc explicitly, don't rely on the default.
+      Writing code is like running an investigation: explicit beats implicit.
+    animation: "show_blindspot_no_aggfunc"
+    error_code: 'pivot_table(df, values="age", index="floor")'
+    correct_code: 'pivot_table(df, values="age", index="floor", aggfunc="count")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: confusing pivot and pivot_table.
+      pandas has two methods, pivot and pivot_table, similar names but different behavior.
+      pivot requires the index plus columns combination to be unique; duplicate values throw an error.
+      pivot_table automatically aggregates duplicates, so it doesn't error.
+      In investigation data, duplicates are the norm, so just obediently use pivot_table.
+    animation: "show_blindspot_pivot_vs_pivot_table"
+    error_code: 'df.pivot(index="floor", columns="wing", values="infected")'
+    correct_code: 'pd.pivot_table(df, index="floor", columns="wing", values="infected")'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: after multiple aggfuncs, the columns become a MultiIndex and you don't know how to read them.
+      You write result, bracket, mean, and it throws a KeyError, scaring you into thinking you made a mistake.
+      Actually, with multiple aggfuncs the result columns are tuples, so you write result, bracket,
+      and inside, parenthesis mean comma infected.
+      It's like an address needing the house number to find the person; the street name alone isn't enough.
+    animation: "show_blindspot_multiindex"
+    error_code: 'result["mean"]'
+    correct_code: 'result[("mean", "infected")]'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! You can now use pivot_table to build professional-grade cross-analysis tables.
+      Next time we enter the world of method chaining,
+      teaching you to string multiple operations together like beads, writing code that's short and beautiful.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

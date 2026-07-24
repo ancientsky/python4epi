@@ -41,6 +41,39 @@ class Ch02DatetimeScene(EpiBaseScene):
 
     total_steps: int = 14
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "日期時間大魔王",
+            "title_sub": "to_datetime 完全攻略",
+            "summary_heading": "日期六大招",
+            "summary_p1": "1. pd.to_datetime() 轉換日期型別",
+            "summary_p2": "2. errors='coerce' 處理髒資料",
+            "summary_p3": "3. .dt accessor 拆出年月日星期",
+            "summary_p4": "4. Timedelta 算日期差",
+            "summary_p5": "5. isocalendar().week 取流行病學週",
+            "summary_p6": "6. strftime() 格式化輸出",
+            "extra_banner_title": "額外範例：COVID-19 潛伏期計算",
+            "blindspot_banner_title": "日期地雷 3 選",
+            "outro_heading": "下一集：衍生變項四大招",
+            "outro_sub": "cut, axis, astype, dt 一次學會！",
+        },
+        "en": {
+            "title_main": "The Date-Time Boss Battle",
+            "title_sub": "The complete to_datetime playbook",
+            "summary_heading": "Six Date Power Moves",
+            "summary_p1": "1. pd.to_datetime() converts to a date type",
+            "summary_p2": "2. errors='coerce' handles dirty data",
+            "summary_p3": "3. .dt accessor pulls out year/month/day/weekday",
+            "summary_p4": "4. Timedelta computes date differences",
+            "summary_p5": "5. isocalendar().week gets the epidemiological week",
+            "summary_p6": "6. strftime() formats the output",
+            "extra_banner_title": "Extra example: COVID-19 incubation period",
+            "blindspot_banner_title": "3 Date Traps",
+            "outro_heading": "Next up: four moves for derived variables",
+            "outro_sub": "Learn cut, axis, astype, dt all at once!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -50,7 +83,7 @@ class Ch02DatetimeScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the datetime lesson."""
-        self.show_title_card("日期時間大魔王", "to_datetime 完全攻略", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_to_datetime(self, duration: float = 7.0, **kwargs) -> None:
         """Step 1: introduce pd.to_datetime()."""
@@ -185,19 +218,19 @@ class Ch02DatetimeScene(EpiBaseScene):
         self.show_step_indicator(7, self.total_steps)
 
         heading = Text(
-            "日期六大招",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. pd.to_datetime() 轉換日期型別", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("2. errors='coerce' 處理髒資料", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("3. .dt accessor 拆出年月日星期", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("4. Timedelta 算日期差", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("5. isocalendar().week 取流行病學週", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("6. strftime() 格式化輸出", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p5"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p6"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.35).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -211,7 +244,7 @@ class Ch02DatetimeScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：COVID-19 潛伏期計算")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 7.0, **kwargs) -> None:
@@ -242,7 +275,7 @@ class Ch02DatetimeScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("日期地雷 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_string_compare(self, duration: float = 5.0, **kwargs) -> None:
@@ -275,14 +308,14 @@ class Ch02DatetimeScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：衍生變項四大招",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "cut, axis, astype, dt 一次學會！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

@@ -1,0 +1,193 @@
+meta:
+  chapter: "01b"
+  concept: "strings_loops"
+  title: "Strings and Advanced Loops: The Swiss Army Knife for Cleaning Outbreak Data"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch01b_06_strings_loops"
+  scene_class: "Ch01bStringsLoopsScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: string methods and loops
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Today we learn two data-cleaning power tools:
+      string methods and advanced loop tricks.
+      Outbreak data is never clean:
+      extra whitespace, inconsistent capitalization, weird symbols...
+      you need a Swiss army knife to deal with these problems.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "strip_method"
+    narration: >
+      Move one: strip.
+      strip chops off the whitespace before and after a string.
+      Data copied from Excel often carries leading and trailing spaces,
+      and untreated, "Legionella" and " Legionella " get counted as different values.
+    animation: "show_strip"
+    code: |
+      raw = "  Legionella  "
+      clean = raw.strip()
+      print(f"[{clean}]")
+    output: "[Legionella]"
+    pause_after: 0.3
+
+  - id: "split_method"
+    narration: >
+      Move two: split.
+      split cuts a string at a chosen separator, turning it into a list.
+      For example, a comma-separated symptom list,
+      one split and it becomes a Python list.
+    animation: "show_split"
+    code: |
+      symptoms = "fever,cough,dyspnea"
+      parts = symptoms.split(",")
+      print(parts)
+    output: "['fever', 'cough', 'dyspnea']"
+    pause_after: 0.3
+
+  - id: "replace_method"
+    narration: >
+      Move three: replace.
+      Swap one piece of a string for another.
+      For instance, changing a full-width comma to a half-width one, or "yes" to True.
+      Incredibly common in data cleaning.
+    animation: "show_replace"
+    code: |
+      status = "confirmed_YES"
+      clean = status.replace("YES", "True")
+      print(clean)
+    output: "confirmed_True"
+    pause_after: 0.3
+
+  - id: "for_range"
+    narration: >
+      Loops, leveled up: for with range.
+      range 5 produces the five numbers 0 through 4.
+      Common when you need to run a fixed number of times,
+      like processing five wings' data in order.
+    animation: "show_for_range"
+    code: |
+      for i in range(5):
+          print(f"processing wing {i}")
+    output: "processing wing 0\nprocessing wing 1\n..."
+    pause_after: 0.3
+
+  - id: "enumerate_method"
+    narration: >
+      A super-handy trick: enumerate.
+      When you need both which-number-it-is and what-the-value-is,
+      enumerate hands you the index and the value at once.
+      No more maintaining a counter yourself.
+    animation: "show_enumerate"
+    code: |
+      wings = ["1A", "1B", "2A", "2B"]
+      for i, wing in enumerate(wings):
+          print(f"#{i}: {wing}")
+    output: "#0: 1A\n#1: 1B\n#2: 2A\n#3: 2B"
+    pause_after: 0.3
+
+  - id: "in_operator"
+    narration: >
+      One last move: the in membership check.
+      Want to know whether a value is in a list? Use in.
+      "Legionella" in pathogens? True!
+      Way faster than writing your own for loop to search.
+    animation: "show_in_operator"
+    code: |
+      pathogens = ["Legionella", "TB", "Dengue"]
+      print("Legionella" in pathogens)
+      print("COVID" in pathogens)
+    output: "True\nFalse"
+    pause_after: 0.3
+
+  - id: "main_summary"
+    narration: >
+      Let's sum up!
+      strip trims spaces, split splits strings, replace swaps content.
+      for with range runs a fixed number of times.
+      enumerate grabs index and value together.
+      in checks whether a member exists.
+      These are your basic weapons for data cleaning.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: cleaning TB report lab results
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Let's see a real example: cleaning the lab-result field on TB notifications.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      The TB notification system's lab-result field has inconsistent formatting:
+      some wrote Positive, some wrote positive, and some have leading or trailing spaces.
+      With strip plus lower, three lines standardize it all.
+      Then use in to check which are positive cases.
+      This kind of cleaning happens every day in real investigations.
+    animation: "show_extra_example"
+    code: |
+      results = [" Positive", "negative ", "POSITIVE"]
+      for r in results:
+          clean = r.strip().lower()
+          is_pos = clean == "positive"
+          print(f"{clean}: {is_pos}")
+    output: "positive: True\nnegative: False\npositive: True"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Three string and loop landmines.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Landmine one: thinking strip changes the original string.
+      Strings in Python are immutable.
+      strip returns a new string; the original is not changed.
+      You must store the result back into a variable.
+    animation: "show_blindspot_strip_inplace"
+    error_code: 'name = " John "\nname.strip()\nprint(name)  # " John "'
+    correct_code: 'name = " John "\nname = name.strip()\nprint(name)'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Landmine two: modifying the list you're looping over.
+      Move the chairs while you're walking across them, and you'll trip for sure.
+      The right way: build a new list and put the ones you want to keep into it.
+    animation: "show_blindspot_modify_list"
+    error_code: "for x in items:\n    items.remove(x)  # bug!"
+    correct_code: "keep = [x for x in items if ok(x)]"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Landmine three: range's end is not included.
+      range 5 is 0 through 4, not 0 through 5.
+      It's called half-open, and this rule is everywhere in Python.
+      Want 1 through 5? Use range 1 comma 6.
+    animation: "show_blindspot_range_off"
+    error_code: "range(5)  # 0,1,2,3,4 not 5!"
+    correct_code: "range(1, 6)  # 1,2,3,4,5"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Nice! Your Swiss army knife is fully stocked.
+      In the next video I'll teach advanced uv usage, managing Python versions and packages.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,167 @@
+meta:
+  chapter: "01b"
+  concept: "uv_advanced"
+  title: "Advanced uv: Manage Python Versions and Packages"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch01b_07_uv_advanced"
+  scene_class: "Ch01bUvAdvancedScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: advanced uv
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Back in Ch00 we learned the basics of uv.
+      Today we go a bit deeper: how to use uv to install different Python versions,
+      manage packages, and how to find good third-party packages.
+      It's like a seasoned investigator who knows exactly where to find the best tools.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "python_versions"
+    narration: >
+      Move one: managing Python versions with uv.
+      uv python install 3.11 installs Python 3.11.
+      uv python pin 3.12 pins this project to 3.12.
+      Different projects can use different Python versions without interfering.
+      It's like different outbreak reports using different versions of the notification form.
+    animation: "show_python_versions"
+    code: |
+      # Install Python 3.11
+      # uv python install 3.11
+      # Pin project to 3.12
+      # uv python pin 3.12
+      # Check current version
+      # uv run python --version
+    pause_after: 0.5
+
+  - id: "add_packages"
+    narration: >
+      Move two: installing packages with uv add.
+      uv add pandas installs the latest version of pandas.
+      Want a specific version? uv add pandas greater-than-or-equal-to 2.0.
+      Want a dev tool? uv add dash dash dev pytest.
+      Every install is recorded in pyproject.toml, all at a glance.
+    animation: "show_add_packages"
+    code: |
+      # uv add pandas
+      # uv add "pandas>=2.0"
+      # uv add --dev pytest
+      # uv add matplotlib seaborn
+    pause_after: 0.5
+
+  - id: "find_packages"
+    narration: >
+      Move three: how do you find good packages?
+      Search keywords on pypi.org, like epidemiology.
+      Look at three signals: are downloads high, are GitHub stars plentiful, and has it updated recently.
+      If a package hasn't updated in a year, it usually means nobody's maintaining it.
+      Epidemiology favorites: pandas for data handling, seaborn for plotting,
+      scipy for statistical tests, lifelines for survival analysis.
+    animation: "show_find_packages"
+    pause_after: 0.5
+
+  - id: "uv_sync"
+    narration: >
+      One last important command: uv sync.
+      When you git clone someone else's project,
+      as long as that project has pyproject.toml and uv.lock,
+      a single uv sync installs every package it needs.
+      It's like a standard operating procedure at an investigation site: just work down the checklist.
+    animation: "show_uv_sync"
+    code: |
+      # Clone a project and install deps
+      # git clone <repo-url>
+      # cd python4epi
+      # uv sync
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's sum up!
+      uv python install installs different Python versions.
+      uv add installs packages and records them in pyproject.toml.
+      uv sync restores the whole dev environment in one command.
+      To find packages, check downloads and stars on pypi.org.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: build a vaccine-coverage analysis project
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Let's see a real example: building a vaccine-coverage analysis project from scratch.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Suppose you want to analyze national COVID-19 vaccine coverage.
+      First, uv init vaccine_coverage creates a new project.
+      Then uv add pandas matplotlib installs your analysis tools.
+      Finally uv run python analyze.py runs the analysis.
+      Three steps, a squeaky-clean environment, packages all clearly recorded.
+      When a colleague takes over, one uv sync reproduces your environment.
+    animation: "show_extra_example"
+    code: |
+      # uv init vaccine_coverage
+      # cd vaccine_coverage
+      # uv add pandas matplotlib
+      # uv run python analyze.py
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Three common uv landmines.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Landmine one: using pip install instead of uv add.
+      pip install only installs into the current environment; it isn't recorded in pyproject.toml.
+      Next time on a new machine, or when a colleague takes over, nobody knows what you installed.
+      uv add installs the package and records it for you at the same time.
+    animation: "show_blindspot_pip_vs_uv"
+    error_code: "pip install pandas  # not tracked!"
+    correct_code: "uv add pandas  # saved to toml"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Landmine two: forgetting uv run.
+      You installed pandas but typed plain python to import it,
+      and you get a ModuleNotFoundError.
+      Because you never entered uv's virtual environment.
+      Remember to use uv run python to use the right environment.
+    animation: "show_blindspot_forget_uv_run"
+    error_code: "python main.py  # wrong env!"
+    correct_code: "uv run python main.py  # OK"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Landmine three: not committing the uv.lock file.
+      uv.lock records the exact combination of package versions.
+      Without it, the versions others get from uv sync may differ from yours.
+      git add uv.lock, so everyone's environment is identical.
+    animation: "show_blindspot_no_lock"
+    error_code: "# .gitignore: uv.lock  WRONG!"
+    correct_code: "git add uv.lock  # reproducible!"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Fantastic! You're now a package-management pro.
+      In the final video I'll teach you Jupyter's tricks and shortcuts.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

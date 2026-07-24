@@ -1,0 +1,204 @@
+meta:
+  chapter: "02"
+  concept: "seaborn_plotly"
+  title: "seaborn + plotly + Figure Export: Submission Secrets"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch02_08_seaborn_plotly"
+  scene_class: "Ch02SeabornPlotlyScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: seaborn + plotly + export
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Last time we drew an epidemic curve with matplotlib,
+      but did you notice how many lines it took just to get one chart?
+      Today I'll introduce two great teammates: seaborn draws statistical charts in one line, and plotly makes your charts come alive!
+      If matplotlib is a manual transmission, seaborn is an automatic, and plotly is a Tesla on autopilot.
+      You'll want all three, but for the daily commute, automatic is plenty.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "sns_histplot"
+    narration: >
+      seaborn's first move: histplot, a histogram in one line.
+      Call sns dot histplot, pass your DataFrame as data, set x to age and hue to infected.
+      Boom, the age distribution appears, already colored by infection status.
+      In the Pine and Cypress nursing home data, you instantly see how the age distribution differs between infected and uninfected residents.
+      What takes ten lines in matplotlib, seaborn does in one.
+    animation: "show_sns_histplot"
+    code: |
+      import seaborn as sns
+      sns.histplot(data=df, x="age", hue="infected",
+                   multiple="stack", bins=10)
+    pause_after: 0.5
+
+  - id: "sns_barplot"
+    narration: >
+      Second move: barplot, a grouped bar chart.
+      Want to compare the attack rate across wings? One line does it.
+      Call sns dot barplot, x is wing, y is attack_rate.
+      seaborn even adds confidence-interval error bars for you automatically.
+      A confidence interval tells you the range the true attack rate probably falls within.
+      In matplotlib you'd have to compute and draw that yourself; seaborn just hands it to you.
+    animation: "show_sns_barplot"
+    code: |
+      sns.barplot(data=wing_stats, x="wing", y="attack_rate",
+                  palette="YlOrRd")
+    pause_after: 0.5
+
+  - id: "sns_heatmap"
+    narration: >
+      Third move: heatmap.
+      Turn attack rates by floor and wing into a cross table, then pass it to heatmap.
+      annot equals True prints the value in each cell, and cmap YlOrRd shades from yellow to red.
+      At a glance you see which area is hit hardest; the bright red cell is the disaster zone.
+      Drop this figure into your investigation briefing and the bosses get it instantly.
+    animation: "show_sns_heatmap"
+    code: |
+      pivot = df.pivot_table(values="infected", index="floor",
+                              columns="wing", aggfunc="mean")
+      sns.heatmap(pivot, annot=True, cmap="YlOrRd", fmt=".1%")
+    pause_after: 0.5
+
+  - id: "plotly_bar"
+    narration: >
+      Now for plotly! Its charts are interactive; hover your mouse and the values pop up.
+      Call px dot bar; the syntax feels a lot like seaborn, but the output is an interactive chart.
+      You can zoom in, zoom out, hover for details, even download it as an image.
+      For an investigation briefing or sharing with colleagues, interactive charts are a huge bonus.
+    animation: "show_plotly_bar"
+    code: |
+      import plotly.express as px
+      fig = px.bar(daily_df, x="date", y="cases", color="floor",
+                   title="Daily cases by floor")
+      fig.show()
+    pause_after: 0.5
+
+  - id: "plotly_vs_mpl"
+    narration: >
+      What's the biggest difference between matplotlib and plotly?
+      matplotlib is imperative: you tell it how to draw, step by step.
+      Build the canvas, draw the bars, add the title, tweak the format; it's like assembling furniture.
+      plotly is declarative: you tell it what you want, and it handles the rest.
+      Which is better? Depends on the situation. Use matplotlib to polish a report, use plotly to explore data fast.
+    animation: "show_plotly_vs_mpl"
+    pause_after: 0.5
+
+  - id: "savefig"
+    narration: >
+      Chart's ready; how do you save it? savefig is your friend.
+      Call fig dot savefig with a filename ending in png or pdf.
+      But! Always add two parameters: dpi equals 300, and bbox_inches equals tight.
+      dpi 300 keeps the resolution high, and bbox_inches tight trims the extra whitespace.
+      Miss those two, and your figure turns into a blurry mess inside the report.
+    animation: "show_savefig"
+    code: |
+      fig_mpl.savefig("epi_curve.png", dpi=300, bbox_inches="tight")
+      fig_mpl.savefig("epi_curve.pdf", bbox_inches="tight")
+    pause_after: 0.5
+
+  - id: "journal_spec"
+    narration: >
+      If you're submitting to an international journal, the figure requirements are strict.
+      NEJM wants at least 1000 DPI, the Lancet at least 300 DPI.
+      The font is usually required to be Arial or Helvetica, nothing fancy.
+      And the palette must be colorblind-safe; you can't rely on red versus green alone.
+      PDF is the safest format because it's vector, so it stays crisp no matter how large.
+      Build the good habit: draw to submission spec from your very first figure.
+    animation: "show_journal_spec"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's recap!
+      seaborn draws statistical charts in one line: histplot, barplot, heatmap.
+      plotly builds interactive charts, perfect for exploring data.
+      When saving, always remember dpi 300 plus bbox_inches tight.
+      And for journals, mind the resolution, the fonts, and a colorblind-safe palette.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: seasonal influenza trends
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Let's see how seaborn and plotly shine in influenza surveillance.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Flu shows up every winter, and the CDC publishes weekly influenza-like-illness visit counts.
+      Use seaborn's lineplot to draw the trend line, with hue splitting by year,
+      and one chart lets you compare this year's trend against previous years.
+      Then use plotly's line for an interactive version; move your mouse and the exact value appears.
+      Put a chart like this up in a surveillance meeting and your supervisor will be impressed.
+    animation: "show_extra_example"
+    code: |
+      sns.lineplot(data=flu, x="epi_week", y="ili_visits",
+                   hue="year", palette="coolwarm")
+      fig = px.line(flu, x="epi_week", y="ili_visits",
+                    color="year", title="ILI trend by year")
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Finally, three classic visualization pitfalls, especially common for seaborn and plotly beginners.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: mixing up seaborn's function names.
+      Some people write sns dot bindspots, but the correct name is histplot.
+      seaborn's function names aren't random: hist stands for histogram, plot means draw.
+      Type the wrong name and Python throws an AttributeError, it can't find that function.
+      When you're unsure, checking the official docs is the safest bet.
+    animation: "show_blindspot_func_name"
+    error_code: 'sns.bindspots(data=df, x="age")'
+    correct_code: 'sns.histplot(data=df, x="age")'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: saving a figure but forgetting high resolution and trimming the whitespace.
+      Lots of students just write fig dot savefig with a filename and call it done,
+      and then the image is blurry in the report with a giant white border.
+      For journal submission it's worse; the editor rejects it and tells you to redraw.
+      Remember the mantra: PDF plus dpi 300 plus bbox_inches tight, the trio you can't skip.
+    animation: "show_blindspot_journal_format"
+    error_code: 'fig.savefig("f.png")'
+    correct_code: 'fig.savefig("f.pdf", dpi=300, bbox_inches="tight")'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: plotly's function names differ from seaborn's.
+      seaborn uses histplot, plotly uses histogram.
+      Someone writes px dot bindspots, and Python again can't find it.
+      Every library has its own naming rules; you can't mix and match.
+      My tip: keep a little cheat sheet of common function names taped next to your screen.
+    animation: "show_blindspot_plotly_name"
+    error_code: 'px.bindspots(df, x="age")'
+    correct_code: 'px.histogram(df, x="age")'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      All three visualization tools are yours now!
+      matplotlib for polish, seaborn for fast charts, plotly for interactive display.
+      You now have a complete visualization toolkit for investigation reports and academic submissions.
+      That wraps up the Chapter 02 journey.
+      In the next chapter we enter the world of descriptive statistics and the 2x2 table, and start analyzing outbreak data for real.
+      See you in the next chapter!
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,153 @@
+meta:
+  chapter: "06"
+  concept: "crude_rr_or_loop"
+  title: "Univariate crude RR vs OR: Compare Them All in One for Loop"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch06_05_crude_rr_or_loop"
+  scene_class: "Ch06CrudeRrOrLoopScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      What's the first step of multivariable analysis? Start with "univariate screening":
+      run each variable on its own and see what its crude RR and crude OR are.
+      This episode we use a for loop to run through ten candidate variables in one pass,
+      and simultaneously run Modified Poisson and logistic, putting the two results side by side.
+      When you see how much larger the OR is than the RR, you'll feel last episode's 43% inflation even more deeply.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_loop"
+    narration: >
+      Why use a for loop?
+      Because an epidemiology study has at least a dozen candidate variables: age, sex, floor, comorbidities, exposures.
+      Typing them out by hand would take all night.
+      One for loop runs them all, one DataFrame collects them, and every result is neatly aligned.
+      This is Python's advantage over SAS and SPSS.
+    animation: "show_why_loop"
+    pause_after: 0.5
+
+  - id: "code_demo"
+    narration: >
+      Look at the code structure.
+      vars holds the list of variable names to run.
+      Inside the for loop, use an f-string to build the formula: infected tilde plus the current variable.
+      Run Modified Poisson: family Poisson plus HC0, then exp to get the RR.
+      Run logistic: smf.logit, then exp to get the OR.
+      Finally append to a list, and turn it into a DataFrame.
+    animation: "show_code_demo"
+    code: |
+      results = []
+      for var in ["shower_use", "age", "immunosuppressed",
+                  "comorbidity_chf", "C(floor)"]:
+          pois = smf.glm(f"infected ~ {var}", data=df,
+                         family=sm.families.Poisson()).fit(cov_type="HC0")
+          logit = smf.logit(f"infected ~ {var}", data=df).fit(disp=0)
+          results.append({
+              "var": var,
+              "crude_RR": np.exp(pois.params.iloc[1]),
+              "crude_OR": np.exp(logit.params.iloc[1]),
+          })
+      pd.DataFrame(results)
+    pause_after: 0.5
+
+  - id: "interpret_output"
+    narration: >
+      The output is a comparison table.
+      shower_use: crude RR 3.2, crude OR 8.5.
+      The RR says "3.2 times the probability of infection".
+      The OR says "8.5 times the odds of infection".
+      Same exposure, same data, completely different conclusions.
+      This is the OR inflation, on record, at a 43% attack rate.
+      When you report to your boss, 3.2 is "3.2 times the risk", not 8.5.
+    animation: "show_interpret_output"
+    pause_after: 0.5
+
+  - id: "ci_pvalue"
+    narration: >
+      Of course the RR alone isn't enough; you also need the 95% CI and the p-value.
+      For the CI, use conf_int and exp the whole set.
+      For the p-value, read pvalues directly, no exp.
+      A complete row should include: the variable, the crude RR, the 95% CI, the p-value, and then the OR for comparison.
+      That way Table 1 is ready to hand in, in one pass.
+    animation: "show_ci_pvalue"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Four steps to wrap up.
+      One: list the candidate variables.
+      Two: run Modified Poisson in a for loop to get the crude RR.
+      Three: in the same loop, run logit to get the crude OR for comparison.
+      Four: append to a DataFrame and format it into Table 1.
+      That's the standard starter for Chapter Six, and next episode we move into the multivariable adjusted RR.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: COVID elderly hospitalization risk!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid"
+    narration: >
+      A COVID-19 hospitalization-risk study, with candidate variables: age, chronic disease, vaccine, BMI, smoking.
+      Run the for loop and you find:
+      the vaccine gives crude RR 0.4 and crude OR 0.35, about the same, because the hospitalization rate is only 5%, so the OR is close to the RR.
+      But for age 65 and over, crude RR is 4.5 and crude OR is 12, because the elderly have a high hospitalization rate, so the OR starts to inflate.
+      This pattern tells you: groups with a high attack rate most need to report the RR, not the OR.
+    animation: "show_extra_covid"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      The three pitfalls people fall into most often inside a for loop!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: running only logit and not Poisson.
+      Most textbook code only demonstrates logit.
+      Everything you get out is an OR, and when your supervisor asks for the RR, you have nothing to hand in.
+      Build the habit: run both, double insurance.
+    animation: "show_blindspot_only_logit"
+    error_code: "for var in vars: smf.logit(f'y~{var}', df).fit()"
+    correct_code: "for var in vars: run_both_poisson_and_logit(var, df)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: forgetting HC0 inside the for loop.
+      Copy-pasting often drops the cov_type HC0.
+      The result is ordinary Poisson, not Modified.
+      When you debug, first check whether your fit parentheses contain those five characters, HC0.
+    animation: "show_blindspot_no_hc0_loop"
+    error_code: "smf.glm(...).fit()"
+    correct_code: "smf.glm(...).fit(cov_type='HC0')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: taking params iloc 0 as the RR.
+      The 0th element of params is the intercept; the 1st is the variable you want.
+      Grab the wrong position and the whole table falls apart.
+      Remember iloc 1, or use params.loc with the variable name directly.
+    animation: "show_blindspot_wrong_index"
+    error_code: "rr = np.exp(model.params.iloc[0])"
+    correct_code: "rr = np.exp(model.params.iloc[1])"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! Univariate screening is done.
+      Next episode we get into the real main event: the multivariable adjusted RR,
+      one formula adjusting for ten covariates at once,
+      and a beautiful Table 2 to hand to your boss.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

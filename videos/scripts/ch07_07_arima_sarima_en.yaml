@@ -1,0 +1,194 @@
+meta:
+  chapter: "07"
+  concept: "arima_sarima"
+  title: "ARIMA vs SARIMA: The Classic Weapon + Capturing Seasonality"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch07_07_arima_sarima"
+  scene_class: "Ch07ArimaSarimaScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      This episode takes on Chapter 7's ultimate weapon: ARIMA and its upgrade, SARIMA.
+      ARIMA is a classic of time-series analysis, in use for over 50 years.
+      The name is scary, but break it open and it's just three English letters: AR, I, MA.
+      SARIMA just adds a "seasonal" set of parameters.
+      After this episode you'll think: "oh, that's all it is".
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "three_letters"
+    narration: >
+      ARIMA's three letters.
+      AR is AutoRegressive, self-regression, "look at your own past p days".
+      I is Integrated, differencing, "difference d times to make the series stationary".
+      MA is Moving Average, but not the rolling average!
+      It's "look at the past q forecast errors" to correct the prediction.
+      ARIMA(p, d, q) is the combination of these three knobs.
+    animation: "show_three_letters"
+    pause_after: 0.5
+
+  - id: "why_not_outbreak"
+    narration: >
+      Why not use the nursing home's 17 days with ARIMA?
+      ARIMA needs at least 30 days, and SARIMA needs at least 2 complete cycles (14 days or more).
+      Force ARIMA onto a 17-day outbreak and it overfits, the forecast flies off.
+      This episode switches to synthetic 90-day "flu-like daily reports",
+      so we can fairly demonstrate the power of ARIMA and SARIMA.
+      For short series, please go back to a rolling mean or Poisson.
+    animation: "show_why_not_outbreak"
+    pause_after: 0.5
+
+  - id: "synth_data"
+    narration: >
+      Synthetic data in four movements.
+      trend: the daily mean rises slowly from 3 to 7.
+      seasonal: a sine wave of plus-or-minus 3 every 7 days.
+      noise: random normal, mean 0, standard deviation 1.2.
+      Sum the three, round, floor negatives to zero, and you get a 90-day series.
+      This is the perfect teaching material for learning SARIMA, trend, cycle, and noise, all three present.
+    animation: "show_synth_data"
+    code: |
+      rng = np.random.default_rng(42)
+      n_days = 90
+      trend = np.linspace(3, 7, n_days)
+      seasonal = 3 * np.sin(2 * np.pi * np.arange(n_days) / 7)
+      noise = rng.normal(0, 1.2, n_days)
+      synth = np.maximum(0, (trend + seasonal + noise).round()).astype(int)
+    pause_after: 0.5
+
+  - id: "adf_test"
+    narration: >
+      A must before ARIMA: the ADF stationarity test.
+      The Augmented Dickey-Fuller test.
+      H0: the series is not stationary (has a unit root).
+      p below 0.05 rejects H0, so it's stationary and d equals 0 works.
+      p above 0.05 means not stationary, difference once (d equals 1) and check again.
+      One line of Python: adfuller(series).
+    animation: "show_adf_test"
+    code: |
+      from statsmodels.tsa.stattools import adfuller
+      adf_stat, p_value, *_ = adfuller(synth)
+      print(f"ADF p-value = {p_value:.3f}")
+      # p < 0.05 → stationary, d can be 0
+    pause_after: 0.5
+
+  - id: "arima_fit"
+    narration: >
+      The ARIMA code is one line.
+      ARIMA(train, order=(1, 1, 1)).fit().
+      (p=1, d=1, q=1) is the opening move, suitable for most data.
+      forecast steps=7 predicts the next 7 days.
+      Remember: split train and test cleanly, and evaluate on the last 7 days.
+    animation: "show_arima_fit"
+    code: |
+      from statsmodels.tsa.arima.model import ARIMA
+      train, test = synth.iloc[:-7], synth.iloc[-7:]
+      model = ARIMA(train, order=(1, 1, 1)).fit()
+      forecast = model.forecast(steps=7)
+      mae_arima = mean_absolute_error(test.values, forecast.values)
+    pause_after: 0.5
+
+  - id: "sarima_fit"
+    narration: >
+      SARIMA has one more set than ARIMA: seasonal_order.
+      (P, D, Q, s): the seasonal versions of AR, I, MA plus the cycle length s.
+      s equals 7 is a 7-day cycle.
+      Monthly data uses s equals 12 (12 months a year), quarterly uses s equals 4.
+      Fit with the SARIMAX class, and fit with disp equals False to silence the training-process noise.
+    animation: "show_sarima_fit"
+    code: |
+      from statsmodels.tsa.statespace.sarimax import SARIMAX
+      model = SARIMAX(
+          train,
+          order=(1, 1, 1),
+          seasonal_order=(1, 1, 1, 7),
+      ).fit(disp=False)
+      forecast = model.forecast(steps=7)
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      The complete ARIMA/SARIMA SOP.
+      One, data long enough (30-plus days).
+      Two, run ADF to see whether to difference.
+      Three, start with ARIMA(1,1,1), tune if needed.
+      Four, clear cycle, upgrade to SARIMA and add seasonal_order.
+      Five, split train/test and compute MAE.
+      These five steps handle most surveillance forecasting.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: the Box-Jenkins methodology, 1970!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_bj"
+    narration: >
+      ARIMA's full name: Box-Jenkins ARIMA.
+      In 1970, George Box and Gwilym Jenkins' classic book
+      "Time Series Analysis" systematized this method.
+      More than 50 years on, finance, weather, and public health still use it.
+      During the 2009 H1N1 pandemic, the US CDC used ARIMA models
+      to predict the care-seeking-rate peak 3 weeks in advance,
+      helping vaccine delivery and staff scheduling.
+      That's a classic moment for a mathematical methodology in the history of public health.
+    animation: "show_extra_bj"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      The three big ARIMA/SARIMA traps!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: forcing ARIMA onto data that's too short.
+      Run SARIMA on a 17-day outbreak and you have more parameters than samples.
+      The result: the MAE looks amazing (overfitting), then collapses instantly in production.
+      The SOP: if you have fewer than 30 days, don't touch ARIMA, just use Poisson plus lag.
+    animation: "show_blindspot_short_data"
+    error_code: "ARIMA(daily_17days, order=(2,1,2)).fit()"
+    correct_code: "# for <30 days, use Poisson+lag or rolling mean"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: turning on seasonality in SARIMA mindlessly.
+      Forcing seasonal_order onto data with no clear cycle gives too many parameters,
+      an exploding CI, and unstable predictions.
+      First check whether the ACF plot shows peaks at multiples of s, and only then use SARIMA.
+      Chapter 7's outbreak data has no cycle, so SARIMA would just be a waste.
+    animation: "show_blindspot_force_sarima"
+    error_code: "SARIMAX(series, seasonal_order=(1,1,1,7))"
+    correct_code: "# check ACF peaks first; use ARIMA if no seasonality"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: guessing p, d, q at random.
+      "Surely ARIMA(5, 3, 5) beats (1, 1, 1)?"
+      Wrong! Higher orders mean more parameters and easy overfitting.
+      The right way: read the ACF and PACF plots to choose initial values,
+      or use pmdarima's auto_arima to pick automatically.
+      Don't just bang in big numbers.
+    animation: "show_blindspot_random_order"
+    error_code: "ARIMA(train, order=(5, 3, 5))"
+    correct_code: "auto_arima(train, seasonal=False).fit()"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      All six models have made their entrance!
+      The next episode is also Chapter 7's last:
+      we put all six models in the ring for a grand showdown,
+      and one table reveals the champion and who fits which scenario.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

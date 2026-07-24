@@ -1,0 +1,172 @@
+meta:
+  chapter: "02"
+  concept: "data_inspect"
+  title: "Understand Your Data in One Minute: info() and describe()"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch02_02_data_inspect"
+  scene_class: "Ch02DataInspectScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: info() and describe()
+  # ========================================
+  - id: "intro"
+    narration: >
+      Welcome back! Last video we learned to read a CSV and grab data.
+      But wait, the first thing to do with new data isn't to rush into analysis,
+      it's to inspect the goods!
+      Just like when an online order arrives, you always open it first to check it's right and nothing's missing.
+      Today we learn two inspection power tools: info and describe.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "info_call"
+    narration: >
+      First up is df.info, in parentheses.
+      This move tells you how many records there are, which columns exist,
+      how many non-null values each column has, and the data type of every column.
+      It's like a health-check report, quickly scanning the whole table's condition.
+      280 records, 32 columns, all at a glance.
+    animation: "show_info"
+    code: "df.info()"
+    pause_after: 0.5
+
+  - id: "dtypes_explain"
+    narration: >
+      The most important thing inside info is the dtype, the data type.
+      int64 is integers, float64 is floats (numbers with a decimal point),
+      object usually means text, and datetime64 is date and time.
+      Why care about types? Because if the type is wrong, the calculation goes wrong.
+      You can't average text, right?
+      It's like you can't measure a fever with an eraser, the tool has to match.
+    animation: "show_dtypes"
+    pause_after: 0.5
+
+  - id: "describe_call"
+    narration: >
+      Next is df.describe, in parentheses.
+      This move automatically computes summary statistics for all your numeric columns.
+      count is the number of non-null values, mean is the average, std is the standard deviation.
+      min is the minimum, 25%, 50%, 75% are the quartiles, and max is the maximum.
+      One line of code, eight statistics, all computed for you.
+    animation: "show_describe"
+    code: "df.describe()"
+    pause_after: 0.5
+
+  - id: "describe_interpret"
+    narration: >
+      Let's read the data from the Pine and Cypress nursing home.
+      The mean of age is about 79, the std about 8.
+      Minimum 60, maximum 99.
+      The 50%, that is the median, is around 79.
+      This tells us residents' ages cluster between 70 and 89.
+      No surprise, it's a nursing home after all.
+    animation: "show_describe_interpret"
+    pause_after: 0.5
+
+  - id: "value_counts"
+    narration: >
+      What if you want the distribution of a categorical column?
+      Use value_counts, in parentheses.
+      value_counts on clinical_severity tells you:
+      how many are not_ill, how many mild, how many moderate, how many severe.
+      It's like asking, in this cluster, what's the ratio of mild to severe cases?
+      One line of code and you have the answer.
+    animation: "show_value_counts"
+    code: 'df["clinical_severity"].value_counts()'
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Remember: inspect the goods before you analyze.
+      info shows types and null values, describe shows summary statistics,
+      value_counts shows category distribution.
+      These three moves are your data-quality quick-screen kit, use them every single time!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: TB contact tracing
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Switch scenes! This time let's look at TB contact-tracing data.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Say you get a TB contact-tracing dataset.
+      Run info first: hmm, contact_date is object, not datetime.
+      That means the date is still in text format, so we'll convert it later.
+      Run describe next: the mean age is 42,
+      much younger than the nursing home, because contacts might be family members or coworkers.
+      value_counts on tst_result: how many positive, how many negative.
+      Same inspection routine, and it flows just as smoothly on a different dataset.
+    animation: "show_extra_example"
+    code: |
+      tb = pd.read_csv("tb_contacts.csv")
+      tb.info()
+      print(tb.describe())
+      print(tb["tst_result"].value_counts())
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      info and describe look simple, but beginners still trip over three easily confused spots!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Trap one: forgetting the parentheses.
+      You wrote df.describe but left off the parentheses.
+      Now you don't get statistics, you get the function itself.
+      Python tells you: this is a method object.
+      And you think, but I wanted the stats table!
+      The fix: add the parentheses, df.describe in parentheses, and it actually runs.
+    animation: "show_blindspot_no_parens"
+    error_code: "df.describe  # returns method object"
+    correct_code: "df.describe()  # returns stats table"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Trap two: seeing object in info and assuming it's a string.
+      object is a very ambiguous type in pandas.
+      It can be text, or it can be mixed types.
+      Don't let object lull you into complacency, better to use head to see the actual content.
+      Sometimes your date column is object too,
+      and then you need to_datetime to convert it, which we'll teach in the next video.
+    animation: "show_blindspot_object"
+    error_code: "df.info()  # shows 'object' dtype"
+    correct_code: "df['col'].head()  # check actual content"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Trap three: describe only shows numeric columns by default.
+      If you just run df.describe in parentheses, all the text columns vanish.
+      You might wonder: where's my sex column? Where's clinical_severity?
+      The fix: add include equals all.
+      Now every column, numbers and text alike, shows up.
+      You gain top, freq, and unique as extra statistics.
+    animation: "show_blindspot_include_all"
+    error_code: 'df.describe()  # numeric columns only'
+    correct_code: 'df.describe(include="all")  # all columns'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Inspection complete! Now you know how to quickly understand a data table.
+      In the next video we take on the date-time boss, to_datetime!
+      Don't worry, follow along with me and you'll clear it smoothly.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

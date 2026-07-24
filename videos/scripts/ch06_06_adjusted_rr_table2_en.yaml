@@ -1,0 +1,173 @@
+meta:
+  chapter: "06"
+  concept: "adjusted_rr_table2"
+  title: "Multivariable adjusted RR: Building a Beautiful Table 2"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch06_06_adjusted_rr_table2"
+  scene_class: "Ch06AdjustedRrTable2Scene"
+
+segments:
+  - id: "intro"
+    narration: >
+      This episode is the climax of Chapter Six: one formula that adjusts for a dozen variables at once,
+      producing an adjusted RR plus a 95% CI, formatted into a publication-standard Table 2.
+      From now on, whenever you write a paper or hand in a report, you'll always have a respectable table to lay out.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_multivariate"
+    narration: >
+      Why upgrade from univariate to multivariable?
+      Because in the epidemiology world there's no such thing as a clean exposure: age, sex, comorbidities, and floor can all confound.
+      Chapter Five's stratified analysis can control only one variable at a time, and beyond three strata the sample runs thin.
+      Multivariable regression controls ten at once with no trouble, as long as the sample is large enough.
+      That's the upgrade value of Chapter Six.
+    animation: "show_why_multivariate"
+    pause_after: 0.5
+
+  - id: "full_formula"
+    narration: >
+      The full formula looks like this.
+      infected tilde shower_use plus hydrotherapy_use plus age
+      plus immunosuppressed plus functional_score
+      plus comorbidity_chf plus dm plus cancer plus copd
+      plus C parentheses floor.
+      Ten variables in one breath.
+      Don't be afraid of the length; Python handles it for you, and you just need to know how to interpret the results.
+    animation: "show_full_formula"
+    code: |
+      formula = (
+          "infected ~ shower_use + hydrotherapy_use + age "
+          "+ immunosuppressed + functional_score "
+          "+ comorbidity_chf + comorbidity_dm "
+          "+ comorbidity_cancer + comorbidity_copd "
+          "+ C(floor)"
+      )
+      model = smf.glm(formula, data=df,
+                      family=sm.families.Poisson()).fit(cov_type="HC0")
+    pause_after: 0.5
+
+  - id: "table2_build"
+    narration: >
+      The building blocks of Table 2.
+      Variable name, adjusted RR, lower bound of the 95% CI, upper bound, and the p-value.
+      The code just exps the params, exps the whole conf_int, tacks on the pvalues,
+      then uses pandas apply and format to turn it into a string like "2.34 (1.20, 4.56)".
+      Twenty lines of code, and a publication-grade Table 2 appears.
+    animation: "show_table2_build"
+    code: |
+      table2 = pd.DataFrame({
+          "variable": model.params.index,
+          "aRR": np.exp(model.params).round(2),
+          "CI_lo": np.exp(model.conf_int()[0]).round(2),
+          "CI_hi": np.exp(model.conf_int()[1]).round(2),
+          "p": model.pvalues.round(3),
+      })
+      table2["aRR (95% CI)"] = table2.apply(
+          lambda r: f"{r['aRR']} ({r['CI_lo']}, {r['CI_hi']})", axis=1)
+    pause_after: 0.5
+
+  - id: "interpret_table2"
+    narration: >
+      Key points for interpretation.
+      Always skip the Intercept first; it's just the baseline and has no clinical meaning.
+      Find the variable you care about: shower_use has an aRR of 2.8 (1.5, 5.2), with a p-value of 0.001.
+      Meaning: after controlling for all other factors, a shower user's infection risk is 2.8 times a non-user's,
+      the CI doesn't cross 1, so it's statistically significant.
+      That's the direct answer to "is showering the source of transmission".
+    animation: "show_interpret_table2"
+    pause_after: 0.5
+
+  - id: "compare_three"
+    narration: >
+      An integrated review: comparing three effect measures.
+      Chapter Three crude RR: no control at all, possibly confounded.
+      Chapter Five Mantel-Haenszel adjusted RR: controls one variable, like floor.
+      Chapter Six adjusted RR from Modified Poisson: controls a dozen variables at once.
+      Same data, three different effect estimates, which is most trustworthy?
+      The last one, because it comes closest to "the true effect after removing all known confounders".
+    animation: "show_compare_three"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      The Table 2 golden workflow, four steps.
+      One: write the full formula, with all candidate adjustment factors.
+      Two: run Modified Poisson plus HC0.
+      Three: exp the params and conf_int, and combine with pvalues into a table.
+      Four: skip the Intercept, and focus on the aRR of the exposure factors.
+      The core deliverable of Chapter Six is this Table 2.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: an AIDS antiretroviral drug study!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_art"
+    narration: >
+      A classic ART antiretroviral study: with or without the drug, how much does mortality differ?
+      Univariate crude RR is 0.3, which looks incredibly effective.
+      But patients self-select, and those on the drug may have started out in milder condition.
+      After controlling for eight variables like CD4, viral load, age, sex, and comorbidities,
+      the adjusted RR rises to 0.55.
+      The effect is still significant, but not as dramatic as it first looked.
+      This is why observational studies must do multivariable adjustment:
+      honestly removing the confounding is what reveals the true effect.
+    animation: "show_extra_art"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three common Table 2 pitfalls!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: writing the exp of the Intercept into the table as an RR.
+      The exp of the Intercept is "the average incidence when all variables are 0", not an RR.
+      Table 2 should drop the Intercept row, or filter it out with loc.
+      Peer review loves to catch this mistake.
+    animation: "show_blindspot_keep_intercept"
+    error_code: "table2.to_csv('table2.csv')  # keeps Intercept"
+    correct_code: "table2.loc[1:].to_csv('table2.csv')  # drop intercept"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: throwing in too many variables and overfitting.
+      280 people of data, and you put in 30 variables.
+      The result: many variables' SE explode, and their CIs span the whole universe.
+      Rule of thumb: at least 10 cases per variable, EPV 10.
+      We have 121 cases, so a limit of 12 variables. Beyond that, trim down or do variable screening first.
+    animation: "show_blindspot_overfit"
+    error_code: "formula = 'y ~ ' + ' + '.join(30_variables)"
+    correct_code: "formula = 'y ~ ' + ' + '.join(selected_by_cie_or_prior)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: getting the categorical variable's reference wrong.
+      For example, floor 1 is the reference, but you want floor 3 as the reference because it has the most people.
+      statsmodels defaults to "the smallest letter or number" as the reference.
+      To change it, add Treatment parentheses reference value inside the C parentheses.
+      A clear reference makes the table easy to read.
+    animation: "show_blindspot_wrong_ref"
+    error_code: "C(floor)"
+    correct_code: "C(floor, Treatment(reference=3))"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Table 2 is complete!
+      Next episode we'll turn this table into a more intuitive picture:
+      the adjusted RR forest plot! One glance and you see which factors are truly dangerous.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

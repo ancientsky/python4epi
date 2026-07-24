@@ -41,6 +41,59 @@ class Ch02PivotTableScene(EpiBaseScene):
 
     total_steps: int = 14
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "Excel 樞紐分析表",
+            "title_sub": "pivot_table 完全攻略",
+            "analogy_heading": "Excel ↔ pandas 對照表",
+            "map1": "列區域  →  index",
+            "map2": "欄區域  →  columns",
+            "map3": "值區域  →  values",
+            "map4": "聚合方式 →  aggfunc",
+            "analogy_note": "四個參數，完全對應 Excel 的四個區塊",
+            "margins_note": "margins=True 就像 Excel 的小計功能",
+            "multi_agg_note": "aggfunc 傳列表 = 一次算多種統計量",
+            "pvg_b1": "groupby  — 一維聚合，適合接續處理（流水線）",
+            "pvg_b2": "pivot_table — 二維交叉表，適合報表展示",
+            "pvg_b3": "給長官看 → pivot_table",
+            "pvg_b4": "接著做更多運算 → groupby",
+            "summary_heading": "重點整理",
+            "summary_p1": "1. index / columns / values / aggfunc 對應 Excel 四區塊",
+            "summary_p2": "2. margins=True 加小計列與小計欄",
+            "summary_p3": "3. aggfunc 可傳列表，一次算多種統計量",
+            "summary_p4": "4. groupby 適合流水線，pivot_table 適合報表",
+            "extra_banner_title": "額外範例：登革熱各區月份分析",
+            "blindspot_banner_title": "pivot_table 三大新手坑",
+            "outro_heading": "下一集：method chaining",
+            "outro_sub": "像串珠子一樣，把操作串成優雅的一行！",
+        },
+        "en": {
+            "title_main": "Excel Pivot Tables",
+            "title_sub": "pivot_table, the complete guide",
+            "analogy_heading": "Excel ↔ pandas cheat sheet",
+            "map1": "Row area     →  index",
+            "map2": "Column area  →  columns",
+            "map3": "Value area   →  values",
+            "map4": "Agg method   →  aggfunc",
+            "analogy_note": "Four parameters, one for each of Excel's four zones",
+            "margins_note": "margins=True works just like Excel's subtotals",
+            "multi_agg_note": "Pass aggfunc a list = compute several statistics at once",
+            "pvg_b1": "groupby  — 1D aggregation, great for a follow-up pipeline",
+            "pvg_b2": "pivot_table — 2D cross table, great for report display",
+            "pvg_b3": "Showing the boss → pivot_table",
+            "pvg_b4": "Doing more computation next → groupby",
+            "summary_heading": "Key Takeaways",
+            "summary_p1": "1. index / columns / values / aggfunc map to Excel's four zones",
+            "summary_p2": "2. margins=True adds subtotal rows and columns",
+            "summary_p3": "3. aggfunc can take a list to compute several statistics at once",
+            "summary_p4": "4. groupby suits pipelines, pivot_table suits reports",
+            "extra_banner_title": "Extra example: dengue by district and month",
+            "blindspot_banner_title": "3 Beginner Traps with pivot_table",
+            "outro_heading": "Next up: method chaining",
+            "outro_sub": "Chain operations like threading beads into one elegant line!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -50,28 +103,28 @@ class Ch02PivotTableScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the pivot_table lesson."""
-        self.show_title_card("Excel 樞紐分析表", "pivot_table 完全攻略", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_excel_analogy(self, duration: float = 7.0, **kwargs) -> None:
         """Step 1: Excel pivot table analogy — mapping fields to parameters."""
         self.show_step_indicator(1, self.total_steps)
 
         heading = Text(
-            "Excel \u2194 pandas 對照表",
+            self.t("analogy_heading"),
             font=FONT_CJK,
             font_size=32,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         mappings = VGroup(
-            Text("列區域  \u2192  index", font=FONT_MONO, font_size=23, color=TEXT_PRIMARY),
-            Text("欄區域  \u2192  columns", font=FONT_MONO, font_size=23, color=TEXT_PRIMARY),
-            Text("值區域  \u2192  values", font=FONT_MONO, font_size=23, color=TEXT_PRIMARY),
-            Text("聚合方式 \u2192  aggfunc", font=FONT_MONO, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("map1"), font=FONT_MONO, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("map2"), font=FONT_MONO, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("map3"), font=FONT_MONO, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("map4"), font=FONT_MONO, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
         note = Text(
-            "四個參數，完全對應 Excel 的四個區塊",
+            self.t("analogy_note"),
             font=FONT_CJK,
             font_size=20,
             color=TEXT_SECONDARY,
@@ -142,7 +195,7 @@ class Ch02PivotTableScene(EpiBaseScene):
         code_panel = self.show_code(code_text, title="pivot_margins.py")
 
         note = Text(
-            "margins=True 就像 Excel 的小計功能",
+            self.t("margins_note"),
             font=FONT_CJK,
             font_size=20,
             color=TEXT_SECONDARY,
@@ -172,7 +225,7 @@ class Ch02PivotTableScene(EpiBaseScene):
         code_panel = self.show_code(code_text, title="pivot_multi_agg.py")
 
         note = Text(
-            "aggfunc 傳列表 = 一次算多種統計量",
+            self.t("multi_agg_note"),
             font=FONT_CJK,
             font_size=20,
             color=ACCENT_ORANGE,
@@ -194,10 +247,10 @@ class Ch02PivotTableScene(EpiBaseScene):
         ).to_edge(UP, buff=0.8)
 
         bullets = VGroup(
-            Text("groupby  \u2014 一維聚合，適合接續處理（流水線）", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("pivot_table \u2014 二維交叉表，適合報表展示", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("給長官看 \u2192 pivot_table", font=FONT_CJK, font_size=22, color=ACCENT_GREEN),
-            Text("接著做更多運算 \u2192 groupby", font=FONT_CJK, font_size=22, color=ACCENT_GREEN),
+            Text(self.t("pvg_b1"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("pvg_b2"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("pvg_b3"), font=FONT_CJK, font_size=22, color=ACCENT_GREEN),
+            Text(self.t("pvg_b4"), font=FONT_CJK, font_size=22, color=ACCENT_GREEN),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.45).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -210,17 +263,17 @@ class Ch02PivotTableScene(EpiBaseScene):
         self.show_step_indicator(6, self.total_steps)
 
         heading = Text(
-            "重點整理",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. index / columns / values / aggfunc 對應 Excel 四區塊", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("2. margins=True 加小計列與小計欄", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("3. aggfunc 可傳列表，一次算多種統計量", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
-            Text("4. groupby 適合流水線，pivot_table 適合報表", font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=22, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.42).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -234,7 +287,7 @@ class Ch02PivotTableScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：登革熱各區月份分析")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 7.0, **kwargs) -> None:
@@ -267,7 +320,7 @@ class Ch02PivotTableScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("pivot_table 三大新手坑")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_no_aggfunc(self, duration: float = 5.0, **kwargs) -> None:
@@ -300,14 +353,14 @@ class Ch02PivotTableScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：method chaining",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "像串珠子一樣，把操作串成優雅的一行！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,

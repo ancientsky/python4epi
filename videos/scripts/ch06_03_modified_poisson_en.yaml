@@ -1,0 +1,162 @@
+meta:
+  chapter: "06"
+  concept: "modified_poisson"
+  title: "Modified Poisson: The Magic of Borrowing a Hat to Compute RR"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch06_03_modified_poisson"
+  scene_class: "Ch06ModifiedPoissonScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      This episode we break down the star of Chapter Six: Modified Poisson regression.
+      It's the gold-standard approach recognized across epidemiology:
+      when a cohort study needs an adjusted RR and there's a pile of covariates to adjust for, you reach for this.
+      It's incredibly simple to run, but the logic behind it is beautiful, and afterward you'll think: "wow, mathematicians are great at borrowing things".
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_not_other"
+    narration: >
+      First, why aren't the other candidates good enough?
+      log-binomial: right in theory, but it often won't converge in practice.
+      Cox: needs a time variable, so if your cohort study only has "infected by the end or not", you can't use it.
+      Logistic: gives you an OR, which inflates at high attack rates.
+      So in 2004, Zou proposed in the American Journal of Epidemiology: borrow the Poisson family plus a robust standard error correction.
+      Ever since, it's been the standard equipment of epidemiology worldwide.
+    animation: "show_why_not_other"
+    pause_after: 0.5
+
+  - id: "poisson_original"
+    narration: >
+      First recall what Poisson was originally for.
+      Poisson is the distribution for "how many times something happens per unit of time", like how many emergency patients arrive in a day.
+      It assumes the expected value equals the variance, and the exp of beta it produces is an incidence rate ratio.
+      Here's the key: for 0-or-1 infection data, exp of beta is exactly the RR.
+      So we borrow Poisson's log link function and apply it to infection data.
+    animation: "show_poisson_original"
+    pause_after: 0.5
+
+  - id: "borrow_hat_metaphor"
+    narration: >
+      But borrowing directly has a problem.
+      Poisson assumes the expected value equals the variance; infection data is binomial, whose variance is smaller.
+      The result: the standard error comes out too large, and the confidence interval balloons.
+      The fix: put on a "patch sticker", a robust sandwich standard error, using HC0 to override Poisson's original SE.
+      That's where "modified" comes from.
+      In plain terms: borrow someone else's hat, and when it doesn't fit your head, stuff it with tissue to fill the gap.
+    animation: "show_borrow_hat"
+    pause_after: 0.5
+
+  - id: "code_demo"
+    narration: >
+      Let's look at the code, super short.
+      From statsmodels.formula.api, use smf.glm,
+      write the formula as infected tilde shower_use plus the other variables.
+      Pass family equals sm.families.Poisson.
+      The key: when you fit, pass cov_type equals HC0.
+      Without that HC0, it isn't modified, and your SE will be wrong.
+    animation: "show_code_demo"
+    code: |
+      import statsmodels.api as sm
+      import statsmodels.formula.api as smf
+
+      model = smf.glm(
+          "infected ~ shower_use + age + C(floor)",
+          data=df,
+          family=sm.families.Poisson(),
+      ).fit(cov_type="HC0")   # ← 修正貼紙
+      rr = np.exp(model.params)
+      ci = np.exp(model.conf_int())
+    pause_after: 0.5
+
+  - id: "exp_and_ci"
+    narration: >
+      Three moves to read the output.
+      Move one: take exp of params to restore the RR.
+      Move two: take exp of the whole conf_int to restore the 95% CI of the RR.
+      Move three: read the p-values directly from pvalues, no exp needed.
+      All three moves together, packaged into Table 2, and you can hand it in.
+    animation: "show_exp_and_ci"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three key things to remember.
+      One: Modified Poisson is the top choice for cohort studies, computing the adjusted RR directly.
+      Two: the keys are family Poisson plus cov_type HC0, both indispensable.
+      Three: remember to exp the results before you call them RR.
+      Remember these three things, and you can replace most of what logistic does in cohort studies.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a dengue cohort study!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue"
+    narration: >
+      In 2015, Tainan had a major dengue outbreak, with attack rates as high as 20% in some neighborhoods.
+      The study asks: with standing-water containers at home, how many times higher is the infection risk?
+      If you use logistic, you get an OR of 3.5.
+      But a 20% attack rate is no longer rare, so the OR overstates.
+      Switch to Modified Poisson and you get an adjusted RR of 2.3.
+      The two numbers differ by 50%: one says "warn pregnant women to be concerned", the other says "it's actually fine", completely different decisions.
+      That's why in high-attack-rate scenarios you must use Modified Poisson.
+    animation: "show_extra_dengue"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three common implementation pitfalls!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: forgetting to add cov_type HC0.
+      Without it, it's ordinary Poisson: the SE is too large, the CI is super wide, and everything looks non-significant.
+      A reviewer will spot that you never applied the Zou 2004 correction.
+      Build the habit: always write cov_type inside the fit parentheses.
+    animation: "show_blindspot_no_hc0"
+    error_code: "model.fit()"
+    correct_code: "model.fit(cov_type='HC0')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: reporting params directly as the RR.
+      params is the log RR, not the RR.
+      You must restore it with np.exp.
+      Before you report, take one more look yourself: "did this number get exp'd?"
+    animation: "show_blindspot_no_exp"
+    error_code: "rr = model.params"
+    correct_code: "rr = np.exp(model.params)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: getting the family wrong.
+      For example, using Binomial or Gaussian.
+      Binomial with a log link is log-binomial, which is different from Modified Poisson and often won't converge.
+      The full spell for Modified Poisson: family Poisson plus HC0.
+      Word for word, memorize it.
+    animation: "show_blindspot_wrong_family"
+    error_code: "family=sm.families.Binomial()"
+    correct_code: "family=sm.families.Poisson()"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! You've now learned epidemiology's most powerful adjusted-RR weapon.
+      Next episode we'll unlock statsmodels formula syntax:
+      the tilde, the plus sign, and the C parentheses, what exactly are they saying?
+      I'll walk you through every symbol, hand by hand.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

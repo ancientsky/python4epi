@@ -1,0 +1,184 @@
+meta:
+  chapter: "01b"
+  concept: "errors"
+  title: "Reading Error Messages: Traceback Is Not Hieroglyphics"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch01b_04_errors"
+  scene_class: "Ch01bErrorsScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: error messages
+  # ========================================
+  - id: "intro"
+    narration: >
+      Hi! Today we talk about the thing every beginner dreads: the red error message.
+      Don't panic! A Traceback is really Python reporting to you:
+      here's where the problem is, and here's what it is.
+      It isn't scolding you; it's helping you debug.
+      Learning to read a traceback is as important as learning to read the conclusion of an outbreak report.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "traceback_anatomy"
+    narration: >
+      A Traceback should be read starting from the last line.
+      The last line tells you the error's type and reason.
+      Reading upward, you find where the error happened: which file, which line.
+      Like an outbreak report, look at the conclusion first, then the process.
+      Remember: read from the bottom up!
+    animation: "show_traceback_anatomy"
+    pause_after: 0.5
+
+  - id: "name_error"
+    narration: >
+      First common error: NameError.
+      It means Python can't find the name you mentioned.
+      Usually it's a typo, like infceted missing an e.
+      Python is strict; one wrong letter and it doesn't recognize it.
+    animation: "show_name_error"
+    code: |
+      infected = 121
+      print(infceted)
+    output: "NameError: name 'infceted' is not defined"
+    pause_after: 0.3
+
+  - id: "type_error"
+    narration: >
+      Second: TypeError.
+      It means you did an unsupported operation on some type.
+      Like dividing the string "121" by the integer 280,
+      Python doesn't know how to compute that.
+      The fix: convert the string to a number before calculating.
+    animation: "show_type_error"
+    code: |
+      cases = "121"
+      rate = cases / 280
+    output: "TypeError: unsupported operand type(s)"
+    pause_after: 0.3
+
+  - id: "key_error"
+    narration: >
+      Third: KeyError.
+      The dictionary can't find the key you asked for.
+      You stored deaths, but you typed death, missing the s.
+      The fix: carefully match against the dictionary's keys.
+    animation: "show_key_error"
+    code: |
+      data = {"deaths": 19, "cases": 121}
+      print(data["death"])
+    output: "KeyError: 'death'"
+    pause_after: 0.3
+
+  - id: "index_error"
+    narration: >
+      Fourth: IndexError.
+      The list has only 6 elements, indices 0 through 5,
+      yet you asked for the 6th, which is out of range.
+      It's like the nursing home has only 3 floors, but you ask for the 4th floor's data.
+    animation: "show_index_error"
+    code: |
+      wings = ["1A", "1B", "2A", "2B", "3A", "3B"]
+      print(wings[6])
+    output: "IndexError: list index out of range"
+    pause_after: 0.3
+
+  - id: "file_error"
+    narration: >
+      Fifth: FileNotFoundError.
+      The file you want to read doesn't exist.
+      Usually the path is wrong, or you forgot to switch into the right folder.
+      The fix: use ls or dir to confirm where the file is.
+    animation: "show_file_error"
+    code: "open('data/outbreak.csv')"
+    output: "FileNotFoundError: [Errno 2]"
+    pause_after: 0.3
+
+  - id: "main_summary"
+    narration: >
+      Let's sum up!
+      Read a Traceback from the bottom up; the last line is the conclusion.
+      NameError means a wrong name, TypeError means the wrong type,
+      KeyError means the dict can't find a key, IndexError means out of range,
+      and FileNotFoundError means a wrong file path.
+      These five cover ninety percent of beginner errors.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: error handling while batch-reading reports
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      Let's see a hands-on scenario: hitting an error while batch-reading multiple notification files.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Suppose you're reading the notification CSVs from five counties,
+      but one of the filenames is misspelled.
+      If you can't read error messages, all you know is the program crashed.
+      But now you see FileNotFoundError,
+      and you instantly know which file path is wrong, and you just fix it.
+      Read error messages, and you debug ten times faster!
+    animation: "show_extra_example"
+    code: |
+      files = ["taipei.csv", "tainan.csv"]
+      for f in files:
+          print(f"reading {f}")
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Three common debugging blind spots.
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot one: reading only the first line of the Traceback.
+      Actually, the first line just tells you an error happened;
+      the real point is in the last line.
+      Many beginners panic at the red text and don't even finish reading.
+      Take a breath and start from the last line.
+    animation: "show_blindspot_read_wrong"
+    error_code: "# only reads first line"
+    correct_code: "# read LAST line first!"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot two: copying the whole error into ChatGPT.
+      Sure, you can, but you should learn to read it yourself too.
+      Take the Error name on the last line plus the message after the colon,
+      search those two keywords, and you'll usually find the answer.
+    animation: "show_blindspot_copy_paste"
+    error_code: "# copy 50 lines to ChatGPT"
+    correct_code: "# search: NameError + message"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot three: confusing Warning with Error.
+      A Warning is just a caution; the program keeps running.
+      An Error is the real problem; the program stops.
+      Don't panic at a yellow Warning; deal with it when you see a red Error.
+    animation: "show_blindspot_warning_vs_error"
+    error_code: "# Warning: panic!"
+    correct_code: "# Warning: just a heads-up"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! You no longer fear the red text.
+      In the next video I'll teach you to handle surprises gracefully with try except.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

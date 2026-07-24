@@ -1,0 +1,146 @@
+meta:
+  chapter: "06"
+  concept: "formula_syntax"
+  title: "statsmodels Formula Syntax: Tilde, Plus, C() Fully Explained"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch06_04_formula_syntax"
+  scene_class: "Ch06FormulaSyntaxScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Open the Chapter Six notebook and you'll see tildes, plus signs, and C parentheses everywhere, like a magic spell.
+      Don't be scared! These symbols are borrowed from the R language's "formula syntax", and each one has a precise meaning.
+      This episode we'll break down the three most important symbols, so from now on you can read any statsmodels formula.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "tilde_symbol"
+    narration: >
+      The first symbol: the tilde.
+      It means "is predicted by what".
+      The left side is the outcome variable Y, the right side is the predictor variable X.
+      infected tilde age means "use age to predict infected".
+      It's not an equals sign! Not "equals"! It's "is predicted by".
+    animation: "show_tilde"
+    pause_after: 0.5
+
+  - id: "plus_symbol"
+    narration: >
+      The second symbol: the plus sign.
+      It's not mathematical addition; it means "include in the model together".
+      age plus sex plus floor means "put age, sex, and floor into the model together".
+      It doesn't compute the value of age plus sex; instead "each gets its own coefficient β".
+      In plain terms: "bring all your friends in to talk together".
+    animation: "show_plus"
+    pause_after: 0.5
+
+  - id: "c_symbol"
+    narration: >
+      The third symbol: a capital C with parentheses.
+      It means "please treat this as a categorical variable".
+      For example, if floor is 1, 2, 3, or 4, without C it gets treated as continuous, as if the levels have a size ordering.
+      Once you write C parentheses floor, statsmodels automatically splits it into dummy variables:
+      floors 2, 3, and 4 each get their own 0-or-1 column, with floor 1 as the baseline group.
+      This is called one-hot encoding, the standard approach for categorical variables.
+    animation: "show_c_symbol"
+    code: |
+      # floor 是 1, 2, 3, 4
+      # 不加 C 會被當連續：floor=2 假設「影響是 floor=1 的兩倍」
+      smf.glm("infected ~ floor", ...)
+      # 加 C 才對：拆成 3 個 dummy
+      smf.glm("infected ~ C(floor)", ...)
+    pause_after: 0.5
+
+  - id: "full_example"
+    narration: >
+      Let's combine a complete formula.
+      infected tilde shower_use plus age plus C parentheses floor.
+      Translated into plain terms: "use shower use, age, and floor (as a category) to predict infection".
+      statsmodels handles it automatically: age as continuous, shower_use as 0-or-1, and floor split into three dummies.
+      One line of formula takes care of everything.
+    animation: "show_full_example"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      The three-symbol cheat sheet.
+      The tilde means "is predicted by".
+      The plus means "include together".
+      C parentheses means "treat as categorical".
+      Beyond these three, there's also star for interaction, colon for pure interaction without main effects, and minus one to drop the intercept, which you'll learn later.
+      For today, remember the three most important ones first.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Another common formula scenario: a flu hospitalization study!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_flu"
+    narration: >
+      A flu hospitalization study needs to adjust for age group, sex, and vaccination status.
+      The formula looks like this: hospitalized tilde vaccinated plus C parentheses age_group plus sex.
+      Note that age_group is originally a string, "0-18", "19-64", "65+",
+      and when statsmodels sees the C parentheses it automatically one-hot encodes it.
+      If age is a pure number, like 65, 72, or 80, then whether to add C depends on the context:
+      as continuous with a linearity assumption, or grouped, which is flexible but spends degrees of freedom.
+      In practice, epidemiology loves grouping plus C, because physiological changes have turning points.
+    animation: "show_extra_flu"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      The three formula-syntax mistakes beginners mix up most!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: using = instead of ~.
+      Python's equals sign is the assignment operator, not formula syntax.
+      Writing it wrong throws a SyntaxError immediately.
+      Remember: a statsmodels formula is a string, and inside it you use the tilde.
+    animation: "show_blindspot_equals"
+    error_code: "smf.glm('infected = age', ...)"
+    correct_code: "smf.glm('infected ~ age', ...)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: forgetting C on a categorical variable.
+      For example, floor is 1, 2, 3, 4; forget C and it gets treated as continuous.
+      The result is one beta and one RR instead of three dummy betas.
+      The meaning is completely different: the former is "how many times higher the infection rate is per floor up", the latter is "how many times higher than floor 1".
+      Always ask yourself once: is this variable continuous? If not, add C.
+    animation: "show_blindspot_no_c"
+    error_code: "smf.glm('infected ~ floor', ...)"
+    correct_code: "smf.glm('infected ~ C(floor)', ...)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: using + for arithmetic.
+      Writing age + age_squared, thinking it computes age squared.
+      Wrong! statsmodels reads that as "age plus a column called age_squared".
+      The correct move is to write I parentheses age to the second power, or add the column to the DataFrame first.
+      I parentheses means "treat what's inside as an ordinary arithmetic expression".
+    animation: "show_blindspot_plus_math"
+    error_code: "smf.glm('y ~ age + age**2', ...)"
+    correct_code: "smf.glm('y ~ age + I(age**2)', ...)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations! You've cracked statsmodels formula syntax.
+      Next episode we'll run Modified Poisson and logit together in a for loop,
+      comparing univariate crude RR against crude OR in one pass,
+      so you can see at a glance "how much a 43% attack rate inflates the OR".
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

@@ -41,6 +41,37 @@ class Ch02DerivedScene(EpiBaseScene):
 
     total_steps: int = 15
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "衍生變項四大招",
+            "title_sub": "cut, axis, astype, dt",
+            "assign_note": "assign() 回傳新 DataFrame，適合 method chaining",
+            "summary_heading": "四大招回顧",
+            "summary_p1": "1. pd.cut() 連續變項分組",
+            "summary_p2": "2. .sum(axis=1) 橫向加總共病數",
+            "summary_p3": "3. .astype() 型別轉換",
+            "summary_p4": "4. .dt accessor 拆解日期衍生欄位",
+            "extra_banner_title": "額外範例：登革熱嚴重度與就醫延遲",
+            "blindspot_banner_title": "衍生變項經典坑 3 選",
+            "outro_heading": "下一集：遺漏值偵探社",
+            "outro_sub": "NaN, NaT, None 一次搞懂！",
+        },
+        "en": {
+            "title_main": "Four Moves for Derived Variables",
+            "title_sub": "cut, axis, astype, dt",
+            "assign_note": "assign() returns a new DataFrame, perfect for method chaining",
+            "summary_heading": "The Four Moves, Recapped",
+            "summary_p1": "1. pd.cut() bins continuous variables",
+            "summary_p2": "2. .sum(axis=1) totals comorbidities row-wise",
+            "summary_p3": "3. .astype() converts data types",
+            "summary_p4": "4. .dt accessor derives fields from dates",
+            "extra_banner_title": "Extra example: dengue severity and care delay",
+            "blindspot_banner_title": "3 Classic Derived-Variable Traps",
+            "outro_heading": "Next up: the Missing-Value Detective Agency",
+            "outro_sub": "Master NaN, NaT, None all at once!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -50,7 +81,7 @@ class Ch02DerivedScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         """Title card for the derived variables lesson."""
-        self.show_title_card("衍生變項四大招", "cut, axis, astype, dt", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_pd_cut(self, duration: float = 7.0, **kwargs) -> None:
         """Step 1: show pd.cut() for binning continuous variables."""
@@ -176,7 +207,7 @@ class Ch02DerivedScene(EpiBaseScene):
         code_panel = self.show_code(code_text, title="assign.py")
 
         note = Text(
-            "assign() 回傳新 DataFrame，適合 method chaining",
+            self.t("assign_note"),
             font=FONT_CJK,
             font_size=20,
             color=TEXT_SECONDARY,
@@ -191,17 +222,17 @@ class Ch02DerivedScene(EpiBaseScene):
         self.show_step_indicator(7, self.total_steps)
 
         heading = Text(
-            "四大招回顧",
+            self.t("summary_heading"),
             font=FONT_CJK,
             font_size=34,
             color=ACCENT_ORANGE,
         ).to_edge(UP, buff=0.8)
 
         points = VGroup(
-            Text("1. pd.cut() 連續變項分組", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("2. .sum(axis=1) 橫向加總共病數", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("3. .astype() 型別轉換", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
-            Text("4. .dt accessor 拆解日期衍生欄位", font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=23, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.42).next_to(heading, DOWN, buff=0.6)
 
         self.play(FadeIn(heading), run_time=0.5)
@@ -215,7 +246,7 @@ class Ch02DerivedScene(EpiBaseScene):
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the ExtraExampleBanner section divider."""
-        banner = ExtraExampleBanner("額外範例：登革熱嚴重度與就醫延遲")
+        banner = ExtraExampleBanner(self.t("extra_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_extra_example(self, duration: float = 7.0, **kwargs) -> None:
@@ -247,7 +278,7 @@ class Ch02DerivedScene(EpiBaseScene):
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
         """Show the BlindSpotBanner section divider."""
-        banner = BlindSpotBanner("衍生變項經典坑 3 選")
+        banner = BlindSpotBanner(self.t("blindspot_banner_title"))
         self.show_section_banner(banner, duration=duration)
 
     def show_blindspot_axis(self, duration: float = 5.0, **kwargs) -> None:
@@ -280,14 +311,14 @@ class Ch02DerivedScene(EpiBaseScene):
         self.show_step_indicator(self.total_steps, self.total_steps)
 
         heading = Text(
-            "下一集：遺漏值偵探社",
+            self.t("outro_heading"),
             font=FONT_CJK,
             font_size=28,
             color=ACCENT_ORANGE,
         ).move_to(ORIGIN + UP * 0.5)
 
         sub = Text(
-            "NaN, NaT, None 一次搞懂！",
+            self.t("outro_sub"),
             font=FONT_CJK,
             font_size=22,
             color=TEXT_SECONDARY,
