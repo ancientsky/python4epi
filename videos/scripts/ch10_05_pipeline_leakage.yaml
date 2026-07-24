@@ -1,0 +1,141 @@
+meta:
+  chapter: "10"
+  concept: "pipeline_leakage"
+  title: "Pipeline 與資料洩漏：把前處理和模型綁成一條，順便防作弊"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch10_05_pipeline_leakage"
+  scene_class: "Ch10PipelineLeakageScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      特徵工程做完了，資料乖乖變成一堆數字，準備餵給模型。
+      但先別急！這一集要先教你 ML 界的頭號殺手——資料洩漏，
+      還有對付它的神兵利器：sklearn 的 Pipeline。
+      學會這一招，你的模型才不會「模擬考滿分、上線就崩」。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "leakage_problem"
+    narration: >
+      先講清楚什麼叫資料洩漏：只要測試集的資訊偷偷混進了訓練，
+      模型就會「考很高、上線慘敗」，因為它其實偷看過答案。
+      三大禁忌記起來：先標準化或 SMOTE 再切分、
+      把結果的一部分當特徵、還有用到未來的資訊。這三個都是作弊。
+    animation: "show_leakage_problem"
+    pause_after: 0.5
+
+  - id: "pipeline_idea"
+    narration: >
+      對付洩漏最優雅的方法，就是把前處理和模型「綁成一條」。
+      Pipeline 就像一條輸送帶：數值欄位丟進去標準化、
+      類別欄位 one-hot、二元欄位直接放行，最後接上模型。
+      整條 fit、predict 一起走，你再也不會手滑先偷算平均值。
+    animation: "show_pipeline_idea"
+    pause_after: 0.5
+
+  - id: "pipeline_code"
+    narration: >
+      寫成程式，先用 ColumnTransformer 把三種欄位分三條路處理，
+      再用 Pipeline 把這個前處理跟模型串成一個物件。
+      看清楚：整套前處理跟 LogisticRegression 被裝進同一個 clf 裡。
+      這一包，就是你之後交叉驗證要丟進去的主角。
+    animation: "show_pipeline_code"
+    code: |
+      from sklearn.pipeline import Pipeline
+      from sklearn.compose import ColumnTransformer
+
+      preprocess = ColumnTransformer([
+          ("num", StandardScaler(), num_cols),
+          ("cat", OneHotEncoder(), cat_cols),
+          ("bin", "passthrough", bin_cols),
+      ])
+      clf = Pipeline([("prep", preprocess), ("model", lr)])
+    pause_after: 0.5
+
+  - id: "fold_safety"
+    narration: >
+      為什麼包成 Pipeline 就不會洩漏？關鍵在交叉驗證的每一折裡，
+      縮放要用的平均值和標準差，只從那一折的訓練資料學，
+      測試折完全不參與計算。這等於改考卷之前，答案卷絕對不准偷看。
+      Pipeline 幫你把這條線自動守得死死的。
+    animation: "show_fold_safety"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Pipeline 加防洩漏，三個重點打包。
+      一，前處理加模型綁成一條，fit、predict 一起走。
+      二，縮放的平均只從訓練折學，測試折絕不參與。
+      三，之後換模型只要換 model 那一格，超級方便——下一集就會用到。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：換個場景，COVID 檢驗值模型的縮放洩漏！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid"
+    narration: >
+      假設你要用白血球、C 反應蛋白這些檢驗值預測 COVID 重症。
+      這些數值範圍差很大，一定要標準化——但千萬別先算全體平均再切分！
+      一樣包成 Pipeline，把 StandardScaler 放進去，
+      交叉驗證時縮放只吃訓練折，同一招就把洩漏擋掉了。
+    animation: "show_extra_covid"
+    code: |
+      covid_clf = Pipeline([
+          ("scale", StandardScaler()),
+          ("model", LogisticRegression(max_iter=500)),
+      ])
+      scores = cross_val_score(covid_clf, X, y, cv=5)
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Pipeline 與資料洩漏，三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：切分前就先 scaler.fit 整份資料。
+      這一手最隱蔽，因為平均值裡已經摻進了測試集的資訊。
+      正確做法：把 scaler 放進 Pipeline，讓它在每一折內部各自 fit。
+    animation: "show_blindspot_scale_before_split"
+    error_code: "scaler.fit(X); split(X)  # leaked!"
+    correct_code: "Pipeline([scaler, model])  # safe"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：切分前就先做 SMOTE 補樣本。
+      在整份資料上生成合成樣本，會讓測試折看到不該看的鄰居。
+      正確做法：用 imblearn 的 Pipeline，讓 SMOTE 也在折內部才做。
+    animation: "show_blindspot_smote_before_split"
+    error_code: "X, y = SMOTE().fit_resample(X, y)"
+    correct_code: "Pipeline([SMOTE(), model])  # in fold"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：把結果的一部分偷偷當特徵。
+      拿發燒、咳嗽這些症狀去預測感染，AUC 會漂亮到 0.99——
+      但上線時你根本還沒有症狀資料。只留下入住當下就知道的線索才對。
+    animation: "show_blindspot_outcome_feature"
+    error_code: "X = df[['age', 'fever', 'cough']]"
+    correct_code: "X = df[['age', 'shower_use']]"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Pipeline 打包好、洩漏也擋住了，我們終於可以放心評分。
+      下一集，我們要搞懂交叉驗證跟 AUC——
+      k-fold 讓每一筆資料都輪流當一次考題，
+      而 AUC 這張成績單，到底在比的是什麼？敬請期待！
+    animation: "show_outro"
+    pause_after: 1.0

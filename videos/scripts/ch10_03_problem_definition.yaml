@@ -1,0 +1,141 @@
+meta:
+  chapter: "10"
+  concept: "problem_definition"
+  title: "問題定義：把長官的模糊問題變成 0/1 標籤"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch10_03_problem_definition"
+  scene_class: "Ch10ProblemDefinitionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集資料切好了，這一集要處理一個看似簡單、其實最容易含糊帶過的步驟——問題定義。
+      長官丟來一句「能不能預測誰會感染」，聽起來很清楚，但對機器學習來說，這句話它完全聽不懂。
+      為什麼？因為模型只認得 0 跟 1。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "boss_question"
+    narration: >
+      機器學習不吃「預測誰會生病」這種模糊句子，它需要一欄乾淨明確的 0/1 標籤。
+      0 代表沒發生、1 代表發生。
+      所以你的第一個工作，是把長官嘴裡那句話，翻譯成資料表裡一欄非 0 即 1 的答案。
+    animation: "show_boss_question"
+    pause_after: 0.5
+
+  - id: "label_code"
+    narration: >
+      來看程式。第一個任務 infected，只要臨床嚴重度不是「沒生病」，就標成 1，代表感染。
+      第二個任務 severe，只要住院或死亡任一成立，就標成 1，代表重症結局。
+      最後那個 astype int 很重要，把 True、False 轉成乾淨的 1 跟 0。
+    animation: "show_label_code"
+    code: |
+      import pandas as pd
+
+      df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
+      sev = df["clinical_severity"]
+      df["infected"] = (sev != "not_ill").astype(int)
+      df["severe"] = (
+          (df["hospitalized"] == 1) | (df["outcome"] == "dead")
+      ).astype(int)
+    pause_after: 0.5
+
+  - id: "two_tasks"
+    narration: >
+      這樣我們就有了兩個明確的預測任務。
+      Task A 是預測感染，280 個住民裡有 121 個感染，正例佔四成三，算是相對平衡。
+      Task B 是預測重症結局，只有 68 個，正例只佔兩成四——
+      這個「不平衡」先記在心裡，等一下它會決定我們用什麼指標評分。
+    animation: "show_two_tasks"
+    pause_after: 0.5
+
+  - id: "label_defines_cheating"
+    narration: >
+      定義標籤還有一個隱藏的重點：標籤一旦定了，「哪些欄位算作弊」也跟著定了。
+      infected 是用 clinical_severity 算出來的，所以臨床嚴重度、症狀、住院、死亡這些「結果端」欄位，
+      全部都不能拿來當特徵——它們根本就是答案的一部分。拿答案去預測答案，AUC 會漂亮到假。
+    animation: "show_label_defines_cheating"
+    pause_after: 0.5
+
+  - id: "class_imbalance"
+    narration: >
+      再回來看那個兩成四。假設你的模型偷懶，對每個病人都猜「不會重症」，
+      準確率照樣有七成六，聽起來很高對吧？但它一個重症病人都沒抓到，完全沒用。
+      這就是類別不平衡的陷阱。所以在少數事件上，我們看的是 AUC，不是準確率。
+    animation: "show_class_imbalance"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      三個重點打包。
+      一，把長官的模糊問題翻譯成一欄 0/1 標籤，記得 astype int。
+      二，標籤定了，結果端欄位就是作弊，全部踢出特徵。
+      三，不平衡資料別被準確率騙了，看 AUC 才誠實。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：換個疾病，登革熱重症的 0/1 標籤！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue"
+    narration: >
+      換個疾病，登革熱。世界衛生組織把出現警示徵象、或需要加護的病人定義為重症登革熱。
+      翻成標籤就是：只要警示徵象或加護任一成立，就標成 1。
+      你看，跟退伍軍人症的重症標籤幾乎長得一模一樣——問題定義的邏輯，換個疾病完全通用。
+    animation: "show_extra_dengue"
+    code: |
+      # 登革熱重症標籤：警示徵象或需要加護
+      df["dengue_severe"] = (
+          (df["warning_signs"] == 1) | (df["icu"] == 1)
+      ).astype(int)
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      問題定義三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_leak_feature"
+    narration: >
+      第一個地雷：把結果端的欄位偷偷放進特徵。
+      用 clinical_severity 或症狀去預測 infected，等於拿標準答案當提示，AUC 會飆到 0.99，
+      然後上線那天你根本還沒有症狀資料，模型直接崩盤。特徵只能用「入住當下就知道」的線索。
+    animation: "show_blindspot_leak_feature"
+    error_code: 'X = df[["clinical_severity"]]  # answer'
+    correct_code: 'X = df[["age", "shower_use"]]  # ok'
+    pause_after: 0.5
+
+  - id: "blindspot_raw_label"
+    narration: >
+      第二個地雷：標籤忘了轉成乾淨的 0/1，直接把原始字串或布林值丟給模型。
+      outcome 欄位是 dead、survived 這種字，模型看不懂。
+      記得用比較運算加 astype int，把它變成非 0 即 1 的整數欄。
+    animation: "show_blindspot_raw_label"
+    error_code: 'y = df["outcome"]  # strings dead/alive'
+    correct_code: 'y = (df["outcome"] == "dead").astype(int)'
+    pause_after: 0.5
+
+  - id: "blindspot_accuracy"
+    narration: >
+      第三個地雷：不平衡資料還用準確率評分。
+      重症只佔兩成四，全猜沒事就有七成六準確率，數字漂亮卻毫無用處。
+      改用 roc_auc_score，看的是排序病人的眼力，不會被多數類別灌水。
+    animation: "show_blindspot_accuracy"
+    error_code: "score = accuracy_score(y_test, pred)"
+    correct_code: "score = roc_auc_score(y_test, proba)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      標籤定好、作弊欄位也踢乾淨了，實習醫師終於知道要考什麼。
+      可是病歷上寫著「男」「A 棟」這種字，模型還是看不懂。
+      下一集我們就來做特徵工程，把一張雜亂的病歷，翻譯成模型能吃的數字。下次見！
+    animation: "show_outro"
+    pause_after: 1.0
