@@ -1,0 +1,156 @@
+meta:
+  chapter: "11"
+  concept: "lstm_cnn_sequence"
+  title: "LSTM / CNN Sequence Forecasting: Sliding Windows, Predicting the Future"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch11_07_lstm_cnn_sequence"
+  scene_class: "Ch11SequenceScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode was a cleaver on a chicken: two hundred eighty-row classification, and deep learning only tied sklearn.
+      This episode we swap in a real ox: sequence forecasting.
+      Using LSTM and CNN, we let deep learning do what it's naturally good at, reading a stretch of history and predicting the future.
+      Ready to see the cleaver truly show its power?
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_sequence"
+    narration: >
+      Why switch scenes?
+      Because the Pine and Cypress nursing home's data has no daily series long enough, so sequence forecasting would starve.
+      So for this step we switch to a teaching synthetic dataset: daily case counts paired with each day's temperature.
+      This echoes the decision framework precisely: high-dimensional, long sequences, and enough data, only then is it deep learning's turn.
+      Sequence forecasting is exactly the ox the cleaver should carve.
+    animation: "show_why_sequence"
+    pause_after: 0.5
+
+  - id: "leading_indicator"
+    narration: >
+      This dataset hides a cheat code called a leading indicator.
+      Temperature is a signal you can know in advance, and today's case count is actually driven by the temperature seven days ago.
+      The task is: use the past twenty-one days of cases and temperature to predict the case count seven days out.
+      For deep learning to win, it's not about the model being trendier, but about whether it can learn to exploit this seven-day-ahead clue.
+    animation: "show_leading_indicator"
+    pause_after: 0.5
+
+  - id: "window_diagram"
+    narration: >
+      The core move in sequence forecasting is called the sliding window.
+      Picture the timeline as a long row of cells; we frame twenty-one consecutive days as the input, this blue stretch; then skip seven days and predict that orange cell, the case count seven days out.
+      Slide the whole window forward one cell at a time along the timeline, and it carves out a big pile of input-and-answer training samples.
+    animation: "show_window_diagram"
+    pause_after: 0.5
+
+  - id: "window_code"
+    narration: >
+      In code, L is looking back twenty-one days and H is predicting seven days out.
+      The key of keys: the mean and standard deviation for standardization can only be computed on the training range, and you absolutely must not peek at the test set.
+      The windows function carves out each sample along time, and, note, there isn't a single line of shuffle here.
+      Once you randomly shuffle sequence data, future windows mix into the training set, and that's serious cheating.
+    animation: "show_window_code"
+    code: |
+      L, H = 21, 7                 # 回看 21 天，預測 7 天後
+      split = n - 60               # 最後 60 天當測試集
+      mu, sd = feats[:split].mean(0), feats[:split].std(0)
+      z = (feats - mu) / sd        # 只用訓練區間標準化
+
+      def windows(s, e):
+          X = [z[i - L:i] for i in range(s, e - H)]
+          y = [z[i + H - 1, 0] for i in range(s, e - H)]
+          return np.array(X), np.array(y)   # 不 shuffle
+    pause_after: 0.5
+
+  - id: "lstm_model"
+    narration: >
+      Enter the star: LSTM, a detective with a memory.
+      It reads through this twenty-one-day sequence, updating an internal memory at every step; once done, what's left in its head isn't a fragment of the last day but a summary of the whole case, has this week's caseload been climbing?
+      Has the temperature been running high day after day?
+      We take only the memory at the last time step, attach one Linear layer, and output the prediction for seven days out.
+      CNN uses the same training pipeline, just swapping in convolution layers, using a small sliding window to catch local shapes instead.
+    animation: "show_lstm_model"
+    code: |
+      class LSTMModel(nn.Module):
+          def __init__(self):
+              super().__init__()
+              self.lstm = nn.LSTM(2, 32, batch_first=True)
+              self.fc = nn.Linear(32, 1)
+
+          def forward(self, x):
+              out, _ = self.lstm(x)       # 讀完 21 天
+              return self.fc(out[:, -1])  # 取最後記憶 → 預測
+    pause_after: 0.5
+
+  - id: "result"
+    narration: >
+      When evaluating sequence forecasting, the first gate is always the naive baseline: persistence, which is assume seven days out is the same as today.
+      Here's the report card: persistence's MAE is 2.88, LSTM presses it down to 2.15, and CNN is 2.20.
+      This time deep learning really won, and won by a decent margin!
+      Why?
+      Because it used temperature, the leading indicator, and captured that non-linear, lagged interaction where the temperature seven days ago drives today's cases, and that's exactly a neural network's home turf.
+    animation: "show_result"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: weekly dengue case forecasting!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue_weekly"
+    narration: >
+      The same weapon can be lifted straight over to weekly dengue forecasting.
+      First resample the daily data into weekly case counts, and swap the leading indicator to that week's temperature plus accumulated rainfall, more rain means more breeding sites and more active mosquito vectors.
+      The sliding window and LSTM don't change one bit; you just swap the prediction target to next week's case count.
+      But don't forget the iron rule: still run a persistence baseline first, because if you can't beat it, the complex model is wasted effort.
+    animation: "show_extra_dengue_weekly"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for sequence forecasting!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_shuffle"
+    narration: >
+      Blind spot number one, and the number-one killer in sequence forecasting: randomly shuffling before splitting a time series.
+      The moment you shuffle, some fold's training set may contain future data points, which is like the model peeking at the answers before the exam, and the offline score is badly overstated.
+      The right move: always split in time order, training first and testing after, with the arrow always pointing toward the future.
+    animation: "show_blindspot_shuffle"
+    error_code: "train_test_split(X, y, shuffle=True)"
+    correct_code: "X_tr = X[idx < split]  # by time"
+    pause_after: 0.5
+
+  - id: "blindspot_scaler_leak"
+    narration: >
+      Blind spot number two: computing the standardization mean and standard deviation over the entire series.
+      This lets the test set's statistics quietly leak into the standardization process, another kind of data leakage, just more hidden.
+      The right move: compute the mean and standard deviation on the training range only, then apply them to all the data.
+    animation: "show_blindspot_scaler_leak"
+    error_code: "mu = feats.mean(0)  # peeks at test"
+    correct_code: "mu = feats[:split].mean(0)  # train"
+    pause_after: 0.5
+
+  - id: "blindspot_no_baseline"
+    narration: >
+      Blind spot number three: reporting only the LSTM's MAE without comparing to a naive baseline.
+      If the curve is smooth and simple, persistence or a plain moving average is often very strong, and your complex model may just be adding overfitting risk for nothing.
+      The right move: always run persistence first, because if the model can't beat it, all that complexity is for nothing.
+    animation: "show_blindspot_no_baseline"
+    error_code: "report(lstm_mae)  # no baseline"
+    correct_code: "assert lstm_mae < persistence_mae"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      In this sequence-forecasting battle, deep learning, riding a leading indicator plus a non-linear lag, beat the naive baseline beautifully, and a cleaver on a real ox truly is sharper.
+      That wraps up the hands-on work of Part A.
+      Next episode we pull the camera back and take a quick tour of the modern deep-learning landscape, GNN, Transformer, DeepSurv, and TSFM, so you'll know which weapon to reach for when you meet a given problem down the road.
+      See you next episode!
+    animation: "show_outro"
+    pause_after: 1.0

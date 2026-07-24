@@ -1,0 +1,146 @@
+meta:
+  chapter: "11"
+  concept: "overfitting_earlystop"
+  title: "Overfitting and Early Stopping: When to Call It Quits"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch11_04_overfitting_earlystop"
+  scene_class: "Ch11OverfittingScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode we drove the loss all the way down.
+      But there's a trap here: training longer isn't necessarily better.
+      Overtrain and the model starts memorizing every detail of the training data, and it actually gets worse on a fresh batch of data, which is called overfitting.
+      This episode teaches you how to spot overfitting at a glance, plus its remedy: early stopping.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "overfitting_curves"
+    narration: >
+      First look at the single most important chart.
+      The horizontal axis is epoch, more training as you go right, and the vertical axis is loss.
+      The training loss, the blue line, bottoms all the way out because the model has the past exam memorized cold.
+      But the validation loss, the orange line, dips first and then rises, forming a V-shaped rebound.
+      That turning point of the rebound is the signal that the model has switched from learning to generalize to memorizing the training data.
+    animation: "show_overfitting_curves"
+    pause_after: 0.5
+
+  - id: "memorize_vs_generalize"
+    narration: >
+      Put the two states side by side.
+      Overfitting is memorizing the training data noise and all: a perfect score on the past exam, but a total collapse the moment the questions change.
+      Generalization is genuinely learning the underlying rule: still accurate on a batch of data it's never seen.
+      What we want is always the latter.
+    animation: "show_memorize_vs_generalize"
+    pause_after: 0.5
+
+  - id: "early_stopping"
+    narration: >
+      Early stopping is the remedy, and the method is dead intuitive: train while watching the validation loss.
+      As soon as it goes several rounds in a row, and that count is called patience, without setting a new best record, you call an early stop.
+      Then rewind and load the weight snapshot from the best-performing round, rather than the set from the last round that has very likely already overfit.
+      This is exactly the quit-while-ahead from the rookie-detective metaphor.
+    animation: "show_early_stopping"
+    pause_after: 0.5
+
+  - id: "early_stop_code"
+    narration: >
+      Translated into code, it's this skeleton.
+      Whenever this round's val loss sets a new best record, save a weight snapshot and reset the counter to zero; no improvement, the counter goes up by one.
+      Once the streak of no improvement reaches patience, break out of the loop.
+      After training, remember to load the best snapshot back in, because the trophy goes to the best-performing round, not the last one.
+    animation: "show_early_stop_code"
+    code: |
+      if val_loss < best_val:
+          best_val = val_loss
+          best_state = snapshot()     # 存最佳快照
+          counter = 0
+      else:
+          counter += 1                # 沒進步就累加
+      if counter >= patience:
+          break                       # 見好就收
+    pause_after: 0.5
+
+  - id: "param_ratio"
+    narration: >
+      Why is small data especially prone to overfitting?
+      Work out a ratio and it's clear.
+      This book's little three-layer network has about seven hundred parameters, but the training set has only a hundred and ninety-some rows, more than three times as many parameters as samples.
+      With more knobs to turn than data points, of course the model can afford to memorize every single row.
+      This is the concrete evidence for why the decision framework tells you not to force DL on small data.
+    animation: "show_param_ratio"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Four lines to wrap up.
+      One, the train loss keeps dropping while the val loss rebounds, that's the signature signal of overfitting.
+      Two, what we want is generalization that transfers, not memorization.
+      Three, early stopping watches the val loss and calls it quits after patience rounds with no improvement.
+      Four, at the end, remember to rewind to the best weight snapshot, not the last run trained into a frenzy.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a tiny outbreak dataset that gets memorized!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tiny"
+    narration: >
+      Here's an extreme example: a small enterovirus cluster of just forty rows, and you cram a big deep net into it.
+      It'll happily memorize all forty rows, driving the training accuracy beautifully up to a hundred percent, and then, with a fresh batch of new cases, its performance collapses on the spot.
+      What can save you here is early stopping, paired with a smaller, humbler model.
+    animation: "show_extra_tiny"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for overfitting!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_train_only"
+    narration: >
+      Blind spot number one: reporting only the training-set score.
+      A hundred percent training accuracy sounds great, but that's very likely just memorization.
+      What you should really look at is the validation or test set, because only if the model stays accurate on a batch of unseen data does it count as real skill.
+    animation: "show_blindspot_train_only"
+    error_code: "acc = model.score(X_train, y_train)"
+    correct_code: "acc = model.score(X_val, y_val)"
+    pause_after: 0.5
+
+  - id: "blindspot_forget_best"
+    narration: >
+      Blind spot number two: after early stopping, forgetting to load the best weights back in.
+      You went to all that trouble saving the best snapshot, but then evaluate with the already-overfit weights from the moment training ended, which makes early stopping pointless.
+      Remember to use load_state_dict to bring the trophy round back.
+    animation: "show_blindspot_forget_best"
+    error_code: "model.state_dict()  # last epoch"
+    correct_code: "model.load_state_dict(best_state)"
+    pause_after: 0.5
+
+  - id: "blindspot_watch_train"
+    narration: >
+      Blind spot number three: using the train loss as the basis for early stopping.
+      The train loss almost always heads straight down and rarely rebounds, so if you watch it, early stopping will never trigger.
+      Early stopping must monitor the validation loss, because only the rebound in val loss reveals overfitting.
+    animation: "show_blindspot_watch_train"
+    error_code: "if train_loss > best: stop()"
+    correct_code: "if val_loss > best: counter += 1"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Congratulations, you've now finished the four core lessons of deep learning: detective intuition, the neuron, the training loop, and overfitting with early stopping.
+      These skeletons apply across the board, whether it's an MLP, an LSTM, or a CNN.
+      Next, in Chapter Twelve, we return to the most fundamental question: did shower exposure really cause the infection, or is it just correlation?
+      We're entering causal inference.
+      See you next chapter!
+    animation: "show_outro"
+    pause_after: 1.0

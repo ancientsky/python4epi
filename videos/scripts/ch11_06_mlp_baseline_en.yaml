@@ -1,0 +1,170 @@
+meta:
+  chapter: "11"
+  concept: "mlp_baseline"
+  title: "MLP Baseline: Running PyTorch by Hand on 280 Rows"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch11_06_mlp_baseline"
+  scene_class: "Ch11MLPBaselineScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode we thumped our chest and said don't use deep learning on two hundred eighty rows, and this episode we verify that claim by hand.
+      Part A, step one: on the same Legionella data, actually run a PyTorch MLP classifier and go head to head with Ch10's sklearn baseline.
+      The point isn't to make it win, but to solidly drill the training-loop syntax, because that's the foundation for all deep learning to come.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "goal"
+    narration: >
+      First, let's be clear about what this step is doing.
+      The task is binary classification: given a resident's basic information, predict whether they'll get infected.
+      We use the exact same columns and the exact same split as Ch10, and the only thing we swap is the model, from sklearn to a PyTorch neural network.
+      Only then is the comparison fair, and only then can we honestly answer whether deep learning gains any advantage on small data.
+    animation: "show_goal"
+    pause_after: 0.5
+
+  - id: "data_prep"
+    narration: >
+      Step one, translate the medical-record table into tensors that PyTorch understands.
+      One-hot the categorical columns with get_dummies and convert everything to float32, because PyTorch weights default to single precision.
+      Numeric columns like age must be standardized with StandardScaler, since a neural network is super sensitive to input scale and convergence is miserable without scaling.
+      And finally, note that this is cross-sectional data where every row is independent, so you can safely shuffle and split seventy-thirty.
+    animation: "show_data_prep"
+    code: |
+      df["infected"] = df["clinical_severity"].ne("not_ill")
+      X = pd.get_dummies(features).values.astype("float32")
+      X[:, 0] = StandardScaler().fit_transform(X[:, :1]).ravel()
+      idx = np.random.permutation(len(X))   # 橫斷面可 shuffle
+      Xtr, Xval = X[idx[:196]], X[idx[196:]]  # 70 / 30
+    pause_after: 0.5
+
+  - id: "architecture"
+    narration: >
+      For the model architecture, just stack three linear layers with nn.Sequential: Linear does the linear combination, and a ReLU sandwiched in between adds non-linearity.
+      Note the last Linear layer outputs a single logit and deliberately skips the sigmoid, leaving that to be handled inside the next segment's loss function, which is numerically more stable.
+      Then we casually print the total parameter count.
+      That number will shortly become Exhibit A for cracking a nut with a sledgehammer.
+    animation: "show_architecture"
+    code: |
+      model = nn.Sequential(
+          nn.Linear(input_dim, 32), nn.ReLU(),
+          nn.Linear(32, 16), nn.ReLU(),
+          nn.Linear(16, 1),   # 輸出 logit，不接 sigmoid
+      )
+      n_params = sum(p.numel() for p in model.parameters())
+      print(n_params, "參數 vs", len(Xtr), "筆樣本")
+    pause_after: 0.5
+
+  - id: "params_vs_samples"
+    narration: >
+      The printout is a shock: this tiny architecture has about seven hundred parameters, while the training set has only about a hundred and ninety-six rows.
+      More parameters than samples means the model has too many knobs it can freely twist, making it all too easy to memorize the training-data noise wholesale.
+      This bar chart of parameters versus samples is the red alert for overfitting risk, the concrete evidence of a cleaver on a chicken.
+    animation: "show_params_vs_samples"
+    pause_after: 0.5
+
+  - id: "training_loop"
+    narration: >
+      The training loop is always the same four-beat rhythm: clear the gradients, forward to compute the loss, backward for backpropagation, and the optimizer updates.
+      Here we add early stopping on top: train while watching the validation loss, save and reset the counter to zero on improvement, and call it quits after several rounds in a row with no improvement.
+      At the end, rewind to the set of weights with the lowest val loss, quitting while ahead instead of handing the prize to the last round trained into a frenzy.
+    animation: "show_training_loop"
+    code: |
+      loss_fn = nn.BCEWithLogitsLoss()
+      opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+      for epoch in range(300):
+          opt.zero_grad()
+          loss = loss_fn(model(Xtr), ytr)   # forward
+          loss.backward(); opt.step()       # backprop + update
+          if val_loss < best: best, snap = val_loss, save()
+          else: counter += 1                # early stopping
+    pause_after: 0.5
+
+  - id: "result"
+    narration: >
+      Here's the honest result: after the full pipeline, the validation AUC is about 0.63.
+      And Ch10's logistic regression and random forest are both right around 0.6.
+      In plain words: deep learning essentially ties sklearn and shows no clear advantage at all.
+      The value of this step isn't winning, it's that you've now run an entire PyTorch training loop by hand.
+    animation: "show_result"
+    pause_after: 0.5
+
+  - id: "split_rule"
+    narration: >
+      One last, hugely important concept: the split.
+      Train to fit, val to tune, test for final sign-off, that's the iron trio.
+      This time it's cross-sectional data with independent rows, so shuffling and splitting is fine; but the moment your data has a time axis, you absolutely must not shuffle, or the future sneaks into the training set.
+      This future-leakage pitfall, next episode's sequence forecasting will cover it until you're scared.
+    animation: "show_split_rule"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a tabular MLP for readmission risk!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_readmission"
+    narration: >
+      The same MLP recipe can be lifted straight over to predicting thirty-day readmission risk.
+      The architecture barely changes; you just swap the input features to the patient's tabular records and the output to a readmission probability.
+      The difference is data volume: if you have tens of thousands of records and dozens of features, only then does deep learning really stand a chance of beating logistic regression.
+      Same cleaver, but swap in a truly big-enough ox, and it carves beautifully.
+    animation: "show_extra_readmission"
+    code: |
+      # 換一個表格風險任務：30 天再入院預測
+      readmit = nn.Sequential(
+          nn.Linear(n_feats, 64), nn.ReLU(),
+          nn.Linear(64, 1),
+      )
+      # 幾萬筆 + 幾十特徵 → DL 才可能贏 logistic
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for the MLP baseline!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_no_scaling"
+    narration: >
+      Blind spot number one: forgetting to standardize and dumping raw values straight into the network.
+      With age in the tens and some columns in the fractions, the scale gap is so large the neural network gets dizzy, converges super slowly, or doesn't converge at all.
+      The right move: always scale numeric features with StandardScaler first, then feed them into the network.
+    animation: "show_blindspot_no_scaling"
+    error_code: "X = df[num_cols].values  # unscaled"
+    correct_code: "X = StandardScaler().fit_transform(X)"
+    pause_after: 0.5
+
+  - id: "blindspot_no_zero_grad"
+    narration: >
+      Blind spot number two: forgetting to clear the gradients in the training loop.
+      PyTorch gradients accumulate by default, and if you don't zero them, this round's gradient piles on the last round's, snowballing bigger until training just crashes.
+      The right move: at the very start of every round, call optimizer.zero_grad first, then backward.
+    animation: "show_blindspot_no_zero_grad"
+    error_code: "loss.backward(); optimizer.step()"
+    correct_code: "optimizer.zero_grad(); loss.backward()"
+    pause_after: 0.5
+
+  - id: "blindspot_last_weights"
+    narration: >
+      Blind spot number three: after early stopping calls it quits, using the weights from the moment training ended.
+      That set of weights has very likely already begun to overfit, making all your careful val-loss monitoring wasted effort.
+      The right move: load back the best set of weights you saved along the way, the one with the lowest val loss, and hand the trophy to the best-performing round.
+    animation: "show_blindspot_last_weights"
+    error_code: "model.save()  # last-epoch weights"
+    correct_code: "model.load_state_dict(best_state)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      The MLP baseline is done, and an honest AUC of 0.63 ties sklearn, so on small data deep learning really gains no edge.
+      But don't write it off just yet.
+      Next episode we switch to a stage deep learning is truly good at: sequence forecasting, using LSTM and CNN, to see how it turns things around beautifully with a leading indicator.
+      See you next episode!
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,143 @@
+meta:
+  chapter: "11"
+  concept: "training_loop"
+  title: "The Training Loop: How a Model Learns From Its Mistakes"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch11_03_training_loop"
+  scene_class: "Ch11TrainingLoopScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode we saw that when a neuron is newborn, its weights are all random guesses.
+      So how does it go from a blank slate to experienced judgement?
+      The answer is the training loop.
+      Training every PyTorch model always follows the same four-beat rhythm, and this episode I'll break those four beats down for you.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "four_beats"
+    narration: >
+      The training loop is always these four beats.
+      Beat one, forward: the data flows through the network and you get the current guess; beat two, loss: compare the guess against the correct answer and compute a single number for how wrong it is; beat three, backprop: trace back from the loss and compute how much blame each weight deserves this round; beat four, update: the optimizer nudges each weight a little in that direction.
+      Go around once, then do it again.
+    animation: "show_four_beats"
+    pause_after: 0.5
+
+  - id: "loss_concept"
+    narration: >
+      First, the loss, also called the loss function.
+      It's just a score measuring how far your guess is from the correct answer, and the smaller the number, the more accurate the guess.
+      For binary classification we often use BCEWithLogitsLoss, and for regression we often use MSELoss.
+      The entire goal of training is to find a way to drive this number as low as possible.
+    animation: "show_loss_concept"
+    pause_after: 0.5
+
+  - id: "gradient_descent"
+    narration: >
+      How do you drive the loss down?
+      With gradient descent.
+      Picture the loss as a valley, the model standing halfway up the slope, and the gradient that backprop computes tells it which direction is downhill; the optimizer, like Adam, takes one small step down the slope.
+      Too big a step flies past the valley floor and bounces back and forth, too small a step crawls along, and that step size is the learning rate.
+      Step by step down to the valley floor, and the loss is at its lowest.
+    animation: "show_gradient_descent"
+    pause_after: 0.5
+
+  - id: "training_code"
+    narration: >
+      Translated into PyTorch it's just these four lines, and the order can't be wrong.
+      First zero_grad to clear out the leftover gradients from the last round; then compute the loss, and that step is the forward pass; loss.backward does backpropagation and automatically computes the gradient for every parameter; finally optimizer.step updates the weights by the gradient.
+      These four lines, you'll see them over and over in every training script.
+    animation: "show_training_code"
+    code: |
+      optimizer.zero_grad()          # 清掉舊梯度
+      loss = loss_fn(model(X), y)    # forward + 算 loss
+      loss.backward()                # backprop 反向傳播
+      optimizer.step()               # 梯度下降更新
+    pause_after: 0.5
+
+  - id: "epoch_curve"
+    narration: >
+      Running all the training data through these four beats once is called one epoch.
+      Training usually takes dozens or hundreds of epochs, and each pass presses the loss down a little more.
+      Plot it as a curve and you'll see the train loss falling all the way down, and that's what a model accumulating experience bit by bit looks like.
+    animation: "show_epoch_curve"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Four lines to pack up the training loop.
+      One, it's always four beats: forward, loss, backprop, update.
+      Two, the loss is how wrong you are, and smaller is better.
+      Three, gradient descent is walking down the slope to the valley floor, with step size being the learning rate.
+      Four, one pass over all the data is one epoch, and many passes drive the loss down.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: training a fever-count forecaster!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_fever"
+    narration: >
+      A different task: use the past fourteen days of fever counts to forecast the next seven days of fever counts.
+      The four-beat rhythm doesn't change one bit, only one thing swaps out: because we're now predicting a continuous number, the loss goes from classification's BCE to regression's MSELoss.
+      Forward still guesses, backward still reviews, step still nudges.
+      Learn the training loop once and it carries over to any new problem.
+    animation: "show_extra_fever"
+    code: |
+      pred = model(X_past14)          # forward: 過去 14 天
+      loss = mse(pred, fever_next7)   # 迴歸用 MSELoss
+      loss.backward(); opt.step()     # 一樣的 backprop + update
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for the training loop!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_zero_grad"
+    narration: >
+      Blind spot number one: forgetting optimizer.zero_grad.
+      PyTorch gradients accumulate by default, and if you don't clear them, this round's gradient piles on top of the last round's, growing bigger and bigger until training goes off the rails.
+      At the start of every loop, zero_grad to clean it up first.
+    animation: "show_blindspot_zero_grad"
+    error_code: "loss.backward(); opt.step()"
+    correct_code: "opt.zero_grad(); loss.backward(); opt.step()"
+    pause_after: 0.5
+
+  - id: "blindspot_big_lr"
+    narration: >
+      Blind spot number two: setting the learning rate too big.
+      With too large a step, the model flies past the valley floor every time and bounces between the sides, and the loss not only fails to drop but can blow up into NaN.
+      A common safe starting point is a small number like 1e-3; if it learns too slowly, nudge it up gradually.
+    animation: "show_blindspot_big_lr"
+    error_code: "Adam(model.parameters(), lr=10.0)"
+    correct_code: "Adam(model.parameters(), lr=1e-3)"
+    pause_after: 0.5
+
+  - id: "blindspot_no_grad"
+    narration: >
+      Blind spot number three: forgetting to wrap the validation loss in no_grad.
+      Validation only needs to read the score and doesn't need gradients, and forgetting to turn them off wastes memory and can even cause accidental updates.
+      Remember to wrap the validation section in torch.no_grad, and don't forget to switch to model.eval first.
+    animation: "show_blindspot_no_grad"
+    error_code: "val_loss = loss_fn(model(X_val), y_val)"
+    correct_code: "with torch.no_grad(): model(X_val)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Now you can write a training loop and you know how to drive the loss all the way down.
+      But there's a danger hidden here: the longer you train, does the model start to memorize?
+      As the train loss bottoms out, is lower really always better?
+      Next episode we'll talk about overfitting and early stopping, and teach you when to call it quits.
+      See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

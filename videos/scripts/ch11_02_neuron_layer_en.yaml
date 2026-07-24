@@ -1,0 +1,134 @@
+meta:
+  chapter: "11"
+  concept: "neuron_layer"
+  title: "What a Neuron Actually Computes: Weighted Sum, Then a Gate"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch11_02_neuron_layer"
+  scene_class: "Ch11NeuronLayerScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode we compared a neural network to a rookie detective.
+      This time we translate the metaphor into something a bit more hardcore: what does a single neuron actually compute?
+      The answer is surprisingly simple, just three moves: take a weighted sum of the clues, add a baseline, and pass it through a gate called activation.
+      Once you understand this one tiny neuron, you understand the whole network.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "neuron_anatomy"
+    narration: >
+      Let's look at the anatomy of one neuron.
+      On the left, each input x is first multiplied by its own weight w, which is how trustworthy that clue is; sum them all up, then add a bias as the baseline; and finally throw the result into the activation.
+      A neuron only ever does this: weighted sum, add bias, pass through activation.
+    animation: "show_neuron_anatomy"
+    pause_after: 0.5
+
+  - id: "neuron_math"
+    narration: >
+      In math it's just one line: z equals each x times its matching w, all added up, plus a b at the end; the output y-hat equals ReLU applied to z.
+      The weight is the trust in each clue, the bias adjusts where the baseline sits, and the activation is a non-linear switch.
+      It looks scary, but it's really just a weighted average plus a switch.
+    animation: "show_neuron_math"
+    pause_after: 0.5
+
+  - id: "activation_relu"
+    narration: >
+      Why does activation matter?
+      Look at ReLU and it clicks: it's like a gate, negative signals all go to zero and positives pass through as is.
+      Here's the key: without activation, no matter how many Linear layers you stack, mathematically it's still equivalent to one straight line, a single linear regression.
+      It's this non-linear gate, the activation, that lets a neural network bend and catch complex interactions.
+    animation: "show_activation_relu"
+    pause_after: 0.5
+
+  - id: "no_activation_trap"
+    narration: >
+      Let me stress this often-overlooked point once more: drop the activation and you can stack ten or a hundred Linear layers, but unfolded it's still one straight line, all for nothing.
+      Remember to put an activation after every Linear layer, so the network really has depth and non-linear expressive power.
+    animation: "show_no_activation_trap"
+    pause_after: 0.5
+
+  - id: "layer_stack"
+    narration: >
+      Line up copies of the same neuron in a row and you get one layer; the input layer connects to a hidden layer, then another hidden layer, and finally the output layer, stacked one on top of another, and that's the depth in deep learning.
+      The more layers you stack, the more complex the functions it can express in theory; but don't forget, deeper also means easier to overfit, which is the star of the next two episodes.
+    animation: "show_layer_stack"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Four lines to wrap up.
+      One, a neuron is weighted sum, add bias, pass through activation.
+      Two, the weight is clue trust and the bias is the baseline.
+      Three, without activation, any number of layers equals one straight line.
+      Four, neurons in a row and layers stacked is the depth in deep learning.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a symptom risk scorer!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_risk_scorer"
+    narration: >
+      With just one neuron you can build the most bare-bones symptom risk scorer.
+      Take fever, cough, and low blood oxygen as inputs, multiply each by the weight learned in training, sum them, pass through ReLU, and out comes a risk score.
+      This is really the neural-network version of logistic regression: one neuron is just a little brain that scores by weighting.
+    animation: "show_extra_risk_scorer"
+    code: |
+      symptoms = [fever, cough, spo2_low]
+      weights  = [1.8, 0.7, 2.1]      # learned trust
+      z = sum(x * w for x, w in zip(symptoms, weights))
+      risk = relu(z + bias)           # one-neuron score
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for the neuron!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_missing_activation"
+    narration: >
+      Blind spot number one: stacking two Linear layers directly and forgetting the activation in between.
+      Without that non-linear gate, two layers unfolded are still one linear layer, and no matter how deep the model, it learns no interactions.
+      Remember to sandwich a ReLU between every Linear layer.
+    animation: "show_blindspot_missing_activation"
+    error_code: "net = nn.Linear(8,4); nn.Linear(4,1)"
+    correct_code: "nn.Sequential(lin, nn.ReLU(), lin2)"
+    pause_after: 0.5
+
+  - id: "blindspot_no_scaling"
+    narration: >
+      Blind spot number two: feeding inputs into the network without standardizing them.
+      A neural network is super sensitive to input scale, and when age is in the tens while some column is in the thousands, that scale gap slows down or even ruins convergence.
+      Use a scaler to bring the features into a similar range first, then feed them into the model.
+    animation: "show_blindspot_no_scaling"
+    error_code: "model(torch.tensor(X_raw))  # unscaled"
+    correct_code: "X = scaler.transform(X); model(X)"
+    pause_after: 0.5
+
+  - id: "blindspot_extra_activation"
+    narration: >
+      Blind spot number three: gilding the lily on the last layer by tacking on another activation.
+      For binary classification, the output layer should spit out the raw logit and let BCEWithLogitsLoss handle the sigmoid internally, which is numerically stable; a regression output really can't use ReLU, or all the negative values get crushed to zero.
+      The last layer should usually just output raw values.
+    animation: "show_blindspot_extra_activation"
+    error_code: "out = torch.relu(model(x))  # regress"
+    correct_code: "out = model(x)  # keep raw logits"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Now you know what every neuron in a neural network computes.
+      But its weights all start as random guesses, so how do they become experienced judgement?
+      Through the training loop.
+      Next episode we break down loss, gradient descent, and backpropagation to see how a model learns from its mistakes.
+      See you next time!
+    animation: "show_outro"
+    pause_after: 1.0
