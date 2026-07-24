@@ -1,0 +1,142 @@
+meta:
+  chapter: "11"
+  concept: "overfitting_earlystop"
+  title: "過擬合與早停法：什麼時候該喊卡"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch11_04_overfitting_earlystop"
+  scene_class: "Ch11OverfittingScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集我們把 loss 一路往下壓。但這裡有個陷阱：練得越久，不一定越好。
+      練過頭，模型會開始死背訓練資料的每個細節，換一批新資料反而變差——這叫過擬合。
+      這一集教你怎麼一眼看出過擬合，還有它的解方：早停法。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "overfitting_curves"
+    narration: >
+      先看這張最關鍵的圖。橫軸是 epoch、越練越久，縱軸是 loss。
+      訓練集的 loss，藍線，會一路往下探底，因為模型把考古題背得滾瓜爛熟。
+      但驗證集的 loss，橘線，會先降後升，出現一個 V 型反彈。
+      那個反彈的轉折點，就是模型從學會舉一反三、轉成死背訓練資料的訊號。
+    animation: "show_overfitting_curves"
+    pause_after: 0.5
+
+  - id: "memorize_vs_generalize"
+    narration: >
+      把兩種狀態擺在一起看。
+      過擬合，是把訓練資料連同噪音全部死記下來——考古題滿分，一換新題就崩盤。
+      一般化，是真的學到背後的規律——換一批沒看過的資料照樣準。
+      我們要的，永遠是後者。
+    animation: "show_memorize_vs_generalize"
+    pause_after: 0.5
+
+  - id: "early_stopping"
+    narration: >
+      早停法就是解方，做法超直覺：一邊訓練，一邊盯著驗證集的 loss。
+      只要連續好幾輪——這個輪數叫 patience——都沒有刷新最佳紀錄，就提早喊停。
+      然後倒帶，回頭載入表現最好那一次的權重快照，而不是用練到最後、很可能已經 overfit 的那一組。
+      這正是新手偵探比喻裡的見好就收。
+    animation: "show_early_stopping"
+    pause_after: 0.5
+
+  - id: "early_stop_code"
+    narration: >
+      翻成程式就這個骨架。
+      只要這一輪的 val loss 刷新了最佳紀錄，就存一份權重快照、把計數器歸零；沒進步，計數器就加一。
+      一旦連續沒進步的次數達到 patience，就 break 跳出迴圈。
+      訓練結束後記得把最佳快照載回來——獎盃要頒給表現最好那次，不是最後那次。
+    animation: "show_early_stop_code"
+    code: |
+      if val_loss < best_val:
+          best_val = val_loss
+          best_state = snapshot()     # 存最佳快照
+          counter = 0
+      else:
+          counter += 1                # 沒進步就累加
+      if counter >= patience:
+          break                       # 見好就收
+    pause_after: 0.5
+
+  - id: "param_ratio"
+    narration: >
+      為什麼小資料特別容易過擬合？算個比值就懂。
+      本書那個三層小網路大約七百個參數，訓練集卻只有一百九十幾筆——參數比樣本還多了三倍多。
+      可以調的旋鈕比資料還多，模型當然有本錢把每一筆都硬背下來。
+      這就是決策框架叫你在小資料上別硬上 DL 的具體證據。
+    animation: "show_param_ratio"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      四句話收尾。
+      一，train loss 一直降、但 val loss 反彈，就是過擬合的招牌訊號。
+      二，我們要的是舉一反三的一般化，不是死背。
+      三，早停法盯著 val loss，連續 patience 輪沒進步就喊卡。
+      四，最後記得倒帶回最佳權重快照，別用練到走火入魔的最後一次。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：一個會被背起來的迷你疫情資料集！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tiny"
+    narration: >
+      來個極端例子：一個只有四十筆的腸病毒小群聚，你硬塞一個大深網進去。
+      它會很開心地把這四十筆全部背起來，訓練準確率漂亮地衝到百分之百——
+      然後換一批新病例，表現立刻崩盤。
+      這時候能救你的，就是早停法，配上一個更小、更謙虛的模型。
+    animation: "show_extra_tiny"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      過擬合三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_train_only"
+    narration: >
+      第一個地雷：只報訓練集的分數。
+      訓練準確率百分之百聽起來很爽，但那很可能只是死背。
+      真正該看的是驗證集或測試集——換一批沒看過的資料，模型還準，才算真本事。
+    animation: "show_blindspot_train_only"
+    error_code: "acc = model.score(X_train, y_train)"
+    correct_code: "acc = model.score(X_val, y_val)"
+    pause_after: 0.5
+
+  - id: "blindspot_forget_best"
+    narration: >
+      第二個地雷：早停以後忘了把最佳權重載回來。
+      你辛辛苦苦存了最佳快照，結果評估時用的還是訓練結束當下、已經 overfit 的權重，那早停等於白做。
+      記得用 load_state_dict 把獎盃那次載回來。
+    animation: "show_blindspot_forget_best"
+    error_code: "model.state_dict()  # last epoch"
+    correct_code: "model.load_state_dict(best_state)"
+    pause_after: 0.5
+
+  - id: "blindspot_watch_train"
+    narration: >
+      第三個地雷：拿 train loss 當早停的依據。
+      train loss 幾乎永遠一路往下、不太會反彈，你盯著它，早停就永遠不會觸發。
+      早停一定要監控驗證集的 loss，因為只有 val loss 的反彈才看得出過擬合。
+    animation: "show_blindspot_watch_train"
+    error_code: "if train_loss > best: stop()"
+    correct_code: "if val_loss > best: counter += 1"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      恭喜，你已經走完深度學習的核心四堂課：偵探直覺、神經元、訓練迴圈、還有過擬合與早停。
+      這些骨架，不管是 MLP、LSTM 還是 CNN 都一體適用。
+      接下來第十二章，我們回到最根本的問題：淋浴暴露真的導致感染，還是只是相關？進入因果推論。我們下章見！
+    animation: "show_outro"
+    pause_after: 1.0
