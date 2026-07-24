@@ -63,6 +63,11 @@ class EpiBaseScene(Scene):
     # Overridden by subclass or pipeline
     total_steps: int = 1
 
+    # Bilingual on-screen text. Subclasses set
+    # ``TEXT = {"zh": {...}, "en": {...}}`` and read strings via ``self.t(key)``
+    # so one scene renders in either language (picked by EPI_VIDEO_LANG).
+    TEXT: dict[str, dict[str, str]] = {}
+
     # ------------------------------------------------------------------
     # Setup
     # ------------------------------------------------------------------
@@ -72,6 +77,19 @@ class EpiBaseScene(Scene):
         self.camera.background_color = ManimColor(BG_WARM)
         self._step = 0
         self._active_mobjects: list = []
+        # "zh" (default) or "en"; the pipeline sets EPI_VIDEO_LANG per script.
+        self.lang = os.environ.get("EPI_VIDEO_LANG", "zh")
+
+    def t(self, key: str, **fmt: object) -> str:
+        """Return the on-screen string for ``key`` in the active language.
+
+        Falls back to Chinese (then to the key itself) when a language or key
+        is missing, so a partially-translated scene still renders. ``**fmt``
+        are applied with ``str.format`` for interpolated labels.
+        """
+        table = self.TEXT.get(self.lang) or self.TEXT.get("zh", {})
+        text = table.get(key) or self.TEXT.get("zh", {}).get(key, key)
+        return text.format(**fmt) if fmt else text
 
     # ------------------------------------------------------------------
     # Timing helpers

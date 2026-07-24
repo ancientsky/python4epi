@@ -1,0 +1,148 @@
+meta:
+  chapter: "08"
+  concept: "spatial_weights"
+  title: "空間權重：定義鄰居 Queen vs KNN"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch08_03_spatial_weights"
+  scene_class: "Ch08SpatialWeightsScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集我們畫出了樓層翼區的侵襲率熱力圖。
+      這一集要往前一步：如果想像 Ch08 的第一集那樣做「洗牌檢定」的正式版，
+      也就是 Moran's I，電腦得先知道白紙黑字寫死的一件事——
+      到底「誰跟誰是鄰居」。這就是空間權重要解決的問題。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_neighbors"
+    narration: >
+      Tobler 定律說「近的東西比較像」，但「近」到底是多近？
+      隔壁房間算鄰居，隔一條走廊呢？隔一層樓呢？
+      統計軟體不會自己猜，我們得先建出一張「誰是誰的鄰居」點名表，
+      這張表在空間統計的世界裡，正式的名字叫「空間權重矩陣 W」。
+    animation: "show_why_neighbors"
+    pause_after: 0.5
+
+  - id: "queen_definition"
+    narration: >
+      最常用的鄰居定義叫 Queen 接壤：
+      西洋棋的皇后可以往八個方向走，
+      只要邊界碰到、哪怕只碰到一個角，就算鄰居。
+      看下面這張示意圖：中間那個縣市，跟所有邊界相連的鄰居都連上了線。
+    animation: "show_queen_definition"
+    pause_after: 0.5
+
+  - id: "queen_code"
+    narration: >
+      寫成程式只要一行：libpysal 的 Queen.from_dataframe，
+      餵進地圖的 GeoDataFrame，就自動幫你算出整張鄰居點名表。
+      但是印出 islands，你會看到幾個縣市完全沒有鄰居——
+      金門、澎湖、連江，它們在海上，Queen 接壤誰都碰不到。
+    animation: "show_queen_code"
+    code: |
+      from libpysal.weights import Queen, KNN
+
+      w_all = Queen.from_dataframe(gdf, use_index=False)
+      print(w_all.islands)   # 金門、澎湖、連江：0 個鄰居
+    pause_after: 0.5
+
+  - id: "islands_knn"
+    narration: >
+      離島沒有鄰居，Moran's I 會直接罷工。
+      解法一：分析先聚焦本島 19 個相連縣市，離島留到後面用「平滑」處理。
+      解法二：改用 KNN，不管接不接壤，直接抓地理上最近的 k 個縣市當鄰居，
+      跨海也沒關係，離島瞬間有鄰居了。
+    animation: "show_islands_knn"
+    pause_after: 0.5
+
+  - id: "row_standardize"
+    narration: >
+      鄰居名單定好了，還有最後一步：row-standardize。
+      w.transform 設成 r，讓每個縣市的鄰居權重加起來等於 1。
+      為什麼要這樣做？因為鄰居多的縣市，不該automatically比鄰居少的縣市「大聲」——
+      這就是公平投票的概念，每個鄰居各分到 1 除以 k 的票數。
+    animation: "show_row_standardize"
+    code: |
+      main = gdf[~gdf["is_inset"]].reset_index(drop=True)
+      w = Queen.from_dataframe(main, use_index=False)
+      w.transform = "r"   # row-standardized：鄰居權重加總 = 1
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      空間權重三個重點打包。
+      一，Queen 接壤：邊界碰到（含角）就是鄰居。
+      二，離島的 0 鄰居問題，用 KNN 或聚焦本島解決。
+      三，row-standardize 讓鄰居權重公平分配，加總等於 1。
+      這張權重矩陣 W，就是下一集 Moran's I 的原料。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：COVID-19 疫調的「防疫熱區」怎麼分鄰居！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid_zones"
+    narration: >
+      六都的行政區也可以套一樣的邏輯。
+      COVID-19 疫調畫警戒地圖時，同樣用 Queen.from_dataframe 建鄰接關係，
+      幫忙判斷「這一區升溫，隔壁區要不要提前戒備」。
+      鄰居定義選對了，防疫資源才不會漏掉真正該注意的那一區。
+    animation: "show_extra_covid_zones"
+    code: |
+      w_district = Queen.from_dataframe(district_gdf, use_index=False)
+      w_district.transform = "r"
+      alert_neighbors = w_district.neighbors["信義區"]
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      空間權重三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：建好權重就直接下去算，完全沒檢查 islands。
+      離島 0 鄰居會讓後面的 Moran's I 出現詭異結果或報錯，
+      一定要先印出 islands 檢查一遍。
+    animation: "show_blindspot_ignore_islands"
+    error_code: "w = Queen.from_dataframe(gdf)"
+    correct_code: "w = Queen.from_dataframe(gdf); print(w.islands)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：忘記做 row-standardize。
+      鄰居多的縣市權重加總天生比較大，會在後面的統計量裡「講話特別大聲」，
+      忘記 transform 等於 r，比較結果就不公平了。
+    animation: "show_blindspot_no_row_standardize"
+    error_code: "w = Queen.from_dataframe(gdf)  # binary weights only"
+    correct_code: "w.transform = 'r'  # row-standardize for fair voting"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：用 KNN 的時候，k 值隨便選一個就用。
+      k 太小鄰居太少不穩定，k 太大又把不相關的縣市也算進來，
+      至少要試幾種 k，比較結果穩不穩定。
+    animation: "show_blindspot_random_k"
+    error_code: "w = KNN.from_dataframe(gdf, k=1)"
+    correct_code: "w = KNN.from_dataframe(gdf, k=5)  # try a few k values"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      鄰居定義好了，權重矩陣 W 也做好了！
+      下一集就是重頭戲：把 W 丟進 Moran's I，
+      用一個數字告訴長官，全台灣到底有沒有真的群聚。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

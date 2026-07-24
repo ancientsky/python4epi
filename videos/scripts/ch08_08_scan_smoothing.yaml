@@ -1,0 +1,145 @@
+meta:
+  chapter: "08"
+  concept: "scan_smoothing"
+  title: "概念延伸：Kulldorff 掃描統計與貝氏平滑"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch08_08_scan_smoothing"
+  scene_class: "Ch08ScanSmoothingScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨，空間流病最後一集，這次是概念延伸。
+      兩個進階武器：一個是會自己在地圖上移動找熱區的 Kulldorff 掃描統計，
+      另一個是專門治療小縣市率暴衝的貝氏平滑。
+      這集比較偏概念，大部分工具在 R 或專門軟體上，
+      但邏輯一定要搞懂，因為它會決定你的地圖到底能不能信。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "small_pop_problem"
+    narration: >
+      先講痛點。連江縣人口只有一萬三千人，如果去年零病例，
+      今年多一個病例，發生率直接從零跳到每十萬人七點七，暴衝到嚇死人。
+      這不是連江縣突然變危險，是分母太小，
+      任何一點點變動都會被放大成戲劇化的數字。
+      這種小人口率忽高忽低，亂到你看不出真正的空間型態。
+    animation: "show_small_pop_problem"
+    pause_after: 0.5
+
+  - id: "bayesian_smoothing"
+    narration: >
+      貝氏平滑的邏輯很像跟鄰居借東西應急。
+      人口小、樣本少的縣市，自己的率不可靠，
+      那就往鄰居的資訊借一點來穩定估計，讓率不再因為一兩個病例就暴衝。
+      Empirical Bayes 是簡單版，往全域平均值收縮；
+      更進階的 BYM 模型，同時往空間鄰居和全域平均借，
+      兩邊資訊一起用，估計出來的風險更穩定，也更貼近真實。
+    animation: "show_bayesian_smoothing"
+    code: |
+      from esda.smoothing import Empirical_Bayes
+
+      eb = Empirical_Bayes(main["cases"], main["pop"])
+      main["rate_smoothed"] = eb.r  # 向鄰居/全域借資訊後的穩定率
+    pause_after: 0.5
+
+  - id: "kulldorff_scan"
+    narration: >
+      換個武器。Kulldorff 掃描統計，概念是拿一個看不見的圓圈，
+      在地圖上一格一格移動、還會放大縮小，
+      每移到一個位置就問：「圈裡面的病例數，是不是比圈外顯著地多？」
+      試遍所有可能的位置和大小之後，挑出最異常的那一圈，回報這是最可能的群聚。
+      跟人工挑選的行政區邊界不一樣，它不受行政區形狀限制，
+      能抓到跨越好幾個鄉鎮的不規則群聚。
+    animation: "show_kulldorff_scan"
+    pause_after: 0.5
+
+  - id: "scan_significance"
+    narration: >
+      掃描統計的顯著性判斷，不能套一般的卡方表 p 值，
+      因為你同時測試了成千上萬個候選圓圈位置，古典的漸進分布假設整個不成立。
+      正確做法是蒙地卡羅模擬：把病例數在地圖上隨機重新分布很多次，例如 999 次，
+      每次都重跑一次同樣的掃描，找出每次模擬中「最異常的那一圈」的統計量，
+      拿真實資料算出來的最大統計量去跟這 999 個模擬值比大小，算出模擬 p 值。
+      這正是 SaTScan 軟體內建幫你做的事。
+    animation: "show_scan_significance"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      收尾。一，小人口地區的率會因為分母小而暴衝，不能直接拿來畫地圖或排名。
+      二，貝氏平滑，不管是 Empirical Bayes 還是 BYM，都是向鄰居和全域借資訊換穩定。
+      三，Kulldorff 掃描統計用移動圓圈找不規則群聚，不受行政區邊界限制。
+      四，掃描統計的顯著性要看蒙地卡羅模擬 p 值，不是課本上的卡方 p 值。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：結核病跨鄉鎮群聚掃描。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tb_scan"
+    narration: >
+      換個病，結核病常常呈現跨鄉鎮的不規則群聚，
+      因為傳播鏈可能沿著通勤路線或特定社福機構擴散，不會乖乖停在行政區邊界。
+      用 Kulldorff 掃描統計去掃，常常能抓到一個橫跨兩三個相鄰鄉鎮、
+      形狀完全不規則的高風險帶，
+      這是傳統只看單一行政區地圖絕對看不出來的型態。
+    animation: "show_extra_tb_scan"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      掃描與平滑地雷 3 選，一次公開！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_raw_small_pop"
+    narration: >
+      第一個地雷：小縣市的原始率直接拿去畫地圖或排名，完全沒有平滑。
+      連江縣今年可能因為一個病例衝上全臺第一名，
+      長官還真的把資源優先派過去，結果只是統計雜訊。
+      正確做法：先做貝氏平滑，再拿平滑後的率去畫圖或排序。
+    animation: "show_blindspot_raw_small_pop"
+    error_code: "top3 = df.sort_values('raw_rate', ascending=False).head(3)"
+    correct_code: "top3 = df.sort_values('smoothed_rate', ascending=False).head(3)"
+    pause_after: 0.5
+
+  - id: "blindspot_naive_pvalue"
+    narration: >
+      第二個地雷：掃描統計跑出一個概似比統計量，直接套標準卡方分布查表算 p 值。
+      因為同時測試了無數個候選圓圈，古典假設不成立，
+      這樣算出來的 p 值會嚴重失真，通常會誤判成假警報。
+      正確做法：一定要用蒙地卡羅模擬出來的 p 值。
+    animation: "show_blindspot_naive_pvalue"
+    error_code: "p = chi2.sf(llr_stat, df=1)"
+    correct_code: "p = monte_carlo_pvalue(llr_stat, n_sim=999)"
+    pause_after: 0.5
+
+  - id: "blindspot_admin_boundary_only"
+    narration: >
+      第三個地雷：只用固定的行政區邊界找群聚，
+      以為疾病傳播會乖乖照著縣市、鄉鎮的線走。
+      真實世界的傳播鏈常常橫跨好幾個行政區，
+      如果只比較單一縣市或單一鄉鎮的數字，會完全漏掉跨界的不規則群聚。
+      正確做法：用掃描統計這種不受行政邊界限制的方法，再搭配平滑後的地圖一起看。
+    animation: "show_blindspot_admin_boundary_only"
+    error_code: "cluster = df.groupby('county')['cases'].sum().idxmax()"
+    correct_code: "cluster = kulldorff_scan(df, max_radius_km=50)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      掃描統計和貝氏平滑都學完了，整個空間流病系列也在這裡告一段落。
+      從熱力圖、spot map，到 choropleth，
+      再到 Moran's I、LISA、Gi 星星，最後是掃描統計和平滑，
+      你現在有一整套完整的空間武器庫。
+      下一章，我們要離開空間，一起追問存活分析的核心問題：
+      發病之後，誰活得比較久，哪些因子在背後影響存活時間。下一章見！
+    animation: "show_outro"
+    pause_after: 1.0

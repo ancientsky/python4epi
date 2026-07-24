@@ -1,0 +1,146 @@
+meta:
+  chapter: "08"
+  concept: "morans_i"
+  title: "全域 Moran's I：整張地圖的物以類聚指數"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch08_04_morans_i"
+  scene_class: "Ch08MoransIScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      鄰居名單建好了，空間權重 W 也準備好了。
+      這一集就是本章第一部的壓軸：全域 Moran's I。
+      它會給你「一個數字」，告訴長官全台灣到底有沒有真的群聚——
+      而且這個數字背後的靈魂，你在第一集其實已經學過了。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_switch"
+    narration: >
+      先解釋一件事：松柏護理之家只有一棟樓，
+      拿一棟樓的 6 個樓層翼區做「縣市級」的空間統計，樣本太小、不夠格。
+      所以這一段換上台灣經典的空間流病應用：登革熱 x 全台縣市。
+      上一集建好的權重矩陣 w，就是直接拿來這裡用的。
+    animation: "show_why_switch"
+    pause_after: 0.5
+
+  - id: "moran_intuition"
+    narration: >
+      Moran's I 的意思，跟第一集教室座位圖的洗牌檢定一模一樣，
+      只是換了公式，還可以套用在整座島上。
+      I 趨近正 1，代表高聚高、低聚低，分區非常明顯；
+      I 趨近 0，代表隨機散布，跟亂貼標籤差不多；
+      I 趨近負 1，代表高低相間，這種棋盤格狀況比較少見。
+    animation: "show_moran_intuition"
+    pause_after: 0.5
+
+  - id: "moran_code"
+    narration: >
+      寫成程式，主角是 esda 套件的 Moran 類別。
+      餵進三樣東西：每個縣市的登革熱發生率、剛剛做好的權重 w、
+      還有洗牌 999 次，跟第一集的洗牌檢定完全同一個精神。
+      算出來就是 Moran's I，還有洗牌得到的 p 值。
+    animation: "show_moran_code"
+    code: |
+      from esda.moran import Moran
+
+      moran = Moran(main["rate"].values, w, permutations=999)
+      print(f"Moran's I = {moran.I:.3f}, p = {moran.p_sim:.4f}")
+    pause_after: 0.5
+
+  - id: "moran_output"
+    narration: >
+      跑出來，Moran's I 大約 0.50，p 值小於 0.05，
+      代表全台灣的登革熱發生率，真的有顯著的空間群聚。
+      在合成資料上，台南、高雄、嘉義跳出來是熱區核心，
+      北部則是低發生率的一片安全區——南部登革熱熱區，用統計坐實了。
+    animation: "show_moran_output"
+    pause_after: 0.5
+
+  - id: "pvalue_caution"
+    narration: >
+      提醒一件事：光看 I 等於 0.5，看起來很像有群聚，
+      但一定要靠洗牌 p 值證明，這個 0.5 不是隨機也會出現的數字。
+      只有 I 顯著，才值得往下做局部分析，找出熱區核心到底在哪一個縣市——
+      那個進階招式叫 LISA，我們留到後面的集數再介紹。
+    animation: "show_pvalue_caution"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      全域 Moran's I 三個重點打包。
+      一，I 的正負號和大小：+1 物以類聚、0 隨機、−1 高低相間。
+      二，洗牌 p_sim 才是判斷「不是巧合」的關鍵。
+      三，只有全域顯著，才值得往下拆解每個縣市的角色。
+      恭喜，空間流病第一部完結，你已經有能力回答「哪裡最嚴重」了！
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：換個疾病，結核病的空間群聚！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tb"
+    narration: >
+      結核病在台灣某些縣市也有明顯的空間聚集現象。
+      同一套程式碼，只要把 rate 換成結核病發生率，
+      Moran 類別、洗牌 999 次、算 I 和 p_sim，一個字都不用改。
+      這就是空間統計最迷人的地方：換一種疾病，同一套武器就能用。
+    animation: "show_extra_tb"
+    code: |
+      moran_tb = Moran(main["tb_rate"].values, w, permutations=999)
+      print(f"TB Moran's I = {moran_tb.I:.3f}, p = {moran_tb.p_sim:.4f}")
+      # 示意：I 顯著為正 → 結核病同樣有空間群聚傾向
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Moran's I 三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：只看 I 的數值，沒看 p_sim 就下結論。
+      I 等於 0.5 聽起來很像群聚，但如果 p_sim 沒有小於 0.05，
+      這個 0.5 有可能只是隨機也會跑出來的數字，千萬別急著下定論。
+    animation: "show_blindspot_i_without_p"
+    error_code: "if moran.I > 0.3: cluster = True"
+    correct_code: "cluster = moran.I > 0.3 and moran.p_sim < 0.05"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：只試一種鄰居定義，就把結果當成鐵律。
+      換成 KNN、換個 k 值，Moran's I 可能整個翻掉，
+      這叫權重敏感度，正式報告前務必換一種定義做交叉檢查。
+    animation: "show_blindspot_weight_sensitivity"
+    error_code: "w = Queen.from_dataframe(gdf)  # only tested once"
+    correct_code: "w2 = KNN.from_dataframe(gdf, k=5)  # check robustness too"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：小人口縣市的原始率沒平滑，直接拿去算 Moran's I。
+      連江縣人口才一萬三，多一個病例率就暴衝，
+      這種不穩定的率會汙染整個統計結果，
+      正確做法是先排除離島或做貝氏平滑，再放進 Moran's I。
+    animation: "show_blindspot_small_pop_raw_rate"
+    error_code: "moran = Moran(raw_rate, w)"
+    correct_code: "moran = Moran(main_only_rate, w)  # exclude islands or smooth"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      空間流病第一部到這裡告一段落！
+      從教室座位圖的直覺、樓層翼區的熱力圖、鄰居的正式定義，
+      一路走到全域 Moran's I，你已經能回答「哪裡最嚴重、是不是真的」。
+      下半部我們會繼續深入局部熱區 LISA 和 Getis-Ord Gi*，敬請期待！
+    animation: "show_outro"
+    pause_after: 1.0

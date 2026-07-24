@@ -1,0 +1,173 @@
+meta:
+  chapter: "08"
+  concept: "spatial_thinking"
+  title: "空間流病超白話：一片紅≠真群聚"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch08_01_spatial_thinking"
+  scene_class: "Ch08SpatialThinkingScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨！歡迎來到 Chapter 8，空間流病！
+      這一章要回答長官最愛問的靈魂拷問：「到底是在哪裡爆發的？」
+      在打開地圖軟體之前，我們先花一整集，
+      把「空間流病到底在幹嘛」用一張大家都懂的圖講清楚——教室座位圖。
+      學會這一招，後面的地圖和 Moran's I 全部都是它的放大版。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "seating_scenario"
+    narration: >
+      想像一間教室，某天老師突然發現，
+      後排右下角一小群同學全部在咳嗽。
+      老師心裡毛毛的：這是感冒一個傳一個的「傳染串」，
+      還是大家剛好各自中鏢、只是湊巧坐得比較近而已？
+      空間流病就是在回答這種問題——
+      把「感覺很擠」變成「統計上真的擠」。
+    animation: "show_seating_scenario"
+    pause_after: 0.5
+
+  - id: "toblers_law"
+    narration: >
+      在動手之前，先記一條地理界的萬有引力，叫 Tobler 第一定律：
+      「近的東西比較像。」
+      隔壁同學的感冒、隔壁房間的蓮蓬頭水管，
+      都比對街、對面樓層更相似。
+      會傳染的病，發病的人自然會在空間上物以類聚。
+      所以「在哪裡」從來不是廢話，它藏著傳播的線索。
+    animation: "show_toblers_law"
+    pause_after: 0.5
+
+  - id: "pattern_trap"
+    narration: >
+      但是，人腦有個超危險的壞習慣，叫「看星座」：
+      把天上隨機分布的星星，硬是連成一隻獵戶座。
+      看著色地圖也一樣——你的大腦一定會「看到」群聚，
+      哪怕那其實只是顏色剛好隨機排列出來的錯覺。
+      所以光用眼睛看「一片紅」，還不能說「這裡真的爆發群聚」。
+    animation: "show_pattern_trap"
+    pause_after: 0.5
+
+  - id: "shuffle_intuition"
+    narration: >
+      那要怎麼分辨真假？流行病學家的招數超暴力但超聰明，叫「洗牌檢定」：
+      把咳嗽的標籤從座位上剪下來，隨機洗牌、重新貼回去，重複個兩百次。
+      左邊是真實座位圖，咳嗽黏成一團；右邊是洗牌之後的樣子，散開了。
+      如果真實地圖比亂貼的版本擠很多，那就是真的群聚；
+      如果跟亂貼的差不多，那就是你自己腦補的。
+    animation: "show_shuffle_intuition"
+    pause_after: 0.5
+
+  - id: "shuffle_code"
+    narration: >
+      這個直覺，寫成程式只要幾行。
+      先數「相鄰兩個座位都在咳」的配對數，這是真實地圖的分數；
+      再把咳嗽標籤洗牌兩百次，每次都重新數一次配對數，當作對照組。
+    animation: "show_shuffle_code"
+    code: |
+      import numpy as np
+
+      # 教室座位 5x5；有咳嗽的同學標 1
+      seats = np.zeros((5, 5), dtype=int)
+      for r, c in [(3, 3), (3, 4), (4, 3), (4, 4), (2, 4), (4, 2)]:
+          seats[r, c] = 1
+
+      def adjacent_cough_pairs(grid):
+          pairs = 0
+          for r in range(5):
+              for c in range(5):
+                  if grid[r, c] == 1:
+                      if c + 1 < 5 and grid[r, c + 1] == 1: pairs += 1
+                      if r + 1 < 5 and grid[r + 1, c] == 1: pairs += 1
+          return pairs
+    pause_after: 0.5
+
+  - id: "shuffle_result"
+    narration: >
+      跑出來，見證奇蹟的時刻到了！
+      真實地圖的相鄰咳嗽對是 6 對；
+      洗牌兩百次的平均只有 2.1 對，最多也才 5 對。
+      p 值算出來趨近於 0——代表真實比亂貼的擠太多了，
+      這不是巧合，是真的群聚！
+    animation: "show_shuffle_result"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      打包一下今天的核心概念。
+      第一，Tobler 定律：近的東西比較像。
+      第二，人眼會腦補，看星座式群聚不能信。
+      第三，洗牌檢定把「感覺」變成「證據」。
+      悄悄告訴你，這個洗牌檢定就是 Moran's I 的靈魂，
+      只是它換了更漂亮的公式，我們這章第四集就會正式介紹。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：從教室搬到台灣地圖！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue"
+    narration: >
+      把「教室座位」換成「台灣縣市」，
+      「咳嗽」換成「登革熱發生率」，
+      「鄰座同學」換成「接壤縣市」——
+      你剛學的每一招：先算率、洗牌檢定、群聚不等於原因，
+      通通原封不動搬過去。
+      這就是為什麼南部縣市的登革熱熱區，年年都能用同一套邏輯抓出來。
+    animation: "show_extra_dengue"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      空間思維三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：只比案例數，不比侵襲率。
+      人多的地方本來案例就多，
+      這跟 Ch03 烤肉「別忘了分母」是同一件事，只是搬到地圖上，
+      一定要先算率，再比較。
+    animation: "show_blindspot_count_vs_rate"
+    error_code: "if cases_wing_a > cases_wing_b: risky = 'A'"
+    correct_code: "if rate_wing_a > rate_wing_b: risky = 'A'"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：找到熱區，就以為找到原因了。
+      這叫生態謬誤——熱區只回答「在哪裡」，不是「為什麼」。
+      看到群聚之後，還是得回頭做暴露分析，
+      才知道兇手是共用水源，還是純屬巧合。
+    animation: "show_blindspot_ecological_fallacy"
+    error_code: "if cluster_found: cause = 'shared_water_pipe'"
+    correct_code: "if cluster_found: investigate_exposures(cluster)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：只用眼睛判斷有沒有群聚。
+      看到一片紅就急著下結論，這正是「看星座」的陷阱。
+      正確做法是先跑洗牌檢定或 Moran's I，
+      p 值顯著了才敢說「這是真的」。
+    animation: "show_blindspot_eyeball_only"
+    error_code: "cluster = looks_clustered(heatmap)"
+    correct_code: "cluster = shuffle_test(heatmap, n=1000) < 0.05"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      空間流病的思維打通了！
+      下一集我們真正打開護理之家的地圖，
+      用 groupby 和 pivot 算出樓層翼區的侵襲率，再畫成一張熱力圖。
+      下支影片見！
+    animation: "show_outro"
+    pause_after: 1.0

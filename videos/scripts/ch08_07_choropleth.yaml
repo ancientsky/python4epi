@@ -1,0 +1,175 @@
+meta:
+  chapter: "08"
+  concept: "choropleth"
+  title: "每十萬人發生率 Choropleth：merge 和 ID 對齊全攻略"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch08_07_choropleth"
+  scene_class: "Ch08ChoroplethScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨，歡迎來到地圖時間！這一集要畫一張正式的 choropleth——
+      全臺退伍軍人病每十萬人發生率地圖，資料是真的政府公開資料。
+      但 choropleth 界有一個超級經典、會讓地圖整片空白、
+      而且完全不會報錯的陷阱，等一下帶你親手踩一次雷、再親手排除它。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "what_is_choropleth"
+    narration: >
+      Choropleth 就是分級著色地圖——每個縣市塗一個顏色，顏色深淺代表數值高低。
+      畫這種圖需要兩份資料：一份是地圖邊界的 SHP 檔，一份是你的疫情數字，
+      靠縣市名稱這個共同欄位把兩份資料 merge 在一起。
+      聽起來很簡單，陷阱就藏在這個「靠名稱 merge」裡。
+    animation: "show_what_is_choropleth"
+    pause_after: 0.5
+
+  - id: "tai_trap"
+    narration: >
+      陷阱就是台灣自己的「台」跟「臺」。
+      政府公文標準用臺——臺北市、臺中市、臺南市、臺東縣，
+      這四個縣市有正體字版本；但你下載的資料可能寫成台北市、台中市這種俗字版本。
+      字串比對的時候，"台北市"不等於"臺北市"，merge 抓不到，
+      那個縣市在地圖上就會變成一片空白——而且完全不會跳錯誤訊息。
+    animation: "show_tai_trap"
+    pause_after: 0.5
+
+  - id: "normalize_code"
+    narration: >
+      解法是寫一個正規化字典，把台北市、台中市、台南市、台東縣
+      統一轉成臺北市、臺中市、臺南市、臺東縣，
+      連舊縣市名像台北縣這種已經合併掉的名稱也一起處理掉。
+      用 get 方法，查得到就轉換，查不到就保留原字串，
+      新北市、桃園市這種本來就沒有台臺差異的縣市不會被誤傷。
+      SHP 和你的疫情資料，兩邊都要套用這個函式，少做一邊還是會出包。
+    animation: "show_normalize_code"
+    code: |
+      TAI_NORMALIZE = {
+          "台北市": "臺北市", "台中市": "臺中市",
+          "台南市": "臺南市", "台東縣": "臺東縣",
+      }
+      def normalize_county(name):
+          return TAI_NORMALIZE.get(str(name).strip(), str(name).strip())
+    pause_after: 0.5
+
+  - id: "id_diff_check"
+    narration: >
+      正規化做完別急著 merge，先做一件事：
+      把 SHP 的縣市名稱集合，減掉疫情資料的縣市名稱集合，反過來再減一次。
+      兩個集合相減，結果應該都是空的。
+      如果印出來還有東西，代表哪個縣市名稱兜不起來，
+      趁現在抓出來修，不要等地圖畫出來一片空白才回頭 debug。
+    animation: "show_id_diff_check"
+    code: |
+      shp_counties = set(gdf["county"].apply(normalize_county))
+      data_counties = set(df["county"].unique())
+      print("只在地圖:", sorted(shp_counties - data_counties))
+      print("只在資料:", sorted(data_counties - shp_counties))
+    pause_after: 0.5
+
+  - id: "rate_per_100k"
+    narration: >
+      ID 對齊之後，才輪到算數字。
+      人口多的縣市病例數本來就多，不能直接比人數，
+      一定要換算成每十萬人發生率：病例數除以縣市人口、再乘以十萬。
+      這樣臺北市兩百五十三萬人跟連江縣一萬三千人，
+      才能放在同一把尺上公平比較。
+    animation: "show_rate_per_100k"
+    code: |
+      annual = df.groupby(["year", "county"])["cases"].sum().reset_index()
+      annual["rate_per_100k"] = (
+          annual["cases"] / annual["county"].map(COUNTY_POP) * 100_000
+      )
+    pause_after: 0.5
+
+  - id: "plot_choropleth"
+    narration: >
+      最後一步，merge 加上色。
+      用正規化後的縣市名稱把地圖 GeoDataFrame 和發生率表 merge 起來，
+      how 設成 left，保留地圖上每一個縣市，就算沒有對應資料也不會整塊消失。
+      接著呼叫 GeoDataFrame 的 plot 方法，column 指定 rate_per_100k，
+      cmap 用 Reds，legend 打開，一行程式碼，地圖就上色了。
+    animation: "show_plot_choropleth"
+    code: |
+      gdf_merged = gdf.merge(latest, left_on="county_norm",
+                              right_on="county", how="left")
+      gdf_merged.plot(column="rate_per_100k", cmap="Reds",
+                       legend=True, ax=ax)
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      五步總結。
+      一，choropleth 靠縣市名稱 merge 地圖和資料。
+      二，台跟臺不一致是頭號陷阱，先正規化。
+      三，merge 前先印出集合差，肉眼確認完全吻合。
+      四，一定要換算成每十萬人發生率，不要比原始病例數。
+      五，merge 用 how 等於 left，保留所有地圖邊界。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：登革熱鄉鎮發生率地圖。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue_township"
+    narration: >
+      換個尺度，登革熱通常畫到鄉鎮市區這一層，比縣市更細。
+      邏輯完全一樣，只是 ID 對齊的坑更多——
+      鄉鎮市區同名的情況比縣市常見，例如好幾個縣市都有「中山區」、「大同區」，
+      merge 的時候一定要用縣市加鄉鎮的組合欄位當 key，
+      單用鄉鎮名稱去對，肯定會對錯地方。
+    animation: "show_extra_dengue"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Choropleth 地雷 3 選，一次公開！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_no_normalize"
+    narration: >
+      第一個地雷，忘記做台臺正規化就直接 merge。
+      臺北市、臺中市、臺南市、臺東縣這幾塊，在地圖上會變成灰灰的空白，
+      而且程式完全不會報錯，你可能上台報告才被發現。
+    animation: "show_blindspot_no_normalize"
+    error_code: "gdf.merge(df, left_on='county', right_on='county')"
+    correct_code: "gdf.merge(df, left_on='county_norm', right_on='county_norm')"
+    pause_after: 0.5
+
+  - id: "blindspot_raw_count"
+    narration: >
+      第二個地雷，地圖上色直接用病例數，不是發生率。
+      人口兩百多萬的臺北市病例數字自然比較大，地圖看起來紅通通，
+      但可能發生率根本沒有比小縣市高，誤導長官把資源分配到錯的地方。
+    animation: "show_blindspot_raw_count"
+    error_code: "gdf_merged.plot(column='cases', cmap='Reds')"
+    correct_code: "gdf_merged.plot(column='rate_per_100k', cmap='Reds')"
+    pause_after: 0.5
+
+  - id: "blindspot_no_diff_check"
+    narration: >
+      第三個地雷，merge 完直接畫圖，跳過集合差檢查那一步。
+      結果地圖上有一塊空白，你完全不知道是資料真的沒有，還是名稱對不起來，
+      白白浪費時間亂猜。
+      正確習慣：merge 前一定先印出兩個集合的差，眼睛看過一遍再往下做。
+    animation: "show_blindspot_no_diff_check"
+    error_code: "merged = gdf.merge(df, how='left'); merged.plot()"
+    correct_code: "print(shp_set - data_set); merged = gdf.merge(df, how='left')"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Choropleth 攻略學完了，你現在知道怎麼避開台臺地雷，
+      也知道怎麼用集合差檢查抓出 merge 問題。
+      下一集是這個系列的概念延伸，我們要聊 Kulldorff 掃描統計和貝氏平滑——
+      當你的地圖遇到小縣市率忽高忽低亂跳，該怎麼辦。下集見！
+    animation: "show_outro"
+    pause_after: 1.0

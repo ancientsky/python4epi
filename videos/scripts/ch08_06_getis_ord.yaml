@@ -1,0 +1,154 @@
+meta:
+  chapter: "08"
+  concept: "getis_ord"
+  title: "Getis-Ord Gi★ 熱點分析：給長官看的那張地圖"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch08_06_getis_ord"
+  scene_class: "Ch08GetisOrdScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨，回到空間流病教室。LISA 幫我們找到了震央和離群值，
+      但長官通常沒空聽你解釋四個象限，他只想要一句話：
+      「哪裡是熱點，現在該去哪裡噴消毒水？」
+      這一集主角 Getis-Ord Gi 星星，登場就是為了回答這個問題——
+      一張紅到藍的溫度地圖，而且藏著整章最容易被誤用的統計陷阱：
+      Z 分數大於 1.96 這個看似無害的門檻。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "gi_vs_lisa"
+    narration: >
+      Gi 星星跟 LISA 差在哪？
+      LISA 問「你跟鄰居像不像」，還會標出唱反調的離群值。
+      Gi 星星根本不管像不像，它只問一件事：
+      把你和你的鄰居圈成一圈，這一圈到底燙不燙？
+      輸出的是 Z 分數，正的比整體平均熱，負的比較冷。
+      它沒有離群值分類，只有一條連續的溫度光譜，
+      剛好適合做成一張漂亮的熱區地圖。
+    animation: "show_gi_vs_lisa"
+    pause_after: 0.5
+
+  - id: "binary_weights"
+    narration: >
+      第一個關鍵細節：Gi 星星要用二元權重，不是 row-standardized。
+      為什麼？因為 Gi 星星算的是「這一圈的加總熱度」，
+      鄰居越多、火力越大，如果先做 row-standardize 把每個鄰居除以鄰居數，
+      反而把「鄰居多」這個訊息洗掉了。
+      所以權重矩陣要設定 transform 等於大寫 B，binary，
+      鄰居就是 1，不是鄰居就是 0，乾脆俐落。
+    animation: "show_binary_weights"
+    code: |
+      w_b = Queen.from_dataframe(main, use_index=False)
+      w_b.transform = "B"   # binary，不做 row-standardize
+    pause_after: 0.5
+
+  - id: "star_meaning"
+    narration: >
+      第二個細節，星號的意思。
+      star 等於 True 代表 Gi 星星，會把焦點縣市自己也圈進這一圈一起算；
+      不加星號，只算鄰居、不含自己。
+      空間流病幾乎都用有星號的版本，
+      因為你自己本來就是這一圈的一部分，沒理由排除在外。
+    animation: "show_star_meaning"
+    code: |
+      from esda.getisord import G_Local
+
+      gi = G_Local(main["rate"].values, w_b,
+                   permutations=999, seed=8, star=True)
+    pause_after: 0.5
+
+  - id: "significance_rule"
+    narration: >
+      現在講整支影片最重要的一句話。
+      判斷熱點顯不顯著，絕對不能只看 Z 分數有沒有超過 1.96。
+      為什麼？縣市只有 19 個，樣本數這麼小，常態分佈的近似值根本不準。
+      正確做法是看洗牌 999 次算出來的 p_sim，小於 0.05 才算顯著，
+      再用 Z 分數的正負號分冷熱：正的是熱點、負的是冷點。
+      兩個條件都要同時成立，缺一不可。
+    animation: "show_significance_rule"
+    code: |
+      hot = main.loc[(gi.p_sim < 0.05) & (gi.Zs > 0), "COUNTYNAME"]
+      cold = main.loc[(gi.p_sim < 0.05) & (gi.Zs < 0), "COUNTYNAME"]
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      收尾五個重點。
+      一，Gi 星星回答「這一圈有多燙」，沒有離群值分類。
+      二，權重矩陣一定要 binary，不要 row-standardized。
+      三，star 等於 True 把自己算進這一圈。
+      四，顯著性看 p_sim 小於 0.05，不是 Z 大於 1.96。
+      五，冷熱看 Zs 的正負號。五條記熟，熱區地圖穩穩交出去。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：腸病毒 71 型幼兒園熱區。
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_enterovirus"
+    narration: >
+      換個場景，腸病毒 71 型。
+      把每個行政區的幼兒園群聚率丟進 Gi 星星，
+      跑出來的熱區常常落在托育機構密集、通報速度快的行政區——
+      不是病毒本身比較兇，而是那一帶群聚被更早、更完整地抓出來。
+      這正是空間分析的老提醒：找到熱點只是問題的路標，
+      背後原因需要再往下追查，是通報落差還是真的傳播比較快。
+    animation: "show_extra_enterovirus"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Gi 星星地雷 3 選，一次公開！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_zscore_threshold"
+    narration: >
+      第一個地雷，也是最常見的：直接用 Z 分數大於 1.96 篩熱點。
+      樣本一小，這條經驗法則整個失靈，會漏掉真正顯著的地方，
+      也可能把雜訊誤判成熱點。
+      正確做法：永遠看洗牌算出來的 p_sim。
+    animation: "show_blindspot_zscore_threshold"
+    error_code: "hot = main.loc[gi.Zs > 1.96, 'COUNTYNAME']"
+    correct_code: "hot = main.loc[gi.p_sim < 0.05, 'COUNTYNAME']"
+    pause_after: 0.5
+
+  - id: "blindspot_row_standardized"
+    narration: >
+      第二個地雷：權重矩陣忘記改成 binary，沿用 LISA 那組 row-standardized 的 w。
+      結果 Gi 星星算出來的「熱度」被鄰居數量稀釋掉，熱點地圖整個走鐘。
+      正確做法：Gi 星星要另外建一組 transform 等於 B 的權重，
+      跟 LISA 用的權重是兩碼子事。
+    animation: "show_blindspot_row_standardized"
+    error_code: "gi = G_Local(main['rate'].values, w_row_std, star=True)"
+    correct_code: "gi = G_Local(main['rate'].values, w_binary, star=True)"
+    pause_after: 0.5
+
+  - id: "blindspot_ignore_sign"
+    narration: >
+      第三個地雷：只篩 p_sim 顯著，卻沒看 Zs 的正負號，
+      結果冷點也被貼上「熱點」標籤，一起排進優先處理名單，資源分配整個亂套。
+      正確做法：p_sim 顯著之後，一定要再確認 Zs 是正的才叫熱點，
+      負的是冷點，兩者意義完全相反。
+    animation: "show_blindspot_ignore_sign"
+    error_code: "hot = main.loc[gi.p_sim < 0.05, 'COUNTYNAME']"
+    correct_code: "hot = main.loc[(gi.p_sim<0.05)&(gi.Zs>0), 'COUNTYNAME']"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Gi 星星學完了，你現在有一張能直接呈報長官的熱區地圖，
+      而且知道怎麼避開三個致命誤用。
+      下一集我們回到 choropleth，這次是全臺退伍軍人病每十萬人發生率的正式地圖，
+      還會示範一個超容易被忽略、卻會讓地圖整片空白的小陷阱：
+      台跟臺的字形不一致。下集見！
+    animation: "show_outro"
+    pause_after: 1.0
