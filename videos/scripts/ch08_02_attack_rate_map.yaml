@@ -59,9 +59,8 @@ segments:
       這種兩個類別變數天然形成矩陣的情境，熱力圖是最直覺的選擇。
     animation: "show_pivot_heatmap"
     code: |
-      heatmap_ar = spatial.pivot(index="floor", columns="wing", values="attack_rate")
-      sns.heatmap(heatmap_ar, annot=True, fmt=".1f", cmap="YlOrRd",
-                  cbar_kws={"label": "%"})
+      hm = spatial.pivot("floor", "wing", "attack_rate")
+      sns.heatmap(hm, annot=True, cmap="YlOrRd")
     pause_after: 0.5
 
   - id: "sorted_bar"
@@ -148,8 +147,8 @@ segments:
       這個數字完全不可靠，不能跟 50 人的翼區相提並論。
       排名前先過濾掉樣本數太小的組別。
     animation: "show_blindspot_small_n"
-    error_code: "rank_by_attack_rate(spatial)"
-    correct_code: "rank_by_attack_rate(spatial[spatial['total'] >= 10])"
+    error_code: "rank_by_attack_rate(spatial)  # tiny cells too"
+    correct_code: "rank_by_attack_rate(spatial[spatial.total>=10])"
     pause_after: 0.5
 
   - id: "outro"

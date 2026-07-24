@@ -335,7 +335,7 @@ class Ch08ScanSmoothingScene(EpiBaseScene):
     def show_blindspot_admin_boundary_only(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(9, self.total_steps)
         panel = self.show_error_vs_correct(
-            kwargs.get("error_code", "cluster = df.groupby('county')['cases'].sum().idxmax()"),
+            kwargs.get("error_code", "cluster = by_county['cases'].sum().idxmax()"),
             kwargs.get("correct_code", "cluster = kulldorff_scan(df, max_radius_km=50)"),
             duration=duration,
         )

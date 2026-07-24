@@ -166,9 +166,19 @@ class EpiBaseScene(Scene):
         title: str = "",
         position=LEFT * 3,
         duration: float = 2.0,
+        max_width: float = 11.0,
     ) -> CodePanel:
-        """Create and fade-in a code panel."""
-        panel = CodePanel(code, title=title) if title else CodePanel(code)
+        """Create and fade-in a code panel.
+
+        ``max_width`` caps the panel's on-screen width; pass a smaller value
+        (e.g. ``6.0``) when the panel sits beside a diagram so the code stays
+        within its half and never overflows the frame or collides with it.
+        """
+        panel = (
+            CodePanel(code, title=title, width=max_width)
+            if title
+            else CodePanel(code, width=max_width)
+        )
         panel.move_to(position)
         self.play(FadeIn(panel), run_time=min(1.0, duration * 0.4))
         return panel

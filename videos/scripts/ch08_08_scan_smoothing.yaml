@@ -129,7 +129,7 @@ segments:
       如果只比較單一縣市或單一鄉鎮的數字，會完全漏掉跨界的不規則群聚。
       正確做法：用掃描統計這種不受行政邊界限制的方法，再搭配平滑後的地圖一起看。
     animation: "show_blindspot_admin_boundary_only"
-    error_code: "cluster = df.groupby('county')['cases'].sum().idxmax()"
+    error_code: "cluster = by_county['cases'].sum().idxmax()"
     correct_code: "cluster = kulldorff_scan(df, max_radius_km=50)"
     pause_after: 0.5
 

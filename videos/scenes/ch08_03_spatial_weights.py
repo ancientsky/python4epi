@@ -307,7 +307,7 @@ class Ch08SpatialWeightsScene(EpiBaseScene):
         self.show_step_indicator(10, self.total_steps)
         panel = self.show_error_vs_correct(
             kwargs.get("error_code", "w = KNN.from_dataframe(gdf, k=1)"),
-            kwargs.get("correct_code", "w = KNN.from_dataframe(gdf, k=5)  # try a few k values"),
+            kwargs.get("correct_code", "w = KNN.from_dataframe(gdf, k=5)  # try ks"),
             duration=duration,
         )
         self.play(FadeOut(panel), run_time=0.5)

@@ -129,7 +129,7 @@ segments:
       and comparing only the numbers within a single county or township completely misses the cross-border irregular clusters.
       The right move: use a boundary-free method like the scan statistic, paired with a smoothed map to look at together.
     animation: "show_blindspot_admin_boundary_only"
-    error_code: "cluster = df.groupby('county')['cases'].sum().idxmax()"
+    error_code: "cluster = by_county['cases'].sum().idxmax()"
     correct_code: "cluster = kulldorff_scan(df, max_radius_km=50)"
     pause_after: 0.5
 

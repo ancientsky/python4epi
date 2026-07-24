@@ -128,8 +128,8 @@ segments:
       The right move: Gi star needs a separate set of weights with transform equal to B,
       which is a totally different thing from the weights you used for LISA.
     animation: "show_blindspot_row_standardized"
-    error_code: "gi = G_Local(main['rate'].values, w_row_std, star=True)"
-    correct_code: "gi = G_Local(main['rate'].values, w_binary, star=True)"
+    error_code: "gi = G_Local(main.rate, w_row_std, star=True)"
+    correct_code: "gi = G_Local(main.rate, w_binary, star=True)"
     pause_after: 0.5
 
   - id: "blindspot_ignore_sign"
@@ -140,7 +140,7 @@ segments:
       because negative is a cold spot, and the two mean completely opposite things.
     animation: "show_blindspot_ignore_sign"
     error_code: "hot = main.loc[gi.p_sim < 0.05, 'COUNTYNAME']"
-    correct_code: "hot = main.loc[(gi.p_sim<0.05)&(gi.Zs>0), 'COUNTYNAME']"
+    correct_code: "hot = main[(gi.p_sim<.05) & (gi.Zs>0)]"
     pause_after: 0.5
 
   - id: "outro"

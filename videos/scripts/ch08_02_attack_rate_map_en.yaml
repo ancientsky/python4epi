@@ -59,9 +59,8 @@ segments:
       Whenever two categorical variables naturally form a matrix like this, a heatmap is the most intuitive choice.
     animation: "show_pivot_heatmap"
     code: |
-      heatmap_ar = spatial.pivot(index="floor", columns="wing", values="attack_rate")
-      sns.heatmap(heatmap_ar, annot=True, fmt=".1f", cmap="YlOrRd",
-                  cbar_kws={"label": "%"})
+      hm = spatial.pivot("floor", "wing", "attack_rate")
+      sns.heatmap(hm, annot=True, cmap="YlOrRd")
     pause_after: 0.5
 
   - id: "sorted_bar"
@@ -148,8 +147,8 @@ segments:
       and that number is completely unreliable, so you can't put it next to a fifty-person wing.
       Before ranking, filter out the groups whose sample size is too small.
     animation: "show_blindspot_small_n"
-    error_code: "rank_by_attack_rate(spatial)"
-    correct_code: "rank_by_attack_rate(spatial[spatial['total'] >= 10])"
+    error_code: "rank_by_attack_rate(spatial)  # tiny cells too"
+    correct_code: "rank_by_attack_rate(spatial[spatial.total>=10])"
     pause_after: 0.5
 
   - id: "outro"
