@@ -122,7 +122,7 @@ class CodePanel(VGroup):
         *,
         title: str = "",
         language: str = "python",
-        width: float = 6.0,
+        width: float = 11.0,
         height: float | None = None,
         font_size: int = 20,
     ) -> None:
@@ -145,11 +145,11 @@ class CodePanel(VGroup):
             code_mob.background.set_fill(ManimColor(CODE_BG), opacity=1)
             code_mob.background.round_corners(0.15)
 
-        # Guard: a long line would otherwise render past the 14.2-unit frame and
-        # get clipped at the screen edge. Scale the whole block down to fit.
-        max_w = 12.5
-        if code_mob.width > max_w:
-            code_mob.scale_to_fit_width(max_w)
+        # Guard: a long line would otherwise render past its allotted width (the
+        # 14.2-unit frame, or a narrower half when the panel sits beside a diagram)
+        # and clip at the edge. Scale the whole block down to fit ``width``.
+        if code_mob.width > width:
+            code_mob.scale_to_fit_width(width)
 
         if title:
             title_mob = Text(
@@ -249,8 +249,11 @@ class ErrorVsCorrect(VGroup):
     ) -> None:
         super().__init__()
 
-        # Usable inner width for the code strip (card minus horizontal padding).
-        inner_w = width - 0.5
+        # Card padding budget: the dark strip stays ``0.3`` inside each card edge,
+        # and the code text stays a further ``0.2`` inside each strip edge, so code
+        # never touches an edge (the "code hugs the border" complaint).
+        inner_w = width - 0.6      # max strip width
+        text_max = inner_w - 0.4   # code is always narrower than the strip
 
         def _panel(code: str, accent: str, fill: str, label_text: str) -> VGroup:
             """Build one NG/OK card whose code always fits inside the strip."""
@@ -271,11 +274,11 @@ class ErrorVsCorrect(VGroup):
             )
             # Scale long lines down so the code never spills past the card edge
             # (root cause of the clipped-at-screen-edge bug for long snippets).
-            if txt.width > inner_w:
-                txt.scale_to_fit_width(inner_w)
+            if txt.width > text_max:
+                txt.scale_to_fit_width(text_max)
             strip = RoundedRectangle(
                 corner_radius=0.1,
-                width=min(txt.width + 0.4, inner_w),
+                width=min(txt.width + 0.5, inner_w),
                 height=max(txt.height + 0.3, 0.6),
                 fill_color=ManimColor(CODE_BG), fill_opacity=1,
                 stroke_width=0,

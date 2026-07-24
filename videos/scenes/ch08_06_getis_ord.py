@@ -268,8 +268,8 @@ class Ch08GetisOrdScene(EpiBaseScene):
     def show_blindspot_row_standardized(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(8, self.total_steps)
         panel = self.show_error_vs_correct(
-            kwargs.get("error_code", "gi = G_Local(main['rate'].values, w_row_std, star=True)"),
-            kwargs.get("correct_code", "gi = G_Local(main['rate'].values, w_binary, star=True)"),
+            kwargs.get("error_code", "gi = G_Local(main.rate, w_row_std, star=True)"),
+            kwargs.get("correct_code", "gi = G_Local(main.rate, w_binary, star=True)"),
             duration=duration,
         )
         self.play(FadeOut(panel), run_time=0.5)
@@ -278,7 +278,7 @@ class Ch08GetisOrdScene(EpiBaseScene):
         self.show_step_indicator(9, self.total_steps)
         panel = self.show_error_vs_correct(
             kwargs.get("error_code", "hot = main.loc[gi.p_sim < 0.05, 'COUNTYNAME']"),
-            kwargs.get("correct_code", "hot = main.loc[(gi.p_sim<0.05)&(gi.Zs>0), 'COUNTYNAME']"),
+            kwargs.get("correct_code", "hot = main[(gi.p_sim<.05) & (gi.Zs>0)]"),
             duration=duration,
         )
         self.play(FadeOut(panel), run_time=0.5)

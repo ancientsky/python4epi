@@ -135,7 +135,7 @@ segments:
       至少要試幾種 k，比較結果穩不穩定。
     animation: "show_blindspot_random_k"
     error_code: "w = KNN.from_dataframe(gdf, k=1)"
-    correct_code: "w = KNN.from_dataframe(gdf, k=5)  # try a few k values"
+    correct_code: "w = KNN.from_dataframe(gdf, k=5)  # try ks"
     pause_after: 0.5
 
   - id: "outro"

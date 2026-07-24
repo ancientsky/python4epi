@@ -204,17 +204,19 @@ class Ch08AttackRateMapScene(EpiBaseScene):
         code = kwargs.get(
             "code",
             (
-                'heatmap_ar = spatial.pivot(index="floor", columns="wing", values="attack_rate")\n'
-                'sns.heatmap(heatmap_ar, annot=True, fmt=".1f", cmap="YlOrRd",\n'
-                '            cbar_kws={"label": "%"})'
+                'hm = spatial.pivot("floor", "wing", "attack_rate")\n'
+                'sns.heatmap(hm, annot=True, cmap="YlOrRd")'
             ),
         )
         h = Text(
             self.t("pivot_heatmap_heading"), font=FONT_CJK, font_size=26, color=ACCENT_ORANGE
         ).to_edge(UP, buff=0.5)
         self.play(FadeIn(h), run_time=0.4)
+        # Code sits in the LEFT half beside the heatmap grid, so cap its width to
+        # that half — otherwise a wide line runs off-screen and over the grid.
         code_panel = self.show_code(
-            code, title=self.t("pivot_heatmap_title"), position=LEFT * 3.3 + DOWN * 0.2
+            code, title=self.t("pivot_heatmap_title"),
+            position=LEFT * 3.2 + DOWN * 0.2, max_width=6.6,
         )
         grid = self._heatmap_grid().move_to(RIGHT * 3.2 + DOWN * 0.2)
         caption = Text(
@@ -305,8 +307,8 @@ class Ch08AttackRateMapScene(EpiBaseScene):
     def show_blindspot_small_n(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(9, self.total_steps)
         panel = self.show_error_vs_correct(
-            kwargs.get("error_code", "rank_by_attack_rate(spatial)"),
-            kwargs.get("correct_code", "rank_by_attack_rate(spatial[spatial['total'] >= 10])"),
+            kwargs.get("error_code", "rank_by_attack_rate(spatial)  # tiny cells too"),
+            kwargs.get("correct_code", "rank_by_attack_rate(spatial[spatial.total>=10])"),
             duration=duration,
         )
         self.play(FadeOut(panel), run_time=0.5)
