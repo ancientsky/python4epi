@@ -1,0 +1,168 @@
+meta:
+  chapter: "11"
+  concept: "mlp_baseline"
+  title: "MLP baseline：在 280 筆資料上親手跑一次 PyTorch"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch11_06_mlp_baseline"
+  scene_class: "Ch11MLPBaselineScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集我們拍胸脯說「280 筆別用深度學習」，這一集就來親手驗證這句話。
+      Part A 第一步：在同一份 Legionella 資料上，真的跑一個 PyTorch MLP 分類器，
+      跟 Ch10 的 sklearn baseline 正面對決。
+      重點不是要它贏，而是扎扎實實把訓練迴圈的語法練起來——這是未來所有深度學習的地基。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "goal"
+    narration: >
+      先講清楚這一步在幹嘛。任務是二元分類：一看到住民的基本資料，就預測他會不會感染。
+      我們用跟 Ch10 一模一樣的欄位、一模一樣的切分，唯一換的是模型——把 sklearn 換成 PyTorch 神經網路。
+      這樣比較才公平，才能誠實回答：小資料上，深度學習到底佔不佔得到便宜。
+    animation: "show_goal"
+    pause_after: 0.5
+
+  - id: "data_prep"
+    narration: >
+      第一步，把病歷表格翻譯成 PyTorch 看得懂的張量。
+      類別欄位用 get_dummies 做 one-hot，全部轉成 float32，因為 PyTorch 權重預設是單精度。
+      年齡這種數值欄位一定要用 StandardScaler 標準化，神經網路對輸入尺度超敏感，不縮放收斂會很慘。
+      最後——注意，這是橫斷面資料、每一列互相獨立，所以可以放心 shuffle，切個七三。
+    animation: "show_data_prep"
+    code: |
+      df["infected"] = df["clinical_severity"].ne("not_ill")
+      X = pd.get_dummies(features).values.astype("float32")
+      X[:, 0] = StandardScaler().fit_transform(X[:, :1]).ravel()
+      idx = np.random.permutation(len(X))   # 橫斷面可 shuffle
+      Xtr, Xval = X[idx[:196]], X[idx[196:]]  # 70 / 30
+    pause_after: 0.5
+
+  - id: "architecture"
+    narration: >
+      模型架構就用 nn.Sequential 疊三層線性層：Linear 做線性組合，中間夾 ReLU 加入非線性。
+      注意最後一層 Linear 輸出單一 logit，故意不接 sigmoid——那件事交給下一段的 loss function 內部處理，數值更穩。
+      然後我們順手把總參數量印出來。這個數字，等一下會變成「殺雞用牛刀」的呈堂證供。
+    animation: "show_architecture"
+    code: |
+      model = nn.Sequential(
+          nn.Linear(input_dim, 32), nn.ReLU(),
+          nn.Linear(32, 16), nn.ReLU(),
+          nn.Linear(16, 1),   # 輸出 logit，不接 sigmoid
+      )
+      n_params = sum(p.numel() for p in model.parameters())
+      print(n_params, "參數 vs", len(Xtr), "筆樣本")
+    pause_after: 0.5
+
+  - id: "params_vs_samples"
+    narration: >
+      印出來嚇一跳：這個小小的架構大約 700 個參數，訓練集卻只有大約 196 筆。
+      參數比樣本還多，這代表模型有太多「可以亂調的旋鈕」，很容易就把訓練資料的雜訊整個背下來。
+      這張參數對樣本的長條圖，就是過擬合風險的紅色警報——牛刀殺雞的具體證據。
+    animation: "show_params_vs_samples"
+    pause_after: 0.5
+
+  - id: "training_loop"
+    narration: >
+      訓練迴圈，永遠是同一個四拍節奏：清梯度、forward 算 loss、backward 反向傳播、optimizer 更新。
+      這裡再加上早停法：一邊訓練一邊盯著驗證集的 loss，進步就存檔、counter 歸零；連續好幾輪沒進步就喊卡。
+      結束後倒帶回 val loss 最低的那組權重——見好就收，別頒獎給練到走火入魔的最後一輪。
+    animation: "show_training_loop"
+    code: |
+      loss_fn = nn.BCEWithLogitsLoss()
+      opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+      for epoch in range(300):
+          opt.zero_grad()
+          loss = loss_fn(model(Xtr), ytr)   # forward
+          loss.backward(); opt.step()       # backprop + update
+          if val_loss < best: best, snap = val_loss, save()
+          else: counter += 1                # early stopping
+    pause_after: 0.5
+
+  - id: "result"
+    narration: >
+      誠實的結果來了：跑完整套流程，驗證集 AUC 大約 0.63。
+      而 Ch10 的 logistic regression 和 random forest 都在 0.6 上下。
+      翻譯成白話就是：深度學習跟 sklearn 幾乎打平，沒有展現任何明顯優勢。
+      這一步的價值不是打贏，而是你已經親手跑通了一整個 PyTorch 訓練迴圈。
+    animation: "show_result"
+    pause_after: 0.5
+
+  - id: "split_rule"
+    narration: >
+      最後補一個超重要的觀念：切分。
+      train 訓練、val 調參、test 最後驗收，這是鐵三角。
+      這次是橫斷面資料、每列獨立，所以 shuffle 切沒問題；
+      但只要你的資料有「時間軸」，就絕對不能 shuffle，否則未來會偷渡進訓練集——這個未來洩漏的坑，下一集序列預測會講到你怕。
+    animation: "show_split_rule"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：再入院風險的表格 MLP！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_readmission"
+    narration: >
+      同一套 MLP 食譜，可以直接搬去做「30 天再入院風險」預測。
+      架構幾乎不用改，只要把輸入特徵換成病人的表格病歷、輸出換成再入院機率。
+      差別在資料量：如果你有幾萬筆病歷、幾十個特徵，這時候深度學習才真的有機會贏過邏輯斯。
+      同一把牛刀，換一頭真正夠大的牛，就殺得漂亮了。
+    animation: "show_extra_readmission"
+    code: |
+      # 換一個表格風險任務：30 天再入院預測
+      readmit = nn.Sequential(
+          nn.Linear(n_feats, 64), nn.ReLU(),
+          nn.Linear(64, 1),
+      )
+      # 幾萬筆 + 幾十特徵 → DL 才可能贏 logistic
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      MLP baseline 三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_no_scaling"
+    narration: >
+      第一個地雷：忘記標準化，直接把原始數值丟進網路。
+      年齡是幾十、某些欄位是零點幾，尺度差太多，神經網路會學到頭昏眼花、收斂超慢甚至根本不收斂。
+      正確做法：數值特徵一律先用 StandardScaler 縮放，再進網路。
+    animation: "show_blindspot_no_scaling"
+    error_code: "X = df[num_cols].values  # unscaled"
+    correct_code: "X = StandardScaler().fit_transform(X)"
+    pause_after: 0.5
+
+  - id: "blindspot_no_zero_grad"
+    narration: >
+      第二個地雷：訓練迴圈裡忘了清梯度。
+      PyTorch 的梯度預設會「累加」，你不歸零，這一輪的梯度會疊上上一輪的，越滾越大，訓練直接崩掉。
+      正確做法：每一輪的最前面，先呼叫 optimizer.zero_grad，再 backward。
+    animation: "show_blindspot_no_zero_grad"
+    error_code: "loss.backward(); optimizer.step()"
+    correct_code: "optimizer.zero_grad(); loss.backward()"
+    pause_after: 0.5
+
+  - id: "blindspot_last_weights"
+    narration: >
+      第三個地雷：早停法喊卡後，卻用訓練結束當下的權重。
+      那組權重很可能已經開始過擬合，你辛苦監控 val loss 等於白做工。
+      正確做法：載回你一路存下來、val loss 最低的那組最佳權重——把獎盃頒給表現最好的那一次。
+    animation: "show_blindspot_last_weights"
+    error_code: "model.save()  # last-epoch weights"
+    correct_code: "model.load_state_dict(best_state)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      MLP baseline 跑完，誠實的 AUC 0.63 跟 sklearn 打成平手——小資料上，深度學習真的沒佔到便宜。
+      但別急著看衰它。下一集我們換一個深度學習真正擅長的舞台：序列預測，
+      用 LSTM 和 CNN，看它怎麼靠一個「領先指標」漂亮翻盤。下集見！
+    animation: "show_outro"
+    pause_after: 1.0

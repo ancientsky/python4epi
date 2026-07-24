@@ -1,0 +1,154 @@
+meta:
+  chapter: "11"
+  concept: "lstm_cnn_sequence"
+  title: "LSTM / CNN 序列預測：滑動視窗，預測未來"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch11_07_lstm_cnn_sequence"
+  scene_class: "Ch11SequenceScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集牛刀殺雞，280 筆分類，深度學習只跟 sklearn 打平。
+      這一集我們換一頭真正的牛：序列預測。
+      用 LSTM 和 CNN，讓深度學習去做它天生擅長的事——讀一段歷史、預測未來。
+      準備好看牛刀真正發威了嗎？
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_sequence"
+    narration: >
+      為什麼要換場景？因為松柏護理之家的資料沒有夠長的每日序列，做序列預測會餓死。
+      所以這一步改用一組教學合成的資料：每日病例數，配上每天的氣溫。
+      這正好呼應決策框架——高維、長序列、資料量夠，才輪到深度學習上場。
+      序列預測，就是牛刀該殺的那頭牛。
+    animation: "show_why_sequence"
+    pause_after: 0.5
+
+  - id: "leading_indicator"
+    narration: >
+      這組資料藏了一個「作弊碼」，叫領先指標。
+      氣溫是可以提前知道的訊號，而且今天的病例數，其實是受「7 天前的氣溫」驅動的。
+      任務就是：用過去 21 天的病例和氣溫，去預測 7 天後的病例數。
+      深度學習要贏，靠的不是「模型比較潮」，而是它能不能學會利用這個提前 7 天的線索。
+    animation: "show_leading_indicator"
+    pause_after: 0.5
+
+  - id: "window_diagram"
+    narration: >
+      序列預測的核心動作叫滑動視窗。
+      想像時間軸是一長排格子，我們框住連續 21 天當作輸入，藍色這一段；
+      然後跳過 7 天，去預測橘色那一格——也就是 7 天後的病例數。
+      整個視窗沿著時間往前一格一格滑，就切出一大堆「輸入配答案」的訓練樣本。
+    animation: "show_window_diagram"
+    pause_after: 0.5
+
+  - id: "window_code"
+    narration: >
+      寫成程式，L 是回看 21 天、H 是預測 7 天後。
+      關鍵中的關鍵：標準化的平均值和標準差只能用訓練區間算，絕對不能偷看測試集。
+      windows 函式沿著時間切出每個樣本，而且——注意，這裡完全沒有一行 shuffle。
+      序列資料一旦隨機打亂，未來的窗口就會混進訓練集，那是嚴重的作弊。
+    animation: "show_window_code"
+    code: |
+      L, H = 21, 7                 # 回看 21 天，預測 7 天後
+      split = n - 60               # 最後 60 天當測試集
+      mu, sd = feats[:split].mean(0), feats[:split].std(0)
+      z = (feats - mu) / sd        # 只用訓練區間標準化
+
+      def windows(s, e):
+          X = [z[i - L:i] for i in range(s, e - H)]
+          y = [z[i + H - 1, 0] for i in range(s, e - H)]
+          return np.array(X), np.array(y)   # 不 shuffle
+    pause_after: 0.5
+
+  - id: "lstm_model"
+    narration: >
+      主角登場：LSTM，一個「有記憶的偵探」。
+      它讀過這 21 天的序列，每一步都更新一個內部記憶；讀完之後，腦中留下的不是最後一天的片段，而是整段案情的摘要——這週病例是不是一直在爬？氣溫是不是連續偏高？
+      我們只取最後一個時間點的記憶，接一層 Linear，輸出 7 天後的預測。
+      CNN 用同一套訓練流程，只是換成卷積層，改用一個小滑動視窗去抓局部形狀。
+    animation: "show_lstm_model"
+    code: |
+      class LSTMModel(nn.Module):
+          def __init__(self):
+              super().__init__()
+              self.lstm = nn.LSTM(2, 32, batch_first=True)
+              self.fc = nn.Linear(32, 1)
+
+          def forward(self, x):
+              out, _ = self.lstm(x)       # 讀完 21 天
+              return self.fc(out[:, -1])  # 取最後記憶 → 預測
+    pause_after: 0.5
+
+  - id: "result"
+    narration: >
+      評估序列預測，第一道關卡永遠是 naive 基準：persistence，也就是「假設 7 天後跟今天一樣」。
+      跑出來的成績單：persistence 的 MAE 是 2.88，LSTM 壓到 2.15，CNN 是 2.20。
+      這次深度學習真的贏了，而且贏得不小！為什麼？因為它用到了氣溫這個領先指標，
+      又抓住了「7 天前氣溫驅動今天病例」這種非線性、有延遲的交互作用——這正是神經網路的主場。
+    animation: "show_result"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：登革熱每週病例預測！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dengue_weekly"
+    narration: >
+      同一套武器可以直接搬去做登革熱的每週預測。
+      先把每日資料 resample 成每週病例數，領先指標換成當週氣溫加上累積雨量——雨越多、孳生源越多、病媒蚊越活躍。
+      滑動視窗和 LSTM 一個字都不用改，只是把預測目標換成「下週病例數」。
+      但別忘了鐵律：一樣先跑一個 persistence 基準，贏不過它，複雜模型就是白費力氣。
+    animation: "show_extra_dengue_weekly"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      序列預測三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_shuffle"
+    narration: >
+      第一個地雷，也是序列預測的頭號殺手：對時間序列隨機打亂切分。
+      你只要一 shuffle，某一折的訓練集就可能包含未來的資料點，模型等於考試前偷看答案，離線分數嚴重高估。
+      正確做法：永遠依時間先後切，訓練在前、測試在後，箭頭永遠指向未來。
+    animation: "show_blindspot_shuffle"
+    error_code: "train_test_split(X, y, shuffle=True)"
+    correct_code: "X_tr = X[idx < split]  # by time"
+    pause_after: 0.5
+
+  - id: "blindspot_scaler_leak"
+    narration: >
+      第二個地雷：用整條序列去算標準化的平均值和標準差。
+      這樣測試集的統計量會偷偷洩漏進標準化過程，又是一種資料洩漏，只是比較隱蔽。
+      正確做法：平均值、標準差只用訓練區間算，再套用到全部資料。
+    animation: "show_blindspot_scaler_leak"
+    error_code: "mu = feats.mean(0)  # peeks at test"
+    correct_code: "mu = feats[:split].mean(0)  # train"
+    pause_after: 0.5
+
+  - id: "blindspot_no_baseline"
+    narration: >
+      第三個地雷：只報 LSTM 的 MAE，卻沒跟 naive 基準比。
+      如果曲線平滑又單純，persistence 或簡單移動平均往往就很強，你的複雜模型可能只是徒增過擬合風險。
+      正確做法：永遠先跑 persistence，模型贏不過它，就代表這身複雜度是白搭。
+    animation: "show_blindspot_no_baseline"
+    error_code: "report(lstm_mae)  # no baseline"
+    correct_code: "assert lstm_mae < persistence_mae"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      序列預測這一仗，深度學習靠著領先指標加上非線性延遲，漂亮打敗了 naive 基準——牛刀殺牛，真的比較利。
+      Part A 動手做到這裡告一段落。下一集我們拉高視角，
+      快速逛一圈現代深度學習的全景——GNN、Transformer、DeepSurv、TSFM，
+      讓你知道未來遇到什麼題目，該去找哪一把武器。下集見！
+    animation: "show_outro"
+    pause_after: 1.0

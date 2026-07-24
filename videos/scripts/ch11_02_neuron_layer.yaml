@@ -1,0 +1,135 @@
+meta:
+  chapter: "11"
+  concept: "neuron_layer"
+  title: "神經元到底在算什麼：加權加總，再過一道關"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch11_02_neuron_layer"
+  scene_class: "Ch11NeuronLayerScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集我們把神經網路比喻成新手偵探。這一集把比喻翻成硬核一點的技術：
+      一個 neuron 到底在算什麼？答案出乎意料地簡單——就三個動作：
+      把線索加權加總、加一個基準、再過一道叫 activation 的關卡。
+      看懂這一個小小的 neuron，整張網路就都懂了。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "neuron_anatomy"
+    narration: >
+      先看一個 neuron 的解剖圖。左邊每個輸入 x，先各自乘上自己的權重 w——這就是這條線索有多可信；
+      全部加總，再加上一個 bias 當基準線；最後把結果丟進 activation。
+      一個 neuron，永遠就只做這件事：加權加總、加 bias、過 activation。
+    animation: "show_neuron_anatomy"
+    pause_after: 0.5
+
+  - id: "neuron_math"
+    narration: >
+      寫成數學就一行：z 等於每個 x 乘上對應的 w、再全部加起來，最後加上一個 b；
+      輸出 ŷ 等於 ReLU 作用在 z 上。
+      weight 是每條線索的可信度，bias 調整基準線在哪裡，activation 是一道非線性開關。
+      看起來很嚇人，其實就是加權平均，再加一個開關而已。
+    animation: "show_neuron_math"
+    pause_after: 0.5
+
+  - id: "activation_relu"
+    narration: >
+      activation 為什麼重要？看 ReLU 就懂：它像一道閘門，負的訊號通通歸零，正的原樣放行。
+      關鍵在這裡——如果沒有 activation，多層 Linear 疊再多層，數學上還是等價於一條直線、一層線性迴歸。
+      是 activation 這道非線性閘門，才讓神經網路能彎、能抓複雜的交互作用。
+    animation: "show_activation_relu"
+    pause_after: 0.5
+
+  - id: "no_activation_trap"
+    narration: >
+      再強調一次這個常被忽略的重點：拿掉 activation，你堆十層、一百層 Linear，攤開來還是一條直線，白忙一場。
+      每一層 Linear 後面都要記得配一個 activation，
+      網路才真的有深度、有非線性的表達力。
+    animation: "show_no_activation_trap"
+    pause_after: 0.5
+
+  - id: "layer_stack"
+    narration: >
+      把同一個 neuron 排成一排，就是一層 layer；輸入層接隱藏層、再接隱藏層、最後接輸出層，一層疊一層——
+      這就是深度學習的深。層數疊得越多，理論上能表達的函數越複雜；
+      但別忘了，越深也越容易過擬合，這是後面兩集的主角。
+    animation: "show_layer_stack"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      四句話收尾。
+      一，一個 neuron 就是加權加總、加 bias、過 activation。
+      二，weight 是線索可信度，bias 是基準線。
+      三，沒有 activation，疊幾層都等於一條直線。
+      四，neuron 排成排、層疊層，就是深度學習的深。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：一個症狀風險評分器！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_risk_scorer"
+    narration: >
+      用一個 neuron 就能組出最陽春的症狀風險評分器。
+      把發燒、咳嗽、血氧偏低當輸入，各自乘上訓練學到的權重、加總、過 ReLU，就吐出一個風險分數。
+      這其實就是邏輯斯迴歸的神經網路版——一個 neuron，就是一顆會加權評分的小腦袋。
+    animation: "show_extra_risk_scorer"
+    code: |
+      symptoms = [fever, cough, spo2_low]
+      weights  = [1.8, 0.7, 2.1]      # learned trust
+      z = sum(x * w for x, w in zip(symptoms, weights))
+      risk = relu(z + bias)           # one-neuron score
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      神經元三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_missing_activation"
+    narration: >
+      第一個地雷：兩層 Linear 直接疊，中間忘了放 activation。
+      少了那道非線性閘門，兩層攤開還是一層線性，模型再深也學不到交互作用。
+      記得在每個 Linear 之間夾一個 ReLU。
+    animation: "show_blindspot_missing_activation"
+    error_code: "net = nn.Linear(8,4); nn.Linear(4,1)"
+    correct_code: "nn.Sequential(lin, nn.ReLU(), lin2)"
+    pause_after: 0.5
+
+  - id: "blindspot_no_scaling"
+    narration: >
+      第二個地雷：輸入沒標準化就丟進網路。
+      神經網路對輸入尺度超級敏感，年齡幾十、某個欄位幾千，尺度差太多會拖慢甚至搞砸收斂。
+      先用 scaler 把特徵縮放到差不多的範圍，再餵進模型。
+    animation: "show_blindspot_no_scaling"
+    error_code: "model(torch.tensor(X_raw))  # unscaled"
+    correct_code: "X = scaler.transform(X); model(X)"
+    pause_after: 0.5
+
+  - id: "blindspot_extra_activation"
+    narration: >
+      第三個地雷：最後一層畫蛇添足，又套一個 activation。
+      做二元分類時，輸出層應該吐原始的 logit，交給 BCEWithLogitsLoss 內部處理 sigmoid，數值才穩；
+      迴歸輸出更不能用 ReLU，不然負值全被壓成零。
+      最後一層，通常讓它輸出原始值就好。
+    animation: "show_blindspot_extra_activation"
+    error_code: "out = torch.relu(model(x))  # regress"
+    correct_code: "out = model(x)  # keep raw logits"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      現在你知道神經網路每個 neuron 在算什麼了。
+      但它一開始的 weight 全是隨機亂猜，怎麼變成有經驗的判斷？靠的就是訓練迴圈。
+      下一集，我們拆解 loss、梯度下降、反向傳播，看模型怎麼從錯誤裡學乖。下次見！
+    animation: "show_outro"
+    pause_after: 1.0

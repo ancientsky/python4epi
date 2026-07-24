@@ -1,0 +1,142 @@
+meta:
+  chapter: "11"
+  concept: "dl_landscape"
+  title: "現代深度學習全景：GNN、Transformer、DeepSurv、TSFM"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch11_08_dl_landscape"
+  scene_class: "Ch11LandscapeScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      前面兩集你已經摸過 MLP、LSTM、CNN 三種模型。
+      但深度學習的版圖遠遠不只這些。這一集是概念導覽，我們不寫可執行的程式，
+      而是帶你逛一圈現代深度學習的「模型動物園」。
+      重點只有一個：知道未來遇到什麼題目，該去找哪位偵探幫忙。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "model_zoo"
+    narration: >
+      先幫已經認識的三位排排站。
+      MLP 是什麼表格都能接的通才；LSTM 是記性好、能讀懂整段案情脈絡的老偵探；
+      CNN 是專找局部指紋的鑑識官。
+      接下來要介紹的每一種新模型，都有它最擅長的案子類型——看題目長什麼樣子，就知道該找誰。
+    animation: "show_model_zoo"
+    pause_after: 0.5
+
+  - id: "gnn"
+    narration: >
+      第一位新面孔：GNN，圖神經網路，一個「社群網絡分析師」。
+      它厲害的地方是——不只看每個人自己的特質，還看「誰跟誰有連結」。
+      在防疫裡，接觸者追蹤網絡、跨機構轉診網絡、地理鄰接的空間傳播，都天然長成「節點加邊」的圖。
+      工具就找 torch-geometric，也就是 PyG，或是 DGL。
+    animation: "show_gnn"
+    pause_after: 0.5
+
+  - id: "transformer"
+    narration: >
+      第二位：時空 Transformer，或它的流病特化版 TFT，一個「懂得分配注意力的秘書」。
+      在一長串資料裡，它會自動找出「這次預測該多看哪一天、哪個變數」。
+      適合同時看病例數、氣溫、人流、疫苗覆蓋率好幾個領先指標，而且要預測很多天以後。
+      更棒的是它的 attention 權重可以直接印出來，天生自帶可解釋性。工具找 pytorch-forecasting。
+    animation: "show_transformer"
+    pause_after: 0.5
+
+  - id: "deepsurv"
+    narration: >
+      第三位，專門呼應 Ch09 存活分析：DeepSurv，神經網路版本的 Cox 迴歸。
+      Ch09 的 Cox 假設每個因子對 log 風險比的貢獻是線性相加；
+      DeepSurv 把這條線性關係換成一個神經網路，讓風險因子之間的非線性和交互作用有機會被學到。
+      當你懷疑比例風險假設不成立、而且資料量夠大時，就輪到它。工具找 pycox。
+    animation: "show_deepsurv"
+    pause_after: 0.5
+
+  - id: "tsfm"
+    narration: >
+      第四位最科幻：TSFM，時序基礎模型，一個「讀遍全球案件的老手」。
+      它在海量、跨領域的時間序列上預訓練好，拿來預測新序列時，常常不用重新訓練——這叫零樣本。
+      看這段示意程式，載入預訓練權重之後，直接 forecast，中間完全沒有 fit 這一步！
+      這正是決策樹第四格的答案：新病原初期沒資料，就借別人的疫情經驗來預測。工具有 TimesFM、Chronos。
+    animation: "show_tsfm"
+    code: |
+      import timesfm
+
+      tfm = timesfm.TimesFm(context_len=512, horizon_len=14)
+      tfm.load_from_checkpoint("google/timesfm-1.0-200m")
+      # 直接預測，沒有 fit() 這一步（零樣本）
+      forecast, _ = tfm.forecast([cases_history], freq=[0])
+    pause_after: 0.5
+
+  - id: "hybrid"
+    narration: >
+      最後一位，也是最推薦給流行病學家的：混合模型、知識注入。
+      代表作是 PINN，物理知情神經網路。它讓模型同時考兩張考卷：
+      一張問「跟觀測資料對不對得上」，一張問「符不符合 SEIR 微分方程式」，loss 就是這兩項相加。
+      適合資料少、但傳播機制清楚的新興傳染病——你要的是一條符合流病常理的曲線，不是硬 fit 噪音。
+    animation: "show_hybrid"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：怎麼把模型配給對的題目！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_matching"
+    narration: >
+      幫你把整個動物園濃縮成一張配對表。
+      題目長成接觸網絡、有節點有邊，就找 GNN；
+      多變量、長序列、還想看 attention，就找 Transformer 或 TFT；
+      存活資料但懷疑有非線性交互，找 DeepSurv；新病原初期沒資料、但外面資料很多，找 TSFM；
+      資料少但機制明確，就用 PINN 或混合模型。看題目，找專長，這就是全部的訣竅。
+    animation: "show_extra_matching"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      選模型三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_overkill_graph"
+    narration: >
+      第一個地雷：硬把資料塞成圖，用 GNN 卻沒有真正的網絡結構。
+      如果邊是你隨便亂連的、根本沒有預測力，那 GNN 只是徒增複雜度，還不如一個簡單模型。
+      正確做法：先確認關係本身帶有訊號，沒有的話，表格資料乖乖用邏輯斯迴歸。
+    animation: "show_blindspot_overkill_graph"
+    error_code: "GNN(x, random_edges)  # edges = noise"
+    correct_code: "LogisticRegression().fit(X, y)"
+    pause_after: 0.5
+
+  - id: "blindspot_shap_causal"
+    narration: >
+      第二個地雷：把 SHAP 或 attention 權重當成因果。
+      它們告訴你模型有多依賴某條線索來預測，不代表你改變這個特徵，結果就會跟著改變。
+      正確做法：要問因果，去看 Ch06 校正干擾後的 adjusted OR，或 Ch12 的因果推論方法。
+    animation: "show_blindspot_shap_causal"
+    error_code: "cause = top_shap_feature(model)"
+    correct_code: "effect = adjusted_or(fit_adj)  # Ch06"
+    pause_after: 0.5
+
+  - id: "blindspot_no_uncertainty"
+    narration: >
+      第三個地雷：不管多潮的模型，都只丟一個單點預測值出來。
+      政策決策需要的是不確定性——信賴區間、機率分布，不是一個孤零零的數字就下判斷。
+      正確做法：輸出預測區間，讓長官看到「最好與最壞」的範圍再決策。
+    animation: "show_blindspot_no_uncertainty"
+    error_code: "yhat = model.predict(x)  # point only"
+    correct_code: "lo, hi = model.predict_interval(x)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      深度學習全景逛完了——從 GNN、Transformer、DeepSurv，到 TSFM 和 PINN，
+      你已經知道哪種題目該找哪位偵探。但請牢牢記住：模型再準，預測力強不等於因果關係。
+      下一章 Ch12，我們回到最根本的問題：淋浴暴露真的「導致」感染嗎，還是只是統計上的相關？
+      因果推論，下章見！
+    animation: "show_outro"
+    pause_after: 1.0
