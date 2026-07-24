@@ -1,0 +1,159 @@
+meta:
+  chapter: "07"
+  concept: "poisson_lag"
+  title: "Poisson Regression + Lag: Reading Daily Cases with the IRR"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch07_04_poisson_lag"
+  scene_class: "Ch07PoissonLagScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Do you remember the Modified Poisson from Chapter 6?
+      In Chapter 7, Poisson finally walks back to "its original home", count data.
+      Daily case counts are 0, 1, 2, 3, 4, counts by nature, exactly the scenario Poisson is best at.
+      This episode feeds Chapter 7's lag features into a Poisson regression,
+      so we don't just predict, we can read "one more person yesterday, how many percent more today".
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_poisson_here"
+    narration: >
+      Why Poisson here instead of linear regression?
+      Because case counts are always non-negative integers, and linear regression can predict negatives.
+      Poisson's log link guarantees predictions stay non-negative.
+      And Poisson's coefficients have a beautiful reading:
+      exp of beta is the incidence rate ratio (IRR),
+      in plain words "for each one-unit rise in a predictor, how many times the rate changes".
+      This is a different concept from Chapter 6's adjusted RR, but it lives in the same math shell.
+    animation: "show_why_poisson_here"
+    pause_after: 0.5
+
+  - id: "code_demo"
+    narration: >
+      The code is super simple.
+      The formula: cases tilde lag_1 plus lag_2 plus day_idx.
+      In plain words: "use yesterday, the day before, and a time trend to predict today".
+      Pass family Poisson, and fit without HC0 (this isn't Modified Poisson, it's the original recipe).
+      Remember two metrics: MAE for prediction accuracy, AIC for model complexity.
+    animation: "show_code_demo"
+    code: |
+      import statsmodels.api as sm
+      import statsmodels.formula.api as smf
+
+      model = smf.glm(
+          "cases ~ lag_1 + lag_2 + day_idx",
+          data=ts_model,
+          family=sm.families.Poisson(),
+      ).fit()
+      pred = model.predict(ts_model)
+      mae = mean_absolute_error(ts_model["cases"], pred)
+      print(f"Poisson+lag: MAE={mae:.3f}, AIC={model.aic:.2f}")
+    pause_after: 0.5
+
+  - id: "irr_interpretation"
+    narration: >
+      How do you read the IRR?
+      Example: lag_1's IRR equals 1.15.
+      Meaning: "for each additional case yesterday, today's expected rate rises by 15 percent".
+      If the IRR equals 0.95, that's "down 5 percent".
+      exp of beta equals 1 means no effect, greater than 1 means increase, less than 1 means decrease.
+      It's the same exp-of-beta recovery as Chapter 6, just with the vocabulary changed to IRR.
+    animation: "show_irr_interpretation"
+    code: |
+      coef_table = pd.DataFrame({
+          "coef (log)": model.params,
+          "IRR": np.exp(model.params),
+      }).round(3)
+      print(coef_table)
+    pause_after: 0.5
+
+  - id: "vs_rolling"
+    narration: >
+      Where does Poisson plus lag beat the rolling mean?
+      One, it has a confidence interval, you can give a range, not just a point estimate.
+      Two, interpretability, you can say things like "yesterday affects today by 15 percent".
+      Three, it can take other variables, like floor, day of week, or last week's report volume.
+      The cost: you need at least 10 days of data (to avoid too small a sample).
+      The nursing home's 17 days is just enough.
+    animation: "show_vs_rolling"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three things about Poisson plus lag.
+      One, the formula: cases tilde lag_1 plus lag_2 plus day_idx.
+      Two, pass family Poisson, fit without HC0.
+      Three, IRR equals exp of beta, "for each extra unit, how many times the rate changes".
+      The next episode pushes Poisson to its limit: the overdispersion problem.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: hourly ER reports!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_ed"
+    narration: >
+      Emergency-department syndromic surveillance often runs on hourly reports.
+      Using a Poisson regression with lag_1 (the previous hour),
+      lag_24 (same hour yesterday), and lag_168 (same hour last week),
+      it predicts the next hour's fever report count.
+      If the actual value goes above the upper 95 percent CI, the alert fires.
+      Systems like this are built on Poisson plus lag,
+      adding, over a rolling mean, the flexibility of a "probabilistic alert line".
+    animation: "show_extra_ed"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three big Poisson plus lag traps!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: reporting the IRR as an RR.
+      The IRR and Chapter 6's RR share a math shell, but the vocabulary differs in the time-series context.
+      RR compares the risk of two groups; IRR compares "the rate change per one-unit change".
+      Right setting, right word, don't mix them up.
+    animation: "show_blindspot_irr_as_rr"
+    error_code: "print(f'RR = {np.exp(beta):.2f}')"
+    correct_code: "print(f'IRR = {np.exp(beta):.2f}')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: drawing conclusions without checking dispersion.
+      Poisson assumes variance equals mean, but investigation data often has variance greater than mean,
+      that's overdispersion. Use Poisson without checking and the CI comes out too narrow,
+      looking super significant when it's really an illusion.
+      Compute the dispersion ratio before every Poisson fit.
+    animation: "show_blindspot_no_dispersion"
+    error_code: "fit Poisson without checking dispersion"
+    correct_code: "disp = var(y) / mean(y); if disp > 1.5: use NB"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: forgetting Poisson's output is continuous when predicting.
+      predict returns something like 4.7, a decimal, not an integer.
+      Be careful which rounding you use, round, ceil, or floor differ by a whole person.
+      Public-health practice usually uses round, but don't forget to state which one you used.
+    animation: "show_blindspot_round"
+    error_code: "int(pred)  # floor: 4.7 -> 4"
+    correct_code: "round(pred)  # standard: 4.7 -> 5"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Poisson, handled! In the next episode we tackle a scene Poisson can't hold up under,
+      when the variance is far greater than the mean (overdispersion),
+      Negative Binomial is the savior. See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

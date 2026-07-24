@@ -1,0 +1,147 @@
+meta:
+  chapter: "07"
+  concept: "lag_features"
+  title: "Lag Features: Turn a Time Series into Regression Data"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch07_03_lag_features"
+  scene_class: "Ch07LagFeaturesScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      In this episode we unlock the most versatile magic in time series: lag features.
+      Its power is this: it "flattens" a time series into an ordinary regression table.
+      From then on every regression skill you've learned, Poisson, logistic, random forest,
+      can all be used for time-series forecasting.
+      After this episode, even a mysterious model like ARIMA will feel friendly.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "problem_regression_needs_table"
+    narration: >
+      Why flatten it?
+      Because regression wants a table where "every row is an independent sample".
+      But in a time series each row is correlated with its neighbors, not independent.
+      What do we do? Move "yesterday's value" into "today's row" as a column!
+      That way, when predicting today, the model can still see yesterday's information.
+      That's the core logic of lag features.
+    animation: "show_problem"
+    pause_after: 0.5
+
+  - id: "shift_concept"
+    narration: >
+      What shift does: push the whole column down.
+      Original cases column: 5, 8, 12, 15, 10.
+      After shift(1): NaN, 5, 8, 12, 15.
+      Today's row lag_1 is now "yesterday's cases".
+      shift(2) is the day before, shift(7) is the same day last week.
+      One shift stitches time together.
+    animation: "show_shift_concept"
+    pause_after: 0.5
+
+  - id: "build_lag_table"
+    narration: >
+      The full code, done in four lines.
+      One, reset_index turns the date into a column.
+      Two, add day_idx as a time-trend variable.
+      Three, shift(1) builds lag_1, shift(2) builds lag_2.
+      Four, dropna removes the first two rows (because lag_2 makes the first two days NaN).
+      The result: a clean table where each row has four columns: cases, day_idx, lag_1, lag_2.
+    animation: "show_build_lag_table"
+    code: |
+      ts = daily.to_frame("cases").reset_index(names="date")
+      ts["day_idx"] = range(len(ts))
+      ts["lag_1"] = ts["cases"].shift(1)
+      ts["lag_2"] = ts["cases"].shift(2)
+      ts_model = ts.dropna().reset_index(drop=True)
+    pause_after: 0.5
+
+  - id: "how_many_lags"
+    narration: >
+      How many lags to add? There's an art to this.
+      Too few (only lag_1): you can't capture cycles, predictions feel stiff.
+      Too many (lag_1 through lag_14): more parameters than samples, overfitting.
+      Practical experience: for a short 17-day outbreak series, use lag_1 and lag_2.
+      For a long series of 90 days or more, you can add lag_7 (same day last week).
+      An ACF plot can help you choose too, we'll cover that a couple episodes from now.
+    animation: "show_how_many_lags"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Four-step summary.
+      One, reset_index to flatten the date.
+      Two, add day_idx as the trend.
+      Three, shift to build lag_1 and lag_2.
+      Four, dropna to clean the NaNs.
+      From then on a time series becomes a regression table, and the world suddenly opens wide.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: daily reports during SARS 2003!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_sars"
+    narration: >
+      In 2003, during SARS, Taiwan's Heping Hospital was sealed off.
+      Later studies turned the daily report counts into a time series,
+      added lag_1 through lag_7, and ran a Poisson regression,
+      finding lag_1 and lag_7 (same day last week) had the biggest coefficients.
+      In plain words: "for today's report count, yesterday matters most, then the same day last week".
+      That lag_7 finding inspired later surveillance systems to include "day of week" as a variable.
+      A single shift(7) rescued public-health reporting efficiency.
+    animation: "show_extra_sars"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three big lag-feature traps!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: shift(-1) is the future, not the past!
+      A positive shift "pushes down" (yesterday moved into today).
+      A negative shift "pushes up" (tomorrow moved into today), data leakage!
+      Memory aid: positive shift equals past; negative equals future (never do it).
+    animation: "show_blindspot_shift_neg"
+    error_code: "ts['lag_1'] = ts['cases'].shift(-1)"
+    correct_code: "ts['lag_1'] = ts['cases'].shift(1)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: forgetting dropna.
+      Leave the NaNs in and glm throws an error, or statsmodels silently drops them and your sample shrinks.
+      Running dropna right after building lags is standard operating procedure.
+    animation: "show_blindspot_no_dropna"
+    error_code: "ts_model = ts  # still has NaN"
+    correct_code: "ts_model = ts.dropna().reset_index(drop=True)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: too many lags causing collinearity.
+      lag_1 and lag_2 are usually highly correlated (yesterday and the day before are often similar).
+      Push it to lag_10 and collinearity explodes, coefficients get unstable.
+      The fix: check the correlation matrix first, pick one of two highly correlated lags, or use PCR / Ridge.
+      Simple rule: two lags are plenty for outbreak data, don't get greedy.
+    animation: "show_blindspot_too_many_lags"
+    error_code: "for k in range(1, 15): ts[f'lag_{k}'] = ts['cases'].shift(k)"
+    correct_code: "ts['lag_1'] = ts['cases'].shift(1); ts['lag_2'] = ts['cases'].shift(2)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Lags, built! In the next episode we feed this table to a Poisson regression,
+      learn how to read the IRR, and compute "one more person yesterday, how many percent more today".
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

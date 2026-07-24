@@ -1,0 +1,146 @@
+meta:
+  chapter: "07"
+  concept: "ts_basics"
+  title: "Time-Series Basics: asfreq, Autocorrelation, Stationarity"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch07_01_ts_basics"
+  scene_class: "Ch07TsBasicsScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Hi, and welcome to Chapter 7: Time Series and Forecasting.
+      This chapter answers the two questions the boss throws out at every outbreak meeting:
+      "How many more people will fall ill next week, and how many hospital beds do we prepare?"
+      "Will tomorrow be another peak day, should we trigger the alert early?"
+      Before we dive into code, this episode nails down three core time-series ideas:
+      filling dates with asfreq, autocorrelation, and stationarity.
+      They sound fancy, but the logic behind them is wonderfully intuitive.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "what_is_ts"
+    narration: >
+      What is a time series? In one sentence: observations arranged in time order.
+      Daily case counts, hourly ER visits, weekly reports, they're all time series.
+      The biggest difference from ordinary data: neighboring points are highly correlated!
+      Ten people today, probably about the same yesterday, and tomorrow won't be far off.
+      That "neighboring points correlate" trait is the main theme of time-series analysis.
+    animation: "show_what_is_ts"
+    pause_after: 0.5
+
+  - id: "asfreq_gap"
+    narration: >
+      The first trap: missing days.
+      If nobody falls ill on a given day at the nursing home, that whole row vanishes after a groupby.
+      A non-continuous series quietly distorts rolling averages and ARIMA alike.
+      The fix: asfreq D plus fill_value equals zero.
+      Fill in every date, and put a zero on the days with no cases.
+      One line of code that saves every downstream analysis from collapsing.
+    animation: "show_asfreq_gap"
+    code: |
+      # 補齊無發病的日期，確保連續
+      daily = cases.groupby("symptom_onset_date").size()
+      daily = daily.asfreq("D", fill_value=0)
+      daily.name = "cases"
+    pause_after: 0.5
+
+  - id: "autocorrelation"
+    narration: >
+      Second concept: autocorrelation.
+      In plain words: how much today's value looks like yesterday's and the day before's.
+      Infectious disease is easily autocorrelated, because a lot of cases yesterday
+      means the disease is spreading in the community, so today brings even more.
+      The key English word: auto, meaning self, plus correlation.
+      With autocorrelation, lag features are useful; without it, forcing in lags just wastes parameters.
+    animation: "show_autocorrelation"
+    pause_after: 0.5
+
+  - id: "stationarity"
+    narration: >
+      Third concept: stationarity.
+      Stationary means the mean and variance don't drift over time.
+      Picture a river: the water level bobs up and down daily, but the average stays steady, that's stationary.
+      ARIMA requires a stationary series. If the whole thing is trending upward, difference it to make it stationary.
+      Differencing is just "today minus yesterday", turning absolute values into changes.
+      That's exactly what the I in ARIMA stands for: Integrated, the number of differencing steps.
+    animation: "show_stationarity"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Let's pack the three concepts away.
+      One, asfreq fills in the dates to keep things continuous.
+      Two, autocorrelation is the main theme of a time series.
+      Three, stationarity is ARIMA's prerequisite.
+      Get these three, and the other six models in Chapter 7 will feel easy.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: COVID-19 daily confirmed cases!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid"
+    narration: >
+      Taiwan's daily COVID-19 confirmed count is a classic time series.
+      When Omicron broke out in 2022, it climbed from about 300 cases a day in March
+      all the way to 90,000 a day in May.
+      This series has super-strong autocorrelation (today's number is nearly 1.1 times yesterday's),
+      a clear trend (always rising), and a weekly effect (fewer reports on weekends).
+      So forecasting Omicron demands differencing for the trend plus seasonal adjustment for the weekly effect.
+      That's exactly the use case for SARIMA.
+    animation: "show_extra_covid"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three pitfalls beginners most often overlook!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: analyzing before filling in the data.
+      Miss three days with no cases, and your rolling-mean window shifts out of place.
+      asfreq D fill_value zero is the standard opening ritual of a time series, do it every single time.
+    animation: "show_blindspot_no_asfreq"
+    error_code: "daily = cases.groupby('date').size()"
+    correct_code: "daily = cases.groupby('date').size().asfreq('D', fill_value=0)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: sorting the date column as a string.
+      Would 2025-12-28 end up before 2026-01-05 in the sort?
+      If the dates are strings, it's genuinely dangerous.
+      The fix: always use pd.to_datetime to convert to datetime before using it as an index.
+    animation: "show_blindspot_string_date"
+    error_code: "df.sort_values('date')  # date is str"
+    correct_code: "df['date'] = pd.to_datetime(df['date']); df.sort_values('date')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: fitting ARIMA without checking stationarity.
+      You pick the d value at random and the forecast shoots to the moon.
+      Build the habit: before any ARIMA, run an adfuller test once.
+      A p-value below 0.05 means stationary and d can be zero; above 0.05 means you need to difference.
+    animation: "show_blindspot_no_adf"
+    error_code: "ARIMA(series, order=(1, 0, 1)).fit()"
+    correct_code: "adfuller(series); # check p-value first"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Three concepts, unlocked!
+      In the next episode we reach Chapter 7's first real model:
+      the rolling mean baseline, and why shift(1) is a lifesaver.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

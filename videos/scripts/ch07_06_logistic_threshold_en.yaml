@@ -1,0 +1,164 @@
+meta:
+  chapter: "07"
+  concept: "logistic_threshold"
+  title: "Logistic Regression: Will Tomorrow Be a Peak Day?"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch07_06_logistic_threshold"
+  scene_class: "Ch07LogisticThresholdScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Let's think about prediction from a new angle.
+      The boss's second question: "will tomorrow be a peak day, and should we trigger an alert?"
+      This isn't the continuous "how many" problem, it's the yes/no "should we" problem.
+      This episode uses Logistic regression with lag features for a binary prediction,
+      the output being "the probability tomorrow exceeds the alert line".
+      That's what a public-health alert system truly needs.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "continuous_vs_binary"
+    narration: >
+      The mindset difference between continuous and binary.
+      Continuous prediction: "tomorrow there will be 7.3 cases", but the boss can't make sense of 7.3.
+      Binary prediction: "a 72 percent chance tomorrow exceeds the alert line", and the boss can decide immediately.
+      Action-oriented decision-makers want "activate or not", not a precise number.
+      Logistic's output is exactly a probability, and paired with a threshold it instantly becomes yes/no.
+    animation: "show_continuous_vs_binary"
+    pause_after: 0.5
+
+  - id: "define_threshold"
+    narration: >
+      How do you define a "peak day"?
+      A common approach: take the 75th percentile of the past data as the threshold.
+      Meaning: historically 25 percent of days exceed this number,
+      and going over counts as a "busier" day.
+      In practice you can also set the threshold with statistical process-control methods like Shewhart or CUSUM,
+      but quantile 0.75 is a simple, fast starting point.
+    animation: "show_define_threshold"
+    code: |
+      threshold = ts_model["cases"].quantile(0.75)
+      ts_model["high_day"] = (ts_model["cases"] > threshold).astype(int)
+      print(f"門檻（75th percentile）= {threshold:.0f} 人")
+    pause_after: 0.5
+
+  - id: "logit_code"
+    narration: >
+      The Logistic code.
+      The formula: high_day tilde lag_1 plus lag_2.
+      Use just the past day or two to predict "will tomorrow exceed the threshold".
+      smf.logit, and fit with disp equals 0 to silence the output noise.
+      predict returns a probability, and above 0.5 counts as "predicted peak day".
+    animation: "show_logit_code"
+    code: |
+      model = smf.logit(
+          "high_day ~ lag_1 + lag_2",
+          data=ts_model,
+      ).fit(disp=False)
+      prob = model.predict(ts_model)
+      pred_binary = (prob > 0.5).astype(int)
+      acc = (pred_binary == ts_model["high_day"]).mean()
+    pause_after: 0.5
+
+  - id: "evaluate_accuracy"
+    narration: >
+      Binary prediction is evaluated with accuracy, the share of correct predictions.
+      But accuracy has a trap: if peak days are only 25 percent and you predict all zeros, accuracy is already 75 percent!
+      More rigorously you should look at sensitivity, specificity, and the ROC curve.
+      Beginners lay the foundation with accuracy first, then move up to AUC.
+    animation: "show_evaluate_accuracy"
+    pause_after: 0.5
+
+  - id: "action_threshold"
+    narration: >
+      Only triggering the alert when the probability exceeds 0.5 is too conservative!
+      The public-health logic: "better to drill too often than to miss an alert".
+      In practice the threshold is usually lowered to 0.3 or 0.2,
+      a 30 percent chance already activates the response level.
+      The cost: more false alarms.
+      But the essence of a public-health system is "trade high sensitivity for low specificity".
+      This is a value judgment, not a statistical-technique problem.
+    animation: "show_action_threshold"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three things for a Logistic alert.
+      One, set the threshold (starting from quantile 0.75) and build the binary high_day column.
+      Two, logit with lag_1 and lag_2 to predict.
+      Three, the action threshold 0.2 to 0.5 depending on your risk appetite.
+      This is closer to real decision-making than "predicting how many people".
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a pre-flu-season alert system!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_flu_alert"
+    narration: >
+      Every flu season the CDC runs a "threshold alert system".
+      It computes a baseline from the influenza-like-illness report rate for the same week over the past 5 years,
+      and alerts when the current week exceeds baseline by two standard deviations.
+      That's the naive version, no logistic.
+      The modern version uses Logistic regression, adding lag features like temperature,
+      whether schools are in session, and last week's report volume, with a probability threshold of 0.3.
+      The result: in 2018 South Korea's early flu detection came 2 weeks sooner, saving many elderly lives.
+      That's the real-world value of a Logistic threshold model.
+    animation: "show_extra_flu_alert"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      The three big Logistic threshold blind spots!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: looking only at accuracy, not sensitivity.
+      For an alert system, missing a real peak (low sensitivity) is the most serious error.
+      80 percent accuracy sounds decent, but what if you missed every real peak?
+      In a public-health setting always ask first: "what's my missed-alert rate?"
+    animation: "show_blindspot_only_accuracy"
+    error_code: "print(f'accuracy = {acc:.2f}')"
+    correct_code: "print(f'sensitivity = {tp/(tp+fn):.2f}')"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: always using a probability threshold of 0.5.
+      0.5 is the math default, not the public-health default.
+      Public-health alerts are usually lowered to 0.2 to 0.3.
+      Better to drill too often than to miss an alert.
+      The threshold should be discussed alongside risk management and cost-effectiveness, not copy-pasted.
+    animation: "show_blindspot_default_threshold"
+    error_code: "pred = (prob > 0.5).astype(int)"
+    correct_code: "pred = (prob > 0.3).astype(int)  # public health"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: computing the threshold with the quantile of the whole dataset.
+      That's using future data to define the past's "peaks", data leakage.
+      The correct way: use the quantile from the first half of the training set, and apply it to the test set.
+      For time-series thresholds and standardization, always watch out for this trap.
+    animation: "show_blindspot_leaky_threshold"
+    error_code: "threshold = ts_model['cases'].quantile(0.75)"
+    correct_code: "threshold = train_cases.quantile(0.75)  # train only"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Part A, short-term outbreak forecasting, is complete!
+      In the next episode Part B upgrades to long-term surveillance,
+      taking on the most classic weapons of time series: ARIMA and SARIMA.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0

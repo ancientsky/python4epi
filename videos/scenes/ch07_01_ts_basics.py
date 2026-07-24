@@ -20,6 +20,95 @@ class Ch07TsBasicsScene(EpiBaseScene):
 
     total_steps: int = 13
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "時間序列基本概念",
+            "title_sub": "asfreq、自相關、平穩性",
+            "what_is_ts_heading": "時間序列是什麼？",
+            "what_is_ts_points": [
+                "按時間排列的觀測值",
+                "每日病例、每小時急診、每週通報",
+                "相鄰點高度相關（關鍵特徵）",
+                "→ 時間序列分析的主旋律",
+            ],
+            "asfreq_heading": "asfreq('D', fill_value=0)",
+            "autocorr_heading": "自相關 autocorrelation",
+            "autocorr_points": [
+                "今天 ↔ 昨天、前天、上週",
+                "傳染病天生自相關高",
+                "有自相關 → lag features 有用",
+                "無自相關 → 加 lag 是浪費",
+            ],
+            "stationarity_heading": "平穩性 stationarity",
+            "stationarity_points": [
+                "均值、變異不隨時間漂移",
+                "像一條河水位穩定起伏",
+                "ARIMA 的前提條件",
+                "不平穩 → 做差分（I 的意思）",
+            ],
+            "main_summary_heading": "三概念打包",
+            "main_summary_points": [
+                "① asfreq 補齊日期",
+                "② 自相關是主旋律",
+                "③ 平穩性是 ARIMA 前提",
+            ],
+            "extra_banner_title": "額外範例：COVID-19 每日確診",
+            "extra_covid_heading": "2022 Omicron 序列特徵",
+            "extra_covid_points": [
+                "強自相關（幾乎 1.1×）",
+                "明顯趨勢（300→9 萬）",
+                "週效應（週末少通報）",
+                "→ SARIMA 最適合",
+            ],
+            "blindspot_banner_title": "時序基本地雷 3 選",
+            "outro_heading": "下一集：Rolling mean baseline",
+            "outro_sub": "shift(1) 救命符",
+        },
+        "en": {
+            "title_main": "Time-Series Basics",
+            "title_sub": "asfreq, autocorrelation, stationarity",
+            "what_is_ts_heading": "What is a time series?",
+            "what_is_ts_points": [
+                "Observations ordered by time",
+                "Daily cases, hourly ER visits, weekly reports",
+                "Neighboring points are highly correlated (key trait)",
+                "→ the main theme of time-series analysis",
+            ],
+            "asfreq_heading": "asfreq('D', fill_value=0)",
+            "autocorr_heading": "Autocorrelation",
+            "autocorr_points": [
+                "Today ↔ yesterday, day before, last week",
+                "Infectious disease is naturally autocorrelated",
+                "Autocorrelation → lag features are useful",
+                "No autocorrelation → adding lags is wasted",
+            ],
+            "stationarity_heading": "Stationarity",
+            "stationarity_points": [
+                "Mean and variance don't drift over time",
+                "Like a river holding a steady water level",
+                "A prerequisite for ARIMA",
+                "Not stationary → difference it (the I in ARIMA)",
+            ],
+            "main_summary_heading": "Three concepts, packed",
+            "main_summary_points": [
+                "① asfreq fills in the dates",
+                "② autocorrelation is the main theme",
+                "③ stationarity is ARIMA's prerequisite",
+            ],
+            "extra_banner_title": "Extra example: COVID-19 daily confirmed cases",
+            "extra_covid_heading": "2022 Omicron series traits",
+            "extra_covid_points": [
+                "Strong autocorrelation (nearly 1.1×)",
+                "Clear trend (300 → 90k)",
+                "Weekly effect (fewer reports on weekends)",
+                "→ SARIMA fits best",
+            ],
+            "blindspot_banner_title": "3 time-series basics pitfalls",
+            "outro_heading": "Next up: Rolling mean baseline",
+            "outro_sub": "shift(1), your lifesaver",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -41,81 +130,57 @@ class Ch07TsBasicsScene(EpiBaseScene):
         self.play(FadeOut(VGroup(h, panel)), run_time=0.5)
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
-        self.show_title_card("時間序列基本概念", "asfreq、自相關、平穩性", duration=duration)
+        self.show_title_card(self.t("title_main"), self.t("title_sub"), duration=duration)
 
     def show_what_is_ts(self, duration: float = 7.0, **kwargs) -> None:
         self.show_step_indicator(1, self.total_steps)
         self._bullets(
-            "時間序列是什麼？",
-            [
-                "按時間排列的觀測值",
-                "每日病例、每小時急診、每週通報",
-                "相鄰點高度相關（關鍵特徵）",
-                "→ 時間序列分析的主旋律",
-            ],
+            self.t("what_is_ts_heading"),
+            self.t("what_is_ts_points"),
             duration,
         )
 
     def show_asfreq_gap(self, duration: float = 8.0, **kwargs) -> None:
         self.show_step_indicator(2, self.total_steps)
-        self._code_block("asfreq('D', fill_value=0)", kwargs.get("code", ""), duration)
+        self._code_block(self.t("asfreq_heading"), kwargs.get("code", ""), duration)
 
     def show_autocorrelation(self, duration: float = 7.0, **kwargs) -> None:
         self.show_step_indicator(3, self.total_steps)
         self._bullets(
-            "自相關 autocorrelation",
-            [
-                "今天 ↔ 昨天、前天、上週",
-                "傳染病天生自相關高",
-                "有自相關 → lag features 有用",
-                "無自相關 → 加 lag 是浪費",
-            ],
+            self.t("autocorr_heading"),
+            self.t("autocorr_points"),
             duration,
         )
 
     def show_stationarity(self, duration: float = 7.0, **kwargs) -> None:
         self.show_step_indicator(4, self.total_steps)
         self._bullets(
-            "平穩性 stationarity",
-            [
-                "均值、變異不隨時間漂移",
-                "像一條河水位穩定起伏",
-                "ARIMA 的前提條件",
-                "不平穩 → 做差分（I 的意思）",
-            ],
+            self.t("stationarity_heading"),
+            self.t("stationarity_points"),
             duration,
         )
 
     def show_main_summary(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(5, self.total_steps)
         self._bullets(
-            "三概念打包",
-            [
-                "① asfreq 補齊日期",
-                "② 自相關是主旋律",
-                "③ 平穩性是 ARIMA 前提",
-            ],
+            self.t("main_summary_heading"),
+            self.t("main_summary_points"),
             duration,
         )
 
     def show_extra_banner(self, duration: float = 2.0, **kwargs) -> None:
-        self.show_section_banner(ExtraExampleBanner("額外範例：COVID-19 每日確診"), duration=duration)
+        self.show_section_banner(ExtraExampleBanner(self.t("extra_banner_title")), duration=duration)
 
     def show_extra_covid(self, duration: float = 7.0, **kwargs) -> None:
         self.show_step_indicator(6, self.total_steps)
         self._bullets(
-            "2022 Omicron 序列特徵",
-            [
-                "強自相關（幾乎 1.1×）",
-                "明顯趨勢（300→9 萬）",
-                "週效應（週末少通報）",
-                "→ SARIMA 最適合",
-            ],
+            self.t("extra_covid_heading"),
+            self.t("extra_covid_points"),
             duration,
         )
 
     def show_blindspot_banner(self, duration: float = 2.0, **kwargs) -> None:
-        self.show_section_banner(BlindSpotBanner("時序基本地雷 3 選"), duration=duration)
+        self.show_section_banner(BlindSpotBanner(self.t("blindspot_banner_title")), duration=duration)
 
     def show_blindspot_no_asfreq(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(7, self.total_steps)
@@ -146,8 +211,8 @@ class Ch07TsBasicsScene(EpiBaseScene):
 
     def show_outro(self, duration: float = 3.0, **kwargs) -> None:
         self.show_step_indicator(self.total_steps, self.total_steps)
-        h = Text("下一集：Rolling mean baseline", font=FONT_CJK, font_size=28, color=ACCENT_ORANGE).move_to(ORIGIN + UP * 0.5)
-        s = Text("shift(1) 救命符", font=FONT_CJK, font_size=22, color=TEXT_SECONDARY).next_to(h, DOWN, buff=0.4)
+        h = Text(self.t("outro_heading"), font=FONT_CJK, font_size=28, color=ACCENT_ORANGE).move_to(ORIGIN + UP * 0.5)
+        s = Text(self.t("outro_sub"), font=FONT_CJK, font_size=22, color=TEXT_SECONDARY).next_to(h, DOWN, buff=0.4)
         self.play(FadeIn(h), run_time=0.6)
         self.play(FadeIn(s), run_time=0.5)
         self.wait(max(0.1, duration - 1.1))

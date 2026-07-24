@@ -1,0 +1,150 @@
+meta:
+  chapter: "07"
+  concept: "rolling_baseline"
+  title: "Rolling Mean Baseline and the shift(1) Lifesaver"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch07_02_rolling_baseline"
+  scene_class: "Ch07RollingBaselineScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      The first step in forecasting is always the dumbest method, the rolling mean.
+      Why dumb? Because it's just "the average of the past few days", no formula to think about.
+      But this dumb method is the baseline for every complex model.
+      If you spend a week training a SARIMA and its MAE is still worse than a rolling mean,
+      you've done all that work for nothing. This episode explains the rolling mean in full.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "rolling_concept"
+    narration: >
+      The rolling mean idea is dead simple.
+      A window of 7 means "the average of the past 7 days".
+      Step forward one day and the window slides along, like a moving average window on wheels.
+      One line of pandas: daily.rolling(window=7).mean().
+      The output is each day's matching past-7-day average.
+    animation: "show_rolling_concept"
+    pause_after: 0.5
+
+  - id: "why_shift"
+    narration: >
+      But here lies a giant trap: data leakage.
+      The result of rolling(7).mean() on day t includes day t's own value.
+      Predicting today with an average that includes today? That's not forecasting, that's cheating.
+      The fix: add a shift(1) to push the whole column back one step.
+      Now day t's prediction only uses the prior 7 days, not today.
+      That single shift(1) is the lifesaver of time-series forecasting.
+    animation: "show_why_shift"
+    code: |
+      # 錯誤：用到今天預測今天
+      pred = daily.rolling(7).mean()
+
+      # 正確：shift(1) 讓「昨天之前」預測「今天」
+      pred = daily.rolling(7).mean().shift(1)
+    pause_after: 0.5
+
+  - id: "window_selection"
+    narration: >
+      How big should the window be?
+      Too small (window 2) means you jump around with daily noise, unstable predictions.
+      Too big (window 14) means you react too slowly and lag behind turning points.
+      The practical approach: loop over windows 3, 5, 7, 10 and compare MAE.
+      Pick the window with the smallest MAE.
+      On Chapter 7's data, window 3 is usually best.
+    animation: "show_window_selection"
+    code: |
+      for w in [3, 5, 7, 10]:
+          pred = daily.rolling(w).mean().shift(1).dropna()
+          actual = daily.loc[pred.index]
+          mae = mean_absolute_error(actual, pred)
+          print(f"window={w}: MAE={mae:.3f}")
+    pause_after: 0.5
+
+  - id: "pros_cons"
+    narration: >
+      Rolling mean, pros and cons.
+      Three pros: simple, usable from day one, and no assumptions about the data distribution.
+      Three cons: it won't predict turning points, it has no confidence interval,
+      and it can't take other variables like floor or day of week.
+      So it's perfect as a baseline, but for real forecasting you upgrade to Poisson, ARIMA, and friends.
+    animation: "show_pros_cons"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three key lines.
+      One, rolling window mean is just "the average of the past few days".
+      Two, you must add shift(1), otherwise it's a cheating prediction.
+      Three, pick the window with a MAE for loop.
+      This is the baseline starting point for every model in Chapter 7.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: the mistake Google Flu Trends once made!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_gft"
+    narration: >
+      Google Flu Trends was once all the rage.
+      But in 2013 it blew it badly, overshooting the flu peak by a factor of two.
+      One reason: during training, the model swallowed "future data", data leakage.
+      A later Science journal review pointed out:
+      time-series validation must strictly use "past data" to predict the "future",
+      and you can never use future data to "correct" the past.
+      shift(1) is a trivial detail in a stats textbook, but at Google it became a classic lesson.
+    animation: "show_extra_gft"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      The three big rolling-mean blind spots!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: forgetting shift(1).
+      The MAE looks unbelievably pretty, 0.1, 0.2.
+      Then it completely collapses in production, because in practice you don't have "today's data" to use.
+      Build the habit: if you're forecasting, always shift(1).
+    animation: "show_blindspot_no_shift"
+    error_code: "pred = daily.rolling(7).mean()"
+    correct_code: "pred = daily.rolling(7).mean().shift(1)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: reporting MAE without comparing to a baseline.
+      "My model's MAE is 1.8, not bad, right?"
+      What if the rolling mean's MAE is 1.5? Then all your training actually made things worse.
+      Always keep a baseline for comparison before you claim your model improved anything.
+    animation: "show_blindspot_no_baseline"
+    error_code: "print(f'my model MAE = {mae:.2f}')"
+    correct_code: "print(f'my MAE={mae:.2f} vs baseline {mae_roll:.2f}')"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: min_periods=1 letting the window grow in gradually.
+      That makes the first 6 days average fewer and fewer points, so the numbers aren't consistent in meaning.
+      For a pure forecasting evaluation you should dropna the first w days, not force early data together.
+      Use min_periods=1 for visuals (it looks nice); dropna for the MAE evaluation (it stays clean).
+    animation: "show_blindspot_min_periods"
+    error_code: "daily.rolling(7, min_periods=1).mean()  # for MAE"
+    correct_code: "daily.rolling(7).mean().shift(1).dropna()  # for MAE"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      In the next episode we turn a time series into a table that regression models can eat.
+      This trick is called lag features, the bridge that carries ARIMA's logic over to regression.
+      See you in the next one!
+    animation: "show_outro"
+    pause_after: 1.0
