@@ -1,0 +1,139 @@
+meta:
+  chapter: "12"
+  concept: "did"
+  title: "差異中之差異 DiD：介入之後數字降了，真的是你的功勞嗎？"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch12_06_did"
+  scene_class: "Ch12DiDScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集我們算出「能救多少人」，但那全都建立在因果成立的假設上。
+      這一集來玩真的：政策評估的王牌——差異中之差異，Difference-in-Differences，簡稱 DiD。
+      它專治一個超常見的錯覺：介入之後數字下降，就一定是介入的功勞嗎？
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_not_before_after"
+    narration: >
+      先破除一個直覺陷阱：很多人評估政策，只比「介入前」跟「介入後」的病例數。
+      但這樣超級危險——說不定疫情本來就要退燒、季節本來就在變、通報作業剛好調整。
+      只比前後，你根本分不清是政策的功勞，還是時間自己走的。
+    animation: "show_why_not_before_after"
+    pause_after: 0.5
+
+  - id: "did_diagram"
+    narration: >
+      DiD 的招數超聰明：找一個「沒被介入、但本來跟你走一樣趨勢」的對照組。
+      看這張圖，介入組跟對照組介入前平行地走；介入後如果什麼都沒做，
+      介入組本應沿著虛線那條反事實延伸線走。
+      實際走的線跟反事實延伸線之間的落差，才是介入真正的效果。
+    animation: "show_did_diagram"
+    pause_after: 0.5
+
+  - id: "nursing_scenario"
+    narration: >
+      搬回護理之家的故事。1 月 25 日，院方對侵襲率最高、又靠近汙染源的 2 到 3 樓 B 翼實施緊急消毒，
+      其餘樓層翼別當對照組。
+      把病例整理成「組別乘每日」的面板資料，就能跑 DiD 迴歸了。
+    animation: "show_nursing_scenario"
+    pause_after: 0.5
+
+  - id: "did_code"
+    narration: >
+      程式其實只有一行迴歸。用 statsmodels 的 ols，
+      公式寫 daily_cases 對 treated 加 post 加 treated 乘 post。
+      眼睛只要盯緊交互作用項 treated:post——那個係數就是 DiD 估計值本身。
+      記得加 cov_type 等於 HC3，用穩健標準誤，面板資料才不會 p 值過度樂觀。
+    animation: "show_did_code"
+    code: |
+      import statsmodels.formula.api as smf
+
+      model = smf.ols(
+          "daily_cases ~ treated + post + treated:post",
+          data=panel,
+      ).fit(cov_type="HC3")
+      did = model.params["treated:post"]   # DiD 估計值
+    pause_after: 0.5
+
+  - id: "did_table"
+    narration: >
+      DiD 為什麼叫「差異中的差異」？看這張表就懂。
+      介入組從 8 降到 3，變化是減 5；對照組從 5 降到 4，變化是減 1。
+      兩個變化再相減：減 5 減掉減 1，等於減 4——
+      這個「差異的差異」，就扣掉了時間自己走的那一份，剩下的才算介入的淨效果。
+    animation: "show_did_table"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      DiD 三個重點。一，別只比介入前後，一定要有對照組。
+      二，答案藏在交互作用項 treated:post，不是 treated、也不是 post。
+      三，記得用 HC3 穩健標準誤。
+      老實說一句：本書合成資料因為觀察窗只剩三四天、樣本太小，
+      DiD 估出來幾乎是零、完全不顯著——這不代表介入沒用，只代表這次資料撐不起結論。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：口罩令加上對照區！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_mask"
+    narration: >
+      換個場景：假設 A 縣實施室內口罩令，隔壁 B 縣沒有，剛好當對照組。
+      treated 標記是不是 A 縣、post 標記是不是政策上路後，一樣看 treated:post 交互作用項。
+      它幫你把「兩縣本來的差異」跟「這段時間大家都在變」都扣掉，
+      剩下的才是口罩令真正壓下的病例。
+    animation: "show_extra_mask"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      DiD 三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：只算介入前後的差，沒有對照組。
+      少了對照組，你根本沒辦法扣掉「時間自己走」的那一份，季節性一來就把你騙得團團轉。
+      DiD 的靈魂，就是那第二個差。
+    animation: "show_blindspot_no_control"
+    error_code: "effect = after.mean() - before.mean()"
+    correct_code: "effect = did_treated - did_control"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：看錯係數，把 post 或 treated 主效果當成介入效果。
+      treated 只是兩組本來的固定差異，post 只是時間趨勢，
+      真正的答案永遠是交互作用項 treated:post。
+    animation: "show_blindspot_wrong_coef"
+    error_code: "effect = model.params['post']"
+    correct_code: "effect = model.params['treated:post']"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：忘了穩健標準誤，直接 fit 就交卷。
+      面板資料常常變異數不齊一，用預設標準誤會讓 p 值過度樂觀、假的顯著滿天飛。
+      加上 cov_type 等於 HC3，結論才站得住腳。
+    animation: "show_blindspot_no_robust"
+    error_code: "smf.ols(f, data=panel).fit()"
+    correct_code: "smf.ols(f, data=panel).fit(cov_type='HC3')"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      DiD 到手，你已經能誠實回答「介入到底有沒有效」。
+      但這整套武器有一個罩門，一旦它垮了，DiD 算再漂亮都是假的——那就是平行趨勢假設。
+      下一集，我們專門來拆這條 DiD 的命脈！
+    animation: "show_outro"
+    pause_after: 1.0

@@ -1,0 +1,132 @@
+meta:
+  chapter: "12"
+  concept: "parallel_trends"
+  title: "平行趨勢假設：DiD 的命脈，一垮全崩"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch12_07_parallel_trends"
+  scene_class: "Ch12ParallelTrendsScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      上一集的 DiD 很威，但它有一條命脈，斷了整個估計就崩盤——
+      那就是平行趨勢假設，parallel trends assumption。
+      這一集我們專門來守護這條命脈，順便學會 event study 這個進階檢查招式。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_matters"
+    narration: >
+      DiD 的核心邏輯是：對照組介入後的變化，可以拿來代表「介入組如果沒被介入，本來會怎樣」。
+      但這句話要成立，前提是兩組介入前本來就走在平行的軌道上。
+      如果介入前斜率就不一樣，介入後看到的差異，
+      可能只是它們本來就在分道揚鑣，跟介入一點關係都沒有。
+    animation: "show_why_matters"
+    pause_after: 0.5
+
+  - id: "parallel_ok"
+    narration: >
+      先看健康的樣子。介入前，介入組跟對照組雖然高低不同，
+      但上上下下的斜率幾乎一模一樣、平行前進。
+      這時候介入後那條反事實延伸線才可信，兩線分開的落差才敢算成介入效果。
+      介入前平行——打勾，DiD 可以信。
+    animation: "show_parallel_ok"
+    pause_after: 0.5
+
+  - id: "parallel_broken"
+    narration: >
+      再看壞掉的樣子。介入前，介入組就一路往上衝、對照組卻平平的，兩條線根本不平行。
+      這種情況下就算你算出介入後有差，那個差有一大半是「介入組本來就在漲」，
+      硬要說成介入效果，就是自己騙自己。
+      介入前不平行——打叉，DiD 不能信。
+    animation: "show_parallel_broken"
+    pause_after: 0.5
+
+  - id: "how_to_check"
+    narration: >
+      所以有個鐵律：先畫圖，再信模型。
+      跑迴歸之前，一定要把兩組的每日趨勢畫在同一張圖上，只盯著介入日「左邊」看——
+      兩條線是不是大致平行地一起起伏。
+      這一步不用什麼高深統計，一張圖、一雙眼睛就能救你一命。
+    animation: "show_how_to_check"
+    pause_after: 0.5
+
+  - id: "event_study"
+    narration: >
+      如果想更嚴謹，就用 event study 事件研究法。
+      把介入前後切成好幾期，每一期估一個效果係數。
+      理想上，介入前每一期的係數都應該貼著零——因為介入還沒發生，不該有效果。
+      看這張圖，介入前的點都黏在零線附近，介入後才明顯掉下去，這才是平行趨勢站得住腳的鐵證。
+    animation: "show_event_study"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      平行趨勢三個重點。一，DiD 可信的前提，是介入前兩組趨勢平行。
+      二，先畫圖只看介入日左側，一雙眼睛勝過一堆公式。
+      三，想嚴謹就跑 event study，檢查介入前的係數是不是都約等於零。
+      守住這條命脈，你的 DiD 才不是空中樓閣。
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：最低購菸年齡政策！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_mla"
+    narration: >
+      來個經典反例：假設某州把最低購菸年齡從 18 提高到 21，
+      想用 DiD 比自己跟鄰州的青少年吸菸率。
+      問題來了——政策上路前，這一州的吸菸率本來就一路往下掉，跟鄰州趨勢根本不平行。
+      這時候硬跑 DiD，會把「本來就在降」的部分算進政策功勞，嚴重高估效果。平行趨勢一垮，再漂亮的估計都不能信。
+    animation: "show_extra_mla"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      平行趨勢三個新手地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      第一個地雷：跳過畫圖，直接跑 DiD 交卷。
+      沒先看介入前兩組平不平行，你的 DiD 有可能整段都是假象。
+      永遠先畫介入前趨勢圖，再決定要不要信模型。
+    animation: "show_blindspot_skip_plot"
+    error_code: "did = fit_did(panel)  # no pre-check"
+    correct_code: "plot_pretrends(panel); did = fit_did(panel)"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      第二個地雷：只有介入前後兩個時間點，就宣稱平行趨勢成立。
+      兩個點連一條線，怎麼看都「平行」，根本沒得檢驗。
+      要多留幾期介入前的資料，趨勢才驗得出來。
+    animation: "show_blindspot_two_points"
+    error_code: "times = [pre, post]  # only 2 points"
+    correct_code: "times = range(-4, 4)  # many periods"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      第三個地雷：event study 跑出來，介入前的係數明明沒貼著零，卻視而不見照樣信 DiD。
+      介入前係數顯著偏離零，就是平行趨勢站不住腳的警報。
+      一定要先確認介入前係數都約等於零，才敢信後面的估計。
+    animation: "show_blindspot_ignore_precoef"
+    error_code: "trust_did = True"
+    correct_code: "trust_did = (pre_coefs.abs() < eps).all()"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      守住平行趨勢，你的 DiD 才真正站得住腳。
+      到這裡，因果推論這一章的三大工具——歸因風險、差異中之差異、平行趨勢假設——全部到齊了！
+      下一章我們進入可重現研究，讓你每一步分析都禁得起別人重新檢查，敬請期待！
+    animation: "show_outro"
+    pause_after: 1.0
