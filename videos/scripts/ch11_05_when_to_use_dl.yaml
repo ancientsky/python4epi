@@ -1,0 +1,125 @@
+meta:
+  chapter: "11"
+  concept: "when_to_use_dl"
+  title: "該不該用深度學習？決策框架：別殺雞用牛刀"
+  voice: "zh-TW-HsiaoChenNeural"
+  rate: "+8%"
+  pitch: "+8Hz"
+  lang: "zh"
+  scene_module: "scenes.ch11_05_when_to_use_dl"
+  scene_class: "Ch11WhenToUseDLScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      嗨！歡迎來到深度學習的第一堂課。奇怪，別的教室都在教你「怎麼寫神經網路」，
+      我們這一集偏偏要先教你「什麼時候別寫」。
+      因為深度學習是一把很利的牛刀，但你手上的題目，很多時候只是一隻雞。
+      這一集就給你一套決策框架，讓你在磨刀之前先想清楚：這刀，到底要不要磨。
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "temptation"
+    narration: >
+      故事是這樣的。Ch10 你用 sklearn 老實跑過一輪，logistic 和 random forest 打成平手，
+      AUC 都在 0.6 上下。這時候同事湊過來說：「聽說深度學習很強，說不定能抓到我們沒想到的複雜交互？」
+      這是個好問題，但答案絕對不是「上就對了」。先問自己四個問題，再決定要不要磨這把牛刀。
+    animation: "show_temptation"
+    pause_after: 0.5
+
+  - id: "decision_tree"
+    narration: >
+      決策框架，四個問題由上往下依序問，符合哪一格就停在那一格。
+      第一，資料是不是少於一千筆？是的話，傳統統計或簡單 ML 更穩、更好解釋。
+      第二，你要的是「會不會」還是「為什麼」？要機制、要因果，那是 SEIR 這種機制模型的主場。
+      第三，高維、長序列、而且資料量真的夠大？這時候才輪到深度學習。
+      第四，新病原、初期幾乎沒資料？那就借用預訓練的時序基礎模型做零樣本預測。
+    animation: "show_decision_tree"
+    pause_after: 0.5
+
+  - id: "data_spectrum"
+    narration: >
+      把本書的 280 筆 Legionella 資料放到這條資料量光譜上看看。
+      左邊是小資料，用簡單模型就好；中間是數千筆的灰色地帶；右邊要數萬筆以上，才輪到深度學習。
+      280 筆呢？遠遠落在最左邊，連中間地帶都還沒摸到。
+      套進剛剛的決策樹，第一個問題就停下來了——這隻雞，真的不用牛刀。
+    animation: "show_data_spectrum"
+    pause_after: 0.5
+
+  - id: "fit_vs_overkill"
+    narration: >
+      整理成一張「適合 vs 殺雞用牛刀」的對照表。
+      適合用深度學習的訊號：資料量大、高維、非線性、影像或長序列，還有——你已經跑過 baseline，它還是不夠好。
+      該收手的訊號：小樣本、低維表格、每一列互相獨立的橫斷面資料，
+      以及最常見的一種——連 baseline 都還沒跑，就急著上深度學習。
+    animation: "show_fit_vs_overkill"
+    pause_after: 0.5
+
+  - id: "iron_rule"
+    narration: >
+      所以本章的鐵律就一句話：先跑傳統統計或 ML baseline，不夠好、而且符合決策樹的條件，才考慮上深度學習。
+      280 筆、大約 15 維，邏輯斯迴歸的表達力已經足夠；深度學習參數量遠超過樣本數，過擬合風險爆表。
+      值得學 PyTorch 語法嗎？非常值得，未來遇到影像和大樣本就派得上用場。
+      但這次的正式分析，乖乖用 sklearn；牛刀，先收進刀鞘。
+    animation: "show_iron_rule"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      額外範例：一個邏輯斯迴歸打敗神經網路的真實情境！
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_logreg_wins"
+    narration: >
+      某醫院想預測病人會不會 30 天內再入院，手上只有 400 筆病歷、8 個表格特徵。
+      有人手癢硬上一個三層 MLP，結果驗證集 AUC 只有 0.68，反而輸給邏輯斯迴歸的 0.72，
+      而且邏輯斯的係數還能直接跟醫師解釋「哪個因子影響多少」。
+      這就是活生生的殺雞用牛刀——小樣本、低維表格，簡單模型又快又準又好解釋。
+    animation: "show_extra_logreg_wins"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      該用 DL 嗎？三個新手最容易踩的地雷！
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_no_baseline"
+    narration: >
+      第一個地雷：連 baseline 都沒跑，就一頭栽進深度學習。
+      沒有比較基準，你根本不知道這把牛刀到底有沒有比較利。
+      正確做法：先花五分鐘跑一個邏輯斯迴歸，把它當成打不打得贏的底線。
+    animation: "show_blindspot_no_baseline"
+    error_code: "dl = MLP().fit(X, y)  # no baseline"
+    correct_code: "lr = LogisticRegression().fit(X, y)"
+    pause_after: 0.5
+
+  - id: "blindspot_giant_model"
+    narration: >
+      第二個地雷：小資料配一個巨無霸模型。
+      280 筆資料你卻疊了好幾層、幾百個神經元，參數量遠超過樣本數，模型直接把雜訊背起來。
+      正確做法：小資料最多一到兩層小隱藏層，或者——乾脆別用深度學習。
+    animation: "show_blindspot_giant_model"
+    error_code: "net = MLP(hidden=[256, 128])  # n=280"
+    correct_code: "net = MLP(hidden=[16])  # or skip DL"
+    pause_after: 0.5
+
+  - id: "blindspot_train_only"
+    narration: >
+      第三個地雷：只看訓練集的分數就宣布勝利。
+      模型在訓練集上背得滾瓜爛熟、準到不行，那只是死記考古題，換一批新資料就現形。
+      正確做法：永遠用獨立、模型沒看過的測試集來評估，那個分數才算數。
+    animation: "show_blindspot_train_only"
+    error_code: "acc = score(model, X_train, y_train)"
+    correct_code: "auc = score(model, X_test, y_test)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      決策框架學會了！記住鐵律：先跑 baseline、再問四個問題、真的需要才磨牛刀。
+      光講不練不算數——下一集我們捲起袖子，
+      在同一份 280 筆資料上親手跑一次 PyTorch MLP，
+      看看牛刀殺雞，到底殺不殺得出優勢。下集見！
+    animation: "show_outro"
+    pause_after: 1.0
