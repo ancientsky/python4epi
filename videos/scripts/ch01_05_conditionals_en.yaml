@@ -1,0 +1,133 @@
+meta:
+  chapter: "01"
+  concept: "conditionals"
+  title: "Conditionals: Turn Metrics into Action Signals"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch01_05_conditionals"
+  scene_class: "Ch01ConditionalsScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: conditionals
+  # ========================================
+  - id: "intro"
+    narration: >
+      Welcome back! We can already compute the attack rate and the case fatality rate.
+      But once the numbers are in, then what? How do we decide what action to take based on them?
+      That's exactly what conditionals are for: if, elif, else.
+      Think of them as a signpost at a crossroads, sending you down a different road depending on the conditions.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "if_elif_else"
+    narration: >
+      Let's look at this code.
+      If the case fatality rate is above 15%, recommend escalating the response level.
+      If it's between 10 and 15%, keep strengthening surveillance.
+      Otherwise, maintain the routine response.
+      Python checks from top to bottom, runs the first condition that's true, and skips the rest.
+      Our CFR is 15.7%, above 15%, so it prints: fatality rate is high, recommend escalating the response level.
+    animation: "show_if_elif_else"
+    code: |
+      if cfr > 0.15:
+          print("致死率偏高（>15%），建議升級應變層級")
+      elif cfr > 0.10:
+          print("致死率中等（10-15%），持續加強監測")
+      else:
+          print("致死率尚可（<10%），維持常規應變")
+    output: "致死率偏高（>15%），建議升級應變層級"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Quick recap: if tests the first condition,
+      elif tests other conditions - you can have many -
+      and else is the default when none of the above hold.
+      Every condition ends with a colon, and the code inside is indented four spaces.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: vaccination-coverage thresholds
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      New scene! This time we'll use if/elif/else to judge a vaccination rate.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Suppose the target vaccination rate is 85%, but we're only at 72%.
+      If it's at least 85%, we've hit the herd-immunity threshold, so maintain surveillance.
+      If it's at least 70%, we're close to the target, so push harder on catch-up doses.
+      Otherwise, coverage is insufficient, so activate community vaccination stations.
+      72% is at least 70%, so we take the second road: push the catch-up doses.
+      And it's not just the fatality rate - any number that needs a decision can be judged with if!
+    animation: "show_extra_example"
+    code: |
+      vaccination_rate = 0.72
+      if vaccination_rate >= 0.85:
+          print("已達群體免疫門檻，維持監測")
+      elif vaccination_rate >= 0.70:
+          print("接近目標，加強催打")
+      else:
+          print("接種率不足，啟動社區疫苗站")
+    output: "接近目標，加強催打"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      The three classic conditional traps!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: comparing with a single equals sign.
+      if cfr single-equals 0.15, and Python throws a SyntaxError.
+      Why? Because one equals sign means put something in - it assigns a value.
+      To compare, you need two equals signs.
+      One little symbol makes a world of difference!
+    animation: "show_blindspot_single_equal"
+    error_code: "if cfr = 0.15:   # 一個等號\n    print(\"...\")  # SyntaxError!"
+    correct_code: "if cfr == 0.15:  # 兩個等號\n    print(\"...\")  # 比較 ✓"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: forgetting the colon.
+      if cfr greater than 0.15 with no colon after it.
+      Python says SyntaxError, because the colon is like a door - without it, Python can't get into the if room.
+      Remember, if, elif, and else all need a colon after them.
+    animation: "show_blindspot_missing_colon"
+    error_code: "if cfr > 0.15    # 少了冒號\n    print(\"...\")  # SyntaxError!"
+    correct_code: "if cfr > 0.15:   # 有冒號\n    print(\"...\")  # 正確 ✓"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: wrong indentation.
+      The code under if isn't indented, or the indentation is inconsistent.
+      Unlike other languages that use curly braces to mark blocks,
+      Python uses indentation to decide who belongs to the if.
+      No indentation means it's not inside the if.
+      Stick to four spaces every time and you're golden.
+    animation: "show_blindspot_indentation"
+    error_code: "if cfr > 0.15:\nprint(\"高\")  # 沒縮排！\n# IndentationError!"
+    correct_code: "if cfr > 0.15:\n    print(\"高\")  # 縮排 4 格\n    # 正確 ✓"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Conditionals: mastered! In the final lesson we'll learn functions
+      and wrap your calculation logic into a reusable tool.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

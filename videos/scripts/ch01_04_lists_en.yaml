@@ -1,0 +1,137 @@
+meta:
+  chapter: "01"
+  concept: "lists"
+  title: "Lists: Store a Group of Similar Data"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch01_04_lists"
+  scene_class: "Ch01ListsScene"
+
+segments:
+  # ========================================
+  # [A] Main lesson: lists
+  # ========================================
+  - id: "intro"
+    narration: >
+      Welcome back! Last time we used a dictionary to pack one person's data together.
+      But what if you have a whole row of numbers - say, the case counts for six different wings?
+      That's when you reach for a list.
+      Picture a list as a row of lockers, each with its own number.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "create_lists"
+    narration: >
+      We build a list with square brackets.
+      floor_wing_cases holds the case counts for six wings: 15, 10, 24, 25, 20, and 27.
+      floor_wing_names holds the matching wing names.
+      The two lists must line up - the first name pairs with the first number.
+    animation: "show_create_lists"
+    code: |
+      floor_wing_cases = [15, 10, 24, 25, 20, 27]
+      floor_wing_names = ["1A", "1B", "2A", "2B", "3A", "3B"]
+    pause_after: 0.5
+
+  - id: "find_max"
+    narration: >
+      Want to find the hardest-hit wing?
+      The max function finds the largest value, 27.
+      The index method finds where 27 sits in the list - position 5.
+      Then you use that position to look up the matching wing name in names: 3B.
+      Wing 3B has 27 cases, the worst-affected area!
+    animation: "show_find_max"
+    code: |
+      max_cases = max(floor_wing_cases)
+      max_index = floor_wing_cases.index(max_cases)
+      print(f"感染最多的翼區：{floor_wing_names[max_index]}"
+            f"（{max_cases} 人）")
+    output: "感染最多的翼區：3B（27 人）"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      The key points: build a list with square brackets, and read values by index.
+      max and index are your trusty helpers.
+      And remember to keep two lists aligned - one for names, one for numbers.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  # ========================================
+  # [B] Extra public-health example: weekly COVID case counts
+  # ========================================
+  - id: "extra_banner"
+    narration: >
+      New scene! This time let's look at the weekly trend of COVID cases.
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_example"
+    narration: >
+      Suppose we have seven days of case data for one week.
+      The weekly_cases list holds each day's number.
+      Using the same max-plus-index trick, we instantly find the peak day.
+      Thursday, 567 cases, is the week's high point!
+      For tracking a weekly case trend, a list is your best friend.
+    animation: "show_extra_example"
+    code: |
+      weekly_cases = [234, 198, 312, 567, 423, 389, 201]
+      days = ["週一", "週二", "週三", "週四",
+              "週五", "週六", "週日"]
+      peak_day = days[weekly_cases.index(max(weekly_cases))]
+      print(f"本週高峰日：{peak_day}"
+            f"（{max(weekly_cases)} 例）")
+    output: "本週高峰日：週四（567 例）"
+    pause_after: 0.5
+
+  # ========================================
+  # [C] Beginner blind spots
+  # ========================================
+  - id: "blindspot_banner"
+    narration: >
+      Here come the three common list traps!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Pitfall one: indexing starts at 0, not 1.
+      names bracket 1 gives you the second element, 1B, not 1A.
+      Want the first? Write names bracket 0.
+      Imagine the first locker is labeled number 0, not number 1.
+      This is a shared rule across nearly every programming language.
+    animation: "show_blindspot_zero_index"
+    error_code: 'names[1]  # → "1B"\n# 不是第一個！'
+    correct_code: 'names[0]  # → "1A"\n# 這才是第一個'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Pitfall two: an index out of range.
+      The list has 6 elements, so the indices are 0 through 5.
+      Write names bracket 6, and Python says IndexError.
+      It's like reaching for the seventh slot when the shelf only has six - your hand grabs thin air.
+    animation: "show_blindspot_index_error"
+    error_code: 'names[6]  # 只有 0~5\n# IndexError!'
+    correct_code: 'names[5]  # → "3B"\n# 最後一個元素'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Pitfall three: two lists whose lengths don't match.
+      If names has 6 items but cases has only 5, matching them by index goes crooked or errors out.
+      It's like two rows of lockers at different heights - the connecting lines end up skewed.
+      When you build parallel lists, always count to make sure the sizes are the same.
+    animation: "show_blindspot_misaligned"
+    error_code: 'names = ["1A", "1B", "2A",\n         "2B", "3A", "3B"]\ncases = [15, 10, 24, 25, 20]\n# 6 vs 5，少一個！'
+    correct_code: 'names = ["1A", "1B", "2A",\n         "2B", "3A", "3B"]\ncases = [15, 10, 24, 25, 20, 27]\n# 6 vs 6，對齊！'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Lists: done! Next lesson we'll learn conditionals
+      and teach Python to decide on its own whether to escalate the response or keep watching.
+      See you in the next video!
+    animation: "show_outro"
+    pause_after: 1.0

@@ -42,6 +42,29 @@ class Ch01FunctionsScene(EpiBaseScene):
 
     total_steps: int = 3
 
+    TEXT: dict[str, dict[str, str]] = {
+        "zh": {
+            "title_main": "函式",
+            "title_sub": "把重複的計算包起來，一行搞定",
+            "summary_p1": "def 函式名稱(參數): 定義函式",
+            "summary_p2": "docstring 說明用途、參數與回傳值",
+            "summary_p3": "return 把結果傳回給呼叫者",
+            "summary_p4": "一次定義，多次呼叫，減少重複程式碼",
+            "outro_title": "小結",
+            "outro_sub": "函式是流病學家的計算公式模板，寫一次到處用！",
+        },
+        "en": {
+            "title_main": "Functions",
+            "title_sub": "Wrap repeated calculations, done in one line",
+            "summary_p1": "def function_name(params): defines a function",
+            "summary_p2": "docstring explains purpose, parameters, and return value",
+            "summary_p3": "return hands the result back to the caller",
+            "summary_p4": "Define once, call many times, cut duplicate code",
+            "outro_title": "Recap",
+            "outro_sub": "A function is an epidemiologist's formula template — write once, use everywhere!",
+        },
+    }
+
     def construct(self) -> None:
         self.construct_from_segments()
 
@@ -51,8 +74,8 @@ class Ch01FunctionsScene(EpiBaseScene):
 
     def show_title(self, duration: float = 3.0, **kwargs) -> None:
         self.show_title_card(
-            "函式",
-            "把重複的計算包起來，一行搞定",
+            self.t("title_main"),
+            self.t("title_sub"),
             duration=duration,
         )
 
@@ -103,10 +126,10 @@ class Ch01FunctionsScene(EpiBaseScene):
     def show_main_summary(self, duration: float = 4.0, **kwargs) -> None:
         step = self.show_step_indicator(3)
         points = VGroup(
-            Text("def 函式名稱(參數): 定義函式", font=FONT_MONO, font_size=26, color=TEXT_PRIMARY),
-            Text("docstring 說明用途、參數與回傳值", font=FONT_CJK, font_size=28, color=TEXT_PRIMARY),
-            Text("return 把結果傳回給呼叫者", font=FONT_MONO, font_size=26, color=ACCENT_ORANGE),
-            Text("一次定義，多次呼叫，減少重複程式碼", font=FONT_CJK, font_size=28, color=TEXT_PRIMARY),
+            Text(self.t("summary_p1"), font=FONT_MONO, font_size=26, color=TEXT_PRIMARY),
+            Text(self.t("summary_p2"), font=FONT_CJK, font_size=28, color=TEXT_PRIMARY),
+            Text(self.t("summary_p3"), font=FONT_MONO, font_size=26, color=ACCENT_ORANGE),
+            Text(self.t("summary_p4"), font=FONT_CJK, font_size=28, color=TEXT_PRIMARY),
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.4)
         points.move_to([0, 0, 0])
         self.play(FadeIn(points), run_time=0.6)
@@ -206,7 +229,7 @@ class Ch01FunctionsScene(EpiBaseScene):
 
     def show_outro(self, duration: float = 3.0, **kwargs) -> None:
         self.show_title_card(
-            "小結",
-            "函式是流病學家的計算公式模板，寫一次到處用！",
+            self.t("outro_title"),
+            self.t("outro_sub"),
             duration=duration,
         )
