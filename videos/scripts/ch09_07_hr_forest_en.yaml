@@ -1,0 +1,165 @@
+meta:
+  chapter: "09"
+  concept: "hr_forest"
+  title: "The HR Forest Plot: See at a Glance Who's Harmful, Who's Not Significant"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch09_07_hr_forest"
+  scene_class: "Ch09HRForestScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode we had Cox spit out a report card packed with numbers. The trouble is,
+      reading down a whole column of coef and a whole column of CI really makes your eyes
+      pop out. This episode I'll teach you one trick to make it pretty: the HR forest plot,
+      the same numbers drawn a different way, so who's harmful, who's protective, and who's
+      not significant is scanned in a single glance.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_forest"
+    narration: >
+      Why draw a forest plot? Because the human brain reads a picture far faster than a
+      table. The forest plot isn't anything new, it's the graphical version of that
+      print_summary table, the exact same numbers. Each variable becomes a "dot plus a
+      horizontal line": the dot is the HR estimate, the line is its confidence interval.
+      Line them up in a row and who's high, who's low, who's steady, and who's shaky
+      appears instantly.
+    animation: "show_why_forest"
+    pause_after: 0.5
+
+  - id: "forest_anatomy"
+    narration: >
+      Let's look at the anatomy of this plot. The dashed line in the middle is the
+      reference line, marking HR equal to 1, meaning no association. The severe dot lands
+      on the right and its whole bar sits on the right without touching the reference line,
+      so it's harmful and significant, drawn in red. The age bar straddles the reference
+      line, meaning not significant, drawn in grey. And the female dot runs to the left
+      with its whole line on the left, so it's protective and significant, drawn in green.
+    animation: "show_forest_anatomy"
+    pause_after: 0.5
+
+  - id: "forest_code"
+    narration: >
+      How easy is it to draw? One line, cph.plot, and out comes the forest plot. One thing
+      to flag: by default lifelines plots the log of the HR on the x-axis, so that "no
+      association" reference line sits at x equals 0, not 1. Add an axvline at 0 and it
+      reads even more clearly.
+    animation: "show_forest_code"
+    code: |
+      import matplotlib.pyplot as plt
+
+      cph.plot()   # forest plot of every HR + 95% CI
+      plt.axvline(0, color="grey", ls="--")  # log(HR)=0 -> HR=1
+      plt.title("Cox Regression - Hazard Ratio")
+      plt.show()
+    pause_after: 0.5
+
+  - id: "read_forest"
+    narration: >
+      Remember three steps to read a forest plot. Step one, see which side of the reference
+      line the dot falls on, which decides direction: right is harmful, left is protective.
+      Step two, see whether the bar crosses the reference line; if it does, it's not
+      significant and the evidence is too weak. Step three, see how long the bar is; longer
+      means a wider confidence interval and more uncertainty, usually because that variable
+      has too small a sample. Direction, significance, certainty, one two three, scan and
+      done.
+    animation: "show_read_forest"
+    pause_after: 0.5
+
+  - id: "adjusted_meaning"
+    narration: >
+      There's one more point many people overlook: every HR on the forest plot is an
+      adjusted HR. Because Cox estimates all the factors together at once, they mutually
+      adjust each other and subtract out the confounding. So the age effect here is the net
+      effect of age with comorbidity and immune status held equal, not the crude
+      association from looking at age alone, which would be confounded by the others. This
+      is exactly what makes a multivariable model so valuable.
+    animation: "show_adjusted_meaning"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways on the HR forest plot. One, the dot's position gives direction, the
+      bar gives significance, it's that intuitive. Two, the moment the confidence interval
+      crosses 1, which on the log plot is crossing 0, it's not significant. Three, every HR
+      on the plot is an adjusted HR, not a crude association. But whether these pretty HRs
+      can be trusted actually hides a big prerequisite, revealed next episode.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: adjusted HRs in a cancer-screening cohort!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_screening"
+    narration: >
+      Public health loves to ask one question: does screening actually lower the risk of
+      death? Split a population by whether they took part in screening, follow them for
+      several years watching for cancer death, use Cox to adjust away age and sex, then one
+      line of plot draws the forest plot. If the screened group's HR is below 1 and its
+      whole confidence interval sits to the left of 1, that's a solid protective effect.
+    animation: "show_extra_screening"
+    code: |
+      # cancer-screening cohort, adjust age + sex
+      cox.fit(screen, "years", "cancer_death")
+      cox.plot()   # forest of adjusted HRs
+      # screened arm: HR < 1 and CI below 1 -> protective
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for the HR forest plot!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_refline"
+    narration: >
+      Blind spot number one: drawing the reference line at HR equal to 1. The problem is
+      that lifelines' forest-plot x-axis is the log of the HR, and after taking the log, HR
+      equal to 1 lands at 0, not 1. The reference line goes at x equals 0, and putting it
+      in the wrong place flips the significance reading for the whole plot.
+    animation: "show_blindspot_refline"
+    error_code: 'plt.axvline(1)  # x is log(HR)'
+    correct_code: 'plt.axvline(0)  # log(HR)=0 is HR=1'
+    pause_after: 0.5
+
+  - id: "blindspot_ci_crosses_one"
+    narration: >
+      Blind spot number two: seeing only that the dot is to the right of 1 and declaring it
+      a harmful factor. The dot's position tells you only direction; what truly decides
+      significance is the whole confidence interval. As long as the CI still straddles 1,
+      the "no difference" possibility of 1 hasn't been ruled out, so you can't call it
+      significant. Judge it by whether the CI's lower and upper bounds both fall on the
+      same side of 1.
+    animation: "show_blindspot_ci_crosses_one"
+    error_code: 'significant = hr > 1  # ignores CI'
+    correct_code: 'significant = ci_low > 1 or ci_hi < 1'
+    pause_after: 0.5
+
+  - id: "blindspot_ci_width"
+    narration: >
+      Blind spot number three: seeing a thick, long bar and assuming the effect is
+      especially strong. It's the opposite, the bar's length represents uncertainty, and
+      longer means blurrier. The strength of the effect is read from the dot's position,
+      that is the HR; the bar's length only tells you how much you trust that estimate.
+      Don't misread "uncertain" as "impressive."
+    animation: "show_blindspot_ci_width"
+    error_code: 'effect = ci_width  # wider=stronger'
+    correct_code: 'effect = hr  # width is uncertainty'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Now you can draw a forest plot and read it in seconds with the one-two-three steps.
+      But whether these dots and bars can be trusted actually all rides on one key Cox
+      assumption: the proportional-hazards assumption. Next episode we verify that premise,
+      teach you to check it with one line of code, and cover the remedies when it's
+      violated. The last piece of the survival-analysis puzzle, we'll fill it in next time!
+    animation: "show_outro"
+    pause_after: 1.0

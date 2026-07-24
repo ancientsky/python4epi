@@ -1,0 +1,145 @@
+meta:
+  chapter: "09"
+  concept: "censoring"
+  title: "Censored Data: the Stopwatch Is Still Running When Observation Ends"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch09_02_censoring"
+  scene_class: "Ch09CensoringScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Last episode we used the phone battery to build up the intuition behind survival
+      analysis. This time we'll nail down the single most important, and most easily
+      botched, move of all: censored data. Master it and you'll never throw away half your
+      data for nothing, and in epidemiology that is a priceless lesson.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "stopwatch"
+    narration: >
+      First, imagine you put a stopwatch next to each patient. Press start on the day of
+      onset, press stop on the day of death, and the days that tick by in between are the
+      "survival time." Start to stop, it's that simple. In our case, start is the onset
+      date and stop is the death date.
+    animation: "show_stopwatch"
+    pause_after: 0.5
+
+  - id: "event_flag"
+    narration: >
+      But not everyone gets a stop press. So we use a flag called event to record the
+      outcome: write 1 for death, meaning the event we were waiting for really happened;
+      write 0 for still alive, meaning the event hasn't happened yet and we only saw half
+      the story. That 1 and 0 is the very heart of the whole analysis, so whatever you
+      do, don't flip it.
+    animation: "show_event_flag"
+    pause_after: 0.5
+
+  - id: "censor_timeline"
+    narration: >
+      Let's look at three patients. The first one dies after onset, the stopwatch got its
+      stop press, so event is 1. The second is still alive when our observation ends,
+      event is 0, and this is called right-censoring. The third is lost to follow-up
+      partway through, and all we know is that they lasted at least until that day, which
+      is censoring too. The key point: censoring is not a missing value, it carries the
+      precious information that this person lasted at least this long.
+    animation: "show_censor_timeline"
+    pause_after: 0.5
+
+  - id: "build_code"
+    narration: >
+      In code it's just three lines. Line one builds the event flag: outcome equals dead
+      becomes 1. Line two computes the time: end date minus onset date, in days. Line
+      three feeds it to the KaplanMeierFitter, time goes first and event goes into
+      event_observed. lifelines takes care of the censored people automatically, so
+      there's nothing extra for you to do.
+    animation: "show_build_code"
+    code: |
+      cases["event"] = (cases["outcome"] == "dead").astype(int)
+      cases["time"] = (end_date - onset_date).dt.days
+      kmf.fit(cases["time"], event_observed=cases["event"])
+    pause_after: 0.5
+
+  - id: "why_not_drop"
+    narration: >
+      A lot of beginners think: the people still alive never had the event, so wouldn't it
+      be cleaner to just drop them? Absolutely not! Dropping the censored rows means
+      deleting all the toughest, longest-lasting folks, which badly underestimates
+      survival time and breeds selection bias on top of it. Remember this line: censored
+      data is an asset, not trash.
+    animation: "show_why_not_drop"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways and we're done. One, survival data needs three things: the time,
+      the event flag, and who is censored. Two, event is 1 for death and 0 for alive,
+      don't flip it. Three, always keep the censored rows and always feed them in, not a
+      single one gets dropped.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a TB treatment cohort study!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tb"
+    narration: >
+      TB means taking drugs for six months or more, so the follow-up is long, and people
+      moving, switching hospitals, and losing contact is an everyday thing. These lost
+      patients aren't treatment failures, we simply never saw their ending, and they are
+      the most classic case of censoring. Same logic: set event to 0, compute the time as
+      usual, and not a single patient goes to waste.
+    animation: "show_extra_tb"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for censored data!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: setting the survivors' time straight to zero. That's like
+      saying their story ended on the very day of onset, which crushes survival time down
+      to rock bottom. The right answer is to fill in the actual number of days observed,
+      that is, the observation end date minus the onset date.
+    animation: "show_blindspot_zero_time"
+    error_code: 'cases.loc[alive, "time"] = 0'
+    correct_code: 'cases.loc[alive, "time"] = obs_days'
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: flipping the event flag, coding death as 0 and alive as 1.
+      Flip it and the meaning of the entire KM curve turns upside down. Remember: event
+      equals 1 is always "the event we're waiting for," which here is death.
+    animation: "show_blindspot_flag_reversed"
+    error_code: 'event = (outcome != "dead").astype(int)'
+    correct_code: 'event = (outcome == "dead").astype(int)'
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: just deleting the censored people's rows entirely. This is
+      the most expensive mistake, you wipe out the longest-lasting folks and your
+      conclusions all skew. The right way is to feed both the time and the event into fit,
+      and the censored rows get included naturally.
+    animation: "show_blindspot_drop_censored"
+    error_code: "cases = cases[cases.event == 1]"
+    correct_code: "kmf.fit(cases.time, cases.event)"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      The stopwatch, the event flag, and censoring, you've got a firm grip on all three!
+      Next episode we officially turn the data into a Kaplan-Meier curve and learn how to
+      actually read that line that walks down a staircase. See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

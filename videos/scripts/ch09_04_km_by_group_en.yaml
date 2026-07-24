@@ -1,0 +1,135 @@
+meta:
+  chapter: "09"
+  concept: "km_by_group"
+  title: "KM Curves by Group: Who Has the Worse Prognosis?"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch09_04_km_by_group"
+  scene_class: "Ch09KMByGroupScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      One line for everyone can only tell you how the whole crowd falls off, but it can't
+      answer the question the attending physician most wants answered: who actually has
+      the worse prognosis? This episode we split patients by clinical severity and stack
+      several lines on one plot so you can see who's ahead at a glance.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_group"
+    narration: >
+      Why bother grouping? Because that overall line averages mild, moderate, and severe
+      all mashed together, with the mild cases pulling the curve up and the severe cases
+      dragging it down, and mashed together like that you can't see a thing. Split them
+      apart, draw one line each, and the difference finally shows itself.
+    animation: "show_why_group"
+    pause_after: 0.5
+
+  - id: "group_code"
+    narration: >
+      The code is intuitive: use a for loop over the three severities, fitting and
+      plotting each group. There's one super-critical detail here, plt.show() must go
+      outside the loop, so the three lines stack on one figure; put it inside and you get
+      three separate figures with one line each, which you simply can't compare.
+    animation: "show_group_code"
+    code: |
+      for sev in ["mild", "moderate", "severe"]:
+          g = cases[cases["clinical_severity"] == sev]
+          kmf.fit(g["time"], event_observed=g["event"], label=sev)
+          kmf.plot_survival_function()
+      plt.show()   # after the loop: all lines on one figure
+    pause_after: 0.5
+
+  - id: "two_curves"
+    narration: >
+      It comes out looking roughly like this. The mild line is high and flat, it holds up;
+      the severe line drops early and steep, it falls fast. The gap that opens up between
+      the two lines is the effect of severity, and the wider the gap, the stronger this
+      factor's influence.
+    animation: "show_two_curves"
+    pause_after: 0.5
+
+  - id: "three_views"
+    narration: >
+      Look at grouped curves from three angles. First, when they start to separate, the
+      earlier they split the more immediate the effect. Second, how big the vertical gap
+      is, the wider the gap the stronger the effect. Third, whether they cross; if they
+      cross, be on alert that the proportional-hazards assumption may be violated, and
+      read the Cox regression results with care.
+    animation: "show_three_views"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways, packaged up. One, grouping is how you see who does worse, which one
+      overall line can't do. Two, plt.show() goes outside the loop so the three lines
+      stack on one figure. Three, watch the split point, the gap, and whether they cross,
+      and crossing is the PH-assumption alarm.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: the COVID ICU, split by age group!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_covid_age"
+    narration: >
+      Severe COVID patients go into intensive care, and we split them by age into young,
+      middle-aged, and elderly, drawing one survival curve each. Usually the elderly line
+      drops early and fast while the young line stays high and flat, and once the three
+      lines stack up, the power of age is crystal clear. Same for loop, same figure, just
+      swap the grouping variable.
+    animation: "show_extra_covid_age"
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for grouped KM curves!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_1"
+    narration: >
+      Blind spot number one: putting plt.show() inside the loop. Then each group pops up
+      its own figure as it finishes, and you end up with three separate one-line plots
+      that you can't compare against each other. show has to go after the loop is done.
+    animation: "show_blindspot_show_in_loop"
+    error_code: "for g in grps: kmf.fit(g); plt.show()"
+    correct_code: "for g in grps: kmf.fit(g)  # show after"
+    pause_after: 0.5
+
+  - id: "blindspot_2"
+    narration: >
+      Blind spot number two: just eyeballing it, "this line is lower so it's worse," and
+      jumping to a conclusion. The eye deceives you, a gap that looks wide open can still
+      be pure luck. To settle it, you must add a log-rank test to verify, and that is
+      exactly the topic of the next episode.
+    animation: "show_blindspot_eyeball_only"
+    error_code: "severe_worse = curve_below  # by eye"
+    correct_code: "logrank_test(a.t, b.t, a.e, b.e)"
+    pause_after: 0.5
+
+  - id: "blindspot_3"
+    narration: >
+      Blind spot number three: one group has hardly any people, but you force a line onto
+      it anyway to compare. If a group is down to just a few people after splitting, that
+      curve jitters all over the place and is wildly unstable. The rule of thumb is at
+      least a dozen or so people and a few events per group before the comparison is
+      reliable.
+    animation: "show_blindspot_tiny_group"
+    error_code: "kmf.fit(tiny_group.t, tiny_group.e)"
+    correct_code: "# need n>=10 per group first"
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Grouping, stacking the plot, and the three angles, you've got them all down! But is
+      the gap your eyes see real or just luck? Next episode we bring in the log-rank test
+      and let a single p-value settle it once and for all. See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

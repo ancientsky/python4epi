@@ -1,0 +1,167 @@
+meta:
+  chapter: "09"
+  concept: "cox_regression"
+  title: "Cox Proportional-Hazards Regression: Quantify Every Factor's Hazard Ratio at Once"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch09_06_cox_regression"
+  scene_class: "Ch09CoxRegressionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Earlier, log-rank answered whether two groups differ, but the attending physician
+      immediately follows up: "So how much do they differ? Age, comorbidity, immune
+      status, which one is most lethal?" This episode we bring out the heavy artillery of
+      survival analysis, Cox proportional-hazards regression, which can stuff several
+      factors into one model at once and compute a clean hazard ratio for each.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "why_cox"
+    narration: >
+      Why do we still need Cox after log-rank? Simple. log-rank only nods or shakes its
+      head: different, not different, that's it. Cox is powerful because it gives you a
+      number, how many times the risk, and it can hold age, sex, and a whole pile of
+      comorbidities together, all mutually adjusted, so each factor spits out its own
+      adjusted HR. That's the upgrade.
+    animation: "show_why_cox"
+    pause_after: 0.5
+
+  - id: "hr_meaning"
+    narration: >
+      First, get a good look at the star: the hazard ratio, HR, is really just a ruler. HR
+      equal to 1 means this factor has nothing to do with how fast death comes; HR above 1
+      runs to the right, a harmful factor that makes people die faster; HR below 1 leans
+      to the left, a protective factor where death comes slower. Remember: HR is a rate
+      ratio, not a probability and not an odds ratio, so don't mix them up.
+    animation: "show_hr_meaning"
+    pause_after: 0.5
+
+  - id: "cox_code"
+    narration: >
+      The code is actually short. First convert the text column sex into a 0-and-1
+      is_male, because Cox only eats numbers and leaving text in there throws an error
+      outright. Then open a CoxPHFitter, tell it which column is time and which is the
+      event, and it treats every remaining column as a factor to estimate an HR for. The
+      last line, print_summary, prints out the report card.
+    animation: "show_cox_code"
+    code: |
+      from lifelines import CoxPHFitter
+
+      cox_df["is_male"] = (cox_df["sex"] == "M").astype(int)
+      cox_df = cox_df.drop(columns=["sex"])
+
+      cph = CoxPHFitter()
+      cph.fit(cox_df, "time_to_event", "event")
+      cph.print_summary()   # exp(coef)=HR, p, 95% CI
+    pause_after: 0.5
+
+  - id: "read_summary"
+    narration: >
+      print_summary prints out a big, scary-looking table, but really you only need to
+      watch two columns. The first, exp(coef), is the HR itself, the most important thing
+      on the whole page, giving you direction and strength in one look. Then check its
+      p-value and 95 percent confidence interval, and the moment the CI crosses 1, it's
+      not significant. At the very bottom of the table there's also a Concordance, the
+      c-index or concordance index, which measures the model's ranking ability: 0.5 is
+      random guessing, and the closer to 1 the better it ranks.
+    animation: "show_read_summary"
+    pause_after: 0.5
+
+  - id: "epv_warning"
+    narration: >
+      Here I have to sound the alarm: sample size. Epidemiology has an old mantra, at least
+      10 events for every variable. Our demo data has only 19 deaths yet crams in 7
+      variables, and 19 divided by 7 is about 2.7, nowhere near 10. Force it in and the
+      result is overfitting, with the HR and CI jittering so much you can't trust them. So
+      for a real study, remember to screen your factors first and keep only the one or two
+      most critical ones.
+    animation: "show_epv_warning"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways on Cox regression to carry off. One, read exp(coef), the HR, which
+      tells you direction and strength. Two, check whether its confidence interval crosses
+      1, which decides significance. Three, use the c-index for ranking power and EPV to
+      check whether your sample can support this many variables. Once you can read this
+      table, next episode we turn it into an at-a-glance forest plot.
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: a new setting, mortality risk factors in a dialysis cohort!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_dialysis"
+    narration: >
+      Nephrology does this kind of analysis all the time: follow a group of dialysis
+      patients for several months and see who goes first. Same CoxPHFitter, swap time for
+      months and the event for death, throw in factors like age, diabetes, and albumin,
+      and you get an HR for each. Low albumin usually has an HR above 1, a harmful factor;
+      and print a c-index while you're at it to see how accurate the model is.
+    animation: "show_extra_dialysis"
+    code: |
+      # dialysis cohort: follow months, event = death
+      cox = CoxPHFitter()
+      cox.fit(dialysis, "months", "death")
+      cox.print_summary()   # HR for age / DM / albumin
+      print("c-index =", cox.concordance_index_)
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for Cox regression, here we go!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_coef_vs_hr"
+    narration: >
+      Blind spot number one: reading the coef column as the HR. coef is the log of the HR,
+      usually a small number and possibly negative, and using it straight to say "so many
+      times the risk" is flat wrong. For the HR, look for the exp(coef) column, that's the
+      real thing brought back to scale.
+    animation: "show_blindspot_coef_vs_hr"
+    error_code: 'hr = cph.summary["coef"]  # this is logHR'
+    correct_code: 'hr = cph.summary["exp(coef)"]  # real HR'
+    pause_after: 0.5
+
+  - id: "blindspot_epv"
+    narration: >
+      Blind spot number two: only a dozen or so events, yet you cram in seven or eight
+      variables. The model hands you a pile of good-looking HRs, but they're all illusions
+      squeezed out by overfitting. Remember the mantra of at least 10 events per variable;
+      when events are few, screen first and keep only the one or two most critical factors
+      before you fit.
+    animation: "show_blindspot_epv"
+    error_code: 'cph.fit(df7, "time", "event")  # 19 events'
+    correct_code: 'cph.fit(df[top2], "time", "event")'
+    pause_after: 0.5
+
+  - id: "blindspot_id_column"
+    narration: >
+      Blind spot number three: cox_df is smuggling in an identifier column like case_id.
+      Cox won't judge for you which columns are meaningful, it treats case_id as just
+      another factor and estimates away, and it can even make the model error out or
+      produce a nonsensical HR. Before the model, drop irrelevant columns like IDs and
+      names entirely, and go in nice and clean.
+    animation: "show_blindspot_id_column"
+    error_code: 'cph.fit(cox_df, "time", "event")  # has id'
+    correct_code: 'cox_df = cox_df.drop(columns="case_id")'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      This episode you learned to use Cox to quantify several factors' hazard ratios at
+      once, and to read that report card column by column. But reading a table column after
+      column really makes your eyes glaze over. Next episode, with one line of code, we
+      turn each HR and its confidence interval into a "dot plus horizontal line" forest
+      plot, so who's harmful, who's protective, and who's not significant is clear at a
+      glance. See you next time!
+    animation: "show_outro"
+    pause_after: 1.0

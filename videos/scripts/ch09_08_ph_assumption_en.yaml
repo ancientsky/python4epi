@@ -1,0 +1,166 @@
+meta:
+  chapter: "09"
+  concept: "ph_assumption"
+  title: "The Proportional-Hazards Assumption: Those Pretty HRs Must Pass This Gate First"
+  voice: "en-US-AriaNeural"
+  rate: "+6%"
+  pitch: "+0Hz"
+  lang: "en"
+  scene_module: "scenes.ch09_08_ph_assumption"
+  scene_class: "Ch09PHAssumptionScene"
+
+segments:
+  - id: "intro"
+    narration: >
+      Over the last two episodes we computed a pile of HRs and even drew them into a pretty
+      forest plot. But here's the brutal truth: those HRs all rest on one assumption nobody
+      spelled out. This episode is where we lay that assumption out and check it, the
+      proportional-hazards assumption. Pass this gate and your earlier analysis truly
+      counts; fail it, and those HRs get a big question mark.
+    animation: "show_title"
+    pause_after: 0.5
+
+  - id: "what_is_ph"
+    narration: >
+      Cox regression has a key premise called the proportional-hazards assumption, PH. It
+      assumes the hazard ratio between two groups stays constant throughout the entire
+      follow-up, in plain words: that HR does not change over time from start to finish.
+      When it holds, the exposed group is a steady 1.5 times faster than the control the
+      whole way; when it's violated, they're blazingly fast early on and then catch up or
+      even slow down later.
+    animation: "show_what_is_ph"
+    pause_after: 0.5
+
+  - id: "ph_curves"
+    narration: >
+      There's a very handy visual check: draw each group as a log-minus-log S curve. If PH
+      holds, these two curves run roughly parallel, keeping the same gap forever, like the
+      one on the left. If PH is violated, the two curves cross, meaning who's faster and
+      who's slower flipped partway through, like the one on the right. See a crossing and
+      an alarm should go off in your head: this factor's effect changes over time.
+    animation: "show_ph_curves"
+    pause_after: 0.5
+
+  - id: "check_code"
+    narration: >
+      Don't want to rely on your eyes alone? lifelines wraps the test into one line,
+      check_assumptions. Note that you feed in the same cox_df you trained on, and it runs
+      a Schoenfeld residual test on each variable, prints out each one's p-value, and even
+      helpfully lists any violating variables with advice attached. Set show_plots to False
+      and it just prints the text conclusion.
+    animation: "show_check_code"
+    code: |
+      # same cox_df used to fit the model
+      cph.check_assumptions(cox_df, show_plots=False)
+      # prints a Schoenfeld test p-value per variable
+      # lists any variable that violates PH + advice
+    pause_after: 0.5
+
+  - id: "read_check"
+    narration: >
+      How do you read the output? If it prints No violation detected, congratulations,
+      everything passes and you can use your earlier HRs with confidence. If some variable's
+      p-value is below 0.05, it violates PH and its HR changes over time. And if you drew
+      the plots, Schoenfeld residuals showing a clear trend against time is also a sign of
+      violation. One reminder: when events are few, the test's power is low to begin with,
+      so detecting no violation doesn't guarantee everything's fine, always read it
+      alongside grouped KM curves.
+    animation: "show_read_check"
+    pause_after: 0.5
+
+  - id: "remedies"
+    narration: >
+      If it really is violated, don't panic, there are four remedies to save you. Remedy
+      one, take the violating variable and stratify it with strata, letting its baseline
+      hazard vary freely. Remedy two, switch to a time-varying coefficient, letting that
+      variable's effect change over time. Remedy three, add an "interaction of that
+      variable with time" term to the model. Remedy four, just split into time periods and
+      run them separately, or switch entirely to an AFT model that sidesteps PH.
+    animation: "show_remedies"
+    pause_after: 0.5
+
+  - id: "main_summary"
+    narration: >
+      Three takeaways to close out the PH assumption. One, Cox's HRs bet everything on the
+      premise that the ratio doesn't change with time, and that's their lifeblood. Two, to
+      verify, use check_assumptions plus whether the grouped KM curves cross, and read the
+      two together for real peace of mind. Three, once it's violated, remedy it by
+      stratifying, using a time-varying coefficient, or adding an interaction with time.
+      Congratulations, the full survival-analysis toolkit is officially yours!
+    animation: "show_main_summary"
+    pause_after: 0.5
+
+  - id: "extra_banner"
+    narration: >
+      Extra example: long-term TB follow-up, where risk shifts over time!
+    animation: "show_extra_banner"
+    pause_after: 0.3
+
+  - id: "extra_tb"
+    narration: >
+      TB is the perfect demo of a PH violation. Once you follow patients it's for years,
+      and the structure of death risk early on versus late is simply not the same, the
+      early treatment phase is dangerous and the later phase is another story entirely.
+      Throw the data into check_assumptions and a violation very likely pops up. At that
+      point, take a variable like HIV status that flips over time and stratify it with
+      strata, and only then does the model stand on solid ground.
+    animation: "show_extra_tb"
+    code: |
+      # TB followed for years: risk changes over time
+      cph.fit(tb, "years", "death")
+      cph.check_assumptions(tb, show_plots=False)  # PH violated
+      cph.fit(tb, "years", "death", strata=["hiv_status"])
+    pause_after: 0.5
+
+  - id: "blindspot_banner"
+    narration: >
+      Three beginner blind spots for the PH assumption!
+    animation: "show_blindspot_banner"
+    pause_after: 0.3
+
+  - id: "blindspot_never_check"
+    narration: >
+      Blind spot number one: fitting Cox and taking the HRs straight to your report without
+      ever checking PH. That's like building a house without inspecting the foundation, and
+      however pretty the HRs look they may be fake. Build the habit: right after you fit,
+      run check_assumptions, verify the foundation before talking about the numbers on top,
+      and consider it basic survival-analysis courtesy.
+    animation: "show_blindspot_never_check"
+    error_code: 'cph.fit(df, "t", "e")  # HR trusted'
+    correct_code: 'cph.check_assumptions(df)  # check!'
+    pause_after: 0.5
+
+  - id: "blindspot_wrong_df"
+    narration: >
+      Blind spot number two: feeding check_assumptions the wrong data, tossing in a
+      different DataFrame. This test has to use the very same data you trained the model on,
+      or the residuals won't line up. Feed it a different one, or one whose columns don't
+      match, and the test result is simply meaningless. Remember: whatever you fit on, you
+      check on.
+    animation: "show_blindspot_wrong_df"
+    error_code: 'cph.check_assumptions(new_df)'
+    correct_code: 'cph.check_assumptions(train_df)  # same'
+    pause_after: 0.5
+
+  - id: "blindspot_report_constant_hr"
+    narration: >
+      Blind spot number three: the test plainly says a variable is violated, yet you still
+      report a single fixed HR for it. Violation means its effect changes over time, and
+      forcing out one constant HR is basically lying. The right way is to remedy it first,
+      stratify it with strata or switch to a time-varying coefficient, and only then
+      interpret the model, because that's the only HR that's honest.
+    animation: "show_blindspot_report_constant_hr"
+    error_code: 'hr = cph.summary["exp(coef)"]  # violated'
+    correct_code: 'cph.fit(df, "t", "e", strata=["sev"])'
+    pause_after: 0.5
+
+  - id: "outro"
+    narration: >
+      Describe, infer, regress, diagnose, the four steps of survival analysis, and from
+      episode one all the way to here, you've walked through every one of them! Now you can
+      not only draw KM curves, run log-rank, compute Cox HRs, and draw forest plots, but
+      also verify the PH assumption and step in to remedy it when it's violated. This whole
+      arsenal is yours. Act Four, survival analysis, is officially complete, and we'll meet
+      again in the next chapter!
+    animation: "show_outro"
+    pause_after: 1.0
