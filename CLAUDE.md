@@ -6,129 +6,29 @@ This file provides guidance for AI assistants working with the **Epi With Python
 
 An educational Jupyter Book site teaching infectious disease epidemiology with Python, from fundamentals through ML/DL. All 18 chapters share a single unifying story: **a Legionella outbreak investigation at a nursing home** (280 residents, 121 infected, 19 deaths). Content is written primarily in Traditional Chinese (繁體中文) with English technical terms. The project emphasizes beginner-friendly, copy-paste runnable code.
 
-## Repository Layout
-
-```
-book/                          # Jupyter Book source
-  _config.yml                  # Book configuration (language: zh, execute: force)
-  _toc.yml                     # Active table of contents (swapped for student/instructor)
-  _toc_student.yml             # Student TOC (no solutions)
-  _toc_instructor.yml          # Instructor TOC (includes solutions)
-  intro.md                     # Landing page
-  chapters/                    # 18 markdown chapter files (00–17)
-  chapters/notebooks/          # Embedded lesson notebooks (executed during build)
-  chapters/exercises/          # Exercise notebooks (14 chapters)
-  chapters/solutions/          # Solution notebooks (14 chapters, instructor only)
-notebooks/                     # Standalone runnable lesson notebooks
-  exercises/                   # Exercise + solution notebooks (mirrors book/chapters/)
-  run_sitrep.py                # Example SitRep script
-src/epi_learning/              # Reusable Python helper package
-  __init__.py                  # Exports: attack_rate, case_fatality_rate, risk_ratio,
-                               #   standardize_line_list, summarize_by_group
-  metrics.py                   # Epi metrics (attack_rate, case_fatality_rate, risk_ratio)
-  cleaning.py                  # Line-list data cleaning (standardize_line_list)
-  tabulate.py                  # Group summary tabulation (summarize_by_group)
-  viz.py                       # Visualization helpers (plot_epi_curve)
-data/synthetic/                # Teaching datasets
-  legionella_outbreak.csv      # Primary dataset: 280 residents × 32 columns
-  line_list.csv                # Legacy sample line-list (used by choropleth demo)
-  admin_areas.geojson          # Administrative boundaries for choropleth lessons
-  location_population.csv      # Population data by location (choropleth demo)
-videos/                        # Tutorial video generation (Manim + TTS + FFMPEG)
-  build.py                     # CLI entry point
-  src/                         # Pipeline modules (tts, base_scene, pipeline, code_mobjects)
-  scripts/                     # YAML narration scripts (one per video)
-  scenes/                      # Manim Scene classes (one per video)
-  output/                      # Generated artifacts (gitignored)
-tests/                         # pytest test suite
-  test_metrics.py              # Unit tests for epi metrics
-  test_cleaning.py             # Unit tests for data cleaning
-  test_tabulate.py             # Unit tests for summarization
-  test_notebook_smoke.py       # Smoke tests validating notebook JSON structure
-.github/workflows/
-  ci.yml                       # PR/push: pytest + jupyter-book build
-  pages.yml                    # Deploy to GitHub Pages on push to main
-```
-
-## Chapter Structure (18 chapters)
-
-```
-【第一幕：接獲通報】
-  Ch00  導讀與工具
-  Ch01  Python 基礎
-  Ch01b Python 開發者工具箱（銜接 Ch01→Ch02）
-  Ch02  資料處理與視覺化
-
-【第二幕：描述性分析】
-  Ch03  描述性統計與 2×2 表
-  Ch04  群聚調查工作流
-
-【第三幕：深入分析】
-  Ch05  分層分析與干擾因子 [新增]
-  Ch06  邏輯斯迴歸 [新增]
-  Ch07  時間序列與預測
-  Ch08  空間流病
-
-【第四幕：進階建模】
-  Ch09  存活分析 [新增]
-  Ch10  機器學習
-  Ch11  深度學習
-  Ch12  因果推論
-
-【第五幕：收尾與實戰】
-  Ch13  可重現研究
-  Ch14  實戰案例
-  Ch15  附錄
-  Ch16  作業區（14 組練習）
-  Ch17  解答區（14 組解答，講師版）
-```
-
 ## Primary Dataset
 
 **`data/synthetic/legionella_outbreak.csv`** — 280 rows × 32 columns
 
 A synthetic dataset simulating a Legionella outbreak at a nursing home (松柏護理之家).
 
-Key columns:
-- Demographics: `case_id`, `age`, `sex`, `floor`, `wing`, `room`
-- Comorbidities: `comorbidity_chf`, `comorbidity_dm`, `comorbidity_cancer`, `comorbidity_copd`, `immunosuppressed`
-- Exposures: `shower_use`, `hydrotherapy_use`, `smoking_history`, `functional_status`
-- Clinical: `clinical_severity` (not_ill/asymptomatic/mild/moderate/severe), `outcome` (survived/dead)
-- Dates: `symptom_onset_date`, `hospitalization_date`, `death_date`, `notification_date`
-- Classification: `lab_confirmed`, `case_classification`, `hospitalized`, `icu_admission`
-
 Key facts: 121 infected (43.2%), 19 deaths (CFR 15.7%), onset range 2026-01-12 to 2026-01-28.
 
 ## Tech Stack
 
-- **Python 3.12** (pinned in `.python-version` and `pyproject.toml`)
-- **uv** as the sole package manager (no pip, conda, or poetry); notebooks also run on **Google Colab**
-- **Node.js 24+** required by Jupyter Book for building the site
-- **Jupyter Book** for static site generation from markdown and notebooks
-- **pytest** for testing, **ruff** for linting, **mypy** for type checking
+See `pyproject.toml` / `.python-version` for versions and dependencies. Constraints
+that the manifest does *not* state:
+
+- **uv** is the sole package manager — never pip, conda, or poetry. Notebooks must also
+  run on **Google Colab**.
+- **Node.js 24+** is required by Jupyter Book to build the site.
 
 ## Essential Commands
 
 All commands use `uv run` to execute within the managed virtual environment.
 
 ```bash
-# Setup
-uv sync                              # Install/lock all dependencies into .venv
-
-# Tests (minimum bar for PRs)
-uv run pytest                        # Run unit + smoke tests
-uv run pytest -v                     # Verbose output
-uv run pytest --cov                  # With coverage report
-
-# Linting and type checking
-uv run ruff check .                  # Lint check
-uv run ruff format --check .         # Format check
-uv run mypy src/                     # Type check the package
-
-# Notebooks
-uv run jupyter lab                   # Start interactive notebook server
-
-# Build the book
+# Build the book — the TOC file is swapped before each edition build
 cp book/_toc_student.yml book/_toc.yml
 uv run jupyter-book build book/      # Student edition
 
@@ -139,21 +39,9 @@ uv run jupyter-book build book/      # Instructor edition (includes solutions)
 uv run python notebooks/run_sitrep.py
 ```
 
-## CI Pipeline
-
-The CI workflow (`.github/workflows/ci.yml`) runs on every PR and push to `main`:
-1. Installs uv, Node.js 24, Python 3.12
-2. Runs `uv sync --group dev`
-3. Runs `uv run pytest`
-4. Builds the Jupyter Book
-
-A separate Pages workflow deploys the built book to GitHub Pages on push to `main`.
-
 ## Coding Conventions
 
 ### Python style
-- 4-space indentation, line length 100 characters (ruff)
-- Target version: Python 3.12
 - Use `from __future__ import annotations` at the top of all source files
 - Full type annotations on function signatures
 - Small, focused functions with clear variable names
@@ -284,157 +172,12 @@ The site is built in two languages, deployed to four URLs by `.github/workflows/
 - **Per-build language flag**: each `_config.yml` sets `sphinx.config.html_context.epi_lang` (`zh` / `en`) and `sphinx.config.language` (`zh_Hant` / `en`). `book/_templates/layout.html` branches on `epi_lang` for OG/Twitter locale + copy and emits `hreflang` alternates. (jupyter-book does not reliably propagate the top-level `language:` key, hence setting it under `sphinx.config` too.)
 - The five-act narrative is encoded as MyST `parts:` in every TOC (captions translated per language).
 
-## Tutorial Video Generation (Manim + TTS + FFMPEG)
+## Tutorial Video & SVG Diagram Production
 
-The project includes a video generation system under `videos/` that produces animated tutorial videos for each chapter's core concepts. All chapters use the same visual style and pipeline.
-
-### Video Pipeline
-```
-YAML 腳本 (narration + animation 指令)
-    → edge-tts 產生語音 (.mp3, zh-TW-HsiaoChenNeural 女聲)
-    → ffprobe 量測各段音檔時長
-    → Manim 依時長渲染動畫 (silent .mp4)
-    → ffmpeg 合併 video + audio → 最終 .mp4
-```
-
-### Video Directory Structure
-```
-videos/
-├── build.py                  # CLI: uv run python videos/build.py --all
-├── README.md                 # Usage documentation
-├── src/                      # Shared pipeline modules
-│   ├── tts.py                # edge-tts wrapper (zh-TW voice)
-│   ├── base_scene.py         # Manim base scene (colors, layout, helpers)
-│   ├── pipeline.py           # TTS → Manim → ffmpeg orchestrator
-│   └── code_mobjects.py      # Custom Manim mobjects (CodePanel, VariableBox, etc.)
-├── scripts/                  # YAML narration scripts (one per video)
-├── scenes/                   # Manim Scene classes (one per video)
-└── output/                   # Generated files (gitignored)
-```
-
-### Visual Style (Anthropic Skilljar Academy-inspired)
-
-All videos MUST follow this visual style consistently across all chapters:
-
-**Color palette (light theme, warm white background):**
-```python
-BG_WARM = "#FAF8F3"          # Page background (warm white)
-BG_CARD = "#FFFFFF"          # Card background (white)
-BG_CARD_ALT = "#F5F3EE"     # Alternate card background (light warm gray)
-ACCENT_ORANGE = "#D97757"    # Primary accent (Anthropic Orange)
-ACCENT_BLUE = "#6A9BCC"      # Secondary accent (Anthropic Blue)
-ACCENT_GREEN = "#788C5D"     # Success/correct (Anthropic Green)
-TEXT_PRIMARY = "#1A1A1A"     # Primary text (dark)
-TEXT_SECONDARY = "#6B6B6B"   # Secondary text (gray)
-ERROR_RED = "#D94452"        # Error highlight
-CODE_BG = "#2B2B2B"          # Code block background (dark for contrast)
-CODE_TEXT = "#F8F8F2"        # Code text (light)
-BORDER_LIGHT = "#E8E5DF"    # Card border (light gray)
-```
-
-> **Note:** This color palette is shared across **all visual assets**: Manim videos, SVG diagrams (in `book/chapters/images/`), and the `youtube-lite` CSS (`book/_static/`). When creating or modifying any visual element, always use these colors for consistency.
-
-### SVG Diagram Style Guide
-
-All hand-crafted SVG diagrams in `book/chapters/images/` follow these conventions:
-
-- **Background**: `fill="#FAF8F3"` warm white with `rx="12"` rounded corners
-- **Cards**: `fill="#FFFFFF"` white with `stroke="#E8E5DF"` border and drop shadow filter
-- **Color usage**: `#D97757` for emphasis/disease/exposed, `#6A9BCC` for secondary/healthy/unexposed, `#788C5D` for success/CI/merge, `#D94452` for errors/warnings
-- **Text**: `#1A1A1A` primary, `#6B6B6B` secondary, system-ui font stack
-- **Structure**: `<svg xmlns="..." viewBox="0 0 W H" font-family="system-ui, -apple-system, sans-serif">`
-- **Shadow filter**: `<filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.1"/></filter>`
-- **Labels**: Chinese prose for descriptions, English for technical terms (e.g., "暴露 Exposed")
-- **Figure directive**: `{figure} images/filename.svg` with `:name:`, `:alt:`, `:width: 100%`
-- **Self-contained**: no external fonts or assets; rely on system fonts
-
-**Design principles:**
-- Light warm-white background (#FAF8F3), clean and minimal
-- Motion graphics style — no talking head, all animated
-- White rounded-corner cards with subtle border (#E8E5DF)
-- Code blocks use dark background (#2B2B2B) for contrast against the light page
-- Serif font for titles (elegant feel), Noto Sans CJK TC for Chinese body text, monospace for code
-- Step-by-step reveal: code appears line by line (typewriter animation) synced with narration
-- Key terms highlighted with ACCENT_ORANGE (#D97757)
-- Smooth FadeIn/FadeOut transitions between segments
-- Step indicator (n/N) in top-right corner
-
-**Layout template:**
-```
-┌──────────────────────────────────────┐
-│  [Title]                   [Step n/N] │
-│                                      │
-│  ┌─────────────┐  ┌──────────────┐  │
-│  │  Code Panel  │  │  Visuals     │  │
-│  │  (dark bg)   │  │  (boxes,     │  │
-│  │             │  │   diagrams)  │  │
-│  └─────────────┘  └──────────────┘  │
-│                                      │
-│  ┌──────────────────────────────┐   │
-│  │  Output Panel                │   │
-│  └──────────────────────────────┘   │
-└──────────────────────────────────────┘
-```
-
-### Three-Part Video Structure
-
-Every video follows this structure:
-1. **Main lesson** — core concept taught with the Legionella outbreak scenario
-2. **Extra epi example** — same concept applied to a different outbreak/public health scenario (e.g., COVID-19, dengue, enterovirus, TB, vaccination coverage)
-3. **Beginner blind spots** — 3 common mistakes per video, shown with "wrong vs correct" side-by-side animation (red error panel vs green correct panel)
-
-### Teaching Style
-- Narration in Traditional Chinese (zh-TW-HsiaoChenNeural female voice)
-- Humorous, relaxed, friend-like teaching tone — use metaphors, everyday examples, occasional jokes
-- Speaking rate slightly slower than default (`-10%`) for beginners
-- Code and variable names remain in English; only prose narration is in Chinese
-
-### Video Build Commands
-```bash
-uv sync --group video                    # Install video dependencies (not in CI)
-uv run python videos/build.py --all      # Build all videos
-uv run python videos/build.py --concept variables  # Build one video
-uv run manim render -ql videos/scenes/ch01_01_variables.py Ch01VariablesScene  # Preview
-```
-
-### Video Dependencies
-Managed in a separate `video` dependency group in `pyproject.toml`:
-- `manim>=0.18.0` (animation engine)
-- `edge-tts>=6.1.0` (Microsoft Edge TTS, free zh-TW voices)
-- `pyyaml>=6.0` (YAML script parsing)
-- System deps: `ffmpeg`, `fonts-noto-cjk`
-
-Video generation is **NOT** part of CI — it requires network access (TTS) and heavy system dependencies.
-
-### YAML Script Format
-Each video is driven by a YAML file pairing narration text with animation methods:
-```yaml
-meta:
-  chapter: "01"
-  concept: "variables"
-  title: "數值變數——先把數字存起來"
-  voice: "zh-TW-HsiaoChenNeural"
-  scene_module: "scenes.ch01_01_variables"
-  scene_class: "Ch01VariablesScene"
-
-segments:
-  - id: "intro"
-    narration: "嗨！歡迎來到 Python 流行病學教室！..."
-    animation: "show_title"
-    pause_after: 0.5
-  - id: "first_variable"
-    narration: "看看這行程式碼..."
-    animation: "show_variable_assignment"
-    code: "total_residents = 280"
-```
-
-### Custom Manim Mobjects
-- `VariableBox` — labeled box + value display (the "box" metaphor)
-- `CodePanel` — syntax-highlighted code block with line highlighting
-- `OutputPanel` — terminal-style output display
-- `ArrowAssignment` — animated arrow showing value → box assignment
-- `ErrorVsCorrect` — side-by-side NG/OK comparison panel using `Text(font=FONT_MONO)` on dark background (**NOT** `Code()` — see known issue below)
-- `BlindSpotBanner` / `ExtraExampleBanner` — section title banners
+Visual style, colour palette, SVG conventions, the Manim + TTS + FFMPEG pipeline, YAML
+script format, and Manim v0.20.1 breaking changes now live in the `video-production`
+skill (`.claude/skills/video-production/SKILL.md`) — it loads automatically when you work
+on videos or diagrams.
 
 ## CJK Font & Visualization Known Issues
 
@@ -456,63 +199,3 @@ segments:
 ### CI font setup
 - `.github/workflows/ci.yml` installs `fonts-noto-cjk` and clears `~/.cache/matplotlib`
 - Font installation MUST happen before `uv sync` and before any matplotlib import to ensure the font cache is built correctly
-
-## Manim v0.20.1 API Compatibility (Known Breaking Changes)
-
-The video system uses Manim Community **v0.20.1**, which introduced major breaking changes from older tutorials/docs. When writing or modifying `Code()` calls, use the v0.20.1 API:
-
-### Code class (`manim.mobject.text.code_mobject.Code`)
-
-**Constructor signature (v0.20.1):**
-```python
-Code(
-    code_file: StrPath | None = None,
-    code_string: str | None = None,
-    language: str | None = None,
-    formatter_style: str = "vim",        # was: style
-    tab_width: int = 4,
-    add_line_numbers: bool = True,
-    line_numbers_from: int = 1,
-    background: Literal["rectangle", "window"] = "rectangle",
-    background_config: dict | None = None,   # was: background_stroke_color, etc.
-    paragraph_config: dict | None = None,    # was: font_size
-)
-```
-
-**Migration table:**
-
-| Old API (pre-0.20) | v0.20.1 API |
-|---------------------|-------------|
-| `Code(code="...")` | `Code(code_string="...")` |
-| `font_size=20` | `paragraph_config={"font_size": 20}` |
-| `style="monokai"` | `formatter_style="monokai"` |
-| `background_stroke_color=X` | `background_config={"stroke_color": X}` |
-| `background_stroke_width=1` | `background_config={"stroke_width": 1}` |
-| `code_mob.background_mobject` | `code_mob.background` |
-
-### Code() class `_gen_chars()` crash (IndexError: list index out of range)
-
-Manim v0.20.1's `Code()` class has a bug in `Text._gen_chars()` where the rendered glyph count from Pango/Cairo doesn't match the expected character count. This crashes with `IndexError: list index out of range` for:
-- Strings with `???`, `...`, or other special character sequences
-- Multi-line code strings with CJK characters
-- Non-Python code strings (shell commands like `git add .`, `pip install`, `command not found: uv`)
-- Even `language="text"` doesn't fix it — the bug is in the text rendering layer, not Pygments
-
-**Critical rule:** `ErrorVsCorrect` uses `Text(font=FONT_MONO)` instead of `Code()`. Do **NOT** reintroduce `Code()` in `ErrorVsCorrect.__init__()`. If you need syntax-highlighted code in comparison panels, use `CodePanel` (which handles the `Code()` lifecycle differently).
-
-**For blindspot `error_code`/`correct_code` strings:** keep them single-line, ASCII-only, valid-looking (no `???`, no CJK characters, no multi-line `\n`). The Chinese explanation is delivered through TTS narration, not the code text.
-
-### System dependencies for CI
-
-Manim's `manimpango` requires C libraries to build from source. The `videos.yml` workflow installs:
-```
-ffmpeg fonts-noto-cjk libpango1.0-dev libcairo2-dev pkg-config
-```
-
-### PYTHONPATH for Manim subprocess
-
-Manim runs scene files in a subprocess. The pipeline (`videos/src/pipeline.py`) automatically adds the project root to `PYTHONPATH` so `from videos.src.base_scene import EpiBaseScene` resolves correctly.
-
-### GitHub Actions Node.js 24 migration
-
-All workflows use `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` because `actions/checkout@v4`, `astral-sh/setup-uv@v5`, etc. internally run on Node.js 20 which is deprecated. The env var forces them to use Node.js 24.
