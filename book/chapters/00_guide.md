@@ -41,15 +41,16 @@
 
 ## 為什麼不用 Excel / Google Sheets 就好？
 
+<!-- video: ch00_01_why_python -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：為什麼用 Python</div>
   <div class="youtube-lite" data-id="eMWQ-IqYjvM">
     <img src="https://img.youtube.com/vi/eMWQ-IqYjvM/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：Excel 的痛點 → Python 的優勢 → Python vs R → COVID-19 大規模疫調範例 → 盲點：數學、先學完、版本問題</p>
 </div>
 ```
+<!-- /video -->
 
 你可能會想：「我用 Excel 用了好幾年，為什麼還要學新工具？」
 
@@ -113,15 +114,16 @@ Python 在這些**自動化、排程、系統串接**的工作上比 R 強很多
 
 ## 為什麼用 `uv` 而不是傳統的 `pip`？
 
+<!-- video: ch00_02_uv_setup -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：uv 與環境設定</div>
   <div class="youtube-lite" data-id="AnPBQW8Vqq0">
     <img src="https://img.youtube.com/vi/AnPBQW8Vqq0/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：為什麼不能直接 pip install → 虛擬環境比喻 → 安裝 uv → uv 三步驟工作流 → 盲點：command not found、uv run、pyproject.toml</p>
 </div>
 ```
+<!-- /video -->
 
 如果你 Google「Python 安裝套件」，幾乎所有教學都會教你用 `pip install`。那為什麼我們要用 `uv` 這個比較新的工具？
 
@@ -391,15 +393,16 @@ uv add seaborn
 
 ## 手把手教學：從零開始的流行病學 Hello World
 
+<!-- video: ch00_04_hello_epi -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：第一支程式 Hello Epi</div>
   <div class="youtube-lite" data-id="VcxttnJxwG4">
     <img src="https://img.youtube.com/vi/VcxttnJxwG4/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：git clone + uv sync → 開 Jupyter → 跑分析 → 看到侵襲率 43.2% → 盲點：clone 失敗、sync 很慢、紅色 Warning</p>
 </div>
 ```
+<!-- /video -->
 
 光看指令可能還是抽象。讓我們從一台什麼都沒裝的電腦開始，一步一步做出流行病學家的第一個「Hello World」——不是印出一行字，而是**讀取一份護理之家群聚事件的 line list、計算侵襲率與致死率、畫一張流行曲線**。
 
@@ -700,15 +703,16 @@ Markdown cell 讓你的 notebook 不只是一堆程式碼，而是一份**圖文
 
 ## 為什麼建議用 Jupyter Lab？不能直接寫 `.py` 嗎？
 
+<!-- video: ch00_03_jupyter -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Jupyter Lab 入門</div>
   <div class="youtube-lite" data-id="iELUPwdPk7M">
     <img src="https://img.youtube.com/vi/iELUPwdPk7M/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：什麼是 Jupyter → 啟動方法 → Cell 概念 → Shift+Enter → 盲點：執行順序、Restart Kernel、[*] 卡住</p>
 </div>
 ```
+<!-- /video -->
 
 你可能會想：「程式不就是一個文字檔嗎？為什麼要用 Jupyter Lab 這個看起來像網頁的東西？」
 
@@ -948,15 +952,16 @@ schtasks /create /tn "Weekly_Report" /tr "cmd /c cd /d C:\path\to\your\project &
 
 ## Git 是什麼？為什麼流行病學家需要它？
 
+<!-- video: ch00_05_git_basics -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Git 版本控制</div>
   <div class="youtube-lite" data-id="SdtrxhPbRqk">
     <img src="https://img.youtube.com/vi/SdtrxhPbRqk/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：版本混亂的惡夢 → Git 時光機比喻 → 三區域 → git add/commit/push → 盲點：git add .、commit message、push 被拒</p>
 </div>
 ```
+<!-- /video -->
 
 ### 先說一個場景
 
@@ -1441,15 +1446,16 @@ uv run jupyter lab
 
 ## 這份教材的學習路線圖
 
+<!-- video: ch00_06_roadmap -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：課程地圖與學習策略</div>
   <div class="youtube-lite" data-id="H3fMhNhj3u4">
     <img src="https://img.youtube.com/vi/H3fMhNhj3u4/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">影片內容：五幕劇結構 → 必修路線 Ch00-04 → 選修路線 Ch05-14 → 不同角色學習路線 → 盲點：從哪開始、可否跳章、Colab vs 本機</p>
 </div>
 ```
+<!-- /video -->
 
 你不需要一口氣學完所有章節。本教材以**松柏護理之家退伍軍人症群聚事件**為貫穿全書的主軸，每一章帶你更深入一層分析，就像真實疫調一樣逐步揭開真相。
 

@@ -71,15 +71,8 @@ We recommend watching the video before reading the code — it makes learning mu
 A **variable** is a labeled box; `=` means "put the value on the right into the box on the left." The four basic data types: `int` (integer), `float` (floating-point number), `str` (string), `bool` (boolean).
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Numeric variables</div>
-  <div class="youtube-lite" data-id="RhqNl3LzjmU">
-    <img src="https://img.youtube.com/vi/RhqNl3LzjmU/hqdefault.jpg" loading="lazy" alt="Tutorial video on numeric variables">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: variables are labeled boxes → COVID-19 campus cluster example → blind spots: string vs. number, letter case, direction of the equals sign</p>
-</div>
-```
+<!-- video: ch01_01_variables -->
+<!-- /video -->
 
 ```python
 # Basic data from the Legionnaires' disease outbreak at Songbai Nursing Home
@@ -94,15 +87,8 @@ deaths = 19                 # Number of deaths
 
 ### 2) Computing metrics — use division to get rates
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Computing metrics</div>
-  <div class="youtube-lite" data-id="ZqqZmuVjoN0">
-    <img src="https://img.youtube.com/vi/ZqqZmuVjoN0/hqdefault.jpg" loading="lazy" alt="Tutorial video on computing metrics">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: division for attack rate/CFR + f-string formatting → dengue prevalence example → blind spots: division types, forgetting the f, breaking down :.2%</p>
-</div>
-```
+<!-- video: ch01_02_arithmetic -->
+<!-- /video -->
 
 ```python
 # Attack rate = number infected / total residents
@@ -128,15 +114,8 @@ print(f"Hospitalization rate: {hosp_rate:.2%}")
 A **list** is a row of pigeonholes; you retrieve values by index (starting from 0). A **dict** is a set of labeled storage boxes; you retrieve values by key. We'll cover dictionaries first, then lists.
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Dictionaries</div>
-  <div class="youtube-lite" data-id="4iriq9cNG-A">
-    <img src="https://img.youtube.com/vi/4iriq9cNG-A/hqdefault.jpg" loading="lazy" alt="Tutorial video on dictionaries">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: a dict is a labeled storage box → enterovirus case-notification example → blind spots: quotes on keys, () vs [], KeyError</p>
-</div>
-```
+<!-- video: ch01_03_dictionaries -->
+<!-- /video -->
 
 ```python
 # Use a dictionary to organize the outbreak summary
@@ -156,15 +135,8 @@ print(f"{outbreak['facility']} CFR: {cfr:.2%}")
 
 ### 4) Lists — store a group of same-kind data
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Lists</div>
-  <div class="youtube-lite" data-id="bwRKaJYyGCU">
-    <img src="https://img.youtube.com/vi/bwRKaJYyGCU/hqdefault.jpg" loading="lazy" alt="Tutorial video on lists">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: a list is a row of pigeonholes → weekly COVID case-trend example → blind spots: indexing starts at 0, IndexError, misaligned lists</p>
-</div>
-```
+<!-- video: ch01_04_lists -->
+<!-- /video -->
 
 ```python
 # Number of infections in each floor-wing
@@ -187,15 +159,8 @@ print(f"Wing with the most infections: {floor_wing_names[max_index]} ({max_cases
 A **conditional statement** lets data take different paths depending on conditions. `if` → `elif` (else if) → `else`. `>`, `<`, `==`, `!=` are **comparison operators** that return `True` or `False`.
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Conditionals</div>
-  <div class="youtube-lite" data-id="8q6imxzb9mM">
-    <img src="https://img.youtube.com/vi/8q6imxzb9mM/hqdefault.jpg" loading="lazy" alt="Tutorial video on conditionals">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: if/elif/else as an intersection sign → vaccination-coverage threshold example → blind spots: = vs ==, forgetting the colon, indentation errors</p>
-</div>
-```
+<!-- video: ch01_05_conditionals -->
+<!-- /video -->
 
 ```python
 # Decide the response level based on the case fatality rate
@@ -217,15 +182,8 @@ else:
 A **function** is like an automatic calculator: inputs go in as **parameters** → pass through the **body** → `return` an **output**. Define it once, call it many times (reusability); to change the formula you only change one place, so nothing slips through the cracks.
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Functions</div>
-  <div class="youtube-lite" data-id="CGux0-2swi8">
-    <img src="https://img.youtube.com/vi/CGux0-2swi8/hqdefault.jpg" loading="lazy" alt="Tutorial video on functions">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: a function is an automatic calculator → tuberculosis incidence-rate example → blind spots: forgetting the parentheses, forgetting return, getting the argument order wrong</p>
-</div>
-```
+<!-- video: ch01_06_functions -->
+<!-- /video -->
 
 ```python
 def calc_attack_rate(cases, population):

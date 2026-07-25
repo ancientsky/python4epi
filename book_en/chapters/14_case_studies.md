@@ -52,6 +52,9 @@ String these ten steps together and that's the path this chapter walks — and t
 
 ---
 
+<!-- video: ch14_01_capstone_intuition -->
+<!-- /video -->
+
 ## Report Structure: 8 Sections ↔ Chapter Skills
 
 A standard outbreak investigation report (also called a SitRep, or situation report) contains the following 8 sections, each mapped to a skill from an earlier chapter:
@@ -77,6 +80,9 @@ A report = the sum total of the skills from the first 14 chapters — behind eve
 
 ---
 
+<!-- video: ch14_02_report_structure -->
+<!-- /video -->
+
 ## Summary of Key Findings
 
 In the notebook, you'll produce the following key numbers:
@@ -91,6 +97,9 @@ In the notebook, you'll produce the following key numbers:
 These numbers aren't independent findings — they're links in the same narrative chain: the shape of the epidemic curve points to a "common exposure source," the spatial hotspots point to "a specific floor's plumbing system," the exposure and stratified analyses rule out the competing hypothesis that "bedridden residents don't shower and also have lower infection rates," and finally the causal judgment ties the thread off into a sentence you can write directly into the closing report.
 
 ---
+
+<!-- video: ch14_03_key_findings -->
+<!-- /video -->
 
 ## Exporting Charts to a PPTX / DOCX Report
 
@@ -203,6 +212,12 @@ print(f"Exported to: {outdir}")
 > | `tempfile.mkdtemp(prefix="sitrep_")` | Writes to the system's temp folder, not into the project directory, so it never gets tracked by git |
 
 > 🎁 **Insight**: programmatic report generation = **one-click rerun, consistent formatting, zero manual errors**. When the data updates or a conclusion gets revised, rerunning the program once regenerates a consistently-formatted slide deck and Word report — no more manually screenshotting into slides, and no more wondering "which version of this chart is in the report." For the full pipeline (including the epidemic curve, spatial heatmap, and more fields), run [`14_case_study_legionella.ipynb`](notebooks/14_case_study_legionella.ipynb) directly — its final section is the complete version that produces the `.pptx` and `.docx` files for you.
+
+<!-- video: ch14_04_export_pptx -->
+<!-- /video -->
+
+<!-- video: ch14_05_export_docx -->
+<!-- /video -->
 
 ## Exercises
 

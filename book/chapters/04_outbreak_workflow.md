@@ -189,6 +189,7 @@ FETP 疫情調查 10 步驟全景。橘色步驟（5、7）為 Python 能高度�
 
 ---
 
+<!-- video: ch04_01_sitrep_overview -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：SitRep 速成——兩小時交出疫情日報</div>
@@ -197,6 +198,7 @@ FETP 疫情調查 10 步驟全景。橘色步驟（5、7）為 Python 能高度�
   </div>
 </div>
 ```
+<!-- /video -->
 
 ## FETP Step 1：行前準備（出發前要做的事）
 
@@ -305,6 +307,7 @@ df["n_comorbidities"] = df[comorbidity_cols].sum(axis=1)
 
 > 📌 **為什麼本教材的 `legionella_outbreak.csv` 沒有 PII？** 因為它是**合成資料（synthetic data）**，一開始就沒有真實姓名、身分證等欄位——這是教學資料集的標準做法。但你在現場拿到的 raw line list 通常不是這樣，所以要學會下面這些技術。
 
+<!-- video: ch04_08_pii_protection -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：個資保護——拿到 Line List 的第一件事</div>
@@ -313,6 +316,7 @@ df["n_comorbidities"] = df[comorbidity_cols].sum(axis=1)
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```{figure} images/pii_protection_techniques.svg
 :name: pii-protection-techniques
@@ -590,6 +594,7 @@ print(f"ICU：{icu}（ICU 率 {icu/hospitalized:.1%}）")
 print(f"死亡：{deaths}（CFR {deaths/infected:.1%}）")
 ```
 
+<!-- video: ch04_02_person -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：描述流行病學（人）——感染者的臉譜</div>
@@ -598,6 +603,7 @@ print(f"死亡：{deaths}（CFR {deaths/infected:.1%}）")
   </div>
 </div>
 ```
+<!-- /video -->
 
 ## Step 3: 人 — Person
 
@@ -629,6 +635,7 @@ for col in comorbidity_cols:
     print(f"  {label}: {n} ({n/len(cases):.1%})")
 ```
 
+<!-- video: ch04_03_time -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：流行曲線——用長條圖抓住疫情的脈搏</div>
@@ -637,6 +644,7 @@ for col in comorbidity_cols:
   </div>
 </div>
 ```
+<!-- /video -->
 
 ## Step 4: 時 — Time
 
@@ -700,6 +708,7 @@ print(f"流行期間：{cases['symptom_onset_date'].min().date()} – {cases['sy
 print(f"高峰日：{daily.idxmax().date()}（{daily.max()} 例）")
 ```
 
+<!-- video: ch04_04_place -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：地點比較——哪個翼區最危險？</div>
@@ -708,6 +717,7 @@ print(f"高峰日：{daily.idxmax().date()}（{daily.max()} 例）")
   </div>
 </div>
 ```
+<!-- /video -->
 
 ## Step 5: 地 — Place
 
@@ -743,6 +753,7 @@ print(wing_stats[["label", "residents", "infected", "AR%", "deaths", "CFR%"]]
       .to_string(index=False))
 ```
 
+<!-- video: ch04_05_classification -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：個案分類——確診、可能和非個案的分層統計</div>
@@ -751,6 +762,7 @@ print(wing_stats[["label", "residents", "infected", "AR%", "deaths", "CFR%"]]
   </div>
 </div>
 ```
+<!-- /video -->
 
 ## FETP Step 4：病例定義——精確度與偵測率的取捨
 
@@ -837,6 +849,7 @@ print("=== 按個案分類分層 ===")
 print(classification.to_string())
 ```
 
+<!-- video: ch04_06_generate_sitrep -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：函式化——把 SitRep 包成一鍵更新</div>
@@ -845,6 +858,7 @@ print(classification.to_string())
   </div>
 </div>
 ```
+<!-- /video -->
 
 ## Step 7: 輸出結構化 SitRep
 
@@ -889,6 +903,7 @@ sitrep = generate_sitrep("data/synthetic/legionella_outbreak.csv")
 print(sitrep)
 ```
 
+<!-- video: ch04_07_report_output -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：專業報告輸出——Dashboard、Word、PPT、PDF 一次搞定</div>
@@ -897,6 +912,7 @@ print(sitrep)
   </div>
 </div>
 ```
+<!-- /video -->
 
 ## Step 8: 產出專業報告
 

@@ -69,6 +69,9 @@ An intern doctor's training = the entire ML workflow. Because this chapter has o
 
 ---
 
+<!-- video: ch10_01_ml_intuition -->
+<!-- /video -->
+
 ## Part A: Doing the Workflow Right on Real Data (`10_ml_baseline`)
 
 Let's first run through a complete ML workflow "by the book" on the **real** Legionella data (280 rows)—the point is not to show off, but to **avoid mistakes** and **face the results honestly**. See the complete code in [`10_ml_baseline.ipynb`](notebooks/10_ml_baseline.ipynb).
@@ -97,6 +100,9 @@ Before feeding any data to the intern, split it apart: one part to **learn** fro
 
 > 📌 **Two honest reminders**: ① **this chapter's 280 rows are the textbook case of "small"**—which is why you won't see anything called `X_val` below; the role of validation is taken over by the **cross-validation in Step 4**; ② **when imbalanced, split "stratified"** (severe cases are only 24%): the split/CV must be stratified (`StratifiedKFold`, `train_test_split(stratify=y)`), otherwise some fold may end up with almost no positives and the scores will jump around wildly.
 
+<!-- video: ch10_02_train_test_split -->
+<!-- /video -->
+
 ## Step 1 — Defining the Problem: Turning the Director's Question into a 0/1 Label
 
 ML can't work with a vague sentence like "predict who will get sick"—it needs one column with an explicit **0/1 label**. We define two prediction tasks:
@@ -122,6 +128,9 @@ df["severe_outcome"] = ((df["hospitalized"] == 1) | (df["outcome"] == "dead")).a
 > | `((df["hospitalized"]==1) \| (df["outcome"]=="dead")).astype(int)` | Hospitalized **or** died counts as a severe outcome (1) |
 >
 > 💡 **Why define the label first?** Because once the label is fixed, "which columns count as cheating" is fixed too. `infected` is defined using `clinical_severity`, so `clinical_severity`, symptoms, hospitalization, death—all these "outcome-side" columns **cannot be used as clues**; they are part of the answer. That's the iron rule for picking features in Step 2. (Also worth remembering: Task B has only 24% positives, and this "imbalance" is what decides, in Step 4, why we look at AUC rather than accuracy.)
+
+<!-- video: ch10_03_problem_definition -->
+<!-- /video -->
 
 ## Step 2 — Feature Engineering: Translating a "Messy Chart" into Numbers the Model Understands
 
@@ -161,6 +170,9 @@ y = df["infected"]
 >
 > (Side note: here we put `floor` in `bin_cols` and use it as 0/1; if there are multiple floors with no size relationship between them, a stricter approach is to treat it as a categorical column and one-hot encode it.)
 
+<!-- video: ch10_04_feature_engineering -->
+<!-- /video -->
+
 ## Step 3 — Pipeline: Tying "Preprocessing + Model" into One Chain, and Preventing Leakage Along the Way
 
 ```python
@@ -190,6 +202,9 @@ clf_lr = Pipeline([
 > | `ColumnTransformer([...])` | Applies different preprocessing to different column groups: scale the numeric, one-hot the categorical, pass the binary through |
 > | `OneHotEncoder(handle_unknown="ignore", drop="first")` | `drop="first"` avoids collinearity; `handle_unknown="ignore"` keeps it from erroring when a test fold contains a category it hasn't seen |
 > | `Pipeline([("preprocess",...), ("model",...)])` | Chains preprocessing + model into a single object, so `fit`/`predict` run together and the whole chain re-runs inside each fold during CV |
+
+<!-- video: ch10_05_pipeline_leakage -->
+<!-- /video -->
 
 ## Step 4 — Cross-Validation + AUC: What Exactly Are We Comparing?
 
@@ -226,6 +241,9 @@ AUC = grab one infected person and one healthy person at random, and it's the pr
 >
 > ⚠️ **Why not use "accuracy"?** Task B is only 24% severe. If the model **always guesses "not severe,"** its accuracy is 76%—sounds high, but it caught not a single patient and is completely useless. AUC looks at **ranking**, not "how many you guessed right," and isn't affected by whatever threshold you set. So on **imbalanced** data (rare events like severe cases and deaths), looking at AUC (and PR-AUC too, in Part B) is far more honest than looking at accuracy.
 
+<!-- video: ch10_06_crossval_auc -->
+<!-- /video -->
+
 ## Step 5 — Random Forest: Swapping in a Smarter Brain
 
 ```python
@@ -257,6 +275,9 @@ result = permutation_importance(clf_rf, X, y, n_repeats=10, random_state=42)
 > 🧭 **Key reminder**: **important ≠ causal**. That a column helps **predict** doesn't mean changing it will **prevent disease** (that's Ch12, causal inference). It's worth cross-checking against Ch06's adjusted OR—if ML and regression point to the same set of risk factors, the conclusion is more credible.
 
 ---
+
+<!-- video: ch10_07_random_forest -->
+<!-- /video -->
 
 ## Part B: Advanced ML—the Model Zoo, Ensembles, Evaluation, and SHAP (`10_ml_advanced`)
 
@@ -302,6 +323,9 @@ The key idea in one sentence: in the **screening phase**, prioritize "don't miss
 ### SHAP: Explaining the Black Box to Clinicians
 
 > 💰 **A fair year-end bonus**: SHAP uses the Shapley value from game theory, asking "how much does the prediction change without this feature?", averaging each feature's **with vs. without** marginal contribution over all orderings. So it can tell you, for a **single patient**: "he was flagged high-risk because immunosuppressed +0.3, exposure +0.2, age 80 +0.15"—exactly the language you need to explain a black box to clinicians. In the sandbox, SHAP successfully recovered the "U-shaped age risk" we deliberately seeded, something a linear age term can never draw.
+
+<!-- video: ch10_08_model_zoo_shap -->
+<!-- /video -->
 
 ## Exercises
 

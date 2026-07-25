@@ -360,14 +360,8 @@ print(f"Total: {len(df)} people, infected: {df['infected'].sum()} people")
 print(f"Overall attack rate: {df['infected'].mean():.1%}")
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Video: The 2×2 Contingency Table—Turning Outbreak Data into a Four-Cell Table</div>
-  <div class="youtube-lite" data-id="MrBUJ3iTyaw">
-    <img src="https://img.youtube.com/vi/MrBUJ3iTyaw/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch03_01_two_by_two -->
+<!-- /video -->
 
 ## Step 2: Build the 2×2 Table (Shower × Infection)
 
@@ -404,14 +398,8 @@ print(f"\nExposed group (Shower) attack rate: {a/(a+b):.1%}")
 print(f"Unexposed group (No shower) attack rate: {c/(c+d):.1%}")
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Video: The Risk Ratio (RR)—Did the Exposure Actually Increase Risk?</div>
-  <div class="youtube-lite" data-id="wUOt40SNZvA">
-    <img src="https://img.youtube.com/vi/wUOt40SNZvA/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch03_02_risk_ratio -->
+<!-- /video -->
 
 ## Step 3: Compute the Risk Ratio
 
@@ -434,14 +422,8 @@ You've just computed the RR, but papers and reports often show the OR too. What'
 :width: 100%
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Video: The Odds Ratio (OR)—How Is It Different from the RR?</div>
-  <div class="youtube-lite" data-id="tOloIGqUFvs">
-    <img src="https://img.youtube.com/vi/tOloIGqUFvs/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch03_03_odds_ratio -->
+<!-- /video -->
 
 ## Step 4: Compute the Odds Ratio
 
@@ -459,14 +441,8 @@ print(f"   Wrong wording: 'shower users' infection risk is {or_val:.1f}x that of
 
 > **Choosing between RR and OR**: this is a cohort study (all 280 people included), so report the effect measure as the **RR**. We compute the OR as well because: (1) it's practice for understanding the difference between the two, and (2) it prepares us for Ch06's logistic regression (whose native output = OR).
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Video: The 95% Confidence Interval—Why Take the log First and Then exp Back?</div>
-  <div class="youtube-lite" data-id="Z_eYSHtyHxM">
-    <img src="https://img.youtube.com/vi/Z_eYSHtyHxM/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch03_04_confidence_interval -->
+<!-- /video -->
 
 ## Step 5: 95% Confidence Interval (RR and OR)
 
@@ -507,14 +483,8 @@ print(f"OR = {or_val:.3f} (95% CI: {ci_or_lo:.3f} – {ci_or_hi:.3f})")
 
 > **Interpretation**: if you repeated this investigation 100 times, roughly 95 of the computed CIs would contain the true RR/OR. A CI that doesn't include 1 = statistically significant at α=0.05, equivalent to p < 0.05.
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Video: The Chi-Square Test—A Showdown Between Observed and Expected Values</div>
-  <div class="youtube-lite" data-id="qv3j0CSfHT0">
-    <img src="https://img.youtube.com/vi/qv3j0CSfHT0/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch03_05_chi_square -->
+<!-- /video -->
 
 ## Step 6: The Chi-Square Test
 
@@ -549,14 +519,8 @@ else:
     print(" → < 5, recommend using Fisher's exact test instead")
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Video: Fisher's Exact Test—The Savior for Small Samples</div>
-  <div class="youtube-lite" data-id="x8n7wUWtfz0">
-    <img src="https://img.youtube.com/vi/x8n7wUWtfz0/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch03_06_fisher_test -->
+<!-- /video -->
 
 ## Step 7: Fisher's Exact Test
 
@@ -665,14 +629,8 @@ print("=== Multi-Factor Crude Effect-Measure Summary Table ===")
 print(display_df[["factor", "RR", "95% CI", "OR", "p-value"]].to_string(index=False))
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Video: The Forest Plot—Spotting the Prime Suspect at a Glance</div>
-  <div class="youtube-lite" data-id="K8dMlS5lr3A">
-    <img src="https://img.youtube.com/vi/K8dMlS5lr3A/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch03_07_forest_plot -->
+<!-- /video -->
 
 ### The Forest Plot
 

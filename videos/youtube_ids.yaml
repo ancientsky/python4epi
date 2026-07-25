@@ -1,0 +1,667 @@
+# ============================================================================
+# YouTube 影片連結對照表 / YouTube video registry
+# ============================================================================
+#
+# 這是全站影片連結的「唯一真相來源」。填好之後執行：
+#
+#     uv run python videos/sync_video_embeds.py
+#
+# 就會把中英文兩版章節裡的影片卡片重新產生，並更新 videos/VIDEO_INDEX.md。
+# 這個指令可以重複執行，不會累積髒東西（idempotent）。
+#
+# 怎麼填：
+#   * key 就是影片腳本的檔名，也就是 GitHub Actions 產出的 mp4 檔名。
+#     例如 ch08_04_morans_i.mp4 -> 填在 ch08_04_morans_i 的 zh:
+#          ch08_04_morans_i_en.mp4 -> 填在 ch08_04_morans_i 的 en:
+#   * 貼「完整網址」或「純影片 ID」都可以，兩種都認得：
+#         zh: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+#         zh: "https://youtu.be/dQw4w9WgXcQ"
+#         zh: "dQw4w9WgXcQ"
+#   * 留空字串 "" = 還沒上傳。網站上就不會出現那張卡片（不會有死連結）。
+#   * title_zh / title_en 是卡片上顯示的標題，可以自由修改。
+#
+# ============================================================================
+
+videos:
+
+  # --- 第 00 章 導讀與工具 (6 部影片；中文已上傳 6/6) ---
+  ch00_01_why_python:
+    title_zh: "為什麼用 Python"
+    title_en: "Why Python: The Epidemiologist's Superpower"
+    zh: "eMWQ-IqYjvM"
+    en: ""
+  ch00_02_uv_setup:
+    title_zh: "uv 與環境設定"
+    title_en: "uv & Environment Setup: One Line to Master Python Packages"
+    zh: "AnPBQW8Vqq0"
+    en: ""
+  ch00_03_jupyter:
+    title_zh: "Jupyter Lab 入門"
+    title_en: "Getting Started with Jupyter Lab: Write and See Results Live"
+    zh: "iELUPwdPk7M"
+    en: ""
+  ch00_04_hello_epi:
+    title_zh: "第一支程式 Hello Epi"
+    title_en: "Your First Program, Hello Epi: Run Your First Epi Analysis in Ten Minutes"
+    zh: "VcxttnJxwG4"
+    en: ""
+  ch00_05_git_basics:
+    title_zh: "Git 版本控制"
+    title_en: "Git Version Control: A Time Machine for Your Code"
+    zh: "SdtrxhPbRqk"
+    en: ""
+  ch00_06_roadmap:
+    title_zh: "課程地圖與學習策略"
+    title_en: "Course Roadmap: An 18-Chapter Learning Guide"
+    zh: "H3fMhNhj3u4"
+    en: ""
+
+  # --- 第 01 章 Python 基礎 (6 部影片；中文已上傳 6/6) ---
+  ch01_01_variables:
+    title_zh: "數值變數"
+    title_en: "Numeric Variables: Store Your Numbers First"
+    zh: "RhqNl3LzjmU"
+    en: ""
+  ch01_02_arithmetic:
+    title_zh: "計算指標"
+    title_en: "Computing Metrics: Get Rates by Division"
+    zh: "ZqqZmuVjoN0"
+    en: ""
+  ch01_03_dictionaries:
+    title_zh: "字典"
+    title_en: "Dictionaries: Keep Data on One Topic Together"
+    zh: "4iriq9cNG-A"
+    en: ""
+  ch01_04_lists:
+    title_zh: "列表"
+    title_en: "Lists: Store a Group of Similar Data"
+    zh: "bwRKaJYyGCU"
+    en: ""
+  ch01_05_conditionals:
+    title_zh: "條件判斷"
+    title_en: "Conditionals: Turn Metrics into Action Signals"
+    zh: "8q6imxzb9mM"
+    en: ""
+  ch01_06_functions:
+    title_zh: "函式"
+    title_en: "Functions: Wrap Logic into a Reusable Tool"
+    zh: "CGux0-2swi8"
+    en: ""
+
+  # --- 第 01b 章 Python 開發者工具箱 (8 部影片；中文已上傳 8/8) ---
+  ch01b_01_indentation:
+    title_zh: "縮排"
+    title_en: "Indentation: Python's Must-Follow Rule"
+    zh: "lQPKMgHv1UQ"
+    en: ""
+  ch01b_02_imports:
+    title_zh: "import"
+    title_en: "import: Borrow Other People's Tools"
+    zh: "srlzHIPR3nk"
+    en: ""
+  ch01b_03_types:
+    title_zh: "型別與轉換"
+    title_en: "Types and Conversion: Numbers, Text, Booleans"
+    zh: "xetiso2OCl8"
+    en: ""
+  ch01b_04_errors:
+    title_zh: "讀懂錯誤訊息"
+    title_en: "Reading Error Messages: Traceback Is Not Hieroglyphics"
+    zh: "aZx7TFtcrvc"
+    en: ""
+  ch01b_05_try_except:
+    title_zh: "try/except"
+    title_en: "try/except: Handle Surprises Gracefully"
+    zh: "QCKTumk34fA"
+    en: ""
+  ch01b_06_strings_loops:
+    title_zh: "字串與迴圈進階"
+    title_en: "Strings and Advanced Loops: The Swiss Army Knife for Cleaning Outbreak Data"
+    zh: "SmKi_i3PC-U"
+    en: ""
+  ch01b_07_uv_advanced:
+    title_zh: "uv 進階"
+    title_en: "Advanced uv: Manage Python Versions and Packages"
+    zh: "cXSoTKvgtEo"
+    en: ""
+  ch01b_08_jupyter_tips:
+    title_zh: "Jupyter 實用密技"
+    title_en: "Practical Jupyter Tips: Double Your Efficiency"
+    zh: "krpakr9TtZM"
+    en: ""
+
+  # --- 第 02 章 資料處理與視覺化 (13 部影片；中文已上傳 13/13) ---
+  ch02_01_dataframe:
+    title_zh: "DataFrame 是什麼？從 CSV 到表格的第一步"
+    title_en: "What Is a DataFrame? Your First Step from CSV to Table"
+    zh: "6VaRmrPorog"
+    en: ""
+  ch02_02_data_inspect:
+    title_zh: "一分鐘看懂你的資料——info() 與 describe()"
+    title_en: "Understand Your Data in One Minute: info() and describe()"
+    zh: "0nr8EO2EYgU"
+    en: ""
+  ch02_03_datetime:
+    title_zh: "日期時間大魔王——to_datetime 完全攻略"
+    title_en: "The Date-Time Boss Battle: The Complete to_datetime Playbook"
+    zh: "fjflhonc_7Y"
+    en: ""
+  ch02_04_derived:
+    title_zh: "衍生變項四大招——cut, axis, astype, dt"
+    title_en: "Four Moves for Derived Variables: cut, axis, astype, dt"
+    zh: "nizzbpAajlw"
+    en: ""
+  ch02_05_missing:
+    title_zh: "遺漏值偵探社——NaN, NaT, None 一次搞懂"
+    title_en: "The Missing-Value Detective Agency: NaN, NaT, None Demystified"
+    zh: "Eb4xFn8MAtI"
+    en: ""
+  ch02_06_groupby:
+    title_zh: "分組統計秘密武器——groupby + agg 完全攻略"
+    title_en: "The Secret Weapon of Group Stats: The Complete groupby + agg Playbook"
+    zh: "A08xPAxb3Fc"
+    en: ""
+  ch02_07_epicurve:
+    title_zh: "用 matplotlib 畫出疫調等級的流行曲線"
+    title_en: "Draw an Investigation-Grade Epidemic Curve with matplotlib"
+    zh: "OnHzOWIP12s"
+    en: ""
+  ch02_08_seaborn_plotly:
+    title_zh: "seaborn + plotly + 圖表輸出投稿密技"
+    title_en: "seaborn + plotly + Figure Export: Submission Secrets"
+    zh: "cLjVwKlXHVM"
+    en: ""
+  ch02_09_value_counts:
+    title_zh: "頻率表速成——value_counts + crosstab 完全攻略"
+    title_en: "Frequency Tables, Fast: value_counts + crosstab"
+    zh: "awq3VxbW9qo"
+    en: ""
+  ch02_10_pivot_table:
+    title_zh: "Excel 樞紐分析表——pivot_table 完全攻略"
+    title_en: "Excel Pivot Tables: The Complete pivot_table Guide"
+    zh: "eFAQ4Xz7gq8"
+    en: ""
+  ch02_11_method_chaining:
+    title_zh: "一行寫完分析——Method Chaining 流水線"
+    title_en: "Write Your Analysis in One Line: Method Chaining Pipelines"
+    zh: "sSw-xiaUafM"
+    en: ""
+  ch02_12_merge:
+    title_zh: "合併資料表——merge 就是你的 VLOOKUP"
+    title_en: "Joining Data Tables: merge Is Your VLOOKUP"
+    zh: "b2W8rfIn8Ts"
+    en: ""
+  ch02_13_str_cleanup:
+    title_zh: "文字清理三板斧——str + drop_duplicates + rename"
+    title_en: "Three Moves for Text Cleanup: str + drop_duplicates + rename"
+    zh: "AasXdk4-i_E"
+    en: ""
+
+  # --- 第 03 章 流行病學統計 (7 部影片；中文已上傳 7/7) ---
+  ch03_01_two_by_two:
+    title_zh: "2×2 列聯表——把疫調資料變成四格表"
+    title_en: "2x2 Contingency Tables: Turning Outbreak Data Into Four Cells"
+    zh: "MrBUJ3iTyaw"
+    en: ""
+  ch03_02_risk_ratio:
+    title_zh: "風險比 RR——暴露到底有沒有增加風險？"
+    title_en: "Risk Ratio: Did Exposure Actually Raise the Risk?"
+    zh: "wUOt40SNZvA"
+    en: ""
+  ch03_03_odds_ratio:
+    title_zh: "勝算比 OR——跟 RR 到底差在哪？"
+    title_en: "Odds Ratio: RR's Sibling — What's the Difference?"
+    zh: "tOloIGqUFvs"
+    en: ""
+  ch03_04_confidence_interval:
+    title_zh: "95% 信賴區間——為什麼要先取 log 再 exp 回來？"
+    title_en: "The 95% Confidence Interval: Why Take the Log Then exp Back?"
+    zh: "Z_eYSHtyHxM"
+    en: ""
+  ch03_05_chi_square:
+    title_zh: "卡方檢定——觀察值 vs 期望值的擂台賽"
+    title_en: "The Chi-square Test: Observed vs Expected in the Ring"
+    zh: "qv3j0CSfHT0"
+    en: ""
+  ch03_06_fisher_test:
+    title_zh: "Fisher 精確檢定——小樣本的救星"
+    title_en: "Fisher's Exact Test: The Small-Sample Lifesaver"
+    zh: "x8n7wUWtfz0"
+    en: ""
+  ch03_07_forest_plot:
+    title_zh: "森林圖——一眼看穿誰是最大嫌疑犯"
+    title_en: "Forest Plot: One Chart to Compare Every Suspect Factor"
+    zh: "K8dMlS5lr3A"
+    en: ""
+
+  # --- 第 04 章 疫調工作流程 (8 部影片；中文已上傳 8/8) ---
+  ch04_01_sitrep_overview:
+    title_zh: "SitRep 速成——兩小時交出疫情日報"
+    title_en: "SitRep Crash Course: Ship a Situation Report in Two Hours"
+    zh: "p5wes20-Az8"
+    en: ""
+  ch04_02_person:
+    title_zh: "描述流行病學（人）——感染者的臉譜"
+    title_en: "Descriptive Epidemiology (Person): A Portrait of the Infected"
+    zh: "tmT3YVLy1EM"
+    en: ""
+  ch04_03_time:
+    title_zh: "流行曲線——用長條圖抓住疫情的脈搏"
+    title_en: "The Epidemic Curve: Catch the Outbreak's Pulse with a Bar Chart"
+    zh: "7eBDkfVqsQo"
+    en: ""
+  ch04_04_place:
+    title_zh: "地點比較——哪個翼區最危險？"
+    title_en: "Comparing Places: Which Wing Is the Most Dangerous?"
+    zh: "wWwHcMXMmG8"
+    en: ""
+  ch04_05_classification:
+    title_zh: "個案分類——確診、可能和非個案的分層統計"
+    title_en: "Case Classification: Stratified Stats for Confirmed, Probable, and Non-Cases"
+    zh: "RZLn3o-svs0"
+    en: ""
+  ch04_06_generate_sitrep:
+    title_zh: "函式化——把 SitRep 包成一鍵更新"
+    title_en: "Wrapping It in a Function: Package Your SitRep into a One-Click Update"
+    zh: "ztrZrHwrD2M"
+    en: ""
+  ch04_07_report_output:
+    title_zh: "專業報告輸出——Dashboard、Word、PPT、PDF 一次搞定"
+    title_en: "Professional Report Output: Dashboard, Word, PPT, PDF in One Go"
+    zh: "eAs3K_Z7Hjk"
+    en: ""
+  ch04_08_pii_protection:
+    title_zh: "個資保護——拿到 Line List 的第一件事"
+    title_en: "PII Protection: The Very First Thing to Do with a Line List"
+    zh: "LLF1T-EtnqU"
+    en: ""
+
+  # --- 第 05 章 分層分析與干擾 (8 部影片；中文已上傳 8/8) ---
+  ch05_01_confounder_concept:
+    title_zh: "干擾因子的三要件——誰才算共犯"
+    title_en: "The Three Criteria for a Confounder: Who Counts as an Accomplice?"
+    zh: "2ZF6K8ylvtI"
+    en: ""
+  ch05_02_dag:
+    title_zh: "DAG 有向無環圖——畫一張因果地圖"
+    title_en: "The DAG: Drawing a Causal Map"
+    zh: "87jXOHHNCog"
+    en: ""
+  ch05_03_verify_criteria:
+    title_zh: "驗證三要件——pd.crosstab 實戰"
+    title_en: "Verifying the Three Criteria: pd.crosstab in Action"
+    zh: "gPq3SstS3JE"
+    en: ""
+  ch05_04_stratified_rr:
+    title_zh: "分層分析——每一層都算一次 RR"
+    title_en: "Stratified Analysis: One RR per Stratum"
+    zh: "8yhHobtu_BU"
+    en: ""
+  ch05_05_stratified_forest_plot:
+    title_zh: "森林圖——一眼看穿各層 RR"
+    title_en: "The Forest Plot: See Every Stratum's RR at a Glance"
+    zh: "NhMpRmZgN10"
+    en: ""
+  ch05_06_mantel_haenszel:
+    title_zh: "Mantel-Haenszel 加權——公平的學期成績"
+    title_en: "Mantel-Haenszel Weighting: A Fair Term Grade"
+    zh: "Fj3d4Jr0kQM"
+    en: ""
+  ch05_07_effect_modification:
+    title_zh: "交互作用——暴露的影響因人而異"
+    title_en: "Effect Modification: The Exposure's Effect Varies by Person"
+    zh: "I82KCu2kM_0"
+    en: ""
+  ch05_08_case_control_mh:
+    title_zh: "病例對照版 MH——換個公式，邏輯一樣"
+    title_en: "Case-Control Mantel-Haenszel: Swap the Formula, Keep the Logic"
+    zh: "9441-KkyGqM"
+    en: ""
+
+  # --- 第 06 章 邏輯斯迴歸 (8 部影片；中文已上傳 8/8) ---
+  ch06_01_why_rr_not_or:
+    title_zh: "為什麼要用 RR 而不是 OR？"
+    title_en: "Why Cohort Studies Use RR, Not OR"
+    zh: "PrbPC5cAyxM"
+    en: ""
+  ch06_02_logit_intuition:
+    title_zh: "邏輯斯迴歸三階梯——機率→勝算→logit"
+    title_en: "The Logistic Regression Three-Step Ladder: Probability, Odds, Logit"
+    zh: "o-bRxWzK_xo"
+    en: ""
+  ch06_03_modified_poisson:
+    title_zh: "Modified Poisson——借帽子算 RR 的魔法"
+    title_en: "Modified Poisson: The Magic of Borrowing a Hat to Compute RR"
+    zh: "A_KHcLHITN0"
+    en: ""
+  ch06_04_formula_syntax:
+    title_zh: "statsmodels formula 語法速懂"
+    title_en: "statsmodels Formula Syntax: Tilde, Plus, C() Fully Explained"
+    zh: "G-cJPHaz7ag"
+    en: ""
+  ch06_05_crude_rr_or_loop:
+    title_zh: "單變項 crude RR vs OR——for loop 一次比完"
+    title_en: "Univariate crude RR vs OR: Compare Them All in One for Loop"
+    zh: "LBf3HvGOLAA"
+    en: ""
+  ch06_06_adjusted_rr_table2:
+    title_zh: "多變項 adjusted RR——打造漂亮的 Table 2"
+    title_en: "Multivariable adjusted RR: Building a Beautiful Table 2"
+    zh: "XIfx82VxVaA"
+    en: ""
+  ch06_07_forest_plot_adjusted:
+    title_zh: "Adjusted RR 森林圖——一眼看穿真正危險因子"
+    title_en: "Adjusted RR Forest Plot: See the True Risk Factors at a Glance"
+    zh: "7GgpIOKr_CY"
+    en: ""
+  ch06_08_change_in_estimate:
+    title_zh: "10% 法則——change-in-estimate 挑變項"
+    title_en: "The 10% Rule: Picking Variables with Change-in-Estimate"
+    zh: "OQLEUHJQv7s"
+    en: ""
+
+  # --- 第 07 章 時間序列 (8 部影片；中文已上傳 8/8) ---
+  ch07_01_ts_basics:
+    title_zh: "時間序列基本概念——asfreq、自相關、平穩性"
+    title_en: "Time-Series Basics: asfreq, Autocorrelation, Stationarity"
+    zh: "VYo8QnHEi74"
+    en: ""
+  ch07_02_rolling_baseline:
+    title_zh: "Rolling mean baseline 與 shift(1) 救命符"
+    title_en: "Rolling Mean Baseline and the shift(1) Lifesaver"
+    zh: "8VP3e7FSKPQ"
+    en: ""
+  ch07_03_lag_features:
+    title_zh: "Lag features——把時間序列變成迴歸資料"
+    title_en: "Lag Features: Turn a Time Series into Regression Data"
+    zh: "1DTX1bomJ4E"
+    en: ""
+  ch07_04_poisson_lag:
+    title_zh: "Poisson regression + lag——IRR 解讀每日病例"
+    title_en: "Poisson Regression + Lag: Reading Daily Cases with the IRR"
+    zh: "zYXleAV-l2U"
+    en: ""
+  ch07_05_negative_binomial:
+    title_zh: "Negative Binomial——過度離散的救星"
+    title_en: "Negative Binomial: The Savior of Overdispersion"
+    zh: "5ZzrjUBGN8c"
+    en: ""
+  ch07_06_logistic_threshold:
+    title_zh: "Logistic regression——明天會不會是高峰日？"
+    title_en: "Logistic Regression: Will Tomorrow Be a Peak Day?"
+    zh: "xzOQKhFM9js"
+    en: ""
+  ch07_07_arima_sarima:
+    title_zh: "ARIMA vs SARIMA——經典武器 + 週期性捕捉"
+    title_en: "ARIMA vs SARIMA: The Classic Weapon + Capturing Seasonality"
+    zh: "u6Tl3toQGZc"
+    en: ""
+  ch07_08_ts_model_comparison:
+    title_zh: "六模型大比拼——誰適合什麼情境？"
+    title_en: "Six-Model Showdown: Which One Fits Which Scenario?"
+    zh: "u9gxSIb57a0"
+    en: ""
+
+  # --- 第 08 章 空間流行病學 (8 部影片；中文已上傳 0/8) ---
+  ch08_01_spatial_thinking:
+    title_zh: "空間流病超白話：一片紅≠真群聚"
+    title_en: "Spatial Epi, Plain and Simple: a sea of red is not a real cluster"
+    zh: ""
+    en: ""
+  ch08_02_attack_rate_map:
+    title_zh: "樓層 x 翼區侵襲率：crosstab 到熱力圖"
+    title_en: "Floor x Wing Attack Rate: from crosstab to heatmap"
+    zh: ""
+    en: ""
+  ch08_03_spatial_weights:
+    title_zh: "空間權重：定義鄰居 Queen vs KNN"
+    title_en: "Spatial Weights: defining neighbors, Queen vs KNN"
+    zh: ""
+    en: ""
+  ch08_04_morans_i:
+    title_zh: "全域 Moran's I：整張地圖的物以類聚指數"
+    title_en: "Global Moran's I: one birds-of-a-feather index for the whole map"
+    zh: ""
+    en: ""
+  ch08_05_lisa:
+    title_zh: "局部 LISA 四象限：熱區核心到底藏在哪？"
+    title_en: "Local LISA Quadrants: where is the hotspot core really hiding?"
+    zh: ""
+    en: ""
+  ch08_06_getis_ord:
+    title_zh: "Getis-Ord Gi★ 熱點分析：給長官看的那張地圖"
+    title_en: "Getis-Ord Gi* Hotspots: the map you hand straight to the boss"
+    zh: ""
+    en: ""
+  ch08_07_choropleth:
+    title_zh: "每十萬人發生率 Choropleth：merge 和 ID 對齊全攻略"
+    title_en: "Per-100k Choropleth: the complete guide to merge and ID alignment"
+    zh: ""
+    en: ""
+  ch08_08_scan_smoothing:
+    title_zh: "概念延伸：Kulldorff 掃描統計與貝氏平滑"
+    title_en: "Concept Extension: the Kulldorff scan statistic and Bayesian smoothing"
+    zh: ""
+    en: ""
+
+  # --- 第 09 章 存活分析 (8 部影片；中文已上傳 0/8) ---
+  ch09_01_survival_intuition:
+    title_zh: "存活分析超白話：手機電池大賽"
+    title_en: "Survival Analysis, Plain and Simple: the Phone Battery Race"
+    zh: ""
+    en: ""
+  ch09_02_censoring:
+    title_zh: "設限資料：碼表還在跑，觀察就結束了"
+    title_en: "Censored Data: the Stopwatch Is Still Running When Observation Ends"
+    zh: ""
+    en: ""
+  ch09_03_kaplan_meier:
+    title_zh: "Kaplan-Meier 曲線：一條會下樓梯的線"
+    title_en: "The Kaplan-Meier Curve: a Line That Walks Down a Staircase"
+    zh: ""
+    en: ""
+  ch09_04_km_by_group:
+    title_zh: "分組 KM 曲線：誰的預後比較差？"
+    title_en: "KM Curves by Group: Who Has the Worse Prognosis?"
+    zh: ""
+    en: ""
+  ch09_05_logrank:
+    title_zh: "Log-rank 檢定：那道差距是真的，還是運氣？"
+    title_en: "The Log-rank Test: Is That Gap Real, or Just Luck?"
+    zh: ""
+    en: ""
+  ch09_06_cox_regression:
+    title_zh: "Cox 比例風險迴歸：一次量化每個因子的風險比"
+    title_en: "Cox Proportional-Hazards Regression: Quantify Every Factor's Hazard Ratio at Once"
+    zh: ""
+    en: ""
+  ch09_07_hr_forest:
+    title_zh: "HR 森林圖：一眼看出誰危險、誰不顯著"
+    title_en: "The HR Forest Plot: See at a Glance Who's Harmful, Who's Not Significant"
+    zh: ""
+    en: ""
+  ch09_08_ph_assumption:
+    title_zh: "比例風險假設：那些漂亮的 HR，先過這一關"
+    title_en: "The Proportional-Hazards Assumption: Those Pretty HRs Must Pass This Gate First"
+    zh: ""
+    en: ""
+
+  # --- 第 10 章 機器學習 (8 部影片；中文已上傳 0/8) ---
+  ch10_01_ml_intuition:
+    title_zh: "機器學習超白話：把模型當成一位受訓中的實習醫師"
+    title_en: "Machine Learning, Plain and Simple: the model as a training intern doctor"
+    zh: ""
+    en: ""
+  ch10_02_train_test_split:
+    title_zh: "資料三切分：先把考卷分好，測試集絕不偷看"
+    title_en: "The Train / Val / Test Split: split the exams first, never peek at the test set"
+    zh: ""
+    en: ""
+  ch10_03_problem_definition:
+    title_zh: "問題定義：把長官的模糊問題變成 0/1 標籤"
+    title_en: "Defining the Problem: turn the boss's vague question into a 0/1 label"
+    zh: ""
+    en: ""
+  ch10_04_feature_engineering:
+    title_zh: "特徵工程：把雜亂病歷翻譯成模型看得懂的數字"
+    title_en: "Feature Engineering: encode the messy chart into numbers the model can read"
+    zh: ""
+    en: ""
+  ch10_05_pipeline_leakage:
+    title_zh: "Pipeline 與資料洩漏：把前處理和模型綁成一條，順便防作弊"
+    title_en: "Pipeline & Data Leakage: bind preprocessing to the model, and stop cheating"
+    zh: ""
+    en: ""
+  ch10_06_crossval_auc:
+    title_zh: "交叉驗證 + AUC：這張成績單到底在比什麼？"
+    title_en: "Cross-Validation + AUC: what does this score actually compare?"
+    zh: ""
+    en: ""
+  ch10_07_random_forest:
+    title_zh: "隨機森林與特徵重要性：換顆聰明腦袋，再問哪條線索最有用"
+    title_en: "Random Forest & Feature Importance: a smarter brain, then which clue matters most"
+    zh: ""
+    en: ""
+  ch10_08_model_zoo_shap:
+    title_zh: "模型動物園、集成與 SHAP：把黑盒解釋給醫師聽"
+    title_en: "The Model Zoo, Ensembles & SHAP: explain the black box to a clinician"
+    zh: ""
+    en: ""
+
+  # --- 第 11 章 深度學習 (8 部影片；中文已上傳 0/8) ---
+  ch11_01_dl_intuition:
+    title_zh: "深度學習超白話：訓練一位新手偵探"
+    title_en: "Deep Learning, Plain and Simple: Training a Rookie Detective"
+    zh: ""
+    en: ""
+  ch11_02_neuron_layer:
+    title_zh: "神經元到底在算什麼：加權加總，再過一道關"
+    title_en: "What a Neuron Actually Computes: Weighted Sum, Then a Gate"
+    zh: ""
+    en: ""
+  ch11_03_training_loop:
+    title_zh: "訓練迴圈：模型怎麼從錯誤裡學乖"
+    title_en: "The Training Loop: How a Model Learns From Its Mistakes"
+    zh: ""
+    en: ""
+  ch11_04_overfitting_earlystop:
+    title_zh: "過擬合與早停法：什麼時候該喊卡"
+    title_en: "Overfitting and Early Stopping: When to Call It Quits"
+    zh: ""
+    en: ""
+  ch11_05_when_to_use_dl:
+    title_zh: "該不該用深度學習？決策框架：別殺雞用牛刀"
+    title_en: "Should You Use Deep Learning? Don't Crack a Nut With a Sledgehammer"
+    zh: ""
+    en: ""
+  ch11_06_mlp_baseline:
+    title_zh: "MLP baseline：在 280 筆資料上親手跑一次 PyTorch"
+    title_en: "MLP Baseline: Running PyTorch by Hand on 280 Rows"
+    zh: ""
+    en: ""
+  ch11_07_lstm_cnn_sequence:
+    title_zh: "LSTM / CNN 序列預測：滑動視窗，預測未來"
+    title_en: "LSTM / CNN Sequence Forecasting: Sliding Windows, Predicting the Future"
+    zh: ""
+    en: ""
+  ch11_08_dl_landscape:
+    title_zh: "現代深度學習全景：GNN、Transformer、DeepSurv、TSFM"
+    title_en: "The Modern Deep-Learning Landscape: GNN, Transformer, DeepSurv, TSFM"
+    zh: ""
+    en: ""
+
+  # --- 第 12 章 因果推論 (7 部影片；中文已上傳 0/7) ---
+  ch12_01_causal_intuition:
+    title_zh: "因果偵探超白話：如果重來一次，還會生病嗎？"
+    title_en: "The Causal Detective, Plain and Simple: If We Ran It Again, Would They Still Get Sick?"
+    zh: ""
+    en: ""
+  ch12_02_association_vs_causation:
+    title_zh: "關聯 ≠ 因果：反事實的正式定義與滷雞腿疫調"
+    title_en: "Association != Causation: The Counterfactual's Formal Definition and a Braised-Chicken Investigation"
+    zh: ""
+    en: ""
+  ch12_03_dag:
+    title_zh: "用 DAG 把因果畫出來：干擾、中介、對撞三結構"
+    title_en: "Drawing Causation with a DAG: Confounder, Mediator, Collider - Three Shapes"
+    zh: ""
+    en: ""
+  ch12_04_collider_berkson:
+    title_zh: "對撞因子的陷阱：Berkson 悖論與三峽登革熱 DAG"
+    title_en: "The Collider Trap: Berkson's Paradox and a Sanxia Dengue DAG"
+    zh: ""
+    en: ""
+  ch12_05_ar_par:
+    title_zh: "歸因風險 AR 與族群歸因風險 PAR：把「有關」變成「能救幾個人」"
+    title_en: "Attributable Risk AR and Population AR (PAR): Turning 'Associated With' into 'How Many Can We Save'"
+    zh: ""
+    en: ""
+  ch12_06_did:
+    title_zh: "差異中之差異 DiD：介入之後數字降了，真的是你的功勞嗎？"
+    title_en: "Difference-in-Differences (DiD): Cases Dropped After the Intervention - Was It Really You?"
+    zh: ""
+    en: ""
+  ch12_07_parallel_trends:
+    title_zh: "平行趨勢假設：DiD 的命脈，一垮全崩"
+    title_en: "The Parallel-Trends Assumption: DiD's Lifeblood - If It Breaks, Everything Collapses"
+    zh: ""
+    en: ""
+
+  # --- 第 13 章 可重現性 (6 部影片；中文已上傳 0/6) ---
+  ch13_01_repro_intuition:
+    title_zh: "可重現研究超白話：把分析寫成一份好食譜"
+    title_en: "Reproducible Research, Plain and Simple: Write Your Analysis as a Good Recipe"
+    zh: ""
+    en: ""
+  ch13_02_why_different_results:
+    title_zh: "為什麼我重跑結果不一樣？三顆地雷 vs 三根支柱"
+    title_en: "Why Do I Get Different Results on Re-run? Three Landmines vs Three Pillars"
+    zh: ""
+    en: ""
+  ch13_03_min_reproducible_report:
+    title_zh: "最小可重跑報告：三行指令，從乾淨環境到報告"
+    title_en: "The Minimal Reproducible Report: Three Commands, Clean Environment to Report"
+    zh: ""
+    en: ""
+  ch13_04_data_summary_contract:
+    title_zh: "讀資料、產出摘要：唯一的標準答案"
+    title_en: "Read Data, Produce the Summary: The One Canonical Answer"
+    zh: ""
+    en: ""
+  ch13_05_seed_determinism:
+    title_zh: "seed 決定論：隨機也要「隨機地一致」"
+    title_en: "Seed Determinism: Random, but Consistently Random"
+    zh: ""
+    en: ""
+  ch13_06_schema_contract:
+    title_zh: "schema 契約：搶在資料改動之前擋下來"
+    title_en: "The Schema Contract: Catch Data Changes Before They Corrupt Results"
+    zh: ""
+    en: ""
+
+  # --- 第 14 章 綜合案例 (5 部影片；中文已上傳 0/5) ---
+  ch14_01_capstone_intuition:
+    title_zh: "超白話總複習：把整箱工具組裝成一份能上呈的報告"
+    title_en: "Plain-Language Capstone: Assemble the Whole Toolbox into One Submittable Report"
+    zh: ""
+    en: ""
+  ch14_02_report_structure:
+    title_zh: "疫調報告的八個段落 ↔ 每段對應一章技能"
+    title_en: "The Eight Report Sections: Each One Maps to a Chapter's Skill"
+    zh: ""
+    en: ""
+  ch14_03_key_findings:
+    title_zh: "主要發現摘要：把整場調查濃縮成長官最想看的幾個數字"
+    title_en: "The Key-Findings Summary: Distill the Whole Investigation into the Numbers the Boss Wants"
+    zh: ""
+    en: ""
+  ch14_04_export_pptx:
+    title_zh: "一鍵輸出 PPTX 簡報：python-pptx 把圖表塞進投影片"
+    title_en: "Export a PPTX Deck in One Click: python-pptx Drops Charts into Slides"
+    zh: ""
+    en: ""
+  ch14_05_export_docx:
+    title_zh: "輸出正式 DOCX 報告：python-docx 標題、表格、內嵌圖"
+    title_en: "Export a Formal DOCX Report: python-docx Headings, Tables, Embedded Figures"
+    zh: ""
+    en: ""

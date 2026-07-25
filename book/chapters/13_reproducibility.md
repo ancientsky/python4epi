@@ -52,6 +52,9 @@
 
 ---
 
+<!-- video: ch13_01_repro_intuition -->
+<!-- /video -->
+
 ## 核心概念
 
 把上一段的食譜比喻翻回正式名詞，可重現研究只圍繞三件事：
@@ -90,6 +93,9 @@
 
 ---
 
+<!-- video: ch13_02_why_different_results -->
+<!-- /video -->
+
 ## 最小可重跑報告：程式碼逐行拆解
 
 一份「最小可重跑報告」要做到：從乾淨環境出發，靠**固定的幾行指令 + 固定的程式碼**，產出跟原作者一模一樣的數字。下面拆成四段：先重建環境並驗證，再產出摘要，然後證明 seed 決定論，最後用 schema contract 把資料結構鎖起來。
@@ -111,6 +117,9 @@ uv run python notebooks/run_sitrep.py
 > | `uv run python notebooks/run_sitrep.py` | 真正跑一次分析：讀取 line list、計算 CFR 與侵襲率、輸出各區統計表——這就是本章要的「最小可重跑報告」 |
 
 > 💡 三行指令、零手動步驟，這正是 single-command workflow 的精神：別人不需要問你「還要裝什麼、還要改哪裡」，複製貼上就能重現。
+
+<!-- video: ch13_03_min_reproducible_report -->
+<!-- /video -->
 
 ### Step 2 — 讀資料、產出摘要：唯一的標準答案
 
@@ -147,6 +156,9 @@ for k, v in summary.items():
 
 > 💡 **為什麼強調「確定性」**：`groupby(...).ngroups`、`.sum()`、`.mean()` 都是純數學運算，跟亂數、多執行緒排序、時區這些「隱形變因」無關——這正是可重現研究要追求的：拿掉所有會讓「同一份程式碼、同一份資料」兩次執行結果卻不同的因素。
 
+<!-- video: ch13_04_data_summary_contract -->
+<!-- /video -->
+
 ### Step 3 — seed 決定論：隨機也要「隨機地一致」
 
 前一步完全沒用到亂數，因為讀資料、算平均數都是確定性運算。但只要分析裡出現「隨機」——像 Ch10 訓練模型時的 `train_test_split`、Ch11 的 `torch.manual_seed`、或任何 `np.random` 抽樣——沒鎖種子就等於每次執行都是不同的實驗。下面用一個最小範例證明：**同一顆種子 → 同樣的亂數；不設種子 → 每次都不同**。
@@ -174,6 +186,9 @@ print("沒設種子   :", sample(), "→ 每次都不同（不可重現）")
 > | `sample()`（不給 seed） | 讓亂數產生器用系統熵源初始化，每次執行都不同 |
 
 > 🎲 **這就是為什麼 Ch10 的 `train_test_split(..., random_state=42)`、Ch11 的 `torch.manual_seed(42)` 都要手動鎖種子**——沒鎖種子，模型的訓練/測試切分、權重初始化都會每次不同，同一份程式碼兩次跑出不同的準確率，讓人誤以為程式碼壞了，其實只是忘記固定亂數。
+
+<!-- video: ch13_05_seed_determinism -->
+<!-- /video -->
 
 ### Step 4 — schema 契約：搶在資料改動之前擋下來
 
@@ -218,6 +233,9 @@ print("✅ schema OK — 欄位、型別、值域都符合預期")
 > 🧭 這種檢查在資料科學圈叫 **schema contract**（欄位契約）或 data validation——正式專案常用 `pandera`、`great_expectations` 等套件把它自動化並整合進 pipeline；這裡用最原始的 `assert` 示範核心概念，重點是**提早抓到上游資料改動**：先假設資料可能會壞，再寫斷言去確認，而不是等分析結果怪怪的才回頭找資料問題。
 
 ---
+
+<!-- video: ch13_06_schema_contract -->
+<!-- /video -->
 
 ## 可重現檢查清單
 

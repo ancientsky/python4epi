@@ -52,6 +52,9 @@
 
 ---
 
+<!-- video: ch14_01_capstone_intuition -->
+<!-- /video -->
+
 ## 報告架構：8 段落 ↔ 章節技能
 
 一份標準的群聚調查報告（outbreak investigation report，或稱 SitRep／情勢報告）包含以下 8 個段落，每一段都對應到之前學過的章節技能：
@@ -77,6 +80,9 @@
 
 ---
 
+<!-- video: ch14_02_report_structure -->
+<!-- /video -->
+
 ## 主要發現摘要
 
 在 notebook 中，你將產出以下關鍵數字：
@@ -91,6 +97,9 @@
 這些數字不是各自獨立的——它們是同一條敘事線上的環節：流行曲線的形狀指向「共同暴露源」，空間熱點指向「特定樓層水管系統」，暴露分析和分層分析排除了「臥床者不淋浴、感染率也低」的競爭假說，最後因果研判把這條線收尾成一句可以寫進結案報告的結論。
 
 ---
+
+<!-- video: ch14_03_key_findings -->
+<!-- /video -->
 
 ## 把圖表輸出成 PPTX / DOCX 報告
 
@@ -203,6 +212,12 @@ print(f"已輸出：{outdir}")
 > | `tempfile.mkdtemp(prefix="sitrep_")` | 輸出到系統暫存資料夾，不寫進專案目錄，不會被 git 追蹤到 |
 
 > 🎁 **洞見**：程式化產報告 = **一鍵重跑、格式一致、零手工錯誤**。資料更新、結論修正，重新執行一次程式就能重新產生格式一致的簡報和 Word 報告——不用再手動截圖貼投影片，也不會再有「這份報告用的是哪一版的圖」這種疑問。完整流程（含流行曲線、空間熱力圖、更多欄位）請直接執行 [`14_case_study_legionella.ipynb`](notebooks/14_case_study_legionella.ipynb)，最後一段就是可以直接跑出 `.pptx` 與 `.docx` 檔案的完整版本。
+
+<!-- video: ch14_04_export_pptx -->
+<!-- /video -->
+
+<!-- video: ch14_05_export_docx -->
+<!-- /video -->
 
 ## 練習題
 

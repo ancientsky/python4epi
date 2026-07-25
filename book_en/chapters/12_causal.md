@@ -62,6 +62,9 @@ While solving a case, a detective has to watch out for three characters that eas
 
 ---
 
+<!-- video: ch12_01_causal_intuition -->
+<!-- /video -->
+
 ## Part 1: Association ≠ Causation
 
 ### The counterfactual: a formal definition of causal inference
@@ -86,6 +89,9 @@ Background case (context only, not something this book computes): reports indica
 > ⚠️ This is exactly the point of this section: **a statistical association alone—no matter how small the p-value—is never enough to declare causation**. A real-world epidemiological investigation always needs "epidemiological association + laboratory/biological evidence + ruling out other explanations" stacked together before it can say "this is what caused it."
 
 ---
+
+<!-- video: ch12_02_association_vs_causation -->
+<!-- /video -->
 
 ## Part 2: Drawing Causation with a DAG
 
@@ -112,6 +118,9 @@ Mapped onto this book's nursing home case:
 - **Confounder**: `functional_status` affects both `shower_use` and `infection`—this is the confounder Ch05 already caught and adjusted for with the Mantel-Haenszel method.
 - **Mediator**: `water_contamination` can only affect `infection` by way of `shower_aerosol`—`shower_aerosol` is the mediator sitting in the middle of that causal path.
 - **Collider**: `hospitalized` is pointed into by both `severity` and other factors (e.g., comorbidities, family preference)—a textbook collider.
+
+<!-- video: ch12_03_dag -->
+<!-- /video -->
 
 ### The collider trap: Berkson's paradox
 
@@ -145,6 +154,9 @@ Once you've sketched this out, you've already completed the most critical step i
 In practice, common tools for drawing a DAG include **draw.io** (drag-and-drop online, fastest to pick up), **graphviz** (describes nodes and arrows as text, good for version control), and Python's **daft** package (handy for embedding directly in a paper or notebook)—these are all just tools for "putting it on paper"; pick whichever you like, even pen and paper works fine. **What really matters is the thinking that happens before you draw**: who do you believe affects whom? Have you missed a possible confounder? Is a given variable a mediator or a confounder? Getting these questions straight matters far more than how slick the tool is.
 
 ---
+
+<!-- video: ch12_04_collider_berkson -->
+<!-- /video -->
 
 ## Part 3: Attributable Risk (AR) and Population Attributable Risk (PAR)
 
@@ -228,6 +240,9 @@ PAF_fp = Pe_fp * (RR_fp - 1) / (1 + Pe_fp * (RR_fp - 1))
 
 ---
 
+<!-- video: ch12_05_ar_par -->
+<!-- /video -->
+
 ## Part 4: Evaluating Policy Effects with DiD
 
 ### Why you can't just compare before vs. after
@@ -274,6 +289,9 @@ did_p = model.pvalues["treated:post"]
 
 **The honest result**: running this on this book's synthetic data, the `treated:post` coefficient comes out at nearly 0 (p ≈ 1, not remotely significant). The reason isn't mysterious—the intervention date (1/25) in the data is only 3-4 days from the end of the observation window (1/28), and on top of that, the whole cluster event was already nearing its tail end, with daily case counts naturally declining. A window of just a few days simply doesn't provide enough statistical power to tell "the effect of the intervention" apart from "the outbreak was winding down anyway." This is exactly one of the traps covered in the next section: **an observation window that's too short, or a sample that's too small, leaving DiD unable to estimate a significant effect, does not mean the intervention didn't work—it only means this particular batch of data can't support that conclusion**.
 
+<!-- video: ch12_06_did -->
+<!-- /video -->
+
 ### The parallel trends assumption: DiD's lifeline
 
 A DiD estimate is only trustworthy if the **parallel trends assumption** holds: if the two groups were already on different slopes before the intervention, the difference observed afterward might just be the two groups continuing to drift apart on their own, with nothing to do with the intervention itself.
@@ -283,6 +301,9 @@ A DiD estimate is only trustworthy if the **parallel trends assumption** holds: 
 If you only have two time points—"before" and "after"—the parallel trends assumption is hard to check; a more rigorous approach is the **event study**, which breaks the before/after period into several smaller time windows (e.g., "3 weeks before intervention," "2 weeks before intervention," ..., "1 week after intervention") and estimates a separate effect coefficient for each one. Ideally, **every pre-intervention coefficient should be close to 0** (since the intervention hasn't happened yet, there shouldn't be an effect); only the post-intervention coefficients should deviate significantly from 0. If the pre-intervention coefficients are already significantly different from 0, that's a sign the two groups were already on different trajectories to begin with, and the parallel trends assumption doesn't hold.
 
 ---
+
+<!-- video: ch12_07_parallel_trends -->
+<!-- /video -->
 
 ## Exercises
 

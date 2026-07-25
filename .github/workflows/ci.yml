@@ -51,6 +51,9 @@ jobs:
       - name: Run tests
         run: uv run pytest
 
+      - name: Check video embeds match youtube_ids.yaml
+        run: uv run python videos/sync_video_embeds.py --check
+
       - name: Build Jupyter Book (student edition — matches deploy)
         run: |
           cp book/_toc_student.yml book/_toc.yml

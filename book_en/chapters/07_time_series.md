@@ -168,14 +168,8 @@ Every move you just helped the owner learn—rolling average, autoregression, se
 | **AIC** | Akaike Information Criterion, smaller is better, penalizes overfitting |
 | **Data leakage** | Using future information to make predictions → unreliable results (always `shift(1)`) |
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Time series fundamentals—asfreq, autocorrelation, stationarity</div>
-  <div class="youtube-lite" data-id="VYo8QnHEi74">
-    <img src="https://img.youtube.com/vi/VYo8QnHEi74/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch07_01_ts_basics -->
+<!-- /video -->
 
 ## Method Overview
 
@@ -275,14 +269,8 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 
 Before reaching for a regression model, start with the simplest possible baseline—the **rolling mean**: guess "tomorrow" using the average of the previous w days, and sweep across a few window sizes to find the most accurate one.
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Rolling mean baseline and the shift(1) lifesaver</div>
-  <div class="youtube-lite" data-id="8VP3e7FSKPQ">
-    <img src="https://img.youtube.com/vi/8VP3e7FSKPQ/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch07_02_rolling_baseline -->
+<!-- /video -->
 
 ```python
 # Predict "the next day" using the average of the previous w days; shift(1) avoids data leakage
@@ -322,14 +310,8 @@ This step doesn't build a model—it just **gives the time series a makeover**: 
 **Lag features**: `df["lag_1"] = df["cases"].shift(1)` pushes the whole column down one row, so "yesterday's cases" appears in "today's row." Combined with `lag_2` and `lag_3`, you can **turn a time series into a table that ordinary regression can consume**.
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Lag features—turning a time series into regression data</div>
-  <div class="youtube-lite" data-id="1DTX1bomJ4E">
-    <img src="https://img.youtube.com/vi/1DTX1bomJ4E/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch07_03_lag_features -->
+<!-- /video -->
 
 ```python
 ts = daily.to_frame("cases").reset_index(names="date")
@@ -361,14 +343,8 @@ Why add lags? Because infection is transmissible—today's case count is highly 
 
 Count data (daily counts are 0, 1, 2, ...) are naturally suited to the **Poisson** distribution. We use `statsmodels`' GLM to include the lag features + a trend term:
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Poisson regression + lag—reading daily cases with IRR</div>
-  <div class="youtube-lite" data-id="zYXleAV-l2U">
-    <img src="https://img.youtube.com/vi/zYXleAV-l2U/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch07_04_poisson_lag -->
+<!-- /video -->
 
 ```python
 import statsmodels.api as sm
@@ -419,14 +395,8 @@ This step is a "check-up" first—verify whether the data is overdispersed befor
 **Poisson's big assumption**: `variance = mean`. But outbreak investigation data often misbehaves—once cluster infection occurs, the variance is far greater than the mean (**overdispersion**). In that case you should switch to **Negative Binomial**, which adds a parameter α specifically to absorb the "extra" variance.
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Negative Binomial—the savior for overdispersion</div>
-  <div class="youtube-lite" data-id="5ZzrjUBGN8c">
-    <img src="https://img.youtube.com/vi/5ZzrjUBGN8c/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch07_05_negative_binomial -->
+<!-- /video -->
 
 ```python
 # First check the dispersion ratio
@@ -460,14 +430,8 @@ print(f"\nNegative Binomial + lag:  MAE={mae_nb:.3f},  AIC={model_nb.aic:.2f}")
 
 The supervisor's second question is a **yes/no alert**, not a continuous number. The approach: **binarize** each day's case count (above a certain threshold → 1, otherwise → 0), then use logistic regression to predict the probability.
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Logistic regression—will tomorrow be a peak day?</div>
-  <div class="youtube-lite" data-id="xzOQKhFM9js">
-    <img src="https://img.youtube.com/vi/xzOQKhFM9js/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch07_06_logistic_threshold -->
+<!-- /video -->
 
 ```python
 # Use the 75th percentile as the "peak day" threshold
@@ -548,14 +512,8 @@ Before actually fitting an ARIMA model, first run an ADF test to confirm the ser
 **ARIMA's three letters**: **AR(p)** looks at the past p days of itself; **I(d)** takes d differences to make the series stationary; **MA(q)** looks at the past q forecast errors. **SARIMA** additionally adds a set of (P, D, Q, s) specifically to capture the seasonal cycle s.
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: ARIMA vs SARIMA—the classic weapon + capturing seasonality</div>
-  <div class="youtube-lite" data-id="u6Tl3toQGZc">
-    <img src="https://img.youtube.com/vi/u6Tl3toQGZc/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch07_07_arima_sarima -->
+<!-- /video -->
 
 ```python
 from statsmodels.tsa.arima.model import ARIMA
@@ -712,14 +670,8 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 
 This lays out the MAE, minimum data requirement, and whether a confidence interval is available for all seven models in one table, so you can compare them directly.
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Six-model showdown—which one suits which situation?</div>
-  <div class="youtube-lite" data-id="u9gxSIb57a0">
-    <img src="https://img.youtube.com/vi/u9gxSIb57a0/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch07_08_ts_model_comparison -->
+<!-- /video -->
 
 ```python
 comparison = pd.DataFrame([
