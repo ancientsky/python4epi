@@ -1,6 +1,6 @@
 ---
 name: video-production
-description: House visual style and build pipeline for this repo's tutorial videos and hand-crafted SVG diagrams — the Anthropic-Skilljar colour palette, SVG diagram conventions, the Manim + edge-TTS + FFMPEG pipeline, YAML narration script format, custom Manim mobjects, and the Manim v0.20.1 breaking-change/crash workarounds. Use when creating or editing anything under videos/ (scenes, scripts, build.py), when authoring or modifying SVG diagrams in book/chapters/images/, or when touching the youtube-lite CSS in book/_static/.
+description: House visual style, build pipeline, and link-publishing workflow for this repo's tutorial videos and hand-crafted SVG diagrams — the Anthropic-Skilljar colour palette, SVG diagram conventions, the bilingual Manim + edge-TTS + FFMPEG pipeline, YAML narration script format, custom Manim mobjects, the Manim v0.20.1 breaking-change/crash workarounds, and how YouTube links reach the site via the youtube_ids.yaml registry and sync_video_embeds.py. Use when creating or editing anything under videos/ (scenes, scripts, build.py, youtube_ids.yaml), when adding or moving a video embed in book/ or book_en/ chapters, when authoring or modifying SVG diagrams in book/chapters/images/, or when touching the youtube-lite CSS in book/_static/.
 ---
 
 # Tutorial video & diagram production
@@ -103,11 +103,45 @@ Every video follows this structure:
 
 ### Video Build Commands
 ```bash
-uv sync --group video                    # Install video dependencies (not in CI)
-uv run python videos/build.py --all      # Build all videos
-uv run python videos/build.py --concept variables  # Build one video
+uv sync --group video                          # Install video deps (not in CI)
+uv run python videos/build.py --all --lang zh  # Build every video, one language
+uv run python videos/build.py --chapter 08 --lang en
+uv run python videos/build.py --concept variables
 uv run manim render -ql videos/scenes/ch01_01_variables.py Ch01VariablesScene  # Preview
 ```
+
+Every concept has a Chinese script (`name.yaml`) and an English one
+(`name_en.yaml`) driving the **same** Manim scene, so `--lang` is almost always
+worth passing explicitly. Output lands in `videos/output/final/<stem>.mp4`
+(English gets the `_en` suffix).
+
+### Publishing Links to the Site — Never Hand-Edit Chapter Embeds
+
+`videos/youtube_ids.yaml` is the single source of truth for every video link on
+the site. The chapter markdown only carries invisible markers:
+
+```
+<!-- video: ch08_04_morans_i -->
+...generated card, or nothing when the ID is blank...
+<!-- /video -->
+```
+
+`videos/sync_video_embeds.py` regenerates everything between those markers in
+**both** `book/` (from the `zh:` field) and `book_en/` (from `en:`), and rewrites
+`videos/VIDEO_INDEX.md`. Editing a card by hand is pointless — the next sync
+overwrites it, and CI (`--check`) fails the build for drifting.
+
+To publish a link: paste the URL or bare ID into the registry entry whose key
+matches the built mp4 stem, then run the sync. A blank ID renders no card at
+all, so unreleased videos never leave a dead thumbnail on the page.
+
+```bash
+uv run python videos/sync_video_embeds.py          # rewrite embeds + index
+uv run python videos/sync_video_embeds.py --check  # CI guard, non-zero if stale
+```
+
+Adding a video for a chapter also means adding its marker pair to the chapter in
+**both** trees, at the same heading position, plus an entry in the registry.
 
 
 ### Video Dependencies
