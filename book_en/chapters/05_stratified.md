@@ -184,14 +184,8 @@ For a variable C to be considered a confounder, it must **simultaneously satisfy
 
 > 🧪 **Memory aid**: A confounder is like a "double agent"—it mixes into both the exposure group and the outcome group, tricking you into thinking exposure and outcome are related (or exaggerating/shrinking the true relationship). All three conditions are essential; skip verifying even one and you may "wrongly convict an innocent" or "let the culprit go free."
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: The three requirements of a confounder—who counts as an accomplice</div>
-  <div class="youtube-lite" data-id="2ZF6K8ylvtI">
-    <img src="https://img.youtube.com/vi/2ZF6K8ylvtI/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch05_01_confounder_concept -->
+<!-- /video -->
 
 ### How Do You Discover Potential Confounders?
 
@@ -227,14 +221,8 @@ From the DAG you can see two paths:
 
 The back-door path is like a classmate next to you copying your answers during an exam—their score (the outcome) looks related to yours (the exposure), but really it's because of the common cause of "sitting next to you" (the confounder). Stratified analysis separates "those sitting next to you" from "those not sitting next to you," eliminating this spurious association.
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: The DAG—draw a map of causation</div>
-  <div class="youtube-lite" data-id="87jXOHHNCog">
-    <img src="https://img.youtube.com/vi/87jXOHHNCog/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch05_02_dag -->
+<!-- /video -->
 
 ### The Logic of Stratified Analysis
 
@@ -304,14 +292,8 @@ print(f"Crude RR (shower_use -> infected) = {crude_rr:.3f}")
 
 Before stratifying, verify that "functional status" really meets the three conditions of a confounder. Skip verifying one and you may be doing all the work for nothing:
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Verifying the three requirements—hands-on with pd.crosstab</div>
-  <div class="youtube-lite" data-id="gPq3SstS3JE">
-    <img src="https://img.youtube.com/vi/gPq3SstS3JE/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch05_03_verify_criteria -->
+<!-- /video -->
 
 ```python
 # --- Condition 1: Is functional status associated with shower use? ---
@@ -348,14 +330,8 @@ print(pd.crosstab(df["functional_status"], df["infected"],
 
 > This is the core step of the whole chapter—split the data by functional status (ambulatory, wheelchair, bedridden) into three strata, and within each stratum compute the RR and 95% confidence interval.
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Stratified analysis—compute an RR for every stratum</div>
-  <div class="youtube-lite" data-id="8yhHobtu_BU">
-    <img src="https://img.youtube.com/vi/8yhHobtu_BU/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch05_04_stratified_rr -->
+<!-- /video -->
 
 ```python
 # --- Stratify by functional_status, computing RR + 95% CI in each stratum ---
@@ -426,14 +402,8 @@ print(f"\n  Crude RR = {crude_rr:.3f}")
 
 A forest plot puts each stratum's RR and confidence interval on a single chart, so you can see at a glance the effect size and precision of each stratum:
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Forest plot—see through every stratum's RR at a glance</div>
-  <div class="youtube-lite" data-id="NhMpRmZgN10">
-    <img src="https://img.youtube.com/vi/NhMpRmZgN10/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch05_05_stratified_forest_plot -->
+<!-- /video -->
 
 ```python
 import matplotlib.pyplot as plt
@@ -478,14 +448,8 @@ plt.show()
 
 This step takes Step 4's per-stratum results and pools them with the Mantel-Haenszel formula into a single adjusted RR—strata with more people get more weight, strata with fewer people get less.
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Mantel-Haenszel weighting—a fair semester grade</div>
-  <div class="youtube-lite" data-id="Fj3d4Jr0kQM">
-    <img src="https://img.youtube.com/vi/Fj3d4Jr0kQM/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch05_06_mantel_haenszel -->
+<!-- /video -->
 
 ```python
 # --- Mantel-Haenszel weighted pooling ---
@@ -538,14 +502,8 @@ Eyeballing whether the stratum RRs look similar isn't precise enough; this step 
 
 > 🍜 **The spicy hotpot analogy**: You're investigating "whether eating spicy hotpot causes diarrhea," and you split people into "strong-stomached" and "weak-stomached" groups. If the strong-stomached group has RR=1.2 and the weak-stomached group has RR=4.5—this isn't confounding, it's **interaction** (effect modification): the effect of spicy hotpot "varies from person to person." In that case you can't just report a single pooled RR; you must report them separately: "For strong-stomached people the effect is small; weak-stomached people should be careful."
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Interaction—the effect of exposure varies from person to person</div>
-  <div class="youtube-lite" data-id="I82KCu2kM_0">
-    <img src="https://img.youtube.com/vi/I82KCu2kM_0/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch05_07_effect_modification -->
+<!-- /video -->
 
 ```python
 # --- Test of homogeneity (simplified Breslow-Day) ---
@@ -656,14 +614,8 @@ So far, our nursing home data is a **cohort study**—all 280 residents are on t
 
 Good news: **the logic of stratified analysis is exactly the same**—still verify the three requirements, still stratify by the confounder, still pool with Mantel-Haenszel. The only difference is:
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: The case-control MH—swap the formula, same logic</div>
-  <div class="youtube-lite" data-id="9441-KkyGqM">
-    <img src="https://img.youtube.com/vi/9441-KkyGqM/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch05_08_case_control_mh -->
+<!-- /video -->
 
 | | Cohort study (this chapter) | Case-control study |
 |---|---|---|

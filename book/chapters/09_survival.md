@@ -151,6 +151,9 @@ print(f"Log-rank p 值 = {res.p_value:.4f} → {verdict}")
 
 ---
 
+<!-- video: ch09_01_survival_intuition -->
+<!-- /video -->
+
 ## 核心概念
 
 ### 存活時間（Survival Time）
@@ -184,6 +187,9 @@ print(f"Log-rank p 值 = {res.p_value:.4f} → {verdict}")
 - **失聯者**：也是 `event = 0`（右設限，但時間較短）
 
 ⚠️ **常見錯誤**：把存活者的 time 當成 0 或直接丟掉——前者低估存活時間，後者浪費重要資訊。
+
+<!-- video: ch09_02_censoring -->
+<!-- /video -->
 
 ### Hazard 與 Hazard Ratio（HR）
 
@@ -332,6 +338,9 @@ plt.show()
 
 > **本案線索**：如果中位存活時間顯示 `inf`，代表超過一半的感染住民在觀察期內都沒死亡（CFR < 50%，合理因為 19/121 ≈ 15.7%）。
 
+<!-- video: ch09_03_kaplan_meier -->
+<!-- /video -->
+
 ## Step 3 — 按嚴重度分組的存活曲線
 
 全體一條線看不出「誰預後比較差」，所以我們**照嚴重度拆成三組**、各畫一條線疊在同一張圖上比較。
@@ -368,6 +377,9 @@ plt.show()
    - 交叉 → PH 假設可能被違反（Cox 結果要小心解讀，Step 7 會驗證）
 
 > **本案預期**：severe 組的曲線應該**最早、最快**下降；mild 組曲線近乎水平。若實際觀察到 severe 和 moderate 交叉，就要 flag「嚴重度的效應可能隨時間變化」。
+
+<!-- video: ch09_04_km_by_group -->
+<!-- /video -->
 
 ## Step 4 — Log-rank 檢定
 
@@ -408,6 +420,9 @@ print(f"Log-rank p-value = {result.p_value:.4f}")
 ⚠️ **重要限制**：log-rank **只告訴你「有沒有差」，不告訴你「差多少」**。想要量化效應（HR + CI），必須用 Cox 迴歸。
 
 > **類比**：log-rank 就像健康檢查報告上的「異常」紅字——提醒你有問題，但不會告訴你問題的嚴重度。要看嚴重度得另外做檢查（＝ Cox 迴歸）。
+
+<!-- video: ch09_05_logrank -->
+<!-- /video -->
 
 ## Step 5 — Cox 比例風險迴歸
 
@@ -477,6 +492,9 @@ cph.print_summary()
 
 > 這也是為什麼 Cox 結果裡很多變項看起來「不顯著」——不是真的不重要，而是**樣本量不夠撐起這麼多變項**。
 
+<!-- video: ch09_06_cox_regression -->
+<!-- /video -->
+
 ## Step 6 — HR 森林圖
 
 `print_summary()` 的表格用看的容易眼花，**森林圖**把每個變項的 HR 和信賴區間畫成「點 + 橫線」，一眼就看出誰危險、誰不顯著。
@@ -510,6 +528,9 @@ plt.show()
 | **橫線很長** | CI 寬 → 不確定性高（通常是該變項樣本少） |
 
 > **閱讀順序**：① 先看 point 在 0 的哪一邊（方向） → ② 看 line 有沒有跨 0（顯著性） → ③ 看 line 的長度（確定性）。
+
+<!-- video: ch09_07_hr_forest -->
+<!-- /video -->
 
 ## Step 7 — PH 假設驗證
 
@@ -554,6 +575,9 @@ results = cph.check_assumptions(cox_df, show_plots=False)
 > **注意**：事件數少（本案 19 events）時，`check_assumptions()` 的檢定力本來就不高——即使沒偵測到違反，也不代表 PH 假設一定成立。永遠搭配視覺檢查（分組 KM 曲線有沒有交叉）。
 
 ---
+
+<!-- video: ch09_08_ph_assumption -->
+<!-- /video -->
 
 ## 練習題
 

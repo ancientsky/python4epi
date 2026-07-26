@@ -168,6 +168,7 @@ print(f"上週同一天法 MAE = {mae_seasonal:.1f} 杯  ← 抓住『週六爆�
 | **AIC** | Akaike Information Criterion，愈小愈好，懲罰過度配適 |
 | **Data leakage** | 用到未來資訊做預測 → 結果不可靠（一定要 `shift(1)`） |
 
+<!-- video: ch07_01_ts_basics -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：時間序列基本概念——asfreq、自相關、平穩性</div>
@@ -176,6 +177,7 @@ print(f"上週同一天法 MAE = {mae_seasonal:.1f} 杯  ← 抓住『週六爆�
   </div>
 </div>
 ```
+<!-- /video -->
 
 ## 方法總覽
 
@@ -275,6 +277,7 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 
 在正式上迴歸模型之前，先用最簡單的**滾動平均**當 baseline：用前 w 天的平均去猜「明天」，順便掃過幾個窗口大小找出最準的一個。
 
+<!-- video: ch07_02_rolling_baseline -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Rolling mean baseline 與 shift(1) 救命符</div>
@@ -283,6 +286,7 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```python
 # 用前 w 天的平均預測「下一天」，shift(1) 避免 data leakage
@@ -322,6 +326,7 @@ Rolling mean 的優點：**簡單、直覺、在第一天就能用**。缺點：
 **Lag features**：`df["lag_1"] = df["cases"].shift(1)` 把整欄往下推一格，讓「昨天的 cases」出現在「今天那一列」。再配合 `lag_2`、`lag_3`，就能把時間序列**變成一般迴歸能吃的表格**。
 ```
 
+<!-- video: ch07_03_lag_features -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Lag features——把時間序列變成迴歸資料</div>
@@ -330,6 +335,7 @@ Rolling mean 的優點：**簡單、直覺、在第一天就能用**。缺點：
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```python
 ts = daily.to_frame("cases").reset_index(names="date")
@@ -361,6 +367,7 @@ print(f"可用列數：{len(ts_model)}")
 
 計數資料（每日人數是 0, 1, 2, ...）天生適合 **Poisson** 分布。我們用 `statsmodels` 的 GLM 把 lag 特徵 + 趨勢項放進去：
 
+<!-- video: ch07_04_poisson_lag -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Poisson regression + lag——IRR 解讀每日病例</div>
@@ -369,6 +376,7 @@ print(f"可用列數：{len(ts_model)}")
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```python
 import statsmodels.api as sm
@@ -419,6 +427,7 @@ print(coef_table.round(3))
 **Poisson 的大前提**：`variance = mean`。但疫調資料常常不乖——一旦發生群聚感染，變異會遠大於平均（**overdispersion**）。此時應改用 **Negative Binomial**，它多一個參數 α 專門吸收「多出來的」變異。
 ```
 
+<!-- video: ch07_05_negative_binomial -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Negative Binomial——過度離散的救星</div>
@@ -427,6 +436,7 @@ print(coef_table.round(3))
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```python
 # 先檢查 dispersion ratio
@@ -460,6 +470,7 @@ print(f"\nNegative Binomial + lag:  MAE={mae_nb:.3f},  AIC={model_nb.aic:.2f}")
 
 長官問的第二個問題是**是/否警報**，不是連續數字。做法：把每天的病例數**二值化**（超過某個門檻 → 1，否則 → 0），再用 logistic regression 預測機率。
 
+<!-- video: ch07_06_logistic_threshold -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Logistic regression——明天會不會是高峰日？</div>
@@ -468,6 +479,7 @@ print(f"\nNegative Binomial + lag:  MAE={mae_nb:.3f},  AIC={model_nb.aic:.2f}")
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```python
 # 把 75th percentile 當「高峰日」門檻
@@ -548,6 +560,7 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 **ARIMA 三個字母**：**AR(p)** 看過去 p 天的自己；**I(d)** 做 d 次差分讓序列平穩；**MA(q)** 看過去 q 次的預測誤差。**SARIMA** 額外加一組 (P, D, Q, s) 專門抓週期 s。
 ```
 
+<!-- video: ch07_07_arima_sarima -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：ARIMA vs SARIMA——經典武器 + 週期性捕捉</div>
@@ -556,6 +569,7 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```python
 from statsmodels.tsa.arima.model import ARIMA
@@ -712,6 +726,7 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 
 把前面七個模型的 MAE、資料需求、能不能給信賴區間全部攤開放進同一張表，方便直接比較。
 
+<!-- video: ch07_08_ts_model_comparison -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：六模型大比拼——誰適合什麼情境？</div>
@@ -720,6 +735,7 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```python
 comparison = pd.DataFrame([

@@ -66,6 +66,9 @@ Different cases call for detectives with different specialties — this logic un
 
 ---
 
+<!-- video: ch11_01_dl_intuition -->
+<!-- /video -->
+
 ## Core Concepts
 
 Before writing any PyTorch, let's translate the metaphor from the last section into formal technical terms.
@@ -91,6 +94,9 @@ $$z = \sum_i x_i w_i + b, \qquad \hat{y} = \text{ReLU}(z) = \max(0, z)$$
 
 Line the same neuron up in a row (a **layer**), and stack input layer → hidden layer → output layer one after another — that's the "deep" in "deep learning": the more layers stacked, the more complex a function it can, in theory, express (but also the more prone to overfitting — see the next section).
 
+<!-- video: ch11_02_neuron_layer -->
+<!-- /video -->
+
 ### The Training Loop: Loss, Gradient Descent, Backprop, Epoch
 
 ```{figure} images/training_loop_en.svg
@@ -110,6 +116,9 @@ Every PyTorch model's training follows the same four-beat rhythm:
 
 Running all the training data through this four-beat rhythm once is called one **epoch**. Training usually needs many epochs, gradually driving the loss down round after round.
 
+<!-- video: ch11_03_training_loop -->
+<!-- /video -->
+
 ### Overfitting and Early Stopping: When to Call It Quits
 
 What happens if you just keep training? **Overfitting**: the model memorizes every detail of the training data (noise included), the train loss keeps sinking, but the val loss falls and then rises — a "V-shaped rebound." That rebound point is the signal that the model has started rote-memorizing the training data instead of learning to generalize.
@@ -117,6 +126,9 @@ What happens if you just keep training? **Overfitting**: the model memorizes eve
 **Early stopping** is the fix: monitor the validation loss while training, and the moment `patience` rounds in a row go by without a new record, stop early and roll back to the weights from the best-performing round — not the weights at the moment training happened to end (which is likely already overfit). This is the technical version of "knowing when to stop" from the rookie-detective metaphor.
 
 ---
+
+<!-- video: ch11_04_overfitting_earlystop -->
+<!-- /video -->
 
 ## 🧭 Decision Framework: Should You Use DL? (Don't Bring a Sledgehammer to Swat a Fly)
 
@@ -162,6 +174,9 @@ Run the decision framework against this book's data, and the answer is clear:
 > 🧭 **Iron rule**: run the traditional statistics / ML baseline first; only consider DL if it's not good enough **and** the conditions in the decision tree above are met. Deep learning is a sledgehammer — Part A of this chapter will let you see with your own eyes: swung at a fly (280-row classification) the sledgehammer shows no advantage, but swung at what it's built for (sequence forecasting), it really does cut sharper.
 
 ---
+
+<!-- video: ch11_05_when_to_use_dl -->
+<!-- /video -->
 
 ## Splitting the Data: Train / Val / Test for Time Series
 
@@ -334,6 +349,9 @@ model.load_state_dict(best_state)
 
 The reason lines up exactly with the decision framework earlier in this chapter: 280 rows is nowhere near enough to support a 700-parameter neural network learning anything sklearn couldn't already learn — **on small data, DL has no edge.** The educational value of this step isn't "beating sklearn" — it's genuinely learning PyTorch's training-loop syntax, in preparation for a task in Step 2 where DL is truly the right tool.
 
+<!-- video: ch11_06_mlp_baseline -->
+<!-- /video -->
+
 ### Step 2 — Sequence Forecasting: LSTM / CNN
 
 280 rows of cross-sectional data leave DL tied with sklearn — so what about a **sequence forecasting** task instead? [`11_dl_sequence.ipynb`](notebooks/11_dl_sequence.ipynb) doesn't use the Songbai Nursing Home data (it doesn't have a long enough daily sequence) — instead it uses a **synthetic teaching dataset of daily "dengue fever × temperature" series**: temperature is a noisy, seasonal **leading indicator** available ahead of time each day, and case counts are driven jointly by "temperature 7 days ago" and "yesterday's case count." The task: given the past 21 days of (cases, temperature), predict the case count **7 days ahead**.
@@ -490,6 +508,9 @@ This time DL really does win, and by a solid margin. **Why?**
 
 ---
 
+<!-- video: ch11_07_lstm_cnn_sequence -->
+<!-- /video -->
+
 ## Part B — A Tour of Modern DL (Conceptual Overview, Not Executed in This Book)
 
 Part A showed you two faces of deep learning: overkill on small-sample classification (can't beat sklearn), genuinely sharper on sequence forecasting once there's a leading indicator to exploit. But deep learning's territory extends far beyond MLP, LSTM, and CNN. The tools below **are not executed in this book** (they need extra packages, a GPU, or an internet connection to download large pretrained weights) — presented here as "metaphor + epi use case + when to use it + tools + illustrative code" for a quick tour, so you know which tool to reach for when you run into a given problem down the road.
@@ -642,6 +663,9 @@ final_forecast = seir_forecast + residual_model.predict(X_covariates_future)
 ```
 
 ---
+
+<!-- video: ch11_08_dl_landscape -->
+<!-- /video -->
 
 ## Evaluation and Interpretability
 

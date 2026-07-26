@@ -52,6 +52,9 @@ Gather all four things — code, data, environment, seed — and anyone, on any 
 
 ---
 
+<!-- video: ch13_01_repro_intuition -->
+<!-- /video -->
+
 ## Core Concepts
 
 Translating the recipe metaphor back into formal terms, reproducible research comes down to three things:
@@ -90,6 +93,9 @@ The landmines make each rerun "drift" a little further from the last; the three 
 
 ---
 
+<!-- video: ch13_02_why_different_results -->
+<!-- /video -->
+
 ## The Minimal Rerunnable Report: Code Walkthrough
 
 A "minimal rerunnable report" needs to do this: starting from a clean environment, using **a fixed handful of commands + fixed code**, produce numbers identical to the original author's. Below it's broken into four parts: first rebuild and verify the environment, then produce the summary, then prove seed determinism, and finally lock down the data's structure with a schema contract.
@@ -111,6 +117,9 @@ uv run python notebooks/run_sitrep.py
 > | `uv run python notebooks/run_sitrep.py` | Actually runs the analysis once: reads the line list, computes CFR and attack rate, outputs summary tables by zone — this is exactly the "minimal rerunnable report" this chapter is after |
 
 > 💡 Three commands, zero manual steps — that's exactly the spirit of a single-command workflow: nobody needs to ask you "what else do I need to install, what else do I need to change." Copy, paste, and it reproduces.
+
+<!-- video: ch13_03_min_reproducible_report -->
+<!-- /video -->
 
 ### Step 2 — Read the Data, Produce a Summary: The One True Answer
 
@@ -147,6 +156,9 @@ for k, v in summary.items():
 
 > 💡 **Why emphasize "determinism"**: `groupby(...).ngroups`, `.sum()`, `.mean()` are all pure math operations, with nothing to do with randomness, multi-threaded sort order, timezones, or other "invisible variables" — this is exactly what reproducible research is chasing: eliminating anything that could make "the same code, the same data" produce different results across two runs.
 
+<!-- video: ch13_04_data_summary_contract -->
+<!-- /video -->
+
 ### Step 3 — Seed Determinism: Even Randomness Needs to Be "Randomly Consistent"
 
 The previous step used no randomness at all, since reading data and computing means are both deterministic operations. But the moment "randomness" shows up in an analysis — like `train_test_split` when training a model in Ch10, `torch.manual_seed` in Ch11, or any `np.random` sampling — failing to fix the seed means every run is a different experiment. Below, a minimal example proves it: **the same seed → the same random numbers; no seed set → different every time**.
@@ -174,6 +186,9 @@ print("no seed set   :", sample(), "-> different every time (not reproducible)")
 > | `sample()` (no seed given) | Lets the random number generator seed itself from system entropy, so every run differs |
 
 > 🎲 **This is exactly why Ch10's `train_test_split(..., random_state=42)` and Ch11's `torch.manual_seed(42)` both fix the seed by hand** — without a fixed seed, the model's train/test split and weight initialization would differ every run, and the same code would produce a different accuracy on two runs, making it look like the code is broken when really someone just forgot to fix the randomness.
+
+<!-- video: ch13_05_seed_determinism -->
+<!-- /video -->
 
 ### Step 4 — Schema Contract: Catching Data Changes Before They Break You
 
@@ -218,6 +233,9 @@ print("✅ schema OK - columns, dtypes, and value ranges all as expected")
 > 🧭 This kind of check is called a **schema contract** (data column contract) or data validation in the data science world — production projects often automate it with packages like `pandera` or `great_expectations` and wire it into the pipeline. Here, plain `assert` statements demonstrate the core idea, and the point is to **catch upstream data changes early**: assume the data might break, and write assertions to confirm it hasn't — rather than waiting until the analysis results look weird before going back to hunt for the data problem.
 
 ---
+
+<!-- video: ch13_06_schema_contract -->
+<!-- /video -->
 
 ## Reproducibility Checklist
 

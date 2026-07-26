@@ -184,6 +184,7 @@ Mantel-Haenszel 校正後 RR = 1.00
 
 > 🧪 **記憶口訣**：干擾因子像「雙面間諜」——它同時混在暴露組和結果組裡，讓你誤以為暴露和結果有關係（或關係被誇大/壓縮）。三個條件缺一不可，少驗一個就可能「冤枉好人」或「放走嫌犯」。
 
+<!-- video: ch05_01_confounder_concept -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：干擾因子的三要件——誰才算共犯</div>
@@ -192,6 +193,7 @@ Mantel-Haenszel 校正後 RR = 1.00
   </div>
 </div>
 ```
+<!-- /video -->
 
 ### 如何發現潛在的干擾因子？
 
@@ -227,6 +229,7 @@ DAG 示意圖：功能狀態（C）同時影響淋浴使用（暴露）和感染
 
 後門路徑就像考試時隔壁同學偷看你的答案——他的分數（結果）看起來跟你（暴露）有關，但其實是因為「坐你旁邊」（干擾因子）這個共同原因。分層分析就是把「坐旁邊的」和「沒坐旁邊的」分開看，消除這個虛假關聯。
 
+<!-- video: ch05_02_dag -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：DAG 有向無環圖——畫一張因果地圖</div>
@@ -235,6 +238,7 @@ DAG 示意圖：功能狀態（C）同時影響淋浴使用（暴露）和感染
   </div>
 </div>
 ```
+<!-- /video -->
 
 ### 分層分析的邏輯
 
@@ -304,6 +308,7 @@ print(f"粗 RR (shower_use → infected) = {crude_rr:.3f}")
 
 在分層之前，先驗證「功能狀態」是不是真的符合干擾因子的三個條件。少驗一個就可能白做工：
 
+<!-- video: ch05_03_verify_criteria -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：驗證三要件——pd.crosstab 實戰</div>
@@ -312,6 +317,7 @@ print(f"粗 RR (shower_use → infected) = {crude_rr:.3f}")
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```python
 # --- 條件 1：功能狀態與淋浴使用有關聯嗎？ ---
@@ -346,6 +352,7 @@ print(pd.crosstab(df["functional_status"], df["infected"],
 
 > 這是整章的核心步驟——把資料按功能狀態（ambulatory、wheelchair、bedridden）分成三層，每一層內分別算 RR 和 95% 信賴區間。
 
+<!-- video: ch05_04_stratified_rr -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：分層分析——每一層都算一次 RR</div>
@@ -354,6 +361,7 @@ print(pd.crosstab(df["functional_status"], df["infected"],
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```python
 # --- 按 functional_status 分層，各層計算 RR + 95% CI ---
@@ -424,6 +432,7 @@ print(f"\n  粗 RR = {crude_rr:.3f}")
 
 森林圖（forest plot）把每一層的 RR 和信賴區間畫在同一張圖上，一眼就能看出各層的效應大小和精確度：
 
+<!-- video: ch05_05_stratified_forest_plot -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：森林圖——一眼看穿各層 RR</div>
@@ -432,6 +441,7 @@ print(f"\n  粗 RR = {crude_rr:.3f}")
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```python
 import matplotlib.pyplot as plt
@@ -476,6 +486,7 @@ plt.show()
 
 這一步把 Step 4 各層的結果，用 Mantel-Haenszel 公式加權合併成「一個」校正後 RR——樣本數多的層權重大，樣本數少的層權重小。
 
+<!-- video: ch05_06_mantel_haenszel -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Mantel-Haenszel 加權——公平的學期成績</div>
@@ -484,6 +495,7 @@ plt.show()
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```python
 # --- Mantel-Haenszel 加權合併 ---
@@ -536,6 +548,7 @@ else:
 
 > 🍜 **麻辣鍋比喻**：你調查「吃麻辣鍋會不會拉肚子」，把人分成「胃好的」和「胃不好的」兩組。如果胃好的人 RR=1.2，胃不好的人 RR=4.5——這不是干擾，而是**交互作用**（effect modification）：麻辣鍋的影響「因人而異」。這時候你不能只報一個合併的 RR，必須分開說：「胃好的人影響不大，胃不好的人要小心。」
 
+<!-- video: ch05_07_effect_modification -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：交互作用——暴露的影響因人而異</div>
@@ -544,6 +557,7 @@ else:
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```python
 # --- 同質性檢定（simplified Breslow-Day）---
@@ -654,6 +668,7 @@ for floor in sorted(df["floor"].unique()):
 
 好消息：**分層分析的邏輯完全一樣**——一樣驗三要件、一樣按干擾因子分層、一樣用 Mantel-Haenszel 合併。唯一的差異是：
 
+<!-- video: ch05_08_case_control_mh -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：病例對照版 MH——換個公式，邏輯一樣</div>
@@ -662,6 +677,7 @@ for floor in sorted(df["floor"].unique()):
   </div>
 </div>
 ```
+<!-- /video -->
 
 | | 世代研究（本章） | 病例對照研究 |
 |---|---|---|

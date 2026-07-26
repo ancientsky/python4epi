@@ -189,14 +189,8 @@ A standard daily situation report contains at least:
 
 ---
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: SitRep crash course — deliver a situation report in two hours</div>
-  <div class="youtube-lite" data-id="p5wes20-Az8">
-    <img src="https://img.youtube.com/vi/p5wes20-Az8/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch04_01_sitrep_overview -->
+<!-- /video -->
 
 ## FETP Step 1: Preparation (what to do before you set out)
 
@@ -307,14 +301,8 @@ In a real investigation, the line list you receive from a hospital or long-term 
 
 > 📌 **Why doesn't this course's `legionella_outbreak.csv` have any PII?** Because it's **synthetic data** — from the start it has no real names, ID numbers, or other identifiers, which is standard practice for a teaching dataset. But the raw line list you get in the field usually isn't like that, so you need to learn the techniques below.
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: PII protection — the first thing to do when you get a line list</div>
-  <div class="youtube-lite" data-id="LLF1T-EtnqU">
-    <img src="https://img.youtube.com/vi/LLF1T-EtnqU/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch04_08_pii_protection -->
+<!-- /video -->
 
 ```{figure} images/pii_protection_techniques_en.svg
 :name: pii-protection-techniques
@@ -595,14 +583,8 @@ print(f"ICU: {icu} (ICU rate {icu/hospitalized:.1%})")
 print(f"Deaths: {deaths} (CFR {deaths/infected:.1%})")
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Descriptive epidemiology (Person) — the profile of the infected</div>
-  <div class="youtube-lite" data-id="tmT3YVLy1EM">
-    <img src="https://img.youtube.com/vi/tmT3YVLy1EM/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch04_02_person -->
+<!-- /video -->
 
 ## Step 3: Person
 
@@ -634,14 +616,8 @@ for col in comorbidity_cols:
     print(f"  {label}: {n} ({n/len(cases):.1%})")
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: The epidemic curve — feeling the outbreak's pulse with a bar chart</div>
-  <div class="youtube-lite" data-id="7eBDkfVqsQo">
-    <img src="https://img.youtube.com/vi/7eBDkfVqsQo/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch04_03_time -->
+<!-- /video -->
 
 ## Step 4: Time
 
@@ -705,14 +681,8 @@ print(f"Outbreak period: {cases['symptom_onset_date'].min().date()} – {cases['
 print(f"Peak day: {daily.idxmax().date()} ({daily.max()} cases)")
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Comparing places — which wing is the most dangerous?</div>
-  <div class="youtube-lite" data-id="wWwHcMXMmG8">
-    <img src="https://img.youtube.com/vi/wWwHcMXMmG8/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch04_04_place -->
+<!-- /video -->
 
 ## Step 5: Place
 
@@ -748,14 +718,8 @@ print(wing_stats[["label", "residents", "infected", "AR%", "deaths", "CFR%"]]
       .to_string(index=False))
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Case classification — stratified stats for confirmed, probable, and not-a-case</div>
-  <div class="youtube-lite" data-id="RZLn3o-svs0">
-    <img src="https://img.youtube.com/vi/RZLn3o-svs0/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch04_05_classification -->
+<!-- /video -->
 
 ## FETP Step 4: Case definition — the trade-off between precision and detection
 
@@ -842,14 +806,8 @@ print("=== Stratified by case classification ===")
 print(classification.to_string())
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Functionization — wrapping the SitRep into a one-click update</div>
-  <div class="youtube-lite" data-id="ztrZrHwrD2M">
-    <img src="https://img.youtube.com/vi/ztrZrHwrD2M/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch04_06_generate_sitrep -->
+<!-- /video -->
 
 ## Step 7: Output a structured SitRep
 
@@ -895,14 +853,8 @@ sitrep = generate_sitrep("data/synthetic/legionella_outbreak.csv")
 print(sitrep)
 ```
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Professional report output — dashboard, Word, PPT, and PDF all at once</div>
-  <div class="youtube-lite" data-id="eAs3K_Z7Hjk">
-    <img src="https://img.youtube.com/vi/eAs3K_Z7Hjk/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch04_07_report_output -->
+<!-- /video -->
 
 ## Step 8: Produce a professional report
 

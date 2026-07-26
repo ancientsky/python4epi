@@ -92,6 +92,7 @@ DataFrame 解剖圖：一張表格由列（row）和欄（column）組成，取�
 
 ### Step 1: 讀入 line list
 
+<!-- video: ch02_01_dataframe -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：DataFrame 是什麼？從 CSV 到表格的第一步</div>
@@ -100,6 +101,7 @@ DataFrame 解剖圖：一張表格由列（row）和欄（column）組成，取�
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```python
 import pandas as pd
@@ -117,6 +119,7 @@ df.head()
 
 ### Step 2: 檢視資料結構
 
+<!-- video: ch02_02_data_inspect -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：一分鐘看懂你的資料——info() 與 describe()</div>
@@ -125,6 +128,7 @@ df.head()
   </div>
 </div>
 ```
+<!-- /video -->
 
 拿到新資料的第一件事：搞清楚「長什麼樣」。
 
@@ -153,6 +157,7 @@ df.describe()
 
 ### Step 3: 日期轉換
 
+<!-- video: ch02_03_datetime -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：日期時間大魔王——to_datetime 完全攻略</div>
@@ -161,6 +166,7 @@ df.describe()
   </div>
 </div>
 ```
+<!-- /video -->
 
 line list 中有 5 個日期欄位，讀入時都是**文字（object）**，Python 不知道它們是日期。必須手動轉成 `datetime` 型別，才能做時間排序、相減、取月份等操作。
 
@@ -197,6 +203,7 @@ print(df["symptom_onset_date"].dt.day_name().head())  # "Thursday"
 
 ### Step 4: 建立衍生變項
 
+<!-- video: ch02_04_derived -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：衍生變項四大招——cut, axis, astype, dt</div>
@@ -205,6 +212,7 @@ print(df["symptom_onset_date"].dt.day_name().head())  # "Thursday"
   </div>
 </div>
 ```
+<!-- /video -->
 
 疫調分析常需要從原始資料**衍生新變項**——也就是用現有的欄位計算出新的欄位。語法很簡單：`df["新欄位名"] = 計算公式`。
 
@@ -289,6 +297,7 @@ df["epi_week"] = df["symptom_onset_date"].dt.isocalendar().week
 
 ### Step 5: 處理遺漏值
 
+<!-- video: ch02_05_missing -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：遺漏值偵探社——NaN, NaT, None 一次搞懂</div>
@@ -297,6 +306,7 @@ df["epi_week"] = df["symptom_onset_date"].dt.isocalendar().week
   </div>
 </div>
 ```
+<!-- /video -->
 
 未感染者不會有 `symptom_onset_date`、`hospitalization_date` 等——這些空值不是資料錯誤，而是**結構性遺漏**（structural missing）：沒生病當然沒有發病日期。
 
@@ -331,6 +341,7 @@ print("未感染者有 onset 日期的數量：",
 
 ### Step 6: groupby 分組統計
 
+<!-- video: ch02_06_groupby -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：分組統計秘密武器——groupby + agg 完全攻略</div>
@@ -339,6 +350,7 @@ print("未感染者有 onset 日期的數量：",
   </div>
 </div>
 ```
+<!-- /video -->
 
 **`groupby` 是什麼？** 想像你在 Excel 裡做樞紐分析表（Pivot Table）：先選擇「依照哪個欄位分組」，再對每組做計算（計數、加總、平均等）。pandas 的 `groupby` 做的就是這件事。
 
@@ -390,6 +402,7 @@ print(wing_stats.to_string(index=False))
 
 #### 頻率表：`value_counts()` — 你的第一張統計表
 
+<!-- video: ch02_09_value_counts -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：頻率表速成——value_counts + crosstab 完全攻略</div>
@@ -398,6 +411,7 @@ print(wing_stats.to_string(index=False))
   </div>
 </div>
 ```
+<!-- /video -->
 
 疫調的第一步通常是看各欄位的次數分布。`value_counts()` 就是 Excel 裡的 `COUNTIF`。
 
@@ -419,6 +433,7 @@ print(df["clinical_severity"].value_counts(normalize=True).round(3) * 100)
 
 #### 樞紐分析表：`pivot_table()` — Excel 最愛的功能
 
+<!-- video: ch02_10_pivot_table -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Excel 樞紐分析表——pivot_table 完全攻略</div>
@@ -427,6 +442,7 @@ print(df["clinical_severity"].value_counts(normalize=True).round(3) * 100)
   </div>
 </div>
 ```
+<!-- /video -->
 
 如果你在 Excel 常用樞紐分析表（Pivot Table），`pd.pivot_table()` 就是它的 Python 版本。
 
@@ -504,6 +520,7 @@ print(df["risk_level"].value_counts())
 
 #### Method Chaining — 現代 pandas 風格
 
+<!-- video: ch02_11_method_chaining -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：一行寫完分析——Method Chaining 流水線</div>
@@ -512,6 +529,7 @@ print(df["risk_level"].value_counts())
   </div>
 </div>
 ```
+<!-- /video -->
 
 傳統寫法把每一步拆開，中間產生很多暫時變數。**Method chaining**（方法鏈）把多步操作串成一條流水線，可讀性更高：
 
@@ -572,6 +590,7 @@ print(result)
 
 #### 合併資料表：`merge()` — 疫調最常見的需求
 
+<!-- video: ch02_12_merge -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：合併資料表——merge 就是你的 VLOOKUP</div>
@@ -580,6 +599,7 @@ print(result)
   </div>
 </div>
 ```
+<!-- /video -->
 
 實際疫調中，個案名冊和檢驗結果、環境檢體資料往往存在不同的檔案裡。`merge()` 就是 Excel 的 `VLOOKUP`，但更強大。
 
@@ -610,6 +630,7 @@ print(merged)
 
 #### 文字清理：`.str` accessor
 
+<!-- video: ch02_13_str_cleanup -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：文字清理三板斧——str + drop_duplicates + rename</div>
@@ -618,6 +639,7 @@ print(merged)
   </div>
 </div>
 ```
+<!-- /video -->
 
 ```python
 # 清理翼區欄位：統一大小寫
@@ -716,6 +738,7 @@ plt.show()                    # 顯示圖表
 
 ### Step 7: 流行曲線（matplotlib）
 
+<!-- video: ch02_07_epicurve -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：用 matplotlib 畫出疫調等級的流行曲線</div>
@@ -724,6 +747,7 @@ plt.show()                    # 顯示圖表
   </div>
 </div>
 ```
+<!-- /video -->
 
 流行曲線（epidemic curve）是流行病學最經典的圖表——X 軸是發病日期，Y 軸是新增病例數。從曲線形狀可推斷傳播模式。
 
@@ -1026,6 +1050,7 @@ plt.show()
 
 ### Step 8: 年齡分布（seaborn）
 
+<!-- video: ch02_08_seaborn_plotly -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：seaborn + plotly + 圖表輸出投稿密技</div>
@@ -1034,6 +1059,7 @@ plt.show()
   </div>
 </div>
 ```
+<!-- /video -->
 
 seaborn 用一行就能畫出漂亮的統計圖，不用像 matplotlib 那樣手動設定每個元素。
 

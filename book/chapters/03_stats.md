@@ -360,6 +360,7 @@ print(f"全體：{len(df)} 人，感染：{df['infected'].sum()} 人")
 print(f"整體侵襲率：{df['infected'].mean():.1%}")
 ```
 
+<!-- video: ch03_01_two_by_two -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：2×2 列聯表——把疫調資料變成四格表</div>
@@ -368,6 +369,7 @@ print(f"整體侵襲率：{df['infected'].mean():.1%}")
   </div>
 </div>
 ```
+<!-- /video -->
 
 ## Step 2: 建立 2×2 表（淋浴 × 感染）
 
@@ -404,6 +406,7 @@ print(f"\n暴露組（使用淋浴）侵襲率: {a/(a+b):.1%}")
 print(f"未暴露組（未使用淋浴）侵襲率: {c/(c+d):.1%}")
 ```
 
+<!-- video: ch03_02_risk_ratio -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：風險比 RR——暴露到底有沒有增加風險？</div>
@@ -412,6 +415,7 @@ print(f"未暴露組（未使用淋浴）侵襲率: {c/(c+d):.1%}")
   </div>
 </div>
 ```
+<!-- /video -->
 
 ## Step 3: 計算 Risk Ratio（風險比）
 
@@ -434,6 +438,7 @@ print(f"  RR = 1 → 無關聯 | RR > 1 → 暴露可能增加風險 | RR < 1 �
 :width: 100%
 ```
 
+<!-- video: ch03_03_odds_ratio -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：勝算比 OR——跟 RR 到底差在哪？</div>
@@ -442,6 +447,7 @@ print(f"  RR = 1 → 無關聯 | RR > 1 → 暴露可能增加風險 | RR < 1 �
   </div>
 </div>
 ```
+<!-- /video -->
 
 ## Step 4: 計算 Odds Ratio（勝算比）
 
@@ -459,6 +465,7 @@ print(f"   錯誤寫法：「淋浴使用者的感染風險是未使用者的 {o
 
 > **RR vs OR 的選擇**：本案是世代研究（280 人全員納入），所以報告效應量用 **RR**。我們額外算 OR 是因為：(1) 練習兩者的差異，(2) 為 Ch06 邏輯斯迴歸（原生輸出 = OR）做準備。
 
+<!-- video: ch03_04_confidence_interval -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：95% 信賴區間——為什麼要先取 log 再 exp 回來？</div>
@@ -467,6 +474,7 @@ print(f"   錯誤寫法：「淋浴使用者的感染風險是未使用者的 {o
   </div>
 </div>
 ```
+<!-- /video -->
 
 ## Step 5: 95% 信賴區間（RR 和 OR）
 
@@ -507,6 +515,7 @@ print(f"OR = {or_val:.3f} (95% CI: {ci_or_lo:.3f} – {ci_or_hi:.3f})")
 
 > **解讀**：如果你把這個調查重複做 100 次，大約 95 次算出的 CI 會包含真正的 RR/OR。CI 不包含 1 = 在 α=0.05 下有統計顯著性，等同於 p < 0.05。
 
+<!-- video: ch03_05_chi_square -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：卡方檢定——觀察值 vs 期望值的擂台賽</div>
@@ -515,6 +524,7 @@ print(f"OR = {or_val:.3f} (95% CI: {ci_or_lo:.3f} – {ci_or_hi:.3f})")
   </div>
 </div>
 ```
+<!-- /video -->
 
 ## Step 6: 卡方檢定
 
@@ -549,6 +559,7 @@ else:
     print(" → < 5，建議改用 Fisher 精確檢定")
 ```
 
+<!-- video: ch03_06_fisher_test -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Fisher 精確檢定——小樣本的救星</div>
@@ -557,6 +568,7 @@ else:
   </div>
 </div>
 ```
+<!-- /video -->
 
 ## Step 7: Fisher 精確檢定
 
@@ -665,6 +677,7 @@ print("=== 多因子粗效應量彙整表 ===")
 print(display_df[["factor", "RR", "95% CI", "OR", "p-value"]].to_string(index=False))
 ```
 
+<!-- video: ch03_07_forest_plot -->
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：森林圖——一眼看穿誰是最大嫌疑犯</div>
@@ -673,6 +686,7 @@ print(display_df[["factor", "RR", "95% CI", "OR", "p-value"]].to_string(index=Fa
   </div>
 </div>
 ```
+<!-- /video -->
 
 ### 森林圖（Forest Plot）
 

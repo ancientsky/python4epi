@@ -47,15 +47,8 @@ We recommend watching the video before reading the code—it makes the learning 
 
 ### 1) Indentation—Python's non-negotiable rule
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Indentation</div>
-  <div class="youtube-lite" data-id="lQPKMgHv1UQ">
-    <img src="https://img.youtube.com/vi/lQPKMgHv1UQ/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">In this video: why four spaces, if/for/nested indentation → dengue zoned-spraying example → blind spots: forgetting to indent, mixing tabs and spaces, extra indentation</p>
-</div>
-```
+<!-- video: ch01b_01_indentation -->
+<!-- /video -->
 
 In most programming languages, indentation just makes your code "look nice." But in Python, **indentation is part of the syntax**—one space too few or too many and the program breaks.
 
@@ -94,15 +87,8 @@ for cases in floor_cases:       # first level
 
 ### 2) import—borrowing other people's tools
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: import</div>
-  <div class="youtube-lite" data-id="srlzHIPR3nk">
-    <img src="https://img.youtube.com/vi/srlzHIPR3nk/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">In this video: the three import forms, conventional aliases → using datetime to compute days since onset → blind spots: package not installed, import placed in the middle, using the full name after a from import</p>
-</div>
-```
+<!-- video: ch01b_02_imports -->
+<!-- /video -->
 
 Every calculation in Ch01 used Python's built-in features. But when you do real outbreak analysis, you'll need to "borrow" powerful tools other people have already written—that's what `import` is for.
 
@@ -165,15 +151,8 @@ print(f"Std dev:  {statistics.stdev(ages):.1f}")      # 7.8
 
 ### 3) Types and conversion—numbers, text, booleans
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Types and conversion</div>
-  <div class="youtube-lite" data-id="xetiso2OCl8">
-    <img src="https://img.youtube.com/vi/xetiso2OCl8/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">In this video: type() to check types, the four main types int/float/str/bool, booleans and logical operations → cleaning an enterovirus age column → blind spots: string addition, "False" vs False, int("N/A")</p>
-</div>
-```
+<!-- video: ch01b_03_types -->
+<!-- /video -->
 
 Every value in Python has a **type**. Get the type wrong and the program errors out.
 
@@ -250,15 +229,8 @@ What trips beginners up most is knowing "which bracket to use in which situation
 
 ### 4) Reading error messages—a traceback isn't a cryptic scroll
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Reading error messages</div>
-  <div class="youtube-lite" data-id="aZx7TFtcrvc">
-    <img src="https://img.youtube.com/vi/aZx7TFtcrvc/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">In this video: read a traceback from the bottom up, live demos of the five common errors → batch-reading notification files → blind spots: reading only the first line, copy-pasting everything into an AI, Warning vs Error</p>
-</div>
-```
+<!-- video: ch01b_04_errors -->
+<!-- /video -->
 
 Don't panic at a screen full of red text. Python's error messages are actually quite considerate—just **read from the last line upward**.
 
@@ -329,15 +301,8 @@ print(wings[5])  # "3B"
 
 ### 5) try/except—handling the unexpected gracefully
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: try/except</div>
-  <div class="youtube-lite" data-id="QCKTumk34fA">
-    <img src="https://img.youtube.com/vi/QCKTumk34fA/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">In this video: try/except basic syntax, a real outbreak-data cleaning example, multiple excepts → cleaning vaccination records → blind spots: bare except, scope too broad, masking bugs</p>
-</div>
-```
+<!-- video: ch01b_05_try_except -->
+<!-- /video -->
 
 Sometimes an error is an "expected surprise"—for example, missing values in the data. Rather than let the program crash, tell Python how to handle it.
 
@@ -379,15 +344,8 @@ print(f"Mean age: {sum(ages) / len(ages):.1f}")          # Mean age: 70.2
 
 ### 6) Advanced strings and loops
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Advanced strings and loops</div>
-  <div class="youtube-lite" data-id="SmKi_i3PC-U">
-    <img src="https://img.youtube.com/vi/SmKi_i3PC-U/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">In this video: strip/split/replace, for+range/enumerate, the in membership check → cleaning TB notification test results → blind spots: strip doesn't change the original, modifying a list inside a loop, range is half-open [left, right)</p>
-</div>
-```
+<!-- video: ch01b_06_strings_loops -->
+<!-- /video -->
 
 When you process CSV data in Ch02, you'll work heavily with strings and loops. Let's build the foundation here first.
 
@@ -443,15 +401,8 @@ if "deaths" not in outbreak:
 
 ### 7) Advanced uv—managing Python versions and packages
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Advanced uv</div>
-  <div class="youtube-lite" data-id="cXSoTKvgtEo">
-    <img src="https://img.youtube.com/vi/cXSoTKvgtEo/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">In this video: uv python install/pin, uv add to install packages, finding useful packages, uv sync → building a vaccine-coverage analysis project from scratch → blind spots: pip vs uv, forgetting uv run, not committing uv.lock</p>
-</div>
-```
+<!-- video: ch01b_07_uv_advanced -->
+<!-- /video -->
 
 Ch00 taught `uv sync` to install all of the course's dependencies. Here we go a step further into `uv`'s practical features.
 
@@ -511,15 +462,8 @@ uv pip list
 
 ### 8) Handy Jupyter tricks
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Handy Jupyter tricks</div>
-  <div class="youtube-lite" data-id="krpakr9TtZM">
-    <img src="https://img.youtube.com/vi/krpakr9TtZM/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">In this video: ! shell commands, !uv add to install packages, ? for help, Tab auto-completion, %timeit → quickly exploring an outbreak CSV → blind spots: not restarting after installing, using ! inside a .py file, cell execution order</p>
-</div>
-```
+<!-- video: ch01b_08_jupyter_tips -->
+<!-- /video -->
 
 The following tricks make your work in Jupyter Lab more efficient.
 

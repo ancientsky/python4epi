@@ -66,6 +66,9 @@ Ch10 的長官問題還在耳邊：「能不能建一個模型，一看到新住
 
 ---
 
+<!-- video: ch11_01_dl_intuition -->
+<!-- /video -->
+
 ## 核心概念
 
 在動手寫 PyTorch 之前，先把上一節的比喻翻譯成正式的技術名詞。
@@ -91,6 +94,9 @@ $$z = \sum_i x_i w_i + b, \qquad \hat{y} = \text{ReLU}(z) = \max(0, z)$$
 
 把同一個 neuron 排成一排（**layer，層**），輸入層 → 隱藏層 → 輸出層一層接一層往下疊——這就是「深度」學習的「深」：層數疊得越多，理論上能表達的函數越複雜（但也越容易過擬合，見下段）。
 
+<!-- video: ch11_02_neuron_layer -->
+<!-- /video -->
+
 ### 訓練迴圈：loss、gradient descent、backprop、epoch
 
 ```{figure} images/training_loop.svg
@@ -110,6 +116,9 @@ $$z = \sum_i x_i w_i + b, \qquad \hat{y} = \text{ReLU}(z) = \max(0, z)$$
 
 把所有訓練資料都跑過一輪這四拍，叫一個 **epoch（訓練週期）**。訓練通常要跑很多個 epoch，一輪一輪把 loss 壓低。
 
+<!-- video: ch11_03_training_loop -->
+<!-- /video -->
+
 ### 過擬合與早停法：什麼時候該喊卡
 
 如果一直練下去會怎樣？**過擬合（overfitting）**：模型把訓練資料的每個細節（連同噪音）都死記下來，train loss 一路探底，但 val loss 先降後升、出現「V 型反彈」——那個反彈點，就是模型開始死背訓練資料、卻學不會舉一反三的訊號。
@@ -117,6 +126,9 @@ $$z = \sum_i x_i w_i + b, \qquad \hat{y} = \text{ReLU}(z) = \max(0, z)$$
 **早停法（early stopping）** 就是解方：一邊訓練一邊監控驗證集的 loss，只要連續 `patience` 輪都沒有刷新紀錄，就提早喊停，回頭用表現最好的那組權重——而不是用訓練結束當下（很可能已經 overfit）的權重。這正是「新手偵探」比喻裡「見好就收」的技術版本。
 
 ---
+
+<!-- video: ch11_04_overfitting_earlystop -->
+<!-- /video -->
 
 ## 🧭 決策框架：該用 DL 嗎？（別殺雞用牛刀）
 
@@ -162,6 +174,9 @@ $$z = \sum_i x_i w_i + b, \qquad \hat{y} = \text{ReLU}(z) = \max(0, z)$$
 > 🧭 **鐵律**：先跑傳統統計 / ML baseline，不夠好、且符合上面決策樹裡的條件，才考慮上 DL。深度學習是一把牛刀——本章 Part A 會讓你親眼看到：牛刀殺雞（280 筆分類）殺不出優勢，但殺牛（序列預測）就真的比較利。
 
 ---
+
+<!-- video: ch11_05_when_to_use_dl -->
+<!-- /video -->
 
 ## 資料切分：時間序列的 train / val / test
 
@@ -334,6 +349,9 @@ model.load_state_dict(best_state)
 
 原因跟第 5 節的決策框架完全吻合：280 筆遠不夠支撐一個 700 參數的神經網路去學到 sklearn 學不到的東西——**小資料上，DL 不佔優勢**。這一步的教學價值不是「打敗 sklearn」，而是扎扎實實學會 PyTorch 的訓練迴圈語法，為 Step 2 真正適合 DL 的任務做準備。
 
+<!-- video: ch11_06_mlp_baseline -->
+<!-- /video -->
+
 ### Step 2 — 序列預測：LSTM / CNN
 
 280 筆橫斷面資料讓 DL 打了平手，那換一個**序列預測（sequence forecasting）**任務呢？[`11_dl_sequence.ipynb`](notebooks/11_dl_sequence.ipynb) 不用松柏護理之家的資料（那組資料沒有足夠長的每日序列），改用一組**教學合成的「登革熱 × 氣溫」每日序列**：氣溫是每天有噪音、有季節性的**領先指標**（可提前取得），病例數則受「7 天前氣溫」與「前一天病例數」共同驅動。任務是：用過去 21 天的 (病例數, 氣溫)，預測 **7 天後**的病例數。
@@ -490,6 +508,9 @@ for name, pred in [
 
 ---
 
+<!-- video: ch11_07_lstm_cnn_sequence -->
+<!-- /video -->
+
 ## Part B — 現代 DL 全景（概念導覽，非本書執行）
 
 Part A 讓你看到深度學習的兩種面貌：在小樣本分類上殺雞用牛刀（贏不了 sklearn），在有領先指標的序列預測上真的比較利。但深度學習的版圖遠不止 MLP、LSTM、CNN。以下工具**不在本書執行**（需要額外套件、GPU，或連網下載大型預訓練權重），用「比喻 + epi 用途 + 何時用 + 工具 + 示意程式」快速導覽，讓你知道未來遇到什麼問題，該去找哪個工具。
@@ -642,6 +663,9 @@ final_forecast = seir_forecast + residual_model.predict(X_covariates_future)
 ```
 
 ---
+
+<!-- video: ch11_08_dl_landscape -->
+<!-- /video -->
 
 ## 評估與可解釋性
 

@@ -151,6 +151,9 @@ Swap "phone" for "patient," "died" for "death," and "brand" for "disease severit
 
 ---
 
+<!-- video: ch09_01_survival_intuition -->
+<!-- /video -->
+
 ## Core Concepts
 
 ### Survival Time
@@ -184,6 +187,9 @@ In this chapter:
 - **Those lost to follow-up**: also `event = 0` (right-censored, but with a shorter time)
 
 ⚠️ **Common mistake**: treating a survivor's time as 0, or just dropping them—the former underestimates survival time, the latter wastes important information.
+
+<!-- video: ch09_02_censoring -->
+<!-- /video -->
 
 ### Hazard and Hazard Ratio (HR)
 
@@ -332,6 +338,9 @@ Four steps for reading the curve:
 
 > **Clue for this case**: if the median survival time shows `inf`, it means more than half of the infected residents did not die during the observation period (CFR < 50%, which makes sense since 19/121 ≈ 15.7%).
 
+<!-- video: ch09_03_kaplan_meier -->
+<!-- /video -->
+
 ## Step 3 — Survival Curves by Severity Group
 
 One curve for everyone can't reveal "who has the worse prognosis," so we **split into three groups by severity** and draw one curve each, layered on the same figure to compare.
@@ -368,6 +377,9 @@ plt.show()
    - Crossing → the PH assumption may be violated (interpret Cox results with caution; Step 7 will verify)
 
 > **Expectation for this case**: the `severe` group's curve should drop the **earliest and fastest**; the `mild` group's curve should be nearly flat. If you actually observe `severe` and `moderate` crossing, flag it as "the effect of severity may change over time."
+
+<!-- video: ch09_04_km_by_group -->
+<!-- /video -->
 
 ## Step 4 — Log-rank Test
 
@@ -408,6 +420,9 @@ print(f"Log-rank p-value = {result.p_value:.4f}")
 ⚠️ **Important limitation**: the log-rank test **only tells you "whether there's a difference," not "how big the difference is."** To quantify the effect (HR + CI), you must use Cox regression.
 
 > **Analogy**: the log-rank test is like the red "abnormal" flag on a health checkup report—it warns you there's a problem, but doesn't tell you how severe it is. To gauge severity you need a separate test (= Cox regression).
+
+<!-- video: ch09_05_logrank -->
+<!-- /video -->
 
 ## Step 5 — Cox Proportional Hazards Regression
 
@@ -477,6 +492,9 @@ The epidemiological rule of thumb (Peduzzi 1995): **each variable needs at least
 
 > This is also why many variables in the Cox results look "not significant"—it's not that they're truly unimportant, but that **the sample size isn't large enough to support this many variables**.
 
+<!-- video: ch09_06_cox_regression -->
+<!-- /video -->
+
 ## Step 6 — HR Forest Plot
 
 Reading the `print_summary()` table with your eyes is dizzying; a **forest plot** draws each variable's HR and confidence interval as a "dot + horizontal line," so you see at a glance who's risky and who's not significant.
@@ -510,6 +528,9 @@ The forest plot `lifelines` draws uses **log(HR)** as the x-axis by default:
 | **Very long horizontal line** | Wide CI → high uncertainty (usually a variable with few samples) |
 
 > **Reading order**: ① first look at which side of 0 the point is on (direction) → ② see whether the line crosses 0 (significance) → ③ look at the length of the line (certainty).
+
+<!-- video: ch09_07_hr_forest -->
+<!-- /video -->
 
 ## Step 7 — Verify the PH Assumption
 
@@ -554,6 +575,9 @@ This function will:
 > **Note**: when the number of events is small (19 events in this case), the power of `check_assumptions()` is inherently low—even if no violation is detected, it doesn't mean the PH assumption definitely holds. Always pair it with a visual check (do the grouped KM curves cross?).
 
 ---
+
+<!-- video: ch09_08_ph_assumption -->
+<!-- /video -->
 
 ## Exercises
 

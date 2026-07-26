@@ -165,14 +165,8 @@ Ch03 already explained it: in a cohort study we can directly compute "risk" (ris
 
 > ⚠️ In this investigation the attack rate is as high as **43%**. Ch03 already warned: when a disease is not rare, the OR will **systematically overestimate** the effect. If you tell your supervisor "the OR for shower use is 3.5," they'll think the risk is 3.5 times higher—but the true risk ratio (RR) might only be about 2.0. That's a big difference!
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Why use RR instead of OR?</div>
-  <div class="youtube-lite" data-id="PrbPC5cAyxM">
-    <img src="https://img.youtube.com/vi/PrbPC5cAyxM/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch06_01_why_rr_not_or -->
+<!-- /video -->
 
 ### Two routes to multivariable analysis
 
@@ -204,27 +198,15 @@ Why does this work? The three-sentence version:
 >
 > Why not use **Cox regression** (proportional hazards)? Cox requires "time-to-event" data, whereas ours is a binary outcome (infected / not infected) with no differences in follow-up time.
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Modified Poisson—the borrowed-hat magic for computing RR</div>
-  <div class="youtube-lite" data-id="A_KHcLHITN0">
-    <img src="https://img.youtube.com/vi/A_KHcLHITN0/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch06_03_modified_poisson -->
+<!-- /video -->
 
 ### Logistic regression in plain language
 
 Although Modified Poisson is the first choice for this investigation, logistic regression remains one of the most widely used multivariable analysis methods in the world. Understanding how it works is essential knowledge for an epidemiologist.
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: The logistic regression three-step ladder—probability → odds → logit</div>
-  <div class="youtube-lite" data-id="o-bRxWzK_xo">
-    <img src="https://img.youtube.com/vi/o-bRxWzK_xo/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch06_02_logit_intuition -->
+<!-- /video -->
 
 ```{figure} images/logit_intuition_en.svg
 :name: fig-logit-intuition
@@ -314,14 +296,8 @@ print(f"→ An attack rate of {ar:.0%} is far above 10%, so the OR will markedly
 
 This step loops over each candidate factor and fits both Modified Poisson (for the crude RR) and logistic regression (for the crude OR), lining up the two effect measures in a single table so you can see, up front, how far apart RR and OR are for a single factor.
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Univariable crude RR vs OR—compare them all in one for loop</div>
-  <div class="youtube-lite" data-id="LBf3HvGOLAA">
-    <img src="https://img.youtube.com/vi/LBf3HvGOLAA/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch06_05_crude_rr_or_loop -->
+<!-- /video -->
 
 ```python
 # === Step 2: Univariable analysis loop ===
@@ -410,14 +386,8 @@ print("   The hand_RR column is the 2×2 hand-computed result from Ch03; it shou
 
 ### Reading the formula syntax
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: A quick guide to statsmodels formula syntax</div>
-  <div class="youtube-lite" data-id="G-cJPHaz7ag">
-    <img src="https://img.youtube.com/vi/G-cJPHaz7ag/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch06_04_formula_syntax -->
+<!-- /video -->
 
 statsmodels borrows the **formula syntax** from the R language, letting you describe "which variables predict the outcome" in a single line:
 
@@ -448,14 +418,8 @@ A multivariable model isn't about throwing in every column; there needs to be a 
 
 This step is the chapter's main analysis: it puts every exposure factor and potential confounder into a single Modified Poisson model at once, directly producing the adjusted RR.
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Multivariable adjusted RR—building a beautiful Table 2</div>
-  <div class="youtube-lite" data-id="XIfx82VxVaA">
-    <img src="https://img.youtube.com/vi/XIfx82VxVaA/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch06_06_adjusted_rr_table2 -->
+<!-- /video -->
 
 ```python
 # === Step 3: Modified Poisson — adjust for all factors at once ===
@@ -645,14 +609,8 @@ If you're reading someone else's paper and see them analyze a **cohort study** w
 
 This step turns Step 3's adjusted RR table into a forest plot, trading a wall of numbers for point estimates and confidence-interval bars you can read at a glance.
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: The adjusted RR forest plot—spot the real risk factors at a glance</div>
-  <div class="youtube-lite" data-id="7GgpIOKr_CY">
-    <img src="https://img.youtube.com/vi/7GgpIOKr_CY/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch06_07_forest_plot_adjusted -->
+<!-- /video -->
 
 ```python
 # === Step 6: Forest Plot — present the adjusted RR graphically ===
@@ -760,14 +718,8 @@ Stepwise uses the p-value as its criterion and may remove "variables that are no
 
 Below we implement the **change-in-estimate method** in Python to see which candidate confounders truly affect the RR of shower_use and hydrotherapy_use:
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: The 10% rule—choosing variables with change-in-estimate</div>
-  <div class="youtube-lite" data-id="OQLEUHJQv7s">
-    <img src="https://img.youtube.com/vi/OQLEUHJQv7s/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-</div>
-```
+<!-- video: ch06_08_change_in_estimate -->
+<!-- /video -->
 
 ```python
 # === Step 7b: Change-in-Estimate variable selection ===

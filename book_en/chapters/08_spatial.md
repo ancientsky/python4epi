@@ -117,6 +117,9 @@ Swap "classroom seats" for "counties and cities across Taiwan," "coughing" for "
 
 ---
 
+<!-- video: ch08_01_spatial_thinking -->
+<!-- /video -->
+
 ## Core Concepts
 
 ### The Three Levels of Spatial Analysis
@@ -218,6 +221,9 @@ plt.title("Attack Rate (%) by Floor × Wing")
 > **When do you use a heatmap?**
 > When the grouping variables happen to be **two categories** (here, floor × wing), they naturally form a matrix → a heatmap is the most intuitive choice.
 > If you only have one categorical variable, a bar chart is more appropriate.
+
+<!-- video: ch08_02_attack_rate_map -->
+<!-- /video -->
 
 ### Step 4 — Attack Rate per Room
 
@@ -459,6 +465,9 @@ Incidence rate (per 100k) = confirmed cases / county population × 100,000
 
 ---
 
+<!-- video: ch08_07_choropleth -->
+<!-- /video -->
+
 ## Part 3: Spatial Statistics (`08_spatial_statistics.ipynb`)
 
 Part 1 and Part 2 taught you how to **draw** spatial distribution maps. But when a patch of red shows up on the map, how do you know it's a **real cluster** and not something your eyes made up? This section uses **spatial statistics** to turn "gut feeling" into "evidence," answering three questions: is there really a cluster across Taiwan (**Moran's I**), where is the core of the hot zone (**LISA**), and which areas are significant hot spots (**Gi\***)?
@@ -508,6 +517,9 @@ w.transform = "r"   # row-standardized
 >
 > ⚠️ **Change the neighbor definition and the answer changes** — the offshore islands let us see this firsthand. This is exactly where the "weight sensitivity" pitfall shows up later.
 
+<!-- video: ch08_03_spatial_weights -->
+<!-- /video -->
+
 ### Step 2: Global Moran's I — A "Birds of a Feather" Index for the Whole Map
 
 **Global Moran's I** summarizes the whole island with a single number: **I ≈ +1** means highs cluster with highs and lows cluster with lows (a clear zoning pattern); **I ≈ 0** means random scatter; **I ≈ −1** means highs and lows alternate (rare). I alone isn't enough — you need a **permutation p-value** to confirm it isn't just chance.
@@ -528,6 +540,9 @@ print(f"Moran's I = {moran.I:.3f}, p = {moran.p_sim:.4f}")   # ≈ 0.50, p < 0.0
 > | `moran.p_sim` | The **permutation p-value**: how far the real map's I sits above 999 random shuffles — only < 0.05 means the clustering isn't chance |
 >
 > 💡 **A significant I is the gate to LISA**: I = 0.5 looks clustered, but the permutation p-value is what proves it isn't something random would produce too. Only if I is significant is it worth drilling into LISA to find the hot-zone core.
+
+<!-- video: ch08_04_morans_i -->
+<!-- /video -->
 
 ### Step 3: Local LISA — Where Exactly Is the Core of the Hot Zone?
 
@@ -564,6 +579,9 @@ main["lisa"] = ["Not significant" if p >= 0.05 else labels[q]
 
 In the synthetic data, **Tainan / Kaohsiung / Chiayi** stand out as **HH epicenters**, while the north comes out as **LL safe zone** — the southern dengue hot zone is confirmed statistically.
 
+<!-- video: ch08_05_lisa -->
+<!-- /video -->
+
 ### Step 4: Hot Spot Analysis with Getis-Ord Gi\* — The Map You Show Your Boss
 
 > 🌡️ **Thermal camera**: Gi\* doesn't care whether "you resemble your neighbors" — it only asks "if we draw a circle around you and your neighbors, how hot is that circle?" The output is a **z-score** = how many standard deviations hot. Unlike LISA, Gi\* has **no outlier category** — it just gives you a red-to-blue temperature spectrum, which makes it ideal for a hot-spot map of "where to send people first."
@@ -588,12 +606,18 @@ hot = main.loc[(gi.p_sim < 0.05) & (gi.Zs > 0), "COUNTYNAME"].tolist()   # signi
 >
 > ⚠️ **Don't threshold hot spots with `Zs > 1.96`**: there are only 19 counties, and with such a small sample the normal approximation is unreliable — judge significance by the **permutation p_sim**, then split hot vs cold by the **sign of Zs**. When both hot and cold spots are significant, using |z| alone would mislabel cold spots as hot.
 
+<!-- video: ch08_06_getis_ord -->
+<!-- /video -->
+
 ### Concept Extension: Scan Statistics and Disease Mapping (Smoothing)
 
 At the county level, the three tools above are the ones you'll use most. There are two more advanced tools worth knowing conceptually (mostly done in R or specialized software):
 
 - **📡 Kulldorff's scan statistic (SaTScan)**: slides and grows a circle across the map, automatically finding suspicious clusters where "the count inside is unusually high." It can catch irregular shapes and even run space-time scans. Commonly used for CDC early warning. Tools: **SaTScan**, `rsatscan`.
 - **📷 Bayesian disease mapping / smoothing**: rates for small populations **swing wildly** (Lienchiang County has a population of only 13,000, so one extra case jumps the rate by 7.7). Smoothing "borrows information from neighbors" to estimate a more stable risk. Tools: **R-INLA**, `CARBayes` (BYM model); in Python, `esda.smoothing.Empirical_Bayes`.
+
+<!-- video: ch08_08_scan_smoothing -->
+<!-- /video -->
 
 ### Interpretation Cheat Sheet (Save This)
 

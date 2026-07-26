@@ -41,15 +41,8 @@ Watching the video before reading the text works even better!
 
 ## Why not just use Excel / Google Sheets?
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Why use Python</div>
-  <div class="youtube-lite" data-id="eMWQ-IqYjvM">
-    <img src="https://img.youtube.com/vi/eMWQ-IqYjvM/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: Excel's pain points → Python's advantages → Python vs R → a large-scale COVID-19 investigation example → blind spots: the math, "finish learning first," version issues</p>
-</div>
-```
+<!-- video: ch00_01_why_python -->
+<!-- /video -->
 
 You might think: "I've used Excel for years—why should I learn a new tool?"
 
@@ -113,15 +106,8 @@ If you'll be working with data engineers or software developers in the future (f
 
 ## Why use `uv` instead of the traditional `pip`?
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: uv and environment setup</div>
-  <div class="youtube-lite" data-id="AnPBQW8Vqq0">
-    <img src="https://img.youtube.com/vi/AnPBQW8Vqq0/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: why you can't just pip install → the virtual environment metaphor → installing uv → the uv three-step workflow → blind spots: command not found, uv run, pyproject.toml</p>
-</div>
-```
+<!-- video: ch00_02_uv_setup -->
+<!-- /video -->
 
 If you Google "install Python packages," almost every tutorial will teach you to use `pip install`. So why do we use the newer tool `uv`?
 
@@ -391,15 +377,8 @@ We recommend Method A (installing from the terminal). Method B is convenient, bu
 
 ## Hands-on tutorial: an epidemiology Hello World from scratch
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: your first program, Hello Epi</div>
-  <div class="youtube-lite" data-id="VcxttnJxwG4">
-    <img src="https://img.youtube.com/vi/VcxttnJxwG4/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: git clone + uv sync → open Jupyter → run the analysis → see an attack rate of 43.2% → blind spots: clone failure, slow sync, red Warnings</p>
-</div>
-```
+<!-- video: ch00_04_hello_epi -->
+<!-- /video -->
 
 Just reading commands can still feel abstract. Let's start from a computer with nothing installed and, step by step, build an epidemiologist's first "Hello World"—not printing a line of text, but **reading a line list from a nursing home cluster, calculating the attack rate and case fatality rate, and drawing an epidemic curve**.
 
@@ -700,15 +679,8 @@ Every chapter in this book uses pandas. If you hit a performance bottleneck in f
 
 ## Why recommend Jupyter Lab? Can't I just write `.py`?
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: getting started with Jupyter Lab</div>
-  <div class="youtube-lite" data-id="iELUPwdPk7M">
-    <img src="https://img.youtube.com/vi/iELUPwdPk7M/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: what is Jupyter → how to launch it → the cell concept → Shift+Enter → blind spots: execution order, Restart Kernel, stuck on [*]</p>
-</div>
-```
+<!-- video: ch00_03_jupyter -->
+<!-- /video -->
 
 You might think: "Isn't a program just a text file? Why use Jupyter Lab, this thing that looks like a web page?"
 
@@ -948,15 +920,8 @@ Advanced: for a better development experience
 
 ## What is Git? Why do epidemiologists need it?
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: Git version control</div>
-  <div class="youtube-lite" data-id="SdtrxhPbRqk">
-    <img src="https://img.youtube.com/vi/SdtrxhPbRqk/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: the nightmare of version chaos → Git as a time machine metaphor → the three areas → git add/commit/push → blind spots: git add ., commit messages, push rejected</p>
-</div>
-```
+<!-- video: ch00_05_git_basics -->
+<!-- /video -->
 
 ### First, a scenario
 
@@ -1443,15 +1408,8 @@ This is one of epidemiology's most central charts: the **epidemic curve**. It te
 
 ## This book's learning roadmap
 
-```{raw} html
-<div class="video-card">
-  <div class="video-title">Tutorial video: the course map and learning strategy</div>
-  <div class="youtube-lite" data-id="H3fMhNhj3u4">
-    <img src="https://img.youtube.com/vi/H3fMhNhj3u4/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
-<p style="font-size:0.85em;color:#6b6b6b;margin-top:0.3em;">Video contents: the five-act structure → the required track Ch00-04 → the elective track Ch05-14 → learning paths for different roles → blind spots: where to start, whether you can skip chapters, Colab vs local</p>
-</div>
-```
+<!-- video: ch00_06_roadmap -->
+<!-- /video -->
 
 You don't need to learn all the chapters in one go. This book uses the **Songbai nursing home Legionnaires' disease cluster** as the thread running through the whole book, with each chapter taking you one layer deeper into the analysis—just like a real investigation, gradually uncovering the truth.
 

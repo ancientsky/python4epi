@@ -69,6 +69,9 @@
 
 ---
 
+<!-- video: ch10_01_ml_intuition -->
+<!-- /video -->
+
 ## Part A：在真實資料上把工作流做對（`10_ml_baseline`）
 
 先在**真實的**退伍軍人症資料（280 筆）上，把一套 ML 工作流「規規矩矩」做一遍——重點不是炫技，而是**別犯錯**、並**誠實面對結果**。完整程式見 [`10_ml_baseline.ipynb`](notebooks/10_ml_baseline.ipynb)。
@@ -97,6 +100,9 @@
 
 > 📌 **兩個誠實提醒**：① **本章 280 筆就是「小」的典型**——所以下面你看不到一個叫 `X_val` 的東西，validation 的角色被 **Step 4 的交叉驗證**接手了；② **不平衡時要「分層切」**（重症只佔 24%）：切分/CV 要用 stratified（`StratifiedKFold`、`train_test_split(stratify=y)`），否則某一折可能幾乎沒有正例、成績亂跳。
 
+<!-- video: ch10_02_train_test_split -->
+<!-- /video -->
+
 ## Step 1 — 問題定義：把長官的問題變成 0/1 標籤
 
 ML 不會optimize「預測誰會生病」這種模糊句子——它需要一欄明確的 **0/1 標籤**。我們定義兩個預測任務：
@@ -122,6 +128,9 @@ df["severe_outcome"] = ((df["hospitalized"] == 1) | (df["outcome"] == "dead")).a
 > | `((df["hospitalized"]==1) \| (df["outcome"]=="dead")).astype(int)` | 住院**或**死亡就算重症結局（1） |
 >
 > 💡 **為什麼要先定義標籤？** 因為標籤一旦定了，「哪些欄位算作弊」也就定了。`infected` 是用 `clinical_severity` 定義的，所以 `clinical_severity`、症狀、住院、死亡這些「結果端」欄位**全部不能當線索**——它們是答案的一部分。這就是 Step 2 選特徵的鐵律。（順帶記住：Task B 只有 24% 正例，這個「不平衡」在 Step 4 會決定我們為什麼看 AUC、不看準確率。）
+
+<!-- video: ch10_03_problem_definition -->
+<!-- /video -->
 
 ## Step 2 — 特徵工程：把「雜亂病歷」翻譯成模型看得懂的數字
 
@@ -161,6 +170,9 @@ y = df["infected"]
 >
 > （小註：這裡把 `floor` 放在 `bin_cols` 當 0/1 用；若樓層有多層、且層與層無大小關係，更嚴謹的做法是當成類別欄位 one-hot。）
 
+<!-- video: ch10_04_feature_engineering -->
+<!-- /video -->
+
 ## Step 3 — Pipeline：把「前處理 + 模型」綁成一條，順便防洩漏
 
 ```python
@@ -190,6 +202,9 @@ clf_lr = Pipeline([
 > | `ColumnTransformer([...])` | 對不同欄位群套不同前處理：數值縮放、類別 one-hot、二元放行 |
 > | `OneHotEncoder(handle_unknown="ignore", drop="first")` | `drop="first"` 避免共線性；`handle_unknown="ignore"` 讓測試折出現沒看過的類別時不報錯 |
 > | `Pipeline([("preprocess",...), ("model",...)])` | 把前處理 + 模型串成一個物件，`fit`/`predict` 一起走，CV 時整條在每折內重跑 |
+
+<!-- video: ch10_05_pipeline_leakage -->
+<!-- /video -->
 
 ## Step 4 — 交叉驗證 + AUC：到底在比什麼？
 
@@ -226,6 +241,9 @@ AUC = 隨機抓一個感染者＋一個健康人，模型把感染者排前面�
 >
 > ⚠️ **為什麼不用「準確率 accuracy」？** Task B 只有 24% 重症。如果模型**全部猜「沒重症」**，準確率就有 76%——聽起來高，其實一個病人都沒抓到、完全沒用。AUC 看的是**排序**、不是「猜對幾個」，也不受你設哪個門檻影響。所以在**不平衡**資料（重症、死亡這種少數事件）上，看 AUC（Part B 再加看 PR-AUC）比看準確率誠實得多。
 
+<!-- video: ch10_06_crossval_auc -->
+<!-- /video -->
+
 ## Step 5 — Random Forest：換一顆更聰明的腦袋
 
 ```python
@@ -257,6 +275,9 @@ result = permutation_importance(clf_rf, X, y, n_repeats=10, random_state=42)
 > 🧭 **關鍵提醒**：**重要 ≠ 有因果**。這欄能幫忙**預測**，不代表改變它就能**防病**（那是 Ch12 因果推論）。值得跟 Ch06 的 adjusted OR 對照——若 ML 和迴歸指向同一批危險因子，結論更可信。
 
 ---
+
+<!-- video: ch10_07_random_forest -->
+<!-- /video -->
 
 ## Part B：進階 ML——模型動物園、Ensemble、評估與 SHAP（`10_ml_advanced`）
 
@@ -302,6 +323,9 @@ Part A 誠實地讓你看到：**在 280 筆弱訊號資料上，RF 幾乎贏不
 ### SHAP：把黑盒解釋給醫師聽
 
 > 💰 **年終公平分紅**：SHAP 用賽局理論的 Shapley value，問「少了這個特徵，預測差多少？」，把每個特徵**加入 vs 不加入**的邊際貢獻對所有順序平均。所以它能對**單一病人**說：「他被判高風險，是因為免疫低下 +0.3、暴露 +0.2、年齡 80 +0.15」——正好是解釋黑盒給醫師聽的語言。在沙盒裡，SHAP 成功還原了我們刻意埋的「年齡 U 型風險」，那是線性 age 永遠畫不出來的。
+
+<!-- video: ch10_08_model_zoo_shap -->
+<!-- /video -->
 
 ## 練習題
 
