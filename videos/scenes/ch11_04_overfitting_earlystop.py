@@ -15,7 +15,6 @@ from manim import (
     RIGHT,
     UP,
     DashedLine,
-    Dot,
     FadeIn,
     FadeOut,
     Line,

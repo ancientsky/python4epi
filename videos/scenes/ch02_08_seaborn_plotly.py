@@ -11,14 +11,11 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
-    Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
@@ -30,10 +27,7 @@ from videos.src.code_mobjects import (
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -119,7 +113,7 @@ class Ch02SeabornPlotlyScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="sns_histplot.py")
+        self.show_code(code_text, title="sns_histplot.py")
 
         note = Text(
             self.t("histplot_note"),
@@ -144,7 +138,7 @@ class Ch02SeabornPlotlyScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="sns_barplot.py")
+        self.show_code(code_text, title="sns_barplot.py")
 
         note = Text(
             self.t("barplot_note"),
@@ -170,7 +164,7 @@ class Ch02SeabornPlotlyScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="sns_heatmap.py")
+        self.show_code(code_text, title="sns_heatmap.py")
 
         note = Text(
             self.t("heatmap_note"),
@@ -197,7 +191,7 @@ class Ch02SeabornPlotlyScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="plotly_bar.py")
+        self.show_code(code_text, title="plotly_bar.py")
 
         note = Text(
             self.t("plotly_bar_note"),
@@ -253,7 +247,7 @@ class Ch02SeabornPlotlyScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="savefig.py")
+        self.show_code(code_text, title="savefig.py")
 
         note = Text(
             self.t("savefig_note"),
@@ -359,7 +353,7 @@ class Ch02SeabornPlotlyScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="flu_trend.py")
+        self.show_code(code_text, title="flu_trend.py")
 
         note = Text(
             self.t("extra_note"),

@@ -11,7 +11,6 @@ from manim import (
     ORIGIN,
     RIGHT,
     UP,
-    UR,
     Create,
     FadeIn,
     FadeOut,
@@ -19,16 +18,13 @@ from manim import (
     RoundedRectangle,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
     ACCENT_BLUE,
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     BG_CARD,
-    BG_CARD_ALT,
     BORDER_LIGHT,
     ERROR_RED,
     FONT_CJK,
@@ -37,7 +33,6 @@ from videos.src.code_mobjects import (
     TEXT_SECONDARY,
     BlindSpotBanner,
     CodePanel,
-    ErrorVsCorrect,
     ExtraExampleBanner,
 )
 

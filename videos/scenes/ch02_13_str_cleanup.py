@@ -10,7 +10,6 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
     FadeIn,
     FadeOut,
@@ -20,17 +19,13 @@ from manim import (
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     FONT_CJK,
     FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -142,9 +137,9 @@ class Ch02StrCleanupScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="str_basic.py")
+        self.show_code(code_text, title="str_basic.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -165,9 +160,9 @@ class Ch02StrCleanupScene(EpiBaseScene):
 
         output_text = kwargs.get("output", "23 severe cases")
 
-        code_panel = self.show_code(code_text, title="str_contains.py")
+        self.show_code(code_text, title="str_contains.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -187,7 +182,7 @@ class Ch02StrCleanupScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="str_replace.py")
+        self.show_code(code_text, title="str_replace.py")
 
         note = Text(
             self.t("replace_note"),
@@ -217,9 +212,9 @@ class Ch02StrCleanupScene(EpiBaseScene):
 
         output_text = kwargs.get("output", "Unique cases: 280")
 
-        code_panel = self.show_code(code_text, title="drop_duplicates.py")
+        self.show_code(code_text, title="drop_duplicates.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -247,9 +242,9 @@ class Ch02StrCleanupScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="rename_nlargest.py")
+        self.show_code(code_text, title="rename_nlargest.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -303,7 +298,7 @@ class Ch02StrCleanupScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="flu_cleanup.py")
+        self.show_code(code_text, title="flu_cleanup.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 

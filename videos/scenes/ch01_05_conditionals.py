@@ -5,35 +5,20 @@ from __future__ import annotations
 from manim import (
     DOWN,
     LEFT,
-    RIGHT,
-    UP,
-    UR,
-    Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
-    BG_WARM,
-    CODE_BG,
-    CODE_TEXT,
     FONT_CJK,
     FONT_MONO,
     TEXT_PRIMARY,
-    TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
-    ErrorVsCorrect,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
-    VariableBox,
 )
 
 

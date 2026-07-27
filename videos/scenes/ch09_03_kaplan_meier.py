@@ -27,7 +27,6 @@ from videos.src.code_mobjects import (
     ACCENT_GREEN,
     ACCENT_ORANGE,
     BORDER_LIGHT,
-    ERROR_RED,
     FONT_CJK,
     TEXT_PRIMARY,
     TEXT_SECONDARY,

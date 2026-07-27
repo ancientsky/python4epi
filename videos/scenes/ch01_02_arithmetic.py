@@ -10,32 +10,23 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
-    Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
     ACCENT_GREEN,
     ACCENT_ORANGE,
-    BG_WARM,
     FONT_CJK,
     FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
-    ErrorVsCorrect,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
-    VariableBox,
 )
 
 
@@ -122,9 +113,9 @@ class Ch01ArithmeticScene(EpiBaseScene):
         ).to_edge(UP, buff=0.7)
 
         self.play(FadeIn(formula), run_time=0.5)
-        code_panel = self.show_code(code_lines, title="attack_rate.py")
+        self.show_code(code_lines, title="attack_rate.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.5)
         self.clear_screen()
 
@@ -152,9 +143,9 @@ class Ch01ArithmeticScene(EpiBaseScene):
         ).to_edge(UP, buff=0.7)
 
         self.play(FadeIn(formula), run_time=0.5)
-        code_panel = self.show_code(code_lines, title="cfr.py")
+        self.show_code(code_lines, title="cfr.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.5)
         self.clear_screen()
 
@@ -182,9 +173,9 @@ class Ch01ArithmeticScene(EpiBaseScene):
         ).to_edge(UP, buff=0.7)
 
         self.play(FadeIn(formula), run_time=0.5)
-        code_panel = self.show_code(code_lines, title="hosp_rate.py")
+        self.show_code(code_lines, title="hosp_rate.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.5)
         self.clear_screen()
 
@@ -239,9 +230,9 @@ class Ch01ArithmeticScene(EpiBaseScene):
 
         output_text = "盛行率: 27.40%\n重症比: 8.76%"
 
-        code_panel = self.show_code(code_lines, title="dengue_prevalence.py")
+        self.show_code(code_lines, title="dengue_prevalence.py")
         self.wait(1.2)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.2)
         self.clear_screen()
 

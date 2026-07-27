@@ -11,7 +11,6 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
     FadeIn,
     FadeOut,

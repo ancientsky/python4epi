@@ -11,7 +11,6 @@ from manim import (
     ORIGIN,
     RIGHT,
     UP,
-    UR,
     Arrow,
     Create,
     FadeIn,
@@ -20,7 +19,6 @@ from manim import (
     RoundedRectangle,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
@@ -31,18 +29,12 @@ from videos.src.code_mobjects import (
     BG_CARD,
     BG_CARD_ALT,
     BORDER_LIGHT,
-    CODE_BG,
-    ERROR_RED,
     FONT_CJK,
     FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
-    ErrorVsCorrect,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -204,7 +196,7 @@ class Ch00GitBasicsScene(EpiBaseScene):
         repo = _flow_card("Repository", fill=ACCENT_GREEN, width=3.0, height=1.6,
                           label_color="#FFFFFF")
 
-        areas = VGroup(wd, sa, repo).arrange(RIGHT, buff=1.6).move_to(ORIGIN + UP * 0.2)
+        VGroup(wd, sa, repo).arrange(RIGHT, buff=1.6).move_to(ORIGIN + UP * 0.2)
 
         arrow_add = Arrow(
             wd.get_right(), sa.get_left(),

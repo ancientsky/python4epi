@@ -11,7 +11,6 @@ from manim import (
     ORIGIN,
     RIGHT,
     UP,
-    UR,
     Arrow,
     Create,
     FadeIn,
@@ -20,7 +19,6 @@ from manim import (
     RoundedRectangle,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
@@ -29,21 +27,14 @@ from videos.src.code_mobjects import (
     ACCENT_GREEN,
     ACCENT_ORANGE,
     BG_CARD,
-    BG_CARD_ALT,
     BORDER_LIGHT,
-    CODE_BG,
-    ERROR_RED,
     FONT_CJK,
     FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
     CodePanel,
-    ErrorVsCorrect,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
-    VariableBox,
 )
 
 

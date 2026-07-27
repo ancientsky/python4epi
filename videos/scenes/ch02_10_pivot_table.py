@@ -10,14 +10,11 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
-    Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
@@ -29,10 +26,7 @@ from videos.src.code_mobjects import (
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -167,9 +161,9 @@ class Ch02PivotTableScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="pivot_basic.py")
+        self.show_code(code_text, title="pivot_basic.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -192,7 +186,7 @@ class Ch02PivotTableScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="pivot_margins.py")
+        self.show_code(code_text, title="pivot_margins.py")
 
         note = Text(
             self.t("margins_note"),
@@ -222,7 +216,7 @@ class Ch02PivotTableScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="pivot_multi_agg.py")
+        self.show_code(code_text, title="pivot_multi_agg.py")
 
         note = Text(
             self.t("multi_agg_note"),
@@ -310,7 +304,7 @@ class Ch02PivotTableScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="dengue_pivot.py")
+        self.show_code(code_text, title="dengue_pivot.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 

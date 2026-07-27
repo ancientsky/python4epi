@@ -24,7 +24,6 @@ from manim import (
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_BLUE,
     ACCENT_GREEN,
     ACCENT_ORANGE,
     BORDER_LIGHT,

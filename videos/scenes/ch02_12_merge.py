@@ -28,10 +28,7 @@ from videos.src.code_mobjects import (
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -161,9 +158,9 @@ class Ch02MergeScene(EpiBaseScene):
             "cases: 280 rows -> merged: 280 rows (lab matched: 241)",
         )
 
-        code_panel = self.show_code(code_text, title="merge_basic.py")
+        self.show_code(code_text, title="merge_basic.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -206,7 +203,7 @@ class Ch02MergeScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="different_keys.py")
+        self.show_code(code_text, title="different_keys.py")
 
         note = Text(
             self.t("diff_keys_note"),
@@ -234,7 +231,7 @@ class Ch02MergeScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="validate.py")
+        self.show_code(code_text, title="validate.py")
 
         note = Text(
             self.t("validate_note"),
@@ -294,7 +291,7 @@ class Ch02MergeScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="vaccine_merge.py")
+        self.show_code(code_text, title="vaccine_merge.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 

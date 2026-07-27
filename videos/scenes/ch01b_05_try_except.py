@@ -10,29 +10,23 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
     Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     FONT_CJK,
-    FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
     CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -87,9 +81,9 @@ class Ch01bTryExceptScene(EpiBaseScene):
         code_text = kwargs.get("code",
             'try:\n    result = int("N/A")\nexcept ValueError:\n    result = 0\n    print("bad value, using 0")')
         output_text = kwargs.get("output", "bad value, using 0")
-        code_panel = self.show_code(code_text, title="try_basic.py")
+        self.show_code(code_text, title="try_basic.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -101,9 +95,9 @@ class Ch01bTryExceptScene(EpiBaseScene):
             "    except ValueError:\n        skipped += 1\n"
             'print(f"valid: {len(ages)}, skipped: {skipped}")')
         output_text = kwargs.get("output", "valid: 3, skipped: 2")
-        code_panel = self.show_code(code_text, title="clean_ages.py")
+        self.show_code(code_text, title="clean_ages.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -155,9 +149,9 @@ class Ch01bTryExceptScene(EpiBaseScene):
             '        print(f"vaccinated: {parsed}")\n    except ValueError:\n'
             '        print(f"skipped: {d!r}")')
         output_text = kwargs.get("output", "vaccinated: 2025-03-15\nskipped: ''\nskipped: 'N/A'")
-        code_panel = self.show_code(code_text, title="vaccine_clean.py")
+        self.show_code(code_text, title="vaccine_clean.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 

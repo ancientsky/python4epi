@@ -10,14 +10,11 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
-    Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
@@ -29,10 +26,7 @@ from videos.src.code_mobjects import (
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -165,9 +159,9 @@ class Ch02ValueCountsScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="value_counts_basic.py")
+        self.show_code(code_text, title="value_counts_basic.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -197,9 +191,9 @@ class Ch02ValueCountsScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="value_counts_normalize.py")
+        self.show_code(code_text, title="value_counts_normalize.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
 
         note = Text(
             self.t("normalize_note"),
@@ -238,9 +232,9 @@ class Ch02ValueCountsScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="crosstab_intro.py")
+        self.show_code(code_text, title="crosstab_intro.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
 
         note = Text(
             self.t("crosstab_note"),
@@ -331,7 +325,7 @@ class Ch02ValueCountsScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="enterovirus_example.py")
+        self.show_code(code_text, title="enterovirus_example.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 

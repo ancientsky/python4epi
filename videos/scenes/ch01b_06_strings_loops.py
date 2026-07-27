@@ -10,29 +10,21 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
-    Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     FONT_CJK,
-    FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -86,9 +78,9 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         self.show_step_indicator(1, self.total_steps)
         code_text = kwargs.get("code", 'raw = "  Legionella  "\nclean = raw.strip()\nprint(f"[{clean}]")')
         output_text = kwargs.get("output", "[Legionella]")
-        code_panel = self.show_code(code_text, title="strip.py")
+        self.show_code(code_text, title="strip.py")
         self.wait(0.8)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 0.8)
         self.clear_screen()
 
@@ -96,9 +88,9 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         self.show_step_indicator(2, self.total_steps)
         code_text = kwargs.get("code", 'symptoms = "fever,cough,dyspnea"\nparts = symptoms.split(",")\nprint(parts)')
         output_text = kwargs.get("output", "['fever', 'cough', 'dyspnea']")
-        code_panel = self.show_code(code_text, title="split.py")
+        self.show_code(code_text, title="split.py")
         self.wait(0.8)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 0.8)
         self.clear_screen()
 
@@ -106,9 +98,9 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         self.show_step_indicator(3, self.total_steps)
         code_text = kwargs.get("code", 'status = "confirmed_YES"\nclean = status.replace("YES", "True")\nprint(clean)')
         output_text = kwargs.get("output", "confirmed_True")
-        code_panel = self.show_code(code_text, title="replace.py")
+        self.show_code(code_text, title="replace.py")
         self.wait(0.8)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 0.8)
         self.clear_screen()
 
@@ -116,9 +108,9 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         self.show_step_indicator(4, self.total_steps)
         code_text = kwargs.get("code", 'for i in range(5):\n    print(f"processing wing {i}")')
         output_text = kwargs.get("output", "processing wing 0\nprocessing wing 1\n...")
-        code_panel = self.show_code(code_text, title="for_range.py")
+        self.show_code(code_text, title="for_range.py")
         self.wait(0.8)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 0.8)
         self.clear_screen()
 
@@ -126,9 +118,9 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         self.show_step_indicator(5, self.total_steps)
         code_text = kwargs.get("code", 'wings = ["1A", "1B", "2A", "2B"]\nfor i, wing in enumerate(wings):\n    print(f"#{i}: {wing}")')
         output_text = kwargs.get("output", "#0: 1A\n#1: 1B\n#2: 2A\n#3: 2B")
-        code_panel = self.show_code(code_text, title="enumerate.py")
+        self.show_code(code_text, title="enumerate.py")
         self.wait(0.8)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 0.8)
         self.clear_screen()
 
@@ -136,9 +128,9 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         self.show_step_indicator(6, self.total_steps)
         code_text = kwargs.get("code", 'pathogens = ["Legionella", "TB", "Dengue"]\nprint("Legionella" in pathogens)\nprint("COVID" in pathogens)')
         output_text = kwargs.get("output", "True\nFalse")
-        code_panel = self.show_code(code_text, title="in_check.py")
+        self.show_code(code_text, title="in_check.py")
         self.wait(0.8)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 0.8)
         self.clear_screen()
 
@@ -172,9 +164,9 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
             '    clean = r.strip().lower()\n    is_pos = clean == "positive"\n'
             '    print(f"{clean}: {is_pos}")')
         output_text = kwargs.get("output", "positive: True\nnegative: False\npositive: True")
-        code_panel = self.show_code(code_text, title="tb_clean.py")
+        self.show_code(code_text, title="tb_clean.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 

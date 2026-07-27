@@ -10,29 +10,22 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
-    Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     FONT_CJK,
     FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -113,9 +106,9 @@ class Ch01bErrorsScene(EpiBaseScene):
         self.show_step_indicator(2, self.total_steps)
         code_text = kwargs.get("code", "infected = 121\nprint(infceted)")
         output_text = kwargs.get("output", "NameError: name 'infceted' is not defined")
-        code_panel = self.show_code(code_text, title="name_error.py")
+        self.show_code(code_text, title="name_error.py")
         self.wait(0.8)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 0.8)
         self.clear_screen()
 
@@ -123,9 +116,9 @@ class Ch01bErrorsScene(EpiBaseScene):
         self.show_step_indicator(3, self.total_steps)
         code_text = kwargs.get("code", 'cases = "121"\nrate = cases / 280')
         output_text = kwargs.get("output", "TypeError: unsupported operand type(s)")
-        code_panel = self.show_code(code_text, title="type_error.py")
+        self.show_code(code_text, title="type_error.py")
         self.wait(0.8)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 0.8)
         self.clear_screen()
 
@@ -133,9 +126,9 @@ class Ch01bErrorsScene(EpiBaseScene):
         self.show_step_indicator(4, self.total_steps)
         code_text = kwargs.get("code", 'data = {"deaths": 19, "cases": 121}\nprint(data["death"])')
         output_text = kwargs.get("output", "KeyError: 'death'")
-        code_panel = self.show_code(code_text, title="key_error.py")
+        self.show_code(code_text, title="key_error.py")
         self.wait(0.8)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 0.8)
         self.clear_screen()
 
@@ -143,9 +136,9 @@ class Ch01bErrorsScene(EpiBaseScene):
         self.show_step_indicator(5, self.total_steps)
         code_text = kwargs.get("code", 'wings = ["1A","1B","2A","2B","3A","3B"]\nprint(wings[6])')
         output_text = kwargs.get("output", "IndexError: list index out of range")
-        code_panel = self.show_code(code_text, title="index_error.py")
+        self.show_code(code_text, title="index_error.py")
         self.wait(0.8)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 0.8)
         self.clear_screen()
 
@@ -153,9 +146,9 @@ class Ch01bErrorsScene(EpiBaseScene):
         self.show_step_indicator(6, self.total_steps)
         code_text = kwargs.get("code", "open('data/outbreak.csv')")
         output_text = kwargs.get("output", "FileNotFoundError: [Errno 2]")
-        code_panel = self.show_code(code_text, title="file_error.py")
+        self.show_code(code_text, title="file_error.py")
         self.wait(0.8)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 0.8)
         self.clear_screen()
 
@@ -185,7 +178,7 @@ class Ch01bErrorsScene(EpiBaseScene):
     def show_extra_example(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(8, self.total_steps)
         code_text = kwargs.get("code", 'files = ["taipei.csv", "tainan.csv"]\nfor f in files:\n    print(f"reading {f}")')
-        code_panel = self.show_code(code_text, title="batch_read.py")
+        self.show_code(code_text, title="batch_read.py")
         self.wait(duration)
         self.clear_screen()
 

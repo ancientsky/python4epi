@@ -10,7 +10,6 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
     FadeIn,
     FadeOut,
@@ -27,10 +26,7 @@ from videos.src.code_mobjects import (
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -250,9 +246,9 @@ class Ch03ConfidenceIntervalScene(EpiBaseScene):
 
         output_text = kwargs.get("output", "RR = 2.04 (1.50, 2.78)")
 
-        code_panel = self.show_code(code_lines, title="katz_ci.py")
+        self.show_code(code_lines, title="katz_ci.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -298,9 +294,9 @@ class Ch03ConfidenceIntervalScene(EpiBaseScene):
 
         output_text = kwargs.get("output", "OR = 3.42 (2.05, 5.70)")
 
-        code_panel = self.show_code(code_lines, title="woolf_ci.py")
+        self.show_code(code_lines, title="woolf_ci.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -403,9 +399,9 @@ class Ch03ConfidenceIntervalScene(EpiBaseScene):
 
         output_text = kwargs.get("output", "VE = 75.0% (61.2%, 83.8%)")
 
-        code_panel = self.show_code(code_lines, title="vaccine_ci.py")
+        self.show_code(code_lines, title="vaccine_ci.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 

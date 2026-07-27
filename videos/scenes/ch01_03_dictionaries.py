@@ -17,24 +17,17 @@ from manim import (
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
-    BG_WARM,
     FONT_CJK,
-    FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
     CodePanel,
-    ErrorVsCorrect,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
     VariableBox,
 )
 
@@ -160,9 +153,9 @@ class Ch01DictionariesScene(EpiBaseScene):
         ).to_edge(UP, buff=0.7)
 
         self.play(FadeIn(formula), run_time=0.5)
-        code_panel = self.show_code(code_lines, title="access_dict.py")
+        self.show_code(code_lines, title="access_dict.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.5)
         self.clear_screen()
 
@@ -219,9 +212,9 @@ class Ch01DictionariesScene(EpiBaseScene):
 
         output_text = "EV2026-0042\n台南市\n18"
 
-        code_panel = self.show_code(code_lines, title="ev71_case_card.py")
+        self.show_code(code_lines, title="ev71_case_card.py")
         self.wait(1.2)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.2)
         self.clear_screen()
 

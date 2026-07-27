@@ -12,14 +12,11 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
-    Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
@@ -31,10 +28,7 @@ from videos.src.code_mobjects import (
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -110,7 +104,7 @@ class Ch02MethodChainingScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="temp_variables.py")
+        self.show_code(code_text, title="temp_variables.py")
 
         note = Text(
             self.t("temps_note"),
@@ -141,7 +135,7 @@ class Ch02MethodChainingScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="method_chaining.py")
+        self.show_code(code_text, title="method_chaining.py")
 
         note = Text(
             self.t("chaining_note"),
@@ -169,7 +163,7 @@ class Ch02MethodChainingScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="query.py")
+        self.show_code(code_text, title="query.py")
 
         note = Text(
             self.t("query_note"),
@@ -199,7 +193,7 @@ class Ch02MethodChainingScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="assign.py")
+        self.show_code(code_text, title="assign.py")
 
         note = Text(
             self.t("assign_note"),
@@ -236,7 +230,7 @@ class Ch02MethodChainingScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="full_pipeline.py")
+        self.show_code(code_text, title="full_pipeline.py")
 
         note = Text(
             "filter -> group -> agg -> assign -> sort : one pipeline",
@@ -311,7 +305,7 @@ class Ch02MethodChainingScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="tb_contacts.py")
+        self.show_code(code_text, title="tb_contacts.py")
 
         note = Text(
             self.t("extra_note"),
