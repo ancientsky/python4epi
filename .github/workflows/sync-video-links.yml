@@ -1,0 +1,79 @@
+name: Sync video links
+
+# Regenerate the chapter video embeds whenever the YouTube registry changes, so
+# links can be added straight from the GitHub web UI: edit
+# videos/youtube_ids.yaml, commit, and the cards appear on the site a minute
+# later without anyone running anything locally.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "videos/youtube_ids.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: write   # commit the regenerated embeds
+  actions: write    # dispatch the Pages deploy afterwards
+
+# Two quick edits in a row must not race each other into a push conflict.
+concurrency:
+  group: sync-video-links
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.6.12"
+
+      # --no-project skips installing the book's full dependency set: the sync
+      # script only needs pyyaml, and this keeps the job down to seconds.
+      - name: Regenerate embeds
+        run: uv run --no-project --with pyyaml python videos/sync_video_embeds.py
+
+      - name: Commit if anything changed
+        id: commit
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "登錄表與章節已經同步，無需變更。" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add book/chapters book_en/chapters videos/VIDEO_INDEX.md
+          git commit -m "docs: regenerate video embeds from youtube_ids.yaml
+
+          Automated by .github/workflows/sync-video-links.yml."
+
+          # Someone may have pushed while this ran; rebase rather than fail.
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          {
+            echo "## 影片卡片已更新"
+            echo ""
+            git show --stat --oneline HEAD | tail -n +2
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # A push made with GITHUB_TOKEN deliberately does not trigger other
+      # workflows, so the deploy has to be asked for explicitly. workflow_dispatch
+      # is one of the two events GitHub exempts from that rule.
+      - name: Redeploy the site
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run pages.yml --repo "${{ github.repository }}" --ref main
+          echo "已觸發 deploy-pages。" >> "$GITHUB_STEP_SUMMARY"

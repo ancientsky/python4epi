@@ -141,13 +141,27 @@ to look up:
 | `ch08_04_morans_i.mp4` | `ch08_04_morans_i` | `zh:` |
 | `ch08_04_morans_i_en.mp4` | `ch08_04_morans_i` | `en:` |
 
-After uploading, paste either the full URL or the bare ID, then run the sync:
+After uploading, paste either the full URL or the bare ID into the matching
+entry. Both of these work:
+
+```yaml
+    zh: "https://youtu.be/dQw4w9WgXcQ"
+    zh: "dQw4w9WgXcQ"
+```
+
+**Editing on github.com is enough.** Committing a change to
+`videos/youtube_ids.yaml` on `main` fires the *Sync video links* workflow, which
+regenerates the embeds, commits them, and dispatches the Pages deploy. Nothing
+has to be run locally. (The deploy needs an explicit dispatch because a push made
+with `GITHUB_TOKEN` deliberately does not trigger other workflows;
+`workflow_dispatch` is one of the two events exempt from that rule.)
+
+Working from a checkout instead:
 
 ```bash
-# 1. edit videos/youtube_ids.yaml
-#      zh: "https://youtu.be/dQw4w9WgXcQ"   <- URL or bare ID, both work
-# 2. regenerate the embeds in book/ and book_en/, plus VIDEO_INDEX.md
+# regenerate the embeds in book/ and book_en/, plus VIDEO_INDEX.md
 uv run python videos/sync_video_embeds.py
+git commit -am "docs: add YouTube links for ch08" && git push
 ```
 
 The sync is idempotent — safe to re-run any time. A video whose ID is still blank
@@ -158,11 +172,15 @@ the card appears on the next build.
 chapter-by-chapter cross-reference of Chinese and English links with upload
 progress. Never edit it by hand.
 
-CI guards against drift:
+CI guards against drift on pull requests:
 
 ```bash
 uv run python videos/sync_video_embeds.py --check   # non-zero exit if stale
 ```
+
+That check is scoped to PRs on purpose. On `main` a registry edit is briefly out
+of sync until the sync workflow commits the regenerated embeds a few seconds
+later, so failing the push would only flag a state that repairs itself.
 
 ## Adding Videos for New Chapters
 
