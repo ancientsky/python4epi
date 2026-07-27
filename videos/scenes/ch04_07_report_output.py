@@ -9,7 +9,6 @@ from __future__ import annotations
 from manim import (
     DOWN,
     LEFT,
-    RIGHT,
     UP,
     ORIGIN,
     FadeIn,
@@ -22,7 +21,6 @@ from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
     ACCENT_ORANGE,
     FONT_CJK,
-    FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,

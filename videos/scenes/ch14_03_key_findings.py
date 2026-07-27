@@ -205,8 +205,8 @@ class Ch14KeyFindingsScene(EpiBaseScene):
         values = self.t("stat_values")
         labels = self.t("stat_labels")
         cards = [
-            self._stat_card(v, l, self._STAT_ACCENTS[i % len(self._STAT_ACCENTS)])
-            for i, (v, l) in enumerate(zip(values, labels))
+            self._stat_card(value, label, self._STAT_ACCENTS[i % len(self._STAT_ACCENTS)])
+            for i, (value, label) in enumerate(zip(values, labels))
         ]
         row1 = VGroup(*cards[:3]).arrange(RIGHT, buff=0.4)
         row2 = VGroup(*cards[3:]).arrange(RIGHT, buff=0.4)

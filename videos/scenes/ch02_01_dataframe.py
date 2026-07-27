@@ -10,29 +10,22 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
-    Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     FONT_CJK,
     FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -129,9 +122,9 @@ class Ch02DataFrameScene(EpiBaseScene):
 
         output_text = kwargs.get("output", "<class 'pandas.core.frame.DataFrame'>")
 
-        code_panel = self.show_code(code_lines, title="read_csv.py")
+        self.show_code(code_lines, title="read_csv.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -152,9 +145,9 @@ class Ch02DataFrameScene(EpiBaseScene):
             "(280, 32)\n   case_id  age sex  floor  ...\n0    C001   82   M      3  ...\n1    C002   75   F      2  ...\n2    C003   68   M      1  ...",
         )
 
-        code_panel = self.show_code(code_lines, title="shape_head.py")
+        self.show_code(code_lines, title="shape_head.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -185,9 +178,9 @@ class Ch02DataFrameScene(EpiBaseScene):
         ).to_edge(UP, buff=0.7)
 
         self.play(FadeIn(note), run_time=0.5)
-        code_panel = self.show_code(code_lines, title="columns.py")
+        self.show_code(code_lines, title="columns.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.5)
         self.clear_screen()
 
@@ -216,9 +209,9 @@ class Ch02DataFrameScene(EpiBaseScene):
         ).to_edge(UP, buff=0.7)
 
         self.play(FadeIn(note), run_time=0.5)
-        code_panel = self.show_code(code_lines, title="iloc_vs_loc.py")
+        self.show_code(code_lines, title="iloc_vs_loc.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.5)
         self.clear_screen()
 
@@ -238,9 +231,9 @@ class Ch02DataFrameScene(EpiBaseScene):
 
         output_text = kwargs.get("output", "19\n81.4")
 
-        code_panel = self.show_code(code_lines, title="boolean_filter.py")
+        self.show_code(code_lines, title="boolean_filter.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -294,7 +287,7 @@ class Ch02DataFrameScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_lines, title="dengue_df.py")
+        self.show_code(code_lines, title="dengue_df.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 

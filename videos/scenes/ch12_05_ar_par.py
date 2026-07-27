@@ -28,7 +28,6 @@ from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
     ACCENT_BLUE,
     ACCENT_ORANGE,
-    ERROR_RED,
     FONT_CJK,
     FONT_MONO,
     TEXT_PRIMARY,

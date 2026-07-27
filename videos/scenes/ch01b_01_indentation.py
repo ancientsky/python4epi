@@ -10,29 +10,23 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
     Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     FONT_CJK,
-    FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
     CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -117,16 +111,16 @@ class Ch01bIndentationScene(EpiBaseScene):
     def show_if_indent(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(2, self.total_steps)
         code_text = kwargs.get("code", "cfr = 0.157\nif cfr > 0.15:\n    print('CFR > 15%, alert!')")
-        code_panel = self.show_code(code_text, title="if_indent.py")
+        self.show_code(code_text, title="if_indent.py")
         self.wait(1.0)
-        output_panel = self.show_output(kwargs.get("output", "CFR > 15%, alert!"))
+        self.show_output(kwargs.get("output", "CFR > 15%, alert!"))
         self.wait(duration - 1.0)
         self.clear_screen()
 
     def show_for_indent(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(3, self.total_steps)
         code_text = kwargs.get("code", 'wings = ["1A","1B","2A"]\nfor wing in wings:\n    print(f"checking {wing}")')
-        code_panel = self.show_code(code_text, title="for_indent.py")
+        self.show_code(code_text, title="for_indent.py")
         self.wait(duration)
         self.clear_screen()
 
@@ -182,7 +176,7 @@ class Ch01bIndentationScene(EpiBaseScene):
         code_text = kwargs.get("code",
             'dengue_cases = 12\nif dengue_cases > 10:\n    action = "full spray"\n'
             'elif dengue_cases > 5:\n    action = "targeted spray"\nelse:\n    action = "education only"')
-        code_panel = self.show_code(code_text, title="dengue_spray.py")
+        self.show_code(code_text, title="dengue_spray.py")
         self.wait(duration)
         self.clear_screen()
 

@@ -10,29 +10,22 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
-    Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     FONT_CJK,
     FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -148,9 +141,9 @@ class Ch02GroupbyScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="groupby_basic.py")
+        self.show_code(code_text, title="groupby_basic.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -170,7 +163,7 @@ class Ch02GroupbyScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="agg_named.py")
+        self.show_code(code_text, title="agg_named.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -188,7 +181,7 @@ class Ch02GroupbyScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="reset_index.py")
+        self.show_code(code_text, title="reset_index.py")
 
         note = Text(
             self.t("reset_note"),
@@ -219,7 +212,7 @@ class Ch02GroupbyScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="attack_rate.py")
+        self.show_code(code_text, title="attack_rate.py")
 
         note = Text(
             self.t("denom_note"),
@@ -248,7 +241,7 @@ class Ch02GroupbyScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="multi_groupby.py")
+        self.show_code(code_text, title="multi_groupby.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -305,7 +298,7 @@ class Ch02GroupbyScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="covid_groupby.py")
+        self.show_code(code_text, title="covid_groupby.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 

@@ -11,29 +11,21 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
-    Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     FONT_CJK,
-    FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -103,7 +95,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="fig_ax.py")
+        self.show_code(code_text, title="fig_ax.py")
 
         note = Text(
             self.t("figax_note"),
@@ -131,7 +123,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="bar_basic.py")
+        self.show_code(code_text, title="bar_basic.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -150,7 +142,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="date_format.py")
+        self.show_code(code_text, title="date_format.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -169,7 +161,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="reindex_zero.py")
+        self.show_code(code_text, title="reindex_zero.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -189,7 +181,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="cdc_style.py")
+        self.show_code(code_text, title="cdc_style.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -209,7 +201,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="title_labels.py")
+        self.show_code(code_text, title="title_labels.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -266,7 +258,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="measles_epicurve.py")
+        self.show_code(code_text, title="measles_epicurve.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 

@@ -10,29 +10,21 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
-    Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     FONT_CJK,
-    FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -102,9 +94,9 @@ class Ch02DatetimeScene(EpiBaseScene):
         )
         output_text = kwargs.get("output", "datetime64[ns]")
 
-        code_panel = self.show_code(code_text, title="to_datetime.py")
+        self.show_code(code_text, title="to_datetime.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -123,7 +115,7 @@ class Ch02DatetimeScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="errors_coerce.py")
+        self.show_code(code_text, title="errors_coerce.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -142,7 +134,7 @@ class Ch02DatetimeScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="dt_accessor.py")
+        self.show_code(code_text, title="dt_accessor.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -162,7 +154,7 @@ class Ch02DatetimeScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="timedelta.py")
+        self.show_code(code_text, title="timedelta.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -181,7 +173,7 @@ class Ch02DatetimeScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="epi_week.py")
+        self.show_code(code_text, title="epi_week.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -207,9 +199,9 @@ class Ch02DatetimeScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="strftime.py")
+        self.show_code(code_text, title="strftime.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -265,7 +257,7 @@ class Ch02DatetimeScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="covid_incubation.py")
+        self.show_code(code_text, title="covid_incubation.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 

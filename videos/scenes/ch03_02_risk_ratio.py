@@ -10,7 +10,6 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
     FadeIn,
     FadeOut,
@@ -20,17 +19,13 @@ from manim import (
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     FONT_CJK,
     FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -170,9 +165,9 @@ class Ch03RiskRatioScene(EpiBaseScene):
 
         output_text = kwargs.get("output", "RR = 2.28")
 
-        code_panel = self.show_code(code_lines, title="risk_ratio.py")
+        self.show_code(code_lines, title="risk_ratio.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -265,9 +260,9 @@ class Ch03RiskRatioScene(EpiBaseScene):
             "RR  = 2.28\n95% CI = (1.63, 3.18)",
         )
 
-        code_panel = self.show_code(code_lines, title="epi_rr.py")
+        self.show_code(code_lines, title="epi_rr.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -349,9 +344,9 @@ class Ch03RiskRatioScene(EpiBaseScene):
             "RR = 0.049\nVaccine efficacy = 95.1%",
         )
 
-        code_panel = self.show_code(code_lines, title="vaccine_rr.py")
+        self.show_code(code_lines, title="vaccine_rr.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 

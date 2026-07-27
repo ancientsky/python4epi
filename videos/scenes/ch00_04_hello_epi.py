@@ -11,7 +11,6 @@ from manim import (
     ORIGIN,
     RIGHT,
     UP,
-    UR,
     Create,
     FadeIn,
     FadeOut,
@@ -19,18 +18,14 @@ from manim import (
     RoundedRectangle,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
     ACCENT_BLUE,
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     BG_CARD,
-    BG_CARD_ALT,
     BORDER_LIGHT,
-    CODE_BG,
     ERROR_RED,
     FONT_CJK,
     FONT_MONO,
@@ -38,10 +33,7 @@ from videos.src.code_mobjects import (
     TEXT_SECONDARY,
     BlindSpotBanner,
     CodePanel,
-    ErrorVsCorrect,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -288,14 +280,14 @@ class Ch00HelloEpiScene(EpiBaseScene):
 
         output_text = self.t("extra_output")
 
-        code_panel = self.show_code(
+        self.show_code(
             code_lines,
             title="enterovirus_analysis.py",
             position=ORIGIN + UP * 0.5,
             duration=1.5,
         )
         self.wait(0.5)
-        output_panel = self.show_output(output_text, position=DOWN * 2.5)
+        self.show_output(output_text, position=DOWN * 2.5)
         self.wait(max(0.1, duration - 2.0))
         self.clear_screen()
 

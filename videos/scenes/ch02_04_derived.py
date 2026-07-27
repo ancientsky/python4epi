@@ -10,29 +10,21 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
-    Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     FONT_CJK,
-    FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
-    CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -102,7 +94,7 @@ class Ch02DerivedScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="pd_cut.py")
+        self.show_code(code_text, title="pd_cut.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -123,7 +115,7 @@ class Ch02DerivedScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="sum_axis.py")
+        self.show_code(code_text, title="sum_axis.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -142,9 +134,9 @@ class Ch02DerivedScene(EpiBaseScene):
         )
         output_text = kwargs.get("output", "bool\n14")
 
-        code_panel = self.show_code(code_text, title="astype.py")
+        self.show_code(code_text, title="astype.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -164,7 +156,7 @@ class Ch02DerivedScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="dt_days.py")
+        self.show_code(code_text, title="dt_days.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -185,7 +177,7 @@ class Ch02DerivedScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="isocalendar.py")
+        self.show_code(code_text, title="isocalendar.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 
@@ -204,7 +196,7 @@ class Ch02DerivedScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="assign.py")
+        self.show_code(code_text, title="assign.py")
 
         note = Text(
             self.t("assign_note"),
@@ -268,7 +260,7 @@ class Ch02DerivedScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="dengue_derived.py")
+        self.show_code(code_text, title="dengue_derived.py")
         self.wait(duration - 0.5)
         self.clear_screen()
 

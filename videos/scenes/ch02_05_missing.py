@@ -17,25 +17,18 @@ from manim import (
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
     ACCENT_GREEN,
     ACCENT_ORANGE,
-    BG_WARM,
     FONT_CJK,
-    FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
     CodePanel,
-    ErrorVsCorrect,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
-    VariableBox,
 )
 
 
@@ -166,9 +159,9 @@ class Ch02MissingScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="check_missing.py")
+        self.show_code(code_text, title="check_missing.py")
         self.wait(0.8)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 0.8)
         self.clear_screen()
 
@@ -229,9 +222,9 @@ class Ch02MissingScene(EpiBaseScene):
         )
         output_text = kwargs.get("output", "缺少發病日: 3 筆")
 
-        code_panel = self.show_code(code_text, title="filter_missing.py")
+        self.show_code(code_text, title="filter_missing.py")
         self.wait(0.8)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 0.8)
         self.clear_screen()
 
@@ -250,7 +243,7 @@ class Ch02MissingScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="fill_or_drop.py")
+        self.show_code(code_text, title="fill_or_drop.py")
 
         note = Text(
             self.t("fill_note"),
@@ -322,9 +315,9 @@ class Ch02MissingScene(EpiBaseScene):
             ),
         )
 
-        code_panel = self.show_code(code_text, title="vaccine_missing.py")
+        self.show_code(code_text, title="vaccine_missing.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 

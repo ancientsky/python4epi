@@ -12,31 +12,23 @@ from manim import (
     ORIGIN,
     RIGHT,
     UP,
-    UR,
     Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
-    BG_WARM,
-    CODE_BG,
     FONT_CJK,
     FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
     CodePanel,
-    ErrorVsCorrect,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
     VariableBox,
 )
 
@@ -218,9 +210,9 @@ class Ch01VariablesScene(EpiBaseScene):
 
         output_text = "總住民人數: 280\n感染人數: 121"
 
-        code_panel = self.show_code(code_lines, title="print_demo.py")
+        self.show_code(code_lines, title="print_demo.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -273,9 +265,9 @@ class Ch01VariablesScene(EpiBaseScene):
 
         output_text = "確診人數: 87\n住院人數: 5"
 
-        code_panel = self.show_code(code_lines, title="covid_school.py")
+        self.show_code(code_lines, title="covid_school.py")
         self.wait(1.2)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.2)
         self.clear_screen()
 

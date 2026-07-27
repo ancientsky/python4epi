@@ -10,14 +10,12 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
     Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
@@ -31,8 +29,6 @@ from videos.src.code_mobjects import (
     BlindSpotBanner,
     CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -222,9 +218,9 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
         self.show_step_indicator(5, self.total_steps)
         code_text = kwargs.get("code", "import math\n%timeit math.sqrt(121)")
         output_text = kwargs.get("output", "47.3 ns per loop")
-        code_panel = self.show_code(code_text, title="Jupyter Cell")
+        self.show_code(code_text, title="Jupyter Cell")
         self.wait(0.8)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 0.8)
         self.clear_screen()
 

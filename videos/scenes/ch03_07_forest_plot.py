@@ -10,7 +10,6 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
     FadeIn,
     FadeOut,
@@ -20,7 +19,6 @@ from manim import (
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     FONT_CJK,
     FONT_MONO,
@@ -28,7 +26,6 @@ from videos.src.code_mobjects import (
     TEXT_SECONDARY,
     BlindSpotBanner,
     ExtraExampleBanner,
-    StepIndicator,
 )
 
 

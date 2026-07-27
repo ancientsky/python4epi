@@ -13,15 +13,10 @@ from manim import (
     RIGHT,
     UP,
     Code,
-    Create,
-    FadeIn,
     ManimColor,
-    Paragraph,
-    Rectangle,
     RoundedRectangle,
     Text,
     VGroup,
-    Write,
 )
 
 # ---------------------------------------------------------------------------

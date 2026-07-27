@@ -10,29 +10,23 @@ from manim import (
     DOWN,
     LEFT,
     ORIGIN,
-    RIGHT,
     UP,
     Create,
     FadeIn,
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     FONT_CJK,
-    FONT_MONO,
     TEXT_PRIMARY,
     TEXT_SECONDARY,
     BlindSpotBanner,
     CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
 )
 
 
@@ -89,18 +83,18 @@ class Ch01bImportsScene(EpiBaseScene):
     def show_import_basic(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(1, self.total_steps)
         code_text = kwargs.get("code", "import math\nprint(math.sqrt(121))")
-        code_panel = self.show_code(code_text, title="import_basic.py")
+        self.show_code(code_text, title="import_basic.py")
         self.wait(1.0)
-        output_panel = self.show_output(kwargs.get("output", "11.0"))
+        self.show_output(kwargs.get("output", "11.0"))
         self.wait(duration - 1.0)
         self.clear_screen()
 
     def show_from_import(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(2, self.total_steps)
         code_text = kwargs.get("code", "from math import sqrt\nprint(sqrt(121))")
-        code_panel = self.show_code(code_text, title="from_import.py")
+        self.show_code(code_text, title="from_import.py")
         self.wait(1.0)
-        output_panel = self.show_output(kwargs.get("output", "11.0"))
+        self.show_output(kwargs.get("output", "11.0"))
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -173,9 +167,9 @@ class Ch01bImportsScene(EpiBaseScene):
             "from datetime import date\nonset = date(2026, 1, 15)\n"
             "admitted = date(2026, 1, 18)\ndelay = (admitted - onset).days\n"
             'print(f"onset-to-admission: {delay} days")')
-        code_panel = self.show_code(code_text, title="date_calc.py")
+        self.show_code(code_text, title="date_calc.py")
         self.wait(1.0)
-        output_panel = self.show_output(kwargs.get("output", "onset-to-admission: 3 days"))
+        self.show_output(kwargs.get("output", "onset-to-admission: 3 days"))
         self.wait(duration - 1.0)
         self.clear_screen()
 

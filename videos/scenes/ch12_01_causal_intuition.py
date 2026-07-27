@@ -34,7 +34,6 @@ from videos.src.code_mobjects import (
     ACCENT_GREEN,
     ACCENT_ORANGE,
     BG_CARD,
-    BORDER_LIGHT,
     ERROR_RED,
     FONT_CJK,
     TEXT_PRIMARY,

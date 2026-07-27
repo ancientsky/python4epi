@@ -17,12 +17,10 @@ from manim import (
     FadeOut,
     Text,
     VGroup,
-    Write,
 )
 
 from videos.src.base_scene import EpiBaseScene
 from videos.src.code_mobjects import (
-    ACCENT_GREEN,
     ACCENT_ORANGE,
     FONT_CJK,
     FONT_MONO,
@@ -31,8 +29,6 @@ from videos.src.code_mobjects import (
     BlindSpotBanner,
     CodePanel,
     ExtraExampleBanner,
-    OutputPanel,
-    StepIndicator,
     VariableBox,
 )
 
@@ -89,9 +85,9 @@ class Ch01bTypesScene(EpiBaseScene):
             'print(type(121))\nprint(type(43.2))\nprint(type("Legionella"))\nprint(type(True))')
         output_text = kwargs.get("output",
             "<class 'int'>\n<class 'float'>\n<class 'str'>\n<class 'bool'>")
-        code_panel = self.show_code(code_text, title="type_check.py")
+        self.show_code(code_text, title="type_check.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -122,9 +118,9 @@ class Ch01bTypesScene(EpiBaseScene):
         self.show_step_indicator(3, self.total_steps)
         code_text = kwargs.get("code", "infected = 121\nprint(infected > 100)\nprint(infected == 0)")
         output_text = kwargs.get("output", "True\nFalse")
-        code_panel = self.show_code(code_text, title="boolean.py")
+        self.show_code(code_text, title="boolean.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -134,9 +130,9 @@ class Ch01bTypesScene(EpiBaseScene):
             "age = 85\nhas_copd = True\nhigh_risk = age > 80 and has_copd\n"
             'print(f"high risk: {high_risk}")')
         output_text = kwargs.get("output", "high risk: True")
-        code_panel = self.show_code(code_text, title="logical.py")
+        self.show_code(code_text, title="logical.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
@@ -169,9 +165,9 @@ class Ch01bTypesScene(EpiBaseScene):
             "for a in raw_ages:\n    ages.append(int(a))\n"
             'avg = sum(ages) / len(ages)\nprint(f"mean age: {avg}")')
         output_text = kwargs.get("output", "mean age: 4.0")
-        code_panel = self.show_code(code_text, title="enterovirus_ages.py")
+        self.show_code(code_text, title="enterovirus_ages.py")
         self.wait(1.0)
-        output_panel = self.show_output(output_text)
+        self.show_output(output_text)
         self.wait(duration - 1.0)
         self.clear_screen()
 
