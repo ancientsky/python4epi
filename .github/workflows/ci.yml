@@ -52,6 +52,14 @@ jobs:
       - name: Check video embeds match youtube_ids.yaml
         run: uv run python videos/sync_video_embeds.py --check
 
+      # Manim scenes are never imported by pytest and are only executed by the
+      # (manually dispatched) video workflow, so a plain NameError in one can sit
+      # undetected until someone spends a build on it -- which is exactly what
+      # `RIGHT` in ch13_01 did. F821/E9 catch that class without dragging in the
+      # unused-import and unused-variable noise these files are full of.
+      - name: Lint video scenes for undefined names
+        run: uv run ruff check videos/ --select F821,E9
+
       - name: Build Jupyter Book (student edition — matches deploy)
         run: |
           cp book/_toc_student.yml book/_toc.yml
