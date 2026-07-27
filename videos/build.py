@@ -11,6 +11,7 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import pathlib
 import sys
@@ -18,7 +19,10 @@ import sys
 # Ensure the project root is importable
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
-from videos.src.pipeline import build_video  # noqa: E402
+# NOTE: videos.src.pipeline pulls in manim and edge_tts, which live in the
+# optional `video` dependency group. It is imported lazily inside main() so that
+# --list (and --help) work with nothing but the standard library -- CI plans the
+# build matrix from a runner that has not installed the render stack.
 
 SCRIPTS_DIR = pathlib.Path(__file__).resolve().parent / "scripts"
 OUTPUT_DIR = pathlib.Path(__file__).resolve().parent / "output"
@@ -70,6 +74,13 @@ def main() -> None:
         help="Reuse cached TTS audio (skip generation)",
     )
     parser.add_argument(
+        "--list",
+        action="store_true",
+        help="Print the selected scripts as a JSON array and exit without "
+        "building. CI uses this to fan one selection out across parallel jobs, "
+        "so the selection rules live here only.",
+    )
+    parser.add_argument(
         "-v", "--verbose",
         action="store_true",
         help="Enable verbose logging",
@@ -111,6 +122,24 @@ def main() -> None:
             sel = args.chapter or args.concept or "any"
             logging.error("No scripts found for '%s' (lang=%s)", sel, args.lang)
             sys.exit(1)
+
+    if args.list:
+        # Emit paths relative to the project root. CI feeds these to
+        # hashFiles(), which resolves against the workspace and silently
+        # returns nothing for an absolute path -- which would quietly collapse
+        # every cache key into the same useless value.
+        root = pathlib.Path(__file__).resolve().parent.parent
+        rel = []
+        for s in scripts:
+            resolved = pathlib.Path(s).resolve()
+            try:
+                rel.append(str(resolved.relative_to(root)))
+            except ValueError:  # --script pointing outside the repo
+                rel.append(str(resolved))
+        print(json.dumps(rel))
+        return
+
+    from videos.src.pipeline import build_video  # noqa: PLC0415 — see module note
 
     succeeded: list[str] = []
     failed: list[tuple[str, str]] = []

@@ -34,6 +34,35 @@ uv run manim render -ql videos/scenes/ch01_01_variables.py Ch01VariablesScene
 is logged and skipped, the rest keep building, and a success/failure summary
 prints at the end (non-zero exit if any failed).
 
+## Building in CI
+
+The **Build Tutorial Videos** workflow renders **one video per job** rather than
+looping through a chapter in a single job. Chapter 02 is what forced this: 13
+videos and 190 narration segments, 65% more work than any other chapter, which
+ran past the job timeout. Fanning out makes wall-clock time track the slowest
+single video, and `fail-fast: false` means a broken render costs you that one
+video instead of the whole chapter — re-run the failed job on its own.
+
+The job matrix comes from `build.py --list`, which applies exactly the same
+chapter/language/concept selection rules as a real build and prints the chosen
+scripts as JSON:
+
+```bash
+uv run python videos/build.py --chapter ch02 --lang zh --list
+# ["videos/scripts/ch02_01_dataframe.yaml", ...]
+```
+
+`--list` deliberately touches nothing but the standard library — the heavy
+`manim` / `edge-tts` import is deferred until a build actually starts — so the
+planning job skips installing the render stack. Paths are printed relative to
+the repo root because CI feeds them to `hashFiles()`, which ignores absolute
+paths.
+
+Narration audio is cached between runs, keyed on the script file. Edit the
+narration and that video's audio is re-synthesised; leave it alone and the
+cached audio is reused. GitHub caps a workflow matrix at 256 jobs, so building
+every chapter in both languages at once (244 videos) fits, but only just.
+
 ## Pipeline
 
 ```

@@ -55,12 +55,75 @@ on:
         default: true
         type: boolean
 
+# Each video is rendered by its own job. Building a chapter sequentially used to
+# blow past the job timeout on ch02 (13 videos, 190 narration segments -- 65%
+# more than any other chapter); fanning out makes wall-clock time track the
+# slowest single video instead of the sum of all of them, and one bad render no
+# longer takes the whole chapter down with it.
+permissions:
+  contents: read
+
 jobs:
-  build-videos:
+  # ---------------------------------------------------------------------------
+  # Resolve the chapter/language/concept inputs into the list of scripts to
+  # build. build.py --list applies the very same selection rules the builder
+  # uses, so the two can never drift apart; it needs only the standard library,
+  # which is why this job can skip installing the render stack entirely.
+  # ---------------------------------------------------------------------------
+  plan:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    permissions:
-      contents: write  # needed for creating releases
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.select.outputs.matrix }}
+      count: ${{ steps.select.outputs.count }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Select scripts
+        id: select
+        env:
+          # Passed as env rather than interpolated into the script body:
+          # `concept` is free text, and ${{ }} would splice it into the shell.
+          CHAPTER: ${{ inputs.chapter }}
+          LANGUAGE: ${{ inputs.language }}
+          CONCEPT: ${{ inputs.concept }}
+        run: |
+          set -euo pipefail
+          if [ -n "$CONCEPT" ]; then
+            SELECTOR=(--concept "$CONCEPT")
+          elif [ "$CHAPTER" = "all" ]; then
+            SELECTOR=(--all)
+          else
+            SELECTOR=(--chapter "$CHAPTER")
+          fi
+
+          MATRIX=$(python3 videos/build.py "${SELECTOR[@]}" --lang "$LANGUAGE" --list \
+            | python3 -c 'import json,pathlib,sys; print(json.dumps([{"path": p, "stem": pathlib.Path(p).stem} for p in json.load(sys.stdin)]))')
+          COUNT=$(printf '%s' "$MATRIX" | python3 -c 'import json,sys; print(len(json.load(sys.stdin)))')
+
+          # GitHub caps a matrix at 256 jobs; fail loudly rather than letting
+          # Actions reject the generated matrix with a much vaguer message.
+          if [ "$COUNT" -gt 256 ]; then
+            echo "::error::$COUNT videos selected, over the 256-job matrix cap. Build one chapter, or one language, at a time."
+            exit 1
+          fi
+
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "Selected $COUNT video(s)." >> "$GITHUB_STEP_SUMMARY"
+
+  # ---------------------------------------------------------------------------
+  # One video per job.
+  # ---------------------------------------------------------------------------
+  build:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 90        # generous for a single video; the old 60 was for all of them
+    strategy:
+      fail-fast: false         # one bad render must not cancel its 12 siblings
+      max-parallel: 8
+      matrix:
+        video: ${{ fromJson(needs.plan.outputs.matrix) }}
 
     steps:
       - uses: actions/checkout@v5
@@ -69,6 +132,7 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           version: "0.6.12"
+          enable-cache: true
 
       - name: Set up Python
         run: uv python install 3.13
@@ -81,58 +145,104 @@ jobs:
       - name: Install Python dependencies
         run: uv sync --group video
 
-      - name: Build videos
-        run: |
-          if [ -n "${{ inputs.concept }}" ]; then
-            uv run python videos/build.py --concept "${{ inputs.concept }}" --lang "${{ inputs.language }}" --quality "${{ inputs.quality }}" -v
-          elif [ "${{ inputs.chapter }}" = "all" ]; then
-            uv run python videos/build.py --all --lang "${{ inputs.language }}" --quality "${{ inputs.quality }}" -v
-          else
-            uv run python videos/build.py --chapter "${{ inputs.chapter }}" --lang "${{ inputs.language }}" --quality "${{ inputs.quality }}" -v
-          fi
+      # Narration audio is the slow, network-bound half of the build. build.py
+      # already invalidates a cached segment when its narration text, voice, rate
+      # or pitch changes, so keying on the script file is enough: edit the words
+      # and the audio is re-synthesised, leave them alone and it is reused.
+      - name: Restore narration audio
+        uses: actions/cache@v5
+        with:
+          path: videos/output/audio
+          key: tts-v1-${{ matrix.video.stem }}-${{ hashFiles(matrix.video.path) }}
+          restore-keys: |
+            tts-v1-${{ matrix.video.stem }}-
 
-      - name: List generated videos
-        run: |
-          echo "## Generated Videos" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          for f in videos/output/final/*.mp4; do
-            if [ -f "$f" ]; then
-              size=$(du -h "$f" | cut -f1)
-              echo "- $(basename $f) ($size)" >> $GITHUB_STEP_SUMMARY
-            fi
-          done
+      - name: Build video
+        env:
+          SCRIPT: ${{ matrix.video.path }}
+          QUALITY: ${{ inputs.quality }}
+        run: uv run python videos/build.py --script "$SCRIPT" --quality "$QUALITY" -v
 
-      - name: Upload as artifact
+      - name: Upload video
         uses: actions/upload-artifact@v6
         with:
-          name: tutorial-videos
+          # Artifact names must be unique across the matrix -- v4 onwards refuses
+          # to let two jobs write the same one.
+          name: video-${{ matrix.video.stem }}
           path: videos/output/final/*.mp4
           retention-days: 30
 
+  # ---------------------------------------------------------------------------
+  # Collect every video that built and publish them as one release.
+  # ---------------------------------------------------------------------------
+  publish:
+    needs: [plan, build]
+    # always(): publish whatever succeeded even if some renders failed, so a
+    # single broken video does not cost you the other twelve.
+    if: always() && inputs.create_release && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write   # creating a release
+
+    steps:
+      - name: Download all videos
+        uses: actions/download-artifact@v7
+        with:
+          path: dist
+          pattern: video-*
+          merge-multiple: true
+
+      - name: Summarise
+        id: summary
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          FILES=(dist/*.mp4)
+          echo "count=${#FILES[@]}" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "## Generated Videos"
+            echo ""
+            echo "| Video | Size |"
+            echo "|-------|------|"
+            for f in "${FILES[@]}"; do
+              echo "| $(basename "$f") | $(du -h "$f" | cut -f1) |"
+            done
+            echo ""
+            echo "${#FILES[@]} of ${{ needs.plan.outputs.count }} selected video(s) built."
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Create GitHub Release
-        if: inputs.create_release
+        if: steps.summary.outputs.count != '0'
         env:
           GH_TOKEN: ${{ github.token }}
+          CHAPTER: ${{ inputs.chapter }}
+          LANGUAGE: ${{ inputs.language }}
+          QUALITY: ${{ inputs.quality }}
+          SELECTED: ${{ needs.plan.outputs.count }}
         run: |
+          set -euo pipefail
           TAG="videos-$(date +%Y%m%d-%H%M%S)"
-          TITLE="Tutorial Videos $(date +%Y-%m-%d)"
 
-          # Build release notes
-          NOTES="## Tutorial Videos — chapter: ${{ inputs.chapter }} · language: ${{ inputs.language }}\n\n"
-          NOTES+="Generated with Manim + edge-tts + ffmpeg.\n\n"
-          NOTES+="| # | Video | Size |\n"
-          NOTES+="|---|-------|------|\n"
-          for f in videos/output/final/*.mp4; do
-            if [ -f "$f" ]; then
-              name=$(basename "$f")
-              size=$(du -h "$f" | cut -f1)
-              NOTES+="| | $name | $size |\n"
-            fi
-          done
-          NOTES+="\n\nQuality: ${{ inputs.quality }} | Commit: ${{ github.sha }}"
+          {
+            echo "## Tutorial Videos — chapter: $CHAPTER · language: $LANGUAGE"
+            echo ""
+            echo "Generated with Manim + edge-tts + ffmpeg."
+            echo ""
+            echo "| Video | Size |"
+            echo "|-------|------|"
+            for f in dist/*.mp4; do
+              echo "| $(basename "$f") | $(du -h "$f" | cut -f1) |"
+            done
+            echo ""
+            echo "Quality: \`$QUALITY\` · Commit: \`${{ github.sha }}\`"
+            echo ""
+            echo "Built $(ls dist/*.mp4 | wc -l) of $SELECTED selected video(s)."
+          } > notes.md
 
-          # Create release with video files attached
           gh release create "$TAG" \
-            --title "$TITLE" \
-            --notes "$(echo -e "$NOTES")" \
-            videos/output/final/*.mp4
+            --repo "${{ github.repository }}" \
+            --title "Tutorial Videos $(date +%Y-%m-%d)" \
+            --notes-file notes.md \
+            dist/*.mp4
