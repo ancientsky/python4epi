@@ -241,13 +241,12 @@ class Ch10RandomForestScene(EpiBaseScene):
             self.t("rf_honest_heading"), font=FONT_CJK, font_size=28, color=ACCENT_ORANGE
         ).to_edge(UP, buff=0.7)
         self.play(FadeIn(h), run_time=0.4)
-        panel = self.show_output(
-            kwargs.get("output", self.t("rf_honest_output")), position=UP * 0.3
+        panel, caption = self.show_output_with_note(
+            kwargs.get("output", self.t("rf_honest_output")),
+            self.t("rf_honest_caption"),
+            position=UP * 0.3,
+            font_size=18,
         )
-        caption = Text(
-            self.t("rf_honest_caption"), font=FONT_CJK, font_size=18, color=TEXT_SECONDARY
-        ).to_edge(DOWN, buff=0.8)
-        self.play(FadeIn(caption), run_time=0.4)
         self.wait(max(0.1, duration - 1.6))
         self.play(FadeOut(VGroup(h, panel, caption)), run_time=0.5)
 

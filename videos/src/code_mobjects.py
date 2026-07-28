@@ -169,6 +169,10 @@ class CodePanel(VGroup):
 class OutputPanel(VGroup):
     """Terminal-style output panel (dark or light variant)."""
 
+    #: Breathing room between the text block and the card edge.
+    PAD_X = 0.5
+    PAD_Y = 0.28
+
     def __init__(
         self,
         text: str,
@@ -176,11 +180,22 @@ class OutputPanel(VGroup):
         width: float = 10.0,
         height: float = 1.2,
         dark: bool = True,
+        max_height: float | None = None,
     ) -> None:
+        """Build the panel.
+
+        Parameters
+        ----------
+        width, height:
+            *Minimum* card size. The card grows past either one when the text
+            needs the room, so multi-line output stays inside it.
+        max_height:
+            Ceiling for the finished card. The text is scaled down to fit rather
+            than allowed to push the card past it.
+        """
         super().__init__()
         bg = CODE_BG if dark else BG_CARD_ALT
         fg = CODE_TEXT if dark else TEXT_PRIMARY
-        card = _card(width, height, fill=bg)
         prefix = Text(
             ">>> ",
             font=FONT_MONO,
@@ -193,7 +208,23 @@ class OutputPanel(VGroup):
             font_size=20,
             color=ManimColor(fg),
         )
-        line = VGroup(prefix, body).arrange(RIGHT, buff=0.05)
+        # aligned_edge=UP puts the prompt beside the first line. Without it a
+        # multi-line block centres ">>>" against its middle row.
+        line = VGroup(prefix, body).arrange(RIGHT, buff=0.05, aligned_edge=UP)
+
+        if max_height is not None:
+            room = max_height - 2 * self.PAD_Y
+            if room > 0 and line.height > room:
+                line.scale(room / line.height)
+
+        # The card used to be a fixed 10 x 1.2 regardless of content, so any
+        # output past ~2 lines spilled out of it — and pale text on the cream
+        # background simply vanishes, which reads as the panel being truncated.
+        card = _card(
+            max(width, line.width + 2 * self.PAD_X),
+            max(height, line.height + 2 * self.PAD_Y),
+            fill=bg,
+        )
         line.move_to(card.get_center())
         self.add(card, line)
         self.card = card
