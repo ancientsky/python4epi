@@ -19,6 +19,7 @@ from manim import (
     DOWN,
     LEFT,
     RIGHT,
+    UP,
     UR,
     FadeIn,
     FadeOut,
@@ -26,6 +27,7 @@ from manim import (
     Scene,
     Text,
     VGroup,
+    config,
 )
 
 from videos.src.code_mobjects import (
@@ -171,18 +173,61 @@ class EpiBaseScene(Scene):
         self.play(FadeIn(panel), run_time=min(1.0, duration * 0.4))
         return panel
 
+    def keep_in_frame(self, mob, *, margin: float = 0.3):
+        """Nudge *mob* back inside the frame if it hangs off the top or bottom.
+
+        Panels are positioned by their centre, so a tall one drifts off-screen
+        as its content grows. Returns *mob* for chaining.
+        """
+        floor = -config.frame_height / 2 + margin
+        ceiling = config.frame_height / 2 - margin
+        if mob.get_bottom()[1] < floor:
+            mob.shift(UP * (floor - mob.get_bottom()[1]))
+        elif mob.get_top()[1] > ceiling:
+            mob.shift(DOWN * (mob.get_top()[1] - ceiling))
+        return mob
+
     def show_output(
         self,
         text: str,
         *,
         position=DOWN * 2.5,
         duration: float = 1.5,
+        max_height: float | None = None,
     ) -> OutputPanel:
-        """Create and fade-in an output panel."""
-        panel = OutputPanel(text)
+        """Create and fade-in an output panel, kept inside the frame."""
+        panel = OutputPanel(text, max_height=max_height)
         panel.move_to(position)
+        self.keep_in_frame(panel)
         self.play(FadeIn(panel), run_time=min(0.5, duration * 0.3))
         return panel
+
+    def show_output_with_note(
+        self,
+        text: str,
+        note: str,
+        *,
+        color: str = TEXT_SECONDARY,
+        position=DOWN * 2.2,
+        font_size: int = 20,
+        duration: float = 1.5,
+        max_height: float | None = None,
+    ) -> tuple[OutputPanel, Text]:
+        """Output panel with a caption beneath it.
+
+        The caption is anchored to the panel rather than to the bottom of the
+        frame: a fixed `to_edge(DOWN)` caption ends up underneath the panel as
+        soon as the output runs to more than a couple of lines. The pair is then
+        shifted as a unit to stay on screen.
+        """
+        panel = self.show_output(
+            text, position=position, duration=duration, max_height=max_height
+        )
+        caption = Text(note, font=FONT_CJK, font_size=font_size, color=ManimColor(color))
+        caption.next_to(panel, DOWN, buff=0.28)
+        self.keep_in_frame(VGroup(panel, caption))
+        self.play(FadeIn(caption), run_time=0.5)
+        return panel, caption
 
     def show_variable_box(
         self,

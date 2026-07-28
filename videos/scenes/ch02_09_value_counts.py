@@ -193,16 +193,10 @@ class Ch02ValueCountsScene(EpiBaseScene):
 
         self.show_code(code_text, title="value_counts_normalize.py")
         self.wait(1.0)
-        self.show_output(output_text)
-
-        note = Text(
-            self.t("normalize_note"),
-            font=FONT_CJK,
-            font_size=20,
-            color=ACCENT_ORANGE,
-        ).to_edge(DOWN, buff=0.8)
-
-        self.play(FadeIn(note), run_time=0.5)
+        # max_height keeps the six-line panel clear of the code panel above it.
+        self.show_output_with_note(
+            output_text, self.t("normalize_note"), color=ACCENT_ORANGE, max_height=2.0
+        )
         self.wait(duration - 1.5)
         self.clear_screen()
 
@@ -234,16 +228,9 @@ class Ch02ValueCountsScene(EpiBaseScene):
 
         self.show_code(code_text, title="crosstab_intro.py")
         self.wait(1.0)
-        self.show_output(output_text)
-
-        note = Text(
-            self.t("crosstab_note"),
-            font=FONT_CJK,
-            font_size=20,
-            color=TEXT_SECONDARY,
-        ).to_edge(DOWN, buff=0.8)
-
-        self.play(FadeIn(note), run_time=0.5)
+        self.show_output_with_note(
+            output_text, self.t("crosstab_note"), color=TEXT_SECONDARY, max_height=2.0
+        )
         self.wait(duration - 1.5)
         self.clear_screen()
 
