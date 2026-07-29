@@ -93,17 +93,23 @@ class Ch01ArithmeticScene(EpiBaseScene):
         """Show attack rate (侵襲率) calculation with code and output."""
         self.show_step_indicator(1, self.total_steps)
 
-        code_lines = (
-            "total_residents = 280\n"
-            "infected        = 121\n"
-            "\n"
-            "# 侵襲率 = 感染人數 / 總暴露人數\n"
-            "attack_rate = infected / total_residents\n"
-            "\n"
-            "print(f'侵襲率: {attack_rate:.2%}')"
+        code_lines = kwargs.get(
+            "code",
+            (
+                "total_residents = 280\n"
+                "infected        = 121\n"
+                "\n"
+                "# 侵襲率 = 感染人數 / 總暴露人數\n"
+                "attack_rate = infected / total_residents\n"
+                "\n"
+                "print(f'侵襲率: {attack_rate:.2%}')"
+            ),
         )
 
-        output_text = "侵襲率: 43.21%"
+        output_text = kwargs.get(
+            "output",
+            "侵襲率: 43.21%",
+        )
 
         formula = Text(
             self.t("attack_rate_formula"),
@@ -123,17 +129,23 @@ class Ch01ArithmeticScene(EpiBaseScene):
         """Show case fatality rate (致死率) calculation."""
         self.show_step_indicator(2, self.total_steps)
 
-        code_lines = (
-            "infected = 121\n"
-            "deaths   = 19\n"
-            "\n"
-            "# 致死率 = 死亡人數 / 確診人數\n"
-            "cfr = deaths / infected\n"
-            "\n"
-            "print(f'致死率: {cfr:.2%}')"
+        code_lines = kwargs.get(
+            "code",
+            (
+                "infected = 121\n"
+                "deaths   = 19\n"
+                "\n"
+                "# 致死率 = 死亡人數 / 確診人數\n"
+                "cfr = deaths / infected\n"
+                "\n"
+                "print(f'致死率: {cfr:.2%}')"
+            ),
         )
 
-        output_text = "致死率: 15.70%"
+        output_text = kwargs.get(
+            "output",
+            "致死率: 15.70%",
+        )
 
         formula = Text(
             self.t("cfr_formula"),
@@ -153,17 +165,23 @@ class Ch01ArithmeticScene(EpiBaseScene):
         """Show hospitalization rate calculation."""
         self.show_step_indicator(3, self.total_steps)
 
-        code_lines = (
-            "infected     = 121\n"
-            "hospitalized = 43\n"
-            "\n"
-            "# 住院率 = 住院人數 / 感染人數\n"
-            "hosp_rate = hospitalized / infected\n"
-            "\n"
-            "print(f'住院率: {hosp_rate:.2%}')"
+        code_lines = kwargs.get(
+            "code",
+            (
+                "infected     = 121\n"
+                "hospitalized = 43\n"
+                "\n"
+                "# 住院率 = 住院人數 / 感染人數\n"
+                "hosp_rate = hospitalized / infected\n"
+                "\n"
+                "print(f'住院率: {hosp_rate:.2%}')"
+            ),
         )
 
-        output_text = "住院率: 35.54%"
+        output_text = kwargs.get(
+            "output",
+            "住院率: 35.54%",
+        )
 
         formula = Text(
             self.t("hosp_rate_formula"),
@@ -215,20 +233,26 @@ class Ch01ArithmeticScene(EpiBaseScene):
         """Dengue prevalence example demonstrating the same arithmetic pattern."""
         self.show_step_indicator(5, self.total_steps)
 
-        code_lines = (
-            "# 登革熱血清調查（南台灣某村）\n"
-            "surveyed     = 500\n"
-            "seropositive = 137\n"
-            "severe_cases = 12\n"
-            "\n"
-            "prevalence = seropositive / surveyed\n"
-            "severity   = severe_cases / seropositive\n"
-            "\n"
-            "print(f'盛行率: {prevalence:.2%}')\n"
-            "print(f'重症比: {severity:.2%}')"
+        code_lines = kwargs.get(
+            "code",
+            (
+                "# 登革熱血清調查（南台灣某村）\n"
+                "surveyed     = 500\n"
+                "seropositive = 137\n"
+                "severe_cases = 12\n"
+                "\n"
+                "prevalence = seropositive / surveyed\n"
+                "severity   = severe_cases / seropositive\n"
+                "\n"
+                "print(f'盛行率: {prevalence:.2%}')\n"
+                "print(f'重症比: {severity:.2%}')"
+            ),
         )
 
-        output_text = "盛行率: 27.40%\n重症比: 8.76%"
+        output_text = kwargs.get(
+            "output",
+            "盛行率: 27.40%\n重症比: 8.76%",
+        )
 
         self.show_code(code_lines, title="dengue_prevalence.py")
         self.wait(1.2)

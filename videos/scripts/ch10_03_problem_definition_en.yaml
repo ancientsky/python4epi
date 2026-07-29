@@ -90,7 +90,7 @@ segments:
       See, it looks almost exactly like the Legionnaires' severe label; the logic of defining the problem carries over to any disease.
     animation: "show_extra_dengue"
     code: |
-      # 登革熱重症標籤：警示徵象或需要加護
+      # Severe dengue label: warning signs, or needing intensive care
       df["dengue_severe"] = (
           (df["warning_signs"] == 1) | (df["icu"] == 1)
       ).astype(int)

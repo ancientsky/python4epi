@@ -48,7 +48,7 @@ segments:
       from libpysal.weights import Queen, KNN
 
       w_all = Queen.from_dataframe(gdf, use_index=False)
-      print(w_all.islands)   # 金門、澎湖、連江：0 個鄰居
+      print(w_all.islands)   # Kinmen, Penghu, Lienchiang: 0 neighbours
     pause_after: 0.5
 
   - id: "islands_knn"
@@ -70,7 +70,7 @@ segments:
     code: |
       main = gdf[~gdf["is_inset"]].reset_index(drop=True)
       w = Queen.from_dataframe(main, use_index=False)
-      w.transform = "r"   # row-standardized：鄰居權重加總 = 1
+      w.transform = "r"   # row-standardized: neighbour weights sum to 1
     pause_after: 0.5
 
   - id: "main_summary"
@@ -99,7 +99,7 @@ segments:
     code: |
       w_district = Queen.from_dataframe(district_gdf, use_index=False)
       w_district.transform = "r"
-      alert_neighbors = w_district.neighbors["信義區"]
+      alert_neighbors = w_district.neighbors["Xinyi"]
     pause_after: 0.5
 
   - id: "blindspot_banner"

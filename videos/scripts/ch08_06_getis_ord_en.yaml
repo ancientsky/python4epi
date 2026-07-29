@@ -44,7 +44,7 @@ segments:
     animation: "show_binary_weights"
     code: |
       w_b = Queen.from_dataframe(main, use_index=False)
-      w_b.transform = "B"   # binary，不做 row-standardize
+      w_b.transform = "B"   # binary - no row standardization
     pause_after: 0.5
 
   - id: "star_meaning"

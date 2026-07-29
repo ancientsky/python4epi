@@ -17,7 +17,7 @@
 
 Your supervisor asks: **"Where is it worst?"**
 
-Songbai Nursing Home has **3 floors × 2 wings (A / B)** and 280 residents in total.
+Pine and Cypress Nursing Home has **3 floors × 2 wings (A / B)** and 280 residents in total.
 You need to map the spatial distribution and find out which floor-wing areas have the highest attack rates.
 If one particular wing stands out, it may hint that the water system there (showerheads, hot-water piping) is the transmission route.
 

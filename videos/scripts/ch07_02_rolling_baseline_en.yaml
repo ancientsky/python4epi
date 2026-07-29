@@ -40,10 +40,10 @@ segments:
       That single shift(1) is the lifesaver of time-series forecasting.
     animation: "show_why_shift"
     code: |
-      # 錯誤：用到今天預測今天
+      # Wrong: uses today to predict today
       pred = daily.rolling(7).mean()
 
-      # 正確：shift(1) 讓「昨天之前」預測「今天」
+      # Right: shift(1) lets "up to yesterday" predict "today"
       pred = daily.rolling(7).mean().shift(1)
     pause_after: 0.5
 

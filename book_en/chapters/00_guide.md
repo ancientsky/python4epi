@@ -432,7 +432,7 @@ Press `Shift + Enter` to run each cell:
 ```python
 import pandas as pd
 
-# Read the line list from the Songbai nursing home Legionnaires' disease cluster (280 residents)
+# Read the line list from the Pine and Cypress nursing home Legionnaires' disease cluster (280 residents)
 df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
 
 # Look at the first few rows—each row is one resident's complete record
@@ -495,7 +495,7 @@ fig, ax = plt.subplots(figsize=(10, 4))  # figsize=(width, height) in inches
 ax.bar(epi_curve.index, epi_curve.values, color="#2980B9", edgecolor="white")
 ax.set_xlabel("Onset Date")   # X-axis label
 ax.set_ylabel("Cases")          # Y-axis label
-ax.set_title("Epidemic Curve — Songbai Nursing Home Legionnaires' Disease Cluster")  # chart title
+ax.set_title("Epidemic Curve — Pine and Cypress Nursing Home Legionnaires' Disease Cluster")  # chart title
 fig.autofmt_xdate()    # automatically rotate the date labels to avoid overlap
 plt.tight_layout()     # automatically adjust the margins to prevent labels being cut off
 plt.show()             # display the chart
@@ -540,7 +540,7 @@ Try modifying the code above: group by the `"shower_use"` column to look at the 
 In the Hello World code just now, you should have seen something like this:
 
 ```python
-# Read the line list from the Songbai nursing home Legionnaires' disease cluster
+# Read the line list from the Pine and Cypress nursing home Legionnaires' disease cluster
 df = pd.read_csv("data/synthetic/legionella_outbreak.csv")
 ```
 
@@ -614,12 +614,12 @@ Markdown cells turn your notebook from just a pile of code into an **illustrated
 
 ### An example inside a notebook
 
-Suppose you're analyzing the Songbai nursing home data. A Markdown cell might read like this:
+Suppose you're analyzing the Pine and Cypress nursing home data. A Markdown cell might read like this:
 
 ```markdown
 ## Attack rate analysis
 
-This analysis uses the line list from the Songbai nursing home Legionnaires' disease cluster (n=280).
+This analysis uses the line list from the Pine and Cypress nursing home Legionnaires' disease cluster (n=280).
 
 ### Key findings
 
@@ -1411,7 +1411,7 @@ This is one of epidemiology's most central charts: the **epidemic curve**. It te
 <!-- video: ch00_06_roadmap -->
 <!-- /video -->
 
-You don't need to learn all the chapters in one go. This book uses the **Songbai nursing home Legionnaires' disease cluster** as the thread running through the whole book, with each chapter taking you one layer deeper into the analysis—just like a real investigation, gradually uncovering the truth.
+You don't need to learn all the chapters in one go. This book uses the **Pine and Cypress nursing home Legionnaires' disease cluster** as the thread running through the whole book, with each chapter taking you one layer deeper into the analysis—just like a real investigation, gradually uncovering the truth.
 
 ```
 == Act One: The Report Comes In ==

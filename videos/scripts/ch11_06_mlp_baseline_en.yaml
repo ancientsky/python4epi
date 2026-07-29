@@ -38,7 +38,7 @@ segments:
       df["infected"] = df["clinical_severity"].ne("not_ill")
       X = pd.get_dummies(features).values.astype("float32")
       X[:, 0] = StandardScaler().fit_transform(X[:, :1]).ravel()
-      idx = np.random.permutation(len(X))   # 橫斷面可 shuffle
+      idx = np.random.permutation(len(X))   # cross-sectional data, so shuffling is fine
       Xtr, Xval = X[idx[:196]], X[idx[196:]]  # 70 / 30
     pause_after: 0.5
 
@@ -53,10 +53,10 @@ segments:
       model = nn.Sequential(
           nn.Linear(input_dim, 32), nn.ReLU(),
           nn.Linear(32, 16), nn.ReLU(),
-          nn.Linear(16, 1),   # 輸出 logit，不接 sigmoid
+          nn.Linear(16, 1),   # outputs a logit - no sigmoid here
       )
       n_params = sum(p.numel() for p in model.parameters())
-      print(n_params, "參數 vs", len(Xtr), "筆樣本")
+      print(n_params, "parameters vs", len(Xtr), "samples")
     pause_after: 0.5
 
   - id: "params_vs_samples"
@@ -116,12 +116,12 @@ segments:
       Same cleaver, but swap in a truly big-enough ox, and it carves beautifully.
     animation: "show_extra_readmission"
     code: |
-      # 換一個表格風險任務：30 天再入院預測
+      # A different tabular risk task: 30-day readmission
       readmit = nn.Sequential(
           nn.Linear(n_feats, 64), nn.ReLU(),
           nn.Linear(64, 1),
       )
-      # 幾萬筆 + 幾十特徵 → DL 才可能贏 logistic
+      # Tens of thousands of rows + dozens of features -> DL can finally beat logistic
     pause_after: 0.5
 
   - id: "blindspot_banner"

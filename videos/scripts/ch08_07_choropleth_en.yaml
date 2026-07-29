@@ -67,8 +67,8 @@ segments:
     code: |
       shp_counties = set(gdf["county"].apply(normalize_county))
       data_counties = set(df["county"].unique())
-      print("只在地圖:", sorted(shp_counties - data_counties))
-      print("只在資料:", sorted(data_counties - shp_counties))
+      print("map only:", sorted(shp_counties - data_counties))
+      print("data only:", sorted(data_counties - shp_counties))
     pause_after: 0.5
 
   - id: "rate_per_100k"

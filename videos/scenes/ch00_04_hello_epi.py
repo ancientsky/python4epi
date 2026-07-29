@@ -264,21 +264,27 @@ class Ch00HelloEpiScene(EpiBaseScene):
         """Enterovirus example using the same analysis pattern."""
         self.show_step_indicator(6, self.total_steps)
 
-        code_lines = (
-            "# 腸病毒幼兒園群聚事件\n"
-            "import pandas as pd\n"
-            "\n"
-            "df = pd.read_csv('enterovirus_kindergarten.csv')\n"
-            "\n"
-            "total = len(df)          # 120 位幼童\n"
-            "infected = df['confirmed'].sum()  # 34 人確診\n"
-            "severe = df['severe'].sum()       # 2 人重症\n"
-            "\n"
-            "attack_rate = infected / total * 100\n"
-            "print(f'侵襲率: {attack_rate:.1f}%')  # 28.3%"
+        code_lines = kwargs.get(
+            "code",
+            (
+                "# 腸病毒幼兒園群聚事件\n"
+                "import pandas as pd\n"
+                "\n"
+                "df = pd.read_csv('enterovirus_kindergarten.csv')\n"
+                "\n"
+                "total = len(df)          # 120 位幼童\n"
+                "infected = df['confirmed'].sum()  # 34 人確診\n"
+                "severe = df['severe'].sum()       # 2 人重症\n"
+                "\n"
+                "attack_rate = infected / total * 100\n"
+                "print(f'侵襲率: {attack_rate:.1f}%')  # 28.3%"
+            ),
         )
 
-        output_text = self.t("extra_output")
+        output_text = kwargs.get(
+            "output",
+            self.t("extra_output"),
+        )
 
         self.show_code(
             code_lines,

@@ -2,7 +2,7 @@
 
 ## Scenario
 
-It's the third day since the Legionnaires' disease outbreak at Songbai Nursing Home. The investigation team has already compiled a **280-row × 32-column** line list of cases. Your job: read this CSV into Python, verify the data quality, build derived variables for analysis, and then use charts to show the outbreak's time trend, spatial distribution, and demographic features.
+It's the third day since the Legionnaires' disease outbreak at Pine and Cypress Nursing Home. The investigation team has already compiled a **280-row × 32-column** line list of cases. Your job: read this CSV into Python, verify the data quality, build derived variables for analysis, and then use charts to show the outbreak's time trend, spatial distribution, and demographic features.
 
 ## What You'll Learn
 
@@ -670,7 +670,7 @@ An epidemic curve is essentially a **histogram**, not an ordinary bar chart. Bel
 5. **Time interval ≈ 1/4 of the incubation period**: Legionnaires' disease has an incubation period of 2–10 days (average 5–6 days), so a 1-day unit is appropriate. When there are many cases you can shorten the interval; when there are few you can lengthen it.
 
 **Title and labels**
-6. **The title should be self-contained**: include the disease name, location, and time range, e.g. "Songbai Nursing Home Legionnaires' disease epidemic curve, by date of symptom onset, January 2026."
+6. **The title should be self-contained**: include the disease name, location, and time range, e.g. "Pine and Cypress Nursing Home Legionnaires' disease epidemic curve, by date of symptom onset, January 2026."
 7. **X-axis**: label it "Date of Symptom Onset"—clearly state the time basis. If you use a surrogate date such as the report date, note it below the chart.
 8. **Y-axis**: label it "Number of Cases," and it must use integer tick marks.
 
@@ -755,7 +755,7 @@ ax.bar(
     color="#2c7fb8", edgecolor="white", linewidth=0.5,
 )
 ax.set_title(
-    "Songbai Nursing Home Legionnaires' Disease Epidemic Curve, by Date of Symptom Onset, January 2026",
+    "Pine and Cypress Nursing Home Legionnaires' Disease Epidemic Curve, by Date of Symptom Onset, January 2026",
     fontsize=13, fontweight="bold",
 )
 ax.set_xlabel("Date of Symptom Onset")
@@ -811,7 +811,7 @@ for cls in ["confirmed", "probable"]:
     bottom = daily_class[cls] if bottom is None else bottom + daily_class[cls]
 
 ax.set_title(
-    "Songbai Nursing Home Legionnaires' Disease Epidemic Curve, by Case Classification and Date of Symptom Onset, January 2026",
+    "Pine and Cypress Nursing Home Legionnaires' Disease Epidemic Curve, by Case Classification and Date of Symptom Onset, January 2026",
     fontsize=12, fontweight="bold",
 )
 ax.set_xlabel("Date of Symptom Onset")
@@ -862,7 +862,7 @@ ax.annotate(
 )
 
 ax.set_title(
-    "Songbai Nursing Home Legionnaires' Disease Epidemic Curve (with key-event annotations)",
+    "Pine and Cypress Nursing Home Legionnaires' Disease Epidemic Curve (with key-event annotations)",
     fontsize=13, fontweight="bold",
 )
 ax.set_xlabel("Date of Symptom Onset")
@@ -927,7 +927,7 @@ fig.autofmt_xdate(rotation=45)
 ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
 
 ax.set_title(
-    "Songbai Nursing Home Legionnaires' Disease Epidemic Curve — Unit Chart (by Case Classification)",
+    "Pine and Cypress Nursing Home Legionnaires' Disease Epidemic Curve — Unit Chart (by Case Classification)",
     fontsize=13, fontweight="bold",
 )
 ax.set_xlabel("Date of Symptom Onset")
@@ -1084,7 +1084,7 @@ fig = px.bar(
     x="symptom_onset_date", y="cases", color="floor",
     barmode="stack",
     color_discrete_sequence=["#2c7fb8", "#41ae76", "#fe9929"],
-    title="Songbai Nursing Home Legionnaires' Disease Epidemic Curve, by Floor and Date of Symptom Onset, January 2026",
+    title="Pine and Cypress Nursing Home Legionnaires' Disease Epidemic Curve, by Floor and Date of Symptom Onset, January 2026",
     labels={"symptom_onset_date": "Date of Symptom Onset",
             "cases": "Number of Cases",
             "floor": "Floor"},
@@ -1194,7 +1194,7 @@ ax.bar(daily.index, daily.values, width=1.0,
 
 # Title and axis labels in English (required by international journals)
 ax.set_title("Epidemic curve of Legionnaires' disease outbreak\n"
-             "Songbai Nursing Home, January 2026",
+             "Pine and Cypress Nursing Home, January 2026",
              fontsize=10, fontweight="bold")
 ax.set_xlabel("Date of symptom onset", fontsize=9)
 ax.set_ylabel("Number of cases", fontsize=9)

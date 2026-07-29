@@ -33,12 +33,12 @@ segments:
     animation: "show_if_elif_else"
     code: |
       if cfr > 0.15:
-          print("致死率偏高（>15%），建議升級應變層級")
+          print("CFR is high (>15%) - escalate the response")
       elif cfr > 0.10:
-          print("致死率中等（10-15%），持續加強監測")
+          print("CFR is moderate (10-15%) - keep surveillance up")
       else:
-          print("致死率尚可（<10%），維持常規應變")
-    output: "致死率偏高（>15%），建議升級應變層級"
+          print("CFR is acceptable (<10%) - routine response")
+    output: "CFR is high (>15%) - escalate the response"
     pause_after: 0.5
 
   - id: "main_summary"
@@ -71,12 +71,12 @@ segments:
     code: |
       vaccination_rate = 0.72
       if vaccination_rate >= 0.85:
-          print("已達群體免疫門檻，維持監測")
+          print("Herd immunity threshold reached - keep monitoring")
       elif vaccination_rate >= 0.70:
-          print("接近目標，加強催打")
+          print("Close to target - push the catch-up campaign")
       else:
-          print("接種率不足，啟動社區疫苗站")
-    output: "接近目標，加強催打"
+          print("Coverage too low - open community vaccination sites")
+    output: "Close to target - push the catch-up campaign"
     pause_after: 0.5
 
   # ========================================
@@ -96,8 +96,8 @@ segments:
       To compare, you need two equals signs.
       One little symbol makes a world of difference!
     animation: "show_blindspot_single_equal"
-    error_code: "if cfr = 0.15:   # 一個等號\n    print(\"...\")  # SyntaxError!"
-    correct_code: "if cfr == 0.15:  # 兩個等號\n    print(\"...\")  # 比較 ✓"
+    error_code: "if cfr = 0.15:   # one equals sign\n    print(\"...\")  # SyntaxError!"
+    correct_code: "if cfr == 0.15:  # two equals signs\n    print(\"...\")  # comparison ✓"
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -107,8 +107,8 @@ segments:
       Python says SyntaxError, because the colon is like a door - without it, Python can't get into the if room.
       Remember, if, elif, and else all need a colon after them.
     animation: "show_blindspot_missing_colon"
-    error_code: "if cfr > 0.15    # 少了冒號\n    print(\"...\")  # SyntaxError!"
-    correct_code: "if cfr > 0.15:   # 有冒號\n    print(\"...\")  # 正確 ✓"
+    error_code: "if cfr > 0.15    # missing the colon\n    print(\"...\")  # SyntaxError!"
+    correct_code: "if cfr > 0.15:   # colon present\n    print(\"...\")  # correct ✓"
     pause_after: 0.5
 
   - id: "blindspot_3"
@@ -120,8 +120,8 @@ segments:
       No indentation means it's not inside the if.
       Stick to four spaces every time and you're golden.
     animation: "show_blindspot_indentation"
-    error_code: "if cfr > 0.15:\nprint(\"高\")  # 沒縮排！\n# IndentationError!"
-    correct_code: "if cfr > 0.15:\n    print(\"高\")  # 縮排 4 格\n    # 正確 ✓"
+    error_code: "if cfr > 0.15:\nprint(\"high\")  # no indent!\n# IndentationError!"
+    correct_code: "if cfr > 0.15:\n    print(\"high\")  # indented 4 spaces\n    # correct ✓"
     pause_after: 0.5
 
   - id: "outro"

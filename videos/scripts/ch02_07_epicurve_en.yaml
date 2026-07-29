@@ -101,7 +101,7 @@ segments:
       For investigation reports, every chart must stand alone, not depend on context.
     animation: "show_title_labels"
     code: |
-      ax.set_title("Legionellosis cases, Songbai NH, Jan 2026")
+      ax.set_title("Legionellosis cases, Pine and Cypress NH, Jan 2026")
       ax.set_xlabel("Date of symptom onset")
       ax.set_ylabel("Number of cases")
     pause_after: 0.5

@@ -11,7 +11,7 @@
 
 It all started with that phone call.
 
-> In mid-January 2026, you receive a notification from Songbai Nursing Home: several residents have recently developed pneumonia symptoms.
+> In mid-January 2026, you receive a notification from Pine and Cypress Nursing Home: several residents have recently developed pneumonia symptoms.
 > You grab your laptop, rush to the site, and begin an epidemiological investigation.
 > Now the investigation is over — it's time to pull all of your analyses together into a formal **outbreak investigation report**.
 
@@ -151,7 +151,7 @@ outdir = tempfile.mkdtemp(prefix="sitrep_")
 # 2. python-pptx: a title slide + a chart/table slide
 prs = Presentation()
 slide1 = prs.slides.add_slide(prs.slide_layouts[0])
-slide1.shapes.title.text = "Songbai Nursing Home Legionnaires' Disease Outbreak SitRep"
+slide1.shapes.title.text = "Pine and Cypress Nursing Home Legionnaires' Disease Outbreak SitRep"
 slide1.placeholders[1].text = (
     f"Attack rate {n_infected / n_total:.1%} | Case fatality rate {n_deaths / n_infected:.1%}"
 )
@@ -171,7 +171,7 @@ prs.save(os.path.join(outdir, "legionella_sitrep.pptx"))
 
 # 3. python-docx: the same material, now as a Word report
 doc = Document()
-doc.add_heading("Songbai Nursing Home Legionnaires' Disease Outbreak Investigation Report", level=0)
+doc.add_heading("Pine and Cypress Nursing Home Legionnaires' Disease Outbreak Investigation Report", level=0)
 
 doc.add_heading("Summary", level=1)
 doc.add_paragraph(

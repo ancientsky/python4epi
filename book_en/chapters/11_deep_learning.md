@@ -354,7 +354,7 @@ The reason lines up exactly with the decision framework earlier in this chapter:
 
 ### Step 2 — Sequence Forecasting: LSTM / CNN
 
-280 rows of cross-sectional data leave DL tied with sklearn — so what about a **sequence forecasting** task instead? [`11_dl_sequence.ipynb`](notebooks/11_dl_sequence.ipynb) doesn't use the Songbai Nursing Home data (it doesn't have a long enough daily sequence) — instead it uses a **synthetic teaching dataset of daily "dengue fever × temperature" series**: temperature is a noisy, seasonal **leading indicator** available ahead of time each day, and case counts are driven jointly by "temperature 7 days ago" and "yesterday's case count." The task: given the past 21 days of (cases, temperature), predict the case count **7 days ahead**.
+280 rows of cross-sectional data leave DL tied with sklearn — so what about a **sequence forecasting** task instead? [`11_dl_sequence.ipynb`](notebooks/11_dl_sequence.ipynb) doesn't use the Pine and Cypress Nursing Home data (it doesn't have a long enough daily sequence) — instead it uses a **synthetic teaching dataset of daily "dengue fever × temperature" series**: temperature is a noisy, seasonal **leading indicator** available ahead of time each day, and case counts are driven jointly by "temperature 7 days ago" and "yesterday's case count." The task: given the past 21 days of (cases, temperature), predict the case count **7 days ahead**.
 
 **① Synthesizing the data: hiding a "cheat code" — the leading indicator**
 

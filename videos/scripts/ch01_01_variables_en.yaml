@@ -41,7 +41,7 @@ segments:
       It means take the value on the right and assign it to the box on the left.
       So 280 gets placed into the box named total_residents.
     animation: "show_first_variable"
-    code: "total_residents = 280       # 住民總數"
+    code: "total_residents = 280       # total residents"
     pause_after: 0.3
 
   - id: "assign_rest"
@@ -52,12 +52,12 @@ segments:
       That's Python's naming convention, and it's called snake_case.
     animation: "show_remaining_variables"
     code: |
-      infected = 121              # 感染人數
-      confirmed = 89              # 確診個案
-      probable = 25               # 可能個案
-      hospitalized = 68           # 住院人數
-      icu = 23                    # ICU 人數
-      deaths = 19                 # 死亡人數
+      infected = 121              # infected
+      confirmed = 89              # confirmed cases
+      probable = 25               # probable cases
+      hospitalized = 68           # hospitalized
+      icu = 23                    # in ICU
+      deaths = 19                 # deaths
     pause_after: 0.3
 
   - id: "print_demo"
@@ -97,9 +97,12 @@ segments:
       Same trick, new scene, still works beautifully!
     animation: "show_extra_example"
     code: |
-      students = 1200        # 全校學生數
-      covid_cases = 86       # 確診人數
-      quarantined = 210      # 居家隔離人數
+      students = 1200        # students school-wide
+      covid_cases = 86       # confirmed cases
+      quarantined = 210      # in home isolation
+    output: |-
+      Confirmed cases: 87
+      Hospitalized: 5
     pause_after: 0.5
 
   # ========================================
@@ -120,8 +123,8 @@ segments:
       Try to add with it? Boom, Python blows up.
       The right way: cases equals 86, with no quotes.
     animation: "show_blindspot_string_vs_int"
-    error_code: 'cases = "86"  # 這是文字！'
-    correct_code: "cases = 86    # 這才是數字"
+    error_code: 'cases = "86"  # this is text!'
+    correct_code: "cases = 86    # this is a number"
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -131,8 +134,8 @@ segments:
       Capital-C Cases and lowercase-c cases are two completely different boxes in Python's eyes.
       So be careful - keep your variable names all lowercase and you'll be fine.
     animation: "show_blindspot_case_sensitive"
-    error_code: "Cases = 86   # 大寫 C"
-    correct_code: "cases = 86   # 小寫 c"
+    error_code: "Cases = 86   # capital C"
+    correct_code: "cases = 86   # lowercase c"
     pause_after: 0.5
 
   - id: "blindspot_3"
@@ -143,8 +146,8 @@ segments:
       Remember, the left of the equals is always the variable name, and the value goes on the right.
       The box on the left, and what goes into it on the right.
     animation: "show_blindspot_reversed_assignment"
-    error_code: "280 = total_residents  # 反了！"
-    correct_code: "total_residents = 280  # 對了"
+    error_code: "280 = total_residents  # backwards!"
+    correct_code: "total_residents = 280  # correct"
     pause_after: 0.5
 
   - id: "outro"

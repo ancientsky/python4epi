@@ -34,8 +34,8 @@ segments:
     animation: "show_attack_rate"
     code: |
       attack_rate = infected / total_residents
-      print(f"侵襲率 (Attack rate): {attack_rate:.2%}")
-    output: "侵襲率 (Attack rate): 43.21%"
+      print(f"Attack rate: {attack_rate:.2%}")
+    output: "Attack rate: 43.21%"
     pause_after: 0.5
 
   - id: "cfr"
@@ -47,8 +47,8 @@ segments:
     animation: "show_cfr"
     code: |
       cfr = deaths / infected
-      print(f"致死率 (CFR): {cfr:.2%}")
-    output: "致死率 (CFR): 15.70%"
+      print(f"Case fatality rate (CFR): {cfr:.2%}")
+    output: "Case fatality rate (CFR): 15.70%"
     pause_after: 0.5
 
   - id: "hosp_rate"
@@ -59,8 +59,8 @@ segments:
     animation: "show_hosp_rate"
     code: |
       hosp_rate = hospitalized / infected
-      print(f"住院率: {hosp_rate:.2%}")
-    output: "住院率: 56.20%"
+      print(f"Hospitalization rate: {hosp_rate:.2%}")
+    output: "Hospitalization rate: 56.20%"
     pause_after: 0.5
 
   - id: "main_summary"
@@ -92,8 +92,8 @@ segments:
       population = 45000
       dengue_cases = 312
       prevalence = dengue_cases / population
-      print(f"社區盛行率: {prevalence:.2%}")
-    output: "社區盛行率: 0.69%"
+      print(f"Community prevalence: {prevalence:.2%}")
+    output: "Community prevalence: 0.69%"
     pause_after: 0.5
 
   # ========================================
@@ -112,8 +112,8 @@ segments:
       But if you're coming from another language, you might habitually worry about integer division.
       In Python 3 there's nothing to fear - a single slash is float division.
     animation: "show_blindspot_division"
-    error_code: "# 不用擔心！\n121 // 280  # 這才是整數除法 → 0"
-    correct_code: "# Python 3 自動浮點\n121 / 280   # → 0.432..."
+    error_code: "# No need to worry!\n121 // 280  # this is floor division -> 0"
+    correct_code: "# Python 3 gives a float\n121 / 280   # → 0.432..."
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -125,10 +125,10 @@ segments:
     animation: "show_blindspot_fstring"
     error_code: |-
       print("CFR: {cfr:.2%}")
-      # 印出 CFR: {cfr:.2%}
+      # prints CFR: {cfr:.2%}
     correct_code: |-
       print(f"CFR: {cfr:.2%}")
-      # 印出 CFR: 15.70%
+      # prints CFR: 15.70%
     pause_after: 0.5
 
   - id: "blindspot_3"
@@ -141,7 +141,7 @@ segments:
       So 0.157 becomes 15.70%.
       Memorize this pattern - it's a lifesaver when you write reports!
     animation: "show_blindspot_format_spec"
-    code: "{cfr:.2%}  →  : 開始格式 / .2 兩位小數 / % 乘 100 加 %"
+    code: "{cfr:.2%}  ->  : starts the format / .2 two decimals / % x100 and adds %"
     pause_after: 0.5
 
   - id: "outro"

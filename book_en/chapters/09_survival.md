@@ -11,7 +11,7 @@
 
 ## The Scenario
 
-The Legionella outbreak at Songbai Nursing Home has entered its third week.
+The Legionella outbreak at Pine and Cypress Nursing Home has entered its third week.
 Of the 121 infected residents, 19 have sadly died, and the rest survived.
 
 You need to answer the attending physician's questions:

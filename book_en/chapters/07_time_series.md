@@ -2,7 +2,7 @@
 
 ## Scenario
 
-The Legionnaires' disease outbreak at Songbai Nursing Home has entered its second week, and at the outbreak investigation meeting the supervisor throws out two questions:
+The Legionnaires' disease outbreak at Pine and Cypress Nursing Home has entered its second week, and at the outbreak investigation meeting the supervisor throws out two questions:
 
 > "How many more people will get sick next week? How many hospital beds do we need to prepare?"
 >
@@ -244,7 +244,7 @@ ax.bar(daily.index, daily.values, width=1.0,
        color="#6A9BCC", edgecolor="white", alpha=0.6, label="Daily new cases")
 ax.plot(rolling_7.index, rolling_7.values, color="#D97757", linewidth=2,
         label="7-day rolling average")
-ax.set_title("Songbai Nursing Home Legionnaires' Disease Epidemic Curve", fontweight="bold")
+ax.set_title("Pine and Cypress Nursing Home Legionnaires' Disease Epidemic Curve", fontweight="bold")
 ax.set_xlabel("Onset date"); ax.set_ylabel("Number of cases")
 ax.legend(); ax.set_ylim(bottom=0)
 ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)

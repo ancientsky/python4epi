@@ -2,7 +2,7 @@
 
 ## Scenario
 
-The outbreak team investigating the Legionnaires' disease cluster at Songbai Nursing Home has already finished cleaning and visualizing the data (Ch02). Now your supervisor asks: **"Do people who use the shower facilities have a higher risk of infection? Is there any statistical evidence for that?"**
+The outbreak team investigating the Legionnaires' disease cluster at Pine and Cypress Nursing Home has already finished cleaning and visualizing the data (Ch02). Now your supervisor asks: **"Do people who use the shower facilities have a higher risk of infection? Is there any statistical evidence for that?"**
 
 You're about to answer "the shower group has a higher attack rate," when a senior outbreak investigator cuts in:
 

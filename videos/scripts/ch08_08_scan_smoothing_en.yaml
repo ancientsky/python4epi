@@ -43,7 +43,7 @@ segments:
       from esda.smoothing import Empirical_Bayes
 
       eb = Empirical_Bayes(main["cases"], main["pop"])
-      main["rate_smoothed"] = eb.r  # 向鄰居/全域借資訊後的穩定率
+      main["rate_smoothed"] = eb.r  # stabilized rate after borrowing from neighbours / the global mean
     pause_after: 0.5
 
   - id: "kulldorff_scan"

@@ -58,9 +58,9 @@ segments:
       Three steps, three commands, ridiculously simple.
     animation: "show_uv_workflow"
     code: |
-      uv init my-epi-project        # 步驟一：建立專案
-      uv add pandas matplotlib      # 步驟二：安裝套件
-      uv run python analysis.py     # 步驟三：執行程式
+      uv init my-epi-project        # Step 1: create the project
+      uv add pandas matplotlib      # Step 2: add packages
+      uv run python analysis.py     # Step 3: run your code
     pause_after: 0.5
 
   - id: "main_summary"
@@ -94,11 +94,11 @@ segments:
       switch to the COVID project and uv run automatically uses pandas 2.1. Just that elegant.
     animation: "show_extra_example"
     code: |
-      # 專案 A：登革熱監測報告
+      # Project A: dengue surveillance report
       cd dengue-report/
       uv run python weekly_report.py    # pandas 1.5
 
-      # 專案 B：COVID 疫苗儀表板
+      # Project B: COVID vaccination dashboard
       cd covid-dashboard/
       uv run python dashboard.py        # pandas 2.1
     pause_after: 0.5
@@ -126,9 +126,9 @@ segments:
       $ uv
       command not found: uv
     correct_code: |
-      # 關掉終端機重開，或執行：
-      source ~/.bashrc   # bash 用戶
-      source ~/.zshrc    # zsh 用戶
+      # Close and reopen the terminal, or run:
+      source ~/.bashrc   # bash users
+      source ~/.zshrc    # zsh users
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -144,7 +144,7 @@ segments:
       ModuleNotFoundError: No module named 'pandas'
     correct_code: |
       $ uv run python analysis.py
-      分析完成！結果已儲存。
+      Analysis complete. Results saved.
     pause_after: 0.5
 
   - id: "blindspot_3"
@@ -158,15 +158,15 @@ segments:
       So go ahead and embrace pyproject.toml, it's the future.
     animation: "show_blindspot_pyproject"
     error_code: |
-      # requirements.txt（舊方法）
+      # requirements.txt (the old way)
       pandas
       matplotlib
-      # 沒有鎖版本，每次裝可能不同
+      # no version lock - every install may differ
     correct_code: |
-      # pyproject.toml（新標準）+ uv.lock
+      # pyproject.toml (the new standard) + uv.lock
       [project]
       dependencies = ["pandas>=2.0", "matplotlib>=3.8"]
-      # uv.lock 精確鎖定每個版本
+      # uv.lock pins every version exactly
     pause_after: 0.5
 
   - id: "outro"

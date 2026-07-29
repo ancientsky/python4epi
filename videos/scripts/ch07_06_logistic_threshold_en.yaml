@@ -43,7 +43,7 @@ segments:
     code: |
       threshold = ts_model["cases"].quantile(0.75)
       ts_model["high_day"] = (ts_model["cases"] > threshold).astype(int)
-      print(f"門檻（75th percentile）= {threshold:.0f} 人")
+      print(f"Threshold (75th percentile) = {threshold:.0f} cases")
     pause_after: 0.5
 
   - id: "logit_code"

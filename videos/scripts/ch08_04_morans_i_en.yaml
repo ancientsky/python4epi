@@ -96,7 +96,7 @@ segments:
     code: |
       moran_tb = Moran(main["tb_rate"].values, w, permutations=999)
       print(f"TB Moran's I = {moran_tb.I:.3f}, p = {moran_tb.p_sim:.4f}")
-      # 示意：I 顯著為正 → 結核病同樣有空間群聚傾向
+      # Illustrative: a significantly positive I means TB clusters in space too
     pause_after: 0.5
 
   - id: "blindspot_banner"

@@ -48,10 +48,10 @@ segments:
       This is called one-hot encoding, the standard approach for categorical variables.
     animation: "show_c_symbol"
     code: |
-      # floor 是 1, 2, 3, 4
-      # 不加 C 會被當連續：floor=2 假設「影響是 floor=1 的兩倍」
+      # floor is 1, 2, 3, 4
+      # without C it is continuous: floor=2 assumes "twice the effect of floor=1"
       smf.glm("infected ~ floor", ...)
-      # 加 C 才對：拆成 3 個 dummy
+      # with C it is right: split into 3 dummies
       smf.glm("infected ~ C(floor)", ...)
     pause_after: 0.5
 

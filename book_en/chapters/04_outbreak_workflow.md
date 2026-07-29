@@ -2,7 +2,7 @@
 
 ## The scenario
 
-Three days into the Legionnaires' disease cluster at Songbai Nursing Home, one afternoon your supervisor says:
+Three days into the Legionnaires' disease cluster at Pine and Cypress Nursing Home, one afternoon your supervisor says:
 
 > "Get me the first daily situation report (SitRep) within two hours. It needs to cover: how many people are infected, where it's worst, what the case fatality rate is, and what the epidemic curve looks like. After that, update it every morning before 9 a.m."
 
@@ -361,7 +361,7 @@ mapping = pd.DataFrame({
 import hashlib
 
 # Salted hashing: prevents an attacker from cracking it with a rainbow table
-SALT = "SongbaiNursingHome2026"  # in practice read from an env var os.environ["PII_SALT"], never hard-coded
+SALT = "PineAndCypressNursingHome2026"  # in practice read from an env var os.environ["PII_SALT"], never hard-coded
 
 def hash_id(raw_id: str, salt: str = SALT) -> str:
     """Salt the raw ID, SHA-256 hash it, and take the first 12 chars as case_id."""
@@ -571,7 +571,7 @@ icu          = df["icu_admission"].sum()
 deaths       = (df["outcome"] == "dead").sum()
 
 print("=" * 50)
-print("Songbai Nursing Home Legionnaires' Disease Cluster — SitRep")
+print("Pine and Cypress Nursing Home Legionnaires' Disease Cluster — SitRep")
 print("=" * 50)
 print(f"Total residents: {total}")
 # {infected/total:.1%}: division gives a decimal; :.1% auto-multiplies by 100,
@@ -649,7 +649,7 @@ ax.bar(daily.index, daily.values, width=1.0,
        color="#2c7fb8", edgecolor="white", linewidth=0.5)
 # width=1.0 makes the bars touch (standard for an epidemic curve, no gaps)
 
-ax.set_title("Songbai Nursing Home Legionnaires' Disease Epidemic Curve, by Onset Date, January 2026",
+ax.set_title("Pine and Cypress Nursing Home Legionnaires' Disease Epidemic Curve, by Onset Date, January 2026",
              fontsize=13, fontweight="bold")
 ax.set_xlabel("Date of Symptom Onset")
 ax.set_ylabel("Number of Cases")
@@ -975,7 +975,7 @@ dashboard.add_trace(
 )
 
 dashboard.update_layout(
-    title_text=f"Songbai Nursing Home Legionnaires' SitRep Dashboard ({report_time})",
+    title_text=f"Pine and Cypress Nursing Home Legionnaires' SitRep Dashboard ({report_time})",
     height=600,
     showlegend=False,     # hide the legend (the subplot titles are explanation enough)
     template="plotly_white",  # clean white-background template
@@ -997,7 +997,7 @@ doc = Document()
 
 # ── Title and time ──
 # level=1 maps to Word's "Heading 1" (the largest heading)
-doc.add_heading("Songbai Nursing Home Legionnaires' SitRep", level=1)
+doc.add_heading("Pine and Cypress Nursing Home Legionnaires' SitRep", level=1)
 doc.add_paragraph(f"Report time: {report_time}")
 doc.add_paragraph(
     f"Data source: legionella_outbreak.csv ({total} resident records)"
@@ -1061,7 +1061,7 @@ prs = Presentation()  # create a new blank PPTX (defaults to 16:9 slides)
 # ── Slide 1: title page ──
 # slide_layouts[0] is PowerPoint's "Title Slide" layout (title + subtitle placeholders)
 slide1 = prs.slides.add_slide(prs.slide_layouts[0])
-slide1.shapes.title.text = "Songbai Nursing Home Legionnaires' SitRep"
+slide1.shapes.title.text = "Pine and Cypress Nursing Home Legionnaires' SitRep"
 # placeholders[1] is the subtitle placeholder (index 0 = main title, index 1 = subtitle)
 slide1.placeholders[1].text = f"Report time: {report_time}"
 
@@ -1177,7 +1177,7 @@ else:
 # new_x="LMARGIN": the next cell starts at the left margin (back to the left)
 # new_y="NEXT": the next cell moves to the next line
 # align="C": center the text within the cell
-pdf.cell(0, 12, text="Songbai Nursing Home Legionnaires' SitRep", new_x="LMARGIN", new_y="NEXT", align="C")
+pdf.cell(0, 12, text="Pine and Cypress Nursing Home Legionnaires' SitRep", new_x="LMARGIN", new_y="NEXT", align="C")
 pdf.set_font_size(10)
 pdf.cell(0, 8, text=f"Report time: {report_time}", new_x="LMARGIN", new_y="NEXT", align="C")
 pdf.ln(8)  # ln(n): insert n points of blank line (layout spacing)

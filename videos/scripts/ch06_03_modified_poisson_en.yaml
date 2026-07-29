@@ -68,7 +68,7 @@ segments:
           "infected ~ shower_use + age + C(floor)",
           data=df,
           family=sm.families.Poisson(),
-      ).fit(cov_type="HC0")   # ← 修正貼紙
+      ).fit(cov_type="HC0")   # <- the robust-SE patch
       rr = np.exp(model.params)
       ci = np.exp(model.conf_int())
     pause_after: 0.5
