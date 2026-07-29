@@ -98,6 +98,9 @@ segments:
       students = 1200        # 全校學生數
       covid_cases = 86       # 確診人數
       quarantined = 210      # 居家隔離人數
+    output: |-
+      確診人數: 87
+      住院人數: 5
     pause_after: 0.5
 
   # ========================================

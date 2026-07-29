@@ -170,14 +170,17 @@ class EpiBaseScene(Scene):
             else CodePanel(code, width=max_width)
         )
         panel.move_to(position)
+        self.keep_in_frame(panel)
         self.play(FadeIn(panel), run_time=min(1.0, duration * 0.4))
         return panel
 
     def keep_in_frame(self, mob, *, margin: float = 0.3):
-        """Nudge *mob* back inside the frame if it hangs off the top or bottom.
+        """Nudge *mob* back inside the frame if it hangs off any edge.
 
-        Panels are positioned by their centre, so a tall one drifts off-screen
-        as its content grows. Returns *mob* for chaining.
+        Panels are positioned by their centre, so one grows off-screen as its
+        content does — a tall output panel drops past the bottom, and a code
+        panel holding a long line (Chinese runs wider than the English of the
+        same snippet) slides past the left edge. Returns *mob* for chaining.
         """
         floor = -config.frame_height / 2 + margin
         ceiling = config.frame_height / 2 - margin
@@ -185,6 +188,13 @@ class EpiBaseScene(Scene):
             mob.shift(UP * (floor - mob.get_bottom()[1]))
         elif mob.get_top()[1] > ceiling:
             mob.shift(DOWN * (mob.get_top()[1] - ceiling))
+
+        left = -config.frame_width / 2 + margin
+        right = config.frame_width / 2 - margin
+        if mob.get_left()[0] < left:
+            mob.shift(RIGHT * (left - mob.get_left()[0]))
+        elif mob.get_right()[0] > right:
+            mob.shift(LEFT * (mob.get_right()[0] - right))
         return mob
 
     def show_output(

@@ -200,15 +200,21 @@ class Ch01VariablesScene(EpiBaseScene):
         """Show print() usage and its output."""
         self.show_step_indicator(4, self.total_steps)
 
-        code_lines = (
-            "total_residents = 280\n"
-            "infected        = 121\n"
-            "\n"
-            "print('總住民人數:', total_residents)\n"
-            "print('感染人數:',   infected)"
+        code_lines = kwargs.get(
+            "code",
+            (
+                "total_residents = 280\n"
+                "infected        = 121\n"
+                "\n"
+                "print('總住民人數:', total_residents)\n"
+                "print('感染人數:',   infected)"
+            ),
         )
 
-        output_text = "總住民人數: 280\n感染人數: 121"
+        output_text = kwargs.get(
+            "output",
+            "總住民人數: 280\n感染人數: 121",
+        )
 
         self.show_code(code_lines, title="print_demo.py")
         self.wait(1.0)
@@ -252,18 +258,24 @@ class Ch01VariablesScene(EpiBaseScene):
         """COVID-19 school cluster example demonstrating variables."""
         self.show_step_indicator(6, self.total_steps)
 
-        code_lines = (
-            "# COVID-19 某校群聚事件\n"
-            "school_students  = 1200\n"
-            "covid_cases      = 87\n"
-            "hospitalized     = 5\n"
-            "quarantine_days  = 14\n"
-            "\n"
-            "print(f'確診人數: {covid_cases}')\n"
-            "print(f'住院人數: {hospitalized}')"
+        code_lines = kwargs.get(
+            "code",
+            (
+                "# COVID-19 某校群聚事件\n"
+                "school_students  = 1200\n"
+                "covid_cases      = 87\n"
+                "hospitalized     = 5\n"
+                "quarantine_days  = 14\n"
+                "\n"
+                "print(f'確診人數: {covid_cases}')\n"
+                "print(f'住院人數: {hospitalized}')"
+            ),
         )
 
-        output_text = "確診人數: 87\n住院人數: 5"
+        output_text = kwargs.get(
+            "output",
+            "確診人數: 87\n住院人數: 5",
+        )
 
         self.show_code(code_lines, title="covid_school.py")
         self.wait(1.2)

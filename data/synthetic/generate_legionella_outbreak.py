@@ -1,6 +1,6 @@
 """Generate a synthetic Legionella outbreak line list for a nursing home.
 
-Scenario: 松柏護理之家 (Songbai Nursing Home) — an outbreak of Legionnaires'
+Scenario: 松柏護理之家 (Pine and Cypress Nursing Home) — an outbreak of Legionnaires'
 disease linked to a contaminated hot-water system.  The facility houses ~280
 residents across 3 floors, each with 2 wings (A / B).  The water heater
 serving floors 2–3 wing B is the primary source, so residents in those

@@ -127,23 +127,29 @@ class Ch01DictionariesScene(EpiBaseScene):
         """Show bracket access and using dict values in calculations."""
         self.show_step_indicator(2, self.total_steps)
 
-        code_lines = (
-            "case_001 = {\n"
-            "    'case_id':   'C001',\n"
-            "    'age':       82,\n"
-            "    'infected':  True,\n"
-            "}\n"
-            "\n"
-            "# 用方括號 [] 取出值\n"
-            "print(case_001['case_id'])   # 'C001'\n"
-            "print(case_001['age'])       # 82\n"
-            "\n"
-            "# 也可以拿來計算\n"
-            "if case_001['infected']:\n"
-            "    print('此個案為確診')"
+        code_lines = kwargs.get(
+            "code",
+            (
+                "case_001 = {\n"
+                "    'case_id':   'C001',\n"
+                "    'age':       82,\n"
+                "    'infected':  True,\n"
+                "}\n"
+                "\n"
+                "# 用方括號 [] 取出值\n"
+                "print(case_001['case_id'])   # 'C001'\n"
+                "print(case_001['age'])       # 82\n"
+                "\n"
+                "# 也可以拿來計算\n"
+                "if case_001['infected']:\n"
+                "    print('此個案為確診')"
+            ),
         )
 
-        output_text = "C001\n82\n此個案為確診"
+        output_text = kwargs.get(
+            "output",
+            "C001\n82\n此個案為確診",
+        )
 
         formula = Text(
             self.t("access_dict_formula"),
@@ -195,22 +201,28 @@ class Ch01DictionariesScene(EpiBaseScene):
         """Enterovirus case card example demonstrating the same dict pattern."""
         self.show_step_indicator(4, self.total_steps)
 
-        code_lines = (
-            "# 腸病毒 71 型個案資料卡\n"
-            "ev71_case = {\n"
-            "    'case_id':    'EV2026-0042',\n"
-            "    'age_months': 18,\n"
-            "    'symptom':    'hand_foot_mouth',\n"
-            "    'severe':     False,\n"
-            "    'county':     '台南市',\n"
-            "}\n"
-            "\n"
-            "print(ev71_case['case_id'])      # EV2026-0042\n"
-            "print(ev71_case['county'])       # 台南市\n"
-            "print(ev71_case['age_months'])   # 18"
+        code_lines = kwargs.get(
+            "code",
+            (
+                "# 腸病毒 71 型個案資料卡\n"
+                "ev71_case = {\n"
+                "    'case_id':    'EV2026-0042',\n"
+                "    'age_months': 18,\n"
+                "    'symptom':    'hand_foot_mouth',\n"
+                "    'severe':     False,\n"
+                "    'county':     '台南市',\n"
+                "}\n"
+                "\n"
+                "print(ev71_case['case_id'])      # EV2026-0042\n"
+                "print(ev71_case['county'])       # 台南市\n"
+                "print(ev71_case['age_months'])   # 18"
+            ),
         )
 
-        output_text = "EV2026-0042\n台南市\n18"
+        output_text = kwargs.get(
+            "output",
+            "EV2026-0042\n台南市\n18",
+        )
 
         self.show_code(code_lines, title="ev71_case_card.py")
         self.wait(1.2)

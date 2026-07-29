@@ -10,7 +10,7 @@
 
 ## The Scenario
 
-The analysis of the Legionella outbreak at Songbai Nursing Home is finally complete.
+The analysis of the Legionella outbreak at Pine and Cypress Nursing Home is finally complete.
 A week from now you'll need to regenerate the same outbreak report, and you have to guarantee that a colleague on a different machine gets identical results.
 
 > "Last time it came out as 121 infected and 19 deaths, but when I rerun it I get something different?"

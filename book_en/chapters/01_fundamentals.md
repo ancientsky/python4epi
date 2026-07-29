@@ -34,7 +34,7 @@ In a Jupyter notebook, you'll see two kinds of "explanatory text":
 
 ## The story
 
-An outbreak of Legionnaires' disease has broken out at Songbai Nursing Home, and your supervisor has just handed you the line list. Before you learn how to read a CSV with pandas (that's Ch02), they first want you to answer:
+An outbreak of Legionnaires' disease has broken out at Pine and Cypress Nursing Home, and your supervisor has just handed you the line list. Before you learn how to read a CSV with pandas (that's Ch02), they first want you to answer:
 
 - What's the facility-wide attack rate?
 - What's the case fatality rate (CFR)?
@@ -75,7 +75,7 @@ A **variable** is a labeled box; `=` means "put the value on the right into the 
 <!-- /video -->
 
 ```python
-# Basic data from the Legionnaires' disease outbreak at Songbai Nursing Home
+# Basic data from the Legionnaires' disease outbreak at Pine and Cypress Nursing Home
 total_residents = 280       # Total number of residents
 infected = 121              # Number infected (including asymptomatic)
 confirmed = 89              # Confirmed cases
@@ -120,7 +120,7 @@ A **list** is a row of pigeonholes; you retrieve values by index (starting from 
 ```python
 # Use a dictionary to organize the outbreak summary
 outbreak = {
-    "facility": "Songbai Nursing Home",
+    "facility": "Pine and Cypress Nursing Home",
     "pathogen": "Legionella pneumophila",
     "total_residents": 280,
     "infected": 121,

@@ -100,6 +100,9 @@ segments:
       students = 1200        # students school-wide
       covid_cases = 86       # confirmed cases
       quarantined = 210      # in home isolation
+    output: |-
+      Confirmed cases: 87
+      Hospitalized: 5
     pause_after: 0.5
 
   # ========================================
