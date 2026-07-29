@@ -112,8 +112,14 @@ segments:
       When it can't find one, it errors out.
       Remember, dictionary keys are usually strings, so add quotes.
     animation: "show_blindspot_key_quotes"
-    error_code: '# key 沒加引號\n{facility: "松柏"}\n# NameError!'
-    correct_code: '# key 要加引號\n{"facility": "松柏"}\n# 正確！'
+    error_code: |-
+      # key 沒加引號
+      {facility: "松柏"}
+      # NameError!
+    correct_code: |-
+      # key 要加引號
+      {"facility": "松柏"}
+      # 正確！
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -123,8 +129,12 @@ segments:
       Parentheses mean call a function, while square brackets mean open the box and take something out.
       To read from a dictionary, always use square brackets.
     animation: "show_blindspot_bracket_type"
-    error_code: 'outbreak("deaths")\n# TypeError: 不能呼叫字典'
-    correct_code: 'outbreak["deaths"]\n# → 19 ✓'
+    error_code: |-
+      outbreak("deaths")
+      # TypeError: 不能呼叫字典
+    correct_code: |-
+      outbreak["deaths"]
+      # → 19 ✓
     pause_after: 0.5
 
   - id: "blindspot_3"
@@ -134,8 +144,12 @@ segments:
       Python rummages through every compartment and, finding nothing, throws a KeyError.
       It's like searching your storage box for a label that was never there - of course you won't find it.
     animation: "show_blindspot_key_error"
-    error_code: 'outbreak["cure"]\n# KeyError: 找不到此鍵'
-    correct_code: 'outbreak.get("cure", "未知")\n# → "未知"（安全取值）'
+    error_code: |-
+      outbreak["cure"]
+      # KeyError: 找不到此鍵
+    correct_code: |-
+      outbreak.get("cure", "未知")
+      # → "未知"（安全取值）
     pause_after: 0.5
 
   - id: "outro"

@@ -109,8 +109,14 @@ segments:
       Python 會把 facility 當成一個變數名去找。
       找不到就報錯了。記住，字典的鍵通常是字串，要加引號。
     animation: "show_blindspot_key_quotes"
-    error_code: '# key 沒加引號\n{facility: "松柏"}\n# NameError!'
-    correct_code: '# key 要加引號\n{"facility": "松柏"}\n# 正確！'
+    error_code: |-
+      # key 沒加引號
+      {facility: "松柏"}
+      # NameError!
+    correct_code: |-
+      # key 要加引號
+      {"facility": "松柏"}
+      # 正確！
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -120,8 +126,12 @@ segments:
       圓括號是「打電話叫函式」，方括號才是「打開盒子取東西」。
       字典取值一定用方括號。
     animation: "show_blindspot_bracket_type"
-    error_code: 'outbreak("deaths")\n# TypeError: 不能呼叫字典'
-    correct_code: 'outbreak["deaths"]\n# → 19 ✓'
+    error_code: |-
+      outbreak("deaths")
+      # TypeError: 不能呼叫字典
+    correct_code: |-
+      outbreak["deaths"]
+      # → 19 ✓
     pause_after: 0.5
 
   - id: "blindspot_3"
@@ -132,8 +142,12 @@ segments:
       Python 會翻遍了所有格子，找不到就報 KeyError。
       就像你去收納盒找一個根本沒有的標籤，當然找不到嘛。
     animation: "show_blindspot_key_error"
-    error_code: 'outbreak["cure"]\n# KeyError: 找不到此鍵'
-    correct_code: 'outbreak.get("cure", "未知")\n# → "未知"（安全取值）'
+    error_code: |-
+      outbreak["cure"]
+      # KeyError: 找不到此鍵
+    correct_code: |-
+      outbreak.get("cure", "未知")
+      # → "未知"（安全取值）
     pause_after: 0.5
 
   - id: "outro"
