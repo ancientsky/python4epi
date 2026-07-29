@@ -59,8 +59,6 @@ def build_video(
     meta = script["meta"]
     segments = script["segments"]
 
-    concept = meta["concept"]
-    chapter = meta["chapter"]
     voice = meta.get("voice", "zh-TW-HsiaoChenNeural")
     rate = meta.get("rate", "+8%")
     pitch = meta.get("pitch", "+8Hz")
@@ -70,7 +68,15 @@ def build_video(
     scene_module = meta["scene_module"]
     scene_class = meta["scene_class"]
 
-    audio_dir = output_dir / "audio" / f"ch{chapter}_{concept}"
+    # The script's own filename names the artefacts. Deriving them from
+    # chapter+concept instead made both languages of a concept collide: the two
+    # scripts share those fields, so a --lang both build wrote one file twice and
+    # whichever ran last -- English, since *_en.yaml sorts later -- was all that
+    # survived. It also collided the TTS cache, so the English narration
+    # overwrote the Chinese audio for the same concept.
+    slug = script_path.stem
+
+    audio_dir = output_dir / "audio" / slug
     raw_video_dir = output_dir / "raw_video"
     final_dir = output_dir / "final"
 
@@ -115,7 +121,7 @@ def build_video(
     # ------------------------------------------------------------------
     logger.info("Step 4/4  Merging video + audio …")
     final_dir.mkdir(parents=True, exist_ok=True)
-    final_path = final_dir / f"ch{chapter}_{concept}.mp4"
+    final_path = final_dir / f"{slug}.mp4"
     _merge_audio_video(raw_video, combined_audio, final_path)
 
     logger.info("Done → %s", final_path)
