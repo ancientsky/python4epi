@@ -17,6 +17,7 @@ from manim import (
     RoundedRectangle,
     Text,
     VGroup,
+    config,
 )
 
 # ---------------------------------------------------------------------------
@@ -326,17 +327,35 @@ class ErrorVsCorrect(VGroup):
 # Section banners
 # ---------------------------------------------------------------------------
 
+def _banner(title: str, glyph: str, accent: str) -> tuple[RoundedRectangle, VGroup]:
+    """Build a section banner whose card fits its title.
+
+    The card used to be a fixed 10 units wide, which suits a short Chinese
+    heading but not the English of the same line — "Extra example: analyze
+    enterovirus data with the same workflow" runs half again as wide and spilled
+    out of the card and across the frame. The card now grows to the title, and
+    the title shrinks if even the full frame width is not enough.
+    """
+    icon = Text(glyph, font_size=32, color=ManimColor(accent), weight="BOLD")
+    label = Text(title, font=FONT_CJK, font_size=28, color=ManimColor(TEXT_PRIMARY))
+    content = VGroup(icon, label).arrange(RIGHT, buff=0.3)
+
+    pad = 0.6
+    limit = config.frame_width - 1.0          # leave a margin at both edges
+    if content.width + 2 * pad > limit:
+        content.scale((limit - 2 * pad) / content.width)
+
+    card = _card(max(10.0, content.width + 2 * pad), 0.8, fill=BG_CARD_ALT)
+    content.move_to(card.get_center())
+    return card, content
+
+
 class BlindSpotBanner(VGroup):
     """Section title banner for *Beginner Blind Spots*."""
 
     def __init__(self, title: str = "初學者常見盲點") -> None:
         super().__init__()
-        card = _card(10, 0.8, fill=BG_CARD_ALT)
-        icon = Text("!", font_size=32, color=ManimColor(ERROR_RED), weight="BOLD")
-        label = Text(title, font=FONT_CJK, font_size=28, color=ManimColor(TEXT_PRIMARY))
-        content = VGroup(icon, label).arrange(RIGHT, buff=0.3)
-        content.move_to(card.get_center())
-        self.add(card, content)
+        self.add(*_banner(title, "!", ERROR_RED))
 
 
 class ExtraExampleBanner(VGroup):
@@ -344,12 +363,7 @@ class ExtraExampleBanner(VGroup):
 
     def __init__(self, title: str = "換個場景試試看") -> None:
         super().__init__()
-        card = _card(10, 0.8, fill=BG_CARD_ALT)
-        icon = Text("+", font_size=32, color=ManimColor(ACCENT_BLUE), weight="BOLD")
-        label = Text(title, font=FONT_CJK, font_size=28, color=ManimColor(TEXT_PRIMARY))
-        content = VGroup(icon, label).arrange(RIGHT, buff=0.3)
-        content.move_to(card.get_center())
-        self.add(card, content)
+        self.add(*_banner(title, "+", ACCENT_BLUE))
 
 
 class StepIndicator(VGroup):
