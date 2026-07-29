@@ -31,3 +31,5 @@ epi_curve_report.png
 
 # Video generation output
 videos/output/
+# Manim writes its render + text-cache artifacts here
+media/
