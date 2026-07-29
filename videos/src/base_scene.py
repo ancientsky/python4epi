@@ -171,6 +171,9 @@ class EpiBaseScene(Scene):
         )
         panel.move_to(position)
         self.keep_in_frame(panel)
+        # Remembered so show_output can drop clear of it — the two are sized
+        # from their content and can grow into each other.
+        self._code_panel = panel
         self.play(FadeIn(panel), run_time=min(1.0, duration * 0.4))
         return panel
 
@@ -209,8 +212,31 @@ class EpiBaseScene(Scene):
         panel = OutputPanel(text, max_height=max_height)
         panel.move_to(position)
         self.keep_in_frame(panel)
+        self.avoid_code_panel(panel)
         self.play(FadeIn(panel), run_time=min(0.5, duration * 0.3))
         return panel
+
+    def avoid_code_panel(self, mob, *, gap: float = 0.25):
+        """Slide *mob* below the code panel already on screen, if they collide.
+
+        Both panels size themselves from their content, so a long snippet and a
+        long output can end up occupying the same band even though each one sits
+        where it always has. Only moves down, and never past the frame edge.
+        """
+        code = getattr(self, "_code_panel", None)
+        if code is None or code not in self.mobjects:
+            return mob
+        overlap_y = min(code.get_top()[1], mob.get_top()[1]) - max(
+            code.get_bottom()[1], mob.get_bottom()[1]
+        )
+        overlap_x = min(code.get_right()[0], mob.get_right()[0]) - max(
+            code.get_left()[0], mob.get_left()[0]
+        )
+        if overlap_y <= 0 or overlap_x <= 0:
+            return mob
+        room = mob.get_bottom()[1] - (-config.frame_height / 2 + 0.3)
+        mob.shift(DOWN * min(overlap_y + gap, max(0.0, room)))
+        return mob
 
     def show_output_with_note(
         self,
