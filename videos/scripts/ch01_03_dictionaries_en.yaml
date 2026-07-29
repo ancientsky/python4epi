@@ -35,7 +35,7 @@ segments:
     animation: "show_create_dict"
     code: |
       outbreak = {
-          "facility": "松柏護理之家",
+          "facility": "Pine and Cypress",
           "pathogen": "Legionella pneumophila",
           "total_residents": 280,
           "infected": 121,
@@ -54,7 +54,7 @@ segments:
     code: |
       cfr = outbreak["deaths"] / outbreak["infected"]
       print(f"{outbreak['facility']} CFR: {cfr:.2%}")
-    output: "松柏護理之家 CFR: 15.70%"
+    output: "Pine and Cypress CFR: 15.70%"
     pause_after: 0.5
 
   - id: "main_summary"
@@ -86,13 +86,13 @@ segments:
           "id": "EV-2026-0042",
           "age": 3,
           "pathogen": "Enterovirus 71",
-          "severity": "重症",
+          "severity": "severe",
           "notification_date": "2026-03-15",
       }
-      print(f"個案 {case_card['id']}，"
-            f"{case_card['age']} 歲，"
+      print(f"Case {case_card['id']}, "
+            f"age {case_card['age']}, "
             f"{case_card['severity']}")
-    output: "個案 EV-2026-0042，3 歲，重症"
+    output: "Case EV-2026-0042, age 3, severe"
     pause_after: 0.5
 
   # ========================================
@@ -113,13 +113,13 @@ segments:
       Remember, dictionary keys are usually strings, so add quotes.
     animation: "show_blindspot_key_quotes"
     error_code: |-
-      # key 沒加引號
-      {facility: "松柏"}
+      # key without quotes
+      {facility: "Pine and Cypress"}
       # NameError!
     correct_code: |-
-      # key 要加引號
-      {"facility": "松柏"}
-      # 正確！
+      # keys need quotes
+      {"facility": "Pine and Cypress"}
+      # correct!
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -131,7 +131,7 @@ segments:
     animation: "show_blindspot_bracket_type"
     error_code: |-
       outbreak("deaths")
-      # TypeError: 不能呼叫字典
+      # TypeError: a dict is not callable
     correct_code: |-
       outbreak["deaths"]
       # → 19 ✓
@@ -146,10 +146,10 @@ segments:
     animation: "show_blindspot_key_error"
     error_code: |-
       outbreak["cure"]
-      # KeyError: 找不到此鍵
+      # KeyError: no such key
     correct_code: |-
-      outbreak.get("cure", "未知")
-      # → "未知"（安全取值）
+      outbreak.get("cure", "unknown")
+      # -> "unknown" (safe lookup)
     pause_after: 0.5
 
   - id: "outro"

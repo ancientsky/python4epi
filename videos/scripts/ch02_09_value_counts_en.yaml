@@ -58,7 +58,7 @@ segments:
       The scariest thing in an investigation is losing data, so remember to use both parameters together.
     animation: "show_value_counts_normalize"
     code: |
-      # 比例 + 顯示缺失值
+      # proportions + show missing values
       df["clinical_severity"].value_counts(
           normalize=True, dropna=False
       )
@@ -132,9 +132,9 @@ segments:
       That's why the health bureau prioritizes lower grades for a class-suspension assessment; the data speaks!
     animation: "show_extra_example"
     code: |
-      # 各班病例數
+      # cases per class
       ev["class"].value_counts()
-      # 年級 x 嚴重程度
+      # grade x severity
       pd.crosstab(ev["grade"], ev["severity"])
     pause_after: 0.5
 

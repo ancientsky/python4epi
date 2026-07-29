@@ -46,8 +46,8 @@ segments:
       a, b, c, d = 120, 280, 25, 375
       risk_exp = a / (a + b)      # 0.300
       risk_unexp = c / (c + d)    # 0.0625
-      AR = risk_exp - risk_unexp  # 相減，不是相除！
-      RR = risk_exp / risk_unexp  # 這才是相除
+      AR = risk_exp - risk_unexp  # subtract, do not divide!
+      RR = risk_exp / risk_unexp  # this is the division
     pause_after: 0.5
 
   - id: "par_paf"
@@ -58,9 +58,9 @@ segments:
     animation: "show_par_paf"
     code: |
       risk_total = (a + c) / (a + b + c + d)     # 0.181
-      Pe = (a + b) / (a + b + c + d)             # 暴露盛行率 0.5
-      PAR = risk_total - risk_unexp              # 族群歸因風險
-      PAF = Pe * (RR - 1) / (1 + Pe * (RR - 1))  # Levin 公式
+      Pe = (a + b) / (a + b + c + d)             # exposure prevalence 0.5
+      PAR = risk_total - risk_unexp              # population attributable risk
+      PAF = Pe * (RR - 1) / (1 + Pe * (RR - 1))  # Levin formula
     pause_after: 0.5
 
   - id: "ar_output"
@@ -96,10 +96,10 @@ segments:
       Same formula, swap the exposure, and it still conquers the field.
     animation: "show_extra_smoking"
     code: |
-      Pe, RR = 0.25, 10        # 吸菸盛行率、肺病風險比
+      Pe, RR = 0.25, 10        # smoking prevalence, lung-disease risk ratio
       PAF = Pe * (RR - 1) / (1 + Pe * (RR - 1))
       print(f"PAF = {PAF:.0%}")   # PAF = 69%
-      # 全族群近七成肺病可歸因於吸菸
+      # Nearly 70% of lung disease in the population is attributable to smoking
     pause_after: 0.5
 
   - id: "blindspot_banner"

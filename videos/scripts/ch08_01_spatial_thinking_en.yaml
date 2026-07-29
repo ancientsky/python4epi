@@ -71,7 +71,7 @@ segments:
     code: |
       import numpy as np
 
-      # 教室座位 5x5；有咳嗽的同學標 1
+      # 5x5 classroom seating; mark a coughing student as 1
       seats = np.zeros((5, 5), dtype=int)
       for r, c in [(3, 3), (3, 4), (4, 3), (4, 4), (2, 4), (4, 2)]:
           seats[r, c] = 1

@@ -45,9 +45,9 @@ segments:
     code: |
       max_cases = max(floor_wing_cases)
       max_index = floor_wing_cases.index(max_cases)
-      print(f"感染最多的翼區：{floor_wing_names[max_index]}"
-            f"（{max_cases} 人）")
-    output: "感染最多的翼區：3B（27 人）"
+      print(f"Worst-hit wing: {floor_wing_names[max_index]}"
+            f" ({max_cases} cases)")
+    output: "Worst-hit wing: 3B (27 cases)"
     pause_after: 0.5
 
   - id: "main_summary"
@@ -77,12 +77,12 @@ segments:
     animation: "show_extra_example"
     code: |
       weekly_cases = [234, 198, 312, 567, 423, 389, 201]
-      days = ["週一", "週二", "週三", "週四",
-              "週五", "週六", "週日"]
+      days = ["Mon", "Tue", "Wed", "Thu",
+              "Fri", "Sat", "Sun"]
       peak_day = days[weekly_cases.index(max(weekly_cases))]
-      print(f"本週高峰日：{peak_day}"
-            f"（{max(weekly_cases)} 例）")
-    output: "本週高峰日：週四（567 例）"
+      print(f"Peak day this week: {peak_day}"
+            f" ({max(weekly_cases)} cases)")
+    output: "Peak day this week: Thu (567 cases)"
     pause_after: 0.5
 
   # ========================================
@@ -104,10 +104,10 @@ segments:
     animation: "show_blindspot_zero_index"
     error_code: |-
       names[1]  # → "1B"
-      # 不是第一個！
+      # not the first one!
     correct_code: |-
       names[0]  # → "1A"
-      # 這才是第一個
+      # this is the first one
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -118,11 +118,11 @@ segments:
       It's like reaching for the seventh slot when the shelf only has six - your hand grabs thin air.
     animation: "show_blindspot_index_error"
     error_code: |-
-      names[6]  # 只有 0~5
+      names[6]  # only 0-5 exist
       # IndexError!
     correct_code: |-
       names[5]  # → "3B"
-      # 最後一個元素
+      # the last element
     pause_after: 0.5
 
   - id: "blindspot_3"
@@ -136,12 +136,12 @@ segments:
       names = ["1A", "1B", "2A",
                "2B", "3A", "3B"]
       cases = [15, 10, 24, 25, 20]
-      # 6 vs 5，少一個！
+      # 6 vs 5 - one short!
     correct_code: |-
       names = ["1A", "1B", "2A",
                "2B", "3A", "3B"]
       cases = [15, 10, 24, 25, 20, 27]
-      # 6 vs 6，對齊！
+      # 6 vs 6 - aligned!
     pause_after: 0.5
 
   - id: "outro"

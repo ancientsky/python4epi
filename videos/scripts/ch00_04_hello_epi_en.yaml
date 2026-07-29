@@ -76,8 +76,8 @@ segments:
       These numbers will be the core of the investigation report you'll write later.
     animation: "show_see_result"
     output: |
-      侵襲率 (Attack Rate): 43.2%
-      致死率 (CFR): 15.7%
+      Attack Rate: 43.2%
+      Case Fatality Rate (CFR): 15.7%
     pause_after: 0.5
 
   - id: "main_summary"
@@ -114,7 +114,7 @@ segments:
       df_ev = pd.read_csv("enterovirus_outbreak.csv")
       ar_ev = attack_rate(infected=52, total=180)
       plot_epi_curve(df_ev, date_col="onset_date")
-    output: "侵襲率 (Attack Rate): 28.9%"
+    output: "Attack Rate: 28.9%"
     pause_after: 0.5
 
   # ========================================
@@ -136,7 +136,7 @@ segments:
       Remember: all roads lead to Rome; the point is to get the materials.
     animation: "show_blindspot_git_clone"
     error_code: "fatal: git is not recognized as a command"
-    correct_code: "# 替代方案：到 GitHub 頁面點 Download ZIP"
+    correct_code: "# Alternative: hit Download ZIP on the GitHub page"
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -147,8 +147,8 @@ segments:
       Relax, this is normal, and it's usually done in a minute or two.
       After the first time, uv uses a cache and finishes in seconds, so fast you'll question reality.
     animation: "show_blindspot_uv_sync"
-    error_code: "# uv sync 卡在 Downloading... 好久好久"
-    correct_code: "# 正常！第一次需要下載，之後秒速完成"
+    error_code: "# uv sync stuck on Downloading... forever"
+    correct_code: "# Normal - the first run downloads, later runs are instant"
     pause_after: 0.5
 
   - id: "blindspot_3"
@@ -162,7 +162,7 @@ segments:
     error_code: |
       UserWarning: Matplotlib font fallback...
       FutureWarning: DataFrame.groupby...
-    correct_code: "# Warning ≠ Error，有結果就 OK！"
+    correct_code: "# Warning != Error - if you got output, you are fine!"
     pause_after: 0.5
 
   - id: "outro"

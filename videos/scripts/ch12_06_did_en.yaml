@@ -57,7 +57,7 @@ segments:
           "daily_cases ~ treated + post + treated:post",
           data=panel,
       ).fit(cov_type="HC3")
-      did = model.params["treated:post"]   # DiD 估計值
+      did = model.params["treated:post"]   # the DiD estimate
     pause_after: 0.5
 
   - id: "did_table"

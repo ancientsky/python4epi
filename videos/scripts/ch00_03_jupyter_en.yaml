@@ -53,8 +53,8 @@ segments:
       The first cell you run shows 1, the second shows 2, and so on.
       That number is really important, and we'll come back to it during the blind spots section.
     animation: "show_run_cell"
-    code: "print('Hello, 疫調人員！')"
-    output: "Hello, 疫調人員！"
+    code: "print('Hello, outbreak investigator!')"
+    output: "Hello, outbreak investigator!"
     pause_after: 0.5
 
   - id: "main_summary"
@@ -88,17 +88,17 @@ segments:
       your boss opens it and reads it, fully reproducible, and you never again battle pasting images into Word!
     animation: "show_extra_example"
     code: |
-      # Markdown cell 寫標題：
-      # # 登革熱監測週報 — 第 12 週
+      # Markdown cell for the heading:
+      # # Dengue surveillance weekly - week 12
 
-      # Code cell 畫圖：
+      # Code cell for the chart:
       import matplotlib.pyplot as plt
       weeks = [8, 9, 10, 11, 12]
       cases = [3, 5, 7, 9, 12]
       plt.bar(weeks, cases)
-      plt.title("本土登革熱週報趨勢")
-      plt.xlabel("週次")
-      plt.ylabel("病例數")
+      plt.title("Local dengue cases by week")
+      plt.xlabel("Week")
+      plt.ylabel("Cases")
       plt.show()
     pause_after: 0.5
 
@@ -122,8 +122,8 @@ segments:
       Build a good habit: when the analysis is done, click the Kernel menu, choose Restart Kernel and Run All,
       so every cell runs from top to bottom and the order is guaranteed correct.
     animation: "show_blindspot_order"
-    error_code: "# 跳過定義就執行 → NameError\nprint(cases)"
-    correct_code: "# Kernel → Restart & Run All\n# 從頭到尾依序執行，萬無一失"
+    error_code: "# Ran it before defining it -> NameError\nprint(cases)"
+    correct_code: "# Kernel → Restart & Run All\n# Runs everything in order - foolproof"
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -136,7 +136,7 @@ segments:
       restart the core, and the import works fine.
     animation: "show_blindspot_kernel"
     error_code: "!pip install some_package\nimport some_package  # ModuleNotFoundError!"
-    correct_code: "# 裝完後 → Restart Kernel\n# 重啟核心再 import\nimport some_package  # 成功！"
+    correct_code: "# After installing -> Restart Kernel\n# Restart the kernel, then import\nimport some_package  # works!"
     pause_after: 0.5
 
   - id: "blindspot_3"
@@ -149,8 +149,8 @@ segments:
       The fix: press the black square stop button in the toolbar to force an interrupt,
       then go back and check your code, fix it, and rerun.
     animation: "show_blindspot_stuck"
-    error_code: "# [*] 一直轉...\nwhile True:\n    pass  # 無窮迴圈！"
-    correct_code: "# 按 ■ 停止按鈕中斷\n# 修正程式碼後重新執行\nfor i in range(10):\n    print(i)"
+    error_code: "# [*] spins forever...\nwhile True:\n    pass  # infinite loop!"
+    correct_code: "# Hit the stop button to interrupt\n# Fix the code, then run it again\nfor i in range(10):\n    print(i)"
     pause_after: 0.5
 
   - id: "outro"

@@ -45,8 +45,8 @@ segments:
     animation: "show_python_power"
     code: |
       attack_rate = infected / total_residents
-      print(f"侵襲率：{attack_rate:.1%}")
-    output: "侵襲率：43.2%"
+      print(f"Attack rate: {attack_rate:.1%}")
+    output: "Attack rate: 43.2%"
     pause_after: 0.5
 
   - id: "python_vs_r"
@@ -93,7 +93,7 @@ segments:
     animation: "show_extra_example"
     code: |
       import pandas as pd
-      df = pd.read_csv("covid_cases.csv")  # 十萬筆，秒讀
+      df = pd.read_csv("covid_cases.csv")  # 100k rows, read in seconds
       daily = df.groupby("report_date").size()
       print(daily.tail())
     pause_after: 0.5
@@ -117,10 +117,10 @@ segments:
       The parts that truly need heavy math are handled by libraries; you just call the function.
       So relax, weak math is absolutely not a problem.
     animation: "show_blindspot_math"
-    error_code: "# 迷思：需要很強的數學底子"
+    error_code: "# Myth: you need a strong math background"
     correct_code: |
-      # 事實：大部分只需要加減乘除
-      attack_rate = 121 / 280  # 就是除法而已！
+      # Reality: mostly just + - x /
+      attack_rate = 121 / 280  # just division!
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -132,10 +132,10 @@ segments:
       Copy-pasting is nothing to be ashamed of; even senior engineers copy-paste from Stack Overflow every single day.
       Use it enough, and it clicks.
     animation: "show_blindspot_learn_first"
-    error_code: "# 迷思：要先把 Python 從頭學完"
+    error_code: "# Myth: learn all of Python first"
     correct_code: |
-      # 事實：邊做邊學，copy-paste 就是學習
-      # 先跑起來，再慢慢理解
+      # Reality: learn by doing - copy-paste counts
+      # Get it running, understand it later
     pause_after: 0.5
 
   - id: "blindspot_3"
@@ -147,11 +147,11 @@ segments:
       The whole course uses uv, so version problems are simply not your concern.
     animation: "show_blindspot_version"
     error_code: |
-      # 迷思：手動裝 Python、pip install 搞半天
-      pip install pandas  # 版本衝突 💥
+      # Myth: install Python by hand, fight with pip
+      pip install pandas  # version conflict 💥
     correct_code: |
-      # 事實：uv 一行搞定
-      uv sync  # 自動安裝 Python + 所有套件
+      # Reality: uv does it in one line
+      uv sync  # installs Python + every package
     pause_after: 0.5
 
   - id: "outro"

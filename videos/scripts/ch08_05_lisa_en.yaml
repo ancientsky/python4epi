@@ -69,7 +69,7 @@ segments:
 
       lisa = Moran_Local(main["rate"].values, w,
                           permutations=999, seed=8)
-      # esda 編碼：1=HH, 2=LH, 3=LL, 4=HL
+      # esda coding: 1=HH, 2=LH, 3=LL, 4=HL
       labels = {1: "HH", 2: "LH", 3: "LL", 4: "HL"}
       main["lisa"] = [
           "not_sig" if p >= 0.05 else labels[q]

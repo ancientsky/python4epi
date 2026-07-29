@@ -57,12 +57,12 @@ segments:
     code: |
       if val_loss < best_val:
           best_val = val_loss
-          best_state = snapshot()     # 存最佳快照
+          best_state = snapshot()     # save the best snapshot
           counter = 0
       else:
-          counter += 1                # 沒進步就累加
+          counter += 1                # no improvement - count up
       if counter >= patience:
-          break                       # 見好就收
+          break                       # quit while ahead
     pause_after: 0.5
 
   - id: "param_ratio"

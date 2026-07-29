@@ -54,15 +54,15 @@ segments:
       Once you randomly shuffle sequence data, future windows mix into the training set, and that's serious cheating.
     animation: "show_window_code"
     code: |
-      L, H = 21, 7                 # 回看 21 天，預測 7 天後
-      split = n - 60               # 最後 60 天當測試集
+      L, H = 21, 7                 # look back 21 days, predict 7 days ahead
+      split = n - 60               # hold out the last 60 days as the test set
       mu, sd = feats[:split].mean(0), feats[:split].std(0)
-      z = (feats - mu) / sd        # 只用訓練區間標準化
+      z = (feats - mu) / sd        # standardize using the training window only
 
       def windows(s, e):
           X = [z[i - L:i] for i in range(s, e - H)]
           y = [z[i + H - 1, 0] for i in range(s, e - H)]
-          return np.array(X), np.array(y)   # 不 shuffle
+          return np.array(X), np.array(y)   # never shuffle
     pause_after: 0.5
 
   - id: "lstm_model"
@@ -81,8 +81,8 @@ segments:
               self.fc = nn.Linear(32, 1)
 
           def forward(self, x):
-              out, _ = self.lstm(x)       # 讀完 21 天
-              return self.fc(out[:, -1])  # 取最後記憶 → 預測
+              out, _ = self.lstm(x)       # read all 21 days
+              return self.fc(out[:, -1])  # take the last hidden state -> predict
     pause_after: 0.5
 
   - id: "result"

@@ -53,10 +53,10 @@ segments:
       These four lines, you'll see them over and over in every training script.
     animation: "show_training_code"
     code: |
-      optimizer.zero_grad()          # 清掉舊梯度
-      loss = loss_fn(model(X), y)    # forward + 算 loss
-      loss.backward()                # backprop 反向傳播
-      optimizer.step()               # 梯度下降更新
+      optimizer.zero_grad()          # clear old gradients
+      loss = loss_fn(model(X), y)    # forward + compute loss
+      loss.backward()                # backpropagation
+      optimizer.step()               # gradient-descent update
     pause_after: 0.5
 
   - id: "epoch_curve"
@@ -91,9 +91,9 @@ segments:
       Learn the training loop once and it carries over to any new problem.
     animation: "show_extra_fever"
     code: |
-      pred = model(X_past14)          # forward: 過去 14 天
-      loss = mse(pred, fever_next7)   # 迴歸用 MSELoss
-      loss.backward(); opt.step()     # 一樣的 backprop + update
+      pred = model(X_past14)          # forward: the past 14 days
+      loss = mse(pred, fever_next7)   # MSELoss for regression
+      loss.backward(); opt.step()     # same backprop + update
     pause_after: 0.5
 
   - id: "blindspot_banner"

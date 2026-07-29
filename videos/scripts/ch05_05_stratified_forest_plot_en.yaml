@@ -82,7 +82,7 @@ segments:
       ax.set_yticklabels(results_df["stratum"])
       ax.set_xlabel("Risk Ratio (RR)")
       ax.set_title(
-          "分層分析森林圖：淋浴 → 感染"
+          "Stratified forest plot: shower -> infection"
       )
       plt.tight_layout()
       plt.show()

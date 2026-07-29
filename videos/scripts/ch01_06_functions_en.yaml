@@ -35,9 +35,9 @@ segments:
     animation: "show_define_function"
     code: |
       def calc_attack_rate(cases, population):
-          """計算侵襲率。"""
+          """Calculate the attack rate."""
           if population == 0:
-              raise ValueError("分母（population）不能為 0")
+              raise ValueError("population (the denominator) cannot be 0")
           return cases / population
     pause_after: 0.5
 
@@ -52,11 +52,11 @@ segments:
     animation: "show_call_function"
     code: |
       ar_all = calc_attack_rate(121, 280)
-      print(f"全機構侵襲率: {ar_all:.2%}")
+      print(f"Facility-wide attack rate: {ar_all:.2%}")
 
       ar_3b = calc_attack_rate(27, 47)
-      print(f"3 樓 B 翼侵襲率: {ar_3b:.2%}")
-    output: "全機構侵襲率: 43.21%\n3 樓 B 翼侵襲率: 57.45%"
+      print(f"Floor 3 wing B attack rate: {ar_3b:.2%}")
+    output: "Facility-wide attack rate: 43.21%\nFloor 3 wing B attack rate: 57.45%"
     pause_after: 0.5
 
   - id: "main_summary"
@@ -90,15 +90,15 @@ segments:
     animation: "show_extra_example"
     code: |
       def calc_incidence_rate(new_cases, person_time):
-          """計算發生率 (incidence rate)。"""
+          """Calculate the incidence rate."""
           if person_time <= 0:
-              raise ValueError("person-time 必須大於 0")
+              raise ValueError("person-time must be greater than 0")
           return new_cases / person_time
 
       tb_ir = calc_incidence_rate(42, 100000)
-      print(f"結核病發生率: {tb_ir:.1f} per "
+      print(f"TB incidence rate: {tb_ir:.1f} per "
             f"100,000 person-years")
-    output: "結核病發生率: 0.0 per 100,000 person-years"
+    output: "TB incidence rate: 0.0 per 100,000 person-years"
     pause_after: 0.5
 
   # ========================================
@@ -118,8 +118,8 @@ segments:
       You've merely picked up the calculator to look at it - you never pressed the equals key.
       Add the parentheses to actually run the function.
     animation: "show_blindspot_no_parens"
-    error_code: "result = calc_attack_rate\n# 沒有括號 → 只是函式物件\n# 不會計算！"
-    correct_code: "result = calc_attack_rate(121, 280)\n# 有括號 → 真正執行\n# → 0.4321"
+    error_code: "result = calc_attack_rate\n# no parentheses -> just the function object\n# nothing is computed!"
+    correct_code: "result = calc_attack_rate(121, 280)\n# with parentheses -> actually runs\n# → 0.4321"
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -130,8 +130,8 @@ segments:
       What you print outside comes back as None, not the number you expected.
       Remember: if you compute it, you have to return it!
     animation: "show_blindspot_no_return"
-    error_code: "def bad_func(a, b):\n    rate = a / b\n    # 忘記 return!\n\nprint(bad_func(121, 280))\n# → None"
-    correct_code: "def good_func(a, b):\n    rate = a / b\n    return rate  # 交出來！\n\nprint(good_func(121, 280))\n# → 0.4321..."
+    error_code: "def bad_func(a, b):\n    rate = a / b\n    # forgot to return!\n\nprint(bad_func(121, 280))\n# → None"
+    correct_code: "def good_func(a, b):\n    rate = a / b\n    return rate  # hand it back!\n\nprint(good_func(121, 280))\n# → 0.4321..."
     pause_after: 0.5
 
   - id: "blindspot_3"
@@ -142,8 +142,8 @@ segments:
       The ingredients must be swapped.
       This is exactly why we recommend meaningful parameter names - so one glance tells you which goes first.
     animation: "show_blindspot_wrong_order"
-    error_code: "# 分子分母放反了\ncalc_attack_rate(280, 121)\n# → 2.314  (231%?!)"
-    correct_code: "# cases 在前, population 在後\ncalc_attack_rate(121, 280)\n# → 0.432  (43.2% ✓)"
+    error_code: "# numerator and denominator swapped\ncalc_attack_rate(280, 121)\n# → 2.314  (231%?!)"
+    correct_code: "# cases first, population second\ncalc_attack_rate(121, 280)\n# → 0.432  (43.2% ✓)"
     pause_after: 0.5
 
   - id: "outro"

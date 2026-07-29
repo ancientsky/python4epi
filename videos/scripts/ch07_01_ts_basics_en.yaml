@@ -42,7 +42,7 @@ segments:
       One line of code that saves every downstream analysis from collapsing.
     animation: "show_asfreq_gap"
     code: |
-      # 補齊無發病的日期，確保連續
+      # fill days with no onsets so the series stays continuous
       daily = cases.groupby("symptom_onset_date").size()
       daily = daily.asfreq("D", fill_value=0)
       daily.name = "cases"

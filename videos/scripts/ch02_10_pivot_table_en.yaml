@@ -73,7 +73,7 @@ segments:
           columns="floor",
           aggfunc="mean",
           margins=True,
-          margins_name="合計",
+          margins_name="All",
       )
     pause_after: 0.5
 

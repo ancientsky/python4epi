@@ -87,9 +87,9 @@ segments:
     animation: "show_extra_example"
     code: |
       git checkout -b feat/descriptive
-      # ... 完成描述性分析 ...
+      # ... finish the descriptive analysis ...
       git push origin feat/descriptive
-      # 在 GitHub 上發 Pull Request
+      # Open a Pull Request on GitHub
     pause_after: 0.8
 
   # ── C. Blind Spots ──────────────────────────────────────────────
@@ -108,10 +108,10 @@ segments:
       Then specify filenames when you git add; don't be lazy with the dot, build a good habit.
     animation: "show_blindspot_git_add"
     code: |
-      # 錯誤示範
+      # Do not do this
       git add .
 
-      # 正確做法
+      # Do this instead
       echo ".env" >> .gitignore
       echo "data/large_file.csv" >> .gitignore
       git add analysis.py epi_curve.py
@@ -125,10 +125,10 @@ segments:
       Future you will thank present you for spending an extra ten seconds writing a good message, trust me.
     animation: "show_blindspot_commit_msg"
     code: |
-      # 錯誤示範
+      # Do not do this
       git commit -m "update"
 
-      # 正確做法
+      # Do this instead
       git commit -m "feat: add attack rate calculation by floor"
     pause_after: 0.5
 
@@ -140,13 +140,13 @@ segments:
       If there's a conflict, Git marks it so you can resolve it by hand, don't panic, look carefully and edit.
     animation: "show_blindspot_push_rejected"
     code: |
-      # push 被拒絕
+      # push rejected
       git push origin main
       # error: rejected - remote contains work you do not have
 
-      # 正確做法
+      # Do this instead
       git pull origin main
-      # 解決衝突（如果有的話）
+      # resolve conflicts, if any
       git push origin main
     pause_after: 0.5
 

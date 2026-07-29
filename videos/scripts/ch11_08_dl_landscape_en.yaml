@@ -68,7 +68,7 @@ segments:
 
       tfm = timesfm.TimesFm(context_len=512, horizon_len=14)
       tfm.load_from_checkpoint("google/timesfm-1.0-200m")
-      # 直接預測，沒有 fit() 這一步（零樣本）
+      # predict directly - no fit() step at all (zero-shot)
       forecast, _ = tfm.forecast([cases_history], freq=[0])
     pause_after: 0.5
 

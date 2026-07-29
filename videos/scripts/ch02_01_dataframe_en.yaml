@@ -87,8 +87,8 @@ segments:
     code: |
       first_row = df.iloc[0]
       first_age = df.loc[0, "age"]
-      print(f"第一位住民的年齡：{first_age}")
-    output: "第一位住民的年齡：72"
+      print(f"First resident's age: {first_age}")
+    output: "First resident's age: 72"
     pause_after: 0.5
 
   - id: "boolean_filter"
@@ -102,8 +102,8 @@ segments:
     animation: "show_boolean_filter"
     code: |
       dead = df[df["outcome"] == "dead"]
-      print(f"死亡個案數：{len(dead)}")
-    output: "死亡個案數：19"
+      print(f"Deaths: {len(dead)}")
+    output: "Deaths: 19"
     pause_after: 0.5
 
   - id: "main_summary"
@@ -137,7 +137,7 @@ segments:
       dengue = pd.read_csv("dengue_surveillance.csv")
       print(dengue.shape)
       severe = dengue[dengue["dengue_severe"] == 1]
-      print(f"重症個案數：{len(severe)}")
+      print(f"Severe cases: {len(severe)}")
     pause_after: 0.5
 
   # ========================================
