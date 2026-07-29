@@ -4,7 +4,7 @@ A Traditional Chinese-first learning website for infectious disease epidemiology
 
 ## The Story
 
-全書 18 章共享一個真實感的故事線：**松柏護理之家退伍軍人症群聚調查**。
+全書 19 章共享一個真實感的故事線：**松柏護理之家退伍軍人症群聚調查**。
 
 > 週五下午四點，你接到衛生局的電話：某護理之家有多名住民出現肺炎症狀。
 > 你帶著筆電趕到現場，開始進行流行病學調查⋯⋯
@@ -15,12 +15,12 @@ A Traditional Chinese-first learning website for infectious disease epidemiology
 
 | 幕 | 章節 | 主題 |
 |----|------|------|
-| 第一幕：接獲通報 | Ch00–02 | 導讀、Python 基礎、資料處理與視覺化 |
-| 第二幕：描述性分析 | Ch03–04 | 2×2 表、卡方檢定、SitRep 工作流 |
+| 第一幕：接獲通報 | Ch00–02（含 Ch01b） | 導讀、Python 基礎、開發者工具箱、資料處理與視覺化 |
+| 第二幕：從描述到推論 | Ch03–04 | 2×2 表、卡方檢定、SitRep 工作流 |
 | 第三幕：深入分析 | Ch05–08 | 分層分析、邏輯斯迴歸、時間序列、空間流病 |
 | 第四幕：進階建模 | Ch09–12 | 存活分析、機器學習、深度學習、因果推論 |
 | 第五幕：收尾與實戰 | Ch13–14 | 可重現研究、完整疫調報告 |
-| 附錄 | Ch15–17 | 術語表、作業區（14 組）、解答區 |
+| 附錄與練習 | Ch15–17 | 術語表、作業區（15 組）、解答區 |
 
 ## Core Principles
 
@@ -35,13 +35,13 @@ A Traditional Chinese-first learning website for infectious disease epidemiology
 
 ## Prerequisites
 
-- Python `3.12`
-- Node.js `20+` (required by Jupyter Book)
+- Python `3.13` (pinned in `.python-version`; the package itself accepts `>=3.12`)
+- Node.js `24+` (required by Jupyter Book)
 
 ## Quick Start
 
 ```bash
-uv python pin 3.12
+uv python pin 3.13
 uv sync
 uv run jupyter lab
 ```
@@ -49,9 +49,9 @@ uv run jupyter lab
 ## Windows Quick Start (PowerShell)
 
 ```powershell
-winget install Python.Python.3.12
+winget install Python.Python.3.13
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-uv python pin 3.12
+uv python pin 3.13
 uv sync
 uv run jupyter lab
 ```
@@ -165,12 +165,23 @@ uv run jupyter-book build book_en/            # English instructor (with solutio
 ## Run Checks
 
 ```bash
-uv run pytest
+uv run pytest                                            # unit + notebook smoke tests
+uv run ruff check videos/ --select F821,E9               # undefined names in Manim scenes
+uv run python videos/sync_video_embeds.py --check        # chapters match youtube_ids.yaml
 ```
+
+CI runs all three on every pull request.
 
 ## Tutorial Videos
 
-每章都有配套教學影片（Manim + TTS + FFMPEG），以輕鬆幽默的語調手把手教學。
+Ch00–Ch14 共 **122 個概念**都有配套教學影片（Manim + edge-tts + ffmpeg），以輕鬆幽默的語調手把手教學。附錄章（Ch15–17）依設計沒有影片。
+
+每個概念都有**中英雙語**兩支影片，共用同一組 Manim 動畫，只換旁白與畫面文字：
+
+| 語言 | 腳本 | 配音 |
+|------|------|------|
+| 繁體中文 | `videos/scripts/<name>.yaml` | `zh-TW-HsiaoChenNeural` |
+| English | `videos/scripts/<name>_en.yaml` | `en-US-AriaNeural` |
 
 影片採用統一的視覺風格：暖白色背景 `#FAF8F3`、橘色強調 `#D97757`、藍色輔助 `#6A9BCC`、綠色成功 `#788C5D`。每支影片包含三個部分：
 
@@ -180,8 +191,26 @@ uv run pytest
 
 ```bash
 uv sync --group video
-uv run python videos/build.py --all
+sudo apt install ffmpeg fonts-noto-cjk          # Linux 系統相依
+
+uv run python videos/build.py --all --lang zh   # 全部中文版
+uv run python videos/build.py --chapter ch08 --lang en   # 單章英文版
 ```
+
+也可以用 GitHub Actions 的 **Build Tutorial Videos** workflow 手動觸發，它會**每支影片各開一個平行 job**，避免大章節（Ch02 有 13 支）撞到單一 job 的時間上限。
+
+### 把 YouTube 連結掛上網站
+
+`videos/youtube_ids.yaml` 是全站影片連結的**唯一真相來源**。建置產出的檔名就是登錄表的 key，不需查對照：
+
+| 產出檔案 | 登錄表 key | 欄位 |
+|----------|-----------|------|
+| `ch08_04_morans_i.mp4` | `ch08_04_morans_i` | `zh:` |
+| `ch08_04_morans_i_en.mp4` | `ch08_04_morans_i` | `en:` |
+
+**直接在 GitHub 網頁上編輯這個檔案就好**——commit 之後 *Sync video links* workflow 會重新產生中英兩版章節的影片卡片、更新 `videos/VIDEO_INDEX.md`，並觸發網站重新部署。貼完整網址或純 ID 都可以；留空則該卡片不會出現在網站上（不會有死連結）。
+
+本機操作則是編輯後執行 `uv run python videos/sync_video_embeds.py`。細節見 [`videos/README.md`](videos/README.md)。
 
 ## Visual Diagrams
 
@@ -193,16 +222,17 @@ uv run python videos/build.py --all
 
 ## Repository Layout
 
-- `book/`: Jupyter Book source (`_config.yml`, TOCs, 18 chapter markdown files, embedded notebooks)
+- `book/`: Jupyter Book source, 繁中版 (`_config.yml`, TOCs, 19 chapter markdown files, embedded notebooks)
+- `book_en/`: English mirror of `book/`; shares `_static`, `_templates`, chapter images and `data` via symlinks
 - `book/chapters/images/`: hand-crafted SVG diagrams for visual explanations
-- `book/_static/`: custom CSS/JS (youtube-lite embed)
-- `notebooks/`: standalone runnable lesson notebooks
-- `notebooks/exercises/`: exercise/solution notebook pairs (14 chapters)
+- `book/_static/`: custom CSS/JS (youtube-lite embed, language switcher)
+- `notebooks/`: standalone runnable lesson notebooks (21 files)
+- `notebooks/exercises/`: exercise/solution notebook pairs (15 chapters)
 - `src/epi_learning/`: reusable helper package (`cleaning`, `metrics`, `tabulate`, `viz`)
 - `data/synthetic/`: teaching datasets — primary: `legionella_outbreak.csv` (280 × 32)
-- `videos/`: tutorial video generation (Manim + TTS + FFMPEG)
+- `videos/`: tutorial video generation (Manim + edge-tts + ffmpeg) — `scripts/` narration YAML, `scenes/` Manim classes, `youtube_ids.yaml` link registry
 - `tests/`: unit tests and notebook JSON smoke tests
-- `.github/workflows/`: CI and GitHub Pages workflows
+- `.github/workflows/`: `ci.yml` (tests + build), `pages.yml` (deploy), `videos.yml` (render videos), `sync-video-links.yml` (regenerate embeds from the registry)
 
 ## Dataset
 
@@ -212,8 +242,8 @@ uv run python videos/build.py --all
 
 ## Key Learning Assets
 
-- Lesson notebooks: `notebooks/01_*.ipynb` through `notebooks/14_*.ipynb`
-- Exercise notebooks: `notebooks/exercises/NN_*_exercise.ipynb` (14 chapters)
+- Lesson notebooks: `notebooks/01_*.ipynb` through `notebooks/14_*.ipynb` (21 notebooks)
+- Exercise notebooks: `notebooks/exercises/NN_*_exercise.ipynb` (15 chapters, each with a matching solution)
 - Visualization toolkit: `notebooks/02_visualization_epi_charts.ipynb`
 - Spatial analysis: `notebooks/08_spatial_rates.ipynb`
 - Complete outbreak report: `notebooks/14_case_study_legionella.ipynb`
