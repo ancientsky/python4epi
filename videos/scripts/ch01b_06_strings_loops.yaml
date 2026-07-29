@@ -158,8 +158,14 @@ segments:
       strip 會回傳一個新的字串，原本的不會被改變。
       你必須把結果存到變數裡。
     animation: "show_blindspot_strip_inplace"
-    error_code: 'name = " John "\nname.strip()\nprint(name)  # " John "'
-    correct_code: 'name = " John "\nname = name.strip()\nprint(name)'
+    error_code: |-
+      name = " John "
+      name.strip()
+      print(name)  # " John "
+    correct_code: |-
+      name = " John "
+      name = name.strip()
+      print(name)
     pause_after: 0.5
 
   - id: "blindspot_2"

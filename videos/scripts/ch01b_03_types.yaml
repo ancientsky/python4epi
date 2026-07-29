@@ -148,7 +148,9 @@ segments:
       加了引號的 "True" 是字串。
       if 判斷時字串永遠是 True 值，不管裡面寫什麼。
     animation: "show_blindspot_bool_str"
-    error_code: 'flag = "False"\nif flag: print("oops")'
+    error_code: |-
+      flag = "False"
+      if flag: print("oops")
     correct_code: "flag = False\nif flag: print('yes')"
     pause_after: 0.5
 
@@ -160,7 +162,9 @@ segments:
       解法：先檢查、或用 try except 保護。
     animation: "show_blindspot_invalid_int"
     error_code: 'int("N/A")  # ValueError!'
-    correct_code: 'val = "N/A"\nif val.isdigit(): int(val)'
+    correct_code: |-
+      val = "N/A"
+      if val.isdigit(): int(val)
     pause_after: 0.5
 
   - id: "outro"

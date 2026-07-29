@@ -123,8 +123,12 @@ segments:
       結果大括號直接被印出來了，完全沒有替換！
       字串前面那個 f 就像開關，沒打開就不會幫你代入變數的值。
     animation: "show_blindspot_fstring"
-    error_code: 'print("CFR: {cfr:.2%}")\n# 印出 CFR: {cfr:.2%}'
-    correct_code: 'print(f"CFR: {cfr:.2%}")\n# 印出 CFR: 15.70%'
+    error_code: |-
+      print("CFR: {cfr:.2%}")
+      # 印出 CFR: {cfr:.2%}
+    correct_code: |-
+      print(f"CFR: {cfr:.2%}")
+      # 印出 CFR: 15.70%
     pause_after: 0.5
 
   - id: "blindspot_3"

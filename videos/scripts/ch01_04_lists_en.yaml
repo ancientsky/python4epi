@@ -102,8 +102,12 @@ segments:
       Imagine the first locker is labeled number 0, not number 1.
       This is a shared rule across nearly every programming language.
     animation: "show_blindspot_zero_index"
-    error_code: 'names[1]  # → "1B"\n# 不是第一個！'
-    correct_code: 'names[0]  # → "1A"\n# 這才是第一個'
+    error_code: |-
+      names[1]  # → "1B"
+      # 不是第一個！
+    correct_code: |-
+      names[0]  # → "1A"
+      # 這才是第一個
     pause_after: 0.5
 
   - id: "blindspot_2"
@@ -113,8 +117,12 @@ segments:
       Write names bracket 6, and Python says IndexError.
       It's like reaching for the seventh slot when the shelf only has six - your hand grabs thin air.
     animation: "show_blindspot_index_error"
-    error_code: 'names[6]  # 只有 0~5\n# IndexError!'
-    correct_code: 'names[5]  # → "3B"\n# 最後一個元素'
+    error_code: |-
+      names[6]  # 只有 0~5
+      # IndexError!
+    correct_code: |-
+      names[5]  # → "3B"
+      # 最後一個元素
     pause_after: 0.5
 
   - id: "blindspot_3"
@@ -124,8 +132,16 @@ segments:
       It's like two rows of lockers at different heights - the connecting lines end up skewed.
       When you build parallel lists, always count to make sure the sizes are the same.
     animation: "show_blindspot_misaligned"
-    error_code: 'names = ["1A", "1B", "2A",\n         "2B", "3A", "3B"]\ncases = [15, 10, 24, 25, 20]\n# 6 vs 5，少一個！'
-    correct_code: 'names = ["1A", "1B", "2A",\n         "2B", "3A", "3B"]\ncases = [15, 10, 24, 25, 20, 27]\n# 6 vs 6，對齊！'
+    error_code: |-
+      names = ["1A", "1B", "2A",
+               "2B", "3A", "3B"]
+      cases = [15, 10, 24, 25, 20]
+      # 6 vs 5，少一個！
+    correct_code: |-
+      names = ["1A", "1B", "2A",
+               "2B", "3A", "3B"]
+      cases = [15, 10, 24, 25, 20, 27]
+      # 6 vs 6，對齊！
     pause_after: 0.5
 
   - id: "outro"

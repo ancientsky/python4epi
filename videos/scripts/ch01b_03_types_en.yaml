@@ -149,7 +149,9 @@ segments:
       while quoted "True" is a string.
       In an if check, a string is always truthy, no matter what's inside it.
     animation: "show_blindspot_bool_str"
-    error_code: 'flag = "False"\nif flag: print("oops")'
+    error_code: |-
+      flag = "False"
+      if flag: print("oops")
     correct_code: "flag = False\nif flag: print('yes')"
     pause_after: 0.5
 
@@ -161,7 +163,9 @@ segments:
       The fix: check first, or protect it with try except.
     animation: "show_blindspot_invalid_int"
     error_code: 'int("N/A")  # ValueError!'
-    correct_code: 'val = "N/A"\nif val.isdigit(): int(val)'
+    correct_code: |-
+      val = "N/A"
+      if val.isdigit(): int(val)
     pause_after: 0.5
 
   - id: "outro"

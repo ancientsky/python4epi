@@ -123,8 +123,12 @@ segments:
       So the curly braces get printed literally, with no substitution at all!
       That f in front of the string is like a switch - leave it off and Python won't plug in your variable's value.
     animation: "show_blindspot_fstring"
-    error_code: 'print("CFR: {cfr:.2%}")\n# 印出 CFR: {cfr:.2%}'
-    correct_code: 'print(f"CFR: {cfr:.2%}")\n# 印出 CFR: 15.70%'
+    error_code: |-
+      print("CFR: {cfr:.2%}")
+      # 印出 CFR: {cfr:.2%}
+    correct_code: |-
+      print(f"CFR: {cfr:.2%}")
+      # 印出 CFR: 15.70%
     pause_after: 0.5
 
   - id: "blindspot_3"
