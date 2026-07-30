@@ -122,7 +122,7 @@ class Ch02DataInspectScene(EpiBaseScene):
         self.show_code(code_lines, title="info_demo.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.0)
+        self.wait(max(0.1, duration - 1.0))
         self.clear_screen()
 
     def show_dtypes(self, duration: float = 5.0, **kwargs) -> None:
@@ -145,7 +145,7 @@ class Ch02DataInspectScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.3), run_time=1.0)
-        self.wait(duration - 1.5)
+        self.wait(max(0.1, duration - 1.5))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     def show_describe(self, duration: float = 6.0, **kwargs) -> None:
@@ -178,7 +178,7 @@ class Ch02DataInspectScene(EpiBaseScene):
         self.show_code(code_lines, title="describe_demo.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.0)
+        self.wait(max(0.1, duration - 1.0))
         self.clear_screen()
 
     def show_describe_interpret(self, duration: float = 5.0, **kwargs) -> None:
@@ -201,7 +201,7 @@ class Ch02DataInspectScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.25), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     def show_value_counts(self, duration: float = 6.0, **kwargs) -> None:
@@ -236,7 +236,7 @@ class Ch02DataInspectScene(EpiBaseScene):
         self.show_code(code_lines, title="value_counts.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.0)
+        self.wait(max(0.1, duration - 1.0))
         self.clear_screen()
 
     def show_main_summary(self, duration: float = 5.0, **kwargs) -> None:
@@ -258,7 +258,7 @@ class Ch02DataInspectScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.25), run_time=1.0)
-        self.wait(duration - 1.5)
+        self.wait(max(0.1, duration - 1.5))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     # ------------------------------------------------------------------
@@ -288,7 +288,7 @@ class Ch02DataInspectScene(EpiBaseScene):
         )
 
         self.show_code(code_lines, title="tb_inspect.py")
-        self.wait(duration - 0.5)
+        self.wait(max(0.1, duration - 0.5))
         self.clear_screen()
 
     # ------------------------------------------------------------------
@@ -345,5 +345,5 @@ class Ch02DataInspectScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
-        self.wait(duration - 1.1)
+        self.wait(max(0.1, duration - 1.1))
         self.play(FadeOut(VGroup(heading, sub)), run_time=0.5)

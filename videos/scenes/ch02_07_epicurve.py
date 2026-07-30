@@ -105,7 +105,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
         ).to_edge(DOWN, buff=0.8)
 
         self.play(FadeIn(note), run_time=0.5)
-        self.wait(duration - 0.5)
+        self.wait(max(0.1, duration - 0.5))
         self.clear_screen()
 
     def show_bar_basic(self, duration: float = 6.0, **kwargs) -> None:
@@ -124,7 +124,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
         )
 
         self.show_code(code_text, title="bar_basic.py")
-        self.wait(duration - 0.5)
+        self.wait(max(0.1, duration - 0.5))
         self.clear_screen()
 
     def show_date_format(self, duration: float = 6.0, **kwargs) -> None:
@@ -143,7 +143,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
         )
 
         self.show_code(code_text, title="date_format.py")
-        self.wait(duration - 0.5)
+        self.wait(max(0.1, duration - 0.5))
         self.clear_screen()
 
     def show_reindex_zero(self, duration: float = 6.0, **kwargs) -> None:
@@ -162,7 +162,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
         )
 
         self.show_code(code_text, title="reindex_zero.py")
-        self.wait(duration - 0.5)
+        self.wait(max(0.1, duration - 0.5))
         self.clear_screen()
 
     def show_cdc_style(self, duration: float = 6.0, **kwargs) -> None:
@@ -182,7 +182,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
         )
 
         self.show_code(code_text, title="cdc_style.py")
-        self.wait(duration - 0.5)
+        self.wait(max(0.1, duration - 0.5))
         self.clear_screen()
 
     def show_title_labels(self, duration: float = 6.0, **kwargs) -> None:
@@ -202,7 +202,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
         )
 
         self.show_code(code_text, title="title_labels.py")
-        self.wait(duration - 0.5)
+        self.wait(max(0.1, duration - 0.5))
         self.clear_screen()
 
     def show_main_summary(self, duration: float = 5.0, **kwargs) -> None:
@@ -227,7 +227,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.2), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     # ------------------------------------------------------------------
@@ -259,7 +259,7 @@ class Ch02EpiCurveScene(EpiBaseScene):
         )
 
         self.show_code(code_text, title="measles_epicurve.py")
-        self.wait(duration - 0.5)
+        self.wait(max(0.1, duration - 0.5))
         self.clear_screen()
 
     # ------------------------------------------------------------------
@@ -316,5 +316,5 @@ class Ch02EpiCurveScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
-        self.wait(duration - 1.1)
+        self.wait(max(0.1, duration - 1.1))
         self.play(FadeOut(VGroup(heading, sub)), run_time=0.5)

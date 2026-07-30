@@ -143,7 +143,7 @@ class Ch03RiskRatioScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.3), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     def show_legionella_calc(self, duration: float = 6.0, **kwargs) -> None:
@@ -168,7 +168,7 @@ class Ch03RiskRatioScene(EpiBaseScene):
         self.show_code(code_lines, title="risk_ratio.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.0)
+        self.wait(max(0.1, duration - 1.0))
         self.clear_screen()
 
     def show_interpretation_null(self, duration: float = 5.0, **kwargs) -> None:
@@ -190,7 +190,7 @@ class Ch03RiskRatioScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.3), run_time=1.0)
-        self.wait(duration - 1.5)
+        self.wait(max(0.1, duration - 1.5))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     def show_interpretation_above(self, duration: float = 5.0, **kwargs) -> None:
@@ -213,7 +213,7 @@ class Ch03RiskRatioScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.3), run_time=1.0)
-        self.wait(duration - 1.5)
+        self.wait(max(0.1, duration - 1.5))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     def show_interpretation_below(self, duration: float = 5.0, **kwargs) -> None:
@@ -236,7 +236,7 @@ class Ch03RiskRatioScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.3), run_time=1.0)
-        self.wait(duration - 1.5)
+        self.wait(max(0.1, duration - 1.5))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     def show_python_function(self, duration: float = 6.0, **kwargs) -> None:
@@ -263,7 +263,7 @@ class Ch03RiskRatioScene(EpiBaseScene):
         self.show_code(code_lines, title="epi_rr.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.0)
+        self.wait(max(0.1, duration - 1.0))
         self.clear_screen()
 
     def show_main_summary(self, duration: float = 5.0, **kwargs) -> None:
@@ -287,7 +287,7 @@ class Ch03RiskRatioScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.25), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     # ------------------------------------------------------------------
@@ -318,7 +318,7 @@ class Ch03RiskRatioScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.3), run_time=1.0)
-        self.wait(duration - 1.5)
+        self.wait(max(0.1, duration - 1.5))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     def show_extra_calc(self, duration: float = 6.0, **kwargs) -> None:
@@ -347,7 +347,7 @@ class Ch03RiskRatioScene(EpiBaseScene):
         self.show_code(code_lines, title="vaccine_rr.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.0)
+        self.wait(max(0.1, duration - 1.0))
         self.clear_screen()
 
     # ------------------------------------------------------------------
@@ -404,5 +404,5 @@ class Ch03RiskRatioScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
-        self.wait(duration - 1.1)
+        self.wait(max(0.1, duration - 1.1))
         self.play(FadeOut(VGroup(heading, sub)), run_time=0.5)

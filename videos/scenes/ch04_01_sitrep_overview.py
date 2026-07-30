@@ -120,7 +120,7 @@ class Ch04SitrepOverviewScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.25), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     def show_data_prep(self, duration: float = 6.0, **kwargs) -> None:
@@ -148,7 +148,7 @@ class Ch04SitrepOverviewScene(EpiBaseScene):
         self.show_code(code_lines, title="data_prep.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.0)
+        self.wait(max(0.1, duration - 1.0))
         self.clear_screen()
 
     def show_kpi_metrics(self, duration: float = 6.0, **kwargs) -> None:
@@ -175,7 +175,7 @@ class Ch04SitrepOverviewScene(EpiBaseScene):
         self.show_code(code_lines, title="kpi_metrics.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.0)
+        self.wait(max(0.1, duration - 1.0))
         self.clear_screen()
 
     def show_workflow_diagram(self, duration: float = 5.0, **kwargs) -> None:
@@ -199,7 +199,7 @@ class Ch04SitrepOverviewScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.25), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     def show_generate_sitrep(self, duration: float = 6.0, **kwargs) -> None:
@@ -242,7 +242,7 @@ class Ch04SitrepOverviewScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.25), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     # ------------------------------------------------------------------
@@ -331,5 +331,5 @@ class Ch04SitrepOverviewScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
-        self.wait(duration - 1.1)
+        self.wait(max(0.1, duration - 1.1))
         self.play(FadeOut(VGroup(heading, sub)), run_time=0.5)

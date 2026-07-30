@@ -120,7 +120,7 @@ class Ch01DictionariesScene(EpiBaseScene):
         self.play(FadeIn(explanation), run_time=0.5)
         self.play(Create(code_panel), run_time=1.0)
         self.play(FadeIn(key_boxes, lag_ratio=0.2), run_time=1.0)
-        self.wait(duration - 2.5)
+        self.wait(max(0.1, duration - 2.5))
         self.play(FadeOut(VGroup(explanation, code_panel, key_boxes)), run_time=0.5)
 
     def show_access_dict(self, duration: float = 7.0, **kwargs) -> None:
@@ -162,7 +162,7 @@ class Ch01DictionariesScene(EpiBaseScene):
         self.show_code(code_lines, title="access_dict.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.5)
+        self.wait(max(0.1, duration - 1.5))
         self.clear_screen()
 
     def show_main_summary(self, duration: float = 4.0, **kwargs) -> None:
@@ -185,7 +185,7 @@ class Ch01DictionariesScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.25), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     # ------------------------------------------------------------------
@@ -227,7 +227,7 @@ class Ch01DictionariesScene(EpiBaseScene):
         self.show_code(code_lines, title="ev71_case_card.py")
         self.wait(1.2)
         self.show_output(output_text)
-        self.wait(duration - 1.2)
+        self.wait(max(0.1, duration - 1.2))
         self.clear_screen()
 
     # ------------------------------------------------------------------
@@ -304,5 +304,5 @@ class Ch01DictionariesScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
-        self.wait(duration - 1.1)
+        self.wait(max(0.1, duration - 1.1))
         self.play(FadeOut(VGroup(heading, sub)), run_time=0.5)

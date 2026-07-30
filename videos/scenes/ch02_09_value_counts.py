@@ -129,7 +129,7 @@ class Ch02ValueCountsScene(EpiBaseScene):
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(bullets, lag_ratio=0.3), run_time=1.0)
         self.play(FadeIn(metaphor), run_time=0.5)
-        self.wait(duration - 2.0)
+        self.wait(max(0.1, duration - 2.0))
         self.play(FadeOut(VGroup(heading, bullets, metaphor)), run_time=0.5)
 
     def show_value_counts_basic(self, duration: float = 6.0, **kwargs) -> None:
@@ -162,7 +162,7 @@ class Ch02ValueCountsScene(EpiBaseScene):
         self.show_code(code_text, title="value_counts_basic.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.0)
+        self.wait(max(0.1, duration - 1.0))
         self.clear_screen()
 
     def show_value_counts_normalize(self, duration: float = 6.0, **kwargs) -> None:
@@ -197,7 +197,7 @@ class Ch02ValueCountsScene(EpiBaseScene):
         self.show_output_with_note(
             output_text, self.t("normalize_note"), color=ACCENT_ORANGE, max_height=2.0
         )
-        self.wait(duration - 1.5)
+        self.wait(max(0.1, duration - 1.5))
         self.clear_screen()
 
     def show_crosstab_intro(self, duration: float = 7.0, **kwargs) -> None:
@@ -231,7 +231,7 @@ class Ch02ValueCountsScene(EpiBaseScene):
         self.show_output_with_note(
             output_text, self.t("crosstab_note"), color=TEXT_SECONDARY, max_height=2.0
         )
-        self.wait(duration - 1.5)
+        self.wait(max(0.1, duration - 1.5))
         self.clear_screen()
 
     def show_crosstab_vs_pivot(self, duration: float = 6.0, **kwargs) -> None:
@@ -262,7 +262,7 @@ class Ch02ValueCountsScene(EpiBaseScene):
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(bullets, lag_ratio=0.25), run_time=1.0)
         self.play(FadeIn(metaphor), run_time=0.5)
-        self.wait(duration - 2.0)
+        self.wait(max(0.1, duration - 2.0))
         self.play(FadeOut(VGroup(heading, bullets, metaphor)), run_time=0.5)
 
     def show_main_summary(self, duration: float = 5.0, **kwargs) -> None:
@@ -285,7 +285,7 @@ class Ch02ValueCountsScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.25), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     # ------------------------------------------------------------------
@@ -313,7 +313,7 @@ class Ch02ValueCountsScene(EpiBaseScene):
         )
 
         self.show_code(code_text, title="enterovirus_example.py")
-        self.wait(duration - 0.5)
+        self.wait(max(0.1, duration - 0.5))
         self.clear_screen()
 
     # ------------------------------------------------------------------
@@ -370,5 +370,5 @@ class Ch02ValueCountsScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
-        self.wait(duration - 1.1)
+        self.wait(max(0.1, duration - 1.1))
         self.play(FadeOut(VGroup(heading, sub)), run_time=0.5)

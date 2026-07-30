@@ -81,7 +81,7 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         self.show_code(code_text, title="strip.py")
         self.wait(0.8)
         self.show_output(output_text)
-        self.wait(duration - 0.8)
+        self.wait(max(0.1, duration - 0.8))
         self.clear_screen()
 
     def show_split(self, duration: float = 5.0, **kwargs) -> None:
@@ -91,7 +91,7 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         self.show_code(code_text, title="split.py")
         self.wait(0.8)
         self.show_output(output_text)
-        self.wait(duration - 0.8)
+        self.wait(max(0.1, duration - 0.8))
         self.clear_screen()
 
     def show_replace(self, duration: float = 5.0, **kwargs) -> None:
@@ -101,7 +101,7 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         self.show_code(code_text, title="replace.py")
         self.wait(0.8)
         self.show_output(output_text)
-        self.wait(duration - 0.8)
+        self.wait(max(0.1, duration - 0.8))
         self.clear_screen()
 
     def show_for_range(self, duration: float = 5.0, **kwargs) -> None:
@@ -111,7 +111,7 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         self.show_code(code_text, title="for_range.py")
         self.wait(0.8)
         self.show_output(output_text)
-        self.wait(duration - 0.8)
+        self.wait(max(0.1, duration - 0.8))
         self.clear_screen()
 
     def show_enumerate(self, duration: float = 5.0, **kwargs) -> None:
@@ -121,7 +121,7 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         self.show_code(code_text, title="enumerate.py")
         self.wait(0.8)
         self.show_output(output_text)
-        self.wait(duration - 0.8)
+        self.wait(max(0.1, duration - 0.8))
         self.clear_screen()
 
     def show_in_operator(self, duration: float = 5.0, **kwargs) -> None:
@@ -131,7 +131,7 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         self.show_code(code_text, title="in_check.py")
         self.wait(0.8)
         self.show_output(output_text)
-        self.wait(duration - 0.8)
+        self.wait(max(0.1, duration - 0.8))
         self.clear_screen()
 
     def show_main_summary(self, duration: float = 4.0, **kwargs) -> None:
@@ -146,7 +146,7 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.35).next_to(heading, DOWN, buff=0.5)
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.2), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     # ------------------------------------------------------------------
@@ -167,7 +167,7 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         self.show_code(code_text, title="tb_clean.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.0)
+        self.wait(max(0.1, duration - 1.0))
         self.clear_screen()
 
     # ------------------------------------------------------------------
@@ -209,5 +209,5 @@ class Ch01bStringsLoopsScene(EpiBaseScene):
         sub = Text(self.t("outro_sub"), font=FONT_CJK, font_size=22, color=TEXT_SECONDARY).next_to(heading, DOWN, buff=0.4)
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
-        self.wait(duration - 1.1)
+        self.wait(max(0.1, duration - 1.1))
         self.play(FadeOut(VGroup(heading, sub)), run_time=0.5)

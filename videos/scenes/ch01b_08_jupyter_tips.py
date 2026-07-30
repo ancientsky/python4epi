@@ -139,7 +139,7 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
         self.play(FadeIn(heading), run_time=0.4)
         self.play(Create(code_panel), run_time=0.8)
         self.play(FadeIn(note), run_time=0.4)
-        self.wait(duration - 1.6)
+        self.wait(max(0.1, duration - 1.6))
         self.play(FadeOut(VGroup(heading, code_panel, note)), run_time=0.5)
 
     def show_install_in_jupyter(self, duration: float = 6.0, **kwargs) -> None:
@@ -164,7 +164,7 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
         self.play(FadeIn(heading), run_time=0.4)
         self.play(FadeIn(steps, lag_ratio=0.3), run_time=1.0)
         self.play(FadeIn(note), run_time=0.4)
-        self.wait(duration - 1.8)
+        self.wait(max(0.1, duration - 1.8))
         self.play(FadeOut(VGroup(heading, steps, note)), run_time=0.5)
 
     def show_question_mark(self, duration: float = 5.0, **kwargs) -> None:
@@ -186,7 +186,7 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
         self.play(FadeIn(heading), run_time=0.4)
         self.play(Create(code_panel), run_time=0.6)
         self.play(FadeIn(note), run_time=0.4)
-        self.wait(duration - 1.4)
+        self.wait(max(0.1, duration - 1.4))
         self.play(FadeOut(VGroup(heading, code_panel, note)), run_time=0.5)
 
     def show_tab_complete(self, duration: float = 5.0, **kwargs) -> None:
@@ -211,7 +211,7 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
         self.play(FadeIn(heading), run_time=0.4)
         self.play(FadeIn(steps, lag_ratio=0.3), run_time=0.9)
         self.play(FadeIn(note), run_time=0.4)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, steps, note)), run_time=0.5)
 
     def show_timeit(self, duration: float = 5.0, **kwargs) -> None:
@@ -221,7 +221,7 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
         self.show_code(code_text, title="Jupyter Cell")
         self.wait(0.8)
         self.show_output(output_text)
-        self.wait(duration - 0.8)
+        self.wait(max(0.1, duration - 0.8))
         self.clear_screen()
 
     def show_main_summary(self, duration: float = 4.0, **kwargs) -> None:
@@ -236,7 +236,7 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.35).next_to(heading, DOWN, buff=0.5)
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.2), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     # ------------------------------------------------------------------
@@ -271,7 +271,7 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
         self.play(FadeIn(heading), run_time=0.4)
         self.play(FadeIn(steps, lag_ratio=0.2), run_time=1.2)
         self.play(FadeIn(note), run_time=0.4)
-        self.wait(duration - 2.0)
+        self.wait(max(0.1, duration - 2.0))
         self.play(FadeOut(VGroup(heading, steps, note)), run_time=0.5)
 
     # ------------------------------------------------------------------
@@ -321,5 +321,5 @@ class Ch01bJupyterTipsScene(EpiBaseScene):
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
         self.play(FadeIn(next_ch), run_time=0.5)
-        self.wait(duration - 1.6)
+        self.wait(max(0.1, duration - 1.6))
         self.play(FadeOut(VGroup(heading, sub, next_ch)), run_time=0.5)

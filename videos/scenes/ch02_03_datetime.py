@@ -97,7 +97,7 @@ class Ch02DatetimeScene(EpiBaseScene):
         self.show_code(code_text, title="to_datetime.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.0)
+        self.wait(max(0.1, duration - 1.0))
         self.clear_screen()
 
     def show_errors_coerce(self, duration: float = 6.0, **kwargs) -> None:
@@ -116,7 +116,7 @@ class Ch02DatetimeScene(EpiBaseScene):
         )
 
         self.show_code(code_text, title="errors_coerce.py")
-        self.wait(duration - 0.5)
+        self.wait(max(0.1, duration - 0.5))
         self.clear_screen()
 
     def show_dt_accessor(self, duration: float = 6.0, **kwargs) -> None:
@@ -135,7 +135,7 @@ class Ch02DatetimeScene(EpiBaseScene):
         )
 
         self.show_code(code_text, title="dt_accessor.py")
-        self.wait(duration - 0.5)
+        self.wait(max(0.1, duration - 0.5))
         self.clear_screen()
 
     def show_timedelta(self, duration: float = 6.0, **kwargs) -> None:
@@ -155,7 +155,7 @@ class Ch02DatetimeScene(EpiBaseScene):
         )
 
         self.show_code(code_text, title="timedelta.py")
-        self.wait(duration - 0.5)
+        self.wait(max(0.1, duration - 0.5))
         self.clear_screen()
 
     def show_epi_week(self, duration: float = 6.0, **kwargs) -> None:
@@ -174,7 +174,7 @@ class Ch02DatetimeScene(EpiBaseScene):
         )
 
         self.show_code(code_text, title="epi_week.py")
-        self.wait(duration - 0.5)
+        self.wait(max(0.1, duration - 0.5))
         self.clear_screen()
 
     def show_strftime(self, duration: float = 6.0, **kwargs) -> None:
@@ -202,7 +202,7 @@ class Ch02DatetimeScene(EpiBaseScene):
         self.show_code(code_text, title="strftime.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.0)
+        self.wait(max(0.1, duration - 1.0))
         self.clear_screen()
 
     def show_main_summary(self, duration: float = 5.0, **kwargs) -> None:
@@ -227,7 +227,7 @@ class Ch02DatetimeScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.2), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     # ------------------------------------------------------------------
@@ -258,7 +258,7 @@ class Ch02DatetimeScene(EpiBaseScene):
         )
 
         self.show_code(code_text, title="covid_incubation.py")
-        self.wait(duration - 0.5)
+        self.wait(max(0.1, duration - 0.5))
         self.clear_screen()
 
     # ------------------------------------------------------------------
@@ -315,5 +315,5 @@ class Ch02DatetimeScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
-        self.wait(duration - 1.1)
+        self.wait(max(0.1, duration - 1.1))
         self.play(FadeOut(VGroup(heading, sub)), run_time=0.5)
