@@ -122,7 +122,7 @@ class Ch01ArithmeticScene(EpiBaseScene):
         self.show_code(code_lines, title="attack_rate.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.5)
+        self.wait(max(0.1, duration - 1.5))
         self.clear_screen()
 
     def show_cfr(self, duration: float = 7.0, **kwargs) -> None:
@@ -158,7 +158,7 @@ class Ch01ArithmeticScene(EpiBaseScene):
         self.show_code(code_lines, title="cfr.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.5)
+        self.wait(max(0.1, duration - 1.5))
         self.clear_screen()
 
     def show_hosp_rate(self, duration: float = 7.0, **kwargs) -> None:
@@ -194,7 +194,7 @@ class Ch01ArithmeticScene(EpiBaseScene):
         self.show_code(code_lines, title="hosp_rate.py")
         self.wait(1.0)
         self.show_output(output_text)
-        self.wait(duration - 1.5)
+        self.wait(max(0.1, duration - 1.5))
         self.clear_screen()
 
     def show_main_summary(self, duration: float = 4.0, **kwargs) -> None:
@@ -217,7 +217,7 @@ class Ch01ArithmeticScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.25), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     # ------------------------------------------------------------------
@@ -257,7 +257,7 @@ class Ch01ArithmeticScene(EpiBaseScene):
         self.show_code(code_lines, title="dengue_prevalence.py")
         self.wait(1.2)
         self.show_output(output_text)
-        self.wait(duration - 1.2)
+        self.wait(max(0.1, duration - 1.2))
         self.clear_screen()
 
     # ------------------------------------------------------------------
@@ -322,7 +322,7 @@ class Ch01ArithmeticScene(EpiBaseScene):
         self.play(FadeIn(heading), run_time=0.4)
         self.play(FadeIn(parts, lag_ratio=0.3), run_time=1.0)
         self.play(FadeIn(example), run_time=0.5)
-        self.wait(duration - 1.9)
+        self.wait(max(0.1, duration - 1.9))
         self.play(FadeOut(VGroup(heading, parts, example)), run_time=0.5)
 
     # ------------------------------------------------------------------
@@ -349,5 +349,5 @@ class Ch01ArithmeticScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
-        self.wait(duration - 1.1)
+        self.wait(max(0.1, duration - 1.1))
         self.play(FadeOut(VGroup(heading, sub)), run_time=0.5)

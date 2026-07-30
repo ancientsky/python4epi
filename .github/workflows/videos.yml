@@ -142,8 +142,23 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg fonts-noto-cjk libpango1.0-dev libcairo2-dev pkg-config >/dev/null 2>&1
 
+      # --only-group installs manim, edge-tts and pyyaml — the only three things
+      # anything under videos/ imports. Syncing the project as well dragged in
+      # torch, geopandas, jupyter-book and ~200 other packages the render never
+      # touches, and every extra download is another chance for a PyPI hiccup to
+      # fail the job: a broken pipe fetching pyogrio, a geopandas dependency, is
+      # what took a build down. Retry anyway, since the network can still blink.
       - name: Install Python dependencies
-        run: uv sync --group video
+        run: |
+          for attempt in 1 2 3; do
+            if uv sync --only-group video --no-install-project; then
+              exit 0
+            fi
+            echo "::warning::uv sync failed (attempt ${attempt}/3), retrying"
+            sleep $((attempt * 10))
+          done
+          echo "::error::uv sync failed three times"
+          exit 1
 
       # Narration audio is the slow, network-bound half of the build. build.py
       # already invalidates a cached segment when its narration text, voice, rate

@@ -105,7 +105,7 @@ class Ch01bIndentationScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.25), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     def show_if_indent(self, duration: float = 6.0, **kwargs) -> None:
@@ -114,7 +114,7 @@ class Ch01bIndentationScene(EpiBaseScene):
         self.show_code(code_text, title="if_indent.py")
         self.wait(1.0)
         self.show_output(kwargs.get("output", "CFR > 15%, alert!"))
-        self.wait(duration - 1.0)
+        self.wait(max(0.1, duration - 1.0))
         self.clear_screen()
 
     def show_for_indent(self, duration: float = 6.0, **kwargs) -> None:
@@ -144,7 +144,7 @@ class Ch01bIndentationScene(EpiBaseScene):
         self.play(FadeIn(heading), run_time=0.4)
         self.play(Create(code_panel), run_time=0.8)
         self.play(FadeIn(note), run_time=0.4)
-        self.wait(duration - 1.6)
+        self.wait(max(0.1, duration - 1.6))
         self.play(FadeOut(VGroup(heading, code_panel, note)), run_time=0.5)
 
     def show_main_summary(self, duration: float = 4.0, **kwargs) -> None:
@@ -160,7 +160,7 @@ class Ch01bIndentationScene(EpiBaseScene):
 
         self.play(FadeIn(heading), run_time=0.5)
         self.play(FadeIn(points, lag_ratio=0.25), run_time=1.2)
-        self.wait(duration - 1.7)
+        self.wait(max(0.1, duration - 1.7))
         self.play(FadeOut(VGroup(heading, points)), run_time=0.5)
 
     # ------------------------------------------------------------------
@@ -219,5 +219,5 @@ class Ch01bIndentationScene(EpiBaseScene):
         sub = Text(self.t("outro_sub"), font=FONT_CJK, font_size=22, color=TEXT_SECONDARY).next_to(heading, DOWN, buff=0.4)
         self.play(FadeIn(heading), run_time=0.6)
         self.play(FadeIn(sub), run_time=0.5)
-        self.wait(duration - 1.1)
+        self.wait(max(0.1, duration - 1.1))
         self.play(FadeOut(VGroup(heading, sub)), run_time=0.5)
