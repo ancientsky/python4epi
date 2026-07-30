@@ -127,75 +127,75 @@ videos:
   ch01b_08_jupyter_tips:
     title_zh: "Jupyter 實用密技"
     title_en: "Practical Jupyter Tips: Double Your Efficiency"
-    zh: "krpakr9TtZM"
+    zh: "https://youtu.be/XR28LubaKa8"
     en: "https://youtu.be/L9nzl_m2pnE"
 
   # --- 第 02 章 資料處理與視覺化 (13 部影片；中文已上傳 13/13) ---
   ch02_01_dataframe:
     title_zh: "DataFrame 是什麼？從 CSV 到表格的第一步"
     title_en: "What Is a DataFrame? Your First Step from CSV to Table"
-    zh: "6VaRmrPorog"
-    en: ""
+    zh: "https://youtu.be/1VGCJopmPhU"
+    en: "https://youtu.be/OxrW1-t_QOU"
   ch02_02_data_inspect:
     title_zh: "一分鐘看懂你的資料——info() 與 describe()"
     title_en: "Understand Your Data in One Minute: info() and describe()"
-    zh: "0nr8EO2EYgU"
-    en: ""
+    zh: "https://youtu.be/h3Q2495gtyY"
+    en: "https://youtu.be/HO_zbbod7qE"
   ch02_03_datetime:
     title_zh: "日期時間大魔王——to_datetime 完全攻略"
     title_en: "The Date-Time Boss Battle: The Complete to_datetime Playbook"
-    zh: "fjflhonc_7Y"
-    en: ""
+    zh: "https://youtu.be/Bd_bY4kXgek"
+    en: "https://youtu.be/fAlF76BSols"
   ch02_04_derived:
     title_zh: "衍生變項四大招——cut, axis, astype, dt"
     title_en: "Four Moves for Derived Variables: cut, axis, astype, dt"
-    zh: "nizzbpAajlw"
-    en: ""
+    zh: "https://youtu.be/3sUV9cjc_eY"
+    en: "https://youtu.be/Zo7kRqi8kEE"
   ch02_05_missing:
     title_zh: "遺漏值偵探社——NaN, NaT, None 一次搞懂"
     title_en: "The Missing-Value Detective Agency: NaN, NaT, None Demystified"
-    zh: "Eb4xFn8MAtI"
-    en: ""
+    zh: "https://youtu.be/WsJIT5J-c8U"
+    en: "https://youtu.be/t9kQchKaRJI"
   ch02_06_groupby:
     title_zh: "分組統計秘密武器——groupby + agg 完全攻略"
     title_en: "The Secret Weapon of Group Stats: The Complete groupby + agg Playbook"
-    zh: "A08xPAxb3Fc"
-    en: ""
+    zh: "https://youtu.be/w8dV44Ir4bo"
+    en: "https://youtu.be/c-X55B2WeiA"
   ch02_07_epicurve:
     title_zh: "用 matplotlib 畫出疫調等級的流行曲線"
     title_en: "Draw an Investigation-Grade Epidemic Curve with matplotlib"
-    zh: "OnHzOWIP12s"
-    en: ""
+    zh: "https://youtu.be/sZuXUsFRW80"
+    en: "https://youtu.be/-Ko9PlfUrsY"
   ch02_08_seaborn_plotly:
     title_zh: "seaborn + plotly + 圖表輸出投稿密技"
     title_en: "seaborn + plotly + Figure Export: Submission Secrets"
-    zh: "cLjVwKlXHVM"
-    en: ""
+    zh: "https://youtu.be/-OhRLppCh_c"
+    en: "https://youtu.be/8zubGuWOpW4"
   ch02_09_value_counts:
     title_zh: "頻率表速成——value_counts + crosstab 完全攻略"
     title_en: "Frequency Tables, Fast: value_counts + crosstab"
-    zh: "awq3VxbW9qo"
-    en: ""
+    zh: "https://youtu.be/oCeidAZktJU"
+    en: "https://youtu.be/0BVll7KCAjc"
   ch02_10_pivot_table:
     title_zh: "Excel 樞紐分析表——pivot_table 完全攻略"
     title_en: "Excel Pivot Tables: The Complete pivot_table Guide"
-    zh: "eFAQ4Xz7gq8"
-    en: ""
+    zh: "https://youtu.be/80CBnMoZIf4"
+    en: "https://youtu.be/h9ug-ryp4ak"
   ch02_11_method_chaining:
     title_zh: "一行寫完分析——Method Chaining 流水線"
     title_en: "Write Your Analysis in One Line: Method Chaining Pipelines"
-    zh: "sSw-xiaUafM"
-    en: ""
+    zh: "https://youtu.be/soJM0kdHchc"
+    en: "https://youtu.be/SPRAJdsijCE"
   ch02_12_merge:
     title_zh: "合併資料表——merge 就是你的 VLOOKUP"
     title_en: "Joining Data Tables: merge Is Your VLOOKUP"
-    zh: "b2W8rfIn8Ts"
-    en: ""
+    zh: "https://youtu.be/BqtKshQy-5Y"
+    en: "https://youtu.be/64OsjfHGn2I"
   ch02_13_str_cleanup:
     title_zh: "文字清理三板斧——str + drop_duplicates + rename"
     title_en: "Three Moves for Text Cleanup: str + drop_duplicates + rename"
-    zh: "AasXdk4-i_E"
-    en: ""
+    zh: "https://youtu.be/PVnhZm5AwHg"
+    en: "https://youtu.be/uvovtzSiIME"
 
   # --- 第 03 章 流行病學統計 (7 部影片；中文已上傳 7/7) ---
   ch03_01_two_by_two:
