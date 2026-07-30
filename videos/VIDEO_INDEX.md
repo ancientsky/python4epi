@@ -14,62 +14,62 @@ uv run python videos/sync_video_embeds.py
 | 語言 | 已上傳 | 總數 | 進度 |
 |------|-------:|-----:|------|
 | 中文 | 72 | 122 | 59% |
-| English | 0 | 122 | 0% |
+| English | 33 | 122 | 27% |
 
 圖例：✅ 已上線　⬜ 尚未上傳（網站上不會顯示該卡片）
 
-## 第 00 章 · `00_guide.md`　（中 6/6　英 0/6）
+## 第 00 章 · `00_guide.md`　（中 6/6　英 6/6）
 
 | # | 影片 key（= mp4 檔名） | 標題 | 中文 | English |
 |---|------------------------|------|------|---------|
-| 1 | `ch00_01_why_python` | 為什麼用 Python | ✅ [eMWQ-IqYjvM](https://youtu.be/eMWQ-IqYjvM) | ⬜ |
-| 2 | `ch00_02_uv_setup` | uv 與環境設定 | ✅ [AnPBQW8Vqq0](https://youtu.be/AnPBQW8Vqq0) | ⬜ |
-| 3 | `ch00_03_jupyter` | Jupyter Lab 入門 | ✅ [iELUPwdPk7M](https://youtu.be/iELUPwdPk7M) | ⬜ |
-| 4 | `ch00_04_hello_epi` | 第一支程式 Hello Epi | ✅ [VcxttnJxwG4](https://youtu.be/VcxttnJxwG4) | ⬜ |
-| 5 | `ch00_05_git_basics` | Git 版本控制 | ✅ [SdtrxhPbRqk](https://youtu.be/SdtrxhPbRqk) | ⬜ |
-| 6 | `ch00_06_roadmap` | 課程地圖與學習策略 | ✅ [H3fMhNhj3u4](https://youtu.be/H3fMhNhj3u4) | ⬜ |
+| 1 | `ch00_01_why_python` | 為什麼用 Python | ✅ [https://youtu.be/Nv4j3T27oGI](https://youtu.be/https://youtu.be/Nv4j3T27oGI) | ✅ [https://youtu.be/rVLTIbXTQOI](https://youtu.be/https://youtu.be/rVLTIbXTQOI) |
+| 2 | `ch00_02_uv_setup` | uv 與環境設定 | ✅ [https://youtu.be/aOCyRkvjsUY](https://youtu.be/https://youtu.be/aOCyRkvjsUY) | ✅ [https://youtu.be/NM3aGh-TpY0](https://youtu.be/https://youtu.be/NM3aGh-TpY0) |
+| 3 | `ch00_03_jupyter` | Jupyter Lab 入門 | ✅ [https://youtu.be/xqaJBdUBd6s](https://youtu.be/https://youtu.be/xqaJBdUBd6s) | ✅ [https://youtu.be/GZjM44USJrU](https://youtu.be/https://youtu.be/GZjM44USJrU) |
+| 4 | `ch00_04_hello_epi` | 第一支程式 Hello Epi | ✅ [https://youtu.be/x4tNVZSAgNI](https://youtu.be/https://youtu.be/x4tNVZSAgNI) | ✅ [https://youtu.be/0SBfu6wWl0k](https://youtu.be/https://youtu.be/0SBfu6wWl0k) |
+| 5 | `ch00_05_git_basics` | Git 版本控制 | ✅ [https://youtu.be/kiH0W9U6bM0](https://youtu.be/https://youtu.be/kiH0W9U6bM0) | ✅ [https://youtu.be/riK6Tbq4rfI](https://youtu.be/https://youtu.be/riK6Tbq4rfI) |
+| 6 | `ch00_06_roadmap` | 課程地圖與學習策略 | ✅ [https://youtu.be/5XQwCgawhVs](https://youtu.be/https://youtu.be/5XQwCgawhVs) | ✅ [https://youtu.be/sv6KEM7_ocY](https://youtu.be/https://youtu.be/sv6KEM7_ocY) |
 
-## 第 01 章 · `01_fundamentals.md`　（中 6/6　英 0/6）
-
-| # | 影片 key（= mp4 檔名） | 標題 | 中文 | English |
-|---|------------------------|------|------|---------|
-| 1 | `ch01_01_variables` | 數值變數 | ✅ [RhqNl3LzjmU](https://youtu.be/RhqNl3LzjmU) | ⬜ |
-| 2 | `ch01_02_arithmetic` | 計算指標 | ✅ [ZqqZmuVjoN0](https://youtu.be/ZqqZmuVjoN0) | ⬜ |
-| 3 | `ch01_03_dictionaries` | 字典 | ✅ [4iriq9cNG-A](https://youtu.be/4iriq9cNG-A) | ⬜ |
-| 4 | `ch01_04_lists` | 列表 | ✅ [bwRKaJYyGCU](https://youtu.be/bwRKaJYyGCU) | ⬜ |
-| 5 | `ch01_05_conditionals` | 條件判斷 | ✅ [8q6imxzb9mM](https://youtu.be/8q6imxzb9mM) | ⬜ |
-| 6 | `ch01_06_functions` | 函式 | ✅ [CGux0-2swi8](https://youtu.be/CGux0-2swi8) | ⬜ |
-
-## 第 01b 章 · `01b_python_toolbox.md`　（中 8/8　英 0/8）
+## 第 01 章 · `01_fundamentals.md`　（中 6/6　英 6/6）
 
 | # | 影片 key（= mp4 檔名） | 標題 | 中文 | English |
 |---|------------------------|------|------|---------|
-| 1 | `ch01b_01_indentation` | 縮排 | ✅ [lQPKMgHv1UQ](https://youtu.be/lQPKMgHv1UQ) | ⬜ |
-| 2 | `ch01b_02_imports` | import | ✅ [srlzHIPR3nk](https://youtu.be/srlzHIPR3nk) | ⬜ |
-| 3 | `ch01b_03_types` | 型別與轉換 | ✅ [xetiso2OCl8](https://youtu.be/xetiso2OCl8) | ⬜ |
-| 4 | `ch01b_04_errors` | 讀懂錯誤訊息 | ✅ [aZx7TFtcrvc](https://youtu.be/aZx7TFtcrvc) | ⬜ |
-| 5 | `ch01b_05_try_except` | try/except | ✅ [QCKTumk34fA](https://youtu.be/QCKTumk34fA) | ⬜ |
-| 6 | `ch01b_06_strings_loops` | 字串與迴圈進階 | ✅ [SmKi_i3PC-U](https://youtu.be/SmKi_i3PC-U) | ⬜ |
-| 7 | `ch01b_07_uv_advanced` | uv 進階 | ✅ [cXSoTKvgtEo](https://youtu.be/cXSoTKvgtEo) | ⬜ |
-| 8 | `ch01b_08_jupyter_tips` | Jupyter 實用密技 | ✅ [krpakr9TtZM](https://youtu.be/krpakr9TtZM) | ⬜ |
+| 1 | `ch01_01_variables` | 數值變數 | ✅ [https://youtu.be/JTt_aW9q0rU](https://youtu.be/https://youtu.be/JTt_aW9q0rU) | ✅ [https://youtu.be/Ehr6UIwd-Oo](https://youtu.be/https://youtu.be/Ehr6UIwd-Oo) |
+| 2 | `ch01_02_arithmetic` | 計算指標 | ✅ [https://youtu.be/cniTIEPpaL4](https://youtu.be/https://youtu.be/cniTIEPpaL4) | ✅ [https://youtu.be/kTFGaPiO-fA](https://youtu.be/https://youtu.be/kTFGaPiO-fA) |
+| 3 | `ch01_03_dictionaries` | 字典 | ✅ [https://youtu.be/vleHeKRvUQk](https://youtu.be/https://youtu.be/vleHeKRvUQk) | ✅ [https://youtu.be/g6Kcohv9jzc](https://youtu.be/https://youtu.be/g6Kcohv9jzc) |
+| 4 | `ch01_04_lists` | 列表 | ✅ [https://youtu.be/bi_lhHO_WJY](https://youtu.be/https://youtu.be/bi_lhHO_WJY) | ✅ [https://youtu.be/BZWfzsk0tw0](https://youtu.be/https://youtu.be/BZWfzsk0tw0) |
+| 5 | `ch01_05_conditionals` | 條件判斷 | ✅ [https://youtu.be/MAJaBGclgOM](https://youtu.be/https://youtu.be/MAJaBGclgOM) | ✅ [https://youtu.be/NA7KP2EqICg](https://youtu.be/https://youtu.be/NA7KP2EqICg) |
+| 6 | `ch01_06_functions` | 函式 | ✅ [https://youtu.be/dksTij3vniQ](https://youtu.be/https://youtu.be/dksTij3vniQ) | ✅ [https://youtu.be/oleAlQpbJ6I](https://youtu.be/https://youtu.be/oleAlQpbJ6I) |
 
-## 第 02 章 · `02_data_wrangling.md`　（中 13/13　英 0/13）
+## 第 01b 章 · `01b_python_toolbox.md`　（中 8/8　英 8/8）
 
 | # | 影片 key（= mp4 檔名） | 標題 | 中文 | English |
 |---|------------------------|------|------|---------|
-| 1 | `ch02_01_dataframe` | DataFrame 是什麼？從 CSV 到表格的第一步 | ✅ [6VaRmrPorog](https://youtu.be/6VaRmrPorog) | ⬜ |
-| 2 | `ch02_02_data_inspect` | 一分鐘看懂你的資料——info() 與 describe() | ✅ [0nr8EO2EYgU](https://youtu.be/0nr8EO2EYgU) | ⬜ |
-| 3 | `ch02_03_datetime` | 日期時間大魔王——to_datetime 完全攻略 | ✅ [fjflhonc_7Y](https://youtu.be/fjflhonc_7Y) | ⬜ |
-| 4 | `ch02_04_derived` | 衍生變項四大招——cut, axis, astype, dt | ✅ [nizzbpAajlw](https://youtu.be/nizzbpAajlw) | ⬜ |
-| 5 | `ch02_05_missing` | 遺漏值偵探社——NaN, NaT, None 一次搞懂 | ✅ [Eb4xFn8MAtI](https://youtu.be/Eb4xFn8MAtI) | ⬜ |
-| 6 | `ch02_06_groupby` | 分組統計秘密武器——groupby + agg 完全攻略 | ✅ [A08xPAxb3Fc](https://youtu.be/A08xPAxb3Fc) | ⬜ |
-| 7 | `ch02_07_epicurve` | 用 matplotlib 畫出疫調等級的流行曲線 | ✅ [OnHzOWIP12s](https://youtu.be/OnHzOWIP12s) | ⬜ |
-| 8 | `ch02_08_seaborn_plotly` | seaborn + plotly + 圖表輸出投稿密技 | ✅ [cLjVwKlXHVM](https://youtu.be/cLjVwKlXHVM) | ⬜ |
-| 9 | `ch02_09_value_counts` | 頻率表速成——value_counts + crosstab 完全攻略 | ✅ [awq3VxbW9qo](https://youtu.be/awq3VxbW9qo) | ⬜ |
-| 10 | `ch02_10_pivot_table` | Excel 樞紐分析表——pivot_table 完全攻略 | ✅ [eFAQ4Xz7gq8](https://youtu.be/eFAQ4Xz7gq8) | ⬜ |
-| 11 | `ch02_11_method_chaining` | 一行寫完分析——Method Chaining 流水線 | ✅ [sSw-xiaUafM](https://youtu.be/sSw-xiaUafM) | ⬜ |
-| 12 | `ch02_12_merge` | 合併資料表——merge 就是你的 VLOOKUP | ✅ [b2W8rfIn8Ts](https://youtu.be/b2W8rfIn8Ts) | ⬜ |
-| 13 | `ch02_13_str_cleanup` | 文字清理三板斧——str + drop_duplicates + rename | ✅ [AasXdk4-i_E](https://youtu.be/AasXdk4-i_E) | ⬜ |
+| 1 | `ch01b_01_indentation` | 縮排 | ✅ [https://youtu.be/BqPzzF4s8WA](https://youtu.be/https://youtu.be/BqPzzF4s8WA) | ✅ [https://youtu.be/jOiqKrkqClg](https://youtu.be/https://youtu.be/jOiqKrkqClg) |
+| 2 | `ch01b_02_imports` | import | ✅ [https://youtu.be/QF-bETQmbSE](https://youtu.be/https://youtu.be/QF-bETQmbSE) | ✅ [https://youtu.be/vu8D3_MhAog](https://youtu.be/https://youtu.be/vu8D3_MhAog) |
+| 3 | `ch01b_03_types` | 型別與轉換 | ✅ [https://youtu.be/KpjF0Iv5v1c](https://youtu.be/https://youtu.be/KpjF0Iv5v1c) | ✅ [https://youtu.be/KZTWa4BHCfY](https://youtu.be/https://youtu.be/KZTWa4BHCfY) |
+| 4 | `ch01b_04_errors` | 讀懂錯誤訊息 | ✅ [https://youtu.be/r9-VUXEMloU](https://youtu.be/https://youtu.be/r9-VUXEMloU) | ✅ [https://youtu.be/00CEZEeFXMw](https://youtu.be/https://youtu.be/00CEZEeFXMw) |
+| 5 | `ch01b_05_try_except` | try/except | ✅ [https://youtu.be/eyQfPTl8xsk](https://youtu.be/https://youtu.be/eyQfPTl8xsk) | ✅ [https://youtu.be/Gv_Ct86O8XM](https://youtu.be/https://youtu.be/Gv_Ct86O8XM) |
+| 6 | `ch01b_06_strings_loops` | 字串與迴圈進階 | ✅ [https://youtu.be/ZloLMJlgxvE](https://youtu.be/https://youtu.be/ZloLMJlgxvE) | ✅ [https://youtu.be/ydQ-lOlN5Ec](https://youtu.be/https://youtu.be/ydQ-lOlN5Ec) |
+| 7 | `ch01b_07_uv_advanced` | uv 進階 | ✅ [https://youtu.be/vTOu1ydb2V4](https://youtu.be/https://youtu.be/vTOu1ydb2V4) | ✅ [https://youtu.be/l-WcIwSMv5s](https://youtu.be/https://youtu.be/l-WcIwSMv5s) |
+| 8 | `ch01b_08_jupyter_tips` | Jupyter 實用密技 | ✅ [https://youtu.be/XR28LubaKa8](https://youtu.be/https://youtu.be/XR28LubaKa8) | ✅ [https://youtu.be/L9nzl_m2pnE](https://youtu.be/https://youtu.be/L9nzl_m2pnE) |
+
+## 第 02 章 · `02_data_wrangling.md`　（中 13/13　英 13/13）
+
+| # | 影片 key（= mp4 檔名） | 標題 | 中文 | English |
+|---|------------------------|------|------|---------|
+| 1 | `ch02_01_dataframe` | DataFrame 是什麼？從 CSV 到表格的第一步 | ✅ [https://youtu.be/1VGCJopmPhU](https://youtu.be/https://youtu.be/1VGCJopmPhU) | ✅ [https://youtu.be/OxrW1-t_QOU](https://youtu.be/https://youtu.be/OxrW1-t_QOU) |
+| 2 | `ch02_02_data_inspect` | 一分鐘看懂你的資料——info() 與 describe() | ✅ [https://youtu.be/h3Q2495gtyY](https://youtu.be/https://youtu.be/h3Q2495gtyY) | ✅ [https://youtu.be/HO_zbbod7qE](https://youtu.be/https://youtu.be/HO_zbbod7qE) |
+| 3 | `ch02_03_datetime` | 日期時間大魔王——to_datetime 完全攻略 | ✅ [https://youtu.be/Bd_bY4kXgek](https://youtu.be/https://youtu.be/Bd_bY4kXgek) | ✅ [https://youtu.be/fAlF76BSols](https://youtu.be/https://youtu.be/fAlF76BSols) |
+| 4 | `ch02_04_derived` | 衍生變項四大招——cut, axis, astype, dt | ✅ [https://youtu.be/3sUV9cjc_eY](https://youtu.be/https://youtu.be/3sUV9cjc_eY) | ✅ [https://youtu.be/Zo7kRqi8kEE](https://youtu.be/https://youtu.be/Zo7kRqi8kEE) |
+| 5 | `ch02_05_missing` | 遺漏值偵探社——NaN, NaT, None 一次搞懂 | ✅ [https://youtu.be/WsJIT5J-c8U](https://youtu.be/https://youtu.be/WsJIT5J-c8U) | ✅ [https://youtu.be/t9kQchKaRJI](https://youtu.be/https://youtu.be/t9kQchKaRJI) |
+| 6 | `ch02_06_groupby` | 分組統計秘密武器——groupby + agg 完全攻略 | ✅ [https://youtu.be/w8dV44Ir4bo](https://youtu.be/https://youtu.be/w8dV44Ir4bo) | ✅ [https://youtu.be/c-X55B2WeiA](https://youtu.be/https://youtu.be/c-X55B2WeiA) |
+| 7 | `ch02_07_epicurve` | 用 matplotlib 畫出疫調等級的流行曲線 | ✅ [https://youtu.be/sZuXUsFRW80](https://youtu.be/https://youtu.be/sZuXUsFRW80) | ✅ [https://youtu.be/-Ko9PlfUrsY](https://youtu.be/https://youtu.be/-Ko9PlfUrsY) |
+| 8 | `ch02_08_seaborn_plotly` | seaborn + plotly + 圖表輸出投稿密技 | ✅ [https://youtu.be/-OhRLppCh_c](https://youtu.be/https://youtu.be/-OhRLppCh_c) | ✅ [https://youtu.be/8zubGuWOpW4](https://youtu.be/https://youtu.be/8zubGuWOpW4) |
+| 9 | `ch02_09_value_counts` | 頻率表速成——value_counts + crosstab 完全攻略 | ✅ [https://youtu.be/oCeidAZktJU](https://youtu.be/https://youtu.be/oCeidAZktJU) | ✅ [https://youtu.be/0BVll7KCAjc](https://youtu.be/https://youtu.be/0BVll7KCAjc) |
+| 10 | `ch02_10_pivot_table` | Excel 樞紐分析表——pivot_table 完全攻略 | ✅ [https://youtu.be/80CBnMoZIf4](https://youtu.be/https://youtu.be/80CBnMoZIf4) | ✅ [https://youtu.be/h9ug-ryp4ak](https://youtu.be/https://youtu.be/h9ug-ryp4ak) |
+| 11 | `ch02_11_method_chaining` | 一行寫完分析——Method Chaining 流水線 | ✅ [https://youtu.be/soJM0kdHchc](https://youtu.be/https://youtu.be/soJM0kdHchc) | ✅ [https://youtu.be/SPRAJdsijCE](https://youtu.be/https://youtu.be/SPRAJdsijCE) |
+| 12 | `ch02_12_merge` | 合併資料表——merge 就是你的 VLOOKUP | ✅ [https://youtu.be/BqtKshQy-5Y](https://youtu.be/https://youtu.be/BqtKshQy-5Y) | ✅ [https://youtu.be/64OsjfHGn2I](https://youtu.be/https://youtu.be/64OsjfHGn2I) |
+| 13 | `ch02_13_str_cleanup` | 文字清理三板斧——str + drop_duplicates + rename | ✅ [https://youtu.be/PVnhZm5AwHg](https://youtu.be/https://youtu.be/PVnhZm5AwHg) | ✅ [https://youtu.be/uvovtzSiIME](https://youtu.be/https://youtu.be/uvovtzSiIME) |
 
 ## 第 03 章 · `03_stats.md`　（中 7/7　英 0/7）
 

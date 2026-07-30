@@ -34,6 +34,7 @@ class Ch05StratifiedRrScene(EpiBaseScene):
             "stratum_calc_heading": "Step 3：每層 2×2 表 + RR",
             "log_ci_heading": "Step 4：log 轉換法 95% CI",
             "results_heading": "Step 5：比對各層 vs 粗 RR",
+            "results_code": "# 各層 RR vs Crude RR 對照",
             "summary_heading": "重點整理：分層分析四步驟",
             "summary_bullets": [
                 "① 先算粗 RR 當基準",
@@ -55,6 +56,7 @@ class Ch05StratifiedRrScene(EpiBaseScene):
             "stratum_calc_heading": "Step 3: per-stratum 2×2 table + RR",
             "log_ci_heading": "Step 4: 95% CI via the log transform",
             "results_heading": "Step 5: compare each stratum vs crude RR",
+            "results_code": "# Stratum-specific RR vs crude RR",
             "summary_heading": "Recap: stratified analysis in four steps",
             "summary_bullets": [
                 "① Compute crude RR as the baseline",
@@ -118,7 +120,12 @@ class Ch05StratifiedRrScene(EpiBaseScene):
 
     def show_results_output(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(5, self.total_steps)
-        self._code_block(self.t("results_heading"), "# 各層 RR vs Crude RR 對照", duration, output=kwargs.get("output"))
+        self._code_block(
+            self.t("results_heading"),
+            self.t("results_code"),
+            duration,
+            output=kwargs.get("output"),
+        )
 
     def show_main_summary(self, duration: float = 6.0, **kwargs) -> None:
         self.show_step_indicator(6, self.total_steps)

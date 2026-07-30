@@ -51,8 +51,8 @@
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：縮排</div>
-  <div class="youtube-lite" data-id="lQPKMgHv1UQ">
-    <img src="https://img.youtube.com/vi/lQPKMgHv1UQ/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="BqPzzF4s8WA">
+    <img src="https://img.youtube.com/vi/BqPzzF4s8WA/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -99,8 +99,8 @@ for cases in floor_cases:       # 第一層
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：import</div>
-  <div class="youtube-lite" data-id="srlzHIPR3nk">
-    <img src="https://img.youtube.com/vi/srlzHIPR3nk/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="QF-bETQmbSE">
+    <img src="https://img.youtube.com/vi/QF-bETQmbSE/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -171,8 +171,8 @@ print(f"標準差:   {statistics.stdev(ages):.1f}")      # 7.8
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：型別與轉換</div>
-  <div class="youtube-lite" data-id="xetiso2OCl8">
-    <img src="https://img.youtube.com/vi/xetiso2OCl8/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="KpjF0Iv5v1c">
+    <img src="https://img.youtube.com/vi/KpjF0Iv5v1c/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -257,8 +257,8 @@ if not (cfr < 0.05):
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：讀懂錯誤訊息</div>
-  <div class="youtube-lite" data-id="aZx7TFtcrvc">
-    <img src="https://img.youtube.com/vi/aZx7TFtcrvc/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="r9-VUXEMloU">
+    <img src="https://img.youtube.com/vi/r9-VUXEMloU/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -337,8 +337,8 @@ print(wings[5])  # "3B"
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：try/except</div>
-  <div class="youtube-lite" data-id="QCKTumk34fA">
-    <img src="https://img.youtube.com/vi/QCKTumk34fA/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="eyQfPTl8xsk">
+    <img src="https://img.youtube.com/vi/eyQfPTl8xsk/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -388,8 +388,8 @@ print(f"平均年齡: {sum(ages) / len(ages):.1f}")          # 平均年齡: 70.
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：字串與迴圈進階</div>
-  <div class="youtube-lite" data-id="SmKi_i3PC-U">
-    <img src="https://img.youtube.com/vi/SmKi_i3PC-U/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="ZloLMJlgxvE">
+    <img src="https://img.youtube.com/vi/ZloLMJlgxvE/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -453,8 +453,8 @@ if "deaths" not in outbreak:
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：uv 進階</div>
-  <div class="youtube-lite" data-id="cXSoTKvgtEo">
-    <img src="https://img.youtube.com/vi/cXSoTKvgtEo/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="vTOu1ydb2V4">
+    <img src="https://img.youtube.com/vi/vTOu1ydb2V4/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -522,8 +522,8 @@ uv pip list
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Jupyter 實用密技</div>
-  <div class="youtube-lite" data-id="krpakr9TtZM">
-    <img src="https://img.youtube.com/vi/krpakr9TtZM/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="XR28LubaKa8">
+    <img src="https://img.youtube.com/vi/XR28LubaKa8/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```

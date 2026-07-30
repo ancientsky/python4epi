@@ -83,7 +83,10 @@ class Ch01ConditionalsScene(EpiBaseScene):
         )
         step = self.show_step_indicator(1)
         panel = self.show_code(code, duration=duration * 0.6)
-        output = self.show_output("疫情等級：中等", duration=duration * 0.25)
+        output = self.show_output(
+            kwargs.get("output", "疫情等級：中等"),
+            duration=duration * 0.25,
+        )
         self.wait(max(0.1, duration * 0.1))
         self.play(FadeOut(panel), FadeOut(output), FadeOut(step), run_time=0.5)
 
@@ -126,7 +129,10 @@ class Ch01ConditionalsScene(EpiBaseScene):
             ),
         )
         panel = self.show_code(code, duration=duration * 0.6)
-        output = self.show_output("覆蓋率 85.0%：尚可，但仍有缺口 ⚠️", duration=duration * 0.25)
+        output = self.show_output(
+            kwargs.get("output", "覆蓋率 85.0%：尚可，但仍有缺口 ⚠️"),
+            duration=duration * 0.25,
+        )
         self.wait(max(0.1, duration * 0.1))
         self.play(FadeOut(panel), FadeOut(output), run_time=0.5)
 

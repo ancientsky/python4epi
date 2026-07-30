@@ -97,7 +97,10 @@ class Ch01ListsScene(EpiBaseScene):
         )
         step = self.show_step_indicator(2)
         panel = self.show_code(code, duration=duration * 0.55)
-        output = self.show_output("感染最嚴重的翼: 3B，病例數: 27", duration=duration * 0.3)
+        output = self.show_output(
+            kwargs.get("output", "感染最嚴重的翼: 3B，病例數: 27"),
+            duration=duration * 0.3,
+        )
         self.wait(max(0.1, duration * 0.1))
         self.play(FadeOut(panel), FadeOut(output), FadeOut(step), run_time=0.5)
 
@@ -137,7 +140,10 @@ class Ch01ListsScene(EpiBaseScene):
             ),
         )
         panel = self.show_code(code, duration=duration * 0.6)
-        output = self.show_output("疫情高峰在第 4 週，病例數 210 例", duration=duration * 0.25)
+        output = self.show_output(
+            kwargs.get("output", "疫情高峰在第 4 週，病例數 210 例"),
+            duration=duration * 0.25,
+        )
         self.wait(max(0.1, duration * 0.1))
         self.play(FadeOut(panel), FadeOut(output), run_time=0.5)
 

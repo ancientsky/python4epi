@@ -88,6 +88,28 @@ class Ch00WhyPythonScene(EpiBaseScene):
             "summary_p3": "3. 寫程式 = 寫分析紀錄，天然可重現",
             "extra_banner_title": "額外範例：COVID-19 大規模疫調",
             "extra_heading": "十萬筆資料？Python 幾秒搞定",
+            # Code panels live here rather than in the YAML script: the script's
+            # `code:` field is a short snippet quoted by the narration, while
+            # these are the fuller teaching panels the scene actually draws.
+            "power_code": (
+                "infected = 121\n"
+                "total    = 280\n"
+                "\n"
+                "attack_rate = infected / total\n"
+                "print(f'侵襲率: {attack_rate:.1%}')"
+            ),
+            "extra_code": (
+                "import pandas as pd\n"
+                "\n"
+                "# 讀取十萬筆 COVID-19 通報資料\n"
+                "df = pd.read_csv('covid_100k.csv')\n"
+                "print(f'共 {len(df):,} 筆資料')\n"
+                "\n"
+                "# 一行算出各縣市侵襲率\n"
+                "rate = df.groupby('county').apply(\n"
+                "    lambda g: g['confirmed'].sum() / g['population'].iloc[0]\n"
+                ")"
+            ),
             "blindspot_banner_title": "初學者常見盲點 3 選",
             "outro_heading": "下一集：安裝 uv 與建立開發環境",
             "outro_sub": "三分鐘搞定 Python 環境，馬上開始寫程式！",
@@ -124,6 +146,25 @@ class Ch00WhyPythonScene(EpiBaseScene):
             "summary_p3": "3. Code = your analysis record, reproducible by nature",
             "extra_banner_title": "Extra example: COVID-19 large-scale investigation",
             "extra_heading": "100k records? Python handles it in seconds",
+            "power_code": (
+                "infected = 121\n"
+                "total    = 280\n"
+                "\n"
+                "attack_rate = infected / total\n"
+                "print(f'Attack rate: {attack_rate:.1%}')"
+            ),
+            "extra_code": (
+                "import pandas as pd\n"
+                "\n"
+                "# Read 100k COVID-19 case reports\n"
+                "df = pd.read_csv('covid_100k.csv')\n"
+                "print(f'{len(df):,} records in total')\n"
+                "\n"
+                "# Every county's attack rate in one line\n"
+                "rate = df.groupby('county').apply(\n"
+                "    lambda g: g['confirmed'].sum() / g['population'].iloc[0]\n"
+                ")"
+            ),
             "blindspot_banner_title": "3 Common Beginner Blind Spots",
             "outro_heading": "Next up: install uv and set up your dev environment",
             "outro_sub": "Python environment ready in three minutes - start coding now!",
@@ -175,11 +216,7 @@ class Ch00WhyPythonScene(EpiBaseScene):
         ).to_edge(UP, buff=0.8)
 
         code_panel = CodePanel(
-            "infected = 121\n"
-            "total    = 280\n"
-            "\n"
-            "attack_rate = infected / total\n"
-            "print(f'侵襲率: {attack_rate:.1%}')",
+            self.t("power_code"),
             title="Python",
         ).move_to(ORIGIN + UP * 0.2)
 
@@ -276,18 +313,7 @@ class Ch00WhyPythonScene(EpiBaseScene):
         """Code showing pandas processing 100k records."""
         self.show_step_indicator(5, self.total_steps)
 
-        code_lines = (
-            "import pandas as pd\n"
-            "\n"
-            "# 讀取十萬筆 COVID-19 通報資料\n"
-            "df = pd.read_csv('covid_100k.csv')\n"
-            "print(f'共 {len(df):,} 筆資料')\n"
-            "\n"
-            "# 一行算出各縣市侵襲率\n"
-            "rate = df.groupby('county').apply(\n"
-            "    lambda g: g['confirmed'].sum() / g['population'].iloc[0]\n"
-            ")"
-        )
+        code_lines = self.t("extra_code")
 
         heading = Text(
             self.t("extra_heading"),

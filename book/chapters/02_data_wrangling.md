@@ -96,8 +96,8 @@ DataFrame 解剖圖：一張表格由列（row）和欄（column）組成，取�
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：DataFrame 是什麼？從 CSV 到表格的第一步</div>
-  <div class="youtube-lite" data-id="6VaRmrPorog">
-    <img src="https://img.youtube.com/vi/6VaRmrPorog/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="1VGCJopmPhU">
+    <img src="https://img.youtube.com/vi/1VGCJopmPhU/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -123,8 +123,8 @@ df.head()
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：一分鐘看懂你的資料——info() 與 describe()</div>
-  <div class="youtube-lite" data-id="0nr8EO2EYgU">
-    <img src="https://img.youtube.com/vi/0nr8EO2EYgU/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="h3Q2495gtyY">
+    <img src="https://img.youtube.com/vi/h3Q2495gtyY/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -161,8 +161,8 @@ df.describe()
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：日期時間大魔王——to_datetime 完全攻略</div>
-  <div class="youtube-lite" data-id="fjflhonc_7Y">
-    <img src="https://img.youtube.com/vi/fjflhonc_7Y/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="Bd_bY4kXgek">
+    <img src="https://img.youtube.com/vi/Bd_bY4kXgek/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -207,8 +207,8 @@ print(df["symptom_onset_date"].dt.day_name().head())  # "Thursday"
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：衍生變項四大招——cut, axis, astype, dt</div>
-  <div class="youtube-lite" data-id="nizzbpAajlw">
-    <img src="https://img.youtube.com/vi/nizzbpAajlw/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="3sUV9cjc_eY">
+    <img src="https://img.youtube.com/vi/3sUV9cjc_eY/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -301,8 +301,8 @@ df["epi_week"] = df["symptom_onset_date"].dt.isocalendar().week
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：遺漏值偵探社——NaN, NaT, None 一次搞懂</div>
-  <div class="youtube-lite" data-id="Eb4xFn8MAtI">
-    <img src="https://img.youtube.com/vi/Eb4xFn8MAtI/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="WsJIT5J-c8U">
+    <img src="https://img.youtube.com/vi/WsJIT5J-c8U/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -345,8 +345,8 @@ print("未感染者有 onset 日期的數量：",
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：分組統計秘密武器——groupby + agg 完全攻略</div>
-  <div class="youtube-lite" data-id="A08xPAxb3Fc">
-    <img src="https://img.youtube.com/vi/A08xPAxb3Fc/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="w8dV44Ir4bo">
+    <img src="https://img.youtube.com/vi/w8dV44Ir4bo/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -406,8 +406,8 @@ print(wing_stats.to_string(index=False))
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：頻率表速成——value_counts + crosstab 完全攻略</div>
-  <div class="youtube-lite" data-id="awq3VxbW9qo">
-    <img src="https://img.youtube.com/vi/awq3VxbW9qo/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="oCeidAZktJU">
+    <img src="https://img.youtube.com/vi/oCeidAZktJU/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -437,8 +437,8 @@ print(df["clinical_severity"].value_counts(normalize=True).round(3) * 100)
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Excel 樞紐分析表——pivot_table 完全攻略</div>
-  <div class="youtube-lite" data-id="eFAQ4Xz7gq8">
-    <img src="https://img.youtube.com/vi/eFAQ4Xz7gq8/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="80CBnMoZIf4">
+    <img src="https://img.youtube.com/vi/80CBnMoZIf4/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -524,8 +524,8 @@ print(df["risk_level"].value_counts())
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：一行寫完分析——Method Chaining 流水線</div>
-  <div class="youtube-lite" data-id="sSw-xiaUafM">
-    <img src="https://img.youtube.com/vi/sSw-xiaUafM/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="soJM0kdHchc">
+    <img src="https://img.youtube.com/vi/soJM0kdHchc/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -594,8 +594,8 @@ print(result)
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：合併資料表——merge 就是你的 VLOOKUP</div>
-  <div class="youtube-lite" data-id="b2W8rfIn8Ts">
-    <img src="https://img.youtube.com/vi/b2W8rfIn8Ts/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="BqtKshQy-5Y">
+    <img src="https://img.youtube.com/vi/BqtKshQy-5Y/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -634,8 +634,8 @@ print(merged)
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：文字清理三板斧——str + drop_duplicates + rename</div>
-  <div class="youtube-lite" data-id="AasXdk4-i_E">
-    <img src="https://img.youtube.com/vi/AasXdk4-i_E/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="PVnhZm5AwHg">
+    <img src="https://img.youtube.com/vi/PVnhZm5AwHg/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -742,8 +742,8 @@ plt.show()                    # 顯示圖表
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：用 matplotlib 畫出疫調等級的流行曲線</div>
-  <div class="youtube-lite" data-id="OnHzOWIP12s">
-    <img src="https://img.youtube.com/vi/OnHzOWIP12s/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="sZuXUsFRW80">
+    <img src="https://img.youtube.com/vi/sZuXUsFRW80/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -1054,8 +1054,8 @@ plt.show()
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：seaborn + plotly + 圖表輸出投稿密技</div>
-  <div class="youtube-lite" data-id="cLjVwKlXHVM">
-    <img src="https://img.youtube.com/vi/cLjVwKlXHVM/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="-OhRLppCh_c">
+    <img src="https://img.youtube.com/vi/-OhRLppCh_c/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```

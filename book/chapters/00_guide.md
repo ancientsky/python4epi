@@ -45,8 +45,8 @@
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：為什麼用 Python</div>
-  <div class="youtube-lite" data-id="eMWQ-IqYjvM">
-    <img src="https://img.youtube.com/vi/eMWQ-IqYjvM/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="Nv4j3T27oGI">
+    <img src="https://img.youtube.com/vi/Nv4j3T27oGI/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -118,8 +118,8 @@ Python 在這些**自動化、排程、系統串接**的工作上比 R 強很多
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：uv 與環境設定</div>
-  <div class="youtube-lite" data-id="AnPBQW8Vqq0">
-    <img src="https://img.youtube.com/vi/AnPBQW8Vqq0/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="aOCyRkvjsUY">
+    <img src="https://img.youtube.com/vi/aOCyRkvjsUY/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -397,8 +397,8 @@ uv add seaborn
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：第一支程式 Hello Epi</div>
-  <div class="youtube-lite" data-id="VcxttnJxwG4">
-    <img src="https://img.youtube.com/vi/VcxttnJxwG4/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="x4tNVZSAgNI">
+    <img src="https://img.youtube.com/vi/x4tNVZSAgNI/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -707,8 +707,8 @@ Markdown cell 讓你的 notebook 不只是一堆程式碼，而是一份**圖文
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Jupyter Lab 入門</div>
-  <div class="youtube-lite" data-id="iELUPwdPk7M">
-    <img src="https://img.youtube.com/vi/iELUPwdPk7M/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="xqaJBdUBd6s">
+    <img src="https://img.youtube.com/vi/xqaJBdUBd6s/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -956,8 +956,8 @@ schtasks /create /tn "Weekly_Report" /tr "cmd /c cd /d C:\path\to\your\project &
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Git 版本控制</div>
-  <div class="youtube-lite" data-id="SdtrxhPbRqk">
-    <img src="https://img.youtube.com/vi/SdtrxhPbRqk/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="kiH0W9U6bM0">
+    <img src="https://img.youtube.com/vi/kiH0W9U6bM0/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -1450,8 +1450,8 @@ uv run jupyter lab
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：課程地圖與學習策略</div>
-  <div class="youtube-lite" data-id="H3fMhNhj3u4">
-    <img src="https://img.youtube.com/vi/H3fMhNhj3u4/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="5XQwCgawhVs">
+    <img src="https://img.youtube.com/vi/5XQwCgawhVs/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```

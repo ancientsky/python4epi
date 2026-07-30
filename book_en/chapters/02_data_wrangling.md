@@ -93,6 +93,14 @@ DataFrame anatomy: a table is made of rows and columns. Take one column and you 
 ### Step 1: Read In the Line List
 
 <!-- video: ch02_01_dataframe -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: What Is a DataFrame? Your First Step from CSV to Table</div>
+  <div class="youtube-lite" data-id="OxrW1-t_QOU">
+    <img src="https://img.youtube.com/vi/OxrW1-t_QOU/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 ```python
@@ -112,6 +120,14 @@ df.head()
 ### Step 2: Inspect the Data Structure
 
 <!-- video: ch02_02_data_inspect -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: Understand Your Data in One Minute: info() and describe()</div>
+  <div class="youtube-lite" data-id="HO_zbbod7qE">
+    <img src="https://img.youtube.com/vi/HO_zbbod7qE/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 The first thing to do with new data: figure out "what it looks like."
@@ -142,6 +158,14 @@ df.describe()
 ### Step 3: Date Conversion
 
 <!-- video: ch02_03_datetime -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: The Date-Time Boss Battle: The Complete to_datetime Playbook</div>
+  <div class="youtube-lite" data-id="fAlF76BSols">
+    <img src="https://img.youtube.com/vi/fAlF76BSols/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 The line list has 5 date columns, and when read in they're all **text (object)**—Python doesn't know they're dates. You have to manually convert them to the `datetime` type before you can sort by time, subtract dates, extract months, and so on.
@@ -180,6 +204,14 @@ print(df["symptom_onset_date"].dt.day_name().head())  # "Thursday"
 ### Step 4: Build Derived Variables
 
 <!-- video: ch02_04_derived -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: Four Moves for Derived Variables: cut, axis, astype, dt</div>
+  <div class="youtube-lite" data-id="Zo7kRqi8kEE">
+    <img src="https://img.youtube.com/vi/Zo7kRqi8kEE/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 Outbreak analysis often requires **deriving new variables** from the raw data—that is, computing new columns from existing ones. The syntax is simple: `df["new_column_name"] = formula`.
@@ -266,6 +298,14 @@ df["epi_week"] = df["symptom_onset_date"].dt.isocalendar().week
 ### Step 5: Handle Missing Values
 
 <!-- video: ch02_05_missing -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: The Missing-Value Detective Agency: NaN, NaT, None Demystified</div>
+  <div class="youtube-lite" data-id="t9kQchKaRJI">
+    <img src="https://img.youtube.com/vi/t9kQchKaRJI/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 People who weren't infected won't have a `symptom_onset_date`, `hospitalization_date`, and so on—these blanks aren't data errors, they're **structural missingness**: if you never got sick, of course you have no onset date.
@@ -302,6 +342,14 @@ print("Number of non-infected people with an onset date:",
 ### Step 6: Grouped Statistics With groupby
 
 <!-- video: ch02_06_groupby -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: The Secret Weapon of Group Stats: The Complete groupby + agg Playbook</div>
+  <div class="youtube-lite" data-id="c-X55B2WeiA">
+    <img src="https://img.youtube.com/vi/c-X55B2WeiA/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 **What is `groupby`?** Imagine building a Pivot Table in Excel: first choose "which column to group by," then compute something for each group (count, sum, average, etc.). That's exactly what pandas's `groupby` does.
@@ -355,6 +403,14 @@ Once you've learned `groupby`, you can already do basic grouped statistics. But 
 #### Frequency tables: `value_counts()` — your first summary table
 
 <!-- video: ch02_09_value_counts -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: Frequency Tables, Fast: value_counts + crosstab</div>
+  <div class="youtube-lite" data-id="0BVll7KCAjc">
+    <img src="https://img.youtube.com/vi/0BVll7KCAjc/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 The first step in an outbreak investigation is usually to look at the frequency distribution of each column. `value_counts()` is the `COUNTIF` of Excel.
@@ -378,6 +434,14 @@ print(df["clinical_severity"].value_counts(normalize=True).round(3) * 100)
 #### Pivot tables: `pivot_table()` — Excel's favorite feature
 
 <!-- video: ch02_10_pivot_table -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: Excel Pivot Tables: The Complete pivot_table Guide</div>
+  <div class="youtube-lite" data-id="h9ug-ryp4ak">
+    <img src="https://img.youtube.com/vi/h9ug-ryp4ak/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 If you often use Pivot Tables in Excel, `pd.pivot_table()` is the Python version.
@@ -457,6 +521,14 @@ print(df["risk_level"].value_counts())
 #### Method Chaining — modern pandas style
 
 <!-- video: ch02_11_method_chaining -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: Write Your Analysis in One Line: Method Chaining Pipelines</div>
+  <div class="youtube-lite" data-id="SPRAJdsijCE">
+    <img src="https://img.youtube.com/vi/SPRAJdsijCE/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 The traditional style breaks each step apart, producing many temporary variables along the way. **Method chaining** links multiple operations into a single pipeline, which is more readable:
@@ -519,6 +591,14 @@ print(result)
 #### Joining tables: `merge()` — the most common need in outbreak work
 
 <!-- video: ch02_12_merge -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: Joining Data Tables: merge Is Your VLOOKUP</div>
+  <div class="youtube-lite" data-id="64OsjfHGn2I">
+    <img src="https://img.youtube.com/vi/64OsjfHGn2I/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 In real outbreak work, the line list, lab results, and environmental-sample data often live in different files. `merge()` is Excel's `VLOOKUP`, but more powerful.
@@ -551,6 +631,14 @@ print(merged)
 #### Text cleaning: the `.str` accessor
 
 <!-- video: ch02_13_str_cleanup -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: Three Moves for Text Cleanup: str + drop_duplicates + rename</div>
+  <div class="youtube-lite" data-id="uvovtzSiIME">
+    <img src="https://img.youtube.com/vi/uvovtzSiIME/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 ```python
@@ -651,6 +739,14 @@ plt.show()                    # display the chart
 ### Step 7: Epidemic Curve (matplotlib)
 
 <!-- video: ch02_07_epicurve -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: Draw an Investigation-Grade Epidemic Curve with matplotlib</div>
+  <div class="youtube-lite" data-id="-Ko9PlfUrsY">
+    <img src="https://img.youtube.com/vi/-Ko9PlfUrsY/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 The epidemic curve is the most iconic chart in epidemiology—the X-axis is the date of symptom onset and the Y-axis is the number of new cases. The shape of the curve lets you infer the mode of transmission.
@@ -955,6 +1051,14 @@ The unit-chart epidemic curve is especially suited to **small clusters** (a few 
 ### Step 8: Age Distribution (seaborn)
 
 <!-- video: ch02_08_seaborn_plotly -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: seaborn + plotly + Figure Export: Submission Secrets</div>
+  <div class="youtube-lite" data-id="8zubGuWOpW4">
+    <img src="https://img.youtube.com/vi/8zubGuWOpW4/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 With seaborn you can draw an attractive statistical chart in one line, without setting every element manually the way you do in matplotlib.

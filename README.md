@@ -167,6 +167,7 @@ uv run jupyter-book build book_en/            # English instructor (with solutio
 ```bash
 uv run pytest                                            # unit + notebook smoke tests
 uv run ruff check videos/ --select F821,E9               # undefined names in Manim scenes
+uv run python videos/check_video_i18n.py                  # no Chinese leaks into the English videos
 uv run python videos/sync_video_embeds.py --validate     # youtube_ids.yaml is usable
 uv run python videos/sync_video_embeds.py --check        # ...and chapters are in sync
 ```
