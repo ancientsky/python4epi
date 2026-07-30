@@ -57,6 +57,34 @@ class Ch00HelloEpiScene(EpiBaseScene):
             "summary_p3": "3. 用 pandas 讀取 CSV 資料",
             "summary_p4": "4. 計算侵襲率與致死率",
             "extra_banner_title": "額外範例：用同樣流程分析腸病毒資料",
+            # Code panels are bilingual here rather than YAML-driven: the
+            # script's `code:` field is the short snippet the narration quotes,
+            # not the fuller panel drawn on screen.
+            "clone_code": (
+                "# 1. 複製教材到本機\n"
+                "git clone https://github.com/your-org/python4epi.git\n"
+                "\n"
+                "# 2. 進入專案資料夾\n"
+                "cd python4epi\n"
+                "\n"
+                "# 3. 安裝所有相依套件\n"
+                "uv sync"
+            ),
+            "analysis_code": (
+                "import pandas as pd\n"
+                "\n"
+                "df = pd.read_csv('data/synthetic/legionella_outbreak.csv')\n"
+                "\n"
+                "total = len(df)\n"
+                "infected = df['case_classification'].eq('confirmed').sum()\n"
+                "deaths = df['outcome'].eq('dead').sum()\n"
+                "\n"
+                "attack_rate = infected / total * 100\n"
+                "cfr = deaths / infected * 100\n"
+                "\n"
+                "print(f'侵襲率: {attack_rate:.1f}%')\n"
+                "print(f'致死率: {cfr:.1f}%')"
+            ),
             "extra_output": "侵襲率: 28.3%",
             "blindspot_banner_title": "初學者常見地雷 3 選 1",
             "outro_heading": "下一集：Git 基礎版本控制",
@@ -76,6 +104,31 @@ class Ch00HelloEpiScene(EpiBaseScene):
             "summary_p3": "3. Read the CSV data with pandas",
             "summary_p4": "4. Computed the attack rate and CFR",
             "extra_banner_title": "Extra example: analyze enterovirus data with the same workflow",
+            "clone_code": (
+                "# 1. Copy the materials to your machine\n"
+                "git clone https://github.com/your-org/python4epi.git\n"
+                "\n"
+                "# 2. Enter the project folder\n"
+                "cd python4epi\n"
+                "\n"
+                "# 3. Install every dependency\n"
+                "uv sync"
+            ),
+            "analysis_code": (
+                "import pandas as pd\n"
+                "\n"
+                "df = pd.read_csv('data/synthetic/legionella_outbreak.csv')\n"
+                "\n"
+                "total = len(df)\n"
+                "infected = df['case_classification'].eq('confirmed').sum()\n"
+                "deaths = df['outcome'].eq('dead').sum()\n"
+                "\n"
+                "attack_rate = infected / total * 100\n"
+                "cfr = deaths / infected * 100\n"
+                "\n"
+                "print(f'Attack rate: {attack_rate:.1f}%')\n"
+                "print(f'CFR: {cfr:.1f}%')"
+            ),
             "extra_output": "Attack rate: 28.3%",
             "blindspot_banner_title": "3 Common Beginner Traps",
             "outro_heading": "Next up: Git version control basics",
@@ -102,16 +155,7 @@ class Ch00HelloEpiScene(EpiBaseScene):
         """Show terminal commands for cloning the repo and installing deps."""
         self.show_step_indicator(1, self.total_steps)
 
-        code_lines = (
-            "# 1. 複製教材到本機\n"
-            "git clone https://github.com/your-org/python4epi.git\n"
-            "\n"
-            "# 2. 進入專案資料夾\n"
-            "cd python4epi\n"
-            "\n"
-            "# 3. 安裝所有相依套件\n"
-            "uv sync"
-        )
+        code_lines = self.t("clone_code")
 
         code_panel = CodePanel(
             code_lines,
@@ -171,21 +215,7 @@ class Ch00HelloEpiScene(EpiBaseScene):
         """Show the core analysis code reading CSV and computing metrics."""
         self.show_step_indicator(3, self.total_steps)
 
-        code_lines = (
-            "import pandas as pd\n"
-            "\n"
-            "df = pd.read_csv('data/synthetic/legionella_outbreak.csv')\n"
-            "\n"
-            "total = len(df)\n"
-            "infected = df['case_classification'].eq('confirmed').sum()\n"
-            "deaths = df['outcome'].eq('dead').sum()\n"
-            "\n"
-            "attack_rate = infected / total * 100\n"
-            "cfr = deaths / infected * 100\n"
-            "\n"
-            "print(f'侵襲率: {attack_rate:.1f}%')\n"
-            "print(f'致死率: {cfr:.1f}%')"
-        )
+        code_lines = self.t("analysis_code")
 
         code_panel = CodePanel(
             code_lines,

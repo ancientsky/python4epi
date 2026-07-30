@@ -115,6 +115,31 @@ Every concept has a Chinese script (`name.yaml`) and an English one
 worth passing explicitly. Output lands in `videos/output/final/<stem>.mp4`
 (English gets the `_en` suffix).
 
+### On-Screen Text Must Be Bilingual — Never a Bare Literal
+
+One scene renders both languages, so every string that reaches the frame has to
+come from either the scene's `TEXT` table (`self.t("key")`) or the script YAML
+(`kwargs.get("key", <zh default>)`). A literal written straight into an
+animation method renders in Chinese in the English video as well.
+
+Which of the two depends on where the real content lives:
+
+- **YAML** when the panel mirrors the segment's `code:` / `output:` — keeping
+  them in step means the panel matches what the narration reads out.
+- **`TEXT`** when the scene draws a fuller teaching panel than the snippet the
+  script quotes. Overwriting that from YAML would shrink the Chinese video.
+
+Check before shipping (CI runs this too):
+
+```bash
+uv run python videos/check_video_i18n.py
+```
+
+It simulates the English build for every `*_en.yaml`, walking each segment's
+animation method, and fails on Chinese that would survive. `ALLOWED` in that file
+exempts cases where the Chinese *is* the subject matter (ch08_07 teaches
+normalising 台北市 → 臺北市).
+
 ### Publishing Links to the Site — Never Hand-Edit Chapter Embeds
 
 `videos/youtube_ids.yaml` is the single source of truth for every video link on

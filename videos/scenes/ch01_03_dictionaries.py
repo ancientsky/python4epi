@@ -49,6 +49,18 @@ class Ch01DictionariesScene(EpiBaseScene):
             "summary_p3": "3. 用 dict['key'] 存取，方括號不能換成圓括號",
             "summary_p4": "4. 一個字典 = 一筆資料卡，適合儲存個案資料",
             "extra_banner_title": "額外範例：腸病毒個案資料卡",
+            # Bilingual here rather than YAML-driven: the script's `code:` field
+            # is the short snippet the narration quotes, not this fuller panel.
+            "create_code": (
+                "# 把一位個案的資料打包成字典\n"
+                "case_001 = {\n"
+                "    'case_id':   'C001',\n"
+                "    'age':       82,\n"
+                "    'floor':     3,\n"
+                "    'infected':  True,\n"
+                "    'outcome':   'survived',\n"
+                "}"
+            ),
             "blindspot_banner_title": "初學者常見地雷 3 選 1",
             "outro_heading": "下一集：用串列儲存多位個案",
             "outro_sub": "把字典放進串列，就是迷你資料庫！",
@@ -64,6 +76,16 @@ class Ch01DictionariesScene(EpiBaseScene):
             "summary_p3": "3. Access with dict['key']; square brackets, not parentheses",
             "summary_p4": "4. One dict = one data card, great for storing a case",
             "extra_banner_title": "Extra example: enterovirus case card",
+            "create_code": (
+                "# Pack one case's data into a dictionary\n"
+                "case_001 = {\n"
+                "    'case_id':   'C001',\n"
+                "    'age':       82,\n"
+                "    'floor':     3,\n"
+                "    'infected':  True,\n"
+                "    'outcome':   'survived',\n"
+                "}"
+            ),
             "blindspot_banner_title": "3 Common Beginner Traps",
             "outro_heading": "Next up: store many cases with lists",
             "outro_sub": "Put dicts in a list and you've got a mini database!",
@@ -92,16 +114,7 @@ class Ch01DictionariesScene(EpiBaseScene):
             color=TEXT_PRIMARY,
         ).to_edge(UP, buff=0.8)
 
-        code_lines = (
-            "# 把一位個案的資料打包成字典\n"
-            "case_001 = {\n"
-            "    'case_id':   'C001',\n"
-            "    'age':       82,\n"
-            "    'floor':     3,\n"
-            "    'infected':  True,\n"
-            "    'outcome':   'survived',\n"
-            "}"
-        )
+        code_lines = self.t("create_code")
 
         code_panel = CodePanel(
             code_lines,

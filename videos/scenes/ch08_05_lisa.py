@@ -54,6 +54,7 @@ class Ch08LisaScene(EpiBaseScene):
             "q_ll_label": "淨土：自己低、鄰居低",
             "q_hl_label": "火苗：自己高、鄰居低",
             "q_encoding_heading": ".q 編碼對照表（別憑直覺！）",
+            "code_lisa_heading": "Moran_Local + .q 對照表",
             "q_row_1": "1  →  HH（震央）",
             "q_row_2": "2  →  LH（颱風眼）  ⚠ 不是 3！",
             "q_row_3": "3  →  LL（淨土）",
@@ -94,6 +95,7 @@ class Ch08LisaScene(EpiBaseScene):
             "q_ll_label": "Safe zone: self low, neighbors low",
             "q_hl_label": "Spark: self high, neighbors low",
             "q_encoding_heading": ".q code table (don't guess!)",
+            "code_lisa_heading": "Moran_Local + the .q code table",
             "q_row_1": "1  →  HH (epicenter)",
             "q_row_2": "2  →  LH (storm eye)  ⚠ not 3!",
             "q_row_3": "3  →  LL (safe zone)",
@@ -213,7 +215,7 @@ class Ch08LisaScene(EpiBaseScene):
 
     def show_code_lisa(self, duration: float = 11.0, **kwargs) -> None:
         self.show_step_indicator(4, self.total_steps)
-        self._code_block("Moran_Local + .q 對照表", kwargs.get("code", ""), duration)
+        self._code_block(self.t("code_lisa_heading"), kwargs.get("code", ""), duration)
 
     def show_reading_result(self, duration: float = 8.0, **kwargs) -> None:
         self.show_step_indicator(5, self.total_steps)

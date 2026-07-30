@@ -102,7 +102,7 @@ class Ch01FunctionsScene(EpiBaseScene):
         step = self.show_step_indicator(2)
         panel = self.show_code(code, duration=duration * 0.55)
         output = self.show_output(
-            "護理之家侵襲率: 43.2%\n員工侵襲率: 17.8%",
+            kwargs.get("output", "護理之家侵襲率: 43.2%\n員工侵襲率: 17.8%"),
             duration=duration * 0.3,
         )
         self.wait(max(0.1, duration * 0.1))
@@ -149,7 +149,10 @@ class Ch01FunctionsScene(EpiBaseScene):
             ),
         )
         panel = self.show_code(code, duration=duration * 0.65)
-        output = self.show_output("台灣結核病發生率：30.4 / 10 萬人", duration=duration * 0.2)
+        output = self.show_output(
+            kwargs.get("output", "台灣結核病發生率：30.4 / 10 萬人"),
+            duration=duration * 0.2,
+        )
         self.wait(max(0.1, duration * 0.1))
         self.play(FadeOut(panel), FadeOut(output), run_time=0.5)
 
