@@ -28,33 +28,33 @@ videos:
   ch00_01_why_python:
     title_zh: "為什麼用 Python"
     title_en: "Why Python: The Epidemiologist's Superpower"
-    zh: "eMWQ-IqYjvM"
-    en: ""
+    zh: "https://youtu.be/Nv4j3T27oGI"
+    en: "https://youtu.be/rVLTIbXTQOI"
   ch00_02_uv_setup:
     title_zh: "uv 與環境設定"
     title_en: "uv & Environment Setup: One Line to Master Python Packages"
-    zh: "AnPBQW8Vqq0"
-    en: ""
+    zh: "https://youtu.be/aOCyRkvjsUY"
+    en: "https://youtu.be/NM3aGh-TpY0"
   ch00_03_jupyter:
     title_zh: "Jupyter Lab 入門"
     title_en: "Getting Started with Jupyter Lab: Write and See Results Live"
-    zh: "iELUPwdPk7M"
-    en: ""
+    zh: "https://youtu.be/xqaJBdUBd6s"
+    en: "https://youtu.be/GZjM44USJrU"
   ch00_04_hello_epi:
     title_zh: "第一支程式 Hello Epi"
     title_en: "Your First Program, Hello Epi: Run Your First Epi Analysis in Ten Minutes"
-    zh: "VcxttnJxwG4"
-    en: ""
+    zh: "https://youtu.be/x4tNVZSAgNI"
+    en: "https://youtu.be/0SBfu6wWl0k"
   ch00_05_git_basics:
     title_zh: "Git 版本控制"
     title_en: "Git Version Control: A Time Machine for Your Code"
-    zh: "SdtrxhPbRqk"
-    en: ""
+    zh: "https://youtu.be/kiH0W9U6bM0"
+    en: "https://youtu.be/riK6Tbq4rfI"
   ch00_06_roadmap:
     title_zh: "課程地圖與學習策略"
     title_en: "Course Roadmap: An 18-Chapter Learning Guide"
-    zh: "H3fMhNhj3u4"
-    en: ""
+    zh: "https://youtu.be/5XQwCgawhVs"
+    en: "https://youtu.be/sv6KEM7_ocY"
 
   # --- 第 01 章 Python 基礎 (6 部影片；中文已上傳 6/6) ---
   ch01_01_variables:
