@@ -92,43 +92,43 @@ videos:
   ch01b_01_indentation:
     title_zh: "縮排"
     title_en: "Indentation: Python's Must-Follow Rule"
-    zh: "lQPKMgHv1UQ"
-    en: ""
+    zh: "https://youtu.be/BqPzzF4s8WA"
+    en: "https://youtu.be/jOiqKrkqClg"
   ch01b_02_imports:
     title_zh: "import"
     title_en: "import: Borrow Other People's Tools"
-    zh: "srlzHIPR3nk"
-    en: ""
+    zh: "https://youtu.be/QF-bETQmbSE"
+    en: "https://youtu.be/vu8D3_MhAog"
   ch01b_03_types:
     title_zh: "型別與轉換"
     title_en: "Types and Conversion: Numbers, Text, Booleans"
-    zh: "xetiso2OCl8"
-    en: ""
+    zh: "https://youtu.be/KpjF0Iv5v1c"
+    en: "https://youtu.be/KZTWa4BHCfY"
   ch01b_04_errors:
     title_zh: "讀懂錯誤訊息"
     title_en: "Reading Error Messages: Traceback Is Not Hieroglyphics"
-    zh: "aZx7TFtcrvc"
-    en: ""
+    zh: "https://youtu.be/r9-VUXEMloU"
+    en: "https://youtu.be/00CEZEeFXMw"
   ch01b_05_try_except:
     title_zh: "try/except"
     title_en: "try/except: Handle Surprises Gracefully"
-    zh: "QCKTumk34fA"
-    en: ""
+    zh: "https://youtu.be/eyQfPTl8xsk"
+    en: "https://youtu.be/Gv_Ct86O8XM"
   ch01b_06_strings_loops:
     title_zh: "字串與迴圈進階"
     title_en: "Strings and Advanced Loops: The Swiss Army Knife for Cleaning Outbreak Data"
-    zh: "SmKi_i3PC-U"
-    en: ""
+    zh: "https://youtu.be/ZloLMJlgxvE"
+    en: "https://youtu.be/ydQ-lOlN5Ec"
   ch01b_07_uv_advanced:
     title_zh: "uv 進階"
     title_en: "Advanced uv: Manage Python Versions and Packages"
-    zh: "cXSoTKvgtEo"
-    en: ""
+    zh: "https://youtu.be/vTOu1ydb2V4"
+    en: "https://youtu.be/l-WcIwSMv5s"
   ch01b_08_jupyter_tips:
     title_zh: "Jupyter 實用密技"
     title_en: "Practical Jupyter Tips: Double Your Efficiency"
     zh: "krpakr9TtZM"
-    en: ""
+    en: "https://youtu.be/L9nzl_m2pnE"
 
   # --- 第 02 章 資料處理與視覺化 (13 部影片；中文已上傳 13/13) ---
   ch02_01_dataframe:
