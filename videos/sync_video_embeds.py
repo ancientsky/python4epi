@@ -18,10 +18,14 @@ and safe to re-run: fill in an ID, run it again, and that card appears. A video
 whose ID is still blank renders nothing at all -- the markers stay behind as an
 invisible placeholder, so no dead thumbnail is ever published.
 
+The deploy workflow runs this script before building, so the published site
+always matches the registry even when the checked-in markdown lags behind it.
+
 Usage::
 
-    uv run python videos/sync_video_embeds.py            # rewrite in place
-    uv run python videos/sync_video_embeds.py --check    # CI: fail if stale
+    uv run python videos/sync_video_embeds.py             # rewrite in place
+    uv run python videos/sync_video_embeds.py --validate  # CI: registry sanity
+    uv run python videos/sync_video_embeds.py --check     # local: fail if stale
 """
 
 from __future__ import annotations
@@ -212,42 +216,73 @@ def build_index(videos: dict[str, dict[str, str]]) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument(
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument(
         "--check",
         action="store_true",
         help="Do not write; exit non-zero if any file is out of date.",
     )
+    mode.add_argument(
+        "--validate",
+        action="store_true",
+        help=(
+            "Do not write; fail only on a broken registry (unknown marker key, "
+            "unparseable YouTube ID). Staleness is reported but tolerated, "
+            "because the deploy regenerates the embeds anyway."
+        ),
+    )
     args = parser.parse_args()
+    dry_run = args.check or args.validate
 
     registry = yaml.safe_load(REGISTRY.read_text(encoding="utf-8"))
     videos: dict[str, dict[str, str]] = registry["videos"]
 
     stale: list[str] = []
     totals: dict[str, tuple[int, int]] = {}
+    pending: list[tuple[pathlib.Path, str]] = []
 
-    for lang, cfg in LANGS.items():
-        found = shown = 0
-        for chapter, basename in CHAPTER_MD.items():
-            path = ROOT / cfg["tree"] / "chapters" / f"{basename}.md"
-            if not path.exists():
-                continue
-            new_text, f_n, s_n = sync_chapter(path, videos, lang)
-            found += f_n
-            shown += s_n
-            if new_text != path.read_text(encoding="utf-8"):
-                stale.append(str(path.relative_to(ROOT)))
-                if not args.check:
-                    path.write_text(new_text, encoding="utf-8")
-        totals[lang] = (shown, found)
+    # Render everything before writing anything. A mistyped link in the registry
+    # then stops the run with one readable line -- rather than a traceback raised
+    # halfway through, with some chapters already rewritten and others not.
+    try:
+        for lang, cfg in LANGS.items():
+            found = shown = 0
+            for chapter, basename in CHAPTER_MD.items():
+                path = ROOT / cfg["tree"] / "chapters" / f"{basename}.md"
+                if not path.exists():
+                    continue
+                new_text, f_n, s_n = sync_chapter(path, videos, lang)
+                found += f_n
+                shown += s_n
+                if new_text != path.read_text(encoding="utf-8"):
+                    stale.append(str(path.relative_to(ROOT)))
+                    pending.append((path, new_text))
+            totals[lang] = (shown, found)
+    except (KeyError, ValueError) as exc:
+        detail = exc.args[0] if exc.args else exc
+        sys.exit(f"登錄表有誤 / registry error: {detail}")
 
     index_text = build_index(videos)
     if not INDEX_MD.exists() or INDEX_MD.read_text(encoding="utf-8") != index_text:
         stale.append(str(INDEX_MD.relative_to(ROOT)))
-        if not args.check:
-            INDEX_MD.write_text(index_text, encoding="utf-8")
+        pending.append((INDEX_MD, index_text))
+
+    if not dry_run:
+        for path, text in pending:
+            path.write_text(text, encoding="utf-8")
 
     for lang, (shown, found) in totals.items():
         print(f"  {lang}: {shown}/{found} 個影片位有連結，已產生卡片")
+
+    if args.validate:
+        # Getting this far means every marker resolved and every ID parsed.
+        # Staleness is informational only: deploy-pages re-renders the embeds
+        # from the registry, so a committed snapshot lagging behind is expected
+        # whenever a link is added straight from the GitHub web UI.
+        print("\n登錄表格式正確，所有影片位都對得上。")
+        if stale:
+            print(f"（{len(stale)} 個產生檔與登錄表不同步，部署時會重新產生。）")
+        return
 
     if args.check:
         if stale:

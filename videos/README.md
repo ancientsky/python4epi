@@ -149,14 +149,27 @@ entry. Both of these work:
     zh: "dQw4w9WgXcQ"
 ```
 
-**Editing on github.com is enough.** Committing a change to
-`videos/youtube_ids.yaml` on `main` fires the *Sync video links* workflow, which
-regenerates the embeds, commits them, and dispatches the Pages deploy. Nothing
-has to be run locally. (The deploy needs an explicit dispatch because a push made
-with `GITHUB_TOKEN` deliberately does not trigger other workflows;
-`workflow_dispatch` is one of the two events exempt from that rule.)
+**Editing on github.com is enough — and nothing else has to happen.** The cards
+are rendered from the registry *by the deploy itself*: `deploy-pages` runs
+`sync_video_embeds.py` before building, so committing a link to
+`videos/youtube_ids.yaml` on `main` triggers that deploy and the card is live a
+few minutes later. Two smaller things run alongside it:
 
-Working from a checkout instead:
+| Workflow | On a registry commit | Why |
+|----------|----------------------|-----|
+| `deploy-pages` | renders the cards, then builds and publishes | the actual update |
+| `Check video links` | validates the registry in ~30 s | catches a mistyped link long before the build finishes |
+
+There is deliberately **no bot commit** in this path. An earlier version of the
+sync workflow pushed the regenerated embeds back to `main` and was rejected by
+the branch ruleset (`GH013 … changes must be made through a pull request`).
+Rendering at build time sidesteps that entirely: no write to `main` is needed,
+so no bypass has to be granted to `github-actions[bot]`.
+
+The flip side is that the embeds committed in the chapter markdown are a
+**snapshot**, not the truth — they lag behind any link added from the web UI
+until someone runs the sync in a checkout. The published site is never affected.
+To refresh the snapshot (and `VIDEO_INDEX.md`) locally:
 
 ```bash
 # regenerate the embeds in book/ and book_en/, plus VIDEO_INDEX.md
@@ -172,15 +185,20 @@ the card appears on the next build.
 chapter-by-chapter cross-reference of Chinese and English links with upload
 progress. Never edit it by hand.
 
-CI guards against drift on pull requests:
+Two dry-run modes:
 
 ```bash
-uv run python videos/sync_video_embeds.py --check   # non-zero exit if stale
+uv run python videos/sync_video_embeds.py --validate  # CI: registry is usable
+uv run python videos/sync_video_embeds.py --check     # local: also fail if stale
 ```
 
-That check is scoped to PRs on purpose. On `main` a registry edit is briefly out
-of sync until the sync workflow commits the regenerated embeds a few seconds
-later, so failing the push would only flag a state that repairs itself.
+`--validate` is what CI runs. It fails only on a registry the build could not
+use — a marker key with no entry, or a link no YouTube ID can be read out of —
+and merely *reports* staleness, because the deploy regenerates the embeds anyway.
+`--check` is the stricter local version that also fails on a stale snapshot; CI
+can't use it, since the snapshot on `main` is expected to lag and every unrelated
+PR would fail. Both leave the working tree untouched, and a bad link aborts the
+run before anything is written.
 
 ## Adding Videos for New Chapters
 

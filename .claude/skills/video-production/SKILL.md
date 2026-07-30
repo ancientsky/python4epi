@@ -129,15 +129,23 @@ the site. The chapter markdown only carries invisible markers:
 `videos/sync_video_embeds.py` regenerates everything between those markers in
 **both** `book/` (from the `zh:` field) and `book_en/` (from `en:`), and rewrites
 `videos/VIDEO_INDEX.md`. Editing a card by hand is pointless — the next sync
-overwrites it, and CI (`--check`) fails the build for drifting.
+overwrites it.
 
 To publish a link: paste the URL or bare ID into the registry entry whose key
-matches the built mp4 stem, then run the sync. A blank ID renders no card at
-all, so unreleased videos never leave a dead thumbnail on the page.
+matches the built mp4 stem. A blank ID renders no card at all, so unreleased
+videos never leave a dead thumbnail on the page.
+
+**The deploy renders the cards, so the registry is the only file that has to
+change.** `pages.yml` runs the sync before building, which is why a link pasted
+on github.com goes live with no bot commit — `main`'s ruleset rejects those
+(`GH013 … changes must be made through a pull request`). Consequence worth
+remembering: the embeds committed in the chapters are a *snapshot* and are
+allowed to be stale, so CI validates rather than diffs.
 
 ```bash
-uv run python videos/sync_video_embeds.py          # rewrite embeds + index
-uv run python videos/sync_video_embeds.py --check  # CI guard, non-zero if stale
+uv run python videos/sync_video_embeds.py             # rewrite embeds + index
+uv run python videos/sync_video_embeds.py --validate  # CI guard: registry usable
+uv run python videos/sync_video_embeds.py --check     # local: also fail if stale
 ```
 
 Adding a video for a chapter also means adding its marker pair to the chapter in
