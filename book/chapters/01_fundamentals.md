@@ -75,8 +75,8 @@ cfr = 19 / 121
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：數值變數</div>
-  <div class="youtube-lite" data-id="RhqNl3LzjmU">
-    <img src="https://img.youtube.com/vi/RhqNl3LzjmU/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="JTt_aW9q0rU">
+    <img src="https://img.youtube.com/vi/JTt_aW9q0rU/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -99,8 +99,8 @@ deaths = 19                 # 死亡人數
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：計算指標</div>
-  <div class="youtube-lite" data-id="ZqqZmuVjoN0">
-    <img src="https://img.youtube.com/vi/ZqqZmuVjoN0/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="cniTIEPpaL4">
+    <img src="https://img.youtube.com/vi/cniTIEPpaL4/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -134,8 +134,8 @@ print(f"住院率: {hosp_rate:.2%}")
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：字典</div>
-  <div class="youtube-lite" data-id="4iriq9cNG-A">
-    <img src="https://img.youtube.com/vi/4iriq9cNG-A/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="vleHeKRvUQk">
+    <img src="https://img.youtube.com/vi/vleHeKRvUQk/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -163,8 +163,8 @@ print(f"{outbreak['facility']} CFR: {cfr:.2%}")
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：列表</div>
-  <div class="youtube-lite" data-id="bwRKaJYyGCU">
-    <img src="https://img.youtube.com/vi/bwRKaJYyGCU/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="bi_lhHO_WJY">
+    <img src="https://img.youtube.com/vi/bi_lhHO_WJY/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -195,8 +195,8 @@ print(f"感染人數最多的翼區：{floor_wing_names[max_index]}（{max_cases
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：條件判斷</div>
-  <div class="youtube-lite" data-id="8q6imxzb9mM">
-    <img src="https://img.youtube.com/vi/8q6imxzb9mM/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="MAJaBGclgOM">
+    <img src="https://img.youtube.com/vi/MAJaBGclgOM/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```
@@ -226,8 +226,8 @@ else:
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：函式</div>
-  <div class="youtube-lite" data-id="CGux0-2swi8">
-    <img src="https://img.youtube.com/vi/CGux0-2swi8/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="dksTij3vniQ">
+    <img src="https://img.youtube.com/vi/dksTij3vniQ/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```

@@ -42,6 +42,14 @@ Watching the video before reading the text works even better!
 ## Why not just use Excel / Google Sheets?
 
 <!-- video: ch00_01_why_python -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: Why Python: The Epidemiologist's Superpower</div>
+  <div class="youtube-lite" data-id="rVLTIbXTQOI">
+    <img src="https://img.youtube.com/vi/rVLTIbXTQOI/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 You might think: "I've used Excel for years—why should I learn a new tool?"
@@ -107,6 +115,14 @@ If you'll be working with data engineers or software developers in the future (f
 ## Why use `uv` instead of the traditional `pip`?
 
 <!-- video: ch00_02_uv_setup -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: uv & Environment Setup: One Line to Master Python Packages</div>
+  <div class="youtube-lite" data-id="NM3aGh-TpY0">
+    <img src="https://img.youtube.com/vi/NM3aGh-TpY0/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 If you Google "install Python packages," almost every tutorial will teach you to use `pip install`. So why do we use the newer tool `uv`?
@@ -378,6 +394,14 @@ We recommend Method A (installing from the terminal). Method B is convenient, bu
 ## Hands-on tutorial: an epidemiology Hello World from scratch
 
 <!-- video: ch00_04_hello_epi -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: Your First Program, Hello Epi: Run Your First Epi Analysis in Ten Minutes</div>
+  <div class="youtube-lite" data-id="0SBfu6wWl0k">
+    <img src="https://img.youtube.com/vi/0SBfu6wWl0k/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 Just reading commands can still feel abstract. Let's start from a computer with nothing installed and, step by step, build an epidemiologist's first "Hello World"—not printing a line of text, but **reading a line list from a nursing home cluster, calculating the attack rate and case fatality rate, and drawing an epidemic curve**.
@@ -680,6 +704,14 @@ Every chapter in this book uses pandas. If you hit a performance bottleneck in f
 ## Why recommend Jupyter Lab? Can't I just write `.py`?
 
 <!-- video: ch00_03_jupyter -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: Getting Started with Jupyter Lab: Write and See Results Live</div>
+  <div class="youtube-lite" data-id="GZjM44USJrU">
+    <img src="https://img.youtube.com/vi/GZjM44USJrU/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 You might think: "Isn't a program just a text file? Why use Jupyter Lab, this thing that looks like a web page?"
@@ -921,6 +953,14 @@ Advanced: for a better development experience
 ## What is Git? Why do epidemiologists need it?
 
 <!-- video: ch00_05_git_basics -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: Git Version Control: A Time Machine for Your Code</div>
+  <div class="youtube-lite" data-id="riK6Tbq4rfI">
+    <img src="https://img.youtube.com/vi/riK6Tbq4rfI/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 ### First, a scenario
@@ -1409,6 +1449,14 @@ This is one of epidemiology's most central charts: the **epidemic curve**. It te
 ## This book's learning roadmap
 
 <!-- video: ch00_06_roadmap -->
+```{raw} html
+<div class="video-card">
+  <div class="video-title">Tutorial video: Course Roadmap: An 18-Chapter Learning Guide</div>
+  <div class="youtube-lite" data-id="sv6KEM7_ocY">
+    <img src="https://img.youtube.com/vi/sv6KEM7_ocY/hqdefault.jpg" loading="lazy" alt="Tutorial video">
+  </div>
+</div>
+```
 <!-- /video -->
 
 You don't need to learn all the chapters in one go. This book uses the **Pine and Cypress nursing home Legionnaires' disease cluster** as the thread running through the whole book, with each chapter taking you one layer deeper into the analysis—just like a real investigation, gradually uncovering the truth.

@@ -14,44 +14,44 @@ uv run python videos/sync_video_embeds.py
 | 語言 | 已上傳 | 總數 | 進度 |
 |------|-------:|-----:|------|
 | 中文 | 72 | 122 | 59% |
-| English | 0 | 122 | 0% |
+| English | 20 | 122 | 16% |
 
 圖例：✅ 已上線　⬜ 尚未上傳（網站上不會顯示該卡片）
 
-## 第 00 章 · `00_guide.md`　（中 6/6　英 0/6）
+## 第 00 章 · `00_guide.md`　（中 6/6　英 6/6）
 
 | # | 影片 key（= mp4 檔名） | 標題 | 中文 | English |
 |---|------------------------|------|------|---------|
-| 1 | `ch00_01_why_python` | 為什麼用 Python | ✅ [eMWQ-IqYjvM](https://youtu.be/eMWQ-IqYjvM) | ⬜ |
-| 2 | `ch00_02_uv_setup` | uv 與環境設定 | ✅ [AnPBQW8Vqq0](https://youtu.be/AnPBQW8Vqq0) | ⬜ |
-| 3 | `ch00_03_jupyter` | Jupyter Lab 入門 | ✅ [iELUPwdPk7M](https://youtu.be/iELUPwdPk7M) | ⬜ |
-| 4 | `ch00_04_hello_epi` | 第一支程式 Hello Epi | ✅ [VcxttnJxwG4](https://youtu.be/VcxttnJxwG4) | ⬜ |
-| 5 | `ch00_05_git_basics` | Git 版本控制 | ✅ [SdtrxhPbRqk](https://youtu.be/SdtrxhPbRqk) | ⬜ |
-| 6 | `ch00_06_roadmap` | 課程地圖與學習策略 | ✅ [H3fMhNhj3u4](https://youtu.be/H3fMhNhj3u4) | ⬜ |
+| 1 | `ch00_01_why_python` | 為什麼用 Python | ✅ [https://youtu.be/Nv4j3T27oGI](https://youtu.be/https://youtu.be/Nv4j3T27oGI) | ✅ [https://youtu.be/rVLTIbXTQOI](https://youtu.be/https://youtu.be/rVLTIbXTQOI) |
+| 2 | `ch00_02_uv_setup` | uv 與環境設定 | ✅ [https://youtu.be/aOCyRkvjsUY](https://youtu.be/https://youtu.be/aOCyRkvjsUY) | ✅ [https://youtu.be/NM3aGh-TpY0](https://youtu.be/https://youtu.be/NM3aGh-TpY0) |
+| 3 | `ch00_03_jupyter` | Jupyter Lab 入門 | ✅ [https://youtu.be/xqaJBdUBd6s](https://youtu.be/https://youtu.be/xqaJBdUBd6s) | ✅ [https://youtu.be/GZjM44USJrU](https://youtu.be/https://youtu.be/GZjM44USJrU) |
+| 4 | `ch00_04_hello_epi` | 第一支程式 Hello Epi | ✅ [https://youtu.be/x4tNVZSAgNI](https://youtu.be/https://youtu.be/x4tNVZSAgNI) | ✅ [https://youtu.be/0SBfu6wWl0k](https://youtu.be/https://youtu.be/0SBfu6wWl0k) |
+| 5 | `ch00_05_git_basics` | Git 版本控制 | ✅ [https://youtu.be/kiH0W9U6bM0](https://youtu.be/https://youtu.be/kiH0W9U6bM0) | ✅ [https://youtu.be/riK6Tbq4rfI](https://youtu.be/https://youtu.be/riK6Tbq4rfI) |
+| 6 | `ch00_06_roadmap` | 課程地圖與學習策略 | ✅ [https://youtu.be/5XQwCgawhVs](https://youtu.be/https://youtu.be/5XQwCgawhVs) | ✅ [https://youtu.be/sv6KEM7_ocY](https://youtu.be/https://youtu.be/sv6KEM7_ocY) |
 
-## 第 01 章 · `01_fundamentals.md`　（中 6/6　英 0/6）
-
-| # | 影片 key（= mp4 檔名） | 標題 | 中文 | English |
-|---|------------------------|------|------|---------|
-| 1 | `ch01_01_variables` | 數值變數 | ✅ [RhqNl3LzjmU](https://youtu.be/RhqNl3LzjmU) | ⬜ |
-| 2 | `ch01_02_arithmetic` | 計算指標 | ✅ [ZqqZmuVjoN0](https://youtu.be/ZqqZmuVjoN0) | ⬜ |
-| 3 | `ch01_03_dictionaries` | 字典 | ✅ [4iriq9cNG-A](https://youtu.be/4iriq9cNG-A) | ⬜ |
-| 4 | `ch01_04_lists` | 列表 | ✅ [bwRKaJYyGCU](https://youtu.be/bwRKaJYyGCU) | ⬜ |
-| 5 | `ch01_05_conditionals` | 條件判斷 | ✅ [8q6imxzb9mM](https://youtu.be/8q6imxzb9mM) | ⬜ |
-| 6 | `ch01_06_functions` | 函式 | ✅ [CGux0-2swi8](https://youtu.be/CGux0-2swi8) | ⬜ |
-
-## 第 01b 章 · `01b_python_toolbox.md`　（中 8/8　英 0/8）
+## 第 01 章 · `01_fundamentals.md`　（中 6/6　英 6/6）
 
 | # | 影片 key（= mp4 檔名） | 標題 | 中文 | English |
 |---|------------------------|------|------|---------|
-| 1 | `ch01b_01_indentation` | 縮排 | ✅ [lQPKMgHv1UQ](https://youtu.be/lQPKMgHv1UQ) | ⬜ |
-| 2 | `ch01b_02_imports` | import | ✅ [srlzHIPR3nk](https://youtu.be/srlzHIPR3nk) | ⬜ |
-| 3 | `ch01b_03_types` | 型別與轉換 | ✅ [xetiso2OCl8](https://youtu.be/xetiso2OCl8) | ⬜ |
-| 4 | `ch01b_04_errors` | 讀懂錯誤訊息 | ✅ [aZx7TFtcrvc](https://youtu.be/aZx7TFtcrvc) | ⬜ |
-| 5 | `ch01b_05_try_except` | try/except | ✅ [QCKTumk34fA](https://youtu.be/QCKTumk34fA) | ⬜ |
-| 6 | `ch01b_06_strings_loops` | 字串與迴圈進階 | ✅ [SmKi_i3PC-U](https://youtu.be/SmKi_i3PC-U) | ⬜ |
-| 7 | `ch01b_07_uv_advanced` | uv 進階 | ✅ [cXSoTKvgtEo](https://youtu.be/cXSoTKvgtEo) | ⬜ |
-| 8 | `ch01b_08_jupyter_tips` | Jupyter 實用密技 | ✅ [krpakr9TtZM](https://youtu.be/krpakr9TtZM) | ⬜ |
+| 1 | `ch01_01_variables` | 數值變數 | ✅ [https://youtu.be/JTt_aW9q0rU](https://youtu.be/https://youtu.be/JTt_aW9q0rU) | ✅ [https://youtu.be/Ehr6UIwd-Oo](https://youtu.be/https://youtu.be/Ehr6UIwd-Oo) |
+| 2 | `ch01_02_arithmetic` | 計算指標 | ✅ [https://youtu.be/cniTIEPpaL4](https://youtu.be/https://youtu.be/cniTIEPpaL4) | ✅ [https://youtu.be/kTFGaPiO-fA](https://youtu.be/https://youtu.be/kTFGaPiO-fA) |
+| 3 | `ch01_03_dictionaries` | 字典 | ✅ [https://youtu.be/vleHeKRvUQk](https://youtu.be/https://youtu.be/vleHeKRvUQk) | ✅ [https://youtu.be/g6Kcohv9jzc](https://youtu.be/https://youtu.be/g6Kcohv9jzc) |
+| 4 | `ch01_04_lists` | 列表 | ✅ [https://youtu.be/bi_lhHO_WJY](https://youtu.be/https://youtu.be/bi_lhHO_WJY) | ✅ [https://youtu.be/BZWfzsk0tw0](https://youtu.be/https://youtu.be/BZWfzsk0tw0) |
+| 5 | `ch01_05_conditionals` | 條件判斷 | ✅ [https://youtu.be/MAJaBGclgOM](https://youtu.be/https://youtu.be/MAJaBGclgOM) | ✅ [https://youtu.be/NA7KP2EqICg](https://youtu.be/https://youtu.be/NA7KP2EqICg) |
+| 6 | `ch01_06_functions` | 函式 | ✅ [https://youtu.be/dksTij3vniQ](https://youtu.be/https://youtu.be/dksTij3vniQ) | ✅ [https://youtu.be/oleAlQpbJ6I](https://youtu.be/https://youtu.be/oleAlQpbJ6I) |
+
+## 第 01b 章 · `01b_python_toolbox.md`　（中 8/8　英 8/8）
+
+| # | 影片 key（= mp4 檔名） | 標題 | 中文 | English |
+|---|------------------------|------|------|---------|
+| 1 | `ch01b_01_indentation` | 縮排 | ✅ [https://youtu.be/BqPzzF4s8WA](https://youtu.be/https://youtu.be/BqPzzF4s8WA) | ✅ [https://youtu.be/jOiqKrkqClg](https://youtu.be/https://youtu.be/jOiqKrkqClg) |
+| 2 | `ch01b_02_imports` | import | ✅ [https://youtu.be/QF-bETQmbSE](https://youtu.be/https://youtu.be/QF-bETQmbSE) | ✅ [https://youtu.be/vu8D3_MhAog](https://youtu.be/https://youtu.be/vu8D3_MhAog) |
+| 3 | `ch01b_03_types` | 型別與轉換 | ✅ [https://youtu.be/KpjF0Iv5v1c](https://youtu.be/https://youtu.be/KpjF0Iv5v1c) | ✅ [https://youtu.be/KZTWa4BHCfY](https://youtu.be/https://youtu.be/KZTWa4BHCfY) |
+| 4 | `ch01b_04_errors` | 讀懂錯誤訊息 | ✅ [https://youtu.be/r9-VUXEMloU](https://youtu.be/https://youtu.be/r9-VUXEMloU) | ✅ [https://youtu.be/00CEZEeFXMw](https://youtu.be/https://youtu.be/00CEZEeFXMw) |
+| 5 | `ch01b_05_try_except` | try/except | ✅ [https://youtu.be/eyQfPTl8xsk](https://youtu.be/https://youtu.be/eyQfPTl8xsk) | ✅ [https://youtu.be/Gv_Ct86O8XM](https://youtu.be/https://youtu.be/Gv_Ct86O8XM) |
+| 6 | `ch01b_06_strings_loops` | 字串與迴圈進階 | ✅ [https://youtu.be/ZloLMJlgxvE](https://youtu.be/https://youtu.be/ZloLMJlgxvE) | ✅ [https://youtu.be/ydQ-lOlN5Ec](https://youtu.be/https://youtu.be/ydQ-lOlN5Ec) |
+| 7 | `ch01b_07_uv_advanced` | uv 進階 | ✅ [https://youtu.be/vTOu1ydb2V4](https://youtu.be/https://youtu.be/vTOu1ydb2V4) | ✅ [https://youtu.be/l-WcIwSMv5s](https://youtu.be/https://youtu.be/l-WcIwSMv5s) |
+| 8 | `ch01b_08_jupyter_tips` | Jupyter 實用密技 | ✅ [krpakr9TtZM](https://youtu.be/krpakr9TtZM) | ✅ [https://youtu.be/L9nzl_m2pnE](https://youtu.be/https://youtu.be/L9nzl_m2pnE) |
 
 ## 第 02 章 · `02_data_wrangling.md`　（中 13/13　英 0/13）
 
