@@ -119,6 +119,12 @@ jobs:
     needs: plan
     runs-on: ubuntu-latest
     timeout-minutes: 90        # generous for a single video; the old 60 was for all of them
+    # `uv run` re-syncs the project before running unless told not to, which
+    # silently undoes the slim install below and drags torch back in — the
+    # rendering step, not the install step, is where a CUDA wheel download
+    # failed the build.
+    env:
+      UV_NO_SYNC: "1"
     strategy:
       fail-fast: false         # one bad render must not cancel its 12 siblings
       max-parallel: 8
