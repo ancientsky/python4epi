@@ -36,6 +36,24 @@ jobs:
       - name: Set up Python
         run: uv python install 3.13
 
+      # Render the YouTube cards from videos/youtube_ids.yaml at build time
+      # rather than trusting the snapshot committed in the chapter markdown.
+      # A link pasted straight into the registry on github.com is therefore live
+      # on this very deploy, with no bot commit in between -- which the branch
+      # ruleset on main would reject anyway. Idempotent: a no-op when in sync.
+      # --no-project skips the book's dependency set; the script only needs pyyaml.
+      - name: Render video embeds from youtube_ids.yaml
+        run: |
+          set -euo pipefail
+          {
+            echo "## 影片卡片"
+            echo ""
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          uv run --no-project --with pyyaml python videos/sync_video_embeds.py \
+            | tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
       - name: Install CJK fonts for matplotlib
         run: |
           sudo apt-get update -qq

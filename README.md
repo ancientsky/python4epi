@@ -167,10 +167,12 @@ uv run jupyter-book build book_en/            # English instructor (with solutio
 ```bash
 uv run pytest                                            # unit + notebook smoke tests
 uv run ruff check videos/ --select F821,E9               # undefined names in Manim scenes
-uv run python videos/sync_video_embeds.py --check        # chapters match youtube_ids.yaml
+uv run python videos/sync_video_embeds.py --validate     # youtube_ids.yaml is usable
+uv run python videos/sync_video_embeds.py --check        # ...and chapters are in sync
 ```
 
-CI runs all three on every pull request.
+CI runs the first three. `--check` is local-only: the embeds committed in the
+chapters are a snapshot that the deploy re-renders, so it is expected to go stale.
 
 ## Tutorial Videos
 
@@ -208,9 +210,9 @@ uv run python videos/build.py --chapter ch08 --lang en   # 單章英文版
 | `ch08_04_morans_i.mp4` | `ch08_04_morans_i` | `zh:` |
 | `ch08_04_morans_i_en.mp4` | `ch08_04_morans_i` | `en:` |
 
-**直接在 GitHub 網頁上編輯這個檔案就好**——commit 之後 *Sync video links* workflow 會重新產生中英兩版章節的影片卡片、更新 `videos/VIDEO_INDEX.md`，並觸發網站重新部署。貼完整網址或純 ID 都可以；留空則該卡片不會出現在網站上（不會有死連結）。
+**直接在 GitHub 網頁上編輯這個檔案就好**——commit 到 `main` 之後 *deploy-pages* 會在建置前自動把登錄表算成中英兩版的影片卡片，幾分鐘後網站就更新了，不需要任何人在本機跑東西，也不會有機器人 commit（`main` 的 ruleset 本來就擋機器人直接推送）。同時 *Check video links* 會在約 30 秒內驗證你貼的連結，打錯了馬上就知道。貼完整網址或純 ID 都可以；留空則該卡片不會出現在網站上（不會有死連結）。
 
-本機操作則是編輯後執行 `uv run python videos/sync_video_embeds.py`。細節見 [`videos/README.md`](videos/README.md)。
+由於卡片是在部署時才產生，repo 裡章節 markdown 內的卡片只是**快照**，會落後於登錄表——網站不受影響。要順便更新快照與 `videos/VIDEO_INDEX.md`，在本機執行 `uv run python videos/sync_video_embeds.py`。細節見 [`videos/README.md`](videos/README.md)。
 
 ## Visual Diagrams
 
@@ -232,7 +234,7 @@ uv run python videos/build.py --chapter ch08 --lang en   # 單章英文版
 - `data/synthetic/`: teaching datasets — primary: `legionella_outbreak.csv` (280 × 32)
 - `videos/`: tutorial video generation (Manim + edge-tts + ffmpeg) — `scripts/` narration YAML, `scenes/` Manim classes, `youtube_ids.yaml` link registry
 - `tests/`: unit tests and notebook JSON smoke tests
-- `.github/workflows/`: `ci.yml` (tests + build), `pages.yml` (deploy), `videos.yml` (render videos), `sync-video-links.yml` (regenerate embeds from the registry)
+- `.github/workflows/`: `ci.yml` (tests + build), `pages.yml` (renders video embeds, then deploys), `videos.yml` (render videos), `sync-video-links.yml` (validate the link registry)
 
 ## Dataset
 

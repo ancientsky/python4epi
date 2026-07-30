@@ -49,14 +49,14 @@ jobs:
       - name: Run tests
         run: uv run pytest
 
-      # Pull requests only. On main the sync-video-links workflow regenerates the
-      # embeds and commits them, so a registry edit is briefly out of sync there
-      # by design -- failing the push would just be flagging a state that fixes
-      # itself. On a PR nothing regenerates anything, so this still has to catch
-      # a contributor who edited the registry without running the sync.
-      - name: Check video embeds match youtube_ids.yaml
-        if: github.event_name == 'pull_request'
-        run: uv run python videos/sync_video_embeds.py --check
+      # Validate, don't diff. deploy-pages re-renders the embeds from the
+      # registry on every build, so the copy committed in the chapter markdown
+      # is a snapshot and is *meant* to lag behind a link added on github.com --
+      # failing on that would break CI for every unrelated PR. What still has to
+      # hold is that the registry itself is usable: every marker key exists and
+      # every ID parses.
+      - name: Validate youtube_ids.yaml against the chapter markers
+        run: uv run python videos/sync_video_embeds.py --validate
 
       # Manim scenes are never imported by pytest and are only executed by the
       # (manually dispatched) video workflow, so a plain NameError in one can sit
