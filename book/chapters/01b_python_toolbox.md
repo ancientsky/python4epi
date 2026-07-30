@@ -522,8 +522,8 @@ uv pip list
 ```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Jupyter 實用密技</div>
-  <div class="youtube-lite" data-id="krpakr9TtZM">
-    <img src="https://img.youtube.com/vi/krpakr9TtZM/hqdefault.jpg" loading="lazy" alt="教學影片">
+  <div class="youtube-lite" data-id="XR28LubaKa8">
+    <img src="https://img.youtube.com/vi/XR28LubaKa8/hqdefault.jpg" loading="lazy" alt="教學影片">
   </div>
 </div>
 ```

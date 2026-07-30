@@ -14,7 +14,7 @@ uv run python videos/sync_video_embeds.py
 | 語言 | 已上傳 | 總數 | 進度 |
 |------|-------:|-----:|------|
 | 中文 | 72 | 122 | 59% |
-| English | 20 | 122 | 16% |
+| English | 33 | 122 | 27% |
 
 圖例：✅ 已上線　⬜ 尚未上傳（網站上不會顯示該卡片）
 
@@ -51,25 +51,25 @@ uv run python videos/sync_video_embeds.py
 | 5 | `ch01b_05_try_except` | try/except | ✅ [https://youtu.be/eyQfPTl8xsk](https://youtu.be/https://youtu.be/eyQfPTl8xsk) | ✅ [https://youtu.be/Gv_Ct86O8XM](https://youtu.be/https://youtu.be/Gv_Ct86O8XM) |
 | 6 | `ch01b_06_strings_loops` | 字串與迴圈進階 | ✅ [https://youtu.be/ZloLMJlgxvE](https://youtu.be/https://youtu.be/ZloLMJlgxvE) | ✅ [https://youtu.be/ydQ-lOlN5Ec](https://youtu.be/https://youtu.be/ydQ-lOlN5Ec) |
 | 7 | `ch01b_07_uv_advanced` | uv 進階 | ✅ [https://youtu.be/vTOu1ydb2V4](https://youtu.be/https://youtu.be/vTOu1ydb2V4) | ✅ [https://youtu.be/l-WcIwSMv5s](https://youtu.be/https://youtu.be/l-WcIwSMv5s) |
-| 8 | `ch01b_08_jupyter_tips` | Jupyter 實用密技 | ✅ [krpakr9TtZM](https://youtu.be/krpakr9TtZM) | ✅ [https://youtu.be/L9nzl_m2pnE](https://youtu.be/https://youtu.be/L9nzl_m2pnE) |
+| 8 | `ch01b_08_jupyter_tips` | Jupyter 實用密技 | ✅ [https://youtu.be/XR28LubaKa8](https://youtu.be/https://youtu.be/XR28LubaKa8) | ✅ [https://youtu.be/L9nzl_m2pnE](https://youtu.be/https://youtu.be/L9nzl_m2pnE) |
 
-## 第 02 章 · `02_data_wrangling.md`　（中 13/13　英 0/13）
+## 第 02 章 · `02_data_wrangling.md`　（中 13/13　英 13/13）
 
 | # | 影片 key（= mp4 檔名） | 標題 | 中文 | English |
 |---|------------------------|------|------|---------|
-| 1 | `ch02_01_dataframe` | DataFrame 是什麼？從 CSV 到表格的第一步 | ✅ [6VaRmrPorog](https://youtu.be/6VaRmrPorog) | ⬜ |
-| 2 | `ch02_02_data_inspect` | 一分鐘看懂你的資料——info() 與 describe() | ✅ [0nr8EO2EYgU](https://youtu.be/0nr8EO2EYgU) | ⬜ |
-| 3 | `ch02_03_datetime` | 日期時間大魔王——to_datetime 完全攻略 | ✅ [fjflhonc_7Y](https://youtu.be/fjflhonc_7Y) | ⬜ |
-| 4 | `ch02_04_derived` | 衍生變項四大招——cut, axis, astype, dt | ✅ [nizzbpAajlw](https://youtu.be/nizzbpAajlw) | ⬜ |
-| 5 | `ch02_05_missing` | 遺漏值偵探社——NaN, NaT, None 一次搞懂 | ✅ [Eb4xFn8MAtI](https://youtu.be/Eb4xFn8MAtI) | ⬜ |
-| 6 | `ch02_06_groupby` | 分組統計秘密武器——groupby + agg 完全攻略 | ✅ [A08xPAxb3Fc](https://youtu.be/A08xPAxb3Fc) | ⬜ |
-| 7 | `ch02_07_epicurve` | 用 matplotlib 畫出疫調等級的流行曲線 | ✅ [OnHzOWIP12s](https://youtu.be/OnHzOWIP12s) | ⬜ |
-| 8 | `ch02_08_seaborn_plotly` | seaborn + plotly + 圖表輸出投稿密技 | ✅ [cLjVwKlXHVM](https://youtu.be/cLjVwKlXHVM) | ⬜ |
-| 9 | `ch02_09_value_counts` | 頻率表速成——value_counts + crosstab 完全攻略 | ✅ [awq3VxbW9qo](https://youtu.be/awq3VxbW9qo) | ⬜ |
-| 10 | `ch02_10_pivot_table` | Excel 樞紐分析表——pivot_table 完全攻略 | ✅ [eFAQ4Xz7gq8](https://youtu.be/eFAQ4Xz7gq8) | ⬜ |
-| 11 | `ch02_11_method_chaining` | 一行寫完分析——Method Chaining 流水線 | ✅ [sSw-xiaUafM](https://youtu.be/sSw-xiaUafM) | ⬜ |
-| 12 | `ch02_12_merge` | 合併資料表——merge 就是你的 VLOOKUP | ✅ [b2W8rfIn8Ts](https://youtu.be/b2W8rfIn8Ts) | ⬜ |
-| 13 | `ch02_13_str_cleanup` | 文字清理三板斧——str + drop_duplicates + rename | ✅ [AasXdk4-i_E](https://youtu.be/AasXdk4-i_E) | ⬜ |
+| 1 | `ch02_01_dataframe` | DataFrame 是什麼？從 CSV 到表格的第一步 | ✅ [https://youtu.be/1VGCJopmPhU](https://youtu.be/https://youtu.be/1VGCJopmPhU) | ✅ [https://youtu.be/OxrW1-t_QOU](https://youtu.be/https://youtu.be/OxrW1-t_QOU) |
+| 2 | `ch02_02_data_inspect` | 一分鐘看懂你的資料——info() 與 describe() | ✅ [https://youtu.be/h3Q2495gtyY](https://youtu.be/https://youtu.be/h3Q2495gtyY) | ✅ [https://youtu.be/HO_zbbod7qE](https://youtu.be/https://youtu.be/HO_zbbod7qE) |
+| 3 | `ch02_03_datetime` | 日期時間大魔王——to_datetime 完全攻略 | ✅ [https://youtu.be/Bd_bY4kXgek](https://youtu.be/https://youtu.be/Bd_bY4kXgek) | ✅ [https://youtu.be/fAlF76BSols](https://youtu.be/https://youtu.be/fAlF76BSols) |
+| 4 | `ch02_04_derived` | 衍生變項四大招——cut, axis, astype, dt | ✅ [https://youtu.be/3sUV9cjc_eY](https://youtu.be/https://youtu.be/3sUV9cjc_eY) | ✅ [https://youtu.be/Zo7kRqi8kEE](https://youtu.be/https://youtu.be/Zo7kRqi8kEE) |
+| 5 | `ch02_05_missing` | 遺漏值偵探社——NaN, NaT, None 一次搞懂 | ✅ [https://youtu.be/WsJIT5J-c8U](https://youtu.be/https://youtu.be/WsJIT5J-c8U) | ✅ [https://youtu.be/t9kQchKaRJI](https://youtu.be/https://youtu.be/t9kQchKaRJI) |
+| 6 | `ch02_06_groupby` | 分組統計秘密武器——groupby + agg 完全攻略 | ✅ [https://youtu.be/w8dV44Ir4bo](https://youtu.be/https://youtu.be/w8dV44Ir4bo) | ✅ [https://youtu.be/c-X55B2WeiA](https://youtu.be/https://youtu.be/c-X55B2WeiA) |
+| 7 | `ch02_07_epicurve` | 用 matplotlib 畫出疫調等級的流行曲線 | ✅ [https://youtu.be/sZuXUsFRW80](https://youtu.be/https://youtu.be/sZuXUsFRW80) | ✅ [https://youtu.be/-Ko9PlfUrsY](https://youtu.be/https://youtu.be/-Ko9PlfUrsY) |
+| 8 | `ch02_08_seaborn_plotly` | seaborn + plotly + 圖表輸出投稿密技 | ✅ [https://youtu.be/-OhRLppCh_c](https://youtu.be/https://youtu.be/-OhRLppCh_c) | ✅ [https://youtu.be/8zubGuWOpW4](https://youtu.be/https://youtu.be/8zubGuWOpW4) |
+| 9 | `ch02_09_value_counts` | 頻率表速成——value_counts + crosstab 完全攻略 | ✅ [https://youtu.be/oCeidAZktJU](https://youtu.be/https://youtu.be/oCeidAZktJU) | ✅ [https://youtu.be/0BVll7KCAjc](https://youtu.be/https://youtu.be/0BVll7KCAjc) |
+| 10 | `ch02_10_pivot_table` | Excel 樞紐分析表——pivot_table 完全攻略 | ✅ [https://youtu.be/80CBnMoZIf4](https://youtu.be/https://youtu.be/80CBnMoZIf4) | ✅ [https://youtu.be/h9ug-ryp4ak](https://youtu.be/https://youtu.be/h9ug-ryp4ak) |
+| 11 | `ch02_11_method_chaining` | 一行寫完分析——Method Chaining 流水線 | ✅ [https://youtu.be/soJM0kdHchc](https://youtu.be/https://youtu.be/soJM0kdHchc) | ✅ [https://youtu.be/SPRAJdsijCE](https://youtu.be/https://youtu.be/SPRAJdsijCE) |
+| 12 | `ch02_12_merge` | 合併資料表——merge 就是你的 VLOOKUP | ✅ [https://youtu.be/BqtKshQy-5Y](https://youtu.be/https://youtu.be/BqtKshQy-5Y) | ✅ [https://youtu.be/64OsjfHGn2I](https://youtu.be/https://youtu.be/64OsjfHGn2I) |
+| 13 | `ch02_13_str_cleanup` | 文字清理三板斧——str + drop_duplicates + rename | ✅ [https://youtu.be/PVnhZm5AwHg](https://youtu.be/https://youtu.be/PVnhZm5AwHg) | ✅ [https://youtu.be/uvovtzSiIME](https://youtu.be/https://youtu.be/uvovtzSiIME) |
 
 ## 第 03 章 · `03_stats.md`　（中 7/7　英 0/7）
 
