@@ -60,33 +60,33 @@ videos:
   ch01_01_variables:
     title_zh: "數值變數"
     title_en: "Numeric Variables: Store Your Numbers First"
-    zh: "RhqNl3LzjmU"
-    en: ""
+    zh: "https://youtu.be/JTt_aW9q0rU"
+    en: "https://youtu.be/Ehr6UIwd-Oo"
   ch01_02_arithmetic:
     title_zh: "計算指標"
     title_en: "Computing Metrics: Get Rates by Division"
-    zh: "ZqqZmuVjoN0"
-    en: ""
+    zh: "https://youtu.be/cniTIEPpaL4"
+    en: "https://youtu.be/kTFGaPiO-fA"
   ch01_03_dictionaries:
     title_zh: "字典"
     title_en: "Dictionaries: Keep Data on One Topic Together"
-    zh: "4iriq9cNG-A"
-    en: ""
+    zh: "https://youtu.be/vleHeKRvUQk"
+    en: "https://youtu.be/g6Kcohv9jzc"
   ch01_04_lists:
     title_zh: "列表"
     title_en: "Lists: Store a Group of Similar Data"
-    zh: "bwRKaJYyGCU"
-    en: ""
+    zh: "https://youtu.be/bi_lhHO_WJY"
+    en: "https://youtu.be/BZWfzsk0tw0"
   ch01_05_conditionals:
     title_zh: "條件判斷"
     title_en: "Conditionals: Turn Metrics into Action Signals"
-    zh: "8q6imxzb9mM"
-    en: ""
+    zh: "https://youtu.be/MAJaBGclgOM"
+    en: "https://youtu.be/NA7KP2EqICg"
   ch01_06_functions:
     title_zh: "函式"
     title_en: "Functions: Wrap Logic into a Reusable Tool"
-    zh: "CGux0-2swi8"
-    en: ""
+    zh: "https://youtu.be/dksTij3vniQ"
+    en: "https://youtu.be/oleAlQpbJ6I"
 
   # --- 第 01b 章 Python 開發者工具箱 (8 部影片；中文已上傳 8/8) ---
   ch01b_01_indentation:
