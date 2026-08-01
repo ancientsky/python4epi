@@ -175,6 +175,17 @@ uv run python videos/sync_video_embeds.py --check        # ...and chapters are i
 CI runs the first three. `--check` is local-only: the embeds committed in the
 chapters are a snapshot that the deploy re-renders, so it is expected to go stale.
 
+Before dispatching a video build, also sweep the layouts — English text is far
+wider than the Chinese the scenes were laid out for, so a caption that fits in
+one language can run off the frame in the other:
+
+```bash
+uv run --group video python videos/check_video_layout.py
+```
+
+CI skips that one: it needs the `video` dependency group (manim), which the test
+job does not install.
+
 ## Tutorial Videos
 
 Ch00–Ch14 共 **122 個概念**都有配套教學影片（Manim + edge-tts + ffmpeg），以輕鬆幽默的語調手把手教學。附錄章（Ch15–17）依設計沒有影片。
