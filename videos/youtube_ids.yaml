@@ -29,7 +29,7 @@ videos:
     title_zh: "為什麼用 Python"
     title_en: "Why Python: The Epidemiologist's Superpower"
     zh: "https://youtu.be/Nv4j3T27oGI"
-    en: "https://youtu.be/rVLTIbXTQOI"
+    en: "https://youtu.be/bbItzWRxxOo"
   ch00_02_uv_setup:
     title_zh: "uv 與環境設定"
     title_en: "uv & Environment Setup: One Line to Master Python Packages"
@@ -44,7 +44,7 @@ videos:
     title_zh: "第一支程式 Hello Epi"
     title_en: "Your First Program, Hello Epi: Run Your First Epi Analysis in Ten Minutes"
     zh: "https://youtu.be/x4tNVZSAgNI"
-    en: "https://youtu.be/0SBfu6wWl0k"
+    en: "https://youtu.be/MOiZQcU_RGM"
   ch00_05_git_basics:
     title_zh: "Git 版本控制"
     title_en: "Git Version Control: A Time Machine for Your Code"
@@ -71,22 +71,22 @@ videos:
     title_zh: "字典"
     title_en: "Dictionaries: Keep Data on One Topic Together"
     zh: "https://youtu.be/vleHeKRvUQk"
-    en: "https://youtu.be/g6Kcohv9jzc"
+    en: "https://youtu.be/t1z1ZN2bXIw"
   ch01_04_lists:
     title_zh: "列表"
     title_en: "Lists: Store a Group of Similar Data"
     zh: "https://youtu.be/bi_lhHO_WJY"
-    en: "https://youtu.be/BZWfzsk0tw0"
+    en: "https://youtu.be/duuuVfsA7NU"
   ch01_05_conditionals:
     title_zh: "條件判斷"
     title_en: "Conditionals: Turn Metrics into Action Signals"
     zh: "https://youtu.be/MAJaBGclgOM"
-    en: "https://youtu.be/NA7KP2EqICg"
+    en: "https://youtu.be/7XYPVDChIlY"
   ch01_06_functions:
     title_zh: "函式"
     title_en: "Functions: Wrap Logic into a Reusable Tool"
     zh: "https://youtu.be/dksTij3vniQ"
-    en: "https://youtu.be/oleAlQpbJ6I"
+    en: "https://youtu.be/-8gqtpR2qq0"
 
   # --- 第 01b 章 Python 開發者工具箱 (8 部影片；中文已上傳 8/8) ---
   ch01b_01_indentation:
@@ -296,7 +296,7 @@ videos:
     title_zh: "分層分析——每一層都算一次 RR"
     title_en: "Stratified Analysis: One RR per Stratum"
     zh: "https://youtu.be/VrmjFkCRxGE"
-    en: "https://youtu.be/8Gb8YLh8yNk"
+    en: "https://youtu.be/OLGe-SACDlM"
   ch05_05_stratified_forest_plot:
     title_zh: "森林圖——一眼看穿各層 RR"
     title_en: "The Forest Plot: See Every Stratum's RR at a Glance"
@@ -427,7 +427,7 @@ videos:
     title_zh: "局部 LISA 四象限：熱區核心到底藏在哪？"
     title_en: "Local LISA Quadrants: where is the hotspot core really hiding?"
     zh: "https://youtu.be/oZ4tyCksfBI"
-    en: "https://youtu.be/XQUIWPPDNpM"
+    en: "https://youtu.be/ttMD-nhrPbk"
   ch08_06_getis_ord:
     title_zh: "Getis-Ord Gi★ 熱點分析：給長官看的那張地圖"
     title_en: "Getis-Ord Gi* Hotspots: the map you hand straight to the boss"
@@ -663,5 +663,5 @@ videos:
   ch14_05_export_docx:
     title_zh: "輸出正式 DOCX 報告：python-docx 標題、表格、內嵌圖"
     title_en: "Export a Formal DOCX Report: python-docx Headings, Tables, Embedded Figures"
-    zh: ""
-    en: ""
+    zh: "https://youtu.be/peXDCz9KFBM"
+    en: "https://youtu.be/rG-oAyAR2qU"
