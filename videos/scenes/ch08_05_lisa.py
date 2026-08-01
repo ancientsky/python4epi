@@ -36,6 +36,9 @@ class Ch08LisaScene(EpiBaseScene):
 
     total_steps: int = 10
 
+    #: Breathing room between a quadrant card's text and its edge.
+    QUAD_PAD: float = 0.25
+
     # Bilingual on-screen text — read via self.t(key). zh/en key sets match.
     TEXT: dict[str, dict[str, str]] = {
         "zh": {
@@ -90,10 +93,10 @@ class Ch08LisaScene(EpiBaseScene):
             "quadrant_heading": "The 4 LISA Quadrants",
             "axis_x": "own rate →",
             "axis_y": "neighbor avg ↑",
-            "q_hh_label": "Epicenter: self high, neighbors high",
-            "q_lh_label": "Eye of storm: self low, neighbors high",
-            "q_ll_label": "Safe zone: self low, neighbors low",
-            "q_hl_label": "Spark: self high, neighbors low",
+            "q_hh_label": "Epicenter: self high,\nneighbors high",
+            "q_lh_label": "Eye of storm: self low,\nneighbors high",
+            "q_ll_label": "Safe zone: self low,\nneighbors low",
+            "q_hl_label": "Spark: self high,\nneighbors low",
             "q_encoding_heading": ".q code table (don't guess!)",
             "code_lisa_heading": "Moran_Local + the .q code table",
             "q_row_1": "1  →  HH (epicenter)",
@@ -153,8 +156,26 @@ class Ch08LisaScene(EpiBaseScene):
             stroke_color=ManimColor(color), stroke_width=3,
         )
         title = Text(label, font=FONT_MONO, font_size=28, color=ManimColor(color), weight="BOLD")
-        sub = Text(self.t(sub_key), font=FONT_CJK, font_size=16, color=ManimColor(TEXT_PRIMARY))
+        # One Text per line rather than one Text with newlines: Pango
+        # left-aligns the lines of a multi-line Text, which looks off-centre
+        # inside a centred card. A single-line caption is unaffected.
+        sub = VGroup(
+            *[
+                Text(line, font=FONT_CJK, font_size=16, color=ManimColor(TEXT_PRIMARY))
+                for line in self.t(sub_key).split("\n")
+            ]
+        ).arrange(DOWN, buff=0.08)
         content = VGroup(title, sub).arrange(DOWN, buff=0.12)
+        # The cards sit only 0.8 apart, so a caption wider than its card does
+        # not merely look cramped -- it runs into the neighbouring quadrant,
+        # which is what the English labels did (they are far longer than the
+        # Chinese). Shrink whatever still does not fit rather than let it spill.
+        overflow = max(
+            content.width / (card.width - 2 * self.QUAD_PAD),
+            content.height / (card.height - 2 * self.QUAD_PAD),
+        )
+        if overflow > 1:
+            content.scale(1 / overflow)
         content.move_to(card.get_center())
         return VGroup(card, content).move_to(pos)
 

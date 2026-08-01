@@ -127,8 +127,14 @@ class EpiBaseScene(Scene):
                 font_size=28,
                 color=ManimColor(TEXT_SECONDARY),
             )
+            # Subtitles are a full sentence, and the English of one runs far
+            # wider than the Chinese — ch01_05's outro reached 15.5 units
+            # against a 14.2-unit frame and ran off both edges. Shrink the
+            # subtitle alone so the title above it keeps its size.
+            self.fit_width(st)
             group.add(st)
             group.arrange(DOWN, buff=0.4)
+        self.fit_width(group)
 
         self.play(FadeIn(group), run_time=min(1.0, duration * 0.3))
         self.wait(max(0.1, duration - 1.0))
@@ -176,6 +182,17 @@ class EpiBaseScene(Scene):
         self._code_panel = panel
         self.play(FadeIn(panel), run_time=min(1.0, duration * 0.4))
         return panel
+
+    def fit_width(self, mob, *, margin: float = 0.5):
+        """Scale *mob* down if it is wider than the frame. Returns *mob*.
+
+        Only ever shrinks: a mobject that already fits is left untouched, so
+        this is safe to apply to layouts tuned for the Chinese text.
+        """
+        room = config.frame_width - 2 * margin
+        if mob.width > room:
+            mob.scale_to_fit_width(room)
+        return mob
 
     def keep_in_frame(self, mob, *, margin: float = 0.3):
         """Nudge *mob* back inside the frame if it hangs off any edge.

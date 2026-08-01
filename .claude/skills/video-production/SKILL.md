@@ -140,6 +140,30 @@ animation method, and fails on Chinese that would survive. `ALLOWED` in that fil
 exempts cases where the Chinese *is* the subject matter (ch08_07 teaches
 normalising 台北市 → 臺北市).
 
+### English Text Is Wider — Check the Layout Too
+
+Translating a label is only half the job: the English of a Chinese caption runs
+roughly 50-80% wider, so a card, panel or subtitle sized for the Chinese spills
+over. Two real cases: the LISA quadrant captions ran into the neighbouring card,
+and two outro subtitles overflowed both frame edges.
+
+```bash
+uv run --group video python videos/check_video_layout.py
+```
+
+It walks every scene with `play`/`wait` stubbed out and measures each mobject,
+so it sweeps a language in minutes without rendering. Not in CI — needs manim.
+
+When it flags something, prefer, in order:
+
+1. **Break the string into two lines** in the `TEXT` table. Cheapest, keeps the
+   font size. Build the caption as one `Text` per line inside a `VGroup` —
+   Pango left-aligns the lines of a multi-line `Text`, which looks off-centre.
+2. **Shrink-to-fit as a guard**, never as the primary fix: `self.fit_width(mob)`
+   on the base scene, or a local `scale(1 / overflow)` against the container.
+   These only ever shrink, so a layout already tuned for Chinese is untouched.
+3. Rewording, last — the narration has to keep matching what is on screen.
+
 ### Publishing Links to the Site — Never Hand-Edit Chapter Embeds
 
 `videos/youtube_ids.yaml` is the single source of truth for every video link on

@@ -130,6 +130,25 @@ Scripts and scenes are paired by the `scene_module`/`scene_class` fields inside
 each YAML's `meta:` block, not by filename — so a script's basename and its
 scene file need not match exactly.
 
+## Pre-Build Checks
+
+One scene renders both languages, and English text runs much wider than the
+Chinese the layout was tuned for. Two checks cover the two ways that goes wrong:
+
+```bash
+uv run python videos/check_video_i18n.py                      # CI runs this
+uv run --group video python videos/check_video_layout.py      # local only
+```
+
+`check_video_i18n.py` catches Chinese that would render in the English video —
+a string written straight into an animation method instead of going through the
+scene's `TEXT` table or the script YAML.
+
+`check_video_layout.py` catches text drawn *outside the frame*. It walks every
+scene the way the pipeline does but stubs out `play`/`wait` and measures each
+mobject, so a whole language sweeps in a few minutes instead of rendering 122
+videos. It stays out of CI because it needs manim from the `video` group.
+
 ## Publishing to YouTube
 
 `videos/youtube_ids.yaml` is the **single source of truth** for every video link
