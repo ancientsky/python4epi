@@ -81,12 +81,12 @@ videos:
     title_zh: "條件判斷"
     title_en: "Conditionals: Turn Metrics into Action Signals"
     zh: "https://youtu.be/MAJaBGclgOM"
-    en: "https://youtu.be/7XYPVDChIlY"
+    en: "https://youtu.be/b6JAMotiptA"
   ch01_06_functions:
     title_zh: "函式"
     title_en: "Functions: Wrap Logic into a Reusable Tool"
     zh: "https://youtu.be/dksTij3vniQ"
-    en: "https://youtu.be/-8gqtpR2qq0"
+    en: "https://youtu.be/vvRbPnZSvTw"
 
   # --- 第 01b 章 Python 開發者工具箱 (8 部影片；中文已上傳 8/8) ---
   ch01b_01_indentation:
@@ -427,7 +427,7 @@ videos:
     title_zh: "局部 LISA 四象限：熱區核心到底藏在哪？"
     title_en: "Local LISA Quadrants: where is the hotspot core really hiding?"
     zh: "https://youtu.be/oZ4tyCksfBI"
-    en: "https://youtu.be/ttMD-nhrPbk"
+    en: "https://youtu.be/WTuKi2n5KAM"
   ch08_06_getis_ord:
     title_zh: "Getis-Ord Gi★ 熱點分析：給長官看的那張地圖"
     title_en: "Getis-Ord Gi* Hotspots: the map you hand straight to the boss"
