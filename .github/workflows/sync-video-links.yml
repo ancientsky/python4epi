@@ -29,7 +29,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
-          version: "0.6.12"
+          version: "0.13.5"
 
       # --no-project skips the book's full dependency set: the script only needs
       # pyyaml, which keeps this job down to seconds.
