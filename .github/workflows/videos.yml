@@ -171,7 +171,7 @@ jobs:
       # or pitch changes, so keying on the script file is enough: edit the words
       # and the audio is re-synthesised, leave them alone and it is reused.
       - name: Restore narration audio
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: videos/output/audio
           key: tts-v1-${{ matrix.video.stem }}-${{ hashFiles(matrix.video.path) }}
