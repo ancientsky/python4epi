@@ -185,7 +185,7 @@ jobs:
         run: uv run python videos/build.py --script "$SCRIPT" --quality "$QUALITY" -v
 
       - name: Upload video
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           # Artifact names must be unique across the matrix -- v4 onwards refuses
           # to let two jobs write the same one.
