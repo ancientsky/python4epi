@@ -197,7 +197,7 @@ interactives work with keyboard and touch at 390 px.
 Fallback text shown without JavaScript.
 :::
 ```
-and `book_ph/_static/ph-site.js` replaces it after hydration. All UI strings come
+and `book_ph/_static/ph-games.js` replaces it after hydration (`ph-site.js` is the language-switch script). All UI strings come
 from a per-language dictionary inside the script (`en`, `zh`, `fil`). Planned set:
 
 | Name | Chapter | What the learner does |
@@ -232,12 +232,12 @@ from a per-language dictionary inside the script (`en`, `zh`, `fil`). Planned se
 
 ## 9. Progress
 
-- [ ] P1 infrastructure: build script, three MyST skeletons, tests, workflows
+- [x] P1 infrastructure: build script, three MyST skeletons, tests, workflows
 - [x] P1 datasets + README + tests
 - [x] P1 design system: CSS and illustrations (see STYLEGUIDE.md)
 - [x] P1 interactives (ph-games.js, GAMES.md)
-- [ ] P2 English chapters 00–02 + notebooks
-- [ ] P2 English chapters 03–05 + notebooks
+- [~] P2 English chapters 00–02 + notebooks (written; awaiting build QA)
+- [~] P2 English chapters 03–05 + notebooks (written; awaiting build QA)
 - [ ] P2 English chapters 06–08 + notebooks
 - [ ] P2 English chapters 09–10 + dashboard
 - [ ] P3 中文 edition

@@ -208,7 +208,7 @@ def compute_kpis(data: dict[str, Any]) -> dict[str, Any]:
         "cfr_pct": {d: _pct(deaths[d], cases[d]) for d in DISEASES},
         "hospitalised": {**{d: int(hosp[d]) for d in DISEASES}, "total": int(hosp.sum())},
         "hospitalised_pct": _pct(hosp.sum(), cases.sum(), 0),
-        "weeks_above": int(len(above)),
+        "weeks_above": len(above),
         "first_above": str(above["morbidity_week"].iloc[0]) if len(above) else None,
         "first_above_start": above["week_start"].iloc[0].date() if len(above) else None,
         "last_week": str(year["morbidity_week"].iloc[-1]),
@@ -789,7 +789,7 @@ STRINGS: dict[str, dict[str, Any]] = {
         "kpi_cases": "Cases", "kpi_cases_sub": "{lep} leptospirosis · {den} dengue",
         "kpi_deaths": "Deaths", "kpi_deaths_sub": "{lep} leptospirosis · {den} dengue",
         "kpi_cfr_lep": "CFR · leptospirosis", "kpi_cfr_den": "CFR · dengue",
-        "kpi_cfr_sub": "{deaths} deaths ÷ {cases} cases",
+        "kpi_cfr_sub": "{deaths} of {cases} cases died",
         "kpi_weeks": "Weeks above threshold", "kpi_weeks_sub": "dengue, {first} to {last}",
         "kpi_hosp": "Hospitalised", "kpi_hosp_sub": "{pct}% of all cases",
         "leptospirosis": "Leptospirosis", "dengue": "Dengue", "both": "Both",
@@ -878,23 +878,23 @@ STRINGS: dict[str, dict[str, Any]] = {
         "tip_rank": "rank {n} of 24",
         "notes_title": "Data notes and privacy",
         "notes": [
-            "<b>Synthetic data.</b> Santa Luz City, Typhoon Amihan, every barangay, person and "
+            ("<b>Synthetic data.</b> Santa Luz City, Typhoon Amihan, every barangay, person and "
             "number on this page are invented for the <i>Bantay Python</i> course. No real "
-            "patient is described.",
-            "<b>Aggregates only.</b> No names, addresses, phone numbers, case IDs or exact "
-            "dates of individual cases are on this page or inside its code.",
-            "<b>Small cells suppressed.</b> Whole-city totals for the whole period (the tiles "
+            "patient is described."),
+            ("<b>Aggregates only.</b> No names, addresses, phone numbers, case IDs or exact "
+            "dates of individual cases are on this page or inside its code."),
+            ("<b>Small cells suppressed.</b> Whole-city totals for the whole period (the tiles "
             "at the top) are shown in full, as in routine bulletins. In every smaller cell (a "
             "week, a barangay, an age–sex group) a count of 1 to 4 is shown as “&lt;5” and its "
             "rate is withheld; “x” marks a cell withheld so that a small cell cannot be worked "
-            "out from the totals.",
-            "<b>Definitions.</b> Cases are counted by week of symptom onset. Attack rate = "
+            "out from the totals."),
+            ("<b>Definitions.</b> Cases are counted by week of symptom onset. Attack rate = "
             "cases ÷ barangay population × 10,000. Case fatality rate (CFR) = deaths ÷ cases. "
             "Epidemic threshold = mean + 2 standard deviations of the same week and its two "
             "neighbours in 2022–2025. 7-1-7 = detect within 7 days of emergence, notify within "
-            "1 day, complete the early response within 7 days.",
-            "<b>Reporting delay.</b> The line list holds cases reported to the CESU by the data "
-            "freeze, so the most recent week is incomplete.",
+            "1 day, complete the early response within 7 days."),
+            ("<b>Reporting delay.</b> The line list holds cases reported to the CESU by the data "
+            "freeze, so the most recent week is incomplete."),
         ],
         "footer": "Built with Python in chapter 9 of <i>Bantay Python — Epi With Python, "
                   "Philippines Edition</i>.",
@@ -923,7 +923,7 @@ STRINGS: dict[str, dict[str, Any]] = {
         "kpi_cases": "病例數", "kpi_cases_sub": "鉤端螺旋體病 {lep} · 登革熱 {den}",
         "kpi_deaths": "死亡數", "kpi_deaths_sub": "鉤端螺旋體病 {lep} · 登革熱 {den}",
         "kpi_cfr_lep": "致死率 · 鉤端螺旋體病", "kpi_cfr_den": "致死率 · 登革熱",
-        "kpi_cfr_sub": "死亡 {deaths} ÷ 病例 {cases}",
+        "kpi_cfr_sub": "{cases} 例中 {deaths} 例死亡",
         "kpi_weeks": "高於閾值的週數", "kpi_weeks_sub": "登革熱，{first} 至 {last}",
         "kpi_hosp": "住院", "kpi_hosp_sub": "占全部病例 {pct}%",
         "leptospirosis": "鉤端螺旋體病", "dengue": "登革熱", "both": "兩者",
@@ -1002,15 +1002,15 @@ STRINGS: dict[str, dict[str, Any]] = {
         "tip_rank": "24 個里中排名第 {n}",
         "notes_title": "資料說明與隱私",
         "notes": [
-            "<b>合成資料。</b>Santa Luz 市、颱風 Amihan，以及本頁的每一個里、每一個人與每一個數字，"
-            "都是為 <i>Bantay Python</i> 課程虛構的，不描述任何真實病人。",
+            ("<b>合成資料。</b>Santa Luz 市、颱風 Amihan，以及本頁的每一個里、每一個人與每一個數字，"
+            "都是為 <i>Bantay Python</i> 課程虛構的，不描述任何真實病人。"),
             "<b>只呈現彙總資料。</b>本頁與其程式碼中沒有姓名、地址、電話、病例編號，也沒有個別病例的確切日期。",
-            "<b>小格數值隱藏。</b>全市全期間的總數（上方的數字方塊）如例行疫情報告一樣完整呈現。"
+            ("<b>小格數值隱藏。</b>全市全期間的總數（上方的數字方塊）如例行疫情報告一樣完整呈現。"
             "其他較小的格子（某一週、某一個里、某一年齡性別組）若為 1 至 4 例，顯示為「&lt;5」且不列侵襲率；"
-            "「x」表示為避免由總數推算出小格數值而一併隱藏的格子。",
-            "<b>定義。</b>病例依發病週別計算。侵襲率 = 病例數 ÷ 該里人口 × 10,000。致死率 = 死亡數 ÷ 病例數。"
+            "「x」表示為避免由總數推算出小格數值而一併隱藏的格子。"),
+            ("<b>定義。</b>病例依發病週別計算。侵襲率 = 病例數 ÷ 該里人口 × 10,000。致死率 = 死亡數 ÷ 病例數。"
             "流行閾值 = 2022–2025 年同一週及其前後兩週的平均值 + 2 個標準差。"
-            "7-1-7 = 事件出現後 7 天內偵測、偵測後 1 天內通報、通報後 7 天內完成初步應變。",
+            "7-1-7 = 事件出現後 7 天內偵測、偵測後 1 天內通報、通報後 7 天內完成初步應變。"),
             "<b>通報延遲。</b>造冊（line list）只收錄資料凍結日前通報至 CESU 的病例，因此最近一週的資料尚未齊全。",
         ],
         "footer": "以 Python 製作於 <i>Bantay Python — Epi With Python 菲律賓版</i>第 9 章。",
@@ -1049,7 +1049,7 @@ STRINGS: dict[str, dict[str, Any]] = {
         "kpi_cases": "Kaso", "kpi_cases_sub": "{lep} leptospirosis · {den} dengue",
         "kpi_deaths": "Namatay", "kpi_deaths_sub": "{lep} leptospirosis · {den} dengue",
         "kpi_cfr_lep": "CFR · leptospirosis", "kpi_cfr_den": "CFR · dengue",
-        "kpi_cfr_sub": "{deaths} namatay ÷ {cases} kaso",
+        "kpi_cfr_sub": "{deaths} sa {cases} kaso ang namatay",
         "kpi_weeks": "Linggong lampas sa threshold",
         "kpi_weeks_sub": "dengue, {first} hanggang {last}",
         "kpi_hosp": "Na-ospital", "kpi_hosp_sub": "{pct}% ng lahat ng kaso",
@@ -1146,23 +1146,23 @@ STRINGS: dict[str, dict[str, Any]] = {
         "tip_rank": "ika-{n} sa 24",
         "notes_title": "Mga tala sa datos at privacy",
         "notes": [
-            "<b>Synthetic na datos.</b> Kathang-isip ang Santa Luz City, ang Bagyong Amihan, at "
+            ("<b>Synthetic na datos.</b> Kathang-isip ang Santa Luz City, ang Bagyong Amihan, at "
             "bawat barangay, tao at numero sa pahinang ito, para sa kursong <i>Bantay "
-            "Python</i>. Walang totoong pasyenteng inilalarawan.",
-            "<b>Aggregate lang.</b> Walang pangalan, address, numero ng telepono, case ID o "
-            "eksaktong petsa ng isang kaso sa pahinang ito o sa code nito.",
-            "<b>Itinatago ang maliliit na cell.</b> Buo ang kabuuan ng buong lungsod para sa "
+            "Python</i>. Walang totoong pasyenteng inilalarawan."),
+            ("<b>Aggregate lang.</b> Walang pangalan, address, numero ng telepono, case ID o "
+            "eksaktong petsa ng isang kaso sa pahinang ito o sa code nito."),
+            ("<b>Itinatago ang maliliit na cell.</b> Buo ang kabuuan ng buong lungsod para sa "
             "buong panahon (ang mga tile sa itaas), gaya ng sa karaniwang bulletin. Sa bawat "
             "mas maliit na cell (isang linggo, isang barangay, isang age–sex group), ang bilang "
             "na 1 hanggang 4 ay ipinapakitang “&lt;5” at walang rate; ang “x” ay cell na "
-            "itinago para hindi makuwenta ang maliit na cell mula sa kabuuan.",
-            "<b>Mga depinisyon.</b> Binibilang ang kaso ayon sa linggo ng onset. Attack rate = "
+            "itinago para hindi makuwenta ang maliit na cell mula sa kabuuan."),
+            ("<b>Mga depinisyon.</b> Binibilang ang kaso ayon sa linggo ng onset. Attack rate = "
             "kaso ÷ populasyon ng barangay × 10,000. Case fatality rate (CFR) = namatay ÷ kaso. "
             "Epidemic threshold = mean + 2 standard deviation ng parehong linggo at ng dalawang "
             "katabi nito noong 2022–2025. 7-1-7 = ma-detect sa loob ng 7 araw, ma-notify sa "
-            "loob ng 1 araw, matapos ang early response sa loob ng 7 araw.",
-            "<b>Reporting delay.</b> Ang line list ay may mga kasong naiulat sa CESU hanggang sa "
-            "data freeze, kaya kulang pa ang pinakahuling linggo.",
+            "loob ng 1 araw, matapos ang early response sa loob ng 7 araw."),
+            ("<b>Reporting delay.</b> Ang line list ay may mga kasong naiulat sa CESU hanggang sa "
+            "data freeze, kaya kulang pa ang pinakahuling linggo."),
         ],
         "footer": "Ginawa gamit ang Python sa kabanata 9 ng <i>Bantay Python — Epi With Python, "
                   "Philippines Edition</i>.",
@@ -1477,7 +1477,7 @@ def render_html(payload: dict[str, Any]) -> str:
 
     alert = ""
     if k["weeks_above"]:
-        alert = (f'<p class="alert" role="status"><span class="pulse" aria-hidden="true"></span>'
+        alert = ('<p class="alert" role="status"><span class="pulse" aria-hidden="true"></span>'
                  + _esc(_t(lang, "alert", n=k["weeks_above"], week=first_above,
                            date=format_date(dt.date.fromisoformat(k["first_above_start"]),
                                             lang)))
@@ -1896,7 +1896,8 @@ main{max-width:1480px;margin:0 auto;padding:8px 20px 24px;outline:none}
 .band-lbl{fill:var(--text);opacity:.55;font-weight:800;letter-spacing:.12em;text-transform:uppercase;pointer-events:none}
 .map-wrap{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:14px;align-items:start}
 .map-info{margin:10px 0 0;font-size:13px;min-height:4.6em;padding:8px 10px;background:var(--surface-alt);border-radius:10px;border:1.5px solid var(--border)}
-.map-info b{display:block;font-size:14px}
+.map-info>b:first-child{display:block;font-size:14px}
+.map-info .muted{display:block;color:var(--muted);font-size:12px}
 .fine{margin:6px 0 0;font-size:11px;color:var(--muted)}
 .male{fill:var(--male)}.female{fill:var(--female)}
 .legend i.male{background:var(--male)}.legend i.female{background:var(--female)}
@@ -2035,18 +2036,17 @@ _PRINT_RULES = r"""
 {P}.kpi-label{font-size:7.5px}{P}.kpi-val{font-size:17px}{P}.kpi-sub{font-size:7.5px;margin:0}
 {P}.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
 {P}.panel{padding:4px 7px 3px;box-shadow:none;border-width:1px;border-radius:8px;break-inside:avoid;animation:none}
-{P}#p-curve{grid-column:span 2}{P}#p-actions{grid-column:span 2;grid-row:span 1}
-{P}#p-map,{P}#p-thr,{P}#p-pyr,{P}#p-717,{P}#p-forest{grid-column:span 1}
-{P}#p-map{grid-column:span 2}{P}#p-thr{grid-column:span 2}
+{P}#p-curve,{P}#p-thr{grid-column:span 2}{P}#p-actions{grid-column:1/-1;order:9}
+{P}#p-map,{P}#p-pyr,{P}#p-717,{P}#p-forest{grid-column:span 1}
+{P}.map-wrap{grid-template-columns:1fr}{P}.legend.vertical{flex-direction:row;flex-wrap:wrap}
 {P}.panel h2{font-size:10px}{P}.panel h2::before{width:8px;height:8px;margin-right:4px}
 {P}.sub{font-size:7.5px;margin:0}
 {P}.take{font-size:8.5px;margin:2px 0;padding-left:5px;border-left-width:2px}
 {P}.legend{font-size:7.5px;margin:1px 0;min-height:0;gap:2px 8px}
 {P}.legend i{width:9px;height:8px}
-{P}.map-wrap{grid-template-columns:minmax(0,1fr) 110px;gap:6px}
 {P}.fine{font-size:7px}
 {P}.fc-note{font-size:7.5px;margin:1px 0 0;padding:1px 4px}
-{P}.actions{gap:3px;margin-top:3px;grid-template-columns:1fr 1fr}
+{P}.actions{gap:3px;margin-top:3px;grid-template-columns:repeat(3,minmax(0,1fr))}
 {P}.act{padding:3px 6px 3px 24px;border-radius:6px}
 {P}.act::before{width:14px;height:14px;font-size:8px;left:5px;top:4px}
 {P}.act h3{font-size:8.5px}{P}.act p{font-size:7.5px;margin:0}
@@ -2087,6 +2087,10 @@ _JS = r"""
   var state = { curve: "both", mapd: "leptospirosis", mapm: "rate", pyr: "leptospirosis" };
   var drawn = {};
   var uid = 0;
+  var root = document.documentElement;
+  function printing() {
+    return root.classList.contains("printing") || (window.matchMedia && window.matchMedia("print").matches);
+  }
 
   // ---------------------------------------------------------------- helpers
   function esc(s) {
@@ -2200,8 +2204,8 @@ _JS = r"""
     if (!W) return;
     var weeks = D.curve.weeks, n = weeks.length;
     var show = state.curve === "both" ? DIS : [state.curve];
-    var H = Math.round(Math.max(230, Math.min(330, W * 0.42)));
-    var m = { l: 40, r: 10, t: 34, b: W < 520 ? 34 : 40 };
+    var H = printing() ? Math.round(W * 0.34) : Math.round(Math.max(230, Math.min(440, W * 0.56)));
+    var m = { l: 40, r: 10, t: 34, b: W < 520 || printing() ? 24 : 40 };
     legend("curve-legend", show.map(function (d) { return ["bar " + SHORT[d], T[d]]; })
       .map(function (x) { return [x[0].replace("bar ", ""), x[1]]; })
       .concat([["sw-hatch", T.lt5_long]]));
@@ -2247,7 +2251,7 @@ _JS = r"""
       if (i % every) return;
       var cx = m.l + bw * i + bw / 2;
       T_(ax, cx, H - m.b + 15, w.wk, "", "middle");
-      if (W >= 520) T_(ax, cx, H - m.b + 29, fdate(w.start), "", "middle", 10);
+      if (W >= 520 && !printing()) T_(ax, cx, H - m.b + 29, fdate(w.start), "", "middle", 10);
     });
     // typhoon marker
     var t0 = day(weeks[0].start), ty = day(D.typhoon);
@@ -2269,7 +2273,7 @@ _JS = r"""
     var weeks = D.thr.weeks, fc = D.forecast;
     var fweeks = fc ? fc.weeks : [];
     var slots = weeks.length + fweeks.length;
-    var H = Math.round(Math.max(230, Math.min(310, W * 0.5)));
+    var H = printing() ? Math.round(W * 0.34) : Math.round(Math.max(230, Math.min(310, W * 0.5)));
     var m = { l: 38, r: 10, t: 16, b: 32 };
     var items = [["den", T.dengue], ["den-above", T.above], ["line", T.threshold]];
     if (fc) items.push(["band", T.fc_label]);
@@ -2338,7 +2342,7 @@ _JS = r"""
       var lab = i < weeks.length ? weeks[i].wk : fweeks[i - weeks.length].wk;
       T_(ax, cx(i), H - m.b + 15, lab, "", "middle");
     }
-    T_(svg, W - m.r - 2, y(thr[thr.length - 1]) - 6, T.threshold, "lbl gfade", "end", 10.5).style.fill = "var(--thr)";
+    T_(svg, m.l + 4, y(Math.max(thr[0], thr[1] || 0)) - 7, T.threshold, "lbl gfade", "start", 10.5).style.fill = "var(--thr)";
   }
 
   // ---------------------------------------------------------------- map
@@ -2414,7 +2418,7 @@ _JS = r"""
     var host = document.getElementById("c-pyr"), W = host.clientWidth;
     if (!W) return;
     var P = D.pyramid, dis = state.pyr, groups = P.groups, n = groups.length;
-    var rowH = W < 420 ? 30 : 32, m = { t: 22, b: 24 }, H = m.t + m.b + rowH * n;
+    var rowH = printing() ? 19 : W < 420 ? 30 : 32, m = { t: 22, b: 24 }, H = m.t + m.b + rowH * n;
     var mid = 44, side = (W - mid) / 2 - 30;
     legend("pyr-legend", [["male", T.male], ["female", T.female], ["sw-hatch", T.lt5_long]]);
     var svg = svgFor(host, W, H, T.pyr_title);
@@ -2472,7 +2476,7 @@ _JS = r"""
     if (!W) return;
     var rows = D.forest, narrow = W < 400, cjk = D.lang === "zh";
     var labW = Math.min(190, Math.max(118, W * 0.4)), valW = narrow ? 0 : 92;
-    var rowH = narrow ? 36 : 30, m = { t: 8, b: 40 };
+    var rowH = printing() ? (narrow ? 22 : 19) : narrow ? 36 : 30, m = { t: 8, b: 40 };
     var H = m.t + m.b + rowH * rows.length;
     var svg = svgFor(host, W, H, T.forest_title);
     var x0 = labW + 6, x1 = W - valW - 10, lmin = Math.log(0.1), lmax = Math.log(10);
@@ -2552,7 +2556,7 @@ _JS = r"""
   // panel entrance stagger
   document.querySelectorAll(".kpi, .panel").forEach(function (el, i) { el.style.setProperty("--i", i); });
   // theme
-  var root = document.documentElement, themeBtn = document.getElementById("theme");
+  var themeBtn = document.getElementById("theme");
   function isDark() {
     var t = root.getAttribute("data-theme");
     if (t) return t === "dark";
