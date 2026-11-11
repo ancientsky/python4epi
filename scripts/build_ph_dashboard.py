@@ -1099,7 +1099,7 @@ STRINGS: dict[str, dict[str, Any]] = {
         "fc_label": "TimesFM forecast (median, 80% range)",
         "fc_none": "Walang forecast sa build na ito. Gumagawa nito ang kabanata 7.",
         "fc_note": "Forecast para sa {n} linggo mula {start}: TimesFM 3.0, mula sa naka-cache na "
-                   "run (non-commercial na lisensya). Hindi nito nakikita ang paparating na "
+                   "run (non-commercial na lisensiya). Hindi nito nakikita ang paparating na "
                    "bagong bagyo.",
         "pyr_title": "Sino: edad at kasarian", "pyr_sub": "Mga kaso ayon sa age group at kasarian",
         "male": "Lalaki", "female": "Babae",
@@ -1112,11 +1112,11 @@ STRINGS: dict[str, dict[str, Any]] = {
         "all3": "Pasado sa tatlo",
         "median_d": "median {n} araw", "met_of": "{met} sa {n} event",
         "bottlenecks": "Pinakamadalas na bottleneck", "events": "{n} event",
-        "forest_title": "Ano ang nagpataas ng leptospirosis",
+        "forest_title": "Mga risk factor ng leptospirosis",
         "forest_sub": "Case-control study, {cases} kaso at {controls} matched control. Odds "
                       "ratio na may 95% CI, log scale.",
         "forest_take": "Paglusong sa baha: OR {or_w} ({or_adj} matapos i-adjust sa clean-up "
-                       "work). Protektado ang may bota at ang uminom ng doxycycline.",
+                       "work). Mas mababa ang odds ng nakabota at ng uminom ng doxycycline.",
         "protective": "mas mababang odds", "risk": "mas mataas na odds",
         "ex_waded": "Lumusong sa baha",
         "ex_waded_adj": "Lumusong, adjusted sa clean-up (M–H)",
@@ -1151,7 +1151,7 @@ STRINGS: dict[str, dict[str, Any]] = {
         "numbers": "Ipakita ang mga numero",
         "week": "Linggo", "week_start": "Simula ng linggo", "cases": "Kaso",
         "per10k": "bawat 10,000",
-        "brgy": "Barangay", "band": "Lugar", "population": "Populasyon",
+        "brgy": "Barangay", "band": "Bahagi ng lungsod", "population": "Populasyon",
         "riverside": "Tabing-ilog", "coastal": "Baybayin", "upland": "Kabundukan",
         "age_group": "Age group", "exposure": "Exposure", "or": "OR", "ci": "95% CI",
         "target": "Target", "met": "Pasado", "missed": "Hindi pasado",
@@ -1184,7 +1184,7 @@ STRINGS: dict[str, dict[str, Any]] = {
             "data freeze, kaya kulang pa ang pinakahuling linggo."),
         ],
         "footer": "Ginawa gamit ang Python sa kabanata 9 ng <i>Bantay Python — Epi With Python, "
-                  "Philippines Edition</i>.",
+                  "Edisyong Pilipinas</i>.",
         "noscript": "Kailangan ng JavaScript ang mga chart. Nasa mga talaang “Ipakita ang mga "
                     "numero” ang lahat ng numero.",
         "or_ci": "OR {or} (95% CI {lo}–{hi})",
