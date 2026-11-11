@@ -512,7 +512,7 @@
         "請以「病例數 ÷ barangay 人口 × 10,000」計算各 barangay 的侵襲率。病例數：依 `barangay` 計算 `linelist` 的列數。人口：`barangays` 的 `population` 欄。輸出由高到低排序的表格。",
         "I-compute ang attack rate bawat barangay: kaso ÷ populasyon ng barangay × 10,000. Kaso: bilangin ang rows ng `linelist` ayon sa `barangay`. Populasyon: column na `population` sa `barangays`. Ibalik bilang table, mula pinakamataas na rate."],
       why: ["A rate needs a denominator. If you don't say which one, an AI may divide by the number of rows, or by the whole city. Name the numerator, the denominator and the unit (per 10,000).",
-        "率一定要有分母。你沒指定，AI 可能拿列數或全市人口來除。請寫清楚分子、分母和單位（每萬人）。",
+        "率一定要有分母。你沒指定，AI 可能拿列數或全市人口來除。請寫清楚分子、分母和單位（每 10,000 人）。",
         "Kailangan ng denominator ang rate. Kung hindi mo sasabihin, baka hatiin ng AI sa bilang ng rows, o sa buong lungsod. Sabihin ang numerator, denominator at unit (bawat 10,000)."]
     },
     {
@@ -590,7 +590,7 @@
         "Text ang dating ng age (\"64\" na may quotes). Hindi kayang ikumpara ng Python ang text sa number, kaya TypeError sa line 3 — ang tunay na ayos ay i-convert sa line 2 gamit ang `int()`."]
     },
     {
-      task: ["A function for the attack rate per 10,000.", "計算每萬人侵襲率的函式。", "Function para sa attack rate bawat 10,000."],
+      task: ["A function for the attack rate per 10,000.", "計算每 10,000 人侵襲率的函式。", "Function para sa attack rate bawat 10,000."],
       code: ["def attack_rate(cases, population):", "    rate = cases / population * 10_000", "", "print(attack_rate(39, 13411))   # prints None"],
       bug: [1],
       fix: "    rate = cases / population * 10_000\n    return rate                  # 29.08...",
@@ -668,11 +668,11 @@
     { ok: false, kind: ["Table by barangay", "各 barangay 病例表", "Table ayon sa barangay"],
       view: function () { return miniTable([["Barangay", "Barangay", "Barangay"], ["Lepto cases", "鉤端螺旋體病例", "Lepto cases"]], [["Ilog", "39"], ["Pampang", "31"], ["Kawayanan", "5"], ["Talahib", "1"]]); },
       why: ["Small cell: 1 case in Talahib, a small upland barangay — neighbours can work out who they are. Suppress counts of 1–4 (show '<5') or merge areas before publishing.",
-        "小細格：人口少的山區 Talahib 只有 1 例——鄰居猜得出是誰。發布前將 1–4 的數字隱藏（顯示「<5」）或合併區域。",
+        "小格：人口少的山區 Talahib 只有 1 例——鄰居猜得出是誰。發布前將 1–4 的數字遮蔽（顯示「<5」）或合併區域。",
         "Small cell: 1 kaso sa Talahib, maliit na upland barangay — mahuhulaan ng kapitbahay kung sino sila. I-suppress ang bilang na 1–4 (ipakita bilang '<5') o pagsamahin ang lugar bago i-publish."] },
     { ok: false, kind: ["Case map", "病例地圖", "Mapa ng kaso"], view: miniDots,
       why: ["One dot per house is an address map. Publish rates by barangay (a choropleth) instead of exact locations.",
-        "每戶一個點等於公布地址。改用各 barangay 的發生率面量圖（choropleth），不要公布確切位置。",
+        "每戶一個點等於公布地址。改用各 barangay 的侵襲率面量圖（choropleth），不要公布確切位置。",
         "Ang isang tuldok bawat bahay ay mapa ng address. Rate bawat barangay (choropleth) ang i-publish, hindi eksaktong lokasyon."] },
     { ok: false, kind: ["'Latest deaths' box", "「最新死亡」區塊", "Kahon ng 'Pinakabagong namatay'"],
       view: function () { return h("p", { class: "ph-mini-note" }, L(["Female, 67, Purok 2, Brgy. Sapa — died 12 Sep 2026", "女性，67 歲，Brgy. Sapa 第 2 Purok——2026/9/12 死亡", "Babae, 67, Purok 2, Brgy. Sapa — namatay 12 Set 2026"])); },
@@ -697,7 +697,7 @@
         "Hindi kailanman inilalagay sa public dashboard ang case-level records — kahit walang pangalan, puwedeng matunton ang tao. Aggregates lang ang ibahagi."] },
     { ok: true, kind: ["Footer", "頁尾說明", "Footer"],
       view: function () { return h("p", { class: "ph-mini-note" }, L(["Source: Santa Luz CESU, data as of 30 Sep 2026 (provisional). Counts below 5 shown as '<5'.", "資料來源：Santa Luz CESU，資料截至 2026/9/30（初步資料）。少於 5 的數字顯示為「<5」。", "Pinagmulan: Santa Luz CESU, datos hanggang 30 Set 2026 (provisional). Ang bilang na mas mababa sa 5 ay '<5'."])); },
-      why: ["Source, date and the suppression rule tell readers how to read the numbers. Approve.", "資料來源、日期與隱藏規則，告訴讀者如何解讀數字。可以發布。", "Ang source, petsa at suppression rule ay gabay sa pagbasa ng mga numero. Aprubado."] }
+      why: ["Source, date and the suppression rule tell readers how to read the numbers. Approve.", "資料來源、日期與小格遮蔽規則，告訴讀者如何解讀數字。可以發布。", "Ang source, petsa at suppression rule ay gabay sa pagbasa ng mga numero. Aprubado."] }
   ];
 
   WIDGETS["publish-check"] = function (ctx) {
@@ -720,7 +720,7 @@
         append(api.box, c);
       },
       endNote: ["Before anything leaves the office: no names or exact addresses, suppress small cells (1–4), no case-level downloads, honest axes, and a source line.",
-        "任何資料離開辦公室前：不放姓名或確切地址、隱藏小細格（1–4）、不提供個案層級下載、座標軸誠實、註明資料來源。",
+        "任何資料離開辦公室前：不放姓名或確切地址、小格遮蔽（1–4）、不提供個案層級下載、座標軸誠實、註明資料來源。",
         "Bago lumabas ng opisina: walang pangalan o eksaktong address, i-suppress ang small cells (1–4), walang case-level download, tapat na axis, at may source line."]
     });
   };
@@ -731,7 +731,7 @@
       { q: ["Which of these must never leave the office?", "下列何者絕不能離開辦公室？", "Alin dito ang hindi dapat lumabas ng opisina?"],
         o: [{ t: ["A PhilHealth number", "PhilHealth 號碼", "PhilHealth number"], ok: true, e: ["An ID number points to exactly one person: a direct identifier.", "識別號碼直接指向特定一人：直接識別資訊。", "Iisang tao lang ang tinutukoy ng ID number: direct identifier."] },
           { t: ["The name of the barangay", "barangay 名稱", "Pangalan ng barangay"], e: ["A barangay alone does not identify a person (but watch small counts).", "單獨的 barangay 不會識別個人（但要注意小數字）。", "Hindi nakikilala ang tao sa barangay lang (pero bantayan ang maliliit na bilang)."] },
-          { t: ["The morbidity week", "疾病週別", "Morbidity week"], e: ["A week number on its own is not personal information.", "單獨的週別不是個人資料。", "Hindi personal information ang week number lang."] }] },
+          { t: ["The morbidity week", "流行病學週", "Morbidity week"], e: ["A week number on its own is not personal information.", "單獨的週別不是個人資料。", "Hindi personal information ang week number lang."] }] },
       { q: ["Maya needs Tala's help with a date error. What does she paste?", "Maya 需要 Tala 幫忙處理日期錯誤，她應該貼上什麼？", "Kailangan ni Maya ng tulong ni Tala sa date error. Ano ang ipe-paste niya?"],
         o: [{ t: ["The first 20 rows of the real line list", "真實造冊的前 20 列", "Unang 20 rows ng totoong line list"], e: ["Real rows contain names and contacts — never paste them into an AI chat.", "真實資料含姓名與聯絡方式——絕不貼進 AI 對話。", "May pangalan at contact ang totoong rows — huwag i-paste sa AI chat."] },
           { t: ["3 made-up rows with the same columns and the error message", "3 列欄位相同的虛構資料，加上錯誤訊息", "3 gawa-gawang rows na pareho ang columns, at ang error message"], ok: true, e: ["Same shape, no real people: Tala can still find the bug.", "結構相同、沒有真人：Tala 一樣找得到問題。", "Parehong hugis, walang totoong tao: makikita pa rin ni Tala ang bug."] },
@@ -743,11 +743,11 @@
     ch04: [
       { q: ["What is the denominator of an attack rate?", "侵襲率的分母是什麼？", "Ano ang denominator ng attack rate?"],
         o: [{ t: ["The number of cases", "病例數", "Bilang ng kaso"], e: ["Cases are the numerator.", "病例數是分子。", "Ang kaso ang numerator."] },
-          { t: ["The population at risk", "可能發病的族群（危險族群）人數", "Ang population at risk"], ok: true, e: ["Everyone who could have become a case, e.g. the residents of the barangay.", "所有可能成為病例的人，例如該 barangay 的居民。", "Lahat ng puwedeng maging kaso, hal. mga residente ng barangay."] },
+          { t: ["The population at risk", "可能發病的族群（風險族群）人數", "Ang population at risk"], ok: true, e: ["Everyone who could have become a case, e.g. the residents of the barangay.", "所有可能成為病例的人，例如該 barangay 的居民。", "Lahat ng puwedeng maging kaso, hal. mga residente ng barangay."] },
           { t: ["The number of deaths", "死亡數", "Bilang ng namatay"], e: ["Deaths over cases is the case fatality rate.", "死亡數除以病例數是致死率。", "Ang namatay ÷ kaso ay case fatality rate."] }] },
       { q: ["An epi curve with one sharp peak that rises and falls within one incubation period suggests…", "流行曲線只有一個尖峰，且在一個潛伏期內上升又下降，代表……", "Ang epi curve na may isang matulis na peak na tumaas at bumaba sa loob ng isang incubation period ay nagpapahiwatig ng…"],
-        o: [{ t: ["A point source", "點狀來源（單一共同暴露）", "Point source"], ok: true, e: ["Everyone was exposed at about the same time, like one shared meal. (Santa Luz's leptospirosis curve stayed high for two weeks: a continuing source.)", "大家大約在同一時間暴露，例如同一餐。（Santa Luz 的鉤端螺旋體病曲線維持高峰兩週：持續性來源。）", "Halos sabay-sabay na-expose ang lahat, gaya ng iisang kainan. (Nanatiling mataas nang dalawang linggo ang leptospirosis curve ng Santa Luz: continuing source.)"] },
-          { t: ["Person-to-person spread", "人傳人", "Hawaan ng tao sa tao"], e: ["Propagated spread shows successive, growing waves.", "人傳人（擴散型）會出現一波比一波高的連續波峰。", "Ang propagated ay may sunud-sunod at lumalaking alon."] }] },
+        o: [{ t: ["A point source", "單一時點共同感染源（所有人同時暴露）", "Point source"], ok: true, e: ["Everyone was exposed at about the same time, like one shared meal. (Santa Luz's leptospirosis curve stayed high for two weeks: a continuing source.)", "大家大約在同一時間暴露，例如同一餐。（Santa Luz 的鉤端螺旋體病曲線維持高峰兩週：持續性共同感染源。）", "Halos sabay-sabay na-expose ang lahat, gaya ng iisang kainan. (Nanatiling mataas nang dalawang linggo ang leptospirosis curve ng Santa Luz: continuing source.)"] },
+          { t: ["Person-to-person spread", "人傳人", "Hawaan ng tao sa tao"], e: ["Propagated spread shows successive, growing waves.", "人傳人（連鎖傳播）會出現一波比一波高的連續波峰。", "Ang propagated ay may sunud-sunod at lumalaking alon."] }] },
       { q: ["39 leptospirosis cases and 6 deaths in Barangay Ilog. The case fatality rate is…", "Barangay Ilog 有 39 例鉤端螺旋體病、6 例死亡，致死率是……", "39 kaso ng leptospirosis at 6 namatay sa Barangay Ilog. Ang case fatality rate ay…"],
         o: [{ t: ["15.4%", "15.4%", "15.4%"], ok: true, e: ["6 ÷ 39 = 0.154.", "6 ÷ 39 = 0.154。", "6 ÷ 39 = 0.154."] },
           { t: ["0.04%", "0.04%", "0.04%"], e: ["That divides by Ilog's 13,411 residents — a mortality rate.", "那是除以 Ilog 的 13,411 位居民——死亡率。", "Hinati iyan sa 13,411 residente ng Ilog — mortality rate iyon."] },
@@ -1111,9 +1111,9 @@
     return withMonth ? day + " " + MONTHS[LI][m] : String(day);
   }
   var SHAPES = {
-    point: ["Point source (one short, shared exposure)", "點狀來源（一次短暫的共同暴露）", "Point source (iisang maikling exposure)"],
-    continuing: ["Continuing common source", "持續性共同來源", "Continuing common source"],
-    propagated: ["Propagated (spreads from case to case)", "擴散型（由病例再傳給他人）", "Propagated (kumakalat mula kaso sa kaso)"]
+    point: ["Point source (one short, shared exposure)", "單一時點共同感染源（一次短暫的共同暴露）", "Point source (iisang maikling exposure)"],
+    continuing: ["Continuing common source", "持續性共同感染源", "Continuing common source"],
+    propagated: ["Propagated (spreads from case to case)", "連鎖傳播（由病例再傳給他人）", "Propagated (kumakalat mula kaso sa kaso)"]
   };
   var CURVES = [
     {
@@ -1121,7 +1121,7 @@
       title: ["Leptospirosis in Santa Luz: one in four of the line list's cases", "Santa Luz 的鉤端螺旋體病：造冊病例每四例取一例", "Leptospirosis sa Santa Luz: isa sa bawat apat na kaso ng line list"],
       context: ["Typhoon Amihan flooded the riverside on 18–20 July; people waded in the flood and the clean-up until about 2 August. Incubation of leptospirosis: usually 7–10 days, range 2–30 (WHO).", "颱風 Amihan 於 7/18–20 淹沒河岸地區；居民在洪水與清理期間涉水，一直到 8/2 左右。鉤端螺旋體病潛伏期：通常 7–10 天，範圍 2–30 天（WHO）。", "Binaha ng Bagyong Amihan ang tabing-ilog noong 18–20 Hulyo; lumusong ang mga tao sa baha at sa paglilinis hanggang mga 2 Agosto. Incubation ng leptospirosis: karaniwang 7–10 araw, mula 2 hanggang 30 (WHO)."],
       pre: [0, 1, 1, 3, 3, 4, 3, 2, 3, 4, 3, 4, 2, 3, 2, 2, 1, 2, 2, 1], mine: [2, 5, 8, 10, 12, 15], answer: "continuing",
-      why: ["One wave that rises, stays high for about two weeks — as long as people kept wading in the flood and the clean-up — and then fades: a continuing common source, as in chapter 04.", "只有一波：上升後維持高峰約兩週——正是民眾在洪水與清理期間持續涉水的時間——然後消退：持續性共同來源，和第 04 章一致。", "Isang alon na tumaas, nanatiling mataas nang mga dalawang linggo — habang lumulusong pa ang mga tao sa baha at sa paglilinis — saka humupa: continuing common source, gaya sa kabanata 04."]
+      why: ["One wave that rises, stays high for about two weeks — as long as people kept wading in the flood and the clean-up — and then fades: a continuing common source, as in chapter 04.", "只有一波：上升後維持高峰約兩週——正是民眾在洪水與清理期間持續涉水的時間——然後消退：持續性共同感染源，和第 04 章一致。", "Isang alon na tumaas, nanatiling mataas nang mga dalawang linggo — habang lumulusong pa ang mga tao sa baha at sa paglilinis — saka humupa: continuing common source, gaya sa kabanata 04."]
     },
     {
       id: "water", unit: "day", start: [2026, 7, 22], marker: 2,
@@ -1129,11 +1129,11 @@
       title: ["Practice scenario: diarrhoea after one meal, evacuation centre", "練習情境：避難中心一餐之後的腹瀉", "Practice scenario: pagtatae pagkatapos ng isang kainan, evacuation center"],
       context: ["Evacuees at Santa Luz Central School all ate the same packed lunch on 24 July. In this made-up scenario the incubation is about 1–2 days.", "Santa Luz 中央小學的撤離民眾在 7/24 都吃了同一批便當。在這個虛構情境中，潛伏期約 1–2 天。", "Iisang packed lunch ang kinain ng lahat ng evacuee sa Santa Luz Central School noong 24 Hulyo. Sa gawa-gawang scenario na ito, mga 1–2 araw ang incubation."],
       pre: [0, 0, 0, 0, 5, 6, 2, 1, 0, 0, 0, 0], mine: [3, 4, 4, 5, 5, 6], answer: "point",
-      why: ["One sharp peak that rises and falls within about one incubation period after the lunch: everyone was exposed at the same moment — a point source.", "午餐後約一個潛伏期內出現單一尖峰，隨即下降：大家在同一時刻暴露——點狀來源。", "Isang matulis na peak na tumaas at bumaba sa loob ng halos isang incubation period matapos ang tanghalian: sabay-sabay na na-expose ang lahat — point source."]
+      why: ["One sharp peak that rises and falls within about one incubation period after the lunch: everyone was exposed at the same moment — a point source.", "午餐後約一個潛伏期內出現單一尖峰，隨即下降：大家在同一時刻暴露——單一時點共同感染源。", "Isang matulis na peak na tumaas at bumaba sa loob ng halos isang incubation period matapos ang tanghalian: sabay-sabay na na-expose ang lahat — point source."]
     },
     {
       id: "dengue", unit: "week", start: 27,
-      title: ["Practice scenario: dengue in a made-up village, by morbidity week", "練習情境：虛構村落的登革熱，依疾病週別", "Practice scenario: dengue sa isang gawa-gawang nayon, ayon sa morbidity week"],
+      title: ["Practice scenario: dengue in a made-up village, by morbidity week", "練習情境：虛構村落的登革熱，依流行病學週", "Practice scenario: dengue sa isang gawa-gawang nayon, ayon sa morbidity week"],
       context: ["Aedes mosquitoes carry dengue from person to person. One cycle (human → mosquito → human) takes about 2–3 weeks.", "登革熱靠斑蚊在人與人之間傳播。一個循環（人 → 蚊 → 人）約需 2–3 週。", "Dinadala ng lamok na Aedes ang dengue mula tao sa tao. Mga 2–3 linggo ang isang ikot (tao → lamok → tao)."],
       pre: [1, 0, 0, 1, 1, 0, 3, 2, 1, 6, 7, 4, 2, 1], mine: [3, 6, 7, 9, 10, 10], answer: "propagated",
       why: ["Successive waves about one cycle apart, each taller than the last: every generation of cases infects the next.", "連續數波、每波相隔約一個傳播週期，且一波比一波高：每一代病例再感染下一代。", "Sunud-sunod na alon na mga isang ikot ang pagitan, palaki nang palaki: bawat henerasyon ng kaso ay nakahahawa sa susunod."]
@@ -1227,7 +1227,7 @@
           if (ok) ctx.celebrate(scenarioScore === 9);
           var last = ci === list.length - 1;
           var nb = ctx.button(last ? "★ " + U("seeScore") : U("nextRound") + " →", function () {
-            if (last) endScreen(ctx, total, totalMax, begin, ["Read an epi curve by its shape: one peak (point source), a plateau (continuing source) or growing waves one incubation apart (propagated).", "從形狀判讀流行曲線：單一尖峰（點狀來源）、高原（持續性來源），或相隔一個潛伏期、越來越高的波峰（擴散型）。", "Basahin ang epi curve ayon sa hugis: isang peak (point source), patag (continuing source), o lumalaking alon na isang incubation ang pagitan (propagated)."]);
+            if (last) endScreen(ctx, total, totalMax, begin, ["Read an epi curve by its shape: one peak (point source), a plateau (continuing source) or growing waves one incubation apart (propagated).", "從形狀判讀流行曲線：單一尖峰（單一時點共同感染源）、高原（持續性共同感染源），或相隔一個潛伏期、越來越高的波峰（連鎖傳播）。", "Basahin ang epi curve ayon sa hugis: isang peak (point source), patag (continuing source), o lumalaking alon na isang incubation ang pagitan (propagated)."]);
             else { ci++; play(list[ci]); }
           }, "ph-primary");
           clear(ctx.controls);
@@ -1932,14 +1932,14 @@
         return g;
       });
       kids.push(s("text", { x: 201, y: 236, class: "ph-tick", "text-anchor": "middle" }, "Marilag River"));
-      var svgEl = s("svg", { viewBox: "0 0 382 242", class: "ph-map", role: "group", tabindex: "-1", focusable: "false", "aria-label": L(["Tile map of the 24 barangays of Santa Luz (left: coast, centre: river valley, right: uplands)", "Santa Luz 24 個 barangay 的方格地圖（左：海岸，中：河谷，右：山區）", "Tile map ng 24 barangay ng Santa Luz (kaliwa: baybayin, gitna: lambak ng ilog, kanan: kabundukan)"]) }, kids);
+      var svgEl = s("svg", { viewBox: "0 0 382 242", class: "ph-map", role: "group", tabindex: "-1", focusable: "false", "aria-label": L(["Tile map of the 24 barangays of Santa Luz (left: coast, centre: river valley, right: uplands)", "Santa Luz 24 個 barangay 的方格地圖（左：沿海，中：河岸，右：山區）", "Tile map ng 24 barangay ng Santa Luz (kaliwa: baybayin, gitna: lambak ng ilog, kanan: kabundukan)"]) }, kids);
       roving(svgEl, ".ph-tile", { cols: 6 });
       legendEl = h("div", { class: "ph-map-legend" });
       msgEl = h("p", { class: "ph-map-msg" });
       infoEl = h("p", { class: "ph-map-info", "aria-live": "polite" }, L(["Tap a barangay for its numbers.", "點選 barangay 看數字。", "I-tap ang barangay para makita ang numero."]));
       missionEl = h("div", { class: "ph-mission" });
       var controls = h("div", { class: "ph-seg-wrap" }, [
-        seg("measure", { label: ["Show", "顯示", "Ipakita"], items: [{ v: "count", t: ["Cases", "病例數", "Kaso"] }, { v: "rate", t: ["Rate per 10,000", "每萬人侵襲率", "Rate bawat 10,000"] }] }),
+        seg("measure", { label: ["Show", "顯示", "Ipakita"], items: [{ v: "count", t: ["Cases", "病例數", "Kaso"] }, { v: "rate", t: ["Rate per 10,000", "每 10,000 人侵襲率", "Rate bawat 10,000"] }] }),
         seg("method", { label: ["Classes", "分級", "Classes"], items: [{ v: "equal", t: ["Equal interval", "等距分級", "Equal interval"] }, { v: "quantile", t: ["Quantile", "分位數分級", "Quantile"] }] }),
         seg("pal", { label: ["Colours", "配色", "Kulay"], items: [{ v: "seq", t: ["Sequential", "單色漸層", "Sequential"] }, { v: "rainbow", t: ["Rainbow", "彩虹", "Rainbow"] }] })
       ]);
@@ -1958,7 +1958,7 @@
         g.parts.name.setAttribute("class", "ph-tile-name" + (dark ? " on-dark" : ""));
         g.parts.val.setAttribute("class", "ph-tile-val" + (dark ? " on-dark" : ""));
         g.parts.val.textContent = fmtV(vals[i]);
-        g.setAttribute("aria-label", g.b[0] + ", " + L(BAND[g.b[1]]) + ": " + g.b[5] + " " + L(["cases", "例", "kaso"]) + ", " + g.b[4].toLocaleString("en") + " " + L(["people", "人", "tao"]) + ", " + rate(g.b).toFixed(1) + " " + L(["per 10,000", "每萬人", "bawat 10,000"]));
+        g.setAttribute("aria-label", g.b[0] + ", " + L(BAND[g.b[1]]) + ": " + g.b[5] + " " + L(["cases", "例", "kaso"]) + ", " + g.b[4].toLocaleString("en") + " " + L(["people", "人", "tao"]) + ", " + rate(g.b).toFixed(1) + " " + L(["per 10,000", "每 10,000 人", "bawat 10,000"]));
         g.classList.toggle("is-selected", st.sel === g.b);
       });
       clear(legendEl);
@@ -1971,7 +1971,7 @@
       var msgs = [];
       msgs.push(st.measure === "count" ?
         fmt(L(["Counts: {p} looks worst — but it is also the biggest barangay ({n} people). Counts mostly map where people live.", "病例數：{p} 看起來最嚴重——但它也是人口最多的 barangay（{n} 人）。病例數地圖大多只反映人住在哪裡。", "Bilang: {p} ang mukhang pinakamalala — pero ito rin ang pinakamalaking barangay ({n} tao). Kadalasan, kung saan nakatira ang tao lang ang ipinapakita ng bilang."]), { p: maxCount[0], n: maxCount[4].toLocaleString("en") }) :
-        L(["Rates: the coastal band stands out, led by Talaba and Buhangin — the most cases are by the river, but the highest risk is on the coast.", "侵襲率：沿海帶最突出，以 Talaba 和 Buhangin 居首——病例最多的是河岸，風險最高的卻是海岸。", "Rates: tumatampok ang baybayin, nangunguna ang Talaba at Buhangin — nasa tabing-ilog ang pinakamaraming kaso, pero nasa baybayin ang pinakamataas na panganib."]));
+        L(["Rates: the coastal band stands out, led by Talaba and Buhangin — the most cases are by the river, but the highest risk is on the coast.", "侵襲率：沿海帶最突出，以 Talaba 和 Buhangin 居首——病例最多的是河岸，風險最高的卻是沿海。", "Rates: tumatampok ang baybayin, nangunguna ang Talaba at Buhangin — nasa tabing-ilog ang pinakamaraming kaso, pero nasa baybayin ang pinakamataas na panganib."]));
       msgs.push(st.method === "equal" ?
         L(["Equal interval: every class spans the same range, so only the truly high barangays reach the darkest colour.", "等距分級：每一級的數值範圍相同，只有真正很高的 barangay 會塗上最深的顏色。", "Equal interval: pare-pareho ang saklaw ng bawat class, kaya ang talagang mataas lang ang nasa pinakamadilim na kulay."]) :
         L(["Quantile: every colour holds about the same number of barangays, so small differences can look large.", "分位數分級：每個顏色的 barangay 數量大致相同，因此小差異也可能看起來很大。", "Quantile: halos pare-pareho ang bilang ng barangay sa bawat kulay, kaya puwedeng magmukhang malaki ang maliit na pagkakaiba."]));
@@ -2023,22 +2023,22 @@
       st.sel = b;
       paint();
       clear(infoEl);
-      append(infoEl, [h("strong", null, b[0]), " (" + L(BAND[b[1]]) + "): " + b[5] + " " + L(["cases", "例", "kaso"]) + " ÷ " + b[4].toLocaleString("en") + " " + L(["people", "人", "tao"]) + " × 10,000 = ", h("strong", null, rate(b).toFixed(1)), " " + L(["per 10,000", "每萬人", "bawat 10,000"])]);
+      append(infoEl, [h("strong", null, b[0]), " (" + L(BAND[b[1]]) + "): " + b[5] + " " + L(["cases", "例", "kaso"]) + " ÷ " + b[4].toLocaleString("en") + " " + L(["people", "人", "tao"]) + " × 10,000 = ", h("strong", null, rate(b).toFixed(1)), " " + L(["per 10,000", "每 10,000 人", "bawat 10,000"])]);
       if (mission !== 0 || ctx.controls.firstChild) return;
       if (b === maxRate && st.measure === "rate") {
         if (firstTry) score++;
         ctx.setScore(score, 3);
-        ctx.say("good", fmt(L(["{b}: {r} per 10,000 — the highest risk, though {p} has more cases. Risk needs a denominator.", "{b}：每萬人 {r}——風險最高，雖然 {p} 的病例數更多。風險一定要有分母。", "{b}: {r} bawat 10,000 — pinakamataas ang panganib, kahit mas marami ang kaso ng {p}. Kailangan ng denominator ang risk."]), { b: b[0], r: rate(b).toFixed(1), p: maxCount[0] }), goodWord());
+        ctx.say("good", fmt(L(["{b}: {r} per 10,000 — the highest risk, though {p} has more cases. Risk needs a denominator.", "{b}：每 10,000 人 {r}——風險最高，雖然 {p} 的病例數更多。風險一定要有分母。", "{b}: {r} bawat 10,000 — pinakamataas ang panganib, kahit mas marami ang kaso ng {p}. Kailangan ng denominator ang risk."]), { b: b[0], r: rate(b).toFixed(1), p: maxCount[0] }), goodWord());
         ctx.celebrate(false);
         nextMission();
       } else if (b === maxRate) {
         firstTry = false;
-        ctx.say("info", L(["Right barangay — now switch 'Show' to 'Rate per 10,000' to prove it, and tap it again.", "選對了——現在把「顯示」切換到「每萬人侵襲率」證明一下，再點一次。", "Tamang barangay — ngayon gawing 'Rate bawat 10,000' ang 'Ipakita' para patunayan, at i-tap ulit."]));
+        ctx.say("info", L(["Right barangay — now switch 'Show' to 'Rate per 10,000' to prove it, and tap it again.", "選對了——現在把「顯示」切換到「每 10,000 人侵襲率」證明一下，再點一次。", "Tamang barangay — ngayon gawing 'Rate bawat 10,000' ang 'Ipakita' para patunayan, at i-tap ulit."]));
       } else {
         firstTry = false;
         ctx.say("bad", b === maxCount ?
-          fmt(L(["{b} has the most cases, but also {n} people. Risk = cases ÷ people. Try 'Rate per 10,000'.", "{b} 病例最多，但人口也有 {n} 人。風險＝病例數 ÷ 人口。試試「每萬人侵襲率」。", "Pinakamarami ang kaso sa {b}, pero {n} din ang tao. Risk = kaso ÷ tao. Subukan ang 'Rate bawat 10,000'."]), { b: b[0], n: b[4].toLocaleString("en") }) :
-          L(["Not the highest. Switch to rates and compare the numbers on the tiles.", "不是最高的。切換到發生率，比較方格上的數字。", "Hindi ito ang pinakamataas. Lumipat sa rates at ikumpara ang numero sa tiles."]), badWord());
+          fmt(L(["{b} has the most cases, but also {n} people. Risk = cases ÷ people. Try 'Rate per 10,000'.", "{b} 病例最多，但人口也有 {n} 人。風險＝病例數 ÷ 人口。試試「每 10,000 人侵襲率」。", "Pinakamarami ang kaso sa {b}, pero {n} din ang tao. Risk = kaso ÷ tao. Subukan ang 'Rate bawat 10,000'."]), { b: b[0], n: b[4].toLocaleString("en") }) :
+          L(["Not the highest. Switch to rates and compare the numbers on the tiles.", "不是最高的。切換到侵襲率，比較方格上的數字。", "Hindi ito ang pinakamataas. Lumipat sa rates at ikumpara ang numero sa tiles."]), badWord());
       }
     }
     build();
@@ -2192,7 +2192,7 @@
         ["Search and destroy breeding sites", "搜尋並清除孳生源", "Search and destroy — hanapin at sirain ang pinamumugaran ng lamok"],
         ["Secure self-protection (long sleeves, repellent)", "做好自我防護（長袖、防蚊液）", "Secure self-protection (mahabang manggas, repellent)"],
         ["Seek early consultation for fever", "發燒及早就醫", "Seek early consultation kapag nilagnat"],
-        ["Support fogging only in outbreak hotspots", "只在疫情熱點支持噴藥", "Suportahan ang fogging sa outbreak hotspots lamang"]
+        ["Support fogging only in outbreak hotspots", "只在疫情熱區配合噴藥", "Suportahan ang fogging sa outbreak hotspots lamang"]
       ];
       var box = h("div", { class: "ph-end", tabindex: "-1" }, [talaStar(88),
         h("p", { class: "ph-end-score" }, fmt(L(["Patrol complete: {p} points!", "巡邏完成：{p} 分！", "Tapos ang patrol: {p} puntos!"]), { p: totalPts })),
