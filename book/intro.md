@@ -125,6 +125,8 @@
 ::::
 :::::
 
+🇵🇭 **菲律賓特別版《Bantay Python》**：給菲律賓第一線疾病監測人員的精簡姊妹書，從零開始到做出一份可分享的疫情儀表板，有英文、中文與 Filipino 三種語言。{button}`開啟菲律賓特別版 <https://ancientsky.github.io/python4epi/ph/zh/>`
+
 每個 notebook 頁面右上角都有 **Open in Colab** 按鈕，也可以在本機執行：
 
 ```bash

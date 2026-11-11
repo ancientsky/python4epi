@@ -463,6 +463,8 @@ anim.save("animation.gif", writer="pillow", fps=1, dpi=80)
 發生率（/10萬）= 確定病例數 / 縣市人口 × 100,000
 ```
 
+> ⚠️ 本章 notebook 為了簡化，用的是**單一年度（約 2023 年）的近似人口**當分母，套用到 2003 年以後的每一年。這樣只適合比較「縣市之間」的相對高低；要比較不同年份的趨勢，必須改用各年度的人口。
+
 ---
 
 <!-- video: ch08_07_choropleth -->
@@ -559,7 +561,7 @@ print(f"Moran's I = {moran.I:.3f}, p = {moran.p_sim:.4f}")   # ≈ 0.50, p < 0.0
 ```python
 from esda.moran import Moran_Local
 
-lisa = Moran_Local(main["rate"].values, w, permutations=999, seed=8)
+lisa = Moran_Local(main["rate"].values, w, permutations=999, seed=8, alternative="two-sided")
 # ⚠️ esda 象限編碼：.q 中 1=HH、2=LH、3=LL、4=HL（LH 是 2，不是 3！）
 labels = {1: "HH 震央", 2: "LH 颱風眼", 3: "LL 淨土", 4: "HL 火苗"}
 main["lisa"] = ["不顯著" if p >= 0.05 else labels[q]
@@ -571,13 +573,14 @@ main["lisa"] = ["不顯著" if p >= 0.05 else labels[q]
 > | 這行程式 | 在做什麼 |
 > |---|---|
 > | `Moran_Local(main["rate"].values, w, permutations=999, seed=8)` | 局部版：對**每一個**縣市各算一個 local Moran，同時看自己的率和鄰居平均率；`seed=8` 讓洗牌可重現 |
+> | `alternative="two-sided"` | 雙尾檢定。esda 下一個大版本會改變條件式洗牌 p 值的預設，現在明確寫出可避免日後 p 值突然變動（約為舊版單尾 `"directed"` 的兩倍） |
 > | `lisa.q` | 每個縣市落在哪一象限的代碼——**esda 編碼是 1=HH、2=LH、3=LL、4=HL** |
 > | `lisa.p_sim` | 每個縣市各自的洗牌 p 值（局部顯著性） |
 > | `["不顯著" if p >= 0.05 else labels[q] ...]` | 先看顯著性：p ≥ 0.05 一律標「不顯著」，顯著的才翻成 HH/LH/LL/HL 標籤 |
 >
 > ⚠️ **最容易踩雷的是 `.q` 的編碼**：直覺會以為 1234 = HH/HL/LL/LH，但 esda 是 **1=HH、2=LH、3=LL、4=HL**（LH 是 2、不是 3！）。照對照表抄，別自己按順序填，否則「颱風眼」和「火苗」會標反。
 
-在合成資料上，**臺南／高雄／嘉義**跳出來是 **HH 震央**，北部是 **LL 淨土**——南部登革熱熱區用統計坐實了。
+在合成資料上，**臺南／嘉義**通過雙尾檢定、跳出來是 **HH 震央**（高雄的發生率也很高、也落在 HH 象限，但 p ≈ 0.08，未達 0.05，不能宣稱顯著），北部的新北市是 **LL 淨土**——南部登革熱熱區用統計坐實了。
 
 <!-- video: ch08_05_lisa -->
 <!-- /video -->
@@ -590,7 +593,7 @@ main["lisa"] = ["不顯著" if p >= 0.05 else labels[q]
 from esda.getisord import G_Local
 
 w_b = Queen.from_dataframe(main, use_index=False); w_b.transform = "B"
-gi = G_Local(main["rate"].values, w_b, permutations=999, seed=8, star=True)
+gi = G_Local(main["rate"].values, w_b, permutations=999, seed=8, star=True, alternative="two-sided")
 hot = main.loc[(gi.p_sim < 0.05) & (gi.Zs > 0), "COUNTYNAME"].tolist()   # 顯著熱點
 ```
 

@@ -48,6 +48,15 @@ video = [
   "edge-tts>=6.1.0",
   "pyyaml>=6.0",
 ]
+timesfm = [
+  # Optional: runs the real TimesFM 3.0 model in notebooks/11_dl_timesfm.ipynb and
+  # regenerates data/tsfm_cache/ (scripts/make_timesfm_cache.py). Not needed to build
+  # the book, which replays the committed cache. `uv sync --group timesfm`.
+  # TimesFM 3.0 *weights* are non-commercial only (see src/epi_learning/tsfm.py).
+  "timesfm[torch]>=3.0.2",
+  # huggingface-hub 2.x pulls httpx2, which would bump idna for the default install too
+  "huggingface-hub>=0.28,<2",
+]
 
 [build-system]
 requires = ["setuptools>=75.0"]

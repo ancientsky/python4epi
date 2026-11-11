@@ -14,6 +14,7 @@
 | 章 | 主題 | 解答重點 | 解答 |
 |----|------|---------|------|
 | 01 | Python 基礎 | dict 組織疫情資料、函數封裝 | [解答](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/fundamentals-solution/) |
+| 01b | Python 開發者工具箱 | statistics 模組、型別轉換、try/except、字串清理 | [解答](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/b-python-toolbox-solution/) |
 | 02 | 資料處理與視覺化 | 日期衍生欄位、年齡分組流行曲線 | [解答](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/data-wrangling-solution/) |
 | 03 | 描述性統計與 2×2 表 | 水療 RR、年齡分組 RR、Fisher's exact | [解答](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/stats-solution/) |
 | 04 | 群聚調查工作流 | 自動化 SitRep 函數、嚴重度分析 | [解答](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/outbreak-workflow-solution/) |

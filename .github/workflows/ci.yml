@@ -71,3 +71,9 @@ jobs:
       # step. See scripts/build_book.py.
       - name: Build Jupyter Book (zh student edition — matches deploy)
         run: uv run python scripts/build_book.py --lang zh --edition student
+
+      # The three Philippines-edition projects (book_ph/{en,zh,fil}) are small,
+      # so CI builds all of them: same strict execution, post-build step,
+      # dashboard generation and link check as the deploy.
+      - name: Build Jupyter Book (Philippines edition — en, zh, fil)
+        run: uv run python scripts/build_book.py --series ph --all

@@ -14,6 +14,7 @@ This chapter provides reference solutions for each chapter's exercises. All solu
 | Ch | Topic | Solution focus | Solution |
 |----|------|---------|------|
 | 01 | Python basics | Organizing outbreak data with dicts, wrapping logic in functions | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/fundamentals-solution/) |
+| 01b | Python developer toolbox | The statistics module, type conversion, try/except, string cleaning | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/b-python-toolbox-solution/) |
 | 02 | Data wrangling and visualization | Derived date columns, epi curve by age group | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/data-wrangling-solution/) |
 | 03 | Descriptive statistics and 2×2 tables | Hydrotherapy RR, RR by age group, Fisher's exact | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/stats-solution/) |
 | 04 | Outbreak investigation workflow | Automated SitRep function, severity analysis | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/outbreak-workflow-solution/) |

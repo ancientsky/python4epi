@@ -59,7 +59,7 @@ Gather all four things — code, data, environment, seed — and anyone, on any 
 
 Translating the recipe metaphor back into formal terms, reproducible research comes down to three things:
 
-- **Environment lock**: `uv.lock` pins the version number of every dependency listed in `pyproject.toml` — not "roughly which version," but down to the exact patch number. Anyone who runs `uv sync` ends up with a virtual environment identical to yours.
+- **Environment lock**: `uv.lock` pins the version number of every dependency listed in `pyproject.toml` — not "roughly which version," but down to the exact patch number. Anyone who runs `uv sync --locked` ends up with a virtual environment identical to yours.
 - **Single-command workflow**: between "one piece of raw data" and "one report," there shouldn't be a single manual step that exists only inside your head. Ideally, someone clones your repo, runs a handful of fixed commands, and gets the exact same output you did.
 - **Traceability**: every number in the report should be traceable back to "which data, which code version, which package version" produced it — the data path is hard-coded into the code, the analysis logic is under version control, and the output is saved together with its version information.
 
@@ -79,7 +79,7 @@ The landmines make each rerun "drift" a little further from the last; the three 
 
 ### Three Common Landmines
 
-1. **Unpinned package versions**: `pandas` upgrades from 2.0 to 2.2, and some function quietly changes its default handling of missing values or sort order — same code, same data, different numbers.
+1. **Unpinned package versions**: `pandas` upgrades from 2.x to 3.0 (strings now default to the `str` dtype, Copy-on-Write everywhere), and the same code quietly behaves differently on string columns and chained assignment — same data, different results.
 2. **No fixed random seed**: any time the code has a random step like `train_test_split`, `np.random`, or `torch.manual_seed`, failing to fix the seed means every run reshuffles the deck all over again. The next section proves this to you directly with a ten-line minimal example.
 3. **Manual notebook edits to data, unrecorded**: deleting a few "weird-looking" rows by hand in a notebook, or manually correcting one field's value, without ever turning it into code — next time you rerun it, those hands have forgotten what they touched.
 
@@ -87,7 +87,7 @@ The landmines make each rerun "drift" a little further from the last; the three 
 
 | Landmine | Pillar (the fix) |
 |---|---|
-| Unpinned package versions | `uv.lock` pins every package's version number; `uv sync` guarantees the installed environment matches the original author's |
+| Unpinned package versions | `uv.lock` pins every package's version number; `uv sync --locked` guarantees the installed environment matches the original author's |
 | No fixed random seed | Every random step gets an explicit seed (`np.random.default_rng(42)`, `random_state=42`, `torch.manual_seed(42)`), so "random" comes out "randomly consistent" |
 | Manual notebook edits to data, unrecorded | Every data transformation (dropping rows, editing values, deriving columns) is written as a visible line of code, not a few clicks of the mouse |
 
@@ -103,7 +103,7 @@ A "minimal rerunnable report" needs to do this: starting from a clean environmen
 ### Step 1 — Three Commands, From a Clean Environment to a Report
 
 ```bash
-uv sync
+uv sync --locked
 uv run pytest
 uv run python notebooks/run_sitrep.py
 ```
@@ -112,9 +112,9 @@ uv run python notebooks/run_sitrep.py
 >
 > | This line | What it does |
 > |---|---|
-> | `uv sync` | Rebuilds the whole virtual environment according to the versions pinned in `uv.lock` — no matter which machine it runs on, the installed package versions come out identical |
+> | `uv sync --locked` | Rebuilds the whole virtual environment according to the versions pinned in `uv.lock` — no matter which machine it runs on, the installed package versions come out identical. `--locked` fails with an error if `uv.lock` and `pyproject.toml` disagree, instead of silently re-resolving versions; add it in CI and whenever you reproduce someone else's results |
 > | `uv run pytest` | Runs the unit tests inside the freshly built environment, confirming the `epi_learning` package's core functions (`attack_rate`, `case_fatality_rate`, ...) behave correctly — passing tests means "the environment is alive, and the code is correct" |
-> | `uv run python notebooks/run_sitrep.py` | Actually runs the analysis once: reads the line list, computes CFR and attack rate, outputs summary tables by zone — this is exactly the "minimal rerunnable report" this chapter is after |
+> | `uv run python notebooks/run_sitrep.py` | Actually runs the analysis once: reads the line list, computes CFR and attack rate, outputs summary tables by zone. Note that this script reads the demo `line_list.csv`, to show the structure of a single-command rerun; the reference answer for the Legionella outbreak (121 infected, 19 deaths) is the `summary` in Step 2 below |
 
 > 💡 Three commands, zero manual steps — that's exactly the spirit of a single-command workflow: nobody needs to ask you "what else do I need to install, what else do I need to change." Copy, paste, and it reproduces.
 
@@ -239,7 +239,7 @@ print("✅ schema OK - columns, dtypes, and value ranges all as expected")
 
 ## Reproducibility Checklist
 
-1. Is there a `uv.lock`, and can `uv sync && uv run pytest` run from a clean environment?
+1. Is there a `uv.lock`, and can `uv sync --locked && uv run pytest` run from a clean environment?
 2. Is there a fixed data column contract (schema contract / line list schema) that immediately gets caught by an `assert` the moment the data changes?
 3. Is there a minimal rerunnable script (e.g., `run_sitrep.py`) that goes from data to report with a single command?
 4. Are all random steps seeded (`np.random.default_rng(seed)`, `random_state=`, `torch.manual_seed()`)?
@@ -258,7 +258,7 @@ print("✅ schema OK - columns, dtypes, and value ranges all as expected")
 |------|----------|
 | Manually editing data in a notebook without recording it | Write all transformations in code — the logic for changing data is itself documentation |
 | Sharing only the result figures, not the code | Include rerunnable code and version information so others can verify it themselves |
-| Not pinning package versions | Pin the environment with `uv.lock`; `uv sync` installs everything in one shot |
+| Not pinning package versions | Pin the environment with `uv.lock`; `uv sync --locked` installs everything in one shot |
 | Random seed not fixed | Set `random_state=`, `np.random.default_rng(seed)`, or `torch.manual_seed()` |
 | No data contract, so nobody notices when columns change | Write a schema contract with `assert` (or a package like `pandera`) so the data raises an error the moment it changes |
 | Keeping only the "final result" in your head, relying on memory for the steps in between | Write the summary and version information into files (CSV/JSON) for diffing later |

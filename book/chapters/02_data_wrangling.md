@@ -130,10 +130,10 @@ df.info()
 
 > **`df.info()` 告訴你：**
 > - 總共幾列、幾欄
-> - 每個欄位的**名稱**和**型別**（`int64` 整數、`float64` 小數、`object` 文字、`bool` 布林）
+> - 每個欄位的**名稱**和**型別**（`int64` 整數、`float64` 小數、`object` 文字（pandas 3 起顯示為 `str`）、`bool` 布林）
 > - 每個欄位有幾個**非空值**——如果某欄只有 121 個非空值（而不是 280），就有遺漏值
 >
-> 💡 `object` 型別通常代表「文字」——日期欄位讀進來也是 `object`，需要手動轉換成 `datetime`。
+> 💡 `object` 型別（本教材鎖定的 pandas 2.3 顯示 `object`；pandas 3 起改顯示 `str`）通常代表「文字」——日期欄位讀進來也是文字，需要手動轉換成 `datetime`。
 
 ```python
 df.describe()
@@ -156,7 +156,7 @@ df.describe()
 </div>
 <!-- /video -->
 
-line list 中有 5 個日期欄位，讀入時都是**文字（object）**，Python 不知道它們是日期。必須手動轉成 `datetime` 型別，才能做時間排序、相減、取月份等操作。
+line list 中有 5 個日期欄位，讀入時都是**文字（`object`；pandas 3 起為 `str`）**，Python 不知道它們是日期。必須手動轉成 `datetime` 型別，才能做時間排序、相減、取月份等操作。
 
 ```python
 date_cols = [

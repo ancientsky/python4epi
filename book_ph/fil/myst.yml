@@ -1,0 +1,84 @@
+# Jupyter Book 2 (MyST) configuration — Philippines edition (Filipino).
+#
+# Build with the shared entry point, not with `jupyter book` directly: it also
+# installs the kernel pre-execution setup and runs the post-build step.
+#
+#   uv run python scripts/build_book.py --series ph --lang fil
+#
+# book_ph/en, book_ph/zh and book_ph/fil mirror each other file-for-file
+# (tests/test_book_toc.py checks it) and share book_ph/_static and
+# book_ph/images through symlinks. See "Philippines edition" in CLAUDE.md.
+version: 1
+project:
+  title: "Bantay Python — Epi With Python, Edisyong Pilipinas"
+  description: "Python para sa mga frontline na kawani ng disease surveillance sa Pilipinas: AI-assisted coding, data privacy, isang kuwento ng leptospirosis at dengue, at isang outbreak dashboard na maibabahagi."
+  thumbnail: _static/og-image_fil.png
+  keywords: [Epidemiology, Python, Pilipinas, disease surveillance, PIDSR, leptospirosis, dengue, data privacy, AI-assisted coding, dashboard]
+  authors:
+    - name: Epi With Python | Python for Epidemiologists
+  license: MIT
+  github: https://github.com/ancientsky/python4epi
+  # One warning per notebook cell id reused across notebooks (colab-setup…).
+  error_rules:
+    - rule: identifier-is-unique
+      severity: ignore
+  # MyST hard-codes an English "Figure N:" caption prefix; no page
+  # cross-references a figure by number, so numbering is off (as in book/).
+  numbering:
+    figure:
+      enabled: false
+  toc:
+    - file: intro.md
+    - title: "Unang Yugto · May ulat!"
+      children:
+        - file: chapters/00_start_here.md
+        - file: chapters/01_python_with_ai.md
+          children:
+            - file: chapters/notebooks/01_python_with_ai.ipynb
+        - file: chapters/02_privacy_first.md
+          children:
+            - file: chapters/notebooks/02_privacy_first.ipynb
+    - title: "Ikalawang Yugto · Bilangin natin"
+      children:
+        - file: chapters/03_clean_linelist.md
+          children:
+            - file: chapters/notebooks/03_clean_linelist.ipynb
+        - file: chapters/04_time_place_person.md
+          children:
+            - file: chapters/notebooks/04_time_place_person.ipynb
+        - file: chapters/05_find_the_source.md
+          children:
+            - file: chapters/notebooks/05_find_the_source.ipynb
+    - title: "Ikatlong Yugto · Bantay"
+      children:
+        - file: chapters/06_signals_and_thresholds.md
+          children:
+            - file: chapters/notebooks/06_signals_and_thresholds.ipynb
+        - file: chapters/07_forecast_timesfm.md
+          children:
+            - file: chapters/notebooks/07_forecast_timesfm.ipynb
+        - file: chapters/08_maps.md
+          children:
+            - file: chapters/notebooks/08_maps.ipynb
+    - title: "Ikaapat na Yugto · Ipakita"
+      children:
+        - file: chapters/09_dashboard.md
+          children:
+            - file: chapters/notebooks/09_dashboard.ipynb
+        - file: chapters/10_wrap_up.md
+site:
+  title: Bantay Python
+  # Same pinned theme as book/myst.yml (see "Theme pin" in CLAUDE.md).
+  template: https://github.com/myst-templates/book-theme/archive/23f2df5493e23dfb1d9433c8aa64c87beb4232a3.zip
+  parts:
+    navbar_end: _site/navbar_end.md
+    footer: _site/footer.md
+  options:
+    favicon: _static/favicon.svg
+    logo: _static/logo.svg
+    logo_dark: _static/logo-dark.svg
+    logo_alt: Bantay Python
+    style: _static/ph.css
+    folders: true
+    outline_maxdepth: 2
+    hide_authors: true

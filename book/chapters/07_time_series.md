@@ -182,10 +182,10 @@ print(f"上週同一天法 MAE = {mae_seasonal:.1f} 杯  ← 抓住『週六爆�
 :alt: 七種時間序列預測方法比較 —— rolling mean, Poisson+lag, Negative Binomial, Logistic, ARIMA, SARIMA, Prophet
 :width: 100%
 
-**時間序列預測方法地圖**：七個模型從簡單到複雜排開，最下面整排的綠色寬卡是 **Prophet**（好上手的現代選項）。資料越少 → 越左邊；需要捕捉週期 → 最右邊。每張卡片告訴你「最少要幾天資料」「能不能給信賴區間」「適合哪種情境」。
+**時間序列預測方法地圖**：七個模型從簡單到複雜排開，最下面整排的綠色寬卡是 **Prophet**（好上手的經典選項；2026 年起官方已將它轉為維護模式）。資料越少 → 越左邊；需要捕捉週期 → 最右邊。每張卡片告訴你「最少要幾天資料」「能不能給信賴區間」「適合哪種情境」。
 ```
 
-> 📌 最下面那張綠色寬卡就是第七種——**Prophet**：用**趨勢＋週期＋假日**三塊積木取代手動選 `(p,d,q)(P,D,Q,s)`，是免調參版的 SARIMA 替代方案。本章 **Step 11** 會動手實作。
+> 📌 最下面那張綠色寬卡就是第七種——**Prophet**：用**趨勢＋週期＋假日**三塊積木取代手動選 `(p,d,q)(P,D,Q,s)`，是免調參版的 SARIMA 替代方案。本章 **Step 11** 會動手實作。2026 年起，連參數都不用配適的選項是**時序基礎模型**（TSFM，如 TimesFM 3.0），見 Step 11 最後的「延伸」。
 
 ---
 
@@ -548,7 +548,12 @@ from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.stattools import adfuller
 
 # 先做平穩性檢定（ADF test）
-adf_stat, p_value, *_ = adfuller(synth)
+try:
+    # statsmodels 0.15 起建議用結果物件（舊的 tuple 回傳已棄用）；0.14 沒有此參數
+    _adf = adfuller(synth, result_object=True)
+    adf_stat, p_value = _adf.statistic, _adf.pvalue
+except TypeError:
+    adf_stat, p_value, *_ = adfuller(synth)
 print(f"ADF statistic = {adf_stat:.3f}, p-value = {p_value:.3f}")
 print(f"→ p < 0.05 表示序列平穩（不需要差分 d=0）；否則 d ≥ 1")
 
@@ -625,7 +630,7 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 
 ## Step 11: Prophet —— Meta 的「自動拆積木」水晶球
 
-Prophet 是 Meta 開源的預測工具，把序列**自動拆成 趨勢(trend) + 週期(seasonality) + 假日(holidays)** 三塊積木相加，只要 `ds`/`y` 兩欄、幾乎免調參，還自帶不確定區間。
+Prophet 是 Meta 開源的預測工具（官方 README 註明自 v1.4.0 起進入**維護模式**：只修 bug、更新相依套件，不再開發新功能；本書鎖定的是 1.3.0），把序列**自動拆成 趨勢(trend) + 週期(seasonality) + 假日(holidays)** 三塊積木相加，只要 `ds`/`y` 兩欄、幾乎免調參，還自帶不確定區間。
 
 ```{figure} images/prophet_decomposition.svg
 :name: fig-prophet-decomposition
@@ -692,6 +697,21 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 
 ⚠️ **Prophet 不是萬靈丹**：它是**加法模型**，假設未來是「已學到的趨勢＋週期」的延續；疫情爆發期那種非線性回饋（像 SEIR 的傳播動力）它抓不到，資料太短（不到約 2 個週期）也學不動——它加入工具箱的是**誠實的選項**，不是更準的水晶球。
 
+### 延伸：時序基礎模型（TSFM）——連參數都不用配適
+
+如果連 Prophet 的 `fit()` 都想省掉，2026 年最省事的選項是**時序基礎模型（Time Series Foundation Model, TSFM）**：Google、Amazon 等團隊先用海量時間序列把模型訓練好，你只要把歷史丟進去，它就直接回傳預測與預測區間——**零樣本（zero-shot）**，沒有任何訓練步驟。Google 在 2026 年 8 月發布的 **TimesFM 3.0** 只要 `pip install "timesfm[torch]"` 加三行程式，筆電 CPU 就跑得動。
+
+Ch11 的實作 notebook [`11_dl_timesfm.ipynb`](notebooks/11_dl_timesfm.ipynb) 拿**本章 Part B 這條 90 天類流感序列**實際比過：
+
+| 評估方式 | TimesFM 3.0（零樣本） | SARIMA | Seasonal naive |
+|---|---|---|---|
+| 本章的單一切分（最後 7 天） | 0.897 | 0.770 | 0.714 |
+| 滾動起點回測（14 個起點 × 7 天） | 0.948 | 0.804 | 1.265 |
+
+也就是說：不用選任何參數就穩定贏過 naive 基準，但在這條「趨勢 + 固定週期」、正好是 SARIMA 主場的序列上，**調好的經典模型仍然比較準**；而且單看一週的成績很容易被運氣左右，一定要做滾動起點回測。
+
+> ⚠️ **兩個提醒**：(1) TSFM 跟 Prophet 一樣，學的是「序列通常怎麼延續」，**看不到群突發的開始與轉折**，也會把通報延遲誤認成疫情下降；(2) **授權**：TimesFM 3.0 的權重只限非商業、非正式上線用途（研究、評估、教學可以，接進例行監測或預警系統不行）；要正式上線請用 Apache-2.0 授權的 TimesFM 2.5 / Chronos-2，或有授權的雲端服務。詳見 Ch11 的 [TSFM 一節](11_deep_learning.md)。
+
 ---
 
 ## Step 12: 模型大比拼
@@ -733,7 +753,8 @@ print(comparison.to_string(index=False))
 - **需要是/否警報**（要不要啟動應變層級）→ Logistic regression
 - **中長期監測**（> 一個月、無明顯週期）→ ARIMA
 - **類流感、每週監測**（有明顯週循環）→ SARIMA
-- **要快速上手、想要趨勢/週期/假日自動拆解 + 不確定區間** → Prophet
+- **要快速上手、想要趨勢/週期/假日自動拆解 + 不確定區間** → Prophet（維護模式，仍可用）
+- **完全不想配適模型、或要同時預測很多條序列** → 時序基礎模型零樣本預測（如 TimesFM 3.0，見 [`11_dl_timesfm.ipynb`](notebooks/11_dl_timesfm.ipynb)）——一樣要跟 baseline 回測比較，且注意權重授權
 
 ## Step 13: 發病 vs 住院曲線（Lag 效應）
 

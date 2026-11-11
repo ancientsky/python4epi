@@ -125,6 +125,8 @@ Lessons + exercises + solutions
 ::::
 :::::
 
+🇵🇭 **Philippines special edition, *Bantay Python***: a shorter sister book for frontline Philippine disease surveillance staff, from zero to a shareable outbreak dashboard, in English, 中文 and Filipino. {button}`Open the Philippines edition <https://ancientsky.github.io/python4epi/ph/>`
+
 Every notebook page has an **Open in Colab** button in the top-right corner, or you can run it locally:
 
 ```bash

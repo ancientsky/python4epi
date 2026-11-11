@@ -156,7 +156,7 @@ slide1.placeholders[1].text = (
     f"Attack rate {n_infected / n_total:.1%} | Case fatality rate {n_deaths / n_infected:.1%}"
 )
 
-slide2 = prs.slides.add_slide(prs.slide_layouts[5])
+slide2 = prs.slides.add_slide(prs.slide_layouts[6])
 buf.seek(0)   # BytesIO can only be read once -- always rewind before inserting the picture
 slide2.shapes.add_picture(buf, Inches(0.4), Inches(1.1), width=Inches(6))
 
@@ -202,7 +202,7 @@ print(f"Exported to: {outdir}")
 > |---|---|
 > | `fig.savefig(buf, format="png", ...); buf.seek(0)` | Saves the chart into an in-memory `BytesIO` — no need to write to disk first before dropping it straight into the report |
 > | `prs.slides.add_slide(prs.slide_layouts[0])` | Layout 0 = the title slide, with built-in main-title and subtitle placeholders |
-> | `prs.slides.add_slide(prs.slide_layouts[5])` | Layout 5 = a blank slide, laid out yourself with a textbox / picture / table |
+> | `prs.slides.add_slide(prs.slide_layouts[6])` | Layout 6 = a blank slide, laid out yourself with a textbox / picture / table |
 > | `slide2.shapes.add_picture(buf, ...)` | Inserts the in-memory PNG directly into the slide, no need to save it as a file first |
 > | `slide2.shapes.add_table(rows, cols, ...).table` | Draws a table on the slide, filled row by row from `summary_rows` |
 > | `buf.seek(0)` (second occurrence) | **`BytesIO` can only be read once**: after PPTX uses it, the cursor is parked at the end of the buffer; before DOCX reads it again you must rewind to the start, or you'll insert a blank image |

@@ -1,0 +1,1757 @@
+/* =============================================================================
+ * Bantay Python — Epi With Python, Philippines Edition
+ * Site stylesheet for the MyST book-theme (Jupyter Book 2), pinned v1.4.1.
+ *
+ * Loaded through `site.options.style` in book_ph/{en,zh,fil}/myst.yml. It
+ * REPLACES book/_static/site.css for these projects (the theme takes one file),
+ * so the structural fixes the theme needs are carried over here (search for
+ * "carried over from site.css").
+ *
+ * Authoring guide (every class, MyST snippets, tokens): book_ph/STYLEGUIDE.md
+ *
+ * Layout of this file
+ *   1. Design tokens  (--ph-* on :root, dark values on html.dark)
+ *   2. Theme tokens   (--myst-color-* mapped onto the --ph-* palette)
+ *   3. Base typography, headings, the jeepney-signboard page title
+ *   4. Header: flag stripe, logo, three-way language switch, extra links
+ *   5. Sidebar, prev/next links
+ *   6. Code, tables, admonitions, quotes, figures, buttons, cards
+ *   7. ph-* components (hero, banderitas, route, story, Tala boxes, check,
+ *      oops, privacy, baon, cast, stat)
+ *   8. Motion: scroll reveal, reduced motion
+ *   9. Phone layout (<= 640 px, <= 400 px)
+ *
+ * Rules
+ *   - Decoration never sits behind running text; textures stay in borders,
+ *     header strips and empty corners.
+ *   - Every motion is decorative and switched off by prefers-reduced-motion.
+ *   - The theme toggles `dark` on <html>; dark values live on html.dark.
+ *   - MyST copies this file alone into /build/, so every image used here is an
+ *     inline SVG data URI (generated; keep them small).
+ * ============================================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Bungee&display=swap");
+
+/* -----------------------------------------------------------------------------
+ * 1. Design tokens — shared with ph-games.css (see STYLEGUIDE.md, "Tokens")
+ * -------------------------------------------------------------------------- */
+:root {
+  /* Brand fills: identical in both themes; white text on them passes AA. */
+  --ph-flag-blue: #0038a8;
+  --ph-flag-red: #ce1126;
+  --ph-sun: #fcd116;          /* fill only; never text on light backgrounds */
+  --ph-sun-deep: #e0a800;
+  --ph-mango: #ff9f1c;        /* fill only */
+  --ph-leaf-fill: #2f7d32;
+  --ph-teal-fill: #00737d;
+  --ph-indigo-fill: #4b3fb0;
+  --ph-mango-fill: #b45309;
+  --ph-chrome-1: #f4f6f8;
+  --ph-chrome-2: #aeb7c0;
+  --ph-chrome-3: #6e7882;
+  --ph-sampaguita: #fffcf4;
+  --ph-ink: #1c1b29;
+  --ph-night: #13183a;
+  --ph-on-fill: #ffffff;      /* text on any *-fill / flag colour */
+  --ph-on-sun: #1c1b29;       /* text on --ph-sun / --ph-mango */
+
+  /* Theme-dependent surfaces and text */
+  --ph-bg: #fffbf2;
+  --ph-bg-alt: #fff4de;
+  --ph-surface: #ffffff;
+  --ph-surface-alt: #fff8ea;
+  --ph-text: #1c1b29;
+  --ph-text-muted: #4d4a5e;
+  --ph-border: #eadcc0;
+  --ph-border-strong: #cdb98f;
+
+  /* Text-safe accents (AA on --ph-bg, --ph-surface and their soft tints) */
+  --ph-blue: #0038a8;
+  --ph-red: #b30e22;
+  --ph-leaf: #276b2a;
+  --ph-mango-text: #9a4600;
+  --ph-teal: #006d77;
+  --ph-indigo: #4b3fb0;
+
+  /* Soft tints for box backgrounds */
+  --ph-soft-blue: #e8efff;
+  --ph-soft-red: #fdecee;
+  --ph-soft-sun: #fff6cc;
+  --ph-soft-leaf: #e9f5e4;
+  --ph-soft-mango: #fff0dc;
+  --ph-soft-teal: #e0f4f5;
+  --ph-soft-indigo: #eeebff;
+
+  --ph-code-bg: #13183a;
+  --ph-code-text: #f3efe3;
+  --ph-focus: #0038a8;
+  --ph-shadow: 0 2px 6px rgba(28, 27, 41, 0.08);
+  --ph-shadow-pop: 0 10px 24px rgba(28, 27, 41, 0.14);
+  --ph-plate-shadow: 0 5px 0 rgba(28, 27, 41, 0.18);
+
+  --ph-radius: 16px;
+  --ph-radius-sm: 10px;
+  --ph-ease: cubic-bezier(0.34, 1.4, 0.64, 1); /* a little bounce */
+
+  --ph-font-display: "Bungee", "Arial Black", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei",
+    "Noto Sans CJK TC", Impact, system-ui, sans-serif;
+  --ph-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", "Noto Sans CJK TC", sans-serif;
+  --ph-font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK TC",
+    monospace;
+
+  /* Motifs (data URIs) — usable by ph-games.css too */
+  --ph-img-sun: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-100 -100 200 200'%3E%3Cpath d='M10.9 -31.3L0.0 -96.0L-10.9 -31.3ZM-3.7 -31.5L-19.6 -68.3L-13.5 -28.7ZM13.5 -28.7L19.6 -68.3L3.7 -31.5ZM29.8 -14.4L67.9 -67.9L14.4 -29.8ZM19.6 -24.9L34.4 -62.1L10.7 -29.8ZM29.8 -10.7L62.1 -34.4L24.9 -19.6ZM31.3 10.9L96.0 0.0L31.3 -10.9ZM31.5 -3.7L68.3 -19.6L28.7 -13.5ZM28.7 13.5L68.3 19.6L31.5 3.7ZM14.4 29.8L67.9 67.9L29.8 14.4ZM24.9 19.6L62.1 34.4L29.8 10.7ZM10.7 29.8L34.4 62.1L19.6 24.9ZM-10.9 31.3L0.0 96.0L10.9 31.3ZM3.7 31.5L19.6 68.3L13.5 28.7ZM-13.5 28.7L-19.6 68.3L-3.7 31.5ZM-29.8 14.4L-67.9 67.9L-14.4 29.8ZM-19.6 24.9L-34.4 62.1L-10.7 29.8ZM-29.8 10.7L-62.1 34.4L-24.9 19.6ZM-31.3 -10.9L-96.0 0.0L-31.3 10.9ZM-31.5 3.7L-68.3 19.6L-28.7 13.5ZM-28.7 -13.5L-68.3 -19.6L-31.5 -3.7ZM-14.4 -29.8L-67.9 -67.9L-29.8 -14.4ZM-24.9 -19.6L-62.1 -34.4L-29.8 -10.7ZM-10.7 -29.8L-34.4 -62.1L-19.6 -24.9Z' fill='%23FCD116'/%3E%3Ccircle r='34' fill='%23FCD116'/%3E%3C/svg%3E");
+  --ph-img-sun-small: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 100'%3E%3Cpath d='M5.4 -15.6L0.0 -48.0L-5.4 -15.6ZM-1.9 -15.7L-9.8 -34.1L-6.8 -14.3ZM6.8 -14.3L9.8 -34.1L1.9 -15.7ZM14.9 -7.2L33.9 -33.9L7.2 -14.9ZM9.8 -12.4L17.2 -31.1L5.4 -14.9ZM14.9 -5.4L31.1 -17.2L12.4 -9.8ZM15.6 5.4L48.0 0.0L15.6 -5.4ZM15.7 -1.9L34.1 -9.8L14.3 -6.8ZM14.3 6.8L34.1 9.8L15.7 1.9ZM7.2 14.9L33.9 33.9L14.9 7.2ZM12.4 9.8L31.1 17.2L14.9 5.4ZM5.4 14.9L17.2 31.1L9.8 12.4ZM-5.4 15.6L0.0 48.0L5.4 15.6ZM1.9 15.7L9.8 34.1L6.8 14.3ZM-6.8 14.3L-9.8 34.1L-1.9 15.7ZM-14.9 7.2L-33.9 33.9L-7.2 14.9ZM-9.8 12.4L-17.2 31.1L-5.4 14.9ZM-14.9 5.4L-31.1 17.2L-12.4 9.8ZM-15.6 -5.4L-48.0 0.0L-15.6 5.4ZM-15.7 1.9L-34.1 9.8L-14.3 6.8ZM-14.3 -6.8L-34.1 -9.8L-15.7 -1.9ZM-7.2 -14.9L-33.9 -33.9L-14.9 -7.2ZM-12.4 -9.8L-31.1 -17.2L-14.9 -5.4ZM-5.4 -14.9L-17.2 -31.1L-9.8 -12.4Z' fill='%23E0A800'/%3E%3Ccircle r='17' fill='%23E0A800'/%3E%3C/svg%3E");
+  --ph-img-jeepney: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 244 122'%3E %3Cellipse cx='122' cy='112' rx='112' ry='6' fill='%23000' opacity='.18'/%3E %3Cpath d='M18 40 Q18 32 26 32 H196 Q204 32 204 40 V58 H226 Q236 60 238 72 V96 H18 Z' fill='%23FFFCF4' stroke='%231C1B29' stroke-width='3' stroke-linejoin='round'/%3E %3Crect x='56' y='12' width='112' height='20' rx='5' fill='%23FCD116' stroke='%231C1B29' stroke-width='3'/%3E %3Ccircle cx='74' cy='22' r='3.4' fill='%23CE1126'/%3E%3Ccircle cx='88' cy='22' r='3.4' fill='%230038A8'/%3E%3Ccircle cx='102' cy='22' r='3.4' fill='%23CE1126'/%3E%3Crect x='112' y='19' width='44' height='6' rx='3' fill='%230038A8'/%3E %3Crect x='14' y='28' width='194' height='8' rx='4' fill='%23AEB7C0' stroke='%231C1B29' stroke-width='2.5'/%3E %3Cg fill='%232F5EB5' stroke='%231C1B29' stroke-width='2.5'%3E%3Crect x='44' y='42' width='30' height='18' rx='3'/%3E%3Crect x='80' y='42' width='30' height='18' rx='3'/%3E%3Crect x='116' y='42' width='30' height='18' rx='3'/%3E%3Crect x='152' y='42' width='30' height='18' rx='3'/%3E%3C/g%3E %3Cpath d='M188 42 H200 V60 H188 Z' fill='%238FB4F0' stroke='%231C1B29' stroke-width='2.5'/%3E %3Crect x='20' y='42' width='18' height='44' rx='2' fill='%231C1B29' opacity='.85'/%3E %3Cpath d='M18 66 H238' stroke='%23CE1126' stroke-width='6'/%3E %3Cpath d='M18 74 H238' stroke='%23FCD116' stroke-width='4'/%3E %3Cpath d='M18 81 H238' stroke='%230038A8' stroke-width='5'/%3E %3Cpath d='M50 50 l3 -4 l3 4 M86 50 l3 -4 l3 4' stroke='%23FCD116' stroke-width='0' fill='none'/%3E %3Crect x='232' y='64' width='8' height='26' rx='2' fill='%23F4F6F8' stroke='%231C1B29' stroke-width='2.5'/%3E %3Ccircle cx='234' cy='64' r='4' fill='%23FCD116' stroke='%231C1B29' stroke-width='2'/%3E %3Cpath d='M212 58 l8 -14 l4 3 l-3 11 Z' fill='%23F4F6F8' stroke='%231C1B29' stroke-width='2.5' stroke-linejoin='round'/%3E %3Crect x='10' y='88' width='230' height='8' rx='4' fill='%23AEB7C0' stroke='%231C1B29' stroke-width='2.5'/%3E %3Cg%3E%3Ccircle cx='62' cy='98' r='15' fill='%231C1B29'/%3E%3Ccircle cx='62' cy='98' r='6' fill='%23F4F6F8'/%3E%3Cpath d='M62 88 V108 M52 98 H72' stroke='%236E7882' stroke-width='2'/%3E%3C/g%3E %3Cg%3E%3Ccircle cx='190' cy='98' r='15' fill='%231C1B29'/%3E%3Ccircle cx='190' cy='98' r='6' fill='%23F4F6F8'/%3E%3Cpath d='M190 88 V108 M180 98 H200' stroke='%236E7882' stroke-width='2'/%3E%3C/g%3E %3C/svg%3E");
+  --ph-img-stars: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 30'%3E%3Cg transform='translate(15 15)'%3E%3Cpolygon points='0.0,-12.0 3.0,-4.1 11.4,-3.7 4.8,1.6 7.1,9.7 0.0,5.0 -7.1,9.7 -4.8,1.6 -11.4,-3.7 -3.0,-4.1' fill='%23FCD116'/%3E%3C/g%3E%3Cg transform='translate(45 15)'%3E%3Cpolygon points='0.0,-12.0 3.0,-4.1 11.4,-3.7 4.8,1.6 7.1,9.7 0.0,5.0 -7.1,9.7 -4.8,1.6 -11.4,-3.7 -3.0,-4.1' fill='%23FFFCF4'/%3E%3C/g%3E%3Cg transform='translate(75 15)'%3E%3Cpolygon points='0.0,-12.0 3.0,-4.1 11.4,-3.7 4.8,1.6 7.1,9.7 0.0,5.0 -7.1,9.7 -4.8,1.6 -11.4,-3.7 -3.0,-4.1' fill='%23FCD116'/%3E%3C/g%3E%3C/svg%3E");
+  --ph-img-bunting: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 44'%3E%3Cpath d='M0 6 Q60.0 22 120 6' fill='none' stroke='%231C1B29' stroke-width='1.6'/%3E%3Cpath d='M2.9 7.9 L21.1 7.9 L12.0 28.9 Z' fill='%230038A8' stroke='%231C1B29' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M26.9 11.7 L45.1 11.7 L36.0 32.7 Z' fill='%23CE1126' stroke='%231C1B29' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M50.9 13.0 L69.1 13.0 L60.0 34.0 Z' fill='%23FCD116' stroke='%231C1B29' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M74.9 11.7 L93.1 11.7 L84.0 32.7 Z' fill='%23FFFCF4' stroke='%231C1B29' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M98.9 7.9 L117.1 7.9 L108.0 28.9 Z' fill='%232F7D32' stroke='%231C1B29' stroke-width='.8' stroke-opacity='.35'/%3E%3C/svg%3E");
+  --ph-img-bunting-alt: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 44'%3E%3Cpath d='M0 6 Q60.0 22 120 6' fill='none' stroke='%231C1B29' stroke-width='1.6'/%3E%3Cpath d='M2.9 7.9 L21.1 7.9 L12.0 28.9 Z' fill='%23FF9F1C' stroke='%231C1B29' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M26.9 11.7 L45.1 11.7 L36.0 32.7 Z' fill='%232F7D32' stroke='%231C1B29' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M50.9 13.0 L69.1 13.0 L60.0 34.0 Z' fill='%230038A8' stroke='%231C1B29' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M74.9 11.7 L93.1 11.7 L84.0 32.7 Z' fill='%23FCD116' stroke='%231C1B29' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M98.9 7.9 L117.1 7.9 L108.0 28.9 Z' fill='%23CE1126' stroke='%231C1B29' stroke-width='.8' stroke-opacity='.35'/%3E%3C/svg%3E");
+  --ph-img-banig: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='%23FCD116'/%3E%3Cpath d='M0 0h12v6H0zM12 6h12v6H12zM0 12h12v6H0zM12 18h12v6H12z' fill='%23CE1126'/%3E%3Cpath d='M6 0h6v12H6zM18 12h6v12h-6z' fill='%230038A8' opacity='.85'/%3E%3Cpath d='M0 6h24M0 12h24M0 18h24M6 0v24M12 0v24M18 0v24' stroke='%23000' stroke-opacity='.12' stroke-width='.8'/%3E%3C/svg%3E");
+  --ph-img-capiz: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' fill='none'/%3E%3Crect x='2' y='2' width='24' height='24' rx='5' fill='%23fff' fill-opacity='.55' stroke='%23B8A98A' stroke-opacity='.45'/%3E%3Cpath d='M6 14 q8 -8 16 0' stroke='%23D9CBB0' stroke-opacity='.5' fill='none'/%3E%3C/svg%3E");
+  --ph-img-tala: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-24 -24 48 48'%3E%3Cpolygon points='0.0,-21.0 6.2,-8.5 20.0,-6.5 10.0,3.2 12.3,17.0 0.0,10.5 -12.3,17.0 -10.0,3.2 -20.0,-6.5 -6.2,-8.5' fill='%23FCD116' stroke='%23FF9F1C' stroke-width='3.5' stroke-linejoin='round'/%3E%3Ccircle cx='-5' cy='-1' r='2.2' fill='%231C1B29'/%3E%3Ccircle cx='5' cy='-1' r='2.2' fill='%231C1B29'/%3E%3Cpath d='M-4 5 q4 4 8 0' stroke='%231C1B29' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+
+  /* 2. Theme tokens: light */
+  --myst-color-bg: var(--ph-bg);
+  --myst-color-bg-secondary: var(--ph-bg-alt);
+  --myst-color-surface: #fbefd6;
+  --myst-color-surface-hover: #f7e6c3;
+  --myst-color-text: var(--ph-text);
+  --myst-color-text-secondary: #3e3c4f;
+  --myst-color-text-tertiary: var(--ph-text-muted);
+  --myst-color-prose-body: #262535;
+  --myst-color-border: var(--ph-border);
+  --myst-color-border-strong: var(--ph-border-strong);
+  --myst-color-link: var(--ph-blue);
+  --myst-color-link-hover: var(--ph-red);
+  --myst-color-link-underline: #8fa8dc;
+  --myst-color-active: var(--ph-red);
+  --myst-color-active-bg: #fcd11640;
+  --myst-color-active-surface: var(--ph-soft-sun);
+  --myst-color-primary: var(--ph-flag-red);
+  --myst-color-primary-hover: #a50d1e;
+  --myst-color-focus-ring: var(--ph-focus);
+  --myst-color-focus-outline: var(--ph-focus);
+  --myst-color-accent-text: var(--ph-red);
+  --myst-color-accent-surface: var(--ph-soft-sun);
+  --myst-color-accent-surface-border: #f0d873;
+  --myst-color-accent-surface-text: var(--ph-red);
+  --myst-color-inverse-bg: var(--ph-night);
+  --myst-color-inverse-text: var(--ph-sampaguita);
+  --myst-color-code: var(--ph-red);
+  --myst-color-info: var(--ph-flag-blue);
+  --myst-color-info-bg: var(--ph-soft-blue);
+  --myst-color-info-text: var(--ph-blue);
+  --myst-color-tip: var(--ph-teal-fill);
+  --myst-color-tip-bg: var(--ph-soft-teal);
+  --myst-color-tip-text: var(--ph-teal);
+  --myst-color-success: var(--ph-leaf-fill);
+  --myst-color-success-bg: var(--ph-soft-leaf);
+  --myst-color-success-text: var(--ph-leaf);
+  --myst-color-warning: var(--ph-mango);
+  --myst-color-warning-bg: var(--ph-soft-mango);
+  --myst-color-warning-text: var(--ph-mango-text);
+  --myst-color-danger: var(--ph-flag-red);
+  --myst-color-danger-bg: var(--ph-soft-red);
+  --myst-color-danger-text: var(--ph-red);
+  --myst-color-error: var(--ph-flag-red);
+  --myst-color-error-bg: var(--ph-soft-red);
+  --myst-color-error-text: var(--ph-red);
+  --myst-color-example: var(--ph-indigo-fill);
+  --myst-color-example-bg: var(--ph-soft-indigo);
+  --myst-color-example-text: var(--ph-indigo);
+}
+
+html.dark {
+  /* A warm tropical night: deep blue, never grey. */
+  --ph-bg: #11152a;
+  --ph-bg-alt: #161b33;
+  --ph-surface: #1b2140;
+  --ph-surface-alt: #222949;
+  --ph-text: #f4efe2;
+  --ph-text-muted: #c8c2b2;
+  --ph-border: #313a62;
+  --ph-border-strong: #4a5384;
+
+  --ph-blue: #9bbaff;
+  --ph-red: #ff8f9b;
+  --ph-leaf: #8ed88a;
+  --ph-mango-text: #ffb861;
+  --ph-teal: #5fd8cc;
+  --ph-indigo: #bcb3ff;
+
+  --ph-soft-blue: #1a2650;
+  --ph-soft-red: #3a1a28;
+  --ph-soft-sun: #37321a;
+  --ph-soft-leaf: #182f22;
+  --ph-soft-mango: #3a2916;
+  --ph-soft-teal: #123238;
+  --ph-soft-indigo: #251f4d;
+
+  --ph-code-bg: #0b0f26;
+  --ph-focus: #fcd116;
+  --ph-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --ph-shadow-pop: 0 12px 28px rgba(0, 0, 0, 0.5);
+  --ph-plate-shadow: 0 5px 0 rgba(0, 0, 0, 0.45);
+
+  --ph-img-sun-small: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 100'%3E%3Cpath d='M5.4 -15.6L0.0 -48.0L-5.4 -15.6ZM-1.9 -15.7L-9.8 -34.1L-6.8 -14.3ZM6.8 -14.3L9.8 -34.1L1.9 -15.7ZM14.9 -7.2L33.9 -33.9L7.2 -14.9ZM9.8 -12.4L17.2 -31.1L5.4 -14.9ZM14.9 -5.4L31.1 -17.2L12.4 -9.8ZM15.6 5.4L48.0 0.0L15.6 -5.4ZM15.7 -1.9L34.1 -9.8L14.3 -6.8ZM14.3 6.8L34.1 9.8L15.7 1.9ZM7.2 14.9L33.9 33.9L14.9 7.2ZM12.4 9.8L31.1 17.2L14.9 5.4ZM5.4 14.9L17.2 31.1L9.8 12.4ZM-5.4 15.6L0.0 48.0L5.4 15.6ZM1.9 15.7L9.8 34.1L6.8 14.3ZM-6.8 14.3L-9.8 34.1L-1.9 15.7ZM-14.9 7.2L-33.9 33.9L-7.2 14.9ZM-9.8 12.4L-17.2 31.1L-5.4 14.9ZM-14.9 5.4L-31.1 17.2L-12.4 9.8ZM-15.6 -5.4L-48.0 0.0L-15.6 5.4ZM-15.7 1.9L-34.1 9.8L-14.3 6.8ZM-14.3 -6.8L-34.1 -9.8L-15.7 -1.9ZM-7.2 -14.9L-33.9 -33.9L-14.9 -7.2ZM-12.4 -9.8L-31.1 -17.2L-14.9 -5.4ZM-5.4 -14.9L-17.2 -31.1L-9.8 -12.4Z' fill='%23FCD116'/%3E%3Ccircle r='17' fill='%23FCD116'/%3E%3C/svg%3E");
+  --ph-img-bunting: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 44'%3E%3Cpath d='M0 6 Q60.0 22 120 6' fill='none' stroke='%23E8E2D0' stroke-width='1.6'/%3E%3Cpath d='M2.9 7.9 L21.1 7.9 L12.0 28.9 Z' fill='%230038A8' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M26.9 11.7 L45.1 11.7 L36.0 32.7 Z' fill='%23CE1126' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M50.9 13.0 L69.1 13.0 L60.0 34.0 Z' fill='%23FCD116' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M74.9 11.7 L93.1 11.7 L84.0 32.7 Z' fill='%23FFFCF4' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M98.9 7.9 L117.1 7.9 L108.0 28.9 Z' fill='%232F7D32' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3C/svg%3E");
+  --ph-img-bunting-alt: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 44'%3E%3Cpath d='M0 6 Q60.0 22 120 6' fill='none' stroke='%23E8E2D0' stroke-width='1.6'/%3E%3Cpath d='M2.9 7.9 L21.1 7.9 L12.0 28.9 Z' fill='%23FF9F1C' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M26.9 11.7 L45.1 11.7 L36.0 32.7 Z' fill='%232F7D32' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M50.9 13.0 L69.1 13.0 L60.0 34.0 Z' fill='%230038A8' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M74.9 11.7 L93.1 11.7 L84.0 32.7 Z' fill='%23FCD116' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M98.9 7.9 L117.1 7.9 L108.0 28.9 Z' fill='%23CE1126' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3C/svg%3E");
+  --ph-img-capiz: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect x='2' y='2' width='24' height='24' rx='5' fill='%23fff' fill-opacity='.05' stroke='%23fff' stroke-opacity='.12'/%3E%3Cpath d='M6 14 q8 -8 16 0' stroke='%23fff' stroke-opacity='.1' fill='none'/%3E%3C/svg%3E");
+
+  /* 2. Theme tokens: dark */
+  --myst-color-surface: #262d52;
+  --myst-color-surface-hover: #2e3660;
+  --myst-color-text-secondary: #ddd8ca;
+  --myst-color-prose-body: #e9e4d6;
+  --myst-color-link-underline: #5b72b5;
+  --myst-color-primary-hover: #e3233a;
+  --myst-color-active-bg: #fcd11633;
+  --myst-color-accent-surface-border: #6b5d1e;
+  --myst-color-accent-text: var(--ph-sun);
+  --myst-color-accent-surface-text: var(--ph-sun);
+  --myst-color-inverse-bg: var(--ph-sampaguita);
+  --myst-color-inverse-text: var(--ph-night);
+  --myst-color-code: #ffd75e;
+  --myst-color-info: #6f95ff;
+  --myst-color-tip: #3cbfb3;
+  --myst-color-success: #5cb860;
+  --myst-color-warning: var(--ph-mango);
+  --myst-color-danger: #ff5c6e;
+  --myst-color-error: #ff5c6e;
+  --myst-color-example: #8f84ff;
+}
+
+/* -----------------------------------------------------------------------------
+ * 3. Typography
+ * -------------------------------------------------------------------------- */
+body {
+  font-family: var(--ph-font-sans);
+  background: var(--ph-bg);
+  color: var(--ph-text);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "kern";
+}
+html[lang^="zh"] body {
+  letter-spacing: 0.02em;
+}
+
+.article {
+  font-size: 1.04rem;
+  line-height: 1.75;
+}
+html[lang^="zh"] .article {
+  line-height: 1.85;
+}
+
+.article h2,
+.article h3,
+.article h4 {
+  font-family: var(--ph-font-sans);
+  font-weight: 800;
+  letter-spacing: 0.005em;
+  line-height: 1.3;
+  color: var(--ph-text);
+}
+
+/* h2: a little eight-rayed sun and a flag stripe underneath. */
+.article h2 {
+  position: relative;
+  padding-bottom: 0.45rem;
+  padding-left: 1.7rem;
+  background: linear-gradient(
+      90deg,
+      var(--ph-flag-blue) 0 38%,
+      var(--ph-sun) 38% 46%,
+      var(--ph-flag-red) 46% 100%
+    )
+    left bottom / 100% 4px no-repeat;
+}
+.article h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.18em;
+  width: 1.15em;
+  height: 1.15em;
+  background: var(--ph-img-sun-small) center / contain no-repeat;
+}
+.article h3 {
+  color: var(--ph-blue);
+}
+.article h4 {
+  color: var(--ph-text-muted);
+}
+
+/* Page title = jeepney signboard: chrome frame, flag-blue plate, sun-yellow
+   lettering with a scarlet drop shadow and four rivets. */
+.myst-fm-block-title {
+  width: fit-content;
+  max-width: 100%;
+  font-family: var(--ph-font-display);
+  font-weight: 400;
+  font-size: clamp(1.55rem, 1rem + 2.1vw, 2.45rem);
+  line-height: 1.18;
+  letter-spacing: 0.015em;
+  color: var(--ph-sun);
+  text-shadow: 2px 2px 0 var(--ph-flag-red), 3px 3px 0 var(--ph-ink);
+  padding: 0.55em 0.95em 0.5em;
+  border: 5px solid transparent;
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 9px 9px, var(--ph-chrome-1) 0 3px, transparent 3.5px) padding-box,
+    radial-gradient(circle at calc(100% - 9px) 9px, var(--ph-chrome-1) 0 3px, transparent 3.5px) padding-box,
+    radial-gradient(circle at 9px calc(100% - 9px), var(--ph-chrome-1) 0 3px, transparent 3.5px) padding-box,
+    radial-gradient(circle at calc(100% - 9px) calc(100% - 9px), var(--ph-chrome-1) 0 3px, transparent 3.5px) padding-box,
+    linear-gradient(160deg, #0b4bd0 0%, var(--ph-flag-blue) 45%, #00266f 100%) padding-box,
+    linear-gradient(135deg, #ffffff 0%, var(--ph-chrome-2) 30%, #f4f6f8 55%, var(--ph-chrome-3) 80%, #e3e7ea 100%) border-box;
+  box-shadow: var(--ph-plate-shadow);
+  overflow-wrap: anywhere;
+}
+html[lang^="zh"] .myst-fm-block-title {
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+/* Content links: dotted underline, solid on hover (carried over from site.css;
+   the theme's own UI links keep their look). */
+#skip-to-article p a:not(.button),
+#skip-to-article li a:not(.button),
+#skip-to-article td a:not(.button) {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+#skip-to-article p a:not(.button):hover,
+#skip-to-article li a:not(.button):hover,
+#skip-to-article td a:not(.button):hover {
+  text-decoration-style: solid;
+}
+
+.article :focus-visible,
+.myst-top-nav :focus-visible {
+  outline: 3px solid var(--ph-focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.article strong {
+  color: inherit;
+}
+.article mark {
+  background: var(--ph-soft-sun);
+  color: inherit;
+  padding: 0 0.2em;
+  border-radius: 3px;
+  box-shadow: inset 0 -0.35em 0 #fcd11680;
+}
+
+/* -----------------------------------------------------------------------------
+ * 4. Header
+ * -------------------------------------------------------------------------- */
+/* A flag stripe under the sticky top bar. */
+.myst-top-nav::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--ph-flag-blue) 0 48%, var(--ph-sun) 48% 52%, var(--ph-flag-red) 52% 100%);
+  pointer-events: none;
+}
+
+/* The theme only shows the navbar part at xl widths and repeats it in the
+   mobile drawer; the language switch belongs in the top bar at every width
+   (carried over from site.css). */
+.myst-navbar-end {
+  display: flex !important;
+  flex-shrink: 0;
+  margin-left: 0.6rem;
+  gap: 0.4rem;
+  align-items: center;
+}
+.myst-primary-sidebar-navbar-end {
+  display: none !important;
+}
+.myst-navbar-end p {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Three-way language switch. Two markups are supported:
+     A) _site/navbar_end.md as a <div class="ph-switch"> holding
+        a.ph-lang.ph-lang-en / .ph-lang-zh / .ph-lang-fil (+ a.ph-book-link);
+     B) plain a.epi-lang-switch links (the main book's convention).
+   The links render as one segmented pill. The current language is taken from
+   <html lang> (set per edition by the post-build step), so no script is
+   needed; aria-current / .is-current / .epi-lang-current also work. */
+.myst-navbar-end .ph-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.myst-navbar-end p:has(> a.epi-lang-switch) {
+  gap: 0;
+  border: 2px solid var(--ph-border-strong);
+  border-radius: 999px;
+  background: var(--ph-surface);
+  overflow: hidden;
+}
+:is(a.epi-lang-switch, a.ph-lang) {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.7rem;
+  color: var(--ph-text-muted) !important;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-decoration: none !important;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+a.ph-lang {
+  background: var(--ph-surface);
+  border: 2px solid var(--ph-border-strong);
+  border-radius: 0;
+}
+a.ph-lang + a.ph-lang {
+  margin-left: calc(-0.4rem - 2px); /* close the flex gap: one pill */
+}
+a.ph-lang-en {
+  border-radius: 999px 0 0 999px;
+}
+a.ph-lang-fil {
+  border-radius: 0 999px 999px 0;
+}
+a.epi-lang-switch + a.epi-lang-switch {
+  border-left: 1px solid var(--ph-border);
+}
+:is(a.epi-lang-switch, a.ph-lang):hover {
+  background: var(--ph-soft-sun);
+  color: var(--ph-text) !important;
+}
+:is(a.epi-lang-switch, a.ph-lang):is([aria-current], .epi-lang-current, .is-current),
+html[lang="en"] a.ph-lang-en,
+html[lang^="zh"] a.ph-lang-zh,
+html[lang="fil"] a.ph-lang-fil {
+  background: var(--ph-flag-blue);
+  border-color: var(--ph-flag-blue);
+  color: var(--ph-on-fill) !important;
+  position: relative;
+  z-index: 1;
+}
+/* The theme wraps link text in a span with white-space: normal, which breaks
+   "中文" onto two lines at phone width (carried over from site.css). */
+:is(a.epi-lang-switch, a.ph-lang),
+:is(a.epi-lang-switch, a.ph-lang) * {
+  white-space: nowrap !important;
+}
+
+/* Other navbar links, e.g. back to the full book: a quiet outlined pill. */
+.myst-navbar-end a:not(.epi-lang-switch):not(.ph-lang):not(.epi-colab-link) {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.7rem;
+  border: 2px solid var(--ph-border-strong);
+  border-radius: 999px;
+  color: var(--ph-text-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.myst-navbar-end a:not(.epi-lang-switch):not(.ph-lang):not(.epi-colab-link):hover {
+  border-color: var(--ph-flag-red);
+  color: var(--ph-red);
+}
+/* External-link icons the theme adds to absolute URLs. */
+.myst-navbar-end a svg {
+  display: none !important;
+}
+
+/* "Open in Colab" (injected next to the page header by the site script). */
+a.epi-colab-link {
+  margin-left: 0.75rem;
+  padding: 0.12rem 0.7rem;
+  border: 2px solid #f9ab00;
+  border-radius: 999px;
+  background: #fff8e1;
+  color: #6b4500;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+a.epi-colab-link:hover {
+  background: #f9ab00;
+  color: var(--ph-ink);
+}
+html.dark a.epi-colab-link {
+  background: #3a2e12;
+  color: #ffd772;
+}
+
+/* -----------------------------------------------------------------------------
+ * 5. Sidebar and prev/next links
+ * -------------------------------------------------------------------------- */
+.myst-toc a.myst-toc-item.active,
+.myst-toc a.myst-toc-item-exact {
+  background: var(--ph-soft-sun);
+  box-shadow: inset 4px 0 0 var(--ph-flag-red);
+  color: var(--ph-text);
+  font-weight: 700;
+}
+html.dark .myst-toc a.myst-toc-item.active,
+html.dark .myst-toc a.myst-toc-item-exact {
+  box-shadow: inset 4px 0 0 var(--ph-sun);
+}
+
+.myst-footer-link {
+  border: 2px solid var(--ph-border) !important;
+  border-radius: var(--ph-radius) !important;
+  background: var(--ph-surface);
+  transition: transform 0.2s var(--ph-ease), border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.myst-footer-link:hover {
+  transform: translateY(-2px);
+  border-color: var(--ph-flag-red) !important;
+  color: var(--ph-text) !important;
+  box-shadow: var(--ph-shadow-pop);
+}
+.myst-footer-link-group {
+  color: var(--ph-mango-text) !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* -----------------------------------------------------------------------------
+ * 6a. Code: inline pills; night-blue blocks with a flag strip, both themes
+ * -------------------------------------------------------------------------- */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--ph-font-mono);
+}
+.article :not(pre) > code {
+  background: var(--ph-soft-sun);
+  color: var(--myst-color-code);
+  border: 1px solid var(--myst-color-accent-surface-border);
+  border-radius: 5px;
+  padding: 0.06em 0.35em;
+  font-size: 0.88em;
+}
+.article :not(pre) > code::before,
+.article :not(pre) > code::after {
+  content: none;
+}
+
+.myst-code {
+  background:
+    linear-gradient(90deg, var(--ph-flag-blue) 0 40%, var(--ph-sun) 40% 60%, var(--ph-flag-red) 60%) top / 100% 4px no-repeat,
+    var(--ph-code-bg) !important;
+  border: 1px solid #0b0f26;
+  border-radius: 12px;
+  box-shadow: var(--ph-shadow);
+  overflow: hidden;
+}
+.myst-code-body {
+  padding-top: 0.95rem !important;
+}
+/* The theme's dark highlight.js theme paints its own background on the body;
+   keep the night-blue block and its flag strip visible in both themes. */
+.myst-code .hljs,
+html.dark .myst-code .hljs,
+.myst-code-body pre {
+  background: transparent !important;
+}
+.myst-code-body,
+.myst-code-body pre,
+.myst-code-body code {
+  color: var(--ph-code-text);
+  background: transparent;
+  line-height: 1.6;
+}
+.myst-code-copy-icon {
+  color: #c9cbe0 !important;
+  top: 0.5rem !important;
+}
+.myst-code-copy-icon:hover {
+  color: var(--ph-sun) !important;
+}
+/* Syntax colours tuned for the night-blue block (all >= 4.5:1). */
+.myst-code .hljs-comment,
+.myst-code .hljs-quote {
+  color: #a3abd0;
+  font-style: italic;
+}
+.myst-code .hljs-keyword,
+.myst-code .hljs-selector-tag,
+.myst-code .hljs-literal,
+.myst-code .hljs-meta .hljs-keyword {
+  color: #ff8fb1;
+}
+.myst-code .hljs-string,
+.myst-code .hljs-template-variable,
+.myst-code .hljs-addition {
+  color: #fcd116;
+}
+.myst-code .hljs-number,
+.myst-code .hljs-symbol,
+.myst-code .hljs-bullet {
+  color: #c9b2ff;
+}
+.myst-code .hljs-title,
+.myst-code .hljs-title.function_,
+.myst-code .hljs-section,
+.myst-code .hljs-name {
+  color: #8ee88a;
+}
+.myst-code .hljs-built_in,
+.myst-code .hljs-type,
+.myst-code .hljs-title.class_,
+.myst-code .hljs-params {
+  color: #7fd8ff;
+}
+.myst-code .hljs-attr,
+.myst-code .hljs-attribute,
+.myst-code .hljs-variable,
+.myst-code .hljs-property {
+  color: #ffb861;
+}
+.myst-code .hljs-meta,
+.myst-code .hljs-doctag {
+  color: #a3abd0;
+}
+.myst-code .hljs-deletion {
+  color: #ff8fb1;
+}
+.myst-code .line-highlight,
+.myst-code [data-highlight="true"] {
+  background: #fcd1161f;
+}
+/* Notebook input cells: a mango rail. */
+.myst-jp-nb-block > .myst-code,
+.myst-jp-nb-block .myst-code.border {
+  border-left: 4px solid var(--ph-mango);
+}
+
+/* -----------------------------------------------------------------------------
+ * 6b. Tables (markdown tables and pandas DataFrames)
+ * -------------------------------------------------------------------------- */
+.article table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 2px solid var(--ph-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--ph-surface);
+  box-shadow: var(--ph-shadow);
+  font-size: 0.95em;
+}
+.article table th,
+.article table td {
+  padding: 0.5rem 0.85rem;
+  text-align: left;
+}
+/* Header row (markdown tables have no <thead>: the first row holds the th). */
+.article table thead th,
+.article table tr:first-child > th {
+  background: var(--ph-flag-blue);
+  color: var(--ph-on-fill);
+  font-weight: 800;
+  border-bottom: 3px solid var(--ph-sun);
+}
+/* Row headers (DataFrame index). */
+.article table tbody tr:not(:first-child) > th,
+.article table thead + tbody tr > th {
+  background: var(--ph-soft-blue);
+  color: var(--ph-text);
+  font-weight: 700;
+}
+.article table td {
+  border-top: 1px solid var(--ph-border);
+}
+.article table tbody tr:nth-child(even) > td {
+  background: var(--ph-surface-alt);
+}
+.article table tbody tr:hover > td {
+  background: var(--ph-soft-sun);
+}
+table.dataframe {
+  font-size: 0.86em;
+}
+
+/* -----------------------------------------------------------------------------
+ * 6c. Admonitions, quotes, figures
+ * -------------------------------------------------------------------------- */
+.myst-admonition {
+  border-radius: 12px !important;
+  border-left-width: 6px !important;
+  background: var(--ph-surface) !important;
+  box-shadow: var(--ph-shadow) !important;
+}
+.myst-admonition-header {
+  font-weight: 800;
+}
+
+.article blockquote {
+  position: relative;
+  margin: 1.4rem 0;
+  padding: 0.7rem 1.1rem 0.7rem 3rem;
+  border-left: 5px solid var(--ph-sun);
+  background: var(--ph-soft-sun);
+  border-radius: 0 12px 12px 0;
+  color: var(--ph-text);
+  font-style: normal;
+}
+.article blockquote::before {
+  content: "\201C";
+  position: absolute;
+  left: 0.7rem;
+  top: 0.1rem;
+  font-family: Georgia, serif;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--ph-mango-text);
+}
+.article blockquote p {
+  margin: 0.35rem 0;
+}
+
+.article figure img {
+  border-radius: 14px;
+}
+.article figcaption {
+  color: var(--ph-text-muted);
+  font-size: 0.92em;
+  text-align: center;
+}
+
+/* -----------------------------------------------------------------------------
+ * 6d. Buttons and cards
+ * -------------------------------------------------------------------------- */
+.article a.button {
+  display: inline-block;
+  padding: 0.6rem 1.35rem;
+  border-radius: 999px;
+  background: var(--ph-flag-red);
+  color: var(--ph-on-fill) !important;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-decoration: none !important;
+  box-shadow: 0 4px 0 #8a0a19;
+  transition: transform 0.18s var(--ph-ease), box-shadow 0.18s ease, background 0.15s ease;
+}
+.article a.button:hover {
+  background: #e0172f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #8a0a19;
+}
+.article a.button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #8a0a19;
+}
+.article a.button,
+.article a.button * {
+  white-space: normal !important;
+}
+
+.myst-grid > .myst-card {
+  margin: 0;
+}
+.myst-card {
+  --ph-card-accent: var(--ph-flag-blue);
+  --ph-card-accent-text: var(--ph-blue);
+  background: var(--ph-surface) !important;
+  border: 2px solid var(--ph-border) !important;
+  border-top: 6px solid var(--ph-card-accent) !important;
+  border-radius: var(--ph-radius) !important;
+  box-shadow: var(--ph-shadow) !important;
+  transition: transform 0.22s var(--ph-ease), box-shadow 0.2s ease;
+}
+a.myst-card:hover,
+.myst-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--ph-shadow-pop) !important;
+}
+.myst-grid > .myst-card:nth-child(6n + 2) {
+  --ph-card-accent: var(--ph-flag-red);
+  --ph-card-accent-text: var(--ph-red);
+}
+.myst-grid > .myst-card:nth-child(6n + 3) {
+  --ph-card-accent: var(--ph-sun-deep);
+  --ph-card-accent-text: var(--ph-mango-text);
+}
+.myst-grid > .myst-card:nth-child(6n + 4) {
+  --ph-card-accent: var(--ph-leaf-fill);
+  --ph-card-accent-text: var(--ph-leaf);
+}
+.myst-grid > .myst-card:nth-child(6n + 5) {
+  --ph-card-accent: var(--ph-teal-fill);
+  --ph-card-accent-text: var(--ph-teal);
+}
+.myst-grid > .myst-card:nth-child(6n + 6) {
+  --ph-card-accent: var(--ph-mango);
+  --ph-card-accent-text: var(--ph-mango-text);
+}
+.myst-card-title {
+  font-size: 1.12rem;
+  font-weight: 800;
+}
+.myst-card-header,
+.myst-card-footer {
+  background: var(--ph-surface-alt) !important;
+  border-color: var(--ph-border) !important;
+}
+.myst-card-header {
+  color: var(--ph-card-accent-text);
+  font-weight: 800;
+}
+.myst-card-footer a.button {
+  display: block;
+  text-align: center;
+}
+
+/* =============================================================================
+ * 7. ph-* components
+ * ============================================================================= */
+
+/* --- ph-hero: home page hero ------------------------------------------------
+   Bunting along the top, a slowly turning sun in the corner, three stars and a
+   jeepney driving along the road at the bottom. Text sits in the clear middle. */
+.ph-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  container-type: inline-size;
+  margin: 1.2rem 0 2.2rem;
+  padding: 4.2rem 12rem 7.6rem 2.2rem;
+  border-radius: 26px;
+  color: #eef2ff;
+  background:
+    var(--ph-img-bunting) left -12px top -6px / 120px 44px repeat-x,
+    var(--ph-img-stars) right 1.6rem bottom 6.3rem / 78px 26px no-repeat,
+    repeating-linear-gradient(90deg, #f5efe0 0 30px, transparent 30px 54px) left bottom 2.05rem / 100% 4px no-repeat,
+    linear-gradient(to top, #2a2f45 0 4.2rem, #4a5068 4.2rem 4.5rem, transparent 4.5rem),
+    radial-gradient(circle at 100% 0, rgba(252, 209, 22, 0.42), transparent 48%),
+    linear-gradient(140deg, #0b4bd0 0%, var(--ph-flag-blue) 30%, #00266f 70%, var(--ph-night) 100%);
+  box-shadow: var(--ph-shadow-pop);
+}
+html.dark .ph-hero {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 44'%3E%3Cpath d='M0 6 Q60.0 22 120 6' fill='none' stroke='%23E8E2D0' stroke-width='1.6'/%3E%3Cpath d='M2.9 7.9 L21.1 7.9 L12.0 28.9 Z' fill='%230038A8' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M26.9 11.7 L45.1 11.7 L36.0 32.7 Z' fill='%23CE1126' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M50.9 13.0 L69.1 13.0 L60.0 34.0 Z' fill='%23FCD116' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M74.9 11.7 L93.1 11.7 L84.0 32.7 Z' fill='%23FFFCF4' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3Cpath d='M98.9 7.9 L117.1 7.9 L108.0 28.9 Z' fill='%232F7D32' stroke='%23E8E2D0' stroke-width='.8' stroke-opacity='.35'/%3E%3C/svg%3E") left -12px top -6px / 120px 44px repeat-x,
+    var(--ph-img-stars) right 1.6rem bottom 6.3rem / 78px 26px no-repeat,
+    repeating-linear-gradient(90deg, #f5efe0 0 30px, transparent 30px 54px) left bottom 2.05rem / 100% 4px no-repeat,
+    linear-gradient(to top, #23283d 0 4.2rem, #3b4158 4.2rem 4.5rem, transparent 4.5rem),
+    radial-gradient(circle at 100% 0, rgba(252, 209, 22, 0.32), transparent 48%),
+    linear-gradient(140deg, #08389a 0%, #062a7a 35%, #0a1a4d 70%, #0b0f26 100%);
+  box-shadow: 0 0 0 2px #2a3366, var(--ph-shadow-pop);
+}
+.ph-hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -110px;
+  right: -110px;
+  width: 340px;
+  height: 340px;
+  background: var(--ph-img-sun) center / contain no-repeat;
+  opacity: 0.95;
+  animation: ph-spin 140s linear infinite;
+}
+.ph-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  bottom: 1.15rem;
+  width: 150px;
+  height: 75px;
+  background: var(--ph-img-jeepney) center / contain no-repeat;
+  translate: 1.2rem 0;
+  animation: ph-drive 16s linear infinite, ph-bounce 0.5s ease-in-out infinite alternate;
+}
+.ph-hero > * {
+  position: relative;
+}
+.ph-hero > p:first-child:has(> strong:only-child),
+.ph-hero > p:first-child:has(> em:only-child) {
+  display: inline-block;
+  margin: 0 0 0.4rem;
+  padding: 0.18rem 0.8rem;
+  border-radius: 999px;
+  background: var(--ph-sun);
+  color: var(--ph-on-sun);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ph-hero > p:first-child > strong,
+.ph-hero > p:first-child > em {
+  font-style: normal;
+  color: inherit;
+}
+.ph-hero h1,
+.ph-hero h2 {
+  margin: 0.15em 0 0.3em;
+  padding: 0;
+  background: none;
+  border: 0;
+  font-family: var(--ph-font-display);
+  font-weight: 400;
+  font-size: clamp(2.1rem, 1.2rem + 3.4vw, 3.5rem);
+  line-height: 1.05;
+  color: var(--ph-sun);
+  text-shadow: 3px 3px 0 var(--ph-flag-red), 5px 5px 0 rgba(0, 0, 0, 0.35);
+}
+html[lang^="zh"] .ph-hero h1,
+html[lang^="zh"] .ph-hero h2 {
+  font-weight: 900;
+}
+.ph-hero h1::before,
+.ph-hero h2::before {
+  content: none;
+}
+.ph-hero p,
+.ph-hero li {
+  color: #eef2ff;
+  font-size: 1.1rem;
+  max-width: 38rem;
+}
+.ph-hero strong {
+  color: #ffffff;
+}
+.ph-hero a:not(.button) {
+  color: var(--ph-sun) !important;
+}
+.ph-hero a.button {
+  margin-top: 0.6rem;
+  background: var(--ph-sun);
+  color: var(--ph-on-sun) !important;
+  box-shadow: 0 4px 0 #a37a00;
+  font-size: 1.08rem;
+}
+.ph-hero a.button:hover {
+  background: #ffe04d;
+  box-shadow: 0 6px 0 #a37a00;
+}
+.ph-hero code {
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* --- ph-banderitas: fiesta bunting divider --------------------------------- */
+.ph-banderitas {
+  position: relative;
+  height: 58px;
+  margin: 2.2rem 0;
+  font-size: 0 !important;
+  color: transparent !important;
+  overflow: hidden;
+}
+.ph-banderitas > * {
+  display: none;
+}
+.ph-banderitas::before,
+.ph-banderitas::after {
+  content: "";
+  position: absolute;
+  left: -60px;
+  right: -60px;
+  height: 44px;
+  transform-origin: 50% 0;
+}
+.ph-banderitas::before {
+  top: 0;
+  background: var(--ph-img-bunting) left top / 120px 44px repeat-x;
+  animation: ph-sway 4.5s ease-in-out infinite alternate;
+}
+.ph-banderitas::after {
+  top: 12px;
+  left: 0;
+  background: var(--ph-img-bunting-alt) left top / 96px 35px repeat-x;
+  opacity: 0.9;
+  animation: ph-sway 5.5s ease-in-out -2s infinite alternate-reverse;
+}
+
+/* --- ph-route: act / route signboard ----------------------------------------
+   First line (bold) = route name in painted letters; a list = the stops. */
+.ph-route {
+  --ph-route: var(--ph-flag-red);
+  position: relative;
+  margin: 2rem 0;
+  padding: 1rem 6.6rem 1.05rem 1.3rem;
+  border: 5px solid transparent;
+  border-radius: 16px;
+  color: var(--ph-ink);
+  background:
+    linear-gradient(180deg, #fffdf6 0%, #fff3cf 100%) padding-box,
+    linear-gradient(135deg, #ffffff 0%, var(--ph-chrome-2) 30%, #f4f6f8 55%, var(--ph-chrome-3) 80%, #e3e7ea 100%) border-box;
+  box-shadow: var(--ph-plate-shadow);
+}
+.ph-route.ph-act-1 { --ph-route: var(--ph-flag-blue); }
+.ph-route.ph-act-2 { --ph-route: var(--ph-flag-red); }
+.ph-route.ph-act-3 { --ph-route: var(--ph-leaf-fill); }
+.ph-route.ph-act-4 { --ph-route: var(--ph-mango-fill); }
+.ph-route::before {
+  content: "";
+  position: absolute;
+  right: 0.9rem;
+  top: 0.75rem;
+  width: 84px;
+  height: 42px;
+  background: var(--ph-img-jeepney) center / contain no-repeat;
+}
+.ph-route::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 6px;
+  height: 4px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(90deg, var(--ph-route) 0 18px, transparent 18px 26px);
+  opacity: 0.45;
+}
+.ph-route > p {
+  margin: 0 0 0.35rem;
+  color: var(--ph-ink);
+}
+.ph-route > p:first-child {
+  font-family: var(--ph-font-display);
+  font-size: clamp(1.15rem, 0.9rem + 1vw, 1.5rem);
+  line-height: 1.2;
+  color: var(--ph-route);
+  text-shadow: 2px 2px 0 var(--ph-sun);
+  letter-spacing: 0.02em;
+}
+.ph-route > p:first-child strong {
+  font-weight: 400;
+  color: inherit;
+}
+html[lang^="zh"] .ph-route > p:first-child {
+  font-weight: 900;
+}
+.ph-route ul,
+.ph-route ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.4rem;
+  margin: 0.4rem 0 0.2rem;
+  padding: 0;
+  list-style: none;
+}
+.ph-route li {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 0.12rem 0.65rem 0.12rem 0.45rem;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 2px solid var(--ph-route);
+  color: var(--ph-ink);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.ph-route li::before {
+  content: "";
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-right: 0.4rem;
+  border-radius: 50%;
+  background: var(--ph-route);
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--ph-route);
+}
+.ph-route li > p {
+  margin: 0;
+}
+.ph-route a {
+  color: var(--ph-ink) !important;
+}
+.ph-route li:hover {
+  background: var(--ph-soft-sun);
+}
+html.dark .ph-route li:hover {
+  background: #fff6cc;
+}
+
+/* --- ph-story: komiks-panel scene with speaker names --------------------------
+   *Scene line* first (italic only) → slug; "**Maya:** text" → name chips;
+   a > blockquote → the question the chapter answers. */
+.ph-story {
+  --ph-speaker: var(--ph-flag-blue);
+  position: relative;
+  margin: 1.8rem 0 2.2rem;
+  padding: 1.1rem 1.35rem 1rem;
+  border: 3px solid var(--ph-ink);
+  border-radius: 18px;
+  background: var(--ph-surface);
+  box-shadow: 7px 7px 0 var(--ph-flag-blue);
+}
+html.dark .ph-story {
+  border-color: #6b76b8;
+  box-shadow: 7px 7px 0 #0b2a77;
+}
+.ph-story::before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  right: 18px;
+  width: 40px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--ph-flag-red) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect x='5' y='8' width='30' height='22' rx='5' fill='%23fff'/%3E%3Cpath d='M12 30 l-2 7 l8 -7z' fill='%23fff'/%3E%3Ccircle cx='14' cy='19' r='2.4' fill='%230038A8'/%3E%3Ccircle cx='20' cy='19' r='2.4' fill='%23CE1126'/%3E%3Ccircle cx='26' cy='19' r='2.4' fill='%23E0A800'/%3E%3C/svg%3E") center / 30px no-repeat;
+  border: 3px solid var(--ph-ink);
+}
+.ph-story > p {
+  margin: 0.55rem 0;
+}
+.ph-story > p:first-child:has(> em:only-child) {
+  display: inline-block;
+  margin: 0 0 0.35rem;
+  padding: 0.12rem 0.75rem;
+  border-radius: 6px;
+  background: var(--ph-ink);
+  color: var(--ph-sun);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+html.dark .ph-story > p:first-child:has(> em:only-child) {
+  background: var(--ph-sun);
+  color: var(--ph-ink);
+}
+.ph-story > p:first-child > em:only-child {
+  font-style: normal;
+}
+.ph-story p > strong:first-child {
+  display: inline-block;
+  margin-right: 0.35em;
+  padding: 0 0.6em;
+  border-radius: 999px;
+  background: var(--ph-speaker);
+  color: var(--ph-on-fill);
+  font-size: 0.86em;
+  font-weight: 800;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+}
+.ph-story .ph-say-maya { --ph-speaker: var(--ph-teal-fill); }
+.ph-story .ph-say-mon { --ph-speaker: var(--ph-flag-blue); }
+.ph-story .ph-say-tala { --ph-speaker: var(--ph-indigo-fill); }
+.ph-story .ph-say-nena { --ph-speaker: var(--ph-leaf-fill); }
+.ph-story .ph-say-jun { --ph-speaker: var(--ph-flag-red); }
+.ph-story [class*="ph-say-"] > p {
+  margin: 0.5rem 0;
+}
+.ph-story blockquote {
+  margin: 0.9rem 0 0.2rem;
+  padding: 0.6rem 1rem 0.6rem 2.9rem;
+  border: 2px dashed var(--ph-flag-red);
+  border-radius: 14px;
+  background: var(--ph-soft-red);
+  font-weight: 700;
+}
+.ph-story blockquote::before {
+  content: "?";
+  top: 50%;
+  left: 0.65rem;
+  translate: 0 -50%;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: var(--ph-flag-red);
+  color: #fff;
+  font-family: var(--ph-font-sans);
+  font-size: 1.05rem;
+  font-weight: 900;
+  line-height: 1.6rem;
+  text-align: center;
+}
+
+/* --- Tala & friends: six boxes, as admonition (:class:) or as {div} ----------
+   Shared shape first, then each colour. */
+.ph-ask-tala,
+.ph-tala-says,
+.ph-check,
+.ph-oops,
+.ph-privacy,
+.ph-baon {
+  --ph-box: var(--ph-flag-blue);
+  --ph-box-soft: var(--ph-soft-blue);
+  --ph-box-text: var(--ph-blue);
+  --ph-box-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M6 8 h28 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-16 l-8 7 v-7 h-4 a4 4 0 0 1 -4 -4 v-14 a4 4 0 0 1 4 -4z' fill='%23fff'/%3E%3Cg transform='translate(20 19)'%3E%3Cpolygon points='0.0,-8.0 2.1,-2.9 7.6,-2.5 3.4,1.1 4.7,6.5 0.0,3.6 -4.7,6.5 -3.4,1.1 -7.6,-2.5 -2.1,-2.9' fill='%23FCD116' stroke='%23FF9F1C' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E");
+  position: relative;
+  margin: 1.7rem 0 !important;
+  border: 2px solid var(--ph-box) !important;
+  border-radius: var(--ph-radius) !important;
+  background: var(--ph-surface) !important;
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--ph-box) 35%, transparent) !important;
+  overflow: hidden;
+}
+.ph-tala-says {
+  --ph-box: var(--ph-indigo-fill);
+  --ph-box-soft: var(--ph-soft-indigo);
+  --ph-box-text: var(--ph-indigo);
+  --ph-box-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-24 -24 48 48'%3E%3Cpolygon points='0.0,-21.0 6.2,-8.5 20.0,-6.5 10.0,3.2 12.3,17.0 0.0,10.5 -12.3,17.0 -10.0,3.2 -20.0,-6.5 -6.2,-8.5' fill='%23FCD116' stroke='%23FF9F1C' stroke-width='3.5' stroke-linejoin='round'/%3E%3Ccircle cx='-5' cy='-1' r='2.2' fill='%231C1B29'/%3E%3Ccircle cx='5' cy='-1' r='2.2' fill='%231C1B29'/%3E%3Cpath d='M-4 5 q4 4 8 0' stroke='%231C1B29' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.ph-check {
+  --ph-box: var(--ph-leaf-fill);
+  --ph-box-soft: var(--ph-soft-leaf);
+  --ph-box-text: var(--ph-leaf);
+  --ph-box-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='17' fill='%23fff'/%3E%3Cpath d='M11 21 l6 6 l12 -14' stroke='%232F7D32' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.ph-oops {
+  --ph-box: var(--ph-flag-red);
+  --ph-box-soft: var(--ph-soft-red);
+  --ph-box-text: var(--ph-red);
+  --ph-box-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 4 L37 34 H3 Z' fill='%23fff' stroke-linejoin='round'/%3E%3Crect x='18' y='14' width='4' height='11' rx='2' fill='%23CE1126'/%3E%3Ccircle cx='20' cy='29.5' r='2.4' fill='%23CE1126'/%3E%3C/svg%3E");
+}
+.ph-privacy {
+  --ph-box: #0b2a6f;
+  --ph-box-soft: var(--ph-soft-blue);
+  --ph-box-text: var(--ph-blue);
+  --ph-box-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpolygon points='37.6,27.3 27.3,37.6 12.7,37.6 2.4,27.3 2.4,12.7 12.7,2.4 27.3,2.4 37.6,12.7' fill='%23CE1126' stroke='%23fff' stroke-width='2.5'/%3E%3Crect x='12' y='18' width='16' height='12' rx='2' fill='%23fff'/%3E%3Cpath d='M15 18 v-3 a5 5 0 0 1 10 0 v3' fill='none' stroke='%23fff' stroke-width='3'/%3E%3Ccircle cx='20' cy='24' r='2' fill='%23CE1126'/%3E%3C/svg%3E");
+}
+html.dark .ph-privacy {
+  --ph-box: #3d63c9;
+}
+.ph-baon {
+  --ph-box: var(--ph-leaf-fill);
+  --ph-box-soft: var(--ph-soft-leaf);
+  --ph-box-text: var(--ph-leaf);
+  --ph-box-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M6 26 Q20 6 34 26 Q20 36 6 26Z' fill='%237CC243' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M8 26 Q20 20 32 26' stroke='%231E5A22' stroke-width='1.6' fill='none'/%3E%3Cpath d='M20 12 V31' stroke='%23FCD116' stroke-width='3'/%3E%3Ccircle cx='20' cy='12' r='3' fill='%23FCD116'/%3E%3C/svg%3E");
+}
+
+/* Admonition form: coloured header strip with the icon in a white disc. */
+.myst-admonition:is(.ph-ask-tala, .ph-tala-says, .ph-check, .ph-oops, .ph-privacy, .ph-baon) .myst-admonition-header {
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.9rem !important;
+  background: var(--ph-box) !important;
+  color: var(--ph-on-fill) !important;
+  font-size: 1.05rem;
+}
+.myst-admonition:is(.ph-ask-tala, .ph-tala-says, .ph-check, .ph-oops, .ph-privacy, .ph-baon) .myst-admonition-header > svg {
+  display: none;
+}
+.myst-admonition:is(.ph-ask-tala, .ph-tala-says, .ph-check, .ph-oops, .ph-privacy, .ph-baon) .myst-admonition-header::before {
+  content: "";
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16) var(--ph-box-icon) center / 1.55rem no-repeat;
+}
+.myst-admonition:is(.ph-ask-tala, .ph-tala-says, .ph-check, .ph-oops, .ph-privacy, .ph-baon) .myst-admonition-header-text {
+  color: var(--ph-on-fill) !important;
+  font-weight: 800;
+}
+.myst-admonition:is(.ph-ask-tala, .ph-tala-says, .ph-check, .ph-oops, .ph-privacy, .ph-baon) .myst-admonition-body {
+  padding: 0.5rem 1.1rem 0.6rem !important;
+}
+
+/* {div} form: no header, the icon floats in the top-left corner. */
+div:is(.ph-ask-tala, .ph-tala-says, .ph-check, .ph-oops, .ph-privacy, .ph-baon) {
+  padding: 0.7rem 1.1rem 0.7rem 4rem;
+  min-height: 3.6rem;
+}
+div:is(.ph-ask-tala, .ph-tala-says, .ph-check, .ph-oops, .ph-privacy, .ph-baon)::before {
+  content: "";
+  position: absolute;
+  left: 0.8rem;
+  top: 0.8rem;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 50%;
+  background: var(--ph-box) var(--ph-box-icon) center / 1.6rem no-repeat;
+}
+div:is(.ph-ask-tala, .ph-tala-says, .ph-check, .ph-oops, .ph-privacy, .ph-baon) > p:first-child > strong:only-child {
+  color: var(--ph-box-text);
+  font-size: 1.05rem;
+}
+
+/* ph-ask-tala: the prompt Maya types — a message composer with a caret. */
+.ph-ask-tala .myst-admonition-body,
+div.ph-ask-tala {
+  background: var(--ph-box-soft);
+}
+.ph-ask-tala .myst-admonition-body > p,
+div.ph-ask-tala > p {
+  font-size: 1.02rem;
+}
+.ph-ask-tala .myst-admonition-body > p:last-child::after,
+div.ph-ask-tala > p:last-child::after {
+  content: "";
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  margin-left: 0.2em;
+  vertical-align: text-bottom;
+  background: var(--ph-box-text);
+  animation: ph-caret 1.1s steps(1) infinite;
+}
+
+/* ph-tala-says: Tala's answer — a speech bubble with a pearly capiz header. */
+.ph-tala-says {
+  border-radius: 20px 20px 20px 6px !important;
+}
+.myst-admonition.ph-tala-says .myst-admonition-header {
+  background:
+    linear-gradient(90deg, var(--ph-box) 0 50%, transparent 85%),
+    var(--ph-img-capiz) right top / 22px 22px,
+    var(--ph-box) !important;
+}
+div.ph-tala-says {
+  background: linear-gradient(90deg, var(--ph-box-soft) 0 3.4rem, var(--ph-surface) 3.4rem) !important;
+}
+
+/* ph-check: verify — banana-leaf green with a check stamp. */
+.ph-check .myst-admonition-body,
+div.ph-check {
+  background: var(--ph-box-soft) !important;
+}
+.ph-check ul,
+.ph-check ol {
+  padding-left: 1.4rem;
+}
+.ph-check li::marker {
+  color: var(--ph-box-text);
+  font-weight: 800;
+}
+
+/* ph-oops: "Tala got it wrong" — dashed, sticker-like, a nudge on hover. */
+.ph-oops {
+  border-style: dashed !important;
+  border-width: 3px !important;
+}
+.ph-oops .myst-admonition-body,
+div.ph-oops {
+  background:
+    repeating-linear-gradient(-45deg, transparent 0 14px, color-mix(in srgb, var(--ph-box) 6%, transparent) 14px 28px)
+    var(--ph-surface) !important;
+}
+.ph-oops:hover .myst-admonition-header::before,
+div.ph-oops:hover::before {
+  animation: ph-wobble 0.5s ease-in-out;
+}
+
+/* ph-privacy: privacy stop — caution tape under the header, stop-sign icon. */
+.myst-admonition.ph-privacy .myst-admonition-header {
+  background:
+    repeating-linear-gradient(-45deg, var(--ph-sun) 0 10px, var(--ph-ink) 10px 20px) left bottom / 100% 7px no-repeat,
+    var(--ph-box) !important;
+  padding-bottom: calc(0.45rem + 7px) !important;
+}
+div.ph-privacy {
+  padding-top: calc(0.7rem + 7px);
+  background:
+    repeating-linear-gradient(-45deg, var(--ph-sun) 0 10px, var(--ph-ink) 10px 20px) left top / 100% 7px no-repeat,
+    var(--ph-soft-blue) !important;
+}
+div.ph-privacy::before {
+  top: calc(0.8rem + 7px);
+  background-color: transparent;
+  background-size: 2.3rem;
+}
+.ph-privacy .myst-admonition-body {
+  background: var(--ph-soft-blue);
+}
+
+/* ph-baon: take-aways wrapped in a banana leaf. */
+.ph-baon {
+  border: 9px solid transparent !important;
+  border-radius: 22px !important;
+  background:
+    linear-gradient(var(--ph-surface), var(--ph-surface)) padding-box,
+    repeating-linear-gradient(62deg, #2f7d32 0 5px, #3f9a43 5px 9px, #2a7030 9px 11px) border-box !important;
+  box-shadow: 0 5px 0 rgba(31, 90, 34, 0.35) !important;
+}
+.myst-admonition.ph-baon .myst-admonition-header {
+  background: var(--ph-soft-leaf) !important;
+  color: var(--ph-leaf) !important;
+  border-bottom: 2px dashed color-mix(in srgb, var(--ph-leaf-fill) 45%, transparent);
+}
+.myst-admonition.ph-baon .myst-admonition-header-text {
+  color: var(--ph-leaf) !important;
+  font-family: var(--ph-font-display);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+html[lang^="zh"] .myst-admonition.ph-baon .myst-admonition-header-text {
+  font-weight: 900;
+}
+.myst-admonition.ph-baon .myst-admonition-header::before {
+  background-color: var(--ph-leaf-fill);
+}
+.ph-baon ul {
+  list-style: none;
+  padding-left: 0.2rem;
+}
+.ph-baon ul > li {
+  position: relative;
+  padding-left: 1.7rem;
+  margin: 0.4rem 0;
+}
+.ph-baon ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.3em;
+  width: 1.1em;
+  height: 1.1em;
+  background: var(--ph-img-sun-small) center / contain no-repeat;
+}
+.ph-baon .myst-admonition-body p:last-child a,
+div.ph-baon p:last-child a {
+  font-weight: 700;
+}
+
+/* --- ph-cast: character cards (grid of {card}s with a portrait) -------------
+   Card order sets the colour: Maya, Doc Mon, Tala, Aling Nena, Jun. */
+.ph-cast .myst-card {
+  position: relative;
+  text-align: center;
+  border-top-width: 2px !important;
+  padding-top: 14px;
+  overflow: hidden;
+}
+.ph-cast .myst-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 14px;
+  background: var(--ph-img-banig) left top / 14px 14px;
+  border-bottom: 3px solid var(--ph-card-accent);
+}
+.ph-cast .myst-grid > .myst-card:nth-child(5n + 1) { --ph-card-accent: var(--ph-teal-fill); --ph-card-accent-text: var(--ph-teal); }
+.ph-cast .myst-grid > .myst-card:nth-child(5n + 2) { --ph-card-accent: var(--ph-flag-blue); --ph-card-accent-text: var(--ph-blue); }
+.ph-cast .myst-grid > .myst-card:nth-child(5n + 3) { --ph-card-accent: var(--ph-indigo-fill); --ph-card-accent-text: var(--ph-indigo); }
+.ph-cast .myst-grid > .myst-card:nth-child(5n + 4) { --ph-card-accent: var(--ph-mango); --ph-card-accent-text: var(--ph-mango-text); }
+.ph-cast .myst-grid > .myst-card:nth-child(5n + 5) { --ph-card-accent: var(--ph-flag-red); --ph-card-accent-text: var(--ph-red); }
+.ph-cast .myst-card-body {
+  display: flex;
+  flex-direction: column;
+}
+.ph-cast .myst-card-body > img,
+.ph-cast .myst-card-body > p:has(img) {
+  order: -1;
+  margin: 0;
+}
+.ph-cast .myst-card img {
+  display: block;
+  width: min(140px, 70%);
+  height: auto;
+  margin: 0.6rem auto 0.3rem;
+  transition: transform 0.35s var(--ph-ease);
+}
+.ph-cast .myst-card:hover img {
+  transform: rotate(-4deg) scale(1.05);
+}
+.ph-cast .myst-card-title {
+  font-family: var(--ph-font-display);
+  font-weight: 400;
+  font-size: 1.08rem;
+  color: var(--ph-card-accent-text);
+  letter-spacing: 0.02em;
+}
+html[lang^="zh"] .ph-cast .myst-card-title {
+  font-weight: 900;
+}
+.ph-cast .myst-card-body p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  color: var(--myst-color-text-secondary);
+}
+.ph-cast .myst-card-body p > em:only-child {
+  display: inline-block;
+  font-style: normal;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ph-card-accent-text);
+}
+
+/* --- ph-stat: big-number tiles (grid of {card}s whose title is the number) -- */
+.ph-stat .myst-card {
+  container-type: inline-size;
+  text-align: center;
+  background:
+    var(--ph-img-capiz) center / 28px 28px,
+    var(--ph-surface) !important;
+}
+.ph-stat .myst-card-body {
+  background: var(--ph-surface);
+  margin: 0.9rem 0.9rem 0.9rem;
+  border-radius: 12px;
+  padding: 0.3rem 0.6rem 0.6rem !important;
+}
+.ph-stat .myst-card-title {
+  padding-top: 0.3rem;
+  font-family: var(--ph-font-display);
+  font-weight: 400;
+  font-size: clamp(1.4rem, 15cqi, 2.6rem);
+  line-height: 1.1;
+  white-space: nowrap;
+  color: var(--ph-card-accent-text);
+  transition: transform 0.3s var(--ph-ease);
+}
+.ph-stat .myst-card:hover .myst-card-title {
+  transform: scale(1.08);
+}
+.ph-stat .myst-card-body p {
+  margin: 0.2rem 0 0;
+  color: var(--myst-color-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+/* --- Small utilities ------------------------------------------------------- */
+/* Centre a block (e.g. a figure or a button paragraph). */
+.ph-center {
+  text-align: center;
+}
+/* Wide diagrams: on phones, keep a readable size and scroll sideways. */
+@media (max-width: 640px) {
+  .ph-wide {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ph-wide img {
+    min-width: 600px;
+  }
+}
+
+/* =============================================================================
+ * 8. Motion
+ * ============================================================================= */
+@keyframes ph-spin {
+  to { rotate: 360deg; }
+}
+@keyframes ph-drive {
+  from { translate: -170px 0; }
+  to { translate: calc(100cqw + 20px) 0; }
+}
+@keyframes ph-bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-2px); }
+}
+@keyframes ph-sway {
+  from { transform: rotate(-0.6deg) skewX(-2deg); }
+  to { transform: rotate(0.6deg) skewX(2deg); }
+}
+@keyframes ph-caret {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes ph-wobble {
+  25% { rotate: -12deg; }
+  75% { rotate: 10deg; }
+}
+@keyframes ph-rise {
+  from { opacity: 0; translate: 0 26px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+/* Scroll reveal, pure CSS: only where scroll-driven animations exist; elsewhere
+   (and without JS) everything is simply visible. The default is a gentle lift
+   that never changes opacity, so full-page screenshots, printing and link
+   previews still show everything; `.ph-reveal` opts a block into a full
+   fade-in. */
+@keyframes ph-lift {
+  from { translate: 0 14px; scale: 0.975; }
+  to { translate: 0 0; scale: 1; }
+}
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .ph-story,
+    .ph-route,
+    .ph-check,
+    .ph-oops,
+    .ph-privacy,
+    .ph-baon,
+    .ph-tala-says,
+    .ph-cast .myst-card,
+    .ph-stat .myst-card {
+      animation: ph-lift linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+    .ph-reveal {
+      animation: ph-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+  }
+}
+
+@media print {
+  .ph-hero::before,
+  .ph-hero::after,
+  .ph-banderitas::before,
+  .ph-banderitas::after {
+    animation: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ph-hero::before,
+  .ph-hero::after,
+  .ph-banderitas::before,
+  .ph-banderitas::after,
+  .ph-ask-tala .myst-admonition-body > p:last-child::after,
+  div.ph-ask-tala > p:last-child::after {
+    animation: none !important;
+  }
+  .ph-hero::after {
+    translate: 1.2rem 0;
+  }
+  .myst-card,
+  .myst-footer-link,
+  .article a.button,
+  .ph-cast .myst-card img,
+  .ph-stat .myst-card-title {
+    transition: none !important;
+  }
+  .myst-card:hover,
+  .myst-footer-link:hover,
+  .article a.button:hover,
+  .ph-cast .myst-card:hover img,
+  .ph-stat .myst-card:hover .myst-card-title {
+    transform: none !important;
+  }
+}
+
+/* =============================================================================
+ * 9. Phones
+ * ============================================================================= */
+/* Let the breadcrumb and the header buttons (+ Colab) wrap instead of
+   overlapping (carried over from site.css). */
+@media (max-width: 640px) {
+  .myst-fm-block-header {
+    flex-wrap: wrap;
+    row-gap: 0.4rem;
+  }
+
+  .myst-fm-block-title {
+    border-width: 4px;
+    padding: 0.5em 0.75em 0.45em;
+  }
+
+  .ph-hero {
+    padding: 8.6rem 1.25rem 7.4rem;
+    border-radius: 20px;
+  }
+  .ph-hero::before {
+    top: -85px;
+    right: -85px;
+    width: 250px;
+    height: 250px;
+  }
+  .ph-hero p,
+  .ph-hero li {
+    font-size: 1.02rem;
+  }
+
+  .ph-route {
+    padding: 3.6rem 1rem 1rem;
+  }
+  .ph-route::before {
+    left: 1rem;
+    right: auto;
+  }
+
+  .ph-story {
+    padding: 1rem 1rem 0.9rem;
+    box-shadow: 5px 5px 0 var(--ph-flag-blue);
+  }
+  html.dark .ph-story {
+    box-shadow: 5px 5px 0 #0b2a77;
+  }
+
+  div:is(.ph-ask-tala, .ph-tala-says, .ph-check, .ph-oops, .ph-privacy, .ph-baon) {
+    padding-left: 3.4rem;
+    padding-right: 0.9rem;
+  }
+  div:is(.ph-ask-tala, .ph-tala-says, .ph-check, .ph-oops, .ph-privacy, .ph-baon)::before {
+    left: 0.6rem;
+    width: 2rem;
+    height: 2rem;
+    background-size: 1.4rem;
+  }
+  div.ph-tala-says {
+    background: linear-gradient(90deg, var(--ph-box-soft) 0 3rem, var(--ph-surface) 3rem) !important;
+  }
+
+  /* The top bar holds menu, logo, search, theme toggle and the language
+     switch: keep everything compact so nothing runs past the right edge. */
+  .myst-navbar-end {
+    margin-left: 0.35rem;
+  }
+  :is(a.epi-lang-switch, a.ph-lang) {
+    padding: 0.16rem 0.45rem;
+    font-size: 0.76rem;
+  }
+  .myst-navbar-end a:not(.epi-lang-switch):not(.ph-lang):not(.epi-colab-link) {
+    display: none;
+  }
+  .myst-top-nav .myst-home-link {
+    margin-left: 0.25rem;
+  }
+  .myst-home-link-logo {
+    margin-right: 0;
+  }
+  /* Show only the shield of the wide logo (its left 80/370 of the width). */
+  .myst-home-link-logo img {
+    height: 2rem;
+    width: 2rem;
+    max-width: none;
+    object-fit: cover;
+    object-position: left center;
+  }
+}
+
+/* Very narrow phones: "Filipino" becomes "FIL" in the switch. */
+@media (max-width: 400px) {
+  a.epi-lang-switch[href*="/fil"],
+  a.ph-lang-fil {
+    font-size: 0;
+  }
+  a.epi-lang-switch[href*="/fil"]::after,
+  a.ph-lang-fil::after {
+    content: "FIL";
+    font-size: 0.76rem;
+  }
+  :is(a.epi-lang-switch, a.ph-lang) {
+    padding: 0.16rem 0.38rem;
+  }
+}
+
+/* zh: long CJK headings fill the line, so the theme's invisible "¶" permalink
+   (translated 10px to the right of the heading) pushed the page 5-9 px wider
+   than a 390 px phone. Clip it; it is only shown on hover anyway. */
+html[lang="zh-Hant"] main.article-grid {
+  overflow-x: clip;
+}
+
+/* fil: long Filipino headings (nakapagpapakilala, doxycycline…) can end at the
+   right margin too, so the same hover-only "¶" permalink pushed notebook pages
+   5-12 px wider than a 390 px phone. Same fix as zh. */
+html[lang="fil"] main.article-grid {
+  overflow-x: clip;
+}

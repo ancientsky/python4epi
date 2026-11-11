@@ -1092,9 +1092,9 @@ slide1.shapes.title.text = "松柏護理之家退伍軍人症 SitRep"
 slide1.placeholders[1].text = f"報告時間：{report_time}"
 
 # ── 投影片 2：關鍵數據 ──
-# slide_layouts[5] 是「空白」版面，沒有任何 placeholder，
+# slide_layouts[6] 是「空白」版面，沒有任何 placeholder，
 # 完全靠我們用 add_textbox() 自行定位內容
-slide2 = prs.slides.add_slide(prs.slide_layouts[5])
+slide2 = prs.slides.add_slide(prs.slide_layouts[6])
 # add_textbox(left, top, width, height)：用 Inches 指定位置和大小
 # 左邊距 1 英吋，上邊距 0.5 英吋，寬 8 英吋，高 1 英吋
 txBox = slide2.shapes.add_textbox(
@@ -1123,7 +1123,7 @@ for line in kpi_lines:
     p.space_after = Pt(12)   # 段落後間距 12 pt（等同按一次 Enter）
 
 # ── 投影片 3：流行曲線 ──
-slide3 = prs.slides.add_slide(prs.slide_layouts[5])
+slide3 = prs.slides.add_slide(prs.slide_layouts[6])
 txBox3 = slide3.shapes.add_textbox(
     Inches(1), Inches(0.3), Inches(8), Inches(0.8),
 )
@@ -1136,7 +1136,7 @@ epicurve_buf.seek(0)  # 重設 BytesIO 游標，才能再次讀取圖片資料
 slide3.shapes.add_picture(epicurve_buf, Inches(0.5), Inches(1.3), Inches(9), Inches(5))
 
 # ── 投影片 4：各翼區侵襲率 ──
-slide4 = prs.slides.add_slide(prs.slide_layouts[5])
+slide4 = prs.slides.add_slide(prs.slide_layouts[6])
 txBox4 = slide4.shapes.add_textbox(
     Inches(1), Inches(0.3), Inches(8), Inches(0.8),
 )
@@ -1343,8 +1343,8 @@ print("✅ PDF 報告已儲存：output/sitrep_report.pdf")
   ✗ 不需要為每個病例建立接觸者清單
   ✗ 不需要設立接觸者健康監測窗口
 
-若病原為 COVID-19 / 流感 / 諾羅病毒（有人傳人）：
-  向前追溯期 = 可傳染期（例：COVID-19 感染後 2–14 天）
+若病原為麻疹 / 結核病 / 諾羅病毒（有人傳人）：
+  向前追溯期 = 可傳染期（例：諾羅病毒自症狀開始至症狀緩解後約 48–72 小時）
   → 需列出密切接觸者名單 + 設定健康監測窗口
 ```
 

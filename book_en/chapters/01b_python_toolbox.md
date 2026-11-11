@@ -441,10 +441,10 @@ Ch00 taught `uv sync` to install all of the course's dependencies. Here we go a 
 uv python list
 
 # install a specific version of Python
-uv python install 3.11
+uv python install 3.14
 
 # pin the Python version the project uses (writes to .python-version)
-uv python pin 3.12
+uv python pin 3.14
 ```
 
 **Installing third-party packages:**

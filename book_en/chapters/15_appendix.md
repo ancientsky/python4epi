@@ -142,7 +142,7 @@ uv run pytest                   # Run tests
 uv run jupyter lab              # Start Jupyter Lab
 
 # Building the book
-uv run jupyter-book build book/ # Build the Jupyter Book
+uv run python scripts/build_book.py --lang en --edition student  # Build the site (needs Node.js 24+)
 
 # Version control
 git status                      # View changes
@@ -160,7 +160,7 @@ git commit -m "message"         # Commit
 | `FileNotFoundError: legionella_outbreak.csv` | Wrong working directory | Make sure you run from the project root |
 | `KeyError: 'column_name'` | Misspelled column name | Check the correct names with `df.columns` |
 | Variables disappear after the notebook kernel restarts | Kernel state was reset | Re-run all cells from the top |
-| `SettingWithCopyWarning` | Assigning to a slice | Use `.copy()` or `.loc` |
+| `SettingWithCopyWarning` (pandas 2.x) / `ChainedAssignmentError` (pandas 3) | Assigning on a slice or chained indexing (`df[cond]["col"] = ...`); the original frame is not changed | Use `df.loc[cond, "col"] = ...`, or `.copy()` first |
 | Date columns can't be computed | Not converted to datetime | `pd.to_datetime(df["col"])` |
 | Chinese characters show as boxes | matplotlib is missing a CJK font | See [E. Chinese chart display troubleshooting](#appendix-e-cjk-charts) below |
 | Plotly charts are blank in Jupyter Book | Wrong renderer setting | See [E. Chinese chart display troubleshooting](#appendix-e-cjk-charts) below |
@@ -309,13 +309,15 @@ Even after installing `fonts-noto-cjk` and clearing the cache, you still have to
 | Ubuntu / Debian | `sudo apt install fonts-wqy-zenhei` | WenQuanYi Zen Hei |
 | macOS | Built in | Heiti TC, Arial Unicode MS |
 | Windows | Built in | Microsoft JhengHei |
-| Google Colab | Preinstalled | Noto Sans CJK JP |
+| Google Colab | Usually preinstalled (depends on the runtime version) | Noto Sans CJK JP |
+
+If `!fc-list :lang=zh` prints nothing in Colab, run `!apt-get install -y fonts-noto-cjk` and restart the runtime.
 
 ### E-2. Plotly: charts are blank when Jupyter Book builds
 
 #### Symptom
 
-An interactive Plotly chart renders fine in Jupyter Lab, but the static HTML produced by `jupyter-book build` is just blank.
+An interactive Plotly chart renders fine in Jupyter Lab, but the static HTML produced by `scripts/build_book.py` (which wraps `jupyter book build`) is just blank.
 
 #### Root cause
 
@@ -323,7 +325,7 @@ Jupyter Book executes notebooks in headless mode, and Plotly's default renderer 
 
 #### Fix
 
-Set the following in your notebook (or via `_config.yml`'s `nb_execution_pre_code`):
+Set the following in your notebook, or once at kernel startup (a startup file) when building:
 
 ```python
 import plotly.io as pio
@@ -333,7 +335,7 @@ pio.renderers.default = "notebook"
 The `"notebook"` renderer outputs the chart as complete HTML + JS, which can be embedded in a static page.
 
 ```{tip}
-This book already sets `pio.renderers.default = "notebook"` globally in `book/_config.yml`'s `nb_execution_pre_code`, so no notebook needs to set it individually. But if you run into the same problem in your own project, just add those two lines to your build script.
+This book already sets `pio.renderers.default = "notebook"` globally: `scripts/build_book.py` calls `epi_learning.book_setup.configure_book_kernel()` when each notebook kernel starts, so no notebook needs to set it. In your own project, add those two lines at kernel startup (or in the first cell).
 ```
 
 ### E-3. Quick self-check list

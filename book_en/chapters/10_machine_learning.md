@@ -337,7 +337,7 @@ The key idea in one sentence: in the **screening phase**, prioritize "don't miss
 | Mistake | Correct approach |
 |------|---------|
 | Standardizing / SMOTE before splitting | Use a Pipeline and do it **inside** each fold (otherwise data leakage) |
-| Evaluating imbalanced data with accuracy | When severe cases are only 8%, "always guess healthy" scores 92% accuracy yet is useless → look at PR-AUC / sensitivity |
+| Evaluating imbalanced data with accuracy | When severe cases are only 8% (as in the downsampled Part B scenario), "always guess healthy" scores 92% accuracy yet is useless → look at PR-AUC / sensitivity |
 | Putting symptoms into the features | Symptoms are part of the outcome and cause data leakage |
 | Reaching for a complex model with only 280 rows | A simple model + cross-validation is more reliable; training AUC 1.0, test 0.7 = overfitting |
 | Using the probabilities for bed allocation just because AUC is high | Ranking well ≠ well-calibrated—look at **calibration** |

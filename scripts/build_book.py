@@ -7,18 +7,26 @@ Pages deploy::
     uv run python scripts/build_book.py --lang zh --edition instructor
     uv run python scripts/build_book.py --lang en --edition student
     uv run python scripts/build_book.py --lang en --edition instructor
-    uv run python scripts/build_book.py --all --site-dir _site   # all four
+    uv run python scripts/build_book.py --series ph --lang en    # also zh, fil
+    uv run python scripts/build_book.py --series ph --all        # the three PH
+    uv run python scripts/build_book.py --all --site-dir _site   # all seven
 
-Each edition is a MyST project (``myst.yml``):
+Each edition is a MyST project (``myst.yml``). The main book (series
+``main``) has four; the Philippines special edition (series ``ph``, see
+``book_ph/PRODUCTION.md``) has three, one per language, and no instructor
+edition:
 
-======================  =========================  =================
-Edition                 Project directory          Deploy path
-======================  =========================  =================
-中文 學生版             ``book/``                  ``/``
-中文 教師版             ``book/_instructor/``      ``/instructor/``
-English student         ``book_en/``               ``/en/``
-English instructor      ``book_en/_instructor/``   ``/en/instructor/``
-======================  =========================  =================
+=========================  =========================  =================
+Edition                    Project directory          Deploy path
+=========================  =========================  =================
+中文 學生版                ``book/``                  ``/``
+中文 教師版                ``book/_instructor/``      ``/instructor/``
+English student            ``book_en/``               ``/en/``
+English instructor         ``book_en/_instructor/``   ``/en/instructor/``
+PH English                 ``book_ph/en/``            ``/ph/``
+PH 中文                    ``book_ph/zh/``            ``/ph/zh/``
+PH Filipino                ``book_ph/fil/``           ``/ph/fil/``
+=========================  =========================  =================
 
 A build does three things Jupyter Book 2 cannot be configured to do itself:
 
@@ -36,13 +44,24 @@ A build does three things Jupyter Book 2 cannot be configured to do itself:
    stubs so JB1 URLs (``chapters/01_fundamentals.html``) keep working. It then
    fails the build if a student edition contains solution files or if any
    same-site link on a built page does not resolve to a file (with ``--all``,
-   links between editions are checked on the assembled site too).
+   links between editions, including absolute links to the production site,
+   are checked on the assembled site too).
+
+Philippines editions differ in the post-build step only: ``hreflang``
+alternates and the language switch span their three languages; pages load
+``book/_static/epi-site.js`` (for ``window.epiWhenHydrated`` only),
+``book_ph/_static/ph-site.js`` (three-way language switch, link back to the
+full book, "Open in Colab") and the optional ``ph-games.css`` /
+``ph-games.js`` instead of ``youtube-lite.js``; there are no JB1 redirect
+stubs; and :func:`build_ph_dashboard.build_dashboard` writes the standalone
+chapter-9 dashboard to ``<edition>/dashboard/index.html``.
 """
 
 from __future__ import annotations
 
 import argparse
 import html
+import importlib.util
 import json
 import os
 import re
@@ -50,6 +69,7 @@ import shutil
 import subprocess
 import sys
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import unquote, urljoin
@@ -96,6 +116,89 @@ LANG_META: dict[str, dict[str, str]] = {
     },
 }
 
+#: The two book series: the main book and the Philippines special edition.
+SERIES: tuple[str, ...] = ("main", "ph")
+#: Languages of the Philippines edition; English is its source of truth.
+PH_LANGS: tuple[str, ...] = ("en", "zh", "fil")
+#: Languages and editions each series is published in.
+SERIES_LANGS: dict[str, tuple[str, ...]] = {"main": LANGS, "ph": PH_LANGS}
+SERIES_EDITIONS: dict[str, tuple[str, ...]] = {"main": EDITIONS, "ph": ("student",)}
+#: Language the ``hreflang="x-default"`` alternate points at, per series.
+X_DEFAULT: dict[str, str] = {"main": "zh", "ph": "en"}
+SITE_NAMES: dict[str, str] = {"main": "Epi With Python", "ph": "Bantay Python · Epi With Python"}
+
+#: Shared static files of the Philippines edition (``book_ph/_static``).
+PH_STATIC_DIR = Path("book_ph") / "_static"
+#: The MyST ``site.options.style`` of the PH projects (owned by the design work;
+#: MyST only logs an error and builds unstyled while it is missing).
+PH_STYLE = "ph.css"
+#: Files copied into every PH edition's ``_static/``: name -> required. Optional
+#: files that are missing are skipped with a warning and not linked from pages.
+PH_STATIC_FILES: dict[str, bool] = {
+    "ph-site.js": True,
+    "ph-games.css": False,
+    "ph-games.js": False,
+}
+#: Stylesheets linked from every PH page (after the theme and ``ph.css``).
+PH_PAGE_STYLES: tuple[str, ...] = ("ph-games.css",)
+#: Scripts injected (in this order) into every PH page. ``epi-site.js`` comes
+#: from ``book/_static`` and only provides ``window.epiWhenHydrated`` here (its
+#: book-specific part needs ``EPI_SITE.alternate``, which PH pages do not set).
+PH_PAGE_SCRIPTS: tuple[str, ...] = ("epi-site.js", "ph-site.js", "ph-games.js")
+#: Standalone pages generated into each PH edition (directory -> generator).
+PH_DASHBOARD_DIR = "dashboard"
+DASHBOARD_SCRIPT = Path(__file__).resolve().parent / "build_ph_dashboard.py"
+
+#: Per-language copy and locale data of the Philippines edition.
+PH_LANG_META: dict[str, dict[str, str]] = {
+    "en": {
+        "tree": "book_ph/en",
+        "prefix": "ph/",
+        "html_lang": "en",
+        "hreflang": "en",
+        "og_locale": "en_PH",
+        "description": (
+            "Python for Philippine disease surveillance staff, from zero to a "
+            "shareable outbreak dashboard, with an AI co-pilot and privacy first."
+        ),
+        "label": "EN",
+        "switch_title": "Read this page in English",
+        "colab_label": "Open in Colab",
+        "book_prefix": "en/",
+        "book_title": "Epi With Python — the full book",
+    },
+    "zh": {
+        "tree": "book_ph/zh",
+        "prefix": "ph/zh/",
+        "html_lang": "zh-Hant",
+        "hreflang": "zh-Hant",
+        "og_locale": "zh_TW",
+        "description": "給菲律賓疾病監測人員的 Python 入門：從零開始，與 AI 一起寫程式，隱私優先，做出可分享的疫情儀表板。",
+        "label": "中文",
+        "switch_title": "以繁體中文閱讀本頁",
+        "colab_label": "Open in Colab",
+        "book_prefix": "",
+        "book_title": "Epi With Python 完整版",
+    },
+    "fil": {
+        "tree": "book_ph/fil",
+        "prefix": "ph/fil/",
+        "html_lang": "fil",
+        "hreflang": "fil",
+        # Facebook's Open Graph locale for Filipino is tl_PH.
+        "og_locale": "tl_PH",
+        "description": (
+            "Python para sa mga kawani ng disease surveillance sa Pilipinas: mula sa "
+            "simula hanggang sa outbreak dashboard, kasama ang AI, privacy muna."
+        ),
+        "label": "Filipino",
+        "switch_title": "Basahin ang pahinang ito sa Filipino",
+        "colab_label": "Buksan sa Colab",
+        "book_prefix": "en/",
+        "book_title": "Epi With Python — ang buong aklat",
+    },
+}
+
 #: Marks a page as already post-processed, so the step is idempotent.
 POSTBUILD_MARKER = "<!-- epi-postbuild -->"
 
@@ -110,29 +213,49 @@ del _epi_configure
 
 @dataclass(frozen=True)
 class Edition:
-    """One of the four published editions.
+    """One of the seven published editions.
 
     Parameters
     ----------
     lang:
-        ``"zh"`` or ``"en"``.
+        ``"zh"`` or ``"en"`` (main book); ``"en"``, ``"zh"`` or ``"fil"`` (PH).
     edition:
-        ``"student"`` or ``"instructor"``.
+        ``"student"`` or ``"instructor"``; the PH series has ``"student"`` only.
+    series:
+        ``"main"`` (the default) or ``"ph"`` (Philippines special edition).
     """
 
     lang: str
-    edition: str
+    edition: str = "student"
+    series: str = "main"
 
     def __post_init__(self) -> None:
-        if self.lang not in LANGS:
-            raise ValueError(f"lang must be one of {LANGS}, got {self.lang!r}")
-        if self.edition not in EDITIONS:
-            raise ValueError(f"edition must be one of {EDITIONS}, got {self.edition!r}")
+        if self.series not in SERIES:
+            raise ValueError(f"series must be one of {SERIES}, got {self.series!r}")
+        langs = SERIES_LANGS[self.series]
+        if self.lang not in langs:
+            raise ValueError(f"lang must be one of {langs}, got {self.lang!r}")
+        editions = SERIES_EDITIONS[self.series]
+        if self.edition not in editions:
+            raise ValueError(
+                f"edition must be one of {editions} for series {self.series!r}, "
+                f"got {self.edition!r}"
+            )
+
+    @property
+    def is_ph(self) -> bool:
+        """Whether this is a Philippines-edition project."""
+        return self.series == "ph"
+
+    @property
+    def meta(self) -> dict[str, str]:
+        """Per-language copy and locale data (:data:`LANG_META` / :data:`PH_LANG_META`)."""
+        return PH_LANG_META[self.lang] if self.is_ph else LANG_META[self.lang]
 
     @property
     def tree(self) -> str:
-        """Source tree holding the content (``book`` or ``book_en``)."""
-        return LANG_META[self.lang]["tree"]
+        """Source tree holding the content (``book``, ``book_en``, ``book_ph/en``…)."""
+        return self.meta["tree"]
 
     @property
     def project_dir(self) -> Path:
@@ -142,7 +265,9 @@ class Edition:
 
     @property
     def prefix(self) -> str:
-        """Deploy path below the site root: ``""``, ``"en/"``, ``"en/instructor/"``…"""
+        """Deploy path below the site root: ``""``, ``"en/"``, ``"ph/zh/"``…"""
+        if self.is_ph:
+            return self.meta["prefix"]
         parts = [] if self.lang == "zh" else ["en"]
         if self.edition == "instructor":
             parts.append("instructor")
@@ -159,16 +284,29 @@ class Edition:
         return self.project_dir / "_build" / "site"
 
     def counterpart(self) -> Edition:
-        """The same edition in the other language."""
+        """The same edition in the other language (main book only)."""
+        if self.is_ph:
+            raise ValueError("PH editions have two other languages; use alternates()")
         other = "en" if self.lang == "zh" else "zh"
         return Edition(other, self.edition)
 
+    def alternates(self) -> tuple[Edition, ...]:
+        """The same edition in each other language of its series."""
+        return tuple(
+            Edition(lang, self.edition, self.series)
+            for lang in SERIES_LANGS[self.series]
+            if lang != self.lang
+        )
+
     def label(self) -> str:
-        """Human-readable name, e.g. ``"zh student"``."""
-        return f"{self.lang} {self.edition}"
+        """Human-readable name, e.g. ``"zh student"`` or ``"ph fil"``."""
+        return f"ph {self.lang}" if self.is_ph else f"{self.lang} {self.edition}"
 
 
-ALL_EDITIONS: tuple[Edition, ...] = tuple(Edition(lang, ed) for lang in LANGS for ed in EDITIONS)
+MAIN_EDITIONS: tuple[Edition, ...] = tuple(Edition(lang, ed) for lang in LANGS for ed in EDITIONS)
+PH_EDITIONS: tuple[Edition, ...] = tuple(Edition(lang, "student", "ph") for lang in PH_LANGS)
+ALL_EDITIONS: tuple[Edition, ...] = MAIN_EDITIONS + PH_EDITIONS
+SERIES_EDITION_LIST: dict[str, tuple[Edition, ...]] = {"main": MAIN_EDITIONS, "ph": PH_EDITIONS}
 
 
 @dataclass(frozen=True)
@@ -426,7 +564,7 @@ def page_meta(page: Page, edition: Edition, title: str) -> list[tuple[str, str, 
     list[tuple[str, str, str]]
         ``(attribute, name, content)`` triples, e.g. ``("property", "og:url", ...)``.
     """
-    meta = LANG_META[edition.lang]
+    meta = edition.meta
     description = page.description or meta["description"]
     page_url = absolute_url(edition, page.url_path)
     # MyST points og:image at the page's first figure (often an SVG, which
@@ -434,12 +572,15 @@ def page_meta(page: Page, edition: Edition, title: str) -> list[tuple[str, str, 
     image = absolute_url(edition, "_static/og-image.png")
     return [
         ("name", "description", description),
-        ("property", "og:site_name", "Epi With Python"),
+        ("property", "og:site_name", SITE_NAMES[edition.series]),
         ("property", "og:type", "website"),
         ("property", "og:url", page_url),
         ("property", "og:description", description),
         ("property", "og:locale", meta["og_locale"]),
-        ("property", "og:locale:alternate", LANG_META[edition.counterpart().lang]["og_locale"]),
+        *(
+            ("property", "og:locale:alternate", other.meta["og_locale"])
+            for other in edition.alternates()
+        ),
         ("name", "image", image),
         ("property", "og:image", image),
         ("property", "og:image:type", "image/png"),
@@ -453,13 +594,73 @@ def page_meta(page: Page, edition: Edition, title: str) -> list[tuple[str, str, 
     ]
 
 
+def site_config(edition: Edition, *, base_path: str, colab: dict[str, str]) -> dict[str, object]:
+    """The ``window.EPI_SITE`` object the page scripts read.
+
+    The theme is a single-page app, so the object written into the first page
+    loaded stays in use after client-side navigation: it holds nothing that
+    is specific to one page.
+
+    Parameters
+    ----------
+    edition:
+        The page's edition.
+    base_path:
+        Path the deploy root is served under.
+    colab:
+        Map of page path -> Colab URL for this edition.
+
+    Returns
+    -------
+    dict
+        Main book: ``lang``, ``edition``, ``htmlLang``, ``root``, ``alternate``,
+        ``colab``, ``colabLabel`` (see ``book/_static/epi-site.js``). PH: the
+        same without ``alternate``, plus ``series``, ``languages``, ``book`` and
+        ``standalone`` (see ``book_ph/_static/ph-site.js``).
+    """
+    meta = edition.meta
+    base = base_path.rstrip("/")
+    config: dict[str, object] = {
+        "lang": edition.lang,
+        "edition": edition.edition,
+        "htmlLang": meta["html_lang"],
+        "root": f"{base}/{edition.prefix}",
+        "colab": colab,
+        "colabLabel": meta["colab_label"],
+    }
+    if not edition.is_ph:
+        other = edition.counterpart()
+        config["alternate"] = {
+            "root": f"{base}/{other.prefix}",
+            "hreflang": other.meta["hreflang"],
+            "title": meta["switch_title"],
+        }
+        return config
+    config["series"] = edition.series
+    config["languages"] = [
+        {
+            "lang": lang.lang,
+            "root": f"{base}/{lang.prefix}",
+            "hreflang": lang.meta["hreflang"],
+            "label": lang.meta["label"],
+            "title": lang.meta["switch_title"],
+        }
+        for lang in SERIES_EDITION_LIST["ph"]
+    ]
+    config["book"] = {"root": f"{base}/{meta['book_prefix']}", "title": meta["book_title"]}
+    config["standalone"] = [f"{PH_DASHBOARD_DIR}/"]
+    return config
+
+
 def head_links_and_scripts(
     page: Page,
     edition: Edition,
     *,
     base_path: str,
-    has_counterpart: bool,
     colab: dict[str, str],
+    has_counterpart: bool = False,
+    alternate_langs: tuple[str, ...] | None = None,
+    static_files: tuple[str, ...] | None = None,
 ) -> str:
     """Build the canonical/``hreflang`` links and the page scripts.
 
@@ -469,52 +670,54 @@ def head_links_and_scripts(
         The page and its edition.
     base_path:
         Path the deploy root is served under, for script URLs.
-    has_counterpart:
-        Whether the other language has the same page (controls ``hreflang``).
     colab:
         Map of page path -> Colab URL for this edition.
+    has_counterpart:
+        Main book: whether the other language has the same page (controls
+        ``hreflang``). Ignored when *alternate_langs* is given.
+    alternate_langs:
+        Other languages of the series that have the same page.
+    static_files:
+        PH only: the optional ``_static`` files present in the build; styles
+        and scripts not listed are not linked (default: all of them).
 
     Returns
     -------
     str
         HTML to insert before ``</head>``.
     """
-    meta = LANG_META[edition.lang]
-    other = edition.counterpart()
+    if alternate_langs is None:
+        alternate_langs = tuple(o.lang for o in edition.alternates()) if has_counterpart else ()
     esc = html.escape
     page_url = absolute_url(edition, page.url_path)
     tags = [f'<link rel="canonical" href="{esc(page_url)}"/>']
     alternates = {edition.lang: page_url}
-    if has_counterpart:
-        alternates[other.lang] = absolute_url(other, page.url_path)
-    for lang in LANGS:
-        if lang in alternates:
+    for other in edition.alternates():
+        if other.lang in alternate_langs:
+            alternates[other.lang] = absolute_url(other, page.url_path)
+    for lang in SERIES_EDITION_LIST[edition.series]:
+        if lang.edition == edition.edition and lang.lang in alternates:
             tags.append(
-                f'<link rel="alternate" hreflang="{LANG_META[lang]["hreflang"]}" '
-                f'href="{esc(alternates[lang])}"/>'
+                f'<link rel="alternate" hreflang="{lang.meta["hreflang"]}" '
+                f'href="{esc(alternates[lang.lang])}"/>'
             )
-    tags.append(
-        f'<link rel="alternate" hreflang="x-default" '
-        f'href="{esc(alternates.get("zh", page_url))}"/>'
-    )
+    x_default = alternates.get(X_DEFAULT[edition.series], page_url)
+    tags.append(f'<link rel="alternate" hreflang="x-default" href="{esc(x_default)}"/>')
 
     root = f"{base_path.rstrip('/')}/{edition.prefix}"
-    config = {
-        "lang": edition.lang,
-        "edition": edition.edition,
-        "htmlLang": meta["html_lang"],
-        "root": root,
-        "alternate": {
-            "root": f"{base_path.rstrip('/')}/{other.prefix}",
-            "hreflang": LANG_META[other.lang]["hreflang"],
-            "title": meta["switch_title"],
-        },
-        "colab": colab,
-        "colabLabel": meta["colab_label"],
-    }
+    config = site_config(edition, base_path=base_path, colab=colab)
     config_json = json.dumps(config, ensure_ascii=False, sort_keys=True).replace("</", "<\\/")
+    if edition.is_ph:
+        present = set(PH_STATIC_FILES if static_files is None else static_files)
+        present.add("epi-site.js")  # copied from book/_static, always there
+        for style in PH_PAGE_STYLES:
+            if style in present:
+                tags.append(f'<link rel="stylesheet" href="{esc(root)}_static/{style}"/>')
+        scripts = tuple(s for s in PH_PAGE_SCRIPTS if s in present)
+    else:
+        scripts = PAGE_SCRIPTS
     tags.append(f"<script>window.EPI_SITE={config_json};</script>")
-    for script in PAGE_SCRIPTS:
+    for script in scripts:
         tags.append(f'<script src="{esc(root)}_static/{script}" defer></script>')
     return "".join(tags)
 
@@ -529,8 +732,8 @@ def process_page_html(page_html: str, page: Page, edition: Edition, **kwargs: ob
     page, edition:
         The page and its edition.
     **kwargs:
-        ``base_path``, ``has_counterpart`` and ``colab``, passed to
-        :func:`head_links_and_scripts`.
+        ``base_path``, ``colab`` and ``has_counterpart`` / ``alternate_langs``
+        (and, for PH, ``static_files``), passed to :func:`head_links_and_scripts`.
 
     Returns
     -------
@@ -539,12 +742,17 @@ def process_page_html(page_html: str, page: Page, edition: Edition, **kwargs: ob
     """
     if POSTBUILD_MARKER in page_html:
         return page_html
-    title = _meta_content(page_html, "property", "og:title") or "Epi With Python"
-    page_html = set_html_lang(page_html, LANG_META[edition.lang]["html_lang"])
+    title = _meta_content(page_html, "property", "og:title") or SITE_NAMES[edition.series]
+    page_html = set_html_lang(page_html, edition.meta["html_lang"])
     page_html = fix_source_links(page_html, edition)
     added = []
+    seen: set[tuple[str, str]] = set()
     for attr, name, content in page_meta(page, edition, title):
-        page_html, existed = upsert_meta(page_html, attr, name, content)
+        # A repeated tag (og:locale:alternate on PH pages) is added, not upserted.
+        existed = False
+        if (attr, name) not in seen:
+            page_html, existed = upsert_meta(page_html, attr, name, content)
+        seen.add((attr, name))
         if not existed:
             added.append(f'<meta {attr}="{name}" content="{html.escape(content)}"/>')
     head_end = page_html.find("</head>")
@@ -651,7 +859,10 @@ def page_url_for(html_file: Path, site_dir: Path, url_root: str) -> str:
 
 
 def broken_links(
-    site_dir: Path, url_root: str, skip_prefixes: tuple[str, ...] = ()
+    site_dir: Path,
+    url_root: str,
+    skip_prefixes: tuple[str, ...] = (),
+    site_url: str | None = None,
 ) -> dict[str, list[str]]:
     """Same-site ``href``s in built pages that do not resolve to a file.
 
@@ -666,6 +877,11 @@ def broken_links(
     skip_prefixes:
         URL roots of other editions: links into them are not checked here
         (:func:`assemble_site` checks them on the assembled site).
+    site_url:
+        Absolute production URL that *url_root* is deployed at (no trailing
+        ``/``). When given, absolute links into it (canonical/``hreflang``
+        links, the navbar fallbacks, links to other editions) are checked too;
+        only meaningful on the fully assembled site.
 
     Returns
     -------
@@ -674,6 +890,7 @@ def broken_links(
     """
     if not url_root.endswith("/"):
         raise ValueError(f"url_root must end with '/', got {url_root!r}")
+    absolute = f"{site_url.rstrip('/')}/" if site_url else None
     broken: dict[str, list[str]] = {}
     for html_file in sorted(site_dir.rglob("*.html")):
         page_url = page_url_for(html_file, site_dir, url_root)
@@ -682,9 +899,12 @@ def broken_links(
         text = _SCRIPT_RX.sub("", text)
         for raw in set(_HREF_RX.findall(text)):
             href = html.unescape(raw).strip()
-            if not href or href.startswith(("#", "//")) or _SCHEME_RX.match(href):
+            link = href
+            if absolute and (link == absolute[:-1] or link.startswith(absolute)):
+                link = url_root + link[len(absolute) :]
+            if not link or link.startswith(("#", "//")) or _SCHEME_RX.match(link):
                 continue  # in-page anchor or another site
-            target = urljoin(page_url, href).split("#", 1)[0].split("?", 1)[0]
+            target = urljoin(page_url, link).split("#", 1)[0].split("?", 1)[0]
             if target.startswith(url_root):
                 # Another edition nested below this one (e.g. /en/instructor/)?
                 nested = [p for p in skip_prefixes if len(p) > len(url_root)]
@@ -699,10 +919,17 @@ def broken_links(
 
 
 def check_links(
-    site_dir: Path, url_root: str, label: str, skip_prefixes: tuple[str, ...] = ()
+    site_dir: Path,
+    url_root: str,
+    label: str,
+    skip_prefixes: tuple[str, ...] = (),
+    site_url: str | None = None,
 ) -> None:
-    """Raise :class:`SystemExit` if any same-site link in *site_dir* is broken."""
-    broken = broken_links(site_dir, url_root, skip_prefixes)
+    """Raise :class:`SystemExit` if any same-site link in *site_dir* is broken.
+
+    Parameters are those of :func:`broken_links`; *label* names the build.
+    """
+    broken = broken_links(site_dir, url_root, skip_prefixes, site_url)
     if broken:
         lines = [f"  {href}  (in {len(pages)} pages, e.g. {pages[0]})"
                  for href, pages in sorted(broken.items())[:20]]
@@ -724,7 +951,8 @@ def postprocess(edition: Edition, base_path: str = DEFAULT_BASE_PATH) -> dict[st
     Returns
     -------
     dict[str, int]
-        Counts of ``pages``, ``notebooks`` (Colab links) and ``redirects`` written.
+        Counts of ``pages``, ``notebooks`` (Colab links) and ``redirects``
+        written (plus, for PH editions, ``standalone`` generated pages).
     """
     html_dir = edition.html_dir
     if not (html_dir / "index.html").is_file():
@@ -737,28 +965,32 @@ def postprocess(edition: Edition, base_path: str = DEFAULT_BASE_PATH) -> dict[st
                 f"{edition.label()}: student edition contains solution material: {leaked[:5]}"
             )
 
-    static_src = REPO_ROOT / "book" / "_static"
     static_dst = html_dir / "_static"
     static_dst.mkdir(exist_ok=True)
-    for name in STATIC_FILES:
-        shutil.copy2(static_src / name, static_dst / name)
+    static_files = copy_static(edition, static_dst)
 
     colab = {p.url_path: colab_url(edition.tree, p.location) for p in pages if p.is_notebook}
-    other_tree = REPO_ROOT / edition.counterpart().tree
-    lang_tag = LANG_META[edition.lang]["html_lang"]
+    lang_tag = edition.meta["html_lang"]
     edition_root = f"{base_path.rstrip('/')}/{edition.prefix}"
 
     for page in pages:
         page_file = html_dir / page.url_path / "index.html"
         page_html = page_file.read_text(encoding="utf-8")
+        location = page.location.lstrip("/")
+        alternate_langs = tuple(
+            other.lang
+            for other in edition.alternates()
+            if (REPO_ROOT / other.tree / location).is_file()
+        )
         page_file.write_text(
             process_page_html(
                 page_html,
                 page,
                 edition,
                 base_path=base_path,
-                has_counterpart=(other_tree / page.location.lstrip("/")).is_file(),
+                alternate_langs=alternate_langs,
                 colab=colab,
+                static_files=static_files,
             ),
             encoding="utf-8",
         )
@@ -770,8 +1002,10 @@ def postprocess(edition: Edition, base_path: str = DEFAULT_BASE_PATH) -> dict[st
             if fixed != text:
                 data_file.write_text(fixed, encoding="utf-8")
 
+    stats = {"pages": len(pages), "notebooks": len(colab)}
+    # The PH edition never had Jupyter Book 1 URLs to keep alive.
     redirects = 0
-    for page in pages:
+    for page in pages if not edition.is_ph else ():
         stub = html_dir / legacy_path(page.location)
         if stub.exists():
             continue
@@ -783,12 +1017,90 @@ def postprocess(edition: Edition, base_path: str = DEFAULT_BASE_PATH) -> dict[st
             encoding="utf-8",
         )
         redirects += 1
+    stats["redirects"] = redirects
+
+    if edition.is_ph:
+        build_dashboard = load_dashboard_builder()
+        written = build_dashboard(edition.lang, html_dir / PH_DASHBOARD_DIR)
+        if not Path(written).is_file():
+            raise SystemExit(f"{edition.label()}: dashboard builder wrote no file at {written}")
+        stats["standalone"] = 1
 
     other_roots = tuple(
         f"{base_path.rstrip('/')}/{other.prefix}" for other in ALL_EDITIONS if other != edition
     )
     check_links(html_dir, edition_root, edition.label(), other_roots)
-    return {"pages": len(pages), "notebooks": len(colab), "redirects": redirects}
+    return stats
+
+
+def copy_static(edition: Edition, static_dst: Path) -> tuple[str, ...]:
+    """Copy the files MyST does not copy into an edition's ``_static/``.
+
+    Main-book editions get :data:`STATIC_FILES` from ``book/_static``. PH
+    editions get ``epi-site.js`` from ``book/_static``, ``og-image.png`` (the
+    first of ``book_ph/_static/og-image_<lang>.png``,
+    ``book_ph/_static/og-image.png`` and ``book/_static/og-image.png``) and
+    :data:`PH_STATIC_FILES` from ``book_ph/_static``; a missing optional file
+    is reported and skipped, a missing required one fails the build.
+
+    Parameters
+    ----------
+    edition:
+        The edition being post-processed.
+    static_dst:
+        Its ``_build/html/_static`` directory.
+
+    Returns
+    -------
+    tuple[str, ...]
+        Names of the files copied.
+    """
+    book_static = REPO_ROOT / "book" / "_static"
+    if not edition.is_ph:
+        for name in STATIC_FILES:
+            shutil.copy2(book_static / name, static_dst / name)
+        return STATIC_FILES
+    ph_static = REPO_ROOT / PH_STATIC_DIR
+    copied = []
+    og_candidates = (
+        ph_static / f"og-image_{edition.lang}.png",
+        ph_static / "og-image.png",
+        book_static / "og-image.png",
+    )
+    sources = {
+        "epi-site.js": book_static / "epi-site.js",
+        "og-image.png": next((p for p in og_candidates if p.is_file()), og_candidates[-1]),
+    }
+    sources.update({name: ph_static / name for name in PH_STATIC_FILES})
+    for name, src in sources.items():
+        if not src.is_file():
+            if PH_STATIC_FILES.get(name, True):
+                raise SystemExit(f"{edition.label()}: required static file {src} is missing")
+            print(f"⚠ {edition.label()}: optional {src.relative_to(REPO_ROOT)} is missing; "
+                  "pages will not link it", flush=True)
+            continue
+        shutil.copy2(src, static_dst / name)
+        copied.append(name)
+    if not (ph_static / PH_STYLE).is_file():
+        print(f"⚠ {edition.label()}: {PH_STATIC_DIR / PH_STYLE} is missing; "
+              "the site is built without the PH theme", flush=True)
+    return tuple(copied)
+
+
+def load_dashboard_builder() -> Callable[[str, Path], Path]:
+    """Import ``build_dashboard`` from ``scripts/build_ph_dashboard.py``.
+
+    Returns
+    -------
+    Callable[[str, Path], Path]
+        ``build_dashboard(lang, out_dir) -> Path`` of the written ``index.html``.
+    """
+    spec = importlib.util.spec_from_file_location("build_ph_dashboard", DASHBOARD_SCRIPT)
+    if spec is None or spec.loader is None:
+        raise SystemExit(f"cannot load {DASHBOARD_SCRIPT}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.build_dashboard
 
 
 def write_kernel_startup(edition: Edition) -> Path:
@@ -889,10 +1201,13 @@ def assemble_site(
         Output directory, replaced if it exists. Its root is the zh student
         edition when that edition is included.
     base_path:
-        Path the site root is served under; when all four editions are
-        included, every same-site link on the assembled site is checked.
+        Path the site root is served under; when all seven editions are
+        included, every same-site link on the assembled site is checked,
+        absolute links to the production site (:data:`SITE_URL`) included.
     """
-    if site_dir.resolve() in {REPO_ROOT, REPO_ROOT / "book", REPO_ROOT / "book_en"}:
+    protected = {REPO_ROOT, REPO_ROOT / "book", REPO_ROOT / "book_en", REPO_ROOT / "book_ph"}
+    protected |= {e.project_dir for e in ALL_EDITIONS}
+    if site_dir.resolve() in protected:
         raise ValueError(f"refusing to replace {site_dir}")
     if site_dir.exists():
         shutil.rmtree(site_dir)
@@ -907,17 +1222,27 @@ def assemble_site(
             raise SystemExit(f"{index} was not post-processed")
     # Links between editions (e.g. the home page's "instructor edition" button)
     # can only be checked once they sit side by side.
-    if len(editions) == len(ALL_EDITIONS):
-        check_links(site_dir, f"{base_path.rstrip('/')}/", "assembled site")
+    if set(editions) == set(ALL_EDITIONS):
+        check_links(site_dir, f"{base_path.rstrip('/')}/", "assembled site", site_url=SITE_URL)
     print(f"✔ site assembled in {site_dir}", flush=True)
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    """Parse command-line arguments."""
+    """Parse command-line arguments.
+
+    ``--lang`` + ``--edition`` select one main-book edition (unchanged);
+    ``--series ph --lang en|zh|fil`` one PH edition; ``--all`` every edition,
+    or with ``--series`` every edition of that series.
+    """
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--lang", choices=LANGS, help="language to build")
-    parser.add_argument("--edition", choices=EDITIONS, help="edition to build")
-    parser.add_argument("--all", action="store_true", help="build all four editions")
+    parser.add_argument("--series", choices=SERIES, help="book series (default: main)")
+    parser.add_argument(
+        "--lang", choices=sorted(set(LANGS) | set(PH_LANGS)), help="language to build"
+    )
+    parser.add_argument("--edition", choices=EDITIONS, help="edition to build (main book)")
+    parser.add_argument(
+        "--all", action="store_true", help="build all seven editions (or all of --series)"
+    )
     parser.add_argument(
         "--base-path",
         default=DEFAULT_BASE_PATH,
@@ -932,16 +1257,34 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     args = parser.parse_args(argv)
     if args.all == bool(args.lang or args.edition):
-        parser.error("give either --all, or both --lang and --edition")
-    if not args.all and not (args.lang and args.edition):
-        parser.error("--lang and --edition go together")
+        parser.error("give either --all, or --lang (with --edition for the main book)")
+    if args.all:
+        return args
+    if (args.series or "main") == "main":
+        if not (args.lang and args.edition):
+            parser.error("--lang and --edition go together")
+        if args.lang not in LANGS:
+            parser.error(f"the main book is built in {LANGS}, not {args.lang!r}")
+    else:
+        if not args.lang or args.lang not in PH_LANGS:
+            parser.error(f"--series ph needs --lang, one of {PH_LANGS}")
+        if args.edition not in (None, "student"):
+            parser.error("the PH edition has no instructor edition")
     return args
+
+
+def selected_editions(args: argparse.Namespace) -> list[Edition]:
+    """The editions the parsed command line asks for, in build order."""
+    if args.all:
+        return list(SERIES_EDITION_LIST[args.series] if args.series else ALL_EDITIONS)
+    series = args.series or "main"
+    return [Edition(args.lang, args.edition or "student", series)]
 
 
 def main(argv: list[str] | None = None) -> None:
     """Command-line entry point."""
     args = parse_args(argv)
-    editions = list(ALL_EDITIONS) if args.all else [Edition(args.lang, args.edition)]
+    editions = selected_editions(args)
     for edition in editions:
         if args.postprocess_only:
             print(f"✔ {edition.label()}: {postprocess(edition, args.base_path)}")

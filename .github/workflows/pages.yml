@@ -64,13 +64,14 @@ jobs:
       - name: Sync deps
         run: uv sync --group dev
 
-      # One entry point builds all four editions (MyST build with notebooks
+      # One entry point builds all seven editions (MyST build with notebooks
       # executed under --strict, then the post-build step) and assembles them
       # at their deploy paths: / (zh student), /instructor/, /en/,
-      # /en/instructor/. Kernel pre-execution setup (repo-root cwd for
+      # /en/instructor/, and the Philippines edition at /ph/, /ph/zh/,
+      # /ph/fil/. Kernel pre-execution setup (repo-root cwd for
       # data/synthetic/, CJK fonts, ggplot, Plotly renderer) is installed by the
       # script, so no data symlinks are needed. See scripts/build_book.py.
-      - name: Build all four editions
+      - name: Build all seven editions
         run: uv run python scripts/build_book.py --all --site-dir page_artifact
 
       - name: Sanity-check the pages artifact
@@ -89,6 +90,20 @@ jobs:
           done
           grep -q '<html lang="zh-Hant"' page_artifact/index.html || fail "zh lang tag"
           grep -q '<html lang="en"' page_artifact/en/index.html || fail "en lang tag"
+          # Philippines edition: three languages, each with its notebook pages,
+          # the post-build config and the generated chapter-9 dashboard.
+          for edition in ph/ ph/zh/ ph/fil/; do
+            dir="page_artifact/${edition}"
+            [ -f "${dir}index.html" ] || fail "${dir}index.html missing"
+            [ -f "${dir}chapters/notebooks/dashboard/index.html" ] \
+              || fail "${dir}: notebook page missing"
+            [ -f "${dir}dashboard/index.html" ] || fail "${dir}: dashboard missing"
+            [ -f "${dir}_static/ph-site.js" ] || fail "${dir}: ph-site.js missing"
+            grep -q 'window.EPI_SITE=' "${dir}index.html" || fail "${dir}: not post-processed"
+          done
+          grep -q '<html lang="en"' page_artifact/ph/index.html || fail "ph en lang tag"
+          grep -q '<html lang="zh-Hant"' page_artifact/ph/zh/index.html || fail "ph zh lang tag"
+          grep -q '<html lang="fil"' page_artifact/ph/fil/index.html || fail "ph fil lang tag"
           # Solutions only in the instructor editions.
           [ -f page_artifact/instructor/chapters/solutions/stats-solution/index.html ] \
             || fail "zh instructor solutions missing"
@@ -97,6 +112,7 @@ jobs:
           # Match the solutions chapter and solution notebooks/pages only: the
           # theme ships an unrelated syntax-highlighting chunk named
           # build/_shared/solution-file-*.js, which a bare '*solution*' would hit.
+          # The root scan also covers page_artifact/ph/ (no instructor edition).
           for student in page_artifact page_artifact/en; do
             if find "$student" -path "$student/instructor" -prune -o -path "$student/en" -prune \
                  -o \( -path '*/chapters/solutions*' -o -name '*_solution.*' -o -name '*-solution' \) \

@@ -101,6 +101,8 @@
   "use strict";
 
   var cfg = window.EPI_SITE;
+  // Philippines-edition pages load this file for epiWhenHydrated() only: their
+  // config has no `alternate`, and book_ph/_static/ph-site.js does the rest.
   if (!cfg || !cfg.root || !cfg.alternate) return;
 
   /** Path of the current page relative to this edition's root ("" = home). */

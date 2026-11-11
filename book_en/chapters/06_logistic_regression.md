@@ -527,7 +527,7 @@ When one category of a binary predictor corresponds completely (or almost comple
 
 Common ways to handle it:
 1. Check the 2×2 table to see whether any cell = 0
-2. Switch to **Firth's penalized likelihood** (the `firthlogist` package)
+2. Switch to **Firth's penalized likelihood**. Note: the `firthlogist` package has not been updated since 2022, and on the scikit-learn 1.8 this book pins we tested it and it fails with `AttributeError: ... '_validate_data'`. What we tested and found working is the maintained `firthmodels` package (install separately: `uv add firthmodels`; after `FirthLogisticRegression().fit(X, y)` you can use `coef_`, `pvalues_` and `conf_int()`). R's `logistf` is another common choice. If you would rather not add a package, statsmodels `GLM(..., family=Binomial()).fit_regularized(alpha=..., L1_wt=0)` gives a ridge-penalised fit with finite coefficients, but no standard errors or confidence intervals, so use it only as a quick check that separation is really the problem
 3. Switch to **Exact logistic regression**
 4. In a teaching setting, skip that variable for now and include it in the multivariable model instead
 ```
@@ -790,7 +790,7 @@ print(cie_df.to_string(index=False))
 
 1. **Reporting only the OR in a cohort study**: at a high attack rate OR ≠ RR. You should use Modified Poisson to compute the RR, or at least report both so readers know the difference
 2. **Using the OR as if it were the RR**: telling your supervisor "OR = 3.5 means the risk is 3.5 times higher" is wrong at a high attack rate. Clearly distinguish "how many times the odds" from "how many times the risk"
-3. **Putting in too many variables**: 280 records with 15+ variables → overfitting. Rule of thumb: each predictor needs at least 10–15 events
+3. **Putting in too many variables**: 280 records with 15+ variables → overfitting (121 cases is fewer than 10 per variable). The traditional "at least 10–15 events per variable (EPV)" rule is only a crude warning sign and is no longer recommended as a standard; newer practice calculates the required sample size from the expected shrinkage and estimation precision (Riley et al., BMJ 2020;368:m441), or uses Firth/penalised regression
 4. **Ignoring multicollinearity**: don't include highly correlated variables together (for example, functional_status and age may be highly correlated)
 5. **Automatic variable selection**: stepwise is not recommended → use epidemiological knowledge and a DAG to select variables
 6. **Not reporting the CI**: reporting only the p-value isn't enough. The CI tells you the precision and clinical significance of the effect

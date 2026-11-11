@@ -1,0 +1,41 @@
+event_id,disease,barangay,date_emergence,date_detection,date_notification,date_response_complete,bottleneck
+EV-001,hepatitis A,Ilog,2025-01-08,2025-01-13,2025-01-13,2025-01-20,none
+EV-002,measles,Sapa,2025-02-04,2025-02-10,2025-02-10,2025-02-19,No vehicle available for the response team
+EV-003,dengue,Pampang,2025-03-14,2025-03-18,2025-03-18,2025-03-23,none
+EV-004,dengue,Bukid,2025-03-21,2025-03-27,2025-03-28,2025-04-03,none
+EV-005,pertussis,Pampang,2025-05-01,2025-05-17,2025-05-23,2025-06-13,Cases seen at a private clinic that is not yet a PIDSR disease reporting unit; EDCS down and no internet at the City Health Office; One DSO for 24 barangays; competing priorities
+EV-006,influenza-like illness,Poblacion,2025-05-01,2025-05-07,2025-05-08,2025-05-15,none
+EV-007,chikungunya,Talahib,2025-05-03,2025-05-05,2025-05-06,2025-05-23,One DSO for 24 barangays; competing priorities
+EV-008,dengue,Baybay,2025-05-04,2025-06-01,2025-06-09,2025-06-16,"BHW noticed the cluster but had no load to text the CESU; Notified by personal chat message, not logged; PESU learned of it days later"
+EV-009,acute watery diarrhoea,Ilog,2025-05-09,2025-05-13,2025-05-13,2025-05-15,none
+EV-010,measles,Dalampasigan,2025-06-11,2025-06-13,2025-06-14,2025-06-17,none
+EV-011,leptospirosis,Pantalan,2025-06-12,2025-06-13,2025-06-17,2025-06-20,"Notified by personal chat message, not logged; PESU learned of it days later"
+EV-012,dengue,Maligaya,2025-06-15,2025-06-23,2025-06-23,2025-06-30,Cases seen at a private clinic that is not yet a PIDSR disease reporting unit
+EV-013,chikungunya,Kawayanan,2025-07-06,2025-07-08,2025-07-09,2025-07-27,Response funds needed Sangguniang Panlungsod approval
+EV-014,meningococcal disease,Talaba,2025-07-29,2025-08-19,2025-08-19,2025-08-22,BHW noticed the cluster but had no load to text the CESU
+EV-015,acute watery diarrhoea,Bagong Silang,2025-08-05,2025-08-27,2025-08-28,2025-09-14,Upland barangay: nearest health station two hours away by habal-habal; Specimens waited 9 days for a courier to the reference laboratory
+EV-016,influenza-like illness,Santo Niño,2025-08-10,2025-08-11,2025-08-11,2025-08-16,none
+EV-017,dengue,Laot,2025-08-23,2025-08-30,2025-09-06,2025-09-08,Detected on a Friday; DSO on leave and no back-up over the weekend
+EV-018,dengue,Bagong Pag-asa,2025-08-25,2025-09-13,2025-09-14,2025-09-27,Cases seen at a private clinic that is not yet a PIDSR disease reporting unit; One DSO for 24 barangays; competing priorities
+EV-019,acute watery diarrhoea,Baybay,2025-10-14,2025-10-19,2025-10-25,2025-11-05,Hospital and CESU each assumed the other had notified the PESU; Response funds needed Sangguniang Panlungsod approval
+EV-020,influenza-like illness,Pantalan,2025-10-15,2025-10-18,2025-10-19,2025-10-23,none
+EV-021,pertussis,San Pedro,2025-10-20,2025-10-23,2025-10-24,2025-10-26,none
+EV-022,acute watery diarrhoea,Tabing-Ilog,2025-12-25,2025-12-28,2026-01-05,2026-01-23,"Notified by personal chat message, not logged; PESU learned of it days later; One DSO for 24 barangays; competing priorities"
+EV-023,pertussis,Tabing-Ilog,2025-12-28,2026-01-01,2026-01-01,2026-01-08,none
+EV-024,"hand, foot and mouth disease",Tabing-Ilog,2025-12-29,2026-01-05,2026-01-06,2026-01-08,none
+EV-025,rabies (human),Tabing-Ilog,2026-01-18,2026-01-24,2026-01-25,2026-02-11,Outbreak-response vaccines requested from the province arrived late
+EV-026,acute watery diarrhoea,Bukid,2026-01-24,2026-02-16,2026-02-16,2026-02-18,Cases seen at a private clinic that is not yet a PIDSR disease reporting unit
+EV-027,"hand, foot and mouth disease",Poblacion,2026-01-31,2026-02-16,2026-02-17,2026-02-22,BHW noticed the cluster but had no load to text the CESU
+EV-028,dengue,Kawayanan,2026-02-04,2026-02-18,2026-02-19,2026-02-24,Clinicians treated it as 'trangkaso' (flu); case definition not applied
+EV-029,acute watery diarrhoea,Tabing-Ilog,2026-02-12,2026-02-19,2026-02-20,2026-02-24,none
+EV-030,typhoid fever,Mataas na Lupa,2026-04-14,2026-04-19,2026-04-20,2026-04-25,none
+EV-031,rabies (human),Dalampasigan,2026-04-18,2026-04-21,2026-04-22,2026-04-26,none
+EV-032,influenza-like illness,San Isidro,2026-04-22,2026-04-27,2026-04-27,2026-05-04,none
+EV-033,influenza-like illness,Sapa,2026-05-07,2026-05-26,2026-05-26,2026-06-10,No local test; diagnosis waited for the referral hospital; No vehicle available for the response team
+EV-034,influenza-like illness,Santo Niño,2026-05-07,2026-05-16,2026-05-17,2026-05-21,Cases seen at a private clinic that is not yet a PIDSR disease reporting unit
+EV-035,dengue,Talaba,2026-05-09,2026-06-03,2026-06-04,2026-06-10,Weekly batch encoding: forms sat in a folder for a week before EDCS entry
+EV-036,acute watery diarrhoea,Laot,2026-05-12,2026-06-07,2026-06-10,2026-06-23,No local test; diagnosis waited for the referral hospital; Detected on a Friday; DSO on leave and no back-up over the weekend; One DSO for 24 barangays; competing priorities
+EV-037,measles,Buhangin,2026-05-14,2026-06-11,2026-06-11,2026-06-27,BHW noticed the cluster but had no load to text the CESU; Outbreak-response vaccines requested from the province arrived late
+EV-038,acute watery diarrhoea,Mataas na Lupa,2026-06-22,2026-06-26,2026-07-04,2026-07-06,Waited for the City Health Officer's signature on the CIF before notifying
+EV-039,leptospirosis,Ilog,2026-07-23,2026-07-27,2026-07-29,2026-08-03,Paper notification forms piled up at the CESU during the typhoon response; PESU notified two days after Aling Nena's text
+EV-040,dengue,Baybay,2026-08-03,2026-08-10,2026-08-11,2026-08-21,4S clean-up and larval survey needed volunteers still busy with typhoon relief; misting supplies requested from the province

@@ -1,0 +1,361 @@
+study_id,matched_set,status,case,case_id,barangay_id,barangay,age,sex,waded_floodwater,wore_boots,skin_wound,doxy_prophylaxis,cleanup_work,rats_near_home
+CC-001,1,case,1,SLC-0004,SL01,Ilog,21,M,1,0,0,0,0,1
+CC-002,1,control,0,,SL01,Ilog,30,M,0,,0,0,0,1
+CC-003,1,control,0,,SL01,Ilog,24,M,1,0,0,0,0,0
+CC-004,2,case,1,SLC-0006,SL03,Pampang,48,F,1,0,1,0,0,0
+CC-005,2,control,0,,SL03,Pampang,38,F,0,,0,0,0,1
+CC-006,2,control,0,,SL03,Pampang,21,F,0,,0,0,0,0
+CC-007,3,case,1,SLC-0009,SL01,Ilog,48,M,1,0,1,0,0,1
+CC-008,3,control,0,,SL01,Ilog,34,F,0,,0,0,0,1
+CC-009,3,control,0,,SL01,Ilog,45,M,1,0,1,1,1,0
+CC-010,4,case,1,SLC-0016,SL01,Ilog,41,M,0,,1,1,1,1
+CC-011,4,control,0,,SL01,Ilog,50,F,0,,0,1,0,0
+CC-012,4,control,0,,SL01,Ilog,39,F,0,,0,0,0,0
+CC-013,5,case,1,SLC-0021,SL07,Bagong Silang,22,M,1,0,0,0,1,0
+CC-014,5,control,0,,SL07,Bagong Silang,53,M,1,0,1,1,1,1
+CC-015,5,control,0,,SL07,Bagong Silang,23,F,0,,0,1,0,1
+CC-016,6,case,1,SLC-0022,SL07,Bagong Silang,18,M,1,0,0,0,1,1
+CC-017,6,control,0,,SL07,Bagong Silang,32,M,1,0,1,0,1,1
+CC-018,6,control,0,,SL07,Bagong Silang,32,M,1,0,1,0,0,1
+CC-019,7,case,1,SLC-0023,SL07,Bagong Silang,15,F,0,,0,0,0,0
+CC-020,7,control,0,,SL07,Bagong Silang,26,M,1,0,0,0,0,0
+CC-021,7,control,0,,SL07,Bagong Silang,24,M,1,1,0,0,1,0
+CC-022,8,case,1,SLC-0025,SL06,San Isidro,50,F,0,,1,0,1,0
+CC-023,8,control,0,,SL06,San Isidro,20,M,0,,0,0,1,1
+CC-024,8,control,0,,SL06,San Isidro,50,F,0,,0,0,0,0
+CC-025,9,case,1,SLC-0029,SL07,Bagong Silang,33,M,1,1,0,0,0,1
+CC-026,9,control,0,,SL07,Bagong Silang,23,M,1,0,0,0,0,1
+CC-027,9,control,0,,SL07,Bagong Silang,41,M,1,1,0,0,1,0
+CC-028,10,case,1,SLC-0030,SL07,Bagong Silang,28,M,1,0,0,0,0,1
+CC-029,10,control,0,,SL07,Bagong Silang,31,F,1,1,0,0,0,0
+CC-030,10,control,0,,SL07,Bagong Silang,62,F,0,,0,0,0,1
+CC-031,11,case,1,SLC-0032,SL07,Bagong Silang,39,M,1,0,0,0,1,0
+CC-032,11,control,0,,SL07,Bagong Silang,38,M,1,1,0,1,1,1
+CC-033,11,control,0,,SL07,Bagong Silang,38,F,0,,0,1,0,0
+CC-034,12,case,1,SLC-0033,SL03,Pampang,58,M,1,0,0,0,1,0
+CC-035,12,control,0,,SL03,Pampang,28,F,0,,0,0,0,1
+CC-036,12,control,0,,SL03,Pampang,41,M,1,0,1,0,1,1
+CC-037,13,case,1,SLC-0034,SL01,Ilog,34,M,1,0,0,0,0,1
+CC-038,13,control,0,,SL01,Ilog,16,F,0,,0,0,0,1
+CC-039,13,control,0,,SL01,Ilog,35,F,0,,0,0,0,1
+CC-040,14,case,1,SLC-0035,SL01,Ilog,26,F,1,0,0,0,0,1
+CC-041,14,control,0,,SL01,Ilog,41,M,0,,0,0,0,0
+CC-042,14,control,0,,SL01,Ilog,29,M,0,,0,1,0,1
+CC-043,15,case,1,SLC-0038,SL02,Tabing-Ilog,42,M,1,0,1,0,1,0
+CC-044,15,control,0,,SL02,Tabing-Ilog,24,F,1,0,0,0,0,0
+CC-045,15,control,0,,SL02,Tabing-Ilog,31,M,1,0,0,1,1,0
+CC-046,16,case,1,SLC-0042,SL07,Bagong Silang,37,M,1,0,1,0,1,0
+CC-047,16,control,0,,SL07,Bagong Silang,28,M,0,,0,0,1,1
+CC-048,16,control,0,,SL07,Bagong Silang,15,M,0,,0,0,0,1
+CC-049,17,case,1,SLC-0043,SL02,Tabing-Ilog,24,M,1,1,0,1,1,0
+CC-050,17,control,0,,SL02,Tabing-Ilog,53,F,0,,0,0,0,1
+CC-051,17,control,0,,SL02,Tabing-Ilog,43,M,0,,0,0,0,0
+CC-052,18,case,1,SLC-0045,SL03,Pampang,42,M,1,0,1,0,1,0
+CC-053,18,control,0,,SL03,Pampang,51,M,0,,1,0,0,0
+CC-054,18,control,0,,SL03,Pampang,29,M,0,,0,0,1,1
+CC-055,19,case,1,SLC-0046,SL07,Bagong Silang,57,M,1,0,0,1,1,1
+CC-056,19,control,0,,SL07,Bagong Silang,27,F,0,,1,0,0,0
+CC-057,19,control,0,,SL07,Bagong Silang,24,F,0,,0,0,0,1
+CC-058,20,case,1,SLC-0047,SL05,Santo Niño,42,M,1,0,0,0,0,0
+CC-059,20,control,0,,SL05,Santo Niño,64,M,1,1,0,0,0,1
+CC-060,20,control,0,,SL05,Santo Niño,16,M,1,1,0,0,0,1
+CC-061,21,case,1,SLC-0048,SL05,Santo Niño,47,M,1,1,1,0,0,0
+CC-062,21,control,0,,SL05,Santo Niño,24,F,0,,0,0,0,0
+CC-063,21,control,0,,SL05,Santo Niño,73,F,0,,0,1,0,0
+CC-064,22,case,1,SLC-0053,SL07,Bagong Silang,15,M,1,0,0,0,0,1
+CC-065,22,control,0,,SL07,Bagong Silang,50,F,0,,0,0,0,1
+CC-066,22,control,0,,SL07,Bagong Silang,65,M,0,,0,0,0,0
+CC-067,23,case,1,SLC-0054,SL01,Ilog,69,F,0,,0,0,0,0
+CC-068,23,control,0,,SL01,Ilog,24,M,1,1,1,0,1,0
+CC-069,23,control,0,,SL01,Ilog,33,M,1,0,0,0,0,0
+CC-070,24,case,1,SLC-0056,SL05,Santo Niño,35,M,1,0,1,0,1,1
+CC-071,24,control,0,,SL05,Santo Niño,63,M,0,,1,0,0,0
+CC-072,24,control,0,,SL05,Santo Niño,32,F,0,,0,0,0,0
+CC-073,25,case,1,SLC-0057,SL06,San Isidro,36,M,1,0,0,0,0,1
+CC-074,25,control,0,,SL06,San Isidro,24,M,1,1,0,0,1,1
+CC-075,25,control,0,,SL06,San Isidro,38,M,0,,1,1,1,1
+CC-076,26,case,1,SLC-0058,SL01,Ilog,23,M,1,0,0,0,0,1
+CC-077,26,control,0,,SL01,Ilog,26,M,0,,1,0,0,1
+CC-078,26,control,0,,SL01,Ilog,64,M,0,,0,1,1,0
+CC-079,27,case,1,SLC-0059,SL06,San Isidro,79,M,1,1,0,0,0,1
+CC-080,27,control,0,,SL06,San Isidro,15,F,0,,0,0,0,0
+CC-081,27,control,0,,SL06,San Isidro,29,M,0,,0,0,0,0
+CC-082,28,case,1,SLC-0063,SL04,Poblacion,20,F,1,0,0,0,0,0
+CC-083,28,control,0,,SL04,Poblacion,46,M,1,0,0,1,1,1
+CC-084,28,control,0,,SL04,Poblacion,33,M,0,,0,0,0,1
+CC-085,29,case,1,SLC-0067,SL01,Ilog,48,F,1,0,0,0,0,0
+CC-086,29,control,0,,SL01,Ilog,48,F,0,,0,0,0,0
+CC-087,29,control,0,,SL01,Ilog,43,F,0,,0,0,0,0
+CC-088,30,case,1,SLC-0070,SL04,Poblacion,41,F,0,,0,0,0,1
+CC-089,30,control,0,,SL04,Poblacion,38,M,0,,1,1,1,1
+CC-090,30,control,0,,SL04,Poblacion,36,F,0,,1,0,0,0
+CC-091,31,case,1,SLC-0071,SL05,Santo Niño,22,M,1,0,0,1,1,0
+CC-092,31,control,0,,SL05,Santo Niño,15,F,0,,0,0,0,1
+CC-093,31,control,0,,SL05,Santo Niño,45,M,0,,1,0,0,0
+CC-094,32,case,1,SLC-0072,SL03,Pampang,53,M,1,0,0,0,1,1
+CC-095,32,control,0,,SL03,Pampang,26,M,0,,0,0,0,1
+CC-096,32,control,0,,SL03,Pampang,73,F,0,,0,0,0,0
+CC-097,33,case,1,SLC-0074,SL03,Pampang,50,F,0,,1,0,0,1
+CC-098,33,control,0,,SL03,Pampang,52,F,1,0,0,1,1,0
+CC-099,33,control,0,,SL03,Pampang,44,F,1,0,0,0,1,0
+CC-100,34,case,1,SLC-0077,SL07,Bagong Silang,34,M,1,0,1,0,0,0
+CC-101,34,control,0,,SL07,Bagong Silang,33,M,0,,0,0,0,0
+CC-102,34,control,0,,SL07,Bagong Silang,23,M,0,,0,0,0,0
+CC-103,35,case,1,SLC-0078,SL05,Santo Niño,59,M,1,0,1,0,1,0
+CC-104,35,control,0,,SL05,Santo Niño,19,M,0,,1,1,1,0
+CC-105,35,control,0,,SL05,Santo Niño,15,M,1,1,0,0,0,0
+CC-106,36,case,1,SLC-0080,SL05,Santo Niño,40,F,0,,0,0,0,1
+CC-107,36,control,0,,SL05,Santo Niño,37,F,0,,0,0,0,0
+CC-108,36,control,0,,SL05,Santo Niño,17,F,0,,0,0,0,1
+CC-109,37,case,1,SLC-0084,SL01,Ilog,20,M,1,0,1,0,1,1
+CC-110,37,control,0,,SL01,Ilog,20,F,0,,0,0,0,0
+CC-111,37,control,0,,SL01,Ilog,31,F,0,,0,0,0,1
+CC-112,38,case,1,SLC-0085,SL07,Bagong Silang,30,F,0,,1,0,0,0
+CC-113,38,control,0,,SL07,Bagong Silang,34,M,1,1,0,0,0,0
+CC-114,38,control,0,,SL07,Bagong Silang,24,F,0,,0,0,0,1
+CC-115,39,case,1,SLC-0088,SL03,Pampang,15,M,1,0,0,0,0,1
+CC-116,39,control,0,,SL03,Pampang,47,F,0,,0,0,0,0
+CC-117,39,control,0,,SL03,Pampang,15,F,0,,0,0,0,1
+CC-118,40,case,1,SLC-0089,SL05,Santo Niño,39,F,1,0,1,0,1,1
+CC-119,40,control,0,,SL05,Santo Niño,37,F,0,,1,0,0,0
+CC-120,40,control,0,,SL05,Santo Niño,22,F,0,,0,0,0,1
+CC-121,41,case,1,SLC-0091,SL06,San Isidro,22,M,0,,1,0,1,0
+CC-122,41,control,0,,SL06,San Isidro,48,F,0,,0,0,0,1
+CC-123,41,control,0,,SL06,San Isidro,24,M,1,0,0,0,0,0
+CC-124,42,case,1,SLC-0093,SL04,Poblacion,41,M,1,0,0,0,0,0
+CC-125,42,control,0,,SL04,Poblacion,21,F,0,,0,0,0,1
+CC-126,42,control,0,,SL04,Poblacion,16,F,0,,0,0,0,1
+CC-127,43,case,1,SLC-0094,SL07,Bagong Silang,51,M,0,,1,0,1,0
+CC-128,43,control,0,,SL07,Bagong Silang,47,F,0,,0,0,0,0
+CC-129,43,control,0,,SL07,Bagong Silang,42,F,0,,0,0,0,0
+CC-130,44,case,1,SLC-0098,SL02,Tabing-Ilog,29,M,1,0,0,0,0,1
+CC-131,44,control,0,,SL02,Tabing-Ilog,20,F,0,,0,0,0,0
+CC-132,44,control,0,,SL02,Tabing-Ilog,51,M,0,,1,0,0,1
+CC-133,45,case,1,SLC-0099,SL06,San Isidro,63,M,1,0,1,0,1,1
+CC-134,45,control,0,,SL06,San Isidro,22,M,0,,0,1,0,1
+CC-135,45,control,0,,SL06,San Isidro,39,M,0,,0,0,0,0
+CC-136,46,case,1,SLC-0101,SL08,Sapa,22,F,1,0,0,0,0,1
+CC-137,46,control,0,,SL08,Sapa,23,M,1,0,0,1,1,0
+CC-138,46,control,0,,SL08,Sapa,47,F,0,,0,0,0,1
+CC-139,47,case,1,SLC-0102,SL03,Pampang,32,M,1,0,0,1,1,0
+CC-140,47,control,0,,SL03,Pampang,43,M,0,,1,1,1,1
+CC-141,47,control,0,,SL03,Pampang,30,F,0,,0,0,0,0
+CC-142,48,case,1,SLC-0104,SL06,San Isidro,26,M,1,0,1,0,0,0
+CC-143,48,control,0,,SL06,San Isidro,35,F,0,,0,1,0,1
+CC-144,48,control,0,,SL06,San Isidro,31,M,0,,0,0,0,0
+CC-145,49,case,1,SLC-0106,SL03,Pampang,17,F,0,,1,0,0,0
+CC-146,49,control,0,,SL03,Pampang,39,F,0,,0,0,0,1
+CC-147,49,control,0,,SL03,Pampang,34,M,0,,0,0,1,1
+CC-148,50,case,1,SLC-0107,SL02,Tabing-Ilog,16,M,1,0,1,0,1,0
+CC-149,50,control,0,,SL02,Tabing-Ilog,17,M,1,1,0,0,1,1
+CC-150,50,control,0,,SL02,Tabing-Ilog,21,F,1,1,0,1,1,1
+CC-151,51,case,1,SLC-0109,SL07,Bagong Silang,57,F,1,0,1,0,1,0
+CC-152,51,control,0,,SL07,Bagong Silang,21,F,1,1,0,0,0,1
+CC-153,51,control,0,,SL07,Bagong Silang,56,M,1,0,0,0,1,1
+CC-154,52,case,1,SLC-0112,SL01,Ilog,50,M,1,0,0,0,1,1
+CC-155,52,control,0,,SL01,Ilog,29,F,0,,0,0,0,1
+CC-156,52,control,0,,SL01,Ilog,54,M,0,,1,0,0,1
+CC-157,53,case,1,SLC-0115,SL01,Ilog,21,F,0,,1,0,0,0
+CC-158,53,control,0,,SL01,Ilog,33,F,0,,0,1,0,0
+CC-159,53,control,0,,SL01,Ilog,26,F,1,0,0,0,0,0
+CC-160,54,case,1,SLC-0118,SL03,Pampang,28,M,1,0,1,1,1,0
+CC-161,54,control,0,,SL03,Pampang,22,M,0,,0,1,0,1
+CC-162,54,control,0,,SL03,Pampang,43,F,0,,1,0,0,0
+CC-163,55,case,1,SLC-0119,SL02,Tabing-Ilog,38,F,0,,1,0,0,1
+CC-164,55,control,0,,SL02,Tabing-Ilog,19,M,1,0,1,0,1,1
+CC-165,55,control,0,,SL02,Tabing-Ilog,16,F,0,,0,1,0,1
+CC-166,56,case,1,SLC-0121,SL05,Santo Niño,47,M,1,0,0,1,1,1
+CC-167,56,control,0,,SL05,Santo Niño,38,F,0,,0,0,0,0
+CC-168,56,control,0,,SL05,Santo Niño,20,F,1,0,0,1,1,0
+CC-169,57,case,1,SLC-0123,SL03,Pampang,46,M,0,,1,0,1,0
+CC-170,57,control,0,,SL03,Pampang,31,M,1,0,0,0,0,1
+CC-171,57,control,0,,SL03,Pampang,56,M,1,0,1,1,1,1
+CC-172,58,case,1,SLC-0125,SL06,San Isidro,17,M,1,0,0,0,0,0
+CC-173,58,control,0,,SL06,San Isidro,34,F,0,,0,0,0,1
+CC-174,58,control,0,,SL06,San Isidro,34,M,1,0,0,0,0,1
+CC-175,59,case,1,SLC-0129,SL08,Sapa,63,M,1,0,0,0,1,1
+CC-176,59,control,0,,SL08,Sapa,27,F,0,,0,0,0,0
+CC-177,59,control,0,,SL08,Sapa,48,F,0,,0,0,0,0
+CC-178,60,case,1,SLC-0130,SL01,Ilog,28,M,0,,0,0,0,0
+CC-179,60,control,0,,SL01,Ilog,64,F,0,,0,0,0,1
+CC-180,60,control,0,,SL01,Ilog,46,M,0,,0,0,0,0
+CC-181,61,case,1,SLC-0134,SL03,Pampang,49,M,1,0,0,0,1,0
+CC-182,61,control,0,,SL03,Pampang,20,M,1,1,0,0,1,1
+CC-183,61,control,0,,SL03,Pampang,23,F,0,,0,0,0,0
+CC-184,62,case,1,SLC-0138,SL07,Bagong Silang,64,M,1,0,1,0,1,1
+CC-185,62,control,0,,SL07,Bagong Silang,22,M,1,0,1,1,0,1
+CC-186,62,control,0,,SL07,Bagong Silang,30,M,1,0,0,0,0,1
+CC-187,63,case,1,SLC-0139,SL07,Bagong Silang,30,M,1,0,0,0,0,0
+CC-188,63,control,0,,SL07,Bagong Silang,16,F,0,,0,0,0,0
+CC-189,63,control,0,,SL07,Bagong Silang,39,M,0,,0,0,0,0
+CC-190,64,case,1,SLC-0140,SL01,Ilog,44,M,1,0,1,0,1,0
+CC-191,64,control,0,,SL01,Ilog,17,F,0,,0,0,1,1
+CC-192,64,control,0,,SL01,Ilog,18,F,0,,0,0,0,0
+CC-193,65,case,1,SLC-0142,SL03,Pampang,16,M,1,0,1,0,1,1
+CC-194,65,control,0,,SL03,Pampang,41,M,1,1,1,0,1,0
+CC-195,65,control,0,,SL03,Pampang,55,F,0,,1,0,0,0
+CC-196,66,case,1,SLC-0145,SL07,Bagong Silang,19,M,1,0,1,0,1,1
+CC-197,66,control,0,,SL07,Bagong Silang,26,F,0,,0,0,1,0
+CC-198,66,control,0,,SL07,Bagong Silang,55,F,1,0,0,0,1,1
+CC-199,67,case,1,SLC-0148,SL03,Pampang,21,M,1,1,0,0,1,0
+CC-200,67,control,0,,SL03,Pampang,22,F,0,,0,0,0,1
+CC-201,67,control,0,,SL03,Pampang,49,F,0,,0,0,0,1
+CC-202,68,case,1,SLC-0149,SL08,Sapa,16,F,0,,0,0,0,0
+CC-203,68,control,0,,SL08,Sapa,54,M,0,,0,0,0,0
+CC-204,68,control,0,,SL08,Sapa,43,F,0,,0,0,0,0
+CC-205,69,case,1,SLC-0150,SL03,Pampang,53,M,1,0,1,0,1,0
+CC-206,69,control,0,,SL03,Pampang,51,F,0,,0,0,0,0
+CC-207,69,control,0,,SL03,Pampang,37,M,0,,0,0,0,0
+CC-208,70,case,1,SLC-0151,SL07,Bagong Silang,23,M,1,0,1,0,1,1
+CC-209,70,control,0,,SL07,Bagong Silang,26,F,0,,0,0,0,1
+CC-210,70,control,0,,SL07,Bagong Silang,17,M,1,0,1,0,1,0
+CC-211,71,case,1,SLC-0152,SL06,San Isidro,35,M,1,0,0,0,0,0
+CC-212,71,control,0,,SL06,San Isidro,29,F,0,,0,0,0,0
+CC-213,71,control,0,,SL06,San Isidro,36,F,0,,0,0,0,0
+CC-214,72,case,1,SLC-0154,SL03,Pampang,15,M,1,0,1,0,1,1
+CC-215,72,control,0,,SL03,Pampang,52,F,1,0,0,0,0,1
+CC-216,72,control,0,,SL03,Pampang,26,M,1,0,0,1,1,0
+CC-217,73,case,1,SLC-0155,SL03,Pampang,55,F,1,1,0,0,1,1
+CC-218,73,control,0,,SL03,Pampang,39,F,0,,0,0,0,1
+CC-219,73,control,0,,SL03,Pampang,17,F,1,0,1,0,1,0
+CC-220,74,case,1,SLC-0166,SL02,Tabing-Ilog,24,M,1,0,0,0,1,1
+CC-221,74,control,0,,SL02,Tabing-Ilog,66,M,0,,0,0,0,1
+CC-222,74,control,0,,SL02,Tabing-Ilog,30,F,0,,0,0,0,0
+CC-223,75,case,1,SLC-0167,SL02,Tabing-Ilog,21,M,0,,0,0,1,1
+CC-224,75,control,0,,SL02,Tabing-Ilog,17,F,1,0,0,0,1,1
+CC-225,75,control,0,,SL02,Tabing-Ilog,62,M,0,,1,0,1,1
+CC-226,76,case,1,SLC-0169,SL05,Santo Niño,40,M,1,0,1,0,1,0
+CC-227,76,control,0,,SL05,Santo Niño,63,M,1,0,0,0,0,1
+CC-228,76,control,0,,SL05,Santo Niño,19,F,0,,1,1,0,1
+CC-229,77,case,1,SLC-0173,SL07,Bagong Silang,45,M,1,0,0,0,1,0
+CC-230,77,control,0,,SL07,Bagong Silang,48,M,1,0,0,0,1,1
+CC-231,77,control,0,,SL07,Bagong Silang,57,F,0,,0,1,1,0
+CC-232,78,case,1,SLC-0174,SL06,San Isidro,17,F,1,0,1,0,1,0
+CC-233,78,control,0,,SL06,San Isidro,21,M,0,,0,0,0,0
+CC-234,78,control,0,,SL06,San Isidro,20,M,0,,0,1,0,1
+CC-235,79,case,1,SLC-0176,SL01,Ilog,57,F,1,0,0,0,0,1
+CC-236,79,control,0,,SL01,Ilog,27,F,0,,0,0,0,0
+CC-237,79,control,0,,SL01,Ilog,15,M,1,0,0,0,0,0
+CC-238,80,case,1,SLC-0180,SL06,San Isidro,26,M,1,0,1,0,1,1
+CC-239,80,control,0,,SL06,San Isidro,76,F,1,0,1,0,0,0
+CC-240,80,control,0,,SL06,San Isidro,36,F,0,,0,1,0,1
+CC-241,81,case,1,SLC-0181,SL01,Ilog,53,F,1,0,1,0,1,1
+CC-242,81,control,0,,SL01,Ilog,56,M,0,,1,0,1,0
+CC-243,81,control,0,,SL01,Ilog,68,F,0,,0,0,0,0
+CC-244,82,case,1,SLC-0182,SL03,Pampang,37,M,1,0,0,0,0,1
+CC-245,82,control,0,,SL03,Pampang,44,M,1,1,0,0,1,0
+CC-246,82,control,0,,SL03,Pampang,41,F,0,,0,0,0,1
+CC-247,83,case,1,SLC-0185,SL01,Ilog,58,M,1,0,1,0,0,0
+CC-248,83,control,0,,SL01,Ilog,31,F,0,,0,0,0,1
+CC-249,83,control,0,,SL01,Ilog,18,F,1,0,0,0,0,0
+CC-250,84,case,1,SLC-0186,SL02,Tabing-Ilog,25,M,1,1,1,0,1,0
+CC-251,84,control,0,,SL02,Tabing-Ilog,50,M,0,,0,1,1,0
+CC-252,84,control,0,,SL02,Tabing-Ilog,18,M,0,,0,1,1,1
+CC-253,85,case,1,SLC-0187,SL02,Tabing-Ilog,28,M,1,0,0,0,0,0
+CC-254,85,control,0,,SL02,Tabing-Ilog,19,M,1,0,0,1,1,1
+CC-255,85,control,0,,SL02,Tabing-Ilog,15,M,1,0,0,0,0,0
+CC-256,86,case,1,SLC-0189,SL06,San Isidro,58,M,1,0,0,0,1,1
+CC-257,86,control,0,,SL06,San Isidro,41,M,1,1,1,0,1,1
+CC-258,86,control,0,,SL06,San Isidro,33,F,0,,1,1,0,1
+CC-259,87,case,1,SLC-0190,SL07,Bagong Silang,25,M,1,0,1,0,1,1
+CC-260,87,control,0,,SL07,Bagong Silang,39,M,1,0,0,0,1,0
+CC-261,87,control,0,,SL07,Bagong Silang,19,M,1,0,0,1,1,0
+CC-262,88,case,1,SLC-0193,SL01,Ilog,54,M,1,0,0,0,1,0
+CC-263,88,control,0,,SL01,Ilog,30,F,0,,1,0,0,0
+CC-264,88,control,0,,SL01,Ilog,20,M,0,,0,1,0,1
+CC-265,89,case,1,SLC-0195,SL04,Poblacion,33,M,1,0,0,0,1,1
+CC-266,89,control,0,,SL04,Poblacion,30,M,1,0,1,0,1,0
+CC-267,89,control,0,,SL04,Poblacion,41,F,1,1,0,0,0,1
+CC-268,90,case,1,SLC-0196,SL01,Ilog,53,M,1,0,0,0,1,0
+CC-269,90,control,0,,SL01,Ilog,52,M,1,0,0,0,0,1
+CC-270,90,control,0,,SL01,Ilog,18,F,1,0,0,0,0,1
+CC-271,91,case,1,SLC-0201,SL03,Pampang,19,M,0,,1,0,0,0
+CC-272,91,control,0,,SL03,Pampang,27,F,0,,0,0,0,0
+CC-273,91,control,0,,SL03,Pampang,53,F,0,,1,1,0,1
+CC-274,92,case,1,SLC-0202,SL03,Pampang,67,M,0,,0,0,0,1
+CC-275,92,control,0,,SL03,Pampang,49,M,0,,1,0,1,0
+CC-276,92,control,0,,SL03,Pampang,27,M,0,,0,0,1,0
+CC-277,93,case,1,SLC-0207,SL07,Bagong Silang,73,F,1,0,0,1,0,0
+CC-278,93,control,0,,SL07,Bagong Silang,68,M,0,,0,0,0,1
+CC-279,93,control,0,,SL07,Bagong Silang,85,M,1,0,0,1,1,0
+CC-280,94,case,1,SLC-0210,SL07,Bagong Silang,47,M,1,0,0,1,0,0
+CC-281,94,control,0,,SL07,Bagong Silang,20,M,1,0,0,0,0,0
+CC-282,94,control,0,,SL07,Bagong Silang,36,M,0,,0,0,0,1
+CC-283,95,case,1,SLC-0211,SL02,Tabing-Ilog,28,M,1,0,0,0,1,0
+CC-284,95,control,0,,SL02,Tabing-Ilog,66,M,0,,0,0,0,0
+CC-285,95,control,0,,SL02,Tabing-Ilog,69,F,0,,0,0,0,1
+CC-286,96,case,1,SLC-0212,SL01,Ilog,53,M,1,0,0,0,0,0
+CC-287,96,control,0,,SL01,Ilog,63,F,0,,0,0,0,0
+CC-288,96,control,0,,SL01,Ilog,40,F,1,0,0,0,0,1
+CC-289,97,case,1,SLC-0213,SL07,Bagong Silang,60,M,0,,0,0,1,1
+CC-290,97,control,0,,SL07,Bagong Silang,23,M,1,0,0,0,1,0
+CC-291,97,control,0,,SL07,Bagong Silang,34,F,0,,0,0,0,1
+CC-292,98,case,1,SLC-0221,SL06,San Isidro,25,M,1,0,1,0,1,1
+CC-293,98,control,0,,SL06,San Isidro,17,M,1,0,0,0,0,1
+CC-294,98,control,0,,SL06,San Isidro,46,M,0,,0,0,1,1
+CC-295,99,case,1,SLC-0230,SL03,Pampang,25,M,1,1,1,0,1,1
+CC-296,99,control,0,,SL03,Pampang,19,M,1,0,0,0,0,1
+CC-297,99,control,0,,SL03,Pampang,27,F,0,,0,0,0,0
+CC-298,100,case,1,SLC-0233,SL03,Pampang,29,M,1,0,1,0,1,0
+CC-299,100,control,0,,SL03,Pampang,93,M,0,,1,0,0,0
+CC-300,100,control,0,,SL03,Pampang,28,F,0,,0,0,0,1
+CC-301,101,case,1,SLC-0250,SL03,Pampang,48,F,0,,0,0,0,1
+CC-302,101,control,0,,SL03,Pampang,27,M,1,0,1,0,1,0
+CC-303,101,control,0,,SL03,Pampang,49,F,0,,0,0,0,1
+CC-304,102,case,1,SLC-0251,SL02,Tabing-Ilog,42,M,0,,0,0,0,1
+CC-305,102,control,0,,SL02,Tabing-Ilog,70,F,1,0,0,0,0,1
+CC-306,102,control,0,,SL02,Tabing-Ilog,31,M,0,,0,1,0,0
+CC-307,103,case,1,SLC-0254,SL03,Pampang,45,F,1,0,0,0,1,1
+CC-308,103,control,0,,SL03,Pampang,17,F,0,,0,0,0,0
+CC-309,103,control,0,,SL03,Pampang,29,F,0,,1,0,0,0
+CC-310,104,case,1,SLC-0257,SL03,Pampang,65,F,0,,1,0,0,0
+CC-311,104,control,0,,SL03,Pampang,29,F,0,,0,0,0,0
+CC-312,104,control,0,,SL03,Pampang,47,F,0,,0,0,0,1
+CC-313,105,case,1,SLC-0258,SL01,Ilog,76,F,1,0,0,0,0,1
+CC-314,105,control,0,,SL01,Ilog,22,M,0,,0,0,0,0
+CC-315,105,control,0,,SL01,Ilog,23,M,1,0,1,1,0,0
+CC-316,106,case,1,SLC-0260,SL01,Ilog,46,M,1,0,1,0,1,1
+CC-317,106,control,0,,SL01,Ilog,52,M,0,,0,0,0,0
+CC-318,106,control,0,,SL01,Ilog,20,M,1,0,1,0,1,1
+CC-319,107,case,1,SLC-0261,SL01,Ilog,31,M,1,0,1,0,1,1
+CC-320,107,control,0,,SL01,Ilog,44,M,0,,0,0,0,0
+CC-321,107,control,0,,SL01,Ilog,17,M,1,1,1,0,1,0
+CC-322,108,case,1,SLC-0268,SL01,Ilog,93,F,0,,1,0,0,0
+CC-323,108,control,0,,SL01,Ilog,61,M,1,0,1,0,1,0
+CC-324,108,control,0,,SL01,Ilog,25,M,1,0,1,1,1,0
+CC-325,109,case,1,SLC-0271,SL01,Ilog,22,F,0,,0,0,0,0
+CC-326,109,control,0,,SL01,Ilog,68,M,0,,0,0,0,0
+CC-327,109,control,0,,SL01,Ilog,16,F,0,,0,0,0,1
+CC-328,110,case,1,SLC-0273,SL05,Santo Niño,33,M,1,0,1,1,1,0
+CC-329,110,control,0,,SL05,Santo Niño,41,F,0,,1,0,0,1
+CC-330,110,control,0,,SL05,Santo Niño,70,F,0,,0,0,0,0
+CC-331,111,case,1,SLC-0275,SL05,Santo Niño,27,M,0,,1,0,1,1
+CC-332,111,control,0,,SL05,Santo Niño,19,M,1,0,0,0,1,1
+CC-333,111,control,0,,SL05,Santo Niño,37,M,1,0,0,0,1,0
+CC-334,112,case,1,SLC-0277,SL06,San Isidro,18,M,0,,0,0,1,0
+CC-335,112,control,0,,SL06,San Isidro,63,F,1,1,1,1,1,0
+CC-336,112,control,0,,SL06,San Isidro,56,F,0,,0,0,0,1
+CC-337,113,case,1,SLC-0279,SL07,Bagong Silang,63,M,1,0,0,0,1,1
+CC-338,113,control,0,,SL07,Bagong Silang,36,M,1,1,0,0,0,0
+CC-339,113,control,0,,SL07,Bagong Silang,16,F,1,0,0,0,1,1
+CC-340,114,case,1,SLC-0280,SL02,Tabing-Ilog,38,F,0,,0,0,0,0
+CC-341,114,control,0,,SL02,Tabing-Ilog,45,F,0,,0,0,0,0
+CC-342,114,control,0,,SL02,Tabing-Ilog,61,M,1,1,1,0,1,1
+CC-343,115,case,1,SLC-0282,SL03,Pampang,31,F,0,,0,0,0,1
+CC-344,115,control,0,,SL03,Pampang,49,M,0,,0,0,0,0
+CC-345,115,control,0,,SL03,Pampang,66,M,0,,0,0,0,0
+CC-346,116,case,1,SLC-0285,SL02,Tabing-Ilog,60,M,1,0,1,0,1,0
+CC-347,116,control,0,,SL02,Tabing-Ilog,21,F,0,,1,0,0,1
+CC-348,116,control,0,,SL02,Tabing-Ilog,25,F,0,,0,1,0,0
+CC-349,117,case,1,SLC-0297,SL02,Tabing-Ilog,24,M,1,1,1,0,1,0
+CC-350,117,control,0,,SL02,Tabing-Ilog,49,M,1,0,0,0,0,0
+CC-351,117,control,0,,SL02,Tabing-Ilog,15,M,1,0,0,0,0,1
+CC-352,118,case,1,SLC-0300,SL04,Poblacion,64,M,1,0,1,0,1,0
+CC-353,118,control,0,,SL04,Poblacion,37,M,1,0,1,0,1,1
+CC-354,118,control,0,,SL04,Poblacion,29,M,1,0,0,0,0,0
+CC-355,119,case,1,SLC-0319,SL04,Poblacion,27,M,0,,0,0,0,0
+CC-356,119,control,0,,SL04,Poblacion,19,F,0,,1,1,1,0
+CC-357,119,control,0,,SL04,Poblacion,24,F,0,,0,0,0,0
+CC-358,120,case,1,SLC-0355,SL06,San Isidro,15,M,1,1,1,1,1,1
+CC-359,120,control,0,,SL06,San Isidro,30,F,0,,0,0,0,0
+CC-360,120,control,0,,SL06,San Isidro,64,M,0,,0,1,1,0

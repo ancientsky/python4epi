@@ -80,7 +80,7 @@ Epidemiology's workaround is to step back and, instead of comparing "the same pe
 
 ### Background case: association and causation in the catered-lunch chicken-thigh incident
 
-Background case (context only, not something this book computes): reports indicate that in 2019, New Taipei City had a school catered-lunch food poisoning incident, which investigators linked to braised chicken thighs served that day; health authorities subsequently detected **Clostridium perfringens** in specimens. This case is a good illustration of how "association" and "causation" get built up step by step in a real epidemiological investigation:
+Background case (context only, not something this book computes): reports indicate that in 2019, New Taipei City had a school catered-lunch food poisoning incident, which investigators linked to a chicken-thigh dish served that day (braised chicken thighs; reports differ slightly on the dish's name); health authorities subsequently detected **Clostridium perfringens** in specimens. This case is a good illustration of how "association" and "causation" get built up step by step in a real epidemiological investigation:
 
 1. **Association first**: investigators handed out questionnaires and found that students "who ate the chicken thighs" were more likely to develop diarrhea and abdominal pain than "students who didn't"—this is only an **association**, not yet ironclad proof of causation.
 2. **Watch out for confounding and bias**: did the students who ate the chicken thighs happen to also eat other suspect items (a potential confounder)? Might students who got sick remember eating the chicken thighs more vividly, while students who didn't get sick have a fuzzier memory of the menu (**recall bias**)? Either of these could make the observed "association" look stronger or weaker than the true causal effect.
@@ -140,7 +140,7 @@ Here's the intuitive version: suppose "exposure" and "severity" really are unrel
 
 ### A real-world DAG sketch: the Sanxia dengue cluster
 
-Background case (context only, not something this book computes or precisely reconstructs): reports indicate that in 2020, Wuliao Village in Sanxia District, New Taipei City, saw a locally acquired dengue cluster, which investigators linked to an imported case together with mosquito breeding in nearby containers of standing water. Let's use this scenario to practice sketching the simplest possible DAG:
+Background case (context only, not something this book computes or precisely reconstructs): reports indicate that in 2020, Wuliao Village in Sanxia District, New Taipei City, saw a locally acquired dengue cluster. Reports differ on the source of infection (an imported case, local bamboo-shoot fields, and others), so the DAG below is a **hypothetical structure for teaching**, not an investigation conclusion. Let's use this scenario to practice sketching the simplest possible DAG:
 
 > **DAG sketch (illustrative only, not a formal epidemiological investigation output)**:
 > - Imported case → locally acquired infection (direct path: a mosquito bites the imported case, then bites a community resident)

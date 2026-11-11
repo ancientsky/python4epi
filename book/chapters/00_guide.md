@@ -268,7 +268,7 @@ uv run python --version
 ├── 專案 B（COVID 儀表板）/.venv/
 │   └── pandas 2.2、plotly 6.0 ...
 └── 專案 C（本教材）/.venv/
-    └── pandas 2.2、matplotlib 3.10 ...
+    └── pandas 2.3、matplotlib 3.10 ...
 ```
 
 ### `uv` 怎麼管理虛擬環境？
@@ -575,7 +575,7 @@ attack_rate = infected / total * 100  # 行尾註解：程式碼後面也可以�
 
 # ✅ 好的註解：解釋「為什麼」
 # 用中位數填補年齡遺漏值，因為平均數容易受極端值影響
-df["age"].fillna(df["age"].median(), inplace=True)
+df["age"] = df["age"].fillna(df["age"].median())
 
 # ❌ 壞的註解：只重複程式碼已經說的事
 # 把 x 設為 5（這誰看不出來？）

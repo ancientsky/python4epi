@@ -7,6 +7,7 @@ in CI. Coverage spans every notebook tree we ship:
 * ``notebooks/`` — standalone lesson + exercise/solution copies (Colab/local)
 * ``book/chapters/{notebooks,exercises,solutions}`` — the zh site
 * ``book_en/chapters/{notebooks,exercises,solutions}`` — the English site
+* ``book_ph/{en,zh,fil}/chapters/notebooks`` — the Philippines edition
 """
 
 import json
@@ -22,6 +23,9 @@ NOTEBOOK_ROOTS = [
     Path("book_en/chapters/notebooks"),
     Path("book_en/chapters/exercises"),
     Path("book_en/chapters/solutions"),
+    Path("book_ph/en/chapters/notebooks"),
+    Path("book_ph/zh/chapters/notebooks"),
+    Path("book_ph/fil/chapters/notebooks"),
 ]
 
 
@@ -60,3 +64,22 @@ def test_book_notebooks_mirrored_in_standalone():
     standalone_nbs = {p.name for p in Path("notebooks").glob("*.ipynb")}
     missing = sorted(book_nbs - standalone_nbs)
     assert not missing, f"Book notebooks with no standalone copy in notebooks/: {missing}"
+
+
+def test_ph_notebooks_mirrored_across_languages():
+    """The three Philippines-edition trees ship the same notebooks, each
+    starting with a title cell and the standard Colab setup cell."""
+    names = {
+        lang: sorted(p.name for p in Path(f"book_ph/{lang}/chapters/notebooks").glob("*.ipynb"))
+        for lang in ("en", "zh", "fil")
+    }
+    assert names["en"], "no PH notebooks found"
+    assert names["zh"] == names["en"] == names["fil"]
+    for lang, lang_names in names.items():
+        for name in lang_names:
+            cells = json.loads(
+                Path(f"book_ph/{lang}/chapters/notebooks/{name}").read_text(encoding="utf-8")
+            )["cells"]
+            assert cells[0]["cell_type"] == "markdown", f"{lang}/{name}: no title cell"
+            setup = "".join(cells[1]["source"])
+            assert "google.colab" in setup and "python4epi" in setup, f"{lang}/{name}"

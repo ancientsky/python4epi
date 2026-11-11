@@ -59,7 +59,7 @@
 
 把上一段的食譜比喻翻回正式名詞，可重現研究只圍繞三件事：
 
-- **Environment lock（環境鎖定）**：`uv.lock` 把 `pyproject.toml` 裡每一個相依套件的版本號完整鎖死——不是「大概哪一版」，是精確到 patch 版號。任何人執行 `uv sync`，裝出來的虛擬環境都跟你的一致。
+- **Environment lock（環境鎖定）**：`uv.lock` 把 `pyproject.toml` 裡每一個相依套件的版本號完整鎖死——不是「大概哪一版」，是精確到 patch 版號。任何人執行 `uv sync --locked`，裝出來的虛擬環境都跟你的一致。
 - **Single-command workflow（單一命令重跑）**：從「一份原始資料」到「一份報告」之間，不該有任何只存在你腦中的手動步驟。理想狀態是：別人複製你的 repo、跑幾行固定指令，就能拿到跟你一樣的輸出。
 - **Traceability（可追溯性）**：報告裡的每個數字，都要能往回追到「哪一份資料、哪一版程式碼、哪一版套件」算出來的——資料路徑寫死在程式裡、分析邏輯進版本控制、輸出結果連同版本資訊一起存檔。
 
@@ -79,7 +79,7 @@
 
 ### 三顆常見地雷
 
-1. **未鎖套件版本**：`pandas` 從 2.0 升級到 2.2，某個函式對缺值或排序的預設處理悄悄改變——同一份程式碼、同一份資料，算出來的數字就是不一樣。
+1. **未鎖套件版本**：`pandas` 從 2.x 升級到 3.0（預設字串型別改為 `str`、全面採用 Copy-on-Write），同一段程式碼對字串欄位與鏈式賦值的行為悄悄改變——同一份資料，算出來的結果就是不一樣。
 2. **沒固定亂數種子**：只要程式裡有 `train_test_split`、`np.random`、`torch.manual_seed` 這類隨機步驟，沒鎖種子就等於每次執行都重新洗牌一次。下一節會用一個十行程式碼的最小範例直接證明給你看。
 3. **notebook 手動改資料，沒記錄**：在 notebook 裡手動刪掉幾列「看起來怪怪的」資料、手動修正一個欄位值，卻沒有寫成程式碼——下次重跑時，那雙手已經忘了自己動過什麼手腳。
 
@@ -87,7 +87,7 @@
 
 | 地雷 | 支柱（解法） |
 |---|---|
-| 未鎖套件版本 | `uv.lock` 把每個套件的版本號鎖死，`uv sync` 保證裝出來的環境跟原作者一致 |
+| 未鎖套件版本 | `uv.lock` 把每個套件的版本號鎖死，`uv sync --locked` 保證裝出來的環境跟原作者一致 |
 | 沒固定亂數種子 | 每個隨機步驟都指定 seed（`np.random.default_rng(42)`、`random_state=42`、`torch.manual_seed(42)`），隨機才會「隨機地一致」 |
 | notebook 手動改資料，沒記錄 | 所有資料轉換（刪列、改值、衍生欄位）都寫成程式碼裡看得見的一行，而不是滑鼠點一點 |
 
@@ -103,7 +103,7 @@
 ### Step 1 — 三行指令，從乾淨環境到報告
 
 ```bash
-uv sync
+uv sync --locked
 uv run pytest
 uv run python notebooks/run_sitrep.py
 ```
@@ -112,9 +112,9 @@ uv run python notebooks/run_sitrep.py
 >
 > | 這行指令 | 在做什麼 |
 > |---|---|
-> | `uv sync` | 依照 `uv.lock` 裡鎖定的版本，把整個虛擬環境重新建起來——不管在哪台機器上跑，裝出來的套件版本都一模一樣 |
+> | `uv sync --locked` | 依照 `uv.lock` 裡鎖定的版本，把整個虛擬環境重新建起來——不管在哪台機器上跑，裝出來的套件版本都一模一樣。`--locked` 會在 `uv.lock` 與 `pyproject.toml` 不一致時直接報錯，而不是默默重新解析版本；CI 與重現他人結果時建議一律加上 |
 > | `uv run pytest` | 在剛建好的環境裡跑單元測試，確認 `epi_learning` 套件的核心函式（`attack_rate`、`case_fatality_rate`…）行為正常——測試通過，才代表「環境是活的、程式是對的」 |
-> | `uv run python notebooks/run_sitrep.py` | 真正跑一次分析：讀取 line list、計算 CFR 與侵襲率、輸出各區統計表——這就是本章要的「最小可重跑報告」 |
+> | `uv run python notebooks/run_sitrep.py` | 真正跑一次分析：讀取 line list、計算 CFR 與侵襲率、輸出各區統計表。注意這份腳本讀的是示範用的 `line_list.csv`，示範「單一命令重跑」的結構；Legionella 事件的標準答案（121 人感染、19 人死亡）請看下面 Step 2 的 `summary` |
 
 > 💡 三行指令、零手動步驟，這正是 single-command workflow 的精神：別人不需要問你「還要裝什麼、還要改哪裡」，複製貼上就能重現。
 
@@ -239,7 +239,7 @@ print("✅ schema OK — 欄位、型別、值域都符合預期")
 
 ## 可重現檢查清單
 
-1. 是否有 `uv.lock`，且能從乾淨環境執行 `uv sync && uv run pytest`。
+1. 是否有 `uv.lock`，且能從乾淨環境執行 `uv sync --locked && uv run pytest`。
 2. 是否有固定資料欄位契約（schema contract／line list schema），資料一改就能立刻被 `assert` 擋下來。
 3. 是否有最小可重跑腳本（例如 `run_sitrep.py`），單一指令從資料跑到報告。
 4. 所有隨機步驟是否都鎖了 seed（`np.random.default_rng(seed)`、`random_state=`、`torch.manual_seed()`）。
@@ -258,7 +258,7 @@ print("✅ schema OK — 欄位、型別、值域都符合預期")
 |------|----------|
 | 在 notebook 手動改資料卻不記錄 | 所有轉換寫在程式碼中，改資料的邏輯本身就是文件 |
 | 只分享結果圖，不分享程式 | 附上可重跑程式與版本資訊，讓別人能自行驗證 |
-| 未鎖定套件版本 | 用 `uv.lock` 固定環境，`uv sync` 一次裝到位 |
+| 未鎖定套件版本 | 用 `uv.lock` 固定環境，`uv sync --locked` 一次裝到位 |
 | 亂數種子未固定 | 設定 `random_state=`、`np.random.default_rng(seed)` 或 `torch.manual_seed()` |
 | 沒有資料契約，欄位改了也不知道 | 用 `assert`（或 `pandera` 等套件）寫 schema contract，資料一變就報錯 |
 | 只把「最終結果」存腦中，中間過程靠記憶 | 摘要與版本資訊都寫進檔案（CSV/JSON），供日後 diff 比對 |

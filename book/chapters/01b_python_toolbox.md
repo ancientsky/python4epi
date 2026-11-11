@@ -441,10 +441,10 @@ Ch00 教了 `uv sync` 安裝教材的所有依賴。這裡進一步介紹 `uv` �
 uv python list
 
 # 安裝指定版本的 Python
-uv python install 3.11
+uv python install 3.14
 
 # 鎖定專案使用的 Python 版本（寫入 .python-version）
-uv python pin 3.12
+uv python pin 3.14
 ```
 
 **安裝第三方套件：**

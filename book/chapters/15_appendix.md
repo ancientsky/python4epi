@@ -142,7 +142,7 @@ uv run pytest                   # 執行測試
 uv run jupyter lab              # 啟動 Jupyter Lab
 
 # 書籍建置
-uv run jupyter-book build book/ # 建置 Jupyter Book
+uv run python scripts/build_book.py --lang zh --edition student  # 建置網站（需要 Node.js 24+）
 
 # 版本控制
 git status                      # 查看變更
@@ -160,7 +160,7 @@ git commit -m "message"         # 提交
 | `FileNotFoundError: legionella_outbreak.csv` | 工作目錄不對 | 確認在專案根目錄執行 |
 | `KeyError: 'column_name'` | 欄位名稱打錯 | `df.columns` 查看正確名稱 |
 | Notebook kernel 重啟後變數消失 | Kernel 狀態重置 | 從頭重新執行所有 cell |
-| `SettingWithCopyWarning` | 在 slice 上賦值 | 使用 `.copy()` 或 `.loc` |
+| `SettingWithCopyWarning`（pandas 2.x）／`ChainedAssignmentError`（pandas 3） | 在 slice 或鏈式索引（`df[cond]["col"] = ...`）上賦值，改不到原表 | 用 `df.loc[cond, "col"] = ...`，或先 `.copy()` |
 | 日期欄位無法計算 | 未轉換為 datetime | `pd.to_datetime(df["col"])` |
 | 中文字型顯示為方框 | matplotlib 缺中文字型 | 見下方 [E. 中文圖表顯示排錯](#appendix-e-cjk-charts) |
 | Plotly 圖表在 Jupyter Book 中空白 | 渲染器設定不對 | 見下方 [E. 中文圖表顯示排錯](#appendix-e-cjk-charts) |
@@ -309,13 +309,15 @@ plt.rcParams["axes.unicode_minus"] = False
 | Ubuntu / Debian | `sudo apt install fonts-wqy-zenhei` | WenQuanYi Zen Hei |
 | macOS | 內建 | Heiti TC, Arial Unicode MS |
 | Windows | 內建 | Microsoft JhengHei（微軟正黑體） |
-| Google Colab | 預裝 | Noto Sans CJK JP |
+| Google Colab | 通常預裝（依 runtime 版本而異） | Noto Sans CJK JP |
+
+若在 Colab 執行 `!fc-list :lang=zh` 沒有輸出，先執行 `!apt-get install -y fonts-noto-cjk`，再重新啟動 runtime。
 
 ### E-2. Plotly：Jupyter Book 建置時圖表空白
 
 #### 症狀
 
-Plotly 互動圖在 Jupyter Lab 中正常顯示，但透過 `jupyter-book build` 產生的靜態 HTML 卻只有空白。
+Plotly 互動圖在 Jupyter Lab 中正常顯示，但透過 `scripts/build_book.py`（底層是 `jupyter book build`）產生的靜態 HTML 卻只有空白。
 
 #### 根本原因
 
@@ -323,7 +325,7 @@ Jupyter Book 使用無頭方式（headless）執行 notebook，Plotly 的預設�
 
 #### 解法
 
-在 notebook 中（或透過 `_config.yml` 的 `nb_execution_pre_code`）設定：
+在 notebook 中，或在建置時用 kernel 啟動檔（startup file）統一設定：
 
 ```python
 import plotly.io as pio
@@ -333,7 +335,7 @@ pio.renderers.default = "notebook"
 `"notebook"` 渲染器會將圖表輸出為完整的 HTML + JS，可以嵌入靜態頁面。
 
 ```{tip}
-本教材已在 `book/_config.yml` 的 `nb_execution_pre_code` 中全域設定 `pio.renderers.default = "notebook"`，所有 notebook 不需再個別設定。但如果你在自己的專案中遇到同樣問題，只要在建置腳本中加上面那兩行即可。
+本教材已由 `scripts/build_book.py` 在每個執行 notebook 的 kernel 啟動時呼叫 `epi_learning.book_setup.configure_book_kernel()`，全域設定 `pio.renderers.default = "notebook"`，所有 notebook 不需再個別設定。如果你在自己的專案中遇到同樣問題，只要在 kernel 啟動時（或 notebook 第一格）加上面那兩行即可。
 ```
 
 ### E-3. 快速自檢清單

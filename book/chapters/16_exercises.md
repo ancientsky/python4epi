@@ -26,6 +26,7 @@
 | 章 | 主題 | 練習重點 | 作業 |
 |----|------|---------|------|
 | 01 | Python 基礎 | 用群聚數字練習變數、dict、函數 | [作業](exercises/01_fundamentals_exercise.ipynb) |
+| 01b | Python 開發者工具箱 | import、型別轉換、讀懂錯誤、try/except、字串清理 | [作業](exercises/01b_python_toolbox_exercise.ipynb) |
 | 02 | 資料處理與視覺化 | 讀取 line list、日期轉換、流行曲線 | [作業](exercises/02_data_wrangling_exercise.ipynb) |
 | 03 | 描述性統計與 2×2 表 | 淋浴暴露 2×2 表、RR、卡方檢定 | [作業](exercises/03_stats_exercise.ipynb) |
 | 04 | 群聚調查工作流 | 完整 SitRep 產出流程 | [作業](exercises/04_outbreak_workflow_exercise.ipynb) |
