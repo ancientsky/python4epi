@@ -163,7 +163,10 @@ page_html = PAGE.substitute(
 ```
 
 The notebook writes the result to your computer's **temporary folder** (about 4.9 MB, mostly
-the Plotly library) and prints where it is. Open it in a browser, then on your phone.
+the Plotly library) and prints where it is. Open it in a browser, then on your phone. One
+exception to "without internet": Plotly's map downloads a small world-outline file the first
+time it draws, so in this simple version the map panel stays empty offline. The full dashboard
+below draws its own map and needs no internet at all.
 
 ## Step 4: Doc Mon's publish check
 

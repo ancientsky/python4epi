@@ -5,9 +5,9 @@ description: "Maya turns Jun's messy post-typhoon export into a clean, de-identi
 
 :::{div}
 :class: ph-story
-*Tuesday 28 July · CESU office, Santa Luz City Health Office*
+*Thursday 30 July · CESU office, Santa Luz City Health Office*
 
-**Jun:** Ate Maya, here's the export. All the fever notifications since the typhoon.
+**Jun:** Ate Maya, here's the export again, on the office computer only this time. All the fever notifications since the typhoon.
 
 **Maya:** Salamat, Jun! Why does Ilog appear six different ways?
 

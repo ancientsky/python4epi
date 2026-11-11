@@ -873,8 +873,8 @@ STRINGS: dict[str, dict[str, Any]] = {
         "a3_b": "{wk} is incomplete because of reporting delay. Judge the trend on complete "
                 "weeks ({prev}: {prev_n}, {last}: {last_n}).",
         "a4_t": "Close the leptospirosis cluster",
-        "a4_b": "No new onset since {date}: {days} days, longer than the 2–30-day incubation "
-                "period. Write the close-out report; keep boots and doxycycline ready for the "
+        "a4_b": "No new onset since {date}: {days} days, longer than the longest leptospirosis "
+                "incubation period (2–30 days, WHO). Write the close-out report; keep boots and doxycycline ready for the "
                 "next flood.",
         "a5_t": "Fix the top 7-1-7 bottleneck",
         "a5_b": "Only {pct}% of events met all three targets. Most common bottleneck: {b}.",
@@ -1000,7 +1000,7 @@ STRINGS: dict[str, dict[str, Any]] = {
         "a3_t": "謹慎解讀最後一週",
         "a3_b": "{wk} 因通報延遲而資料未齊。請以完整週判斷趨勢（{prev}：{prev_n}，{last}：{last_n}）。",
         "a4_t": "結束鉤端螺旋體病群聚",
-        "a4_b": "自 {date} 起沒有新的發病：已 {days} 天，超過 2–30 天的潛伏期。撰寫結案報告；為下一次淹水備妥雨靴與 doxycycline。",
+        "a4_b": "自 {date} 起沒有新的發病：已 {days} 天，超過鉤端螺旋體病最長的潛伏期（2–30 天，WHO）。撰寫結案報告；為下一次淹水備妥雨靴與 doxycycline。",
         "a5_t": "改善 7-1-7 最大的瓶頸",
         "a5_b": "只有 {pct}% 的事件三項目標皆達成。最常見的瓶頸：{b}。",
         "a6_t": "加快鉤端螺旋體病的檢驗結果",
@@ -1140,8 +1140,8 @@ STRINGS: dict[str, dict[str, Any]] = {
         "a3_b": "Kulang pa ang {wk} dahil sa reporting delay. Tingnan ang trend sa mga "
                 "kumpletong linggo ({prev}: {prev_n}, {last}: {last_n}).",
         "a4_t": "Isara ang leptospirosis cluster",
-        "a4_b": "Walang bagong kaso mula {date}: {days} araw na, lampas sa 2–30 araw na "
-                "incubation period. Isulat ang close-out report; ihanda ang bota at doxycycline "
+        "a4_b": "Walang bagong kaso mula {date}: {days} araw na, lampas sa pinakamahabang incubation period "
+                "ng leptospirosis (2–30 araw, WHO). Isulat ang close-out report; ihanda ang bota at doxycycline "
                 "para sa susunod na baha.",
         "a5_t": "Ayusin ang pinakamalaking 7-1-7 bottleneck",
         "a5_b": "{pct}% lang ng mga event ang pumasa sa tatlong target. Pinakamadalas na "

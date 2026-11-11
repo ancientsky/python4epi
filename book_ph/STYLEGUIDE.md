@@ -23,7 +23,7 @@ direction; this file is how to apply it.
    ```
    :::::{div}          ← 5 colons, outer
    :class: ph-cast
-   ::::{grid} 2 3 5 5  ← 4 colons
+   ::::{grid} 2 3 3 3  ← 4 colons
    :::{card} Maya      ← 3 colons, innermost
    :::
    ::::
@@ -252,7 +252,7 @@ Jun (scarlet). Keep that order.
 ```
 :::::{div}
 :class: ph-cast
-::::{grid} 2 3 5 5
+::::{grid} 2 3 3 3
 
 :::{card} Maya
 ![Maya, the surveillance officer](chapters/images/cast_maya.svg)

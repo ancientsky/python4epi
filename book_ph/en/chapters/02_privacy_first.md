@@ -49,10 +49,10 @@ barangay. Some diseases carry more stigma than others, but none should be gossip
 
 | You **must** report | You **must** protect |
 |---|---|
-| [RA 11332](https://lawphil.net/statutes/repacts/ra2019/ra_11332_2019.html), the mandatory reporting law of 2019, makes reporting notifiable diseases a duty. Under its [2020 Revised IRR](https://law.upd.edu.ph/wp-content/uploads/2020/09/DOH-Revised-IRR-RA-11332.pdf), Category I diseases are reported within 24 hours and Category II weekly. | The same law lists the unauthorised disclosure of confidential information about a patient's medical condition among its prohibited acts. The **Data Privacy Act of 2012 (RA 10173)** treats information about a person's health as *sensitive personal information*, which needs the strictest care. |
+| [RA 11332](https://lawphil.net/statutes/repacts/ra2019/ra_11332_2019.html), the mandatory reporting law of 2019, makes reporting notifiable diseases a duty. Under its [2020 Revised IRR](https://law.upd.edu.ph/wp-content/uploads/2020/09/DOH-Revised-IRR-RA-11332.pdf), Category I diseases are reported within 24 hours and Category II weekly. | The **Data Privacy Act of 2012 (RA 10173)** governs how personal information is collected, used and shared, and a person's health is among the most sensitive things a file can hold. Your office's Data Protection Officer can tell you what the law requires of you. |
 
-Reporting and confidentiality do not fight each other. The law sends the data **up the
-reporting chain to the people who need it**, and nowhere else. DOH and the National
+Reporting and confidentiality do not fight each other. Reports travel **up the
+reporting chain to the people who need them**, and nowhere else. DOH and the National
 Privacy Commission have issued joint guidance on exactly this balance, for example
 [JMC 2020-0002](https://law.upd.edu.ph/wp-content/uploads/2020/05/DOH-NPC-JMC-No-2020-0002.pdf)
 on COVID-19 surveillance data.

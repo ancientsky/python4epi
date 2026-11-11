@@ -75,8 +75,8 @@ def test_ph_notebooks_mirrored_across_languages():
     }
     assert names["en"], "no PH notebooks found"
     assert names["zh"] == names["en"] == names["fil"]
-    for lang in names:
-        for name in names[lang]:
+    for lang, lang_names in names.items():
+        for name in lang_names:
             cells = json.loads(
                 Path(f"book_ph/{lang}/chapters/notebooks/{name}").read_text(encoding="utf-8")
             )["cells"]

@@ -64,7 +64,7 @@ adds one piece.
 
 :::::{div}
 :class: ph-cast
-::::{grid} 2 3 5 5
+::::{grid} 2 3 3 3
 
 :::{card} Maya
 ![Maya Dela Cruz, the Disease Surveillance Officer, holding a clipboard](chapters/images/cast_maya.svg)

@@ -236,10 +236,10 @@ from a per-language dictionary inside the script (`en`, `zh`, `fil`). Planned se
 - [x] P1 datasets + README + tests
 - [x] P1 design system: CSS and illustrations (see STYLEGUIDE.md)
 - [x] P1 interactives (ph-games.js, GAMES.md)
-- [~] P2 English chapters 00–02 + notebooks (written; awaiting build QA)
-- [~] P2 English chapters 03–05 + notebooks (written; awaiting build QA)
-- [~] P2 English chapters 06–08 + notebooks (written; awaiting build QA)
-- [~] P2 English chapters 09–10 + dashboard (written; English edition builds strict; browser QA in progress)
+- [x] P2 English chapters 00–02 + notebooks (browser QA passed)
+- [x] P2 English chapters 03–05 + notebooks (browser QA passed)
+- [x] P2 English chapters 06–08 + notebooks (browser QA passed)
+- [x] P2 English chapters 09–10 + dashboard (browser QA passed)
 - [ ] P3 中文 edition
 - [ ] P3 Filipino edition
 - [ ] P4 full build, browser QA (light/dark, desktop/phone), fixes

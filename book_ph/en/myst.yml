@@ -12,6 +12,7 @@ version: 1
 project:
   title: "Bantay Python — Epi With Python, Philippines Edition"
   description: "A beginner's Python course for Philippine disease surveillance staff: AI-assisted coding, data privacy, a leptospirosis and dengue story, and a shareable outbreak dashboard."
+  thumbnail: _static/og-image.png
   keywords: [Epidemiology, Python, Philippines, disease surveillance, PIDSR, leptospirosis, dengue, data privacy, AI-assisted coding, dashboard]
   authors:
     - name: Epi With Python | Python for Epidemiologists

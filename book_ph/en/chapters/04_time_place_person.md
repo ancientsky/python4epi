@@ -91,8 +91,10 @@ The leptospirosis curve has one wave. The first onset is 22 July, four days afte
 landfall; the median onset is **14 days** after landfall. Cases stay high from about
 24 July to 6 August, then fade by mid-August. That fits a **continuing common source**:
 days of wading during the flood and the clean-up, then a delay for incubation.
-Leptospirosis does not usually spread from person to person, so a propagated pattern
-would be surprising. Real floods show the same delay. After the late-July 2025 floods,
+WHO gives the incubation period of leptospirosis as usually 7–10 days, with a range of
+2–30 days, and notes that it passes from person to person only very rarely
+([WHO Disease Outbreak News, 2022](https://www.who.int/emergencies/disease-outbreak-news/item/2022-DON403)),
+so a propagated pattern would be surprising. Real floods show the same delay. After the late-July 2025 floods,
 the DOH warned in early August that leptospirosis cases might still rise
 ([Philstar, 9 Aug 2025](https://www.philstar.com/headlines/2025/08/09/2464294/doh-warns-leptospirosis-cases-may-still-rise-coming-days)).
 

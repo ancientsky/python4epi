@@ -34,8 +34,13 @@ Fallback text shown without JavaScript.
   `prefers-reduced-motion`, and follows the light/dark theme through the
   `--ph-*` tokens of `ph.css`.
 - Every person, place and number inside the games is fictional and each game
-  says so. Game numbers are illustrative and are **not** the dataset's
-  headline numbers; do not quote them in prose.
+  says so. Where a game shows Santa Luz itself it uses the **dataset's own
+  numbers** (`threshold-watch`, `forecast-guess`, `map-paint`, the leptospirosis
+  curve of `epicurve-builder`, the Ilog CFR of `bug-hunt` and the `ph-quiz-ch04`
+  bank, the `publish-check` tiles). Any other numbers belong to a scenario
+  labelled "practice" in the game (`two-by-two`, the other two curves); do not
+  quote those in prose. Real-world facts in a game (e.g. the WHO incubation
+  period of leptospirosis) carry their source in the chapter.
 - Option for any widget: `ph-compact` (tighter spacing).
 
 **Build integration:** `scripts/build_book.py` must inject
@@ -115,9 +120,11 @@ Excel serial numbers and flag ambiguous dates instead of guessing.
 
 ### `epicurve-builder` — chapter 04
 
-Three scenarios (leptospirosis after the flood, diarrhoea at an evacuation
-centre, dengue in Barangay Baybay). Place each case on its onset day/week,
-then name the curve's shape.
+Three scenarios: leptospirosis after the flood (a 1-in-4 sample of the Santa
+Luz line list: a **continuing common source**, as in chapter 04), a practice
+point source (diarrhoea after one shared lunch at an evacuation centre) and a
+practice propagated dengue outbreak in a made-up village. Place each case on
+its onset day/week, then name the curve's shape.
 
 Option: `ph-curve-lepto`, `ph-curve-water` or `ph-curve-dengue` plays only
 that scenario.
@@ -125,15 +132,17 @@ that scenario.
 ```
 :::{div}
 :class: ph-game ph-game-epicurve-builder ph-curve-lepto
-One sharp wave within about one incubation period suggests a point source.
+A wave that stays high while the exposure lasts (wading through the flood and
+the clean-up) suggests a continuing common source.
 :::
 ```
 
 ### `two-by-two` — chapter 05
 
-Round 1 (cohort, the Barangay Ilog clean-up crew): wading without boots,
-RR = 8.0. Round 2 (case-control): doxycycline prophylaxis, OR = 0.11, and the
-RR row is marked "not valid". Live formulas and 95% CIs (log/Woolf method).
+Round 1 (practice cohort, one Barangay Ilog clean-up crew of 24): wading
+without boots, RR = 8.0. Round 2 (practice case-control pilot of 20 people,
+not Maya's 360-person study): doxycycline prophylaxis, OR = 0.11, and the RR
+row is marked "not valid". Live formulas and 95% CIs (log/Woolf method).
 After six correct placements the learner may fill the rest automatically.
 
 Option: `ph-2x2-cohort` or `ph-2x2-casecontrol` plays only that round.
@@ -148,9 +157,10 @@ a case-control study compares odds of exposure (OR), never an RR.
 
 ### `threshold-watch` — chapter 06
 
-Weekly dengue counts for 2026 appear one week at a time against the alert
-threshold (mean + 2 SD of the same week, 2021–2025; a "how is this computed?"
-panel shows the arithmetic). Raise the alert at the right week, then decide
+The real Santa Luz weekly dengue counts for 2026-W20…W39 appear one week at a
+time against the chapter 06 alert threshold (mean + 2 SD of weeks w−1, w, w+1
+in 2022–2025, 12 values; a "how is this computed?" panel shows the arithmetic).
+The first crossing is W32 (33 vs 17.5), detected on Monday 10 August. Raise the alert at the right week, then decide
 when to notify the PESU and which early-response plan fits — scored against
 7-1-7.
 
@@ -165,9 +175,10 @@ of emergence, notify within 1 day, complete the early response within 7 days.
 ### `forecast-guess` — chapter 07
 
 Draw the next 8 weeks (drag, tap, or arrow keys on each dot), then reveal the
-truth, an illustrative TimesFM-style forecast with its 80% band, and two
-baselines, ranked by mean absolute error. Round 1 is a normal year; round 2 is
-after Typhoon Amihan, where the model misses the surge.
+truth, the cached TimesFM 3.0 forecast of chapter 07 with its 80% band, and two
+baselines, ranked by mean absolute error. Round 1 is an ordinary year (origin
+2025-W31); round 2 is the take-off after Typhoon Amihan (history to 2026-W31),
+where the model misses every week.
 
 Option: `ph-forecast-normal` or `ph-forecast-typhoon`.
 
@@ -181,9 +192,11 @@ and say when something the model could not see has changed.
 
 ### `map-paint` — chapter 08
 
-A tile map of 24 fictional barangays. Switch counts ↔ rates, equal interval ↔
-quantile, sequential ↔ rainbow. Three missions: find the highest-*risk*
-barangay, identify quantile classes, choose a readable palette.
+A tile map of the 24 Santa Luz barangays with their dengue cases (chapter 08's
+data; rates per 10,000). Switch counts ↔ rates, equal interval ↔ quantile,
+sequential ↔ rainbow. Three missions: find the highest-*risk* barangay
+(Talaba, though Ilog has the most cases), identify quantile classes, choose a
+readable palette.
 
 ```
 :::{div}

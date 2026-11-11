@@ -12,6 +12,7 @@ version: 1
 project:
   title: "Bantay Python — Epi With Python 菲律賓特別版"
   description: "給菲律賓第一線疾病監測人員的 Python 入門：AI 輔助寫程式、資料隱私、一則鉤端螺旋體病與登革熱的故事，以及一份可分享的疫情儀表板。"
+  thumbnail: _static/og-image_zh.png
   keywords: [Epidemiology, Python, Philippines, 菲律賓, 疾病監測, 鉤端螺旋體病, 登革熱, 資料隱私, AI 輔助, 儀表板]
   authors:
     - name: Epi With Python | Python for Epidemiologists

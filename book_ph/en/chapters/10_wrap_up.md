@@ -53,7 +53,7 @@ coastal band; highest in Talaba (43.4) and Buhangin (35.5).
 
 **Timeliness (7-1-7).** 15 of 40 events since January 2025 (38%) met all three targets. This
 cluster: notification took 2 days (target 1). The dengue response took 10 days (target 7).
-Median time to leptospirosis lab confirmation: 18 days.
+Median time from consultation to leptospirosis lab confirmation: 18 days.
 
 **Actions.** 4S search-and-destroy with BHWs in the coastal barangays; hospitals prepared
 for severe dengue; leptospirosis close-out report; enrol the private clinic as a disease
@@ -76,8 +76,8 @@ list: **Ask → Run → Check**, with privacy around it.
 
 1. Use the assistant your office has approved, under its rules.
 2. **Never paste identifiable data**: names, phone numbers, addresses, PhilHealth numbers,
-   birth dates, free-text remarks, photos of forms. Health information is *sensitive personal
-   information* under the Data Privacy Act of 2012 (RA 10173).
+   birth dates, free-text remarks, photos of forms. Follow the Data Privacy Act of 2012
+   (RA 10173) as your office's Data Protection Officer applies it.
 3. Describe the **columns** and give two or three **made-up** rows instead (chapter 02).
 4. Say exactly what output you want and how you will check it.
 

@@ -14,7 +14,7 @@ description: "Open your first Colab notebook, learn the Ask → Run → Check lo
 
 :::{div}
 :class: ph-say-maya
-**Maya:** That's eleven this week. Doc Mon wants a line list and a first analysis by Friday. I have never written a line of code.
+**Maya:** That's eleven forms since Friday. Doc Mon wants a line list and a first analysis by Friday. I have never written a line of code.
 :::
 
 :::{div}
@@ -211,7 +211,7 @@ Every row is a neighbour.
 3. In Colab, a cell says a variable is not defined. What is the most likely cause?
    - ✓ An earlier cell was not run yet — run the cells from the top, in order.
    - Colab is broken — restarting helps sometimes, but the order of cells is the usual reason.
-   - Your computer needs Python installed — no, Colab runs everything in the browser.
+   - Your computer needs Python installed — no: Colab runs Python on Google's computers; you only need a browser.
 :::
 
 :::{admonition} Baon

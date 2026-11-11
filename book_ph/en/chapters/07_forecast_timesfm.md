@@ -7,7 +7,7 @@ description: "Maya forecasts the next eight weeks of dengue: simple baselines fi
 :class: ph-story
 *Wednesday 30 September · CESU office, after the data freeze*
 
-**Doc Mon:** The Local Health Board meets next week. They will ask three things: how many beds, how many fogging teams, how many NS1 kits for October and November.
+**Doc Mon:** The Local Health Board meets on Friday. They will ask three things: how many beds, how many fogging teams, how many NS1 kits for October and November.
 
 **Maya:** So… they want me to predict the future?
 
@@ -121,7 +121,8 @@ have hidden this. **Always score the unusual period on its own.**
 :::{admonition} Tala got it wrong
 :class: ph-oops
 Maya asked for "a better baseline: the average of the same week in all years". Tala's
-version scored an MAE of **3.27**, better than TimesFM. Doc Mon asked one question:
+version scored an MAE of **3.27** over all 94 forecasts, better than TimesFM's 3.86 on the
+same forecasts. Doc Mon asked one question:
 *"Which years went into that average?"* All of them, **including the weeks being
 forecast**. That is **leakage**: the forecast had seen the answer. Averaging only the
 three years *before* each origin gives **3.95**, slightly worse than TimesFM's 3.86.
@@ -183,8 +184,10 @@ typhoon or a rise in severe cases would change it."*
 TimesFM's **code** is Apache-2.0. The **TimesFM 3.0 weights** are under the **TimesFM
 Non-Commercial License v1.0**: research, evaluation and teaching, **no commercial and no
 production use** ([licence on Hugging Face](https://huggingface.co/google/timesfm-3.0-pytorch/blob/main/LICENSE)).
-The older **TimesFM 2.5** weights are Apache-2.0, and Google offers commercial and
-production use through Google Cloud ([TimesFM on GitHub](https://github.com/google-research/timesfm)).
+The older **TimesFM 2.5** weights are Apache-2.0
+([model card](https://huggingface.co/google/timesfm-2.5-200m-pytorch)), and Google points to
+TimesFM in BigQuery (Google Cloud) for official support
+([TimesFM on GitHub](https://github.com/google-research/timesfm)).
 
 For a government health office this means: learning, exploring and backtesting old data —
 like this chapter — fits. Using 3.0 forecasts in a routine early-warning system or a public
