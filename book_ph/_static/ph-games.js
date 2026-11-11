@@ -2135,7 +2135,6 @@
           b.setAttribute("aria-label", L(it.def.n) + " — " + L(["cleared", "已清除", "nalinis na"]));
           b.appendChild(h("span", { class: "ph-splash", "aria-hidden": "true" }, L(["Cleared!", "清除！", "Tinaob!"])));
           ctx.say("good", L(it.def.e), goodWord());
-          if (found === need) end(true);
         } else {
           points = Math.max(0, points - 5);
           b.classList.remove("ph-shake"); void b.offsetWidth; b.classList.add("ph-shake");
@@ -2143,6 +2142,7 @@
         }
         hudUpdate();
         ctx.setScore(totalPts + points);
+        if (found === need) end(true);
       }
       function end(all) {
         stop();
@@ -2264,9 +2264,12 @@
     var r = el.getBoundingClientRect();
     return r.top < (W.innerHeight || 800) && r.bottom > 0;
   }
+  /* ph.css already reveals `.ph-reveal` with scroll-driven CSS where the
+     browser supports it; this JS reveal only fills in elsewhere. */
+  var cssReveal = !!(W.CSS && W.CSS.supports && W.CSS.supports("animation-timeline: view()"));
   function hooks() {
     if (reduced() || !observer()) return;
-    var rev = D.querySelectorAll(".ph-reveal");
+    var rev = cssReveal ? [] : D.querySelectorAll(".ph-reveal");
     for (var i = 0; i < rev.length; i++) {
       var el = rev[i];
       if (el.__phReveal) continue;
@@ -2275,12 +2278,17 @@
       el.classList.add("ph-reveal-pending");
       io.observe(el);
     }
+    // `.ph-stat`: count up each card title (the style guide's tiles), or the
+    // element's own first number when it has no cards.
     var stats = D.querySelectorAll(".ph-stat");
     for (var j = 0; j < stats.length; j++) {
-      var st = stats[j];
-      if (st.__phStat) continue;
-      st.__phStat = true;
-      io.observe(st);
+      var titles = stats[j].querySelectorAll(".myst-card-title");
+      var targets = titles.length ? titles : [stats[j]];
+      for (var k = 0; k < targets.length; k++) {
+        if (targets[k].__phStat) continue;
+        targets[k].__phStat = true;
+        io.observe(targets[k]);
+      }
     }
   }
   /** Animate the first number in the element's text from 0, in place. */

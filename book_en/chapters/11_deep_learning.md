@@ -587,27 +587,68 @@ model = CoxPH(net, tt.optim.Adam)
 model.fit(x_train, (duration_train, event_train), epochs=100)
 ```
 
-### TSFM (Time Series Foundation Model) — The Veteran Who's Read Every Case Worldwide
+### TSFM (Time Series Foundation Model) — The Veteran Who's Read Every Case Worldwide (Hands-On in This Book)
 
 **Time Series Foundation Models (TSFM)** are pretrained on massive, cross-domain time series, and when applied to a new series, usually need no retraining at all (**zero-shot**) or only a tiny bit of fine-tuning data (**few-shot**) — exactly the idea behind **transfer learning**: borrowing knowledge already learned from someone else's mountain of data, and applying it directly to your own short new series.
 
-| TSFM | Core idea | Advantage | Tool |
-|---|---|---|---|
-| **TimesFM** (Google) | Decoder-only transformer, pretrained on massive time series | Zero-shot forecasting, no retraining needed | `timesfm` |
-| **Chronos** (Amazon) | Tokenizes time-series values and applies a language-model architecture | Open source, multiple model sizes available | `chronos-forecasting` |
-| **Moirai** (Salesforce) | A general-purpose multivariate time-series foundation model | Supports different frequencies and multivariate input | `uni2ts` |
-| **TimeGPT** (Nixtla) | Commercial API, a GPT-style time-series model | Easy to get started, hosted API available | `nixtla` |
+TSFMs are the one Part B tool this book **actually runs**: **TimesFM 3.0**, released by Google in August 2026, is now as easy as a `pip install` plus three lines of code, and it runs on a laptop CPU. The full hands-on example with an honest evaluation is [`11_dl_timesfm.ipynb`](notebooks/11_dl_timesfm.ipynb).
+
+**The main players in 2026** (versions and licences checked in 2026-11 on each model's Hugging Face page):
+
+| TSFM | Latest (released) | Weights licence | Highlights | Package |
+|---|---|---|---|---|
+| **TimesFM 3.0** (Google) | 3.0 (2026-08), ~330M parameters | ⚠️ **Non-commercial** (code is Apache-2.0) | Native multivariate + covariates, 9 quantiles | `timesfm` (`timesfm3` API) |
+| **TimesFM 2.5** (Google) | 2.5 (2025-09), 200M parameters | Apache-2.0 | Univariate; covariates via XReg | `timesfm` (`TimesFM_2p5_200M_torch`) |
+| **Chronos-2** (Amazon) | 2025-10, 120M parameters | Apache-2.0 | Zero-shot univariate, multivariate and covariates | `chronos-forecasting` |
+| **Moirai 2.0** (Salesforce) | 2025-08 (R-small) | CC BY-NC 4.0 (non-commercial) | General-purpose, handles different frequencies | `uni2ts` |
+| **TimeGPT-2.1** (Nixtla) | Cloud API | Commercial service (API key) | No model to run yourself | `nixtla` |
+
+**How to read the leaderboards**: the most-cited public benchmarks are Salesforce's **GIFT-Eval** and the AutoGluon team's **fev-bench**. Google reports TimesFM 3.0 as rank #1 on fev-bench and #1 among foundation models on GIFT-Eval; in October 2025 Amazon likewise reported Chronos-2 as the best pretrained model on both. These are **the developers' own claims, and the top spot changes every few months** — winning a leaderboard does not mean winning on your surveillance data, as the hands-on example below shows.
+
+**The TimesFM 3.0 API** (the runnable version is in the notebook):
 
 ```python
-# illustrative only — NOT executed in this book — TSFM zero-shot forecasting (no local training at all)
-import timesfm
+# pip install "timesfm[torch]>=3.0.2"   (this repo: uv sync --group timesfm)
+from timesfm3 import TimesFM3Evaluator, ModelConfig
 
-tfm = timesfm.TimesFm(context_len=512, horizon_len=14, backend="cpu")
-tfm.load_from_checkpoint(repo_id="google/timesfm-1.0-200m")
-forecast, _ = tfm.forecast([cases_history], freq=[0])  # predicts directly, with no fit() step at all
+config = ModelConfig(
+    checkpoint_path="google/timesfm-3.0-pytorch",  # downloads ~1.3 GB of weights the first time
+    per_core_batch_size=32,
+    device="cpu",                                  # "cuda" if you have a GPU
+)
+model = TimesFM3Evaluator(config)
+
+out = next(model.predict_batch([cases_history], horizon=14))  # no fit() step
+out.forecast    # median forecast, shape (14,)
+out.quantiles   # nine quantiles 0.1-0.9, shape (14, 9) -> 80% prediction interval = column 0 to column 8
 ```
 
-> ⚠️ **TSFM needs to download large weights and needs an internet connection** — this book's build doesn't execute this snippet — but this is exactly the answer to box ④ of the decision tree earlier: with barely any data in the early days of a new pathogen, you can still borrow a model pretrained on "someone else's outbreak data," instead of starting from scratch and waiting for your own data to accumulate.
+**Multivariate and covariates**: the big new feature of 3.0 is that, with no per-task tuning, it can forecast several related series jointly (pass `contexts` arrays shaped `(n_targets, T)`, e.g. cases per district) and accept two kinds of covariates — `past_only_covariates`, known only in the past (e.g. observed temperature), and `past_future_covariates`, also known over the forecast period (e.g. a weather forecast, holidays, a scheduled vaccination campaign; `horizon` steps longer). But "supports covariates" does not mean "covariates always help": on the notebook's synthetic dengue data, adding temperature did not make it more accurate — every covariate has to prove its worth in a backtest.
+
+**The honest scorecard** ([`11_dl_timesfm.ipynb`](notebooks/11_dl_timesfm.ipynb): same series and same test period as Part A Step 2, rolling-origin backtest, forecasting 7 days ahead):
+
+| Model | Training needed? | MAE |
+|---|---|---|
+| Persistence (naive baseline) | No | 2.88 |
+| **TimesFM 3.0 zero-shot** (whole history) | No | **⟨TFM_UNI⟩** |
+| TimesFM 3.0 + temperature covariate | No | ⟨TFM_PO⟩ |
+| LSTM (Part A Step 2) | Yes | 2.15 |
+| 1D-CNN (Part A Step 2) | Yes | 2.20 |
+
+Without a single line of training code, TimesFM beats the naive baseline and comes with an 80% prediction interval whose coverage is about ⟨TFM_COV⟩; but it loses to the LSTM / CNN, which were **trained on this very series** and learned the "temperature 7 days ago" mechanism. On Ch07's influenza-like-illness series (a clear weekly cycle, no hidden mechanism), TimesFM beats seasonal naive in a rolling-origin backtest (MAE ⟨ILI_TFM⟩ vs ⟨ILI_SN⟩) ⟨ILI_VERDICT_EN⟩ a SARIMA refitted at every origin (⟨ILI_SARIMA⟩). And at the start of the nursing-home outbreak it cannot see the coming peak at all — which is the point of the next box.
+
+> ⚠️ **When not to trust a TSFM**: (1) **at outbreak onset or a turning point** — the model learned "how series usually continue" and cannot see a transmission chain expanding; in the notebook, the 80% interval it forecast three days before the peak missed almost all of the actual cases; (2) **after a policy or case-definition change (regime change)** — the shape of the history no longer represents the future; (3) **under reporting delay** — the most recent days are not fully notified yet, and the model reads that as a decline (an underestimate of about ⟨DELAY⟩ in the notebook), so nowcast first; (4) **with tiny counts** — on a series of 0–3 cases a day, the quantile intervals carry little information. A zero-shot model is a **strong baseline that needs no tuning**, not an automatic early-warning system.
+
+**Hardware** (measured for this book: 4-core CPU, no GPU, timesfm 3.0.2, torch 2.10): the weight download is ~1.3 GB (once); the model has ~330M parameters and peaks at ~3.1 GB of RAM; loading takes ~5 seconds; 60 series of ~300 days, 7 days ahead each, take ~4 seconds (~7–9 seconds with a covariate). The CPU of free Google Colab (~12 GB of RAM) is enough, as is a laptop with 8 GB of RAM; no GPU is needed.
+
+> ⚖️ **Licence: TimesFM 3.0 weights must not go "into production"**
+>
+> - TimesFM's **code** is Apache-2.0, and the **weights** up to version 2.5 are Apache-2.0 too; but the **TimesFM 3.0 weights** (`google/timesfm-3.0-pytorch`) are under the **TimesFM Non-Commercial License v1.0**: **non-commercial, non-production** testing, evaluation and research only.
+> - The licence explicitly excludes "production deployment" and "direct or indirect interactions with end users or production systems" from the permitted uses, and forbids redistributing the weights or derivatives of them.
+> - **A health agency may**: backtest on historical surveillance data internally, compare methods, do academic research, and teach (as this book does).
+> - **A health agency may not**: plug self-downloaded 3.0 weights into a routine surveillance or early-warning system, use its forecasts as the basis for public releases or routine decisions, wrap it into a paid service, or use it to train / distil other commercial models.
+> - **To go into production**: Google states that 3.0 may be used commercially and in production through Google Cloud's **BigQuery ML** (under the Google Cloud terms of service); to self-host open weights, use the Apache-2.0 **TimesFM 2.5** or **Chronos-2** instead.
+> - This is not legal advice; have your legal team check the terms ([TimesFM 3.0 LICENSE](https://huggingface.co/google/timesfm-3.0-pytorch/blob/main/LICENSE)) before an agency adopts it.
 
 ### Hybrid / Knowledge Injection (Most Recommended for Epidemiologists)
 

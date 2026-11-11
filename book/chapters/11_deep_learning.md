@@ -587,27 +587,68 @@ model = CoxPH(net, tt.optim.Adam)
 model.fit(x_train, (duration_train, event_train), epochs=100)
 ```
 
-### TSFM（時序基礎模型）——讀遍全球案件的老手
+### TSFM（時序基礎模型）——讀遍全球案件的老手（本書有實作）
 
 **時序基礎模型（Time Series Foundation Model, TSFM）** 是在海量、跨領域的時間序列上預訓練好的模型，拿來預測新的序列時，通常不需要重新訓練（**零樣本 zero-shot**）或只需要極少量資料微調（**少樣本 few-shot**）——這正是**遷移學習（transfer learning）**的思路：借用在別的大量資料上已經學好的知識，直接套在你手上這條資料量不多的新序列。
 
-| TSFM | 核心 | 優勢 | 工具 |
-|---|---|---|---|
-| **TimesFM**（Google） | Decoder-only transformer，在海量時序上預訓練 | 零樣本預測，不用重新訓練 | `timesfm` |
-| **Chronos**（Amazon） | 把時序數值 token 化，套用語言模型架構訓練 | 開源、多種模型尺寸可選 | `chronos-forecasting` |
-| **Moirai**（Salesforce） | 通用型多變量時序基礎模型 | 支援不同頻率、多變量輸入 | `uni2ts` |
-| **TimeGPT**（Nixtla） | 商用 API，GPT 風格時序模型 | 好上手，有 hosted API | `nixtla` |
+TSFM 是 Part B 裡唯一一個**本書真的跑過**的工具：Google 在 2026 年 8 月發布的 **TimesFM 3.0** 已經簡單到 `pip install` 加三行程式就能用，筆電 CPU 也跑得動。完整的實作與誠實評估在 [`11_dl_timesfm.ipynb`](notebooks/11_dl_timesfm.ipynb)。
+
+**2026 年的主要選手**（版本與授權查證於 2026-11，各模型的 Hugging Face 頁面）：
+
+| TSFM | 最新版（發布） | 權重授權 | 特色 | 套件 |
+|---|---|---|---|---|
+| **TimesFM 3.0**（Google） | 3.0（2026-08），約 3.3 億參數 | ⚠️ **非商業授權**（程式碼 Apache-2.0） | 原生多變量 + 共變量、9 個分位數 | `timesfm`（`timesfm3` API） |
+| **TimesFM 2.5**（Google） | 2.5（2025-09），2 億參數 | Apache-2.0 | 單變量；共變量透過 XReg | `timesfm`（`TimesFM_2p5_200M_torch`） |
+| **Chronos-2**（Amazon） | 2025-10，1.2 億參數 | Apache-2.0 | 單變量、多變量、共變量都能零樣本 | `chronos-forecasting` |
+| **Moirai 2.0**（Salesforce） | 2025-08（R-small） | CC BY-NC 4.0（非商業） | 通用型，支援不同頻率 | `uni2ts` |
+| **TimeGPT-2.1**（Nixtla） | 雲端 API | 商用服務（需 API key） | 不用自己跑模型 | `nixtla` |
+
+**排行榜怎麼看？** 目前最常被引用的公開基準是 Salesforce 的 **GIFT-Eval** 與 AutoGluon 團隊的 **fev-bench**。Google 宣稱 TimesFM 3.0 在 fev-bench 排名第一、在 GIFT-Eval 的基礎模型中排名第一；Amazon 在 2025 年 10 月也宣稱 Chronos-2 在這兩個基準上是預訓練模型中最好的。這些都是**開發者自己的說法、而且排名每幾個月就換人**——排行榜贏，不代表在你的監測資料上會贏，下面的實作就是例子。
+
+**TimesFM 3.0 的 API**（本書可執行的版本在 notebook 裡）：
 
 ```python
-# 示意，非本書執行 —— TSFM 零樣本預測（不用任何本地訓練）
-import timesfm
+# pip install "timesfm[torch]>=3.0.2"   （本 repo：uv sync --group timesfm）
+from timesfm3 import TimesFM3Evaluator, ModelConfig
 
-tfm = timesfm.TimesFm(context_len=512, horizon_len=14, backend="cpu")
-tfm.load_from_checkpoint(repo_id="google/timesfm-1.0-200m")
-forecast, _ = tfm.forecast([cases_history], freq=[0])  # 直接預測，沒有 fit() 這一步
+config = ModelConfig(
+    checkpoint_path="google/timesfm-3.0-pytorch",  # 第一次會下載約 1.3 GB 權重
+    per_core_batch_size=32,
+    device="cpu",                                  # 有 GPU 就用 "cuda"
+)
+model = TimesFM3Evaluator(config)
+
+out = next(model.predict_batch([cases_history], horizon=14))  # 沒有 fit() 這一步
+out.forecast    # 中位數預測，形狀 (14,)
+out.quantiles   # 0.1–0.9 九個分位數，形狀 (14, 9) → 80% 預測區間 = 第 0 欄到第 8 欄
 ```
 
-> ⚠️ **TSFM 需要下載大權重、需要連網**，本書的 build 不會執行這段程式——但這正是第 5 節決策樹第④格的答案：新病原初期資料極少，卻能借用「別人的疫情資料」預訓練好的模型，不用從零開始等資料累積。
+**多變量與共變量**：3.0 最大的新功能是不用針對任務調整，就能一次預測多條相關序列（`contexts` 傳入形狀 `(目標數, T)` 的陣列，例如各區的病例數），並接收兩種共變量——`past_only_covariates` 只知道過去（例如已觀測的氣溫），`past_future_covariates` 連預測期間都已知（例如氣象預報、假日、已排定的疫苗接種活動，長度要多出 `horizon`）。但「支援共變量」不等於「共變量一定有幫助」：在 notebook 的合成登革熱資料上，加入氣溫反而沒有變準——每一個共變量都要用回測證明自己的價值。
+
+**誠實的成績單**（[`11_dl_timesfm.ipynb`](notebooks/11_dl_timesfm.ipynb)，跟 Part A Step 2 同一條序列、同一個測試期，滾動起點回測、預測 7 天後）：
+
+| 模型 | 需要訓練？ | MAE |
+|---|---|---|
+| Persistence（naive 基準） | 否 | 2.88 |
+| **TimesFM 3.0 零樣本**（全部歷史） | 否 | **⟨TFM_UNI⟩** |
+| TimesFM 3.0 + 氣溫共變量 | 否 | ⟨TFM_PO⟩ |
+| LSTM（Part A Step 2） | 是 | 2.15 |
+| 1D-CNN（Part A Step 2） | 是 | 2.20 |
+
+一行訓練程式都沒寫，TimesFM 就贏了 naive 基準，還附帶覆蓋率約 ⟨TFM_COV⟩ 的 80% 預測區間；但它輸給**在這條序列上訓練過**、學到「7 天前氣溫」機制的 LSTM / CNN。換到 Ch07 的類流感監測序列（週期明顯、沒有隱藏機制），TimesFM 在滾動起點回測中贏過 seasonal naive（MAE ⟨ILI_TFM⟩ vs ⟨ILI_SN⟩），跟每個起點重新配適的 SARIMA（⟨ILI_SARIMA⟩）⟨ILI_VERDICT⟩。而在松柏護理之家的群突發剛開始時，它完全看不到即將到來的高峰——這正是下一段要強調的。
+
+> ⚠️ **什麼時候不能相信 TSFM**：(1) **群突發剛開始或已經轉折**——模型學的是「序列通常怎麼延續」，看不到傳染鏈正在擴大，notebook 裡它在高峰前 3 天做的預測，80% 區間幾乎完全沒涵蓋實際病例；(2) **政策或通報定義改變（regime change）**——歷史形狀不再代表未來；(3) **通報延遲**——最近幾天還沒補登完整，模型會把它當成疫情下降（notebook 裡低估約 ⟨DELAY⟩），要先 nowcasting；(4) **極小的計數**——每天 0–3 例的序列，分位數區間沒有什麼資訊量。零樣本模型是一個**不用調教的強基準**，不是自動預警系統。
+
+**硬體需求**（本書實測：4 核心 CPU、無 GPU，timesfm 3.0.2、torch 2.10）：權重下載約 1.3 GB（只需一次）；模型約 3.3 億參數，執行時記憶體峰值約 3.1 GB；載入約 5 秒；60 條長度約 300 天的序列、各預測 7 天，約 4 秒（加入共變量約 7–9 秒）。免費版 Google Colab（約 12 GB 記憶體）的 CPU 就能跑，筆電 8 GB 記憶體也夠，不需要 GPU。
+
+> ⚖️ **授權：TimesFM 3.0 的權重不能拿來「正式上線」**
+>
+> - TimesFM 的**程式碼**是 Apache-2.0，2.5 版以前的**權重**也是 Apache-2.0；但 **TimesFM 3.0 的權重**（`google/timesfm-3.0-pytorch`）採用 **TimesFM Non-Commercial License v1.0**：只能用於**非商業、非正式上線（non-production）**的測試、評估與研究。
+> - 授權明文把「正式上線部署」以及「與終端使用者或正式系統的直接或間接互動」排除在允許範圍之外，也禁止轉散布權重或其衍生模型。
+> - **衛生單位可以**：用歷史監測資料在內部做回測、比較方法、學術研究、教學訓練（例如本書）。
+> - **衛生單位不可以**：把自行下載的 3.0 權重接進例行的監測或預警系統、把它的預測當成對外發布或例行決策的依據、包進收費服務，或用它訓練 / 蒸餾其他商用模型。
+> - **要正式上線**：Google 表示 3.0 可透過 Google Cloud 的 **BigQuery ML** 合法用於商業與正式環境（依 Google Cloud 服務條款）；想自行部署開源權重，可改用 Apache-2.0 授權的 **TimesFM 2.5** 或 **Chronos-2**。
+> - 本段不是法律意見；機關正式採用前，請由法務確認授權條款（[TimesFM 3.0 LICENSE](https://huggingface.co/google/timesfm-3.0-pytorch/blob/main/LICENSE)）。
 
 ### 混合 / 知識注入（最推薦給流行病學家）
 
