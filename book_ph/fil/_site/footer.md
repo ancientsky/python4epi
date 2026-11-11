@@ -1,0 +1,1 @@
+© 2026 Epi With Python | Python for Epidemiologists · Lisensiyado sa ilalim ng MIT License · Kathang-isip ang kuwento at lahat ng datos sa edisyong ito · [GitHub](https://github.com/ancientsky/python4epi)
