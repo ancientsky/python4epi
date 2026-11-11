@@ -1160,7 +1160,7 @@
       var cardEl = h("p", { class: "ph-case-card", "aria-live": "off" });
       var chart = h("div", { class: "ph-curve", role: "group", style: "--rows:" + maxY, "aria-label": L(["Epi curve: choose the column for the case", "流行曲線：為這位病例選擇欄位", "Epi curve: piliin ang column para sa kaso"]) });
       var cols = counts.map(function (n, k) {
-        var stack = h("span", { class: "ph-stack", "aria-hidden": "true" });
+        var stack = h("span", { class: "ph-pile", "aria-hidden": "true" });
         for (var j = 0; j < n; j++) stack.appendChild(h("i", { class: "ph-sq" }));
         var col = h("button", { type: "button", class: "ph-col" + (c.marker === k ? " ph-col-marker" : ""), onclick: function () { drop(k); } }, [
           stack,
@@ -1339,7 +1339,7 @@
         append(cardEl, [
           h("span", { class: "ph-avatar", "aria-hidden": "true", style: "--hue:" + ((p.name.length * 47) % 360) }, initials),
           h("span", { class: "ph-person-text" }, [
-            h("strong", null, p.name), " · " + deck.length + " " + L(["left", "人待分類", "natitira"]),
+            h("span", null, [h("strong", null, p.name), h("span", { class: "ph-left" }, " · " + deck.length + " " + L(["left", "人待分類", "natitira"]))]),
             h("span", { class: "ph-fact " + (p.exp ? "yes" : "no") }, (p.exp ? "● " : "○ ") + L(p.exp ? r.expLabel : r.unexpLabel)),
             h("span", { class: "ph-fact " + (p.ill ? "yes" : "no") }, (p.ill ? "● " : "○ ") + L(p.ill ? r.outLabel : r.noOutLabel))
           ])
@@ -1667,9 +1667,9 @@
   /* =============================================== forecast-guess (ch 07) */
   var FORECASTS = [
     {
-      id: "normal", firstWeek: 14, year: 2025, yMax: 35,
+      id: "normal", firstWeek: 20, year: 2025, yMax: 35,
       title: ["Round 1 — a normal year (2025)", "第 1 回合——平常的一年（2025）", "Round 1 — karaniwang taon (2025)"],
-      hist: [7, 8, 6, 9, 8, 7, 8, 10, 9, 8, 7, 11, 14, 10, 15, 14, 16, 19],
+      hist: [8, 10, 9, 8, 7, 11, 14, 10, 15, 14, 16, 19],
       truth: [23, 16, 20, 20, 17, 17, 11, 13],
       model: [20, 21, 20, 19, 18, 16, 15, 14],
       lo: [15, 15, 14, 13, 12, 10, 9, 8], hi: [26, 28, 28, 27, 26, 24, 23, 22],
@@ -1677,9 +1677,9 @@
       lesson: ["In an ordinary season the model and simple baselines are close; the model's 80% band held the truth every week. Always compare with a baseline before trusting a model.", "在平常的季節，模型與簡單基準差不多；真實值每週都落在模型的 80% 區間內。信任模型之前，一定要和基準比較。", "Sa karaniwang season, magkalapit ang model at simpleng baselines; nasa 80% band ng model ang totoo bawat linggo. Laging ikumpara sa baseline bago pagkatiwalaan ang model."]
     },
     {
-      id: "typhoon", firstWeek: 14, year: 2026, yMax: 80,
+      id: "typhoon", firstWeek: 20, year: 2026, yMax: 80,
       title: ["Round 2 — after Typhoon Amihan (2026)", "第 2 回合——颱風 Amihan 之後（2026）", "Round 2 — pagkatapos ng Bagyong Amihan (2026)"],
-      hist: [9, 8, 10, 9, 11, 10, 10, 11, 12, 10, 11, 13, 15, 17, 18, 16, 22, 26],
+      hist: [10, 11, 12, 10, 11, 13, 15, 17, 18, 16, 22, 26],
       truth: [35, 48, 63, 71, 66, 58, 49, 41],
       model: [28, 29, 29, 28, 27, 25, 23, 21],
       lo: [21, 21, 20, 19, 18, 16, 14, 13], hi: [36, 39, 40, 40, 39, 37, 35, 33],
@@ -1715,6 +1715,7 @@
       }
       for (i = 0; i < N; i += 4) kids.push(s("text", { x: xs(i), y: Y0 + 12, class: "ph-tick", "text-anchor": "middle" }, "W" + (f.firstWeek + i)));
       kids.push(s("rect", { x: X0 + H * bw, y: Y1, width: F * bw, height: Y0 - Y1, class: "ph-future-bg" }));
+      kids.push(s("text", { x: X0 + (H + F / 2) * bw, y: Y1 + 10, class: "ph-tick ph-draw-hint", "text-anchor": "middle" }, "✎ " + L(["draw here", "在這裡畫", "iguhit dito"])));
       f.hist.forEach(function (val, i2) {
         kids.push(s("rect", { x: X0 + i2 * bw + 1, y: ys(val), width: bw - 2, height: Y0 - ys(val), class: "ph-bar" }));
       });
@@ -1725,7 +1726,7 @@
       kids.push(overlay, s("line", { x1: X0, x2: X1, y1: Y0, y2: Y0, class: "ph-axis" }), drawRect, guessLine);
       for (i = 0; i < F; i++) {
         (function (k) {
-          var c = s("circle", { r: 7, class: "ph-handle", tabindex: "0", role: "slider", "aria-valuemin": "0", "aria-valuemax": String(f.yMax),
+          var c = s("circle", { r: 6.5, class: "ph-handle", tabindex: "0", role: "slider", "aria-valuemin": "0", "aria-valuemax": String(f.yMax),
             "aria-label": fmt(L(["Your forecast for week W{w}", "你對 W{w} 的預測", "Forecast mo para sa W{w}"]), { w: f.firstWeek + H + k }) });
           c.addEventListener("keydown", function (e) {
             if (revealed) return;

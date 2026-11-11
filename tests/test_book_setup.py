@@ -54,8 +54,11 @@ def test_configure_book_kernel(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     fake_pio = types.SimpleNamespace(renderers=types.SimpleNamespace(default="plotly_mimetype"))
     monkeypatch.setitem(sys.modules, "plotly.io", fake_pio)
     monkeypatch.chdir(nested)
+    monkeypatch.delenv(book_setup.TSFM_MODE_ENV, raising=False)
     with plt.style.context("default"):
         root = book_setup.configure_book_kernel()
+        # the build replays committed TimesFM forecasts instead of running the model
+        assert os.environ[book_setup.TSFM_MODE_ENV] == "cache"
         assert root == tmp_path.resolve()
         assert Path(os.getcwd()).resolve() == tmp_path.resolve()
         assert plt.rcParams["figure.dpi"] == book_setup.FIGURE_DPI

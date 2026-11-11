@@ -1276,7 +1276,8 @@ div.ph-ask-tala > p:last-child::after {
 }
 .myst-admonition.ph-tala-says .myst-admonition-header {
   background:
-    var(--ph-img-capiz) left top / 22px 22px,
+    linear-gradient(90deg, var(--ph-box) 0 50%, transparent 85%),
+    var(--ph-img-capiz) right top / 22px 22px,
     var(--ph-box) !important;
 }
 div.ph-tala-says {
@@ -1408,6 +1409,15 @@ div.ph-baon p:last-child a {
 .ph-cast .myst-grid > .myst-card:nth-child(5n + 3) { --ph-card-accent: var(--ph-indigo-fill); --ph-card-accent-text: var(--ph-indigo); }
 .ph-cast .myst-grid > .myst-card:nth-child(5n + 4) { --ph-card-accent: var(--ph-mango); --ph-card-accent-text: var(--ph-mango-text); }
 .ph-cast .myst-grid > .myst-card:nth-child(5n + 5) { --ph-card-accent: var(--ph-flag-red); --ph-card-accent-text: var(--ph-red); }
+.ph-cast .myst-card-body {
+  display: flex;
+  flex-direction: column;
+}
+.ph-cast .myst-card-body > img,
+.ph-cast .myst-card-body > p:has(img) {
+  order: -1;
+  margin: 0;
+}
 .ph-cast .myst-card img {
   display: block;
   width: min(140px, 70%);
@@ -1445,6 +1455,7 @@ html[lang^="zh"] .ph-cast .myst-card-title {
 
 /* --- ph-stat: big-number tiles (grid of {card}s whose title is the number) -- */
 .ph-stat .myst-card {
+  container-type: inline-size;
   text-align: center;
   background:
     var(--ph-img-capiz) center / 28px 28px,
@@ -1460,8 +1471,9 @@ html[lang^="zh"] .ph-cast .myst-card-title {
   padding-top: 0.3rem;
   font-family: var(--ph-font-display);
   font-weight: 400;
-  font-size: clamp(1.9rem, 1.4rem + 1.6vw, 2.6rem);
+  font-size: clamp(1.4rem, 15cqi, 2.6rem);
   line-height: 1.1;
+  white-space: nowrap;
   color: var(--ph-card-accent-text);
   transition: transform 0.3s var(--ph-ease);
 }
@@ -1523,9 +1535,16 @@ html[lang^="zh"] .ph-cast .myst-card-title {
 }
 
 /* Scroll reveal, pure CSS: only where scroll-driven animations exist; elsewhere
-   (and without JS) everything is simply visible. */
+   (and without JS) everything is simply visible. The default is a gentle lift
+   that never changes opacity, so full-page screenshots, printing and link
+   previews still show everything; `.ph-reveal` opts a block into a full
+   fade-in. */
+@keyframes ph-lift {
+  from { translate: 0 14px; scale: 0.975; }
+  to { translate: 0 0; scale: 1; }
+}
 @supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
+  @media screen and (prefers-reduced-motion: no-preference) {
     .ph-story,
     .ph-route,
     .ph-check,
@@ -1533,13 +1552,26 @@ html[lang^="zh"] .ph-cast .myst-card-title {
     .ph-privacy,
     .ph-baon,
     .ph-tala-says,
-    .ph-reveal,
     .ph-cast .myst-card,
     .ph-stat .myst-card {
+      animation: ph-lift linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+    .ph-reveal {
       animation: ph-rise linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 55%;
     }
+  }
+}
+
+@media print {
+  .ph-hero::before,
+  .ph-hero::after,
+  .ph-banderitas::before,
+  .ph-banderitas::after {
+    animation: none !important;
   }
 }
 

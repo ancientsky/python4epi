@@ -14,6 +14,7 @@ What it does, in order:
    (see :func:`epi_learning.viz.configure_chinese_font`).
 3. Apply the house matplotlib look: ``ggplot`` style at 150 dpi.
 4. Make Plotly emit self-contained HTML that the static site can display.
+5. Default ``EPI_TSFM_MODE`` to ``cache`` (see :mod:`epi_learning.tsfm`).
 """
 
 from __future__ import annotations
@@ -28,6 +29,10 @@ PLOTLY_RENDERER = "notebook"
 
 #: Matplotlib figure resolution for the built site.
 FIGURE_DPI = 150
+
+#: Environment variable read by :mod:`epi_learning.tsfm`; the build sets it to
+#: ``cache`` (unless already set) so notebooks replay committed forecasts.
+TSFM_MODE_ENV = "EPI_TSFM_MODE"
 
 
 def find_repo_root(start: Path, max_levels: int = 6) -> Path | None:
@@ -101,6 +106,10 @@ def configure_book_kernel(start: Path | None = None) -> Path | None:
     root = find_repo_root(Path.cwd() if start is None else start)
     if root is not None:
         os.chdir(root)
+    # The build replays committed TimesFM forecasts instead of running the
+    # 1.3 GB model, even where the optional `timesfm` group is installed
+    # (see epi_learning.tsfm).
+    os.environ.setdefault(TSFM_MODE_ENV, "cache")
     configure_matplotlib()
     configure_plotly()
     return root
