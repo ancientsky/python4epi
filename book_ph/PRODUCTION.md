@@ -241,44 +241,22 @@ from a per-language dictionary inside the script (`en`, `zh`, `fil`). Planned se
 - [x] P2 English chapters 06–08 + notebooks (browser QA passed)
 - [x] P2 English chapters 09–10 + dashboard (browser QA passed)
 - [x] P3 中文 edition (harmonised; strict build, browser QA passed)
-- [~] P3 Filipino edition — both halves translated; copy-chief pass (harmonise terms, fix shared fil strings, build, browser QA) was IN PROGRESS when work paused
-- [ ] P4 full build, browser QA (light/dark, desktop/phone), fixes
+- [x] P3 Filipino edition (harmonised; strict build, browser QA passed; needs native-speaker review)
+- [x] P4 full build of all seven editions (strict, 0 warnings, assembled-site link check), browser QA per language
 
-## 10. Director's handoff notes (paused 2026-11-11 ~16:55 Asia/Taipei; resume 19:00)
+## 10. Status and open items (2026-11-11)
 
-Done and committed: staleness audit + fixes for the main book (34 findings; reports in
-`book_ph/handoff/audit_*.md`, `fix_*_report.md`), chapter 11 TimesFM 3.0 rewrite + notebook
-(`handoff/timesfm_report.md`), PH infrastructure, datasets, theme, games, English edition (QA passed,
-`handoff/qa_en_report.md`), dashboard, first-draft zh and fil translations.
+All units above are accepted. Open items for a human:
 
-Paused mid-flight (workers were stopped; their partial edits are in the tree, unreviewed):
-1. **zh copy chief** — harmonise the two translators' terms, check completeness against English, build
-   `--series ph --lang zh` strict, browser QA. Decided glossary: box titles 問問 Tala / Tala 說 /
-   檢查一下 / Tala 搞錯了 / 隱私停看聽 / Baon（帶走重點）; `barangay` kept in English with first-use gloss
-   「barangay（描籠涯，菲律賓最基層的行政區，類似台灣的村里）」; 村里衛生員（BHW）; 市／省流行病學與監測單位
-   （CESU／PESU）; 疾病監測專員（DSO）; 小格遮蔽; 單一時點共同感染源／持續性共同感染源／連鎖傳播;
-   警戒閾值／流行閾值; plus the Taiwan terminology table in CLAUDE.md.
-2. **fil copy chief** — same for Filipino, plus fixes to shared fil strings reported by the translators:
-   dashboard ("lisensya"→"lisensiya", forest-plot title, band label "Lugar", "Protektado…" overstates an
-   OR); games ("Good try." untranslated, "Laro ulit"→"Maglaro ulit", "Tinaob!"→"Itinaob!", plant-saucer
-   item must say throw away the *water*, awkward threshold-watch sentence); SVGs (`timeline_717_fil.svg`
-   wording, `mosquito_4s_fil.svg` "proteksiyon"); check the ch09 fil notebook's dashboard link
-   (`/ph/fil/dashboard/`) works under the `/python4epi/` base path.
-   On resume: re-dispatch both passes (they must first look at what is already changed in the tree).
+- **Native-speaker review of the Filipino edition** (pages, notebooks, game and dashboard strings,
+  `_fil` SVGs) and a legal read of the RA 10173 / RA 11332 statements in chapter 02.
+- The dashboard shows city-wide totals unsuppressed (including one dengue death); everything smaller
+  is suppressed. Tighten `suppress_small_cells` usage in `scripts/build_ph_dashboard.py` if policy requires.
+- Plotly figures on notebook pages and real Noto CJK rendering could not be checked in the build sandbox
+  (CDN and fonts differ); check them on the deployed site.
 
-Still to do after those two:
-3. Full seven-edition build `scripts/build_book.py --all --site-dir <tmp>` (strict, link check) + `uv run pytest`.
-4. Final director review of screenshots (zh, fil, assembled site); tick the Progress list; final commit.
-5. Delete the recurring check-in scheduled task ("python4epi 總監復工檢查") when everything is done.
-6. Final report to the user, including items needing their decision: the dashboard shows city-wide
-   totals unsuppressed (incl. 1 dengue death); zh wording of barangay/box titles; `videos/` scripts still
-   use `slide_layouts[5]`; 8 pre-existing ruff findings; external links that could not be verified from
-   the sandbox; legal statements (RA 10173 / RA 11332) and all Filipino text need a native/legal review;
-   six Hugging Face hosts were added to the `first_flight` environment allow-list.
-
-Sandbox notes for whoever builds: run builds with `JUPYTER_CONFIG_DIR=book_ph/handoff/jcfg` (Jupyter
-refuses to run as root otherwise); the theme zip download is blocked here, so each project needs
-`_build/templates/site/<sha256>/` seeded (copy from another project's `_build/templates`, or git-fetch the
-pinned sha); notebooks are executed from the repo root (nbclient with path '.'), not with plain nbconvert.
-Worker briefs: `book_ph/handoff/writer_brief.md`, `translator_brief.md`. Workers never commit; the
-director commits. The `book_ph/handoff/` folder is temporary and should be removed before the final commit.
+Sandbox notes for whoever builds as root behind a restrictive proxy: Jupyter refuses to run as root
+(set `JUPYTER_CONFIG_DIR` to a folder whose `jupyter_server_config.py` sets
+`c.ServerApp.allow_root = True`); if the theme zip cannot be downloaded, seed
+`<project>/_build/templates/site/<sha256 of the template URL>/` from a git fetch of the pinned sha;
+execute notebooks from the repo root.

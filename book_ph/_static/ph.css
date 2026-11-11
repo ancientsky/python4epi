@@ -1748,3 +1748,10 @@ html[lang^="zh"] .ph-cast .myst-card-title {
 html[lang="zh-Hant"] main.article-grid {
   overflow-x: clip;
 }
+
+/* fil: long Filipino headings (nakapagpapakilala, doxycycline…) can end at the
+   right margin too, so the same hover-only "¶" permalink pushed notebook pages
+   5-12 px wider than a 390 px phone. Same fix as zh. */
+html[lang="fil"] main.article-grid {
+  overflow-x: clip;
+}
