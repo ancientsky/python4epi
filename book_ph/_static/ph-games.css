@@ -288,7 +288,7 @@ html.dark .ph-prompt-tag { color: #7fd6d6; }
 }
 .ph-col:nth-child(even) { background: rgba(0, 56, 168, 0.035); }
 html.dark .ph-col:nth-child(even) { background: rgba(143, 176, 255, 0.05); }
-.ph-col:hover:not(:disabled) { background: rgba(252, 209, 22, 0.25); }
+@media (hover: hover) { .ph-col:hover:not(:disabled) { background: rgba(252, 209, 22, 0.25); } }
 .ph-col:disabled { cursor: default; }
 .ph-col-marker { background: repeating-linear-gradient(135deg, rgba(31, 138, 138, 0.14) 0 6px, transparent 6px 12px) !important; }
 .ph-pile { display: flex; flex-direction: column-reverse; gap: 1px; padding: 0 1px; }
@@ -321,7 +321,7 @@ html.dark .ph-col:nth-child(even) { background: rgba(143, 176, 255, 0.05); }
 }
 .ph-cell b { font-size: 1.35rem; color: var(--g-blue); font-variant-numeric: tabular-nums; }
 .ph-cell-id { position: absolute; top: 3px; left: 7px; font-size: 0.72rem; font-weight: 800; color: var(--g-muted); font-style: italic; }
-.ph-cell:hover:not(:disabled) { background: var(--g-sun); }
+@media (hover: hover) { .ph-cell:hover:not(:disabled) { background: var(--g-sun); } .ph-cell:hover:not(:disabled) b { color: var(--g-on-sun); } }
 .ph-cell:disabled { cursor: default; }
 .ph-total { font-weight: 700; color: var(--g-muted); min-width: 2.5rem; }
 .ph-stat-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin: 0.5rem 0; }
@@ -440,7 +440,7 @@ html.dark .ph-dash-kind { color: #7fd6d6; }
   transition: transform 0.12s ease;
 }
 html.dark .ph-spot { background: linear-gradient(#2c3a2e, #223026); color: #eef0f6 !important; }
-.ph-spot:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--g-blue); }
+@media (hover: hover) { .ph-spot:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--g-blue); } }
 .ph-spot:disabled { cursor: default; }
 .ph-icon { width: 56px; height: 56px; }
 .ph-spot-name { font-size: 0.72rem; line-height: 1.2; text-align: center; }
@@ -498,3 +498,31 @@ html.dark .ph-draw-hint { fill: var(--g-sun); }
 .ph-line.is-right .ph-ln::before { content: "✓"; font-size: 0.95rem; color: #7bd389; font-weight: 800; }
 .ph-line.is-wrong .ph-ln::before { content: "✕"; font-size: 0.95rem; color: #ff7a8a; font-weight: 800; }
 @media (max-width: 480px) { .ph-line code { font-size: 0.8rem; } }
+
+/* -- shield the game tables from page-wide table styling (ph.css .article table) --
+   Triple class beats `.article table tr:first-child > th` regardless of load order. */
+.ph-w.ph-w.ph-w table {
+  border: 0; border-radius: 0; box-shadow: none; background: transparent; overflow: visible;
+  font-size: inherit; margin: 0.3rem 0;
+}
+.ph-w.ph-w.ph-w table tr > th,
+.ph-w.ph-w.ph-w table tr > td,
+.ph-w.ph-w.ph-w table tbody tr:nth-child(even) > td,
+.ph-w.ph-w.ph-w table tbody tr:hover > td {
+  background: transparent; color: inherit; border: 0; border-bottom: 1px solid var(--g-line);
+  padding: 0.3rem 0.4rem; font-weight: inherit;
+}
+.ph-w.ph-w.ph-w table th { font-weight: 700; }
+.ph-w.ph-w.ph-w table.ph-2x2 { border-collapse: separate; border-spacing: 4px; margin: 0 auto; }
+.ph-w.ph-w.ph-w table.ph-2x2 tr > th { border: 0; color: var(--g-muted); font-size: 0.8rem; text-align: center; padding: 0.2rem; }
+.ph-w.ph-w.ph-w table.ph-2x2 tbody tr > th { text-align: right; }
+.ph-w.ph-w.ph-w table.ph-2x2 tr > td { border: 0; padding: 0; text-align: center; }
+.ph-w.ph-w.ph-w table.ph-stat-table, .ph-w.ph-w.ph-w table.ph-717-table { width: 100%; border-collapse: collapse; }
+.ph-w.ph-w.ph-w table.ph-stat-table tr.is-key > th, .ph-w.ph-w.ph-w table.ph-stat-table tr.is-key > td.ph-val { color: var(--g-blue); }
+.ph-w.ph-w.ph-w table.ph-stat-table tr.is-muted > td.ph-val { color: var(--g-bad); }
+.ph-w.ph-w.ph-w table.ph-stat-table .ph-formula { color: var(--g-muted); }
+.ph-w.ph-w.ph-w table.ph-717-table tr.is-ok > .ph-mark { color: var(--g-good); font-weight: 800; }
+.ph-w.ph-w.ph-w table.ph-717-table tr.is-late > .ph-mark { color: var(--g-bad); font-weight: 800; }
+.ph-w.ph-w.ph-w table.ph-mini-table { border-collapse: collapse; }
+.ph-w.ph-w.ph-w table.ph-mini-table tr > th, .ph-w.ph-w.ph-w table.ph-mini-table tr > td { border: 1px solid var(--g-line); padding: 0.2rem 0.6rem; }
+.ph-w.ph-w.ph-w table.ph-mini-table thead th { background: var(--g-info-bg); }
