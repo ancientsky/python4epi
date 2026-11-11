@@ -2036,7 +2036,7 @@ _PRINT_RULES = r"""
 {P}.skip,{P}.tools,{P}.bunting,{P}details.numbers,{P}.ph .seg,{P}.ph .ctrls,{P}.map-info,{P}.tip,{P}.noscript{display:none!important}
 {P}.flagbar{height:3px}
 {P}.top{padding:0 0 3px;max-width:none}
-{P}.sign{padding:5px 12px 8px;border-width:2px;border-radius:10px;box-shadow:none;gap:10px}
+{P}.sign{padding:3px 12px 6px;border-width:2px;border-radius:10px;box-shadow:none;gap:10px}
 {P}.sign::after{height:3px}
 {P}.sun{width:30px;height:30px;animation:none}
 {P}.top h1{font-size:19px;margin:2px 0 0;text-shadow:0 2px 0 #001a55}
@@ -2050,8 +2050,8 @@ _PRINT_RULES = r"""
 {P}.kpis{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin-bottom:5px}
 {P}.kpi{padding:3px 8px 3px;box-shadow:none;border-width:1px;border-radius:8px}
 {P}.kpi::before{height:3px}
-{P}.kpi-label{font-size:7.5px}{P}.kpi-val{font-size:17px}{P}.kpi-sub{font-size:7.5px;margin:0}
-{P}.grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
+{P}.kpi-label{font-size:7px;margin:0}{P}.kpi-val{font-size:15px;margin:0}{P}.kpi-sub{font-size:7px;margin:0}
+{P}.grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
 {P}.panel{padding:4px 7px 3px;box-shadow:none;border-width:1px;border-radius:8px;break-inside:avoid;animation:none}
 {P}.grid>.panel,{P}.grid>#p-forest{grid-column:span 2}{P}#p-actions{grid-column:1/-1;order:9}
 {P}#p-curve{order:1}{P}#p-thr{order:2}{P}#p-map{order:3}{P}#p-pyr{order:4}{P}#p-forest{order:5}{P}#p-717{order:6}
@@ -2068,7 +2068,7 @@ _PRINT_RULES = r"""
 {P}#c-map svg{width:auto;max-width:100%;height:100px;margin:0 auto}
 {P}.act{padding:3px 6px 3px 24px;border-radius:6px}
 {P}.act::before{width:14px;height:14px;font-size:8px;left:5px;top:4px}
-{P}.act h3{font-size:8px}{P}.act p{font-size:7px;line-height:1.3;margin:0}
+{P}.act h3{font-size:7.5px}{P}.act p{font-size:7px;line-height:1.3;margin:0}
 {P}.chip{display:none}
 {P}.gauges{gap:3px;margin-top:2px}
 {P}.gauge{max-width:52px}
@@ -2503,7 +2503,7 @@ _JS = r"""
     var x0 = labW + 6, x1 = W - valW - 10, lmin = Math.log(0.1), lmax = Math.log(10);
     function X(v) { return x0 + (x1 - x0) * (Math.log(v) - lmin) / (lmax - lmin); }
     var ax = S("g", { "class": "ax" }, svg);
-    [0.1, 0.2, 0.5, 1, 2, 5, 10].forEach(function (v) {
+    (PR ? [0.1, 0.5, 1, 5, 10] : [0.1, 0.2, 0.5, 1, 2, 5, 10]).forEach(function (v) {
       S("line", { x1: X(v), x2: X(v), y1: m.t, y2: H - m.b, "class": "gridl" }, ax);
       T_(ax, X(v), H - m.b + 14, String(v), "", "middle", 10.5);
     });
