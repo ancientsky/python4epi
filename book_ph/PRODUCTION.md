@@ -234,7 +234,8 @@ from a per-language dictionary inside the script (`en`, `zh`, `fil`). Planned se
 
 - [ ] P1 infrastructure: build script, three MyST skeletons, tests, workflows
 - [x] P1 datasets + README + tests
-- [ ] P1 design system: CSS, illustrations, interactives
+- [x] P1 design system: CSS and illustrations (see STYLEGUIDE.md)
+- [ ] P1 interactives (ph-games.js, GAMES.md)
 - [ ] P2 English chapters 00–02 + notebooks
 - [ ] P2 English chapters 03–05 + notebooks
 - [ ] P2 English chapters 06–08 + notebooks

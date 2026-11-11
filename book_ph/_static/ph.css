@@ -382,9 +382,18 @@ html[lang^="zh"] .myst-fm-block-title {
   gap: 0.4rem;
 }
 
-/* Three-way language switch: consecutive a.epi-lang-switch links render as one
-   segmented pill. Mark the current one with aria-current, .epi-lang-current or
-   .is-current (the site script does this). */
+/* Three-way language switch. Two markups are supported:
+     A) _site/navbar_end.md as a <div class="ph-switch"> holding
+        a.ph-lang.ph-lang-en / .ph-lang-zh / .ph-lang-fil (+ a.ph-book-link);
+     B) plain a.epi-lang-switch links (the main book's convention).
+   The links render as one segmented pill. The current language is taken from
+   <html lang> (set per edition by the post-build step), so no script is
+   needed; aria-current / .is-current / .epi-lang-current also work. */
+.myst-navbar-end .ph-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
 .myst-navbar-end p:has(> a.epi-lang-switch) {
   gap: 0;
   border: 2px solid var(--ph-border-strong);
@@ -392,42 +401,58 @@ html[lang^="zh"] .myst-fm-block-title {
   background: var(--ph-surface);
   overflow: hidden;
 }
-a.epi-lang-switch {
+:is(a.epi-lang-switch, a.ph-lang) {
   display: inline-flex;
   align-items: center;
   padding: 0.22rem 0.7rem;
   color: var(--ph-text-muted) !important;
   font-size: 0.85rem;
   font-weight: 700;
+  line-height: 1.35;
   text-decoration: none !important;
   white-space: nowrap;
   transition: background 0.15s ease, color 0.15s ease;
 }
+a.ph-lang {
+  background: var(--ph-surface);
+  border: 2px solid var(--ph-border-strong);
+  border-radius: 0;
+}
+a.ph-lang + a.ph-lang {
+  margin-left: calc(-0.4rem - 2px); /* close the flex gap: one pill */
+}
+a.ph-lang-en {
+  border-radius: 999px 0 0 999px;
+}
+a.ph-lang-fil {
+  border-radius: 0 999px 999px 0;
+}
 a.epi-lang-switch + a.epi-lang-switch {
   border-left: 1px solid var(--ph-border);
 }
-a.epi-lang-switch:hover {
+:is(a.epi-lang-switch, a.ph-lang):hover {
   background: var(--ph-soft-sun);
   color: var(--ph-text) !important;
 }
-a.epi-lang-switch[aria-current],
-a.epi-lang-switch.epi-lang-current,
-a.epi-lang-switch.is-current {
+:is(a.epi-lang-switch, a.ph-lang):is([aria-current], .epi-lang-current, .is-current),
+html[lang="en"] a.ph-lang-en,
+html[lang^="zh"] a.ph-lang-zh,
+html[lang="fil"] a.ph-lang-fil {
   background: var(--ph-flag-blue);
+  border-color: var(--ph-flag-blue);
   color: var(--ph-on-fill) !important;
-}
-a.epi-lang-switch svg {
-  display: none !important;
+  position: relative;
+  z-index: 1;
 }
 /* The theme wraps link text in a span with white-space: normal, which breaks
    "中文" onto two lines at phone width (carried over from site.css). */
-a.epi-lang-switch,
-a.epi-lang-switch * {
+:is(a.epi-lang-switch, a.ph-lang),
+:is(a.epi-lang-switch, a.ph-lang) * {
   white-space: nowrap !important;
 }
 
 /* Other navbar links, e.g. back to the full book: a quiet outlined pill. */
-.myst-navbar-end a:not(.epi-lang-switch):not(.epi-colab-link) {
+.myst-navbar-end a:not(.epi-lang-switch):not(.ph-lang):not(.epi-colab-link) {
   display: inline-flex;
   align-items: center;
   padding: 0.22rem 0.7rem;
@@ -436,13 +461,15 @@ a.epi-lang-switch * {
   color: var(--ph-text-muted);
   font-size: 0.82rem;
   font-weight: 700;
+  line-height: 1.35;
   text-decoration: none;
   white-space: nowrap;
 }
-.myst-navbar-end a:not(.epi-lang-switch):not(.epi-colab-link):hover {
+.myst-navbar-end a:not(.epi-lang-switch):not(.ph-lang):not(.epi-colab-link):hover {
   border-color: var(--ph-flag-red);
   color: var(--ph-red);
 }
+/* External-link icons the theme adds to absolute URLs. */
 .myst-navbar-end a svg {
   display: none !important;
 }
@@ -536,6 +563,13 @@ pre {
 }
 .myst-code-body {
   padding-top: 0.95rem !important;
+}
+/* The theme's dark highlight.js theme paints its own background on the body;
+   keep the night-blue block and its flag strip visible in both themes. */
+.myst-code .hljs,
+html.dark .myst-code .hljs,
+.myst-code-body pre {
+  background: transparent !important;
 }
 .myst-code-body,
 .myst-code-body pre,
@@ -1669,11 +1703,11 @@ html[lang^="zh"] .ph-cast .myst-card-title {
   .myst-navbar-end {
     margin-left: 0.35rem;
   }
-  a.epi-lang-switch {
+  :is(a.epi-lang-switch, a.ph-lang) {
     padding: 0.16rem 0.45rem;
     font-size: 0.76rem;
   }
-  .myst-navbar-end a:not(.epi-lang-switch):not(.epi-colab-link) {
+  .myst-navbar-end a:not(.epi-lang-switch):not(.ph-lang):not(.epi-colab-link) {
     display: none;
   }
   .myst-top-nav .myst-home-link {
@@ -1694,14 +1728,16 @@ html[lang^="zh"] .ph-cast .myst-card-title {
 
 /* Very narrow phones: "Filipino" becomes "FIL" in the switch. */
 @media (max-width: 400px) {
-  a.epi-lang-switch[href*="/fil"] {
+  a.epi-lang-switch[href*="/fil"],
+  a.ph-lang-fil {
     font-size: 0;
   }
-  a.epi-lang-switch[href*="/fil"]::after {
+  a.epi-lang-switch[href*="/fil"]::after,
+  a.ph-lang-fil::after {
     content: "FIL";
     font-size: 0.76rem;
   }
-  a.epi-lang-switch {
+  :is(a.epi-lang-switch, a.ph-lang) {
     padding: 0.16rem 0.38rem;
   }
 }
