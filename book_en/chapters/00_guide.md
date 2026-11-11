@@ -42,14 +42,10 @@ Watching the video before reading the text works even better!
 ## Why not just use Excel / Google Sheets?
 
 <!-- video: ch00_01_why_python -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Why Python: The Epidemiologist's Superpower</div>
-  <div class="youtube-lite" data-id="rVLTIbXTQOI">
-    <img src="https://img.youtube.com/vi/rVLTIbXTQOI/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=rVLTIbXTQOI">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 You might think: "I've used Excel for years—why should I learn a new tool?"
@@ -115,14 +111,10 @@ If you'll be working with data engineers or software developers in the future (f
 ## Why use `uv` instead of the traditional `pip`?
 
 <!-- video: ch00_02_uv_setup -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: uv & Environment Setup: One Line to Master Python Packages</div>
-  <div class="youtube-lite" data-id="NM3aGh-TpY0">
-    <img src="https://img.youtube.com/vi/NM3aGh-TpY0/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=NM3aGh-TpY0">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 If you Google "install Python packages," almost every tutorial will teach you to use `pip install`. So why do we use the newer tool `uv`?
@@ -149,7 +141,7 @@ If you Google "install Python packages," almost every tutorial will teach you to
 
 | Task | The traditional way (`pip`) | This book's way (`uv`) |
 |------|-------------------|-------------------|
-| Install Python | Download from the official site and install manually | `uv python install 3.13` |
+| Install Python | Download from the official site and install manually | `uv python install 3.14` |
 | Create an environment | `python -m venv .venv && source .venv/bin/activate` | `uv sync` (creates and activates automatically) |
 | Install packages | `pip install pandas matplotlib` | `uv add pandas matplotlib` or `uv sync` |
 | Open a notebook | `jupyter lab` (make sure it's installed first) | `uv run jupyter lab` |
@@ -191,7 +183,7 @@ Next come the actual installation steps. The good news is: **you only need to in
 | The traditional way | The `uv` way |
 |----------|----------------|
 | ① Download the Python installer from the website | ① Install `uv` (one command) |
-| ② Install Python | ② `uv python install 3.13` (`uv` downloads Python automatically) |
+| ② Install Python | ② `uv python install 3.14` (`uv` downloads Python automatically) |
 | ③ Configure the PATH environment variable | ③ Not needed—`uv` manages it for you |
 | ④ Install pip / create a virtual environment | ④ Not needed—`uv sync` handles it all |
 
@@ -238,19 +230,19 @@ uv --version
 Once `uv` is installed, a single command installs Python:
 
 ```bash
-uv python install 3.13
+uv python install 3.14
 ```
 
-`uv` automatically downloads Python 3.13 and installs it into its own managed directory, so it won't conflict with any Python already on your computer.
+`uv` automatically downloads Python 3.14 and installs it into its own managed directory, so it won't conflict with any Python already on your computer.
 
 Verify:
 
 ```bash
 uv run python --version
-# You'll see: Python 3.13.x
+# You'll see: Python 3.14.x
 ```
 
-> **Why recommend 3.13?** Python 3.13 is the current stable release (published in October 2024). It has better performance, clearer error messages, and all the major data science packages already support it. If your computer already has Python 3.12 or 3.11, you can still use this book normally, but we recommend the latest version for the best experience.
+> **Why recommend 3.14?** Python 3.14 was released in October 2025 and has had several bug-fix releases since, so it is mature and stable. It has better performance, clearer error messages, and all the major data science packages this book uses already support it. The newer 3.15 has only just come out (October 2026) and some packages may not have caught up yet, so this book pins 3.14. If your computer already has Python 3.12 or 3.13, you can still use this book normally (the project accepts 3.12 and later), but we recommend 3.14 so your setup matches the book.
 
 ---
 
@@ -328,7 +320,7 @@ cd dengue-analysis
 uv init
 
 # Pin the Python version
-uv python pin 3.13
+uv python pin 3.14
 
 # Install the packages you need
 uv add pandas matplotlib jupyterlab openpyxl
@@ -377,9 +369,9 @@ We recommend Method A (installing from the terminal). Method B is convenient, bu
 
 | I want to… | Command | Notes |
 |---------|------|------|
-| Install Python | `uv python install 3.13` | Download the specified Python version |
+| Install Python | `uv python install 3.14` | Download the specified Python version |
 | Initialize a new project | `uv init` | Create `pyproject.toml` |
-| Pin the project's Python version | `uv python pin 3.13` | Create a `.python-version` file |
+| Pin the project's Python version | `uv python pin 3.14` | Create a `.python-version` file |
 | Install all packages | `uv sync` | Install according to `pyproject.toml` |
 | Add one package | `uv add pandas` | Install and record it in `pyproject.toml` |
 | Add multiple packages | `uv add pandas matplotlib seaborn` | Install several at once |
@@ -394,14 +386,10 @@ We recommend Method A (installing from the terminal). Method B is convenient, bu
 ## Hands-on tutorial: an epidemiology Hello World from scratch
 
 <!-- video: ch00_04_hello_epi -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Your First Program, Hello Epi: Run Your First Epi Analysis in Ten Minutes</div>
-  <div class="youtube-lite" data-id="0SBfu6wWl0k">
-    <img src="https://img.youtube.com/vi/0SBfu6wWl0k/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=0SBfu6wWl0k">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 Just reading commands can still feel abstract. Let's start from a computer with nothing installed and, step by step, build an epidemiologist's first "Hello World"—not printing a line of text, but **reading a line list from a nursing home cluster, calculating the attack rate and case fatality rate, and drawing an epidemic curve**.
@@ -424,7 +412,7 @@ After it finishes, **close the terminal and reopen it**.
 mkdir epi-hello-world
 cd epi-hello-world
 uv init
-uv python pin 3.13
+uv python pin 3.14
 ```
 
 ### Step 3: install the epidemiology analysis packages
@@ -704,14 +692,10 @@ Every chapter in this book uses pandas. If you hit a performance bottleneck in f
 ## Why recommend Jupyter Lab? Can't I just write `.py`?
 
 <!-- video: ch00_03_jupyter -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Getting Started with Jupyter Lab: Write and See Results Live</div>
-  <div class="youtube-lite" data-id="GZjM44USJrU">
-    <img src="https://img.youtube.com/vi/GZjM44USJrU/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=GZjM44USJrU">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 You might think: "Isn't a program just a text file? Why use Jupyter Lab, this thing that looks like a web page?"
@@ -778,6 +762,7 @@ Besides Jupyter Lab, you can also write Python in other code editors:
 **This book recommends Jupyter Lab for beginners.** Once you're more comfortable, try VS Code—it can open `.ipynb` files directly (the experience is almost identical to Jupyter Lab) and also edit `.py` files, handling both formats in one environment.
 ```
 
+(guide-ipynb-to-py)=
 ### Converting `.ipynb` to `.py`: three methods
 
 Once your analysis workflow is settled and you want to turn the notebook into a `.py` script (for example, to schedule automatic runs), there are three ways:
@@ -953,14 +938,10 @@ Advanced: for a better development experience
 ## What is Git? Why do epidemiologists need it?
 
 <!-- video: ch00_05_git_basics -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Git Version Control: A Time Machine for Your Code</div>
-  <div class="youtube-lite" data-id="riK6Tbq4rfI">
-    <img src="https://img.youtube.com/vi/riK6Tbq4rfI/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=riK6Tbq4rfI">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 ### First, a scenario
@@ -1439,7 +1420,7 @@ This is one of epidemiology's most central charts: the **epidemic curve**. It te
 |------|------|
 | `git clone` shows a `fatal` error | Your computer may not have Git installed—see the installation notes in Step 2, or use the ZIP download instead |
 | `command not found: uv` | Close the terminal and reopen it, or confirm the install path was added to `PATH` |
-| `python --version` isn't 3.13 | That's fine—`uv sync` will automatically download the correct version of Python |
+| `python --version` isn't 3.14 | That's fine—`uv sync` will automatically download the correct version of Python |
 | `uv sync` fails | Check your internet connection, then run it again. The first run needs to download quite a few packages |
 | Jupyter Lab opens blank | Try manually entering the `http://localhost:8888/...` URL shown in the terminal into your browser |
 | The notebook throws an error | Confirm you've run `uv sync`, then rerun from the first cell |
@@ -1449,14 +1430,10 @@ This is one of epidemiology's most central charts: the **epidemic curve**. It te
 ## This book's learning roadmap
 
 <!-- video: ch00_06_roadmap -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Course Roadmap: An 18-Chapter Learning Guide</div>
-  <div class="youtube-lite" data-id="sv6KEM7_ocY">
-    <img src="https://img.youtube.com/vi/sv6KEM7_ocY/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=sv6KEM7_ocY">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 You don't need to learn all the chapters in one go. This book uses the **Pine and Cypress nursing home Legionnaires' disease cluster** as the thread running through the whole book, with each chapter taking you one layer deeper into the analysis—just like a real investigation, gradually uncovering the truth.

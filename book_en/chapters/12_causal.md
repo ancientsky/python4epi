@@ -308,7 +308,7 @@ If you only have two time points—"before" and "after"—the parallel trends as
 ## Exercises
 
 - Exercise version: [`12_causal_exercise.ipynb`](exercises/12_causal_exercise.ipynb)
-- Solution version (instructor): [`12_causal_solution.ipynb`](solutions/12_causal_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/12_causal_solution.ipynb>)
+- Solution version (instructor): [`12_causal_solution.ipynb`](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/causal-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/12_causal_solution.ipynb>)
 
 ## Part 5: Common Beginner Pitfalls
 

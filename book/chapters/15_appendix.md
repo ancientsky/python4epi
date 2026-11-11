@@ -1,5 +1,6 @@
 # 15 附錄
 
+(appendix-a-glossary)=
 ## A. 流行病學術語字典（中英對照）
 
 ### 一般流行病學
@@ -161,11 +162,12 @@ git commit -m "message"         # 提交
 | Notebook kernel 重啟後變數消失 | Kernel 狀態重置 | 從頭重新執行所有 cell |
 | `SettingWithCopyWarning` | 在 slice 上賦值 | 使用 `.copy()` 或 `.loc` |
 | 日期欄位無法計算 | 未轉換為 datetime | `pd.to_datetime(df["col"])` |
-| 中文字型顯示為方框 | matplotlib 缺中文字型 | 見下方 [E. 中文圖表顯示排錯](#e-中文圖表顯示排錯matplotlib--plotly) |
-| Plotly 圖表在 Jupyter Book 中空白 | 渲染器設定不對 | 見下方 [E. 中文圖表顯示排錯](#e-中文圖表顯示排錯matplotlib--plotly) |
+| 中文字型顯示為方框 | matplotlib 缺中文字型 | 見下方 [E. 中文圖表顯示排錯](#appendix-e-cjk-charts) |
+| Plotly 圖表在 Jupyter Book 中空白 | 渲染器設定不對 | 見下方 [E. 中文圖表顯示排錯](#appendix-e-cjk-charts) |
 
 ---
 
+(appendix-e-cjk-charts)=
 ## E. 中文圖表顯示排錯（matplotlib & Plotly）
 
 在使用繁體中文標籤時，matplotlib 和 Plotly 各有不同的陷阱。這一節記錄本教材在 CI/CD 及本機環境實際踩過的坑，以及解法。
@@ -348,6 +350,7 @@ pio.renderers.default = "notebook"
 
 ---
 
+(appendix-f-incubation)=
 ## F. 傳染病期間概念對照
 
 疫情調查時常常需要決定「隔離多久」「檢疫幾天」「暴露窗口是何時」，這些決策都建立在正確區分以下四個期間概念之上。
@@ -380,6 +383,7 @@ pio.renderers.default = "notebook"
 
 ---
 
+(appendix-g-chain-of-infection)=
 ## G. 傳染鏈六要素與介入策略
 
 傳染病從病原體傳播到易感宿主，必須依序通過六個環節。只要阻斷任一環節，即可中斷傳播鏈。

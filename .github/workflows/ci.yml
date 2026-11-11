@@ -18,7 +18,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
-          version: "0.13.5"
+          version: "0.13.7"
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -27,7 +27,7 @@ jobs:
           check-latest: true
 
       - name: Set up Python
-        run: uv python install 3.13
+        run: uv python install 3.14
 
       - name: Install CJK fonts for matplotlib
         run: |
@@ -37,15 +37,6 @@ jobs:
 
       - name: Sync deps
         run: uv sync --group dev
-
-      - name: Create data symlinks for notebook execution
-        run: |
-          for dir in book book/chapters book/chapters/exercises book/chapters/solutions book/chapters/notebooks; do
-            if [ -d "$dir" ]; then
-              rel=$(python3 -c "import os.path; print(os.path.relpath('data', '$dir'))")
-              ln -sfn "$rel" "$dir/data"
-            fi
-          done
 
       - name: Run tests
         run: uv run pytest
@@ -75,7 +66,8 @@ jobs:
       - name: Check no Chinese survives into the English videos
         run: uv run python videos/check_video_i18n.py
 
-      - name: Build Jupyter Book (student edition — matches deploy)
-        run: |
-          cp book/_toc_student.yml book/_toc.yml
-          uv run jupyter-book build book/
+      # Same entry point as the Pages deploy: MyST build with notebooks executed
+      # (--strict, so a cell that raises fails the job) plus the post-build
+      # step. See scripts/build_book.py.
+      - name: Build Jupyter Book (zh student edition — matches deploy)
+        run: uv run python scripts/build_book.py --lang zh --edition student

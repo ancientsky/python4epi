@@ -582,7 +582,7 @@ This function will:
 ## Exercises
 
 - Exercise version: [`09_survival_exercise.ipynb`](exercises/09_survival_exercise.ipynb)
-- Solution version (instructor): [`09_survival_solution.ipynb`](solutions/09_survival_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/09_survival_solution.ipynb>)
+- Solution version (instructor): [`09_survival_solution.ipynb`](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/survival-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/09_survival_solution.ipynb>)
 
 ## Common Misuses
 

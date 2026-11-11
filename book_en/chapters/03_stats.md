@@ -736,6 +736,6 @@ From crude association (Ch03) → controlling for confounding (Ch05) → multiva
 
 ## Practice Notebooks
 
-- Lesson notes: {ref}`03_stats_basics.ipynb`
+- Lesson notes: [03_stats_basics.ipynb](notebooks/03_stats_basics.ipynb)
 - Exercise version: [`03_stats_exercise.ipynb`](exercises/03_stats_exercise.ipynb)
-- Solution version (instructor edition): [`03_stats_solution.ipynb`](solutions/03_stats_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/03_stats_solution.ipynb>)
+- Solution version (instructor edition): [`03_stats_solution.ipynb`](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/stats-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/03_stats_solution.ipynb>)

@@ -42,14 +42,10 @@
 ## 為什麼不用 Excel / Google Sheets 就好？
 
 <!-- video: ch00_01_why_python -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：為什麼用 Python</div>
-  <div class="youtube-lite" data-id="Nv4j3T27oGI">
-    <img src="https://img.youtube.com/vi/Nv4j3T27oGI/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=Nv4j3T27oGI">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 你可能會想：「我用 Excel 用了好幾年，為什麼還要學新工具？」
@@ -115,14 +111,10 @@ Python 在這些**自動化、排程、系統串接**的工作上比 R 強很多
 ## 為什麼用 `uv` 而不是傳統的 `pip`？
 
 <!-- video: ch00_02_uv_setup -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：uv 與環境設定</div>
-  <div class="youtube-lite" data-id="aOCyRkvjsUY">
-    <img src="https://img.youtube.com/vi/aOCyRkvjsUY/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=aOCyRkvjsUY">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 如果你 Google「Python 安裝套件」，幾乎所有教學都會教你用 `pip install`。那為什麼我們要用 `uv` 這個比較新的工具？
@@ -149,7 +141,7 @@ Python 在這些**自動化、排程、系統串接**的工作上比 R 強很多
 
 | 任務 | 傳統做法（`pip`） | 本教材做法（`uv`） |
 |------|-------------------|-------------------|
-| 安裝 Python | 去官網下載、手動安裝 | `uv python install 3.13` |
+| 安裝 Python | 去官網下載、手動安裝 | `uv python install 3.14` |
 | 建立環境 | `python -m venv .venv && source .venv/bin/activate` | `uv sync`（自動建立並啟用） |
 | 安裝套件 | `pip install pandas matplotlib` | `uv add pandas matplotlib` 或 `uv sync` |
 | 開 notebook | `jupyter lab`（要先確定裝過） | `uv run jupyter lab` |
@@ -191,7 +183,7 @@ Python 在這些**自動化、排程、系統串接**的工作上比 R 強很多
 | 傳統方式 | 用 `uv` 的方式 |
 |----------|----------------|
 | ① 去官網下載 Python 安裝程式 | ① 安裝 `uv`（一行指令） |
-| ② 安裝 Python | ② `uv python install 3.13`（`uv` 自動下載 Python） |
+| ② 安裝 Python | ② `uv python install 3.14`（`uv` 自動下載 Python） |
 | ③ 設定環境變數 PATH | ③ 不需要，`uv` 幫你管理 |
 | ④ 安裝 pip / 建立虛擬環境 | ④ 不需要，`uv sync` 全部搞定 |
 
@@ -238,19 +230,19 @@ uv --version
 安裝好 `uv` 之後，一行指令就能安裝 Python：
 
 ```bash
-uv python install 3.13
+uv python install 3.14
 ```
 
-`uv` 會自動下載 Python 3.13 並安裝到它自己管理的目錄中，不會跟你電腦上現有的 Python 衝突。
+`uv` 會自動下載 Python 3.14 並安裝到它自己管理的目錄中，不會跟你電腦上現有的 Python 衝突。
 
 驗證：
 
 ```bash
 uv run python --version
-# 你會看到：Python 3.13.x
+# 你會看到：Python 3.14.x
 ```
 
-> **為什麼建議 3.13？** Python 3.13 是目前最新的穩定版（2024 年 10 月發布），效能更好、錯誤訊息更清楚，而且所有主要的資料科學套件都已支援。如果你的電腦上已經有 Python 3.12 或 3.11，仍然可以正常使用本教材，但我們建議用最新版以獲得最佳體驗。
+> **為什麼建議 3.14？** Python 3.14 於 2025 年 10 月發布，已經過多次修正版更新，相當穩定；效能更好、錯誤訊息更清楚，而且本教材用到的主要資料科學套件都已支援。更新的 3.15 才剛推出（2026 年 10 月），部分套件可能還沒跟上，所以本教材固定使用 3.14。如果你的電腦上已經有 Python 3.12 或 3.13，仍然可以正常使用本教材（專案接受 3.12 以上），但我們建議用 3.14 以獲得與本書一致的環境。
 
 ---
 
@@ -328,7 +320,7 @@ cd dengue-analysis
 uv init
 
 # 指定 Python 版本
-uv python pin 3.13
+uv python pin 3.14
 
 # 安裝你需要的套件
 uv add pandas matplotlib jupyterlab openpyxl
@@ -377,9 +369,9 @@ uv add seaborn
 
 | 我想要… | 指令 | 說明 |
 |---------|------|------|
-| 安裝 Python | `uv python install 3.13` | 下載指定版本的 Python |
+| 安裝 Python | `uv python install 3.14` | 下載指定版本的 Python |
 | 初始化新專案 | `uv init` | 建立 `pyproject.toml` |
-| 指定專案的 Python 版本 | `uv python pin 3.13` | 建立 `.python-version` 檔案 |
+| 指定專案的 Python 版本 | `uv python pin 3.14` | 建立 `.python-version` 檔案 |
 | 安裝所有套件 | `uv sync` | 依照 `pyproject.toml` 安裝 |
 | 新增一個套件 | `uv add pandas` | 安裝並記錄到 `pyproject.toml` |
 | 新增多個套件 | `uv add pandas matplotlib seaborn` | 一次裝多個 |
@@ -394,14 +386,10 @@ uv add seaborn
 ## 手把手教學：從零開始的流行病學 Hello World
 
 <!-- video: ch00_04_hello_epi -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：第一支程式 Hello Epi</div>
-  <div class="youtube-lite" data-id="x4tNVZSAgNI">
-    <img src="https://img.youtube.com/vi/x4tNVZSAgNI/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=x4tNVZSAgNI">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 光看指令可能還是抽象。讓我們從一台什麼都沒裝的電腦開始，一步一步做出流行病學家的第一個「Hello World」——不是印出一行字，而是**讀取一份護理之家群聚事件的 line list、計算侵襲率與致死率、畫一張流行曲線**。
@@ -424,7 +412,7 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 mkdir epi-hello-world
 cd epi-hello-world
 uv init
-uv python pin 3.13
+uv python pin 3.14
 ```
 
 ### Step 3：安裝流病分析套件
@@ -704,14 +692,10 @@ Markdown cell 讓你的 notebook 不只是一堆程式碼，而是一份**圖文
 ## 為什麼建議用 Jupyter Lab？不能直接寫 `.py` 嗎？
 
 <!-- video: ch00_03_jupyter -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Jupyter Lab 入門</div>
-  <div class="youtube-lite" data-id="xqaJBdUBd6s">
-    <img src="https://img.youtube.com/vi/xqaJBdUBd6s/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=xqaJBdUBd6s">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 你可能會想：「程式不就是一個文字檔嗎？為什麼要用 Jupyter Lab 這個看起來像網頁的東西？」
@@ -778,6 +762,7 @@ Jupyter Lab 的 notebook（`.ipynb` 檔案）正好適合這種工作方式：
 **本教材建議初學者用 Jupyter Lab。** 當你比較熟悉之後，可以試試 VS Code——它可以直接打開 `.ipynb` 檔案（體驗跟 Jupyter Lab 幾乎一樣），同時也能編輯 `.py` 檔案，兩種格式在同一個環境中搞定。
 ```
 
+(guide-ipynb-to-py)=
 ### 把 `.ipynb` 轉成 `.py`：三種方法
 
 當你的分析流程確定了，想把 notebook 轉成 `.py` 腳本（例如要排程自動執行），有三種方式：
@@ -953,14 +938,10 @@ schtasks /create /tn "Weekly_Report" /tr "cmd /c cd /d C:\path\to\your\project &
 ## Git 是什麼？為什麼流行病學家需要它？
 
 <!-- video: ch00_05_git_basics -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Git 版本控制</div>
-  <div class="youtube-lite" data-id="kiH0W9U6bM0">
-    <img src="https://img.youtube.com/vi/kiH0W9U6bM0/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=kiH0W9U6bM0">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ### 先說一個場景
@@ -1437,7 +1418,7 @@ uv run jupyter lab
 |------|------|
 | `git clone` 顯示 `fatal` 錯誤 | 你的電腦可能還沒安裝 Git，請參考 Step 2 的安裝說明，或改用 ZIP 下載 |
 | `command not found: uv` | 關掉終端機再重新打開，或確認安裝路徑已加入 `PATH` |
-| `python --version` 不是 3.13 | 沒關係，`uv sync` 會自動下載正確版本的 Python |
+| `python --version` 不是 3.14 | 沒關係，`uv sync` 會自動下載正確版本的 Python |
 | `uv sync` 失敗 | 檢查網路連線，然後再執行一次。第一次需要下載較多套件 |
 | Jupyter Lab 打開是空白 | 試試在瀏覽器手動輸入終端機顯示的 `http://localhost:8888/...` 網址 |
 | notebook 跑出錯誤 | 確認已執行 `uv sync`，然後從第一個 cell 重新開始執行 |
@@ -1447,14 +1428,10 @@ uv run jupyter lab
 ## 這份教材的學習路線圖
 
 <!-- video: ch00_06_roadmap -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：課程地圖與學習策略</div>
-  <div class="youtube-lite" data-id="5XQwCgawhVs">
-    <img src="https://img.youtube.com/vi/5XQwCgawhVs/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=5XQwCgawhVs">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 你不需要一口氣學完所有章節。本教材以**松柏護理之家退伍軍人症群聚事件**為貫穿全書的主軸，每一章帶你更深入一層分析，就像真實疫調一樣逐步揭開真相。

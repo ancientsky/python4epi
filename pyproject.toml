@@ -20,7 +20,7 @@ dependencies = [
   "esda>=2.10.0",
   "libpysal>=4.12.0",
   "jupyterlab>=4.3.0",
-  "jupyter-book>=1.0.0,<2",
+  "jupyter-book>=2.1.7,<3",
   "nbclient>=0.10.0",
   "torch>=2.6.0",
   "lifelines>=0.29.0",
@@ -36,6 +36,8 @@ dev = [
   "pytest-cov>=6.0.0",
   "ruff>=0.9.0",
   "mypy>=1.15.0",
+  # tests/test_book_toc.py parses the myst.yml files
+  "pyyaml>=6.0",
 ]
 video = [
   # Pin to the 0.20.x line: the code targets the v0.20.1 Code() API
@@ -63,10 +65,10 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py313"
+target-version = "py314"
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 strict = false
 warn_unused_ignores = true
 warn_redundant_casts = true

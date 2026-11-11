@@ -72,14 +72,10 @@ A **variable** is a labeled box; `=` means "put the value on the right into the 
 ```
 
 <!-- video: ch01_01_variables -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Numeric Variables: Store Your Numbers First</div>
-  <div class="youtube-lite" data-id="Ehr6UIwd-Oo">
-    <img src="https://img.youtube.com/vi/Ehr6UIwd-Oo/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=Ehr6UIwd-Oo">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -96,14 +92,10 @@ deaths = 19                 # Number of deaths
 ### 2) Computing metrics — use division to get rates
 
 <!-- video: ch01_02_arithmetic -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Computing Metrics: Get Rates by Division</div>
-  <div class="youtube-lite" data-id="kTFGaPiO-fA">
-    <img src="https://img.youtube.com/vi/kTFGaPiO-fA/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=kTFGaPiO-fA">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -131,14 +123,10 @@ A **list** is a row of pigeonholes; you retrieve values by index (starting from 
 ```
 
 <!-- video: ch01_03_dictionaries -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Dictionaries: Keep Data on One Topic Together</div>
-  <div class="youtube-lite" data-id="g6Kcohv9jzc">
-    <img src="https://img.youtube.com/vi/g6Kcohv9jzc/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=g6Kcohv9jzc">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -160,14 +148,10 @@ print(f"{outbreak['facility']} CFR: {cfr:.2%}")
 ### 4) Lists — store a group of same-kind data
 
 <!-- video: ch01_04_lists -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Lists: Store a Group of Similar Data</div>
-  <div class="youtube-lite" data-id="BZWfzsk0tw0">
-    <img src="https://img.youtube.com/vi/BZWfzsk0tw0/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=BZWfzsk0tw0">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -192,14 +176,10 @@ A **conditional statement** lets data take different paths depending on conditio
 ```
 
 <!-- video: ch01_05_conditionals -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Conditionals: Turn Metrics into Action Signals</div>
-  <div class="youtube-lite" data-id="NA7KP2EqICg">
-    <img src="https://img.youtube.com/vi/NA7KP2EqICg/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=NA7KP2EqICg">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -223,14 +203,10 @@ A **function** is like an automatic calculator: inputs go in as **parameters** �
 ```
 
 <!-- video: ch01_06_functions -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Functions: Wrap Logic into a Reusable Tool</div>
-  <div class="youtube-lite" data-id="oleAlQpbJ6I">
-    <img src="https://img.youtube.com/vi/oleAlQpbJ6I/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=oleAlQpbJ6I">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -265,9 +241,9 @@ print(f"3rd floor wing B attack rate: {ar_3b:.2%}")
 
 ## Practice notebooks
 
-- Class notes: {ref}`01_fundamentals_python_basics.ipynb`
+- Class notes: [01_fundamentals_python_basics.ipynb](notebooks/01_fundamentals_python_basics.ipynb)
 - Exercise version: [`01_fundamentals_exercise.ipynb`](exercises/01_fundamentals_exercise.ipynb)
-- Solution version (instructor edition): [`01_fundamentals_solution.ipynb`](solutions/01_fundamentals_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/01_fundamentals_solution.ipynb>)
+- Solution version (instructor edition): [`01_fundamentals_solution.ipynb`](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/fundamentals-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/01_fundamentals_solution.ipynb>)
 
 ## Minimal runnable environment commands
 

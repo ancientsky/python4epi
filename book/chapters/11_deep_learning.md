@@ -693,7 +693,7 @@ final_forecast = seir_forecast + residual_model.predict(X_covariates_future)
 ## 練習題
 
 - 作業版：[`11_dl_exercise.ipynb`](exercises/11_dl_exercise.ipynb)
-- 解答版（講師）：[`11_dl_solution.ipynb`](solutions/11_dl_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/11_dl_solution.ipynb>)
+- 解答版（講師）：[`11_dl_solution.ipynb`](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/dl-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/11_dl_solution.ipynb>)
 
 ## 常見誤用
 

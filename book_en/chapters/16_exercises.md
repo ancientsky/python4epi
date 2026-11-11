@@ -13,7 +13,7 @@ This section collects the exercise notebooks for each chapter (without solutions
 ```{admonition} Where are the solutions?
 :class: tip
 
-The solution notebooks are in [Ch17 Solutions](17_solutions.md), available only in the **instructor edition**.
+The solution notebooks are in [Ch17 Solutions](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/), available only in the **instructor edition**.
 
 - **Student edition** (this site): `https://ancientsky.github.io/python4epi/`
 - **Instructor edition** (with solutions): `https://ancientsky.github.io/python4epi/instructor/`

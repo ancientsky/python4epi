@@ -190,14 +190,10 @@ FETP 疫情調查 10 步驟全景。橘色步驟（5、7）為 Python 能高度�
 ---
 
 <!-- video: ch04_01_sitrep_overview -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：SitRep 速成——兩小時交出疫情日報</div>
-  <div class="youtube-lite" data-id="p5wes20-Az8">
-    <img src="https://img.youtube.com/vi/p5wes20-Az8/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=p5wes20-Az8">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ## FETP Step 1：行前準備（出發前要做的事）
@@ -308,14 +304,10 @@ df["n_comorbidities"] = df[comorbidity_cols].sum(axis=1)
 > 📌 **為什麼本教材的 `legionella_outbreak.csv` 沒有 PII？** 因為它是**合成資料（synthetic data）**，一開始就沒有真實姓名、身分證等欄位——這是教學資料集的標準做法。但你在現場拿到的 raw line list 通常不是這樣，所以要學會下面這些技術。
 
 <!-- video: ch04_08_pii_protection -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：個資保護——拿到 Line List 的第一件事</div>
-  <div class="youtube-lite" data-id="LLF1T-EtnqU">
-    <img src="https://img.youtube.com/vi/LLF1T-EtnqU/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=LLF1T-EtnqU">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```{figure} images/pii_protection_techniques.svg
@@ -520,7 +512,7 @@ data/restricted/
 ```
 
 ```{admonition} 台灣法規與國際標準
-:class: tip, dropdown
+:class: tip dropdown
 
 **台灣（Taiwan）：**
 - **個人資料保護法（個資法）**：第 6 條（特種個資，含醫療、基因、性生活、健檢、犯罪前科）、第 20 條（特定目的外利用）
@@ -595,14 +587,10 @@ print(f"死亡：{deaths}（CFR {deaths/infected:.1%}）")
 ```
 
 <!-- video: ch04_02_person -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：描述流行病學（人）——感染者的臉譜</div>
-  <div class="youtube-lite" data-id="tmT3YVLy1EM">
-    <img src="https://img.youtube.com/vi/tmT3YVLy1EM/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=tmT3YVLy1EM">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ## Step 3: 人 — Person
@@ -636,14 +624,10 @@ for col in comorbidity_cols:
 ```
 
 <!-- video: ch04_03_time -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：流行曲線——用長條圖抓住疫情的脈搏</div>
-  <div class="youtube-lite" data-id="7eBDkfVqsQo">
-    <img src="https://img.youtube.com/vi/7eBDkfVqsQo/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=7eBDkfVqsQo">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ## Step 4: 時 — Time
@@ -709,14 +693,10 @@ print(f"高峰日：{daily.idxmax().date()}（{daily.max()} 例）")
 ```
 
 <!-- video: ch04_04_place -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：地點比較——哪個翼區最危險？</div>
-  <div class="youtube-lite" data-id="wWwHcMXMmG8">
-    <img src="https://img.youtube.com/vi/wWwHcMXMmG8/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=wWwHcMXMmG8">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ## Step 5: 地 — Place
@@ -754,14 +734,10 @@ print(wing_stats[["label", "residents", "infected", "AR%", "deaths", "CFR%"]]
 ```
 
 <!-- video: ch04_05_classification -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：個案分類——確診、可能和非個案的分層統計</div>
-  <div class="youtube-lite" data-id="RZLn3o-svs0">
-    <img src="https://img.youtube.com/vi/RZLn3o-svs0/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=RZLn3o-svs0">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ## FETP Step 4：病例定義——精確度與偵測率的取捨
@@ -850,14 +826,10 @@ print(classification.to_string())
 ```
 
 <!-- video: ch04_06_generate_sitrep -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：函式化——把 SitRep 包成一鍵更新</div>
-  <div class="youtube-lite" data-id="ztrZrHwrD2M">
-    <img src="https://img.youtube.com/vi/ztrZrHwrD2M/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=ztrZrHwrD2M">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ## Step 7: 輸出結構化 SitRep
@@ -904,14 +876,10 @@ print(sitrep)
 ```
 
 <!-- video: ch04_07_report_output -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：專業報告輸出——Dashboard、Word、PPT、PDF 一次搞定</div>
-  <div class="youtube-lite" data-id="eAs3K_Z7Hjk">
-    <img src="https://img.youtube.com/vi/eAs3K_Z7Hjk/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=eAs3K_Z7Hjk">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ## Step 8: 產出專業報告
@@ -1383,9 +1351,9 @@ print("✅ PDF 報告已儲存：output/sitrep_report.pdf")
 > **退伍軍人症的調查策略**：集中資源在 **traceback**（環境採樣 + 分析性研究），無需建立接觸者追蹤系統。
 
 ```{seealso}
-Mantel-Haenszel 分層分析與勝算比計算的 Python 實作 → {doc}`05_stratified`
+Mantel-Haenszel 分層分析與勝算比計算的 Python 實作 → [](05_stratified.md)
 
-邏輯斯迴歸多變量分析（校正多個干擾因子）→ {doc}`06_logistic_regression`
+邏輯斯迴歸多變量分析（校正多個干擾因子）→ [](06_logistic_regression.md)
 ```
 
 ---
@@ -1510,7 +1478,7 @@ if __name__ == "__main__":
 ```
 
 ```{tip}
-**從 notebook 轉成 `.py` 腳本的三種方法**，請見 {ref}`Ch00 開發者工具 <00_guide:把-.ipynb-轉成-.py：三種方法>`。本教材的 `notebooks/run_sitrep.py` 就是一個整理好的範例。
+**從 notebook 轉成 `.py` 腳本的三種方法**，請見 [Ch00 開發者工具](#guide-ipynb-to-py)。本教材的 `notebooks/run_sitrep.py` 就是一個整理好的範例。
 ```
 
 ### 9b: macOS：launchd（推薦）
@@ -1668,6 +1636,6 @@ schtasks /delete /tn "SitRep_Daily" /f
 
 ## 練習本
 
-- 課堂筆記：{ref}`04_outbreak_workflow.ipynb`
+- 課堂筆記：[04_outbreak_workflow.ipynb](notebooks/04_outbreak_workflow.ipynb)
 - 作業版：[`04_outbreak_workflow_exercise.ipynb`](exercises/04_outbreak_workflow_exercise.ipynb)
-- 解答版（教師版）：[`04_outbreak_workflow_solution.ipynb`](solutions/04_outbreak_workflow_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/04_outbreak_workflow_solution.ipynb>)
+- 解答版（教師版）：[`04_outbreak_workflow_solution.ipynb`](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/outbreak-workflow-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/04_outbreak_workflow_solution.ipynb>)

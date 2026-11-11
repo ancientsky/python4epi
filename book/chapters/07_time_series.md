@@ -169,14 +169,10 @@ print(f"上週同一天法 MAE = {mae_seasonal:.1f} 杯  ← 抓住『週六爆�
 | **Data leakage** | 用到未來資訊做預測 → 結果不可靠（一定要 `shift(1)`） |
 
 <!-- video: ch07_01_ts_basics -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：時間序列基本概念——asfreq、自相關、平穩性</div>
-  <div class="youtube-lite" data-id="VYo8QnHEi74">
-    <img src="https://img.youtube.com/vi/VYo8QnHEi74/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=VYo8QnHEi74">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ## 方法總覽
@@ -278,14 +274,10 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 在正式上迴歸模型之前，先用最簡單的**滾動平均**當 baseline：用前 w 天的平均去猜「明天」，順便掃過幾個窗口大小找出最準的一個。
 
 <!-- video: ch07_02_rolling_baseline -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Rolling mean baseline 與 shift(1) 救命符</div>
-  <div class="youtube-lite" data-id="8VP3e7FSKPQ">
-    <img src="https://img.youtube.com/vi/8VP3e7FSKPQ/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=8VP3e7FSKPQ">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -327,14 +319,10 @@ Rolling mean 的優點：**簡單、直覺、在第一天就能用**。缺點：
 ```
 
 <!-- video: ch07_03_lag_features -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Lag features——把時間序列變成迴歸資料</div>
-  <div class="youtube-lite" data-id="1DTX1bomJ4E">
-    <img src="https://img.youtube.com/vi/1DTX1bomJ4E/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=1DTX1bomJ4E">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -368,14 +356,10 @@ print(f"可用列數：{len(ts_model)}")
 計數資料（每日人數是 0, 1, 2, ...）天生適合 **Poisson** 分布。我們用 `statsmodels` 的 GLM 把 lag 特徵 + 趨勢項放進去：
 
 <!-- video: ch07_04_poisson_lag -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Poisson regression + lag——IRR 解讀每日病例</div>
-  <div class="youtube-lite" data-id="zYXleAV-l2U">
-    <img src="https://img.youtube.com/vi/zYXleAV-l2U/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=zYXleAV-l2U">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -428,14 +412,10 @@ print(coef_table.round(3))
 ```
 
 <!-- video: ch07_05_negative_binomial -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Negative Binomial——過度離散的救星</div>
-  <div class="youtube-lite" data-id="5ZzrjUBGN8c">
-    <img src="https://img.youtube.com/vi/5ZzrjUBGN8c/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=5ZzrjUBGN8c">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -471,14 +451,10 @@ print(f"\nNegative Binomial + lag:  MAE={mae_nb:.3f},  AIC={model_nb.aic:.2f}")
 長官問的第二個問題是**是/否警報**，不是連續數字。做法：把每天的病例數**二值化**（超過某個門檻 → 1，否則 → 0），再用 logistic regression 預測機率。
 
 <!-- video: ch07_06_logistic_threshold -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Logistic regression——明天會不會是高峰日？</div>
-  <div class="youtube-lite" data-id="xzOQKhFM9js">
-    <img src="https://img.youtube.com/vi/xzOQKhFM9js/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=xzOQKhFM9js">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -561,14 +537,10 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 ```
 
 <!-- video: ch07_07_arima_sarima -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：ARIMA vs SARIMA——經典武器 + 週期性捕捉</div>
-  <div class="youtube-lite" data-id="u6Tl3toQGZc">
-    <img src="https://img.youtube.com/vi/u6Tl3toQGZc/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=u6Tl3toQGZc">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -727,14 +699,10 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 把前面七個模型的 MAE、資料需求、能不能給信賴區間全部攤開放進同一張表，方便直接比較。
 
 <!-- video: ch07_08_ts_model_comparison -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：六模型大比拼——誰適合什麼情境？</div>
-  <div class="youtube-lite" data-id="u9gxSIb57a0">
-    <img src="https://img.youtube.com/vi/u9gxSIb57a0/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=u9gxSIb57a0">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -835,6 +803,6 @@ print(f"發病高峰 → 住院高峰 lag = {lag_days} 天")
 
 ## 練習本
 
-- 課堂筆記：{ref}`07_time_series_baseline.ipynb`
+- 課堂筆記：[07_time_series_baseline.ipynb](notebooks/07_time_series_baseline.ipynb)
 - 作業版：[`07_time_series_exercise.ipynb`](exercises/07_time_series_exercise.ipynb)
-- 解答版（教師版）：[`07_time_series_solution.ipynb`](solutions/07_time_series_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/07_time_series_solution.ipynb>)
+- 解答版（教師版）：[`07_time_series_solution.ipynb`](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/time-series-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/07_time_series_solution.ipynb>)

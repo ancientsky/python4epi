@@ -26,7 +26,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
-          version: "0.13.5"
+          version: "0.13.7"
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -35,7 +35,7 @@ jobs:
           check-latest: true
 
       - name: Set up Python
-        run: uv python install 3.13
+        run: uv python install 3.14
 
       # Render the YouTube cards from videos/youtube_ids.yaml at build time
       # rather than trusting the snapshot committed in the chapter markdown.
@@ -64,87 +64,46 @@ jobs:
       - name: Sync deps
         run: uv sync --group dev
 
-      - name: Create data symlinks for notebook execution
+      # One entry point builds all four editions (MyST build with notebooks
+      # executed under --strict, then the post-build step) and assembles them
+      # at their deploy paths: / (zh student), /instructor/, /en/,
+      # /en/instructor/. Kernel pre-execution setup (repo-root cwd for
+      # data/synthetic/, CJK fonts, ggplot, Plotly renderer) is installed by the
+      # script, so no data symlinks are needed. See scripts/build_book.py.
+      - name: Build all four editions
+        run: uv run python scripts/build_book.py --all --site-dir page_artifact
+
+      - name: Sanity-check the pages artifact
         run: |
-          # Jupyter Book executes notebooks from their own directory.
-          # Symlinks let `data/synthetic/...` resolve from any subdirectory.
-          for dir in \
-            book book/chapters book/chapters/exercises book/chapters/solutions book/chapters/notebooks \
-            book_en book_en/chapters book_en/chapters/exercises book_en/chapters/solutions book_en/chapters/notebooks; do
-            if [ -d "$dir" ]; then
-              # Compute relative path back to repo-root data/
-              rel=$(python3 -c "import os.path; print(os.path.relpath('data', '$dir'))")
-              ln -sfn "$rel" "$dir/data"
+          set -euo pipefail
+          fail() { echo "ERROR: $*"; exit 1; }
+          for edition in "" instructor/ en/ en/instructor/; do
+            dir="page_artifact/${edition}"
+            [ -f "${dir}index.html" ] || fail "${dir}index.html missing"
+            [ -f "${dir}chapters/notebooks/stats-basics/index.html" ] \
+              || fail "${dir}: notebook page missing"
+            # JB1 URLs must keep working (redirect stubs).
+            [ -f "${dir}chapters/notebooks/03_stats_basics.html" ] \
+              || fail "${dir}: legacy redirect missing"
+            grep -q 'window.EPI_SITE=' "${dir}index.html" || fail "${dir}: not post-processed"
+          done
+          grep -q '<html lang="zh-Hant"' page_artifact/index.html || fail "zh lang tag"
+          grep -q '<html lang="en"' page_artifact/en/index.html || fail "en lang tag"
+          # Solutions only in the instructor editions.
+          [ -f page_artifact/instructor/chapters/solutions/stats-solution/index.html ] \
+            || fail "zh instructor solutions missing"
+          [ -f page_artifact/en/instructor/chapters/solutions/stats-solution/index.html ] \
+            || fail "en instructor solutions missing"
+          # Match the solutions chapter and solution notebooks/pages only: the
+          # theme ships an unrelated syntax-highlighting chunk named
+          # build/_shared/solution-file-*.js, which a bare '*solution*' would hit.
+          for student in page_artifact page_artifact/en; do
+            if find "$student" -path "$student/instructor" -prune -o -path "$student/en" -prune \
+                 -o \( -path '*/chapters/solutions*' -o -name '*_solution.*' -o -name '*-solution' \) \
+                 -print | grep -q .; then
+              fail "$student contains solution files"
             fi
           done
-          # Verify
-          ls -la book/chapters/solutions/data/synthetic/legionella_outbreak.csv
-
-      - name: Build student edition
-        run: |
-          cp book/_toc_student.yml book/_toc.yml
-          uv run jupyter-book build book/
-
-      - name: Save student build
-        run: |
-          cp -a book/_build/html student_html
-
-      - name: Build instructor edition
-        run: |
-          cp book/_toc_instructor.yml book/_toc.yml
-          uv run jupyter-book build book/ --all
-
-      - name: Build English student edition
-        run: |
-          cp book_en/_toc_student.yml book_en/_toc.yml
-          uv run jupyter-book build book_en/
-
-      - name: Save English student build
-        run: |
-          cp -a book_en/_build/html en_student_html
-
-      - name: Build English instructor edition
-        run: |
-          cp book_en/_toc_instructor.yml book_en/_toc.yml
-          uv run jupyter-book build book_en/ --all
-
-      - name: Prepare pages artifact
-        run: |
-          # Helper: fail if a build dir has no top-level HTML.
-          check_build() {
-            if [ ! -d "$1" ] || [ -z "$(find "$1" -maxdepth 1 -name '*.html' | head -n 1)" ]; then
-              echo "ERROR: $2 not found or contains no HTML files."
-              exit 1
-            fi
-          }
-          # Helper: ensure an index.html exists (fall back to intro.html).
-          ensure_index() {
-            if [ ! -f "$1/index.html" ] && [ -f "$1/intro.html" ]; then
-              cp "$1/intro.html" "$1/index.html"
-            fi
-          }
-
-          check_build student_html "zh student build"
-          check_build book/_build/html "zh instructor build"
-          check_build en_student_html "en student build"
-          check_build book_en/_build/html "en instructor build"
-
-          # Root = zh student edition
-          rm -rf page_artifact
-          cp -a student_html page_artifact
-          ensure_index page_artifact
-
-          # /instructor/ = zh instructor edition (includes solutions)
-          cp -a book/_build/html page_artifact/instructor
-          ensure_index page_artifact/instructor
-
-          # /en/ = English student edition
-          cp -a en_student_html page_artifact/en
-          ensure_index page_artifact/en
-
-          # /en/instructor/ = English instructor edition
-          cp -a book_en/_build/html page_artifact/en/instructor
-          ensure_index page_artifact/en/instructor
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5

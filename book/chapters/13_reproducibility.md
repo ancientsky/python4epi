@@ -250,7 +250,7 @@ print("✅ schema OK — 欄位、型別、值域都符合預期")
 ## 練習題
 
 - 作業版：[`13_reproducibility_exercise.ipynb`](exercises/13_reproducibility_exercise.ipynb)
-- 解答版（講師）：[`13_reproducibility_solution.ipynb`](solutions/13_reproducibility_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/13_reproducibility_solution.ipynb>)
+- 解答版（講師）：[`13_reproducibility_solution.ipynb`](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/reproducibility-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/13_reproducibility_solution.ipynb>)
 
 ## 常見誤用
 

@@ -166,14 +166,10 @@ Ch03 已經解釋過：在世代研究中，我們能直接算出「風險」（
 > ⚠️ 本案侵襲率高達 **43%**。Ch03 已經警告過：當疾病不罕見時，OR 會**系統性高估**效應。如果你對主管說「淋浴使用的 OR 是 3.5」，他會以為風險是 3.5 倍——但真正的風險比（RR）可能只有 2.0 倍。差很多！
 
 <!-- video: ch06_01_why_rr_not_or -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：為什麼要用 RR 而不是 OR？</div>
-  <div class="youtube-lite" data-id="PrbPC5cAyxM">
-    <img src="https://img.youtube.com/vi/PrbPC5cAyxM/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=PrbPC5cAyxM">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ### 兩條多變項分析路線
@@ -207,14 +203,10 @@ Ch03 已經解釋過：在世代研究中，我們能直接算出「風險」（
 > 為什麼不用 **Cox regression**（proportional hazards）？Cox 需要「時間到事件」的資料，我們的資料是二元結果（感染/未感染），沒有隨訪時間差異。
 
 <!-- video: ch06_03_modified_poisson -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Modified Poisson——借帽子算 RR 的魔法</div>
-  <div class="youtube-lite" data-id="A_KHcLHITN0">
-    <img src="https://img.youtube.com/vi/A_KHcLHITN0/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=A_KHcLHITN0">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ### 邏輯斯迴歸白話文
@@ -222,14 +214,10 @@ Ch03 已經解釋過：在世代研究中，我們能直接算出「風險」（
 雖然 Modified Poisson 是本案的首選，邏輯斯迴歸（logistic regression）仍然是全世界最常用的多變項分析方法之一。理解它的原理對流行病學家是必備素養。
 
 <!-- video: ch06_02_logit_intuition -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：邏輯斯迴歸三階梯——機率→勝算→logit</div>
-  <div class="youtube-lite" data-id="o-bRxWzK_xo">
-    <img src="https://img.youtube.com/vi/o-bRxWzK_xo/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=o-bRxWzK_xo">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```{figure} images/logit_intuition.svg
@@ -321,14 +309,10 @@ print(f"→ 侵襲率 {ar:.0%} 遠高於 10%，OR 會顯著高估效應，應以
 這個 Step 用一個迴圈，對每個候選因子分別跑 Modified Poisson（算 crude RR）和邏輯斯迴歸（算 crude OR），把兩種效應測量並排放進同一張表，讓你先看到只看單一因子時 RR 和 OR 差多少。
 
 <!-- video: ch06_05_crude_rr_or_loop -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：單變項 crude RR vs OR——for loop 一次比完</div>
-  <div class="youtube-lite" data-id="LBf3HvGOLAA">
-    <img src="https://img.youtube.com/vi/LBf3HvGOLAA/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=LBf3HvGOLAA">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -419,14 +403,10 @@ print("   hand_RR 欄是 Ch03 的 2×2 表手算結果，應與 crude_RR 幾乎�
 ### 讀懂公式語法
 
 <!-- video: ch06_04_formula_syntax -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：statsmodels formula 語法速懂</div>
-  <div class="youtube-lite" data-id="G-cJPHaz7ag">
-    <img src="https://img.youtube.com/vi/G-cJPHaz7ag/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=G-cJPHaz7ag">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 statsmodels 的公式借用了 R 語言的 **formula 語法**，用一行字就能描述「用哪些變項來預測結果」：
@@ -459,14 +439,10 @@ statsmodels 的公式借用了 R 語言的 **formula 語法**，用一行字就�
 這個 Step 是本章的主軸分析：把所有暴露因子和潛在干擾因子一次放進同一個 Modified Poisson 模型，直接算出校正後的 adjusted RR。
 
 <!-- video: ch06_06_adjusted_rr_table2 -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：多變項 adjusted RR——打造漂亮的 Table 2</div>
-  <div class="youtube-lite" data-id="XIfx82VxVaA">
-    <img src="https://img.youtube.com/vi/XIfx82VxVaA/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=XIfx82VxVaA">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -569,7 +545,7 @@ print(adj_or_df.to_string(index=False))
 > 💡 **重點**：Step 3 和 Step 4 唯一的差別只有 `family`（Poisson vs. logistic）——公式完全相同，才能乾淨地看出「同一組資料，RR 和 OR 差多少」。
 
 ```{admonition} 為什麼有些變數「模型未收斂」？
-:class: tip, dropdown
+:class: tip dropdown
 
 當某個二元預測變數的其中一個類別完全（或幾乎完全）對應到某個結果時，稱為**完美分離（complete separation）**或**準完美分離（quasi-complete separation）**。此時最大概似估計法（MLE）的 OR 會趨近 0 或 ∞，Hessian 矩陣無法反轉，導致模型無法收斂。
 
@@ -658,14 +634,10 @@ print("  • adj RR→OR 欄：同一模型下 OR 比 RR 高估多少（侵襲�
 這個 Step 把 Step 3 的 adjusted RR 表格畫成森林圖，用點估計和信賴區間橫線取代一堆數字，一眼看出哪些因子真的顯著。
 
 <!-- video: ch06_07_forest_plot_adjusted -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Adjusted RR 森林圖——一眼看穿真正危險因子</div>
-  <div class="youtube-lite" data-id="7GgpIOKr_CY">
-    <img src="https://img.youtube.com/vi/7GgpIOKr_CY/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=7GgpIOKr_CY">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -775,14 +747,10 @@ Stepwise 以 p-value 為標準，可能會移除「不顯著但確實在干擾�
 下面用 Python 實作 **change-in-estimate 法**，看哪些候選干擾因子真正影響了 shower_use 和 hydrotherapy_use 的 RR：
 
 <!-- video: ch06_08_change_in_estimate -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：10% 法則——change-in-estimate 挑變項</div>
-  <div class="youtube-lite" data-id="OQLEUHJQv7s">
-    <img src="https://img.youtube.com/vi/OQLEUHJQv7s/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=OQLEUHJQv7s">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -865,6 +833,6 @@ print(cie_df.to_string(index=False))
 
 ## 練習本
 
-- 課堂筆記：{ref}`06_logistic_regression.ipynb`
+- 課堂筆記：[06_logistic_regression.ipynb](notebooks/06_logistic_regression.ipynb)
 - 作業版：[`06_logistic_regression_exercise.ipynb`](exercises/06_logistic_regression_exercise.ipynb)
-- 解答版（教師版）：[`06_logistic_regression_solution.ipynb`](solutions/06_logistic_regression_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/06_logistic_regression_solution.ipynb>)
+- 解答版（教師版）：[`06_logistic_regression_solution.ipynb`](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/logistic-regression-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/06_logistic_regression_solution.ipynb>)

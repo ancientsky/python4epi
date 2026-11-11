@@ -521,7 +521,7 @@ print(adj_or_df.to_string(index=False))
 > 💡 **Key point**: the only difference between Step 3 and Step 4 is the `family` (Poisson vs. logistic)—the formula is identical, which is exactly what lets you cleanly see how far apart RR and OR are on the same data.
 
 ```{admonition} Why do some variables "fail to converge"?
-:class: tip, dropdown
+:class: tip dropdown
 
 When one category of a binary predictor corresponds completely (or almost completely) to a particular outcome, this is called **complete separation** or **quasi-complete separation**. In that case the maximum likelihood estimate (MLE) of the OR tends toward 0 or ∞, the Hessian matrix cannot be inverted, and the model fails to converge.
 
@@ -801,6 +801,6 @@ The multivariable analysis answered "which factors independently affect the risk
 
 ## Practice Notebooks
 
-- Class notes: {ref}`06_logistic_regression.ipynb`
+- Class notes: [06_logistic_regression.ipynb](notebooks/06_logistic_regression.ipynb)
 - Exercise version: [`06_logistic_regression_exercise.ipynb`](exercises/06_logistic_regression_exercise.ipynb)
-- Solution version (instructor edition): [`06_logistic_regression_solution.ipynb`](solutions/06_logistic_regression_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/06_logistic_regression_solution.ipynb>)
+- Solution version (instructor edition): [`06_logistic_regression_solution.ipynb`](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/logistic-regression-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/06_logistic_regression_solution.ipynb>)

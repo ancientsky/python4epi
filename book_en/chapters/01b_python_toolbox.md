@@ -48,14 +48,10 @@ We recommend watching the video before reading the code—it makes the learning 
 ### 1) Indentation—Python's non-negotiable rule
 
 <!-- video: ch01b_01_indentation -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Indentation: Python's Must-Follow Rule</div>
-  <div class="youtube-lite" data-id="jOiqKrkqClg">
-    <img src="https://img.youtube.com/vi/jOiqKrkqClg/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=jOiqKrkqClg">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 In most programming languages, indentation just makes your code "look nice." But in Python, **indentation is part of the syntax**—one space too few or too many and the program breaks.
@@ -96,14 +92,10 @@ for cases in floor_cases:       # first level
 ### 2) import—borrowing other people's tools
 
 <!-- video: ch01b_02_imports -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: import: Borrow Other People's Tools</div>
-  <div class="youtube-lite" data-id="vu8D3_MhAog">
-    <img src="https://img.youtube.com/vi/vu8D3_MhAog/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=vu8D3_MhAog">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 Every calculation in Ch01 used Python's built-in features. But when you do real outbreak analysis, you'll need to "borrow" powerful tools other people have already written—that's what `import` is for.
@@ -168,14 +160,10 @@ print(f"Std dev:  {statistics.stdev(ages):.1f}")      # 7.8
 ### 3) Types and conversion—numbers, text, booleans
 
 <!-- video: ch01b_03_types -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Types and Conversion: Numbers, Text, Booleans</div>
-  <div class="youtube-lite" data-id="KZTWa4BHCfY">
-    <img src="https://img.youtube.com/vi/KZTWa4BHCfY/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=KZTWa4BHCfY">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 Every value in Python has a **type**. Get the type wrong and the program errors out.
@@ -254,14 +242,10 @@ What trips beginners up most is knowing "which bracket to use in which situation
 ### 4) Reading error messages—a traceback isn't a cryptic scroll
 
 <!-- video: ch01b_04_errors -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Reading Error Messages: Traceback Is Not Hieroglyphics</div>
-  <div class="youtube-lite" data-id="00CEZEeFXMw">
-    <img src="https://img.youtube.com/vi/00CEZEeFXMw/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=00CEZEeFXMw">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 Don't panic at a screen full of red text. Python's error messages are actually quite considerate—just **read from the last line upward**.
@@ -334,14 +318,10 @@ print(wings[5])  # "3B"
 ### 5) try/except—handling the unexpected gracefully
 
 <!-- video: ch01b_05_try_except -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: try/except: Handle Surprises Gracefully</div>
-  <div class="youtube-lite" data-id="Gv_Ct86O8XM">
-    <img src="https://img.youtube.com/vi/Gv_Ct86O8XM/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=Gv_Ct86O8XM">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 Sometimes an error is an "expected surprise"—for example, missing values in the data. Rather than let the program crash, tell Python how to handle it.
@@ -385,14 +365,10 @@ print(f"Mean age: {sum(ages) / len(ages):.1f}")          # Mean age: 70.2
 ### 6) Advanced strings and loops
 
 <!-- video: ch01b_06_strings_loops -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Strings and Advanced Loops: The Swiss Army Knife for Cleaning Outbreak Data</div>
-  <div class="youtube-lite" data-id="ydQ-lOlN5Ec">
-    <img src="https://img.youtube.com/vi/ydQ-lOlN5Ec/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=ydQ-lOlN5Ec">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 When you process CSV data in Ch02, you'll work heavily with strings and loops. Let's build the foundation here first.
@@ -450,14 +426,10 @@ if "deaths" not in outbreak:
 ### 7) Advanced uv—managing Python versions and packages
 
 <!-- video: ch01b_07_uv_advanced -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Advanced uv: Manage Python Versions and Packages</div>
-  <div class="youtube-lite" data-id="l-WcIwSMv5s">
-    <img src="https://img.youtube.com/vi/l-WcIwSMv5s/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=l-WcIwSMv5s">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 Ch00 taught `uv sync` to install all of the course's dependencies. Here we go a step further into `uv`'s practical features.
@@ -519,14 +491,10 @@ uv pip list
 ### 8) Handy Jupyter tricks
 
 <!-- video: ch01b_08_jupyter_tips -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">Tutorial video: Practical Jupyter Tips: Double Your Efficiency</div>
-  <div class="youtube-lite" data-id="L9nzl_m2pnE">
-    <img src="https://img.youtube.com/vi/L9nzl_m2pnE/hqdefault.jpg" loading="lazy" alt="Tutorial video">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=L9nzl_m2pnE">Watch on YouTube</a></div>
 </div>
-```
 <!-- /video -->
 
 The following tricks make your work in Jupyter Lab more efficient.
@@ -628,6 +596,6 @@ If you can answer all of these, congratulations—you're ready to enter the pand
 
 ## Workbooks
 
-- Class notes: {ref}`01b_python_toolbox.ipynb`
+- Class notes: [01b_python_toolbox.ipynb](notebooks/01b_python_toolbox.ipynb)
 - Exercise version: [`01b_python_toolbox_exercise.ipynb`](exercises/01b_python_toolbox_exercise.ipynb)
-- Solution version (instructor): [`01b_python_toolbox_solution.ipynb`](solutions/01b_python_toolbox_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/01b_python_toolbox_solution.ipynb>)
+- Solution version (instructor): [`01b_python_toolbox_solution.ipynb`](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/b-python-toolbox-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/01b_python_toolbox_solution.ipynb>)

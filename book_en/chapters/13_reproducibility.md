@@ -250,7 +250,7 @@ print("✅ schema OK - columns, dtypes, and value ranges all as expected")
 ## Exercises
 
 - Exercise version: [`13_reproducibility_exercise.ipynb`](exercises/13_reproducibility_exercise.ipynb)
-- Solution version (instructor): [`13_reproducibility_solution.ipynb`](solutions/13_reproducibility_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/13_reproducibility_solution.ipynb>)
+- Solution version (instructor): [`13_reproducibility_solution.ipynb`](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/reproducibility-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/13_reproducibility_solution.ipynb>)
 
 ## Common Misuses
 

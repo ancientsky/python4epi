@@ -1,0 +1,112 @@
+# Jupyter Book 2 (MyST) configuration — English instructor edition.
+#
+#   uv run python scripts/build_book.py --lang en --edition instructor
+#
+# Everything except the table of contents comes from ../myst.yml (the student
+# edition). MyST resolves a project's files relative to the directory holding
+# its myst.yml, so this directory carries symlinks back to the shared content
+# (chapters/, intro.md, _static/, _site/) and URLs match the student edition.
+# The TOC is the student TOC plus 17_solutions and its notebooks.
+version: 1
+extends: ../myst.yml
+project:
+  toc:
+    - file: intro.md
+    - title: 'Act I — The Call'
+      children:
+        - file: chapters/00_guide.md
+        - file: chapters/01_fundamentals.md
+          children:
+            - file: chapters/notebooks/01_fundamentals_python_basics.ipynb
+        - file: chapters/01b_python_toolbox.md
+          children:
+            - file: chapters/notebooks/01b_python_toolbox.ipynb
+        - file: chapters/02_data_wrangling.md
+          children:
+            - file: chapters/notebooks/02_data_wrangling_for_beginners.ipynb
+            - file: chapters/notebooks/02_visualization_epi_charts.ipynb
+    - title: 'Act II — From Description to Inference'
+      children:
+        - file: chapters/03_stats.md
+          children:
+            - file: chapters/notebooks/03_stats_basics.ipynb
+        - file: chapters/04_outbreak_workflow.md
+          children:
+            - file: chapters/notebooks/04_outbreak_workflow.ipynb
+    - title: 'Act III — Digging Deeper'
+      children:
+        - file: chapters/05_stratified.md
+          children:
+            - file: chapters/notebooks/05_stratified_analysis.ipynb
+        - file: chapters/06_logistic_regression.md
+          children:
+            - file: chapters/notebooks/06_logistic_regression.ipynb
+        - file: chapters/07_time_series.md
+          children:
+            - file: chapters/notebooks/07_time_series_baseline.ipynb
+        - file: chapters/08_spatial.md
+          children:
+            - file: chapters/notebooks/08_spatial_rates.ipynb
+            - file: chapters/notebooks/08_spatial_choropleth.ipynb
+            - file: chapters/notebooks/08_spatial_statistics.ipynb
+    - title: 'Act IV — Advanced Modeling'
+      children:
+        - file: chapters/09_survival.md
+          children:
+            - file: chapters/notebooks/09_survival_analysis.ipynb
+        - file: chapters/10_machine_learning.md
+          children:
+            - file: chapters/notebooks/10_ml_baseline.ipynb
+            - file: chapters/notebooks/10_ml_advanced.ipynb
+        - file: chapters/11_deep_learning.md
+          children:
+            - file: chapters/notebooks/11_dl_baseline.ipynb
+            - file: chapters/notebooks/11_dl_sequence.ipynb
+        - file: chapters/12_causal.md
+          children:
+            - file: chapters/notebooks/12_causal_did.ipynb
+    - title: 'Act V — Wrap-Up & Real Cases'
+      children:
+        - file: chapters/13_reproducibility.md
+          children:
+            - file: chapters/notebooks/13_reproducibility_workflow.ipynb
+        - file: chapters/14_case_studies.md
+          children:
+            - file: chapters/notebooks/14_case_study_legionella.ipynb
+    - title: Appendix & Exercises
+      children:
+        - file: chapters/15_appendix.md
+        - file: chapters/16_exercises.md
+          children:
+            - file: chapters/exercises/01_fundamentals_exercise.ipynb
+            - file: chapters/exercises/01b_python_toolbox_exercise.ipynb
+            - file: chapters/exercises/02_data_wrangling_exercise.ipynb
+            - file: chapters/exercises/03_stats_exercise.ipynb
+            - file: chapters/exercises/04_outbreak_workflow_exercise.ipynb
+            - file: chapters/exercises/05_stratified_exercise.ipynb
+            - file: chapters/exercises/06_logistic_regression_exercise.ipynb
+            - file: chapters/exercises/07_time_series_exercise.ipynb
+            - file: chapters/exercises/08_spatial_exercise.ipynb
+            - file: chapters/exercises/09_survival_exercise.ipynb
+            - file: chapters/exercises/10_ml_exercise.ipynb
+            - file: chapters/exercises/11_dl_exercise.ipynb
+            - file: chapters/exercises/12_causal_exercise.ipynb
+            - file: chapters/exercises/13_reproducibility_exercise.ipynb
+            - file: chapters/exercises/14_case_study_exercise.ipynb
+        - file: chapters/17_solutions.md
+          children:
+            - file: chapters/solutions/01_fundamentals_solution.ipynb
+            - file: chapters/solutions/01b_python_toolbox_solution.ipynb
+            - file: chapters/solutions/02_data_wrangling_solution.ipynb
+            - file: chapters/solutions/03_stats_solution.ipynb
+            - file: chapters/solutions/04_outbreak_workflow_solution.ipynb
+            - file: chapters/solutions/05_stratified_solution.ipynb
+            - file: chapters/solutions/06_logistic_regression_solution.ipynb
+            - file: chapters/solutions/07_time_series_solution.ipynb
+            - file: chapters/solutions/08_spatial_solution.ipynb
+            - file: chapters/solutions/09_survival_solution.ipynb
+            - file: chapters/solutions/10_ml_solution.ipynb
+            - file: chapters/solutions/11_dl_solution.ipynb
+            - file: chapters/solutions/12_causal_solution.ipynb
+            - file: chapters/solutions/13_reproducibility_solution.ipynb
+            - file: chapters/solutions/14_case_study_solution.ipynb

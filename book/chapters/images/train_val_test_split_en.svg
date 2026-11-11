@@ -9,7 +9,7 @@
   <rect x="424" y="86" width="128" height="52" fill="#D97757" fill-opacity="0.85" stroke="#FFFFFF" stroke-width="2"/>
   <text x="488" y="117" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">validation</text>
   <text x="488" y="160" text-anchor="middle" font-size="11" font-weight="bold" fill="#D97757">20%</text>
-  <text x="488" y="178" text-anchor="middle" font-size="10.5" fill="#6B6B6B">tune & pick model</text>
+  <text x="488" y="178" text-anchor="middle" font-size="10.5" fill="#6B6B6B">tune &amp; pick model</text>
   <rect x="552" y="86" width="128" height="52" fill="#788C5D" fill-opacity="0.85" stroke="#FFFFFF" stroke-width="2"/>
   <text x="616" y="117" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">test</text>
   <text x="616" y="160" text-anchor="middle" font-size="11" font-weight="bold" fill="#788C5D">20%</text>

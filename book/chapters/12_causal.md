@@ -308,7 +308,7 @@ DiD 估計值只有在**平行趨勢假設（parallel trends assumption）**成�
 ## 練習題
 
 - 作業版：[`12_causal_exercise.ipynb`](exercises/12_causal_exercise.ipynb)
-- 解答版（講師）：[`12_causal_solution.ipynb`](solutions/12_causal_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/12_causal_solution.ipynb>)
+- 解答版（講師）：[`12_causal_solution.ipynb`](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/causal-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/12_causal_solution.ipynb>)
 
 ## 五、新手最常踩的坑
 
