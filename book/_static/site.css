@@ -395,6 +395,10 @@ html.dark .myst-admonition {
 .epi-hero-cta {
   margin: 1.8rem 0 2.2rem;
 }
+.epi-hero-cta a.button,
+.epi-hero-cta a.button * {
+  white-space: normal !important;
+}
 .epi-hero-cta a.button {
   display: block;
   text-align: center;
@@ -490,7 +494,16 @@ a.epi-lang-switch:hover {
   color: var(--epi-orange);
 }
 a.epi-lang-switch svg {
-  display: none;
+  display: none !important;
+}
+/* The theme wraps link text in a span with white-space: normal, which let the
+   two-character "中文" break onto two lines at phone width. */
+a.epi-lang-switch,
+a.epi-lang-switch * {
+  white-space: nowrap !important;
+}
+.myst-navbar-end {
+  flex-shrink: 0;
 }
 
 a.epi-colab-link {
@@ -573,7 +586,7 @@ html.dark a.epi-colab-link {
   font-size: 0;
 }
 .youtube-lite.yt-ready > a svg {
-  display: none;
+  display: none !important;
 }
 .youtube-lite.yt-ready > a:focus-visible {
   outline: 3px solid var(--epi-orange);
@@ -630,5 +643,33 @@ html.dark a.epi-colab-link {
   .myst-fm-block-header {
     flex-wrap: wrap;
     row-gap: 0.4rem;
+  }
+}
+
+/* Phones: the top bar holds menu, logo, search, theme toggle and the language
+   switch; keep the switch compact so it never runs past the right edge. */
+@media (max-width: 640px) {
+  .myst-navbar-end {
+    margin-left: 0.35rem;
+  }
+  a.epi-lang-switch {
+    padding: 0.1rem 0.45rem;
+    font-size: 0.8rem;
+  }
+  .myst-top-nav .myst-home-link {
+    margin-left: 0.25rem;
+  }
+  .myst-home-link-logo {
+    margin-right: 0;
+  }
+  .myst-home-link-logo img {
+    height: 1.75rem;
+    width: auto;
+  }
+}
+
+@media (max-width: 360px) {
+  .myst-home-link-logo img {
+    height: 1.4rem;
   }
 }
