@@ -93,7 +93,7 @@
     next: ["Next", "下一題", "Susunod"],
     nextRound: ["Next round", "下一回合", "Susunod na round"],
     check: ["Check", "檢查", "I-check"],
-    again: ["Play again", "再玩一次", "Laro ulit"],
+    again: ["Play again", "再玩一次", "Maglaro ulit"],
     start: ["Start", "開始", "Simulan"],
     seeScore: ["See my score", "看我的分數", "Tingnan ang puntos ko"],
     of: ["{i} of {n}", "第 {i} / {n} 題", "{i} sa {n}"],
@@ -102,8 +102,8 @@
     bad: [["Not quite.", "Almost — have a look.", "Good try."], ["再想想。", "差一點！", "不太對喔。"], ["Hindi pa.", "Malapit na!", "Subukan ulit!"]],
     done: ["You scored {s} of {n}.", "你得到 {s} / {n} 分。", "Nakakuha ka ng {s} sa {n}."],
     perfect: ["Perfect! Tala is cheering for you.", "滿分！Tala 正在為你歡呼。", "Perpekto! Pinapalakpakan ka ni Tala."],
-    fine: ["Well done — check the explanations and try again for a perfect round.", "做得好——看看說明，再挑戰一次滿分吧。", "Magaling! Basahin ang paliwanag at subukan ulit para perpekto."],
-    low: ["Every expert started here. Read the explanations, then play again.", "每位專家都是從這裡開始的。讀完說明再玩一次。", "Lahat ng eksperto ay nagsimula rito. Basahin ang paliwanag, tapos laro ulit."],
+    fine: ["Well done — check the explanations and try again for a perfect round.", "做得好——看看說明，再挑戰一次滿分吧。", "Magaling! Basahin ang paliwanag at subukan ulit para sa perpektong score."],
+    low: ["Every expert started here. Read the explanations, then play again.", "每位專家都是從這裡開始的。讀完說明再玩一次。", "Lahat ng eksperto ay nagsimula rito. Basahin ang paliwanag, tapos maglaro ulit."],
     talaSays: ["Tala", "Tala", "Tala"],
     yourAnswer: ["Your answer", "你的答案", "Sagot mo"],
     rightAnswer: ["Right answer", "正確答案", "Tamang sagot"],
@@ -666,10 +666,10 @@
       view: function () { return h("div", { class: "ph-kpis" }, [h("div", { class: "ph-kpi" }, [h("b", null, "618"), h("span", null, L(["cases, city, 20 Jul–30 Sep", "病例（全市，7/20–9/30）", "kaso, buong lungsod, 20 Hul–30 Set"]))]), h("div", { class: "ph-kpi" }, [h("b", null, "21"), h("span", null, L(["deaths, city", "死亡（全市）", "namatay, buong lungsod"]))])]); },
       why: ["City-wide totals do not point to any person. Approve.", "全市總數不會指向任何個人，可以發布。", "Hindi tumuturo sa sinumang tao ang kabuuan ng buong lungsod. Aprubado."] },
     { ok: false, kind: ["Table by barangay", "各 barangay 病例表", "Table ayon sa barangay"],
-      view: function () { return miniTable([["Barangay", "Barangay", "Barangay"], ["Lepto cases", "鉤端螺旋體病例", "Lepto cases"]], [["Ilog", "39"], ["Pampang", "31"], ["Kawayanan", "5"], ["Talahib", "1"]]); },
+      view: function () { return miniTable([["Barangay", "Barangay", "Barangay"], ["Lepto cases", "鉤端螺旋體病例", "Kaso ng lepto"]], [["Ilog", "39"], ["Pampang", "31"], ["Kawayanan", "5"], ["Talahib", "1"]]); },
       why: ["Small cell: 1 case in Talahib, a small upland barangay — neighbours can work out who they are. Suppress counts of 1–4 (show '<5') or merge areas before publishing.",
         "小格：人口少的山區 Talahib 只有 1 例——鄰居猜得出是誰。發布前將 1–4 的數字遮蔽（顯示「<5」）或合併區域。",
-        "Small cell: 1 kaso sa Talahib, maliit na upland barangay — mahuhulaan ng kapitbahay kung sino sila. I-suppress ang bilang na 1–4 (ipakita bilang '<5') o pagsamahin ang lugar bago i-publish."] },
+        "Small cell: 1 kaso sa Talahib, maliit na barangay sa kabundukan — mahuhulaan ng kapitbahay kung sino sila. I-suppress ang bilang na 1–4 (ipakita bilang '<5') o pagsamahin ang lugar bago i-publish."] },
     { ok: false, kind: ["Case map", "病例地圖", "Mapa ng kaso"], view: miniDots,
       why: ["One dot per house is an address map. Publish rates by barangay (a choropleth) instead of exact locations.",
         "每戶一個點等於公布地址。改用各 barangay 的侵襲率面量圖（choropleth），不要公布確切位置。",
@@ -757,7 +757,7 @@
       { q: ["What do the three numbers of 7-1-7 stand for?", "7-1-7 的三個數字代表什麼？", "Ano ang ibig sabihin ng tatlong numero ng 7-1-7?"],
         o: [{ t: ["Detect ≤7 days, notify ≤1 day, complete early response ≤7 days", "≤7 天內偵測、≤1 天內通報、≤7 天內完成早期應變", "Detect ≤7 araw, notify ≤1 araw, tapusin ang early response ≤7 araw"], ok: true, e: ["Detection is counted from emergence, notification from detection, response from notification.", "偵測從事件出現起算、通報從偵測起算、應變從通報起算。", "Ang detection ay mula emergence, ang notification mula detection, ang response mula notification."] },
           { t: ["7 cases, 1 death, 7 barangays", "7 例、1 死、7 個 barangay", "7 kaso, 1 namatay, 7 barangay"], e: ["7-1-7 is a timeliness target, not a case count.", "7-1-7 是時效目標，不是病例數。", "Timeliness target ang 7-1-7, hindi bilang ng kaso."] }] },
-      { q: ["The alert threshold in this book is…", "本書使用的警戒閾值是……", "Ang alert threshold sa librong ito ay…"],
+      { q: ["The alert threshold in this book is…", "本書使用的警戒閾值是……", "Ang alert threshold sa aklat na ito ay…"],
         o: [{ t: ["The mean of the same week in past years + 2 standard deviations", "過去數年同一週的平均值 + 2 個標準差", "Mean ng parehong linggo sa mga nakaraang taon + 2 standard deviations"], ok: true, e: ["Weeks far above the usual range for that time of year raise a signal.", "遠高於該時節平常範圍的週數會發出訊號。", "Nagbibigay ng signal ang linggong lampas na lampas sa karaniwan para sa panahong iyon."] },
           { t: ["Any week with more cases than last week", "任何比上週多的一週", "Anumang linggong mas marami ang kaso kaysa noong nakaraang linggo"], e: ["Counts go up and down by chance; that would alarm every other week.", "病例數本來就會隨機起伏，這樣幾乎每隔一週就要警報。", "Tumataas-bumababa ang bilang nang nagkataon; halos linggu-linggo kang mag-a-alarm."] }] }
     ]
@@ -1028,7 +1028,7 @@
   ];
 
   WIDGETS["date-fixer"] = function (ctx) {
-    var title = L(["Date fixer", "日期修理站", "Date fixer"]);
+    var title = L(["Date fixer", "日期修理站", "Ayusin ang mga petsa"]);
     var intro = L(["Jun's export mixes date formats. Tap a messy date, then tap the ISO date it really means.", "Jun 匯出的資料混了好幾種日期格式。先點一個雜亂的日期，再點它真正代表的 ISO 日期。", "Halo-halo ang format ng petsa sa export ni Jun. I-tap ang magulong petsa, tapos i-tap ang tunay nitong ISO date."]);
     ctx.host.appendChild(shell(ctx, title, intro));
     var selected = null, score = 0, placed = 0, tried = {};
@@ -1255,18 +1255,18 @@
       title: ["Practice cohort: one Barangay Ilog clean-up crew (made-up numbers)", "練習用世代研究：Barangay Ilog 的一支清理隊（虛構數字）", "Practice cohort: isang clean-up crew ng Barangay Ilog (gawa-gawang bilang)"],
       context: ["All 24 volunteers who cleared debris after the flood were followed up. Exposure: waded without boots. Outcome: leptospirosis.", "追蹤洪水後清理雜物的全部 24 位志工。暴露：沒穿雨鞋涉水。結果：鉤端螺旋體病。", "Sinundan ang lahat ng 24 volunteer na naglinis ng kalat pagkatapos ng baha. Exposure: lumusong nang walang bota. Outcome: leptospirosis."],
       expLabel: ["Waded without boots", "沒穿雨鞋涉水", "Lumusong nang walang bota"],
-      unexpLabel: ["Wore boots", "有穿雨鞋", "Naka-bota"],
+      unexpLabel: ["Wore boots", "有穿雨鞋", "Nakabota"],
       outLabel: ["Got leptospirosis", "得到鉤端螺旋體病", "Nagka-leptospirosis"], noOutLabel: ["Stayed well", "沒有發病", "Hindi nagkasakit"],
       people: people([[1, 1, 8], [1, 0, 4], [0, 1, 1], [0, 0, 11]]),
       q: ["What does this study show about wading without boots?", "關於沒穿雨鞋涉水，這項研究顯示了什麼？", "Ano ang ipinapakita ng pag-aaral tungkol sa paglusong nang walang bota?"],
       opts: [
         { v: "ok", t: ["It multiplied the risk of leptospirosis by about 8 (RR = 8.0)", "它讓得病風險增為約 8 倍（RR = 8.0）", "Mga 8 beses na tumaas ang risk ng leptospirosis (RR = 8.0)"] },
-        { v: "or", t: ["It multiplied the risk by 22, because OR = 22", "因為 OR = 22，所以風險增為 22 倍", "22 beses ang risk, kasi OR = 22"] },
+        { v: "or", t: ["It multiplied the risk by 22, because OR = 22", "因為 OR = 22，所以風險增為 22 倍", "Tumaas nang 22 beses ang risk, kasi OR = 22"] },
         { v: "no", t: ["It made no difference", "沒有差別", "Walang pinagkaiba"] }
       ],
       why: ["Risk 8/12 = 0.67 in the barefoot waders versus 1/12 = 0.08 with boots: RR = 8.0 (95% CI 1.2–55). The OR (22) is much larger because the illness was common in this crew; the OR only approximates the RR when the outcome is rare.",
         "沒穿雨鞋者風險 8/12 = 0.67，有穿雨鞋者 1/12 = 0.08：RR = 8.0（95% 信賴區間 1.2–55）。OR（22）大得多，是因為這群人發病很普遍；只有在結果罕見時，OR 才接近 RR。",
-        "Risk 8/12 = 0.67 sa lumusong nang walang bota kumpara sa 1/12 = 0.08 sa naka-bota: RR = 8.0 (95% CI 1.2–55). Mas malaki ang OR (22) dahil karaniwan ang sakit sa crew na ito; lumalapit lang ang OR sa RR kapag bihira ang outcome."]
+        "Risk 8/12 = 0.67 sa lumusong nang walang bota kumpara sa 1/12 = 0.08 sa nakabota: RR = 8.0 (95% CI 1.2–55). Mas malaki ang OR (22) dahil karaniwan ang sakit sa crew na ito; lumalapit lang ang OR sa RR kapag bihira ang outcome."]
     },
     {
       id: "casecontrol", design: "cc",
@@ -1363,7 +1363,7 @@
         cellBtns[id].classList.remove("ph-pop"); void cellBtns[id].offsetWidth; cellBtns[id].classList.add("ph-pop");
         ctx.setScore(total + roundScore, totalMax);
         if (streak === 6 && deck.length > 2 && !autoBtn) {
-          autoBtn = ctx.button("⏩ " + L(["You've got it — fill the rest", "你會了——自動填完", "Gets mo na — punan ang natitira"]), autofill);
+          autoBtn = ctx.button("⏩ " + L(["You've got it — fill the rest", "你會了——自動填完", "Kaya mo na — punan ang natitira"]), autofill);
           append(ctx.controls, autoBtn);
         }
         showCard();
@@ -1571,7 +1571,7 @@
       if (TW.now[t] <= B[t].thr && t < cross) {
         falseAlarms++;
         stopPlay();
-        ctx.say("bad", fmt(L(["False alarm: W{w} has {c} cases, below the threshold of {th}. A rise is worth watching, but an alert sends a field team out. Keep watching.", "誤報：W{w} 有 {c} 例，低於閾值 {th}。上升值得留意，但發出警戒就要派出現場團隊。繼續監看。", "False alarm: {c} kaso ang W{w}, mas mababa sa threshold na {th}. Dapat bantayan ang pagtaas, pero magpapadala ng field team ang alert. Bantay lang."]), { w: TW.first + t, c: TW.now[t], th: num(B[t].thr, 1) }), badWord());
+        ctx.say("bad", fmt(L(["False alarm: W{w} has {c} cases, below the threshold of {th}. A rise is worth watching, but an alert sends a field team out. Keep watching.", "誤報：W{w} 有 {c} 例，低於閾值 {th}。上升值得留意，但發出警戒就要派出現場團隊。繼續監看。", "False alarm: {c} kaso ang W{w}, mas mababa sa threshold na {th}. Dapat bantayan ang pagtaas, pero magpapadala ng field team ang alert. Patuloy na magbantay."]), { w: TW.first + t, c: TW.now[t], th: num(B[t].thr, 1) }), badWord());
         return;
       }
       alertAt = t;
@@ -1585,7 +1585,7 @@
       var days = Math.round((detected - emergence) / 864e5);
       var msg = delay === 0 ?
         fmt(L(["Alert raised the moment W{w} crossed the threshold.", "W{w} 一超過閾值就發出警戒。", "Nag-alert agad nang lumampas ang W{w} sa threshold."]), { w: TW.first + cross }) :
-        fmt(L(["W{w} had already crossed the threshold {d} week(s) earlier.", "W{w} 早在 {d} 週前就已經超過閾值了。", "{d} linggo nang mas maaga lumampas ang W{w} sa threshold."]), { w: TW.first + cross, d: delay });
+        fmt(L(["W{w} had already crossed the threshold {d} week(s) earlier.", "W{w} 早在 {d} 週前就已經超過閾值了。", "Lumampas na pala sa threshold ang W{w}, {d} linggo bago ka nag-alert."]), { w: TW.first + cross, d: delay });
       if (falseAlarms) msg += " " + fmt(L(["({f} false alarm(s) cost points.)", "（{f} 次誤報扣分。）", "(Nabawasan ng puntos dahil sa {f} false alarm.)"]), { f: falseAlarms });
       ctx.say(delay === 0 ? "good" : "bad", msg, delay === 0 ? goodWord() : null);
       if (delay === 0) ctx.celebrate(false);
@@ -1611,7 +1611,7 @@
       var detectOk = addRow(["Detect", "偵測", "Detect"], 7, dDays);
       function table() {
         return h("table", { class: "ph-717-table" }, [
-          h("thead", null, h("tr", null, [h("th", null, "7-1-7"), h("th", null, L(["Target", "目標", "Target"])), h("th", null, L(["Yours", "你的", "Iyo"])), h("th", null, "")])),
+          h("thead", null, h("tr", null, [h("th", null, "7-1-7"), h("th", null, L(["Target", "目標", "Target"])), h("th", null, L(["Yours", "你的", "Sa iyo"])), h("th", null, "")])),
           h("tbody", null, rows.slice())
         ]);
       }
@@ -1630,7 +1630,7 @@
         if (ok) score++;
         ctx.setScore(score, 5);
         clear(tableHolder); tableHolder.appendChild(table());
-        ctx.say(ok ? "good" : "bad", L(["Notification means telling the next level right away. Waiting for a weekly report or for lab confirmation spends the 1-day budget many times over.", "通報就是立刻告知上一層級。等每週報告或實驗室確認，會把 1 天的期限用掉好幾倍。", "Ang notification ay agarang pagsabi sa susunod na antas. Kapag hinintay ang weekly report o lab confirmation, ilang beses na lampas ang 1 araw."]), ok ? goodWord() : badWord());
+        ctx.say(ok ? "good" : "bad", L(["Notification means telling the next level right away. Waiting for a weekly report or for lab confirmation spends the 1-day budget many times over.", "通報就是立刻告知上一層級。等每週報告或實驗室確認，會把 1 天的期限用掉好幾倍。", "Ang notification ay agarang pagsabi sa susunod na antas. Kapag hinintay mo pa ang weekly report o ang lab confirmation, ilang ulit mong lalampasan ang 1 araw na palugit."]), ok ? goodWord() : badWord());
         askResponse();
       }, "ph-stack");
       q1.appendChild(c1);
@@ -1640,7 +1640,7 @@
         var q2 = h("div", { class: "ph-step" }, [h("p", { class: "ph-q" }, L(["Which plan completes the early response within 7 days?", "哪一個計畫能在 7 天內完成早期應變？", "Aling plano ang tatapos sa early response sa loob ng 7 araw?"]))]);
         var c2 = choiceButtons(shuffle([
           { label: L(["Within 5 days: case investigation, 4S clean-up with BHWs, clinics alerted, risk communication", "5 天內：疫調、與 BHW 一起進行 4S 清除孳生源、通知診所、風險溝通", "Sa loob ng 5 araw: case investigation, 4S clean-up kasama ang BHWs, alerto sa clinics, risk communication"]), value: "5" },
-          { label: L(["Fog the whole city tomorrow — and that's it", "明天全市噴藥——就這樣", "I-fog ang buong lungsod bukas — tapos na"]), value: "fog" },
+          { label: L(["Fog the whole city tomorrow — and that's it", "明天全市噴藥——就這樣", "I-fog ang buong lungsod bukas — iyon lang"]), value: "fog" },
           { label: L(["Plan it at next month's Local Health Board meeting", "等下個月地方衛生委員會開會再規劃", "Planuhin sa pulong ng Local Health Board sa susunod na buwan"]), value: "30" }
         ]), function (o, buttons, btn) {
           lockChoices(buttons, "5", btn);
@@ -1650,7 +1650,7 @@
           if (ok) score++;
           ctx.setScore(score, 5);
           clear(tableHolder); tableHolder.appendChild(table());
-          ctx.say(ok ? "good" : "bad", L(["An early response is a set of actions, not one spray: investigate, remove breeding sites (4S), alert clinics, inform the public. Fogging alone is not enough and is meant for outbreak hotspots.", "早期應變是一組行動，不是噴一次藥：疫調、清除孳生源（4S）、通知診所、告知民眾。單靠噴藥不夠，而且只用於疫情熱點。", "Hanay ng aksyon ang early response, hindi iisang spray: imbestigasyon, sirain ang breeding sites (4S), alertuhin ang clinics, ipaalam sa publiko. Hindi sapat ang fogging lang, at para lang ito sa outbreak hotspots."]), ok ? goodWord() : badWord());
+          ctx.say(ok ? "good" : "bad", L(["An early response is a set of actions, not one spray: investigate, remove breeding sites (4S), alert clinics, inform the public. Fogging alone is not enough and is meant for outbreak hotspots.", "早期應變是一組行動，不是噴一次藥：疫調、清除孳生源（4S）、通知診所、告知民眾。單靠噴藥不夠，而且只用於疫情熱點。", "Hanay ng aksiyon ang early response, hindi iisang spray: imbestigasyon, sirain ang breeding sites (4S), alertuhin ang clinics, ipaalam sa publiko. Hindi sapat ang fogging lang, at para lang ito sa outbreak hotspots."]), ok ? goodWord() : badWord());
           clear(ctx.controls);
           var b = ctx.button("★ " + U("seeScore"), function () {
             endScreen(ctx, score, 5, build, ["With weekly data, reacting the same day the week arrives is the only way to meet 'detect ≤ 7 days'. Then notify within a day and finish the early response within a week.", "使用每週資料時，唯有在數字送達當天就反應，才能達成「≤7 天偵測」。接著 1 天內通報，一週內完成早期應變。", "Sa lingguhang datos, ang pagkilos sa mismong araw na dumating ang bilang ang tanging paraan para maabot ang 'detect ≤ 7 araw'. Tapos notify sa loob ng isang araw at tapusin ang early response sa loob ng isang linggo."]);
@@ -1691,7 +1691,7 @@
       model: [10, 10, 10, 11, 11, 11, 11, 12],
       lo: [5, 5, 5, 5, 5, 5, 5, 5], hi: [17, 18, 19, 20, 21, 22, 23, 23],
       seasonal: [10, 13, 14, 10, 9, 10, 24, 19],
-      lesson: ["The model only saw past counts — it could not know about the flood and the standing water. The truth fell outside its 80% band in all 8 weeks, as in chapter 07, and the last week (45) is still incomplete. An honest evaluation reports this. In chapter 07 even rainfall barely helped; a person who knows a typhoon just hit (like you!) can.", "模型只看過去的病例數——它不知道洪水和積水。8 週的真實值全都落在 80% 區間之外，和第 07 章一樣，而且最後一週（45）的資料還不完整。誠實的評估要把這點寫出來。第 07 章中連加入雨量都幫助不大；知道颱風剛來過的人（就是你！）才幫得上忙。", "Mga nakaraang bilang lang ang nakita ng model — hindi nito alam ang baha at stagnant na tubig. Nasa labas ng 80% band nito ang totoo sa lahat ng 8 linggo, gaya sa kabanata 07, at kulang pa ang huling linggo (45). Iniuulat ito ng tapat na ebalwasyon. Sa kabanata 07, halos hindi nakatulong kahit ang rainfall; ang taong alam na kakadaan lang ng bagyo (ikaw!) ang makatutulong."]
+      lesson: ["The model only saw past counts — it could not know about the flood and the standing water. The truth fell outside its 80% band in all 8 weeks, as in chapter 07, and the last week (45) is still incomplete. An honest evaluation reports this. In chapter 07 even rainfall barely helped; a person who knows a typhoon just hit (like you!) can.", "模型只看過去的病例數——它不知道洪水和積水。8 週的真實值全都落在 80% 區間之外，和第 07 章一樣，而且最後一週（45）的資料還不完整。誠實的評估要把這點寫出來。第 07 章中連加入雨量都幫助不大；知道颱風剛來過的人（就是你！）才幫得上忙。", "Mga nakaraang bilang lang ang nakita ng model — hindi nito alam ang baha at ang naiipong tubig. Nasa labas ng 80% band nito ang totoo sa lahat ng 8 linggo, gaya sa kabanata 07, at kulang pa ang huling linggo (45). Iniuulat ito ng tapat na ebalwasyon. Sa kabanata 07, halos hindi nakatulong kahit ang rainfall; ang taong alam na kadaraan lang ng bagyo (ikaw!) ang makatutulong."]
     }
   ];
 
@@ -2000,7 +2000,7 @@
           if (ok) score++;
           ctx.setScore(score, 3);
           ctx.say(ok ? "good" : "bad", mission === 1 ?
-            fmt(L(["Quantile classes split the 24 barangays into five groups of about 5 (count them in the legend). Equal interval splits the range of values instead — with these numbers only {n} barangays reach the top class.", "分位數分級把 24 個 barangay 分成五組、每組約 5 個（數數圖例）。等距分級則是平分數值範圍——以這組數字，只有 {n} 個 barangay 進入最高級。", "Hinahati ng quantile ang 24 barangay sa limang grupo na tig-~5 (bilangin sa legend). Ang equal interval naman ay hinahati ang saklaw ng values — {n} barangay lang dito ang umabot sa pinakamataas na class."]), { n: topEqual() }) :
+            fmt(L(["Quantile classes split the 24 barangays into five groups of about 5 (count them in the legend). Equal interval splits the range of values instead — with these numbers only {n} barangays reach the top class.", "分位數分級把 24 個 barangay 分成五組、每組約 5 個（數數圖例）。等距分級則是平分數值範圍——以這組數字，只有 {n} 個 barangay 進入最高級。", "Hinahati ng quantile ang 24 barangay sa limang grupo na may tig-lilimang barangay, humigit-kumulang (bilangin sa legend). Ang equal interval naman ay hinahati ang saklaw ng values — {n} barangay lang dito ang umabot sa pinakamataas na class."]), { n: topEqual() }) :
             L(["A sequential palette goes from light to dark, so 'darker = more' needs no legend. Rainbow colours have no natural order.", "單色漸層由淺到深，「越深＝越多」不需要圖例。彩虹色沒有自然的順序。", "Mula maliwanag hanggang madilim ang sequential palette, kaya 'mas madilim = mas marami' kahit walang legend. Walang natural na pagkakasunod ang rainbow."]),
             ok ? goodWord() : badWord());
           if (ok) ctx.celebrate(false);
@@ -2076,8 +2076,8 @@
     bucket: { icon: "bucket", breed: true, n: ["Pail of rainwater", "裝了雨水的水桶", "Baldeng may tubig-ulan"], e: ["Use it, empty it or cover it — never leave it sitting.", "用掉、倒掉或蓋起來——別放著不管。", "Gamitin, itapon ang tubig o takpan — huwag hayaang nakatiwangwang."] },
     bucketDown: { icon: "bucketDown", breed: false, n: ["Pail turned upside down", "倒扣的水桶", "Baldeng nakataob"], e: ["Turned over: it cannot collect water.", "倒扣著，不會積水。", "Nakataob: hindi makaiipon ng tubig."] },
     bottle: { icon: "bottle", breed: true, n: ["Open bottle with water", "裝水的開口瓶", "Bukas na boteng may tubig"], e: ["Empty it and store bottles upside down.", "倒掉積水，把瓶子倒放。", "Itapon ang tubig at itaob ang mga bote."] },
-    bottlesDown: { icon: "bottlesDown", breed: false, n: ["Bottles stored upside down", "倒放的瓶子", "Mga boteng nakataob"], e: ["Stored upside down: exactly right.", "倒放收納，完全正確。", "Nakataob ang pagkakatago: tama!"] },
-    saucer: { icon: "saucer", breed: true, n: ["Plant saucer with water", "積水的花盆底盤", "Platito ng paso na may tubig"], e: ["Saucers under pots collect water. Empty them weekly or fill them with sand.", "花盆底盤會積水。每週倒掉，或填入沙子。", "Nag-iipon ng tubig ang platito sa ilalim ng paso. Itapon linggu-linggo o lagyan ng buhangin."] },
+    bottlesDown: { icon: "bottlesDown", breed: false, n: ["Bottles stored upside down", "倒放的瓶子", "Mga boteng nakataob"], e: ["Stored upside down: exactly right.", "倒放收納，完全正確。", "Nakataob ang pagkakatago: tamang-tama!"] },
+    saucer: { icon: "saucer", breed: true, n: ["Plant saucer with water", "積水的花盆底盤", "Platito ng paso na may tubig"], e: ["Saucers under pots collect water. Empty them weekly or fill them with sand.", "花盆底盤會積水。每週倒掉，或填入沙子。", "Nag-iipon ng tubig ang platito sa ilalim ng paso. Itapon ang tubig linggu-linggo o lagyan ng buhangin."] },
     saucerSand: { icon: "saucerSand", breed: false, n: ["Plant saucer filled with sand", "填沙的花盆底盤", "Platitong may buhangin"], e: ["Sand keeps water from pooling. Good idea!", "沙子讓水無法積存，好方法！", "Pinipigilan ng buhangin ang pag-ipon ng tubig. Magandang ideya!"] },
     pond: { icon: "pond", breed: false, n: ["Pond with fish", "有魚的池塘", "Pond na may isda"], e: ["Fish such as guppies eat mosquito larvae — leave this one alone.", "孔雀魚等魚類會吃孑孓——這個不用動。", "Kinakain ng isda gaya ng guppy ang kiti-kiti — hayaan na ito."] },
     can: { icon: "can", breed: true, n: ["Empty can", "空罐", "Lata"], e: ["Discarded cans fill with rain. Crush them and put them in the trash.", "丟棄的空罐會積雨水。壓扁後丟進垃圾桶。", "Napupuno ng ulan ang mga itinapong lata. Pitpitin at ilagay sa basurahan."] },
@@ -2146,7 +2146,7 @@
           it.done = true; found++; points += 10;
           b.classList.add("is-cleared");
           b.setAttribute("aria-label", L(it.def.n) + " — " + L(["cleared", "已清除", "nalinis na"]));
-          b.appendChild(h("span", { class: "ph-splash", "aria-hidden": "true" }, L(["Cleared!", "清除！", "Tinaob!"])));
+          b.appendChild(h("span", { class: "ph-splash", "aria-hidden": "true" }, L(["Cleared!", "清除！", "Itinaob!"])));
           ctx.say("good", L(it.def.e), goodWord());
         } else {
           points = Math.max(0, points - 5);
@@ -2192,7 +2192,7 @@
         ["Search and destroy breeding sites", "搜尋並清除孳生源", "Search and destroy — hanapin at sirain ang pinamumugaran ng lamok"],
         ["Secure self-protection (long sleeves, repellent)", "做好自我防護（長袖、防蚊液）", "Secure self-protection (mahabang manggas, repellent)"],
         ["Seek early consultation for fever", "發燒及早就醫", "Seek early consultation kapag nilagnat"],
-        ["Support fogging only in outbreak hotspots", "只在疫情熱區配合噴藥", "Suportahan ang fogging sa outbreak hotspots lamang"]
+        ["Support fogging only in outbreak hotspots", "只在疫情熱區配合噴藥", "Support fogging sa outbreak hotspots lamang"]
       ];
       var box = h("div", { class: "ph-end", tabindex: "-1" }, [talaStar(88),
         h("p", { class: "ph-end-score" }, fmt(L(["Patrol complete: {p} points!", "巡邏完成：{p} 分！", "Tapos ang patrol: {p} puntos!"]), { p: totalPts })),
