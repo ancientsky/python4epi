@@ -94,9 +94,13 @@ jobs:
             || fail "zh instructor solutions missing"
           [ -f page_artifact/en/instructor/chapters/solutions/stats-solution/index.html ] \
             || fail "en instructor solutions missing"
+          # Match the solutions chapter and solution notebooks/pages only: the
+          # theme ships an unrelated syntax-highlighting chunk named
+          # build/_shared/solution-file-*.js, which a bare '*solution*' would hit.
           for student in page_artifact page_artifact/en; do
             if find "$student" -path "$student/instructor" -prune -o -path "$student/en" -prune \
-                 -o -name '*solution*' -print | grep -q .; then
+                 -o \( -path '*/chapters/solutions*' -o -name '*_solution.*' -o -name '*-solution' \) \
+                 -print | grep -q .; then
               fail "$student contains solution files"
             fi
           done
