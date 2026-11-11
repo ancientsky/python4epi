@@ -106,7 +106,7 @@ pinapayagan ng opisina mo; pareho ang paraan.
 ## Ang paraan: Ask → Run → Check
 
 ```{figure} images/ask_run_check_fil.svg
-:alt: Ikot ng tatlong istasyon. Magtanong: pangalanan ang mga column at gawa-gawang rows lang ang ibigay. Patakbuhin: patakbuhin sa Colab at basahin ang error. Suriin: subukan sa maliit na kasong kayang bilangin nang mano-mano. May palaso mula Suriin pabalik sa Magtanong: ayusin at magtanong ulit.
+:alt: Ikot ng tatlong istasyon. Magtanong: pangalanan ang mga column at gawa-gawang rows lang ang ibigay. Patakbuhin: patakbuhin sa Colab at basahin ang error. I-check: subukan sa maliit na kasong kayang bilangin nang mano-mano. May palaso mula I-check pabalik sa Magtanong: ayusin at magtanong ulit.
 :width: 100%
 Dadaan sa ikot na ito kahit isang beses ang bawat piraso ng code sa aklat na ito.
 ```
@@ -115,7 +115,7 @@ Dadaan sa ikot na ito kahit isang beses ang bawat piraso ng code sa aklat na ito
    gawa-gawang row.
 2. **Run (patakbuhin).** I-paste ang code sa isang cell at patakbuhin. Kung may error,
    basahin muna ang huling linya. Kadalasan, sinasabi nito kung ano ang mali.
-3. **Check (suriin).** Subukan ang code sa kasong napakaliit na kaya mong bilangin nang
+3. **Check (i-check).** Subukan ang code sa kasong napakaliit na kaya mong bilangin nang
    mano-mano. Tugma ba ang total sa bilang ng rows? Tama ba ang denominator? Kung may
    mali, sabihin kay Tala ang nakita mo at magtanong ulit.
 
@@ -168,7 +168,7 @@ assert counts.sum() == len(dengue)              # check: isang beses nabilang an
 ```
 :::
 
-:::{admonition} Suriin
+:::{admonition} I-check natin
 :class: ph-check
 1. Patakbuhin muna ito sa tatlong gawa-gawang row. Sinabi mong inaasahan mo ang A = 1,
    B = 1. Iyan ba ang lumabas?
@@ -227,7 +227,7 @@ Bawat row ay kapitbahay.
    - ✓ Ang eksaktong pangalan ng mga column at dalawang imbentong row — iyan na ang lahat ng kailangan ni Tala.
    - Ang pangalan ng pasyente, para maintindihan ni Tala ang kaso — hindi kailanman pumapasok sa AI chat ang pangalan.
 3. Sa Colab, sinasabi ng isang cell na hindi naka-define ang isang variable. Ano ang malamang na dahilan?
-   - ✓ May naunang cell na hindi pa napapatakbo — patakbuhin ang mga cell mula sa itaas, nang sunud-sunod.
+   - ✓ May naunang cell na hindi pa napapatakbo — patakbuhin ang mga cell mula sa itaas, nang sunod-sunod.
    - Sira ang Colab — minsan nakatutulong ang pag-restart, pero kadalasang ang pagkakasunod ng mga cell ang dahilan.
    - Kailangang may naka-install na Python sa computer mo — hindi: pinapatakbo ng Colab ang Python sa mga computer ng Google; browser lang ang kailangan mo.
 :::

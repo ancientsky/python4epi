@@ -68,7 +68,7 @@ seasonal_naive = np.stack([y[o - 52:o - 52 + H] for o in origins])  # walang ISO
 ```
 :::
 
-:::{admonition} Suriin
+:::{admonition} I-check natin
 :class: ph-check
 1. Pumili ng isang origin at tingnan: inuulit ba talaga ng "last value" ang linggo *bago*
    ang origin? Kinokopya ba ng "seasonal naive" ang parehong ISO week isang taon bago?
@@ -174,7 +174,7 @@ Mula sa lahat ng datos hanggang 2026-W39, bumababa ang median ng TimesFM mula **
 W40 (80% interval 24–63)** papuntang **16 sa W47 (6–44)**. 215 kaso ang kabuuan ng mga
 lingguhang median para sa walong linggo; 75 ang parehong walong linggo noong 2025.
 
-:::{admonition} Suriin
+:::{admonition} I-check natin
 :class: ph-check
 1. **Kumpleto na ba ang huling linggo?** Hindi pa: inuulat pa ang W39 (45 kaso) (tingnan
    ang [kabanata 06](06_signals_and_thresholds.md)). Mula sa datos hanggang W38, 53 kaso

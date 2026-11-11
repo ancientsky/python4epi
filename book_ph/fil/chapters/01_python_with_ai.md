@@ -26,7 +26,7 @@ description: "Ang pinakakaunting Python na kailangan mo para mabasa ang code na 
 ::::
 
 Mas kaunti kaysa inaakala mo. Hindi mo kailangang *sumulat* ng programa mula sa memorya.
-Kailangan mo lang makilala ang mga pitong building block, gaya ng pagkilala mo sa mga
+Kailangan mo lang makilala ang pitong building block, gaya ng pagkilala mo sa mga
 bahagi ng case investigation form. Itinuturo ng kabanatang ito ang pitong iyon, gamit ang
 anim na form ni Maya.
 
@@ -95,7 +95,7 @@ Basahin ito na parang tally sheet ni Maya: magsimula sa zero, tingnan ang bawat 
 na space papasok) ay bahagi ng loop at ng `if`; sa indentation nalalaman ng Python kung
 ano ang nasa loob ng ano.
 
-:::{admonition} Suriin
+:::{admonition} I-check natin
 :class: ph-check
 1. **Bilangin muna nang mano-mano**, bago ka magpatakbo ng kahit ano: leptospirosis ang
    form A, C at E. **3** iyon.
@@ -148,7 +148,7 @@ print(f"{waded_lepto} sa {len(lepto_forms)} leptospirosis form ang lumusong: {an
 
 Ipi-print nito ang `2 sa 3 leptospirosis form ang lumusong: 66.7%`. Ang linyang
 `[f for f in forms if ...]` ay isang-linyang loop: itinitira lang nito ang mga form na
-pumasa sa test. Ang mga label na `: int` at `-> float` ay opsyonal na tala kung ano ang
+pumasa sa test. Ang mga label na `: int` at `-> float` ay opsiyonal na tala kung ano ang
 pumapasok at ano ang lumalabas.
 
 ## Hanapin ang bug

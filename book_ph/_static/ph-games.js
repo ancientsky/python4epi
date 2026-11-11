@@ -747,7 +747,7 @@
           { t: ["The number of deaths", "死亡數", "Bilang ng namatay"], e: ["Deaths over cases is the case fatality rate.", "死亡數除以病例數是致死率。", "Ang namatay ÷ kaso ay case fatality rate."] }] },
       { q: ["An epi curve with one sharp peak that rises and falls within one incubation period suggests…", "流行曲線只有一個尖峰，且在一個潛伏期內上升又下降，代表……", "Ang epi curve na may isang matulis na peak na tumaas at bumaba sa loob ng isang incubation period ay nagpapahiwatig ng…"],
         o: [{ t: ["A point source", "單一時點共同感染源（所有人同時暴露）", "Point source"], ok: true, e: ["Everyone was exposed at about the same time, like one shared meal. (Santa Luz's leptospirosis curve stayed high for two weeks: a continuing source.)", "大家大約在同一時間暴露，例如同一餐。（Santa Luz 的鉤端螺旋體病曲線維持高峰兩週：持續性共同感染源。）", "Halos sabay-sabay na-expose ang lahat, gaya ng iisang kainan. (Nanatiling mataas nang dalawang linggo ang leptospirosis curve ng Santa Luz: continuing source.)"] },
-          { t: ["Person-to-person spread", "人傳人", "Hawaan ng tao sa tao"], e: ["Propagated spread shows successive, growing waves.", "人傳人（連鎖傳播）會出現一波比一波高的連續波峰。", "Ang propagated ay may sunud-sunod at lumalaking alon."] }] },
+          { t: ["Person-to-person spread", "人傳人", "Hawaan ng tao sa tao"], e: ["Propagated spread shows successive, growing waves.", "人傳人（連鎖傳播）會出現一波比一波高的連續波峰。", "Ang propagated ay may sunod-sunod at lumalaking alon."] }] },
       { q: ["39 leptospirosis cases and 6 deaths in Barangay Ilog. The case fatality rate is…", "Barangay Ilog 有 39 例鉤端螺旋體病、6 例死亡，致死率是……", "39 kaso ng leptospirosis at 6 namatay sa Barangay Ilog. Ang case fatality rate ay…"],
         o: [{ t: ["15.4%", "15.4%", "15.4%"], ok: true, e: ["6 ÷ 39 = 0.154.", "6 ÷ 39 = 0.154。", "6 ÷ 39 = 0.154."] },
           { t: ["0.04%", "0.04%", "0.04%"], e: ["That divides by Ilog's 13,411 residents — a mortality rate.", "那是除以 Ilog 的 13,411 位居民——死亡率。", "Hinati iyan sa 13,411 residente ng Ilog — mortality rate iyon."] },
@@ -759,7 +759,7 @@
           { t: ["7 cases, 1 death, 7 barangays", "7 例、1 死、7 個 barangay", "7 kaso, 1 namatay, 7 barangay"], e: ["7-1-7 is a timeliness target, not a case count.", "7-1-7 是時效目標，不是病例數。", "Timeliness target ang 7-1-7, hindi bilang ng kaso."] }] },
       { q: ["The alert threshold in this book is…", "本書使用的警戒閾值是……", "Ang alert threshold sa aklat na ito ay…"],
         o: [{ t: ["The mean of the same week in past years + 2 standard deviations", "過去數年同一週的平均值 + 2 個標準差", "Mean ng parehong linggo sa mga nakaraang taon + 2 standard deviations"], ok: true, e: ["Weeks far above the usual range for that time of year raise a signal.", "遠高於該時節平常範圍的週數會發出訊號。", "Nagbibigay ng signal ang linggong lampas na lampas sa karaniwan para sa panahong iyon."] },
-          { t: ["Any week with more cases than last week", "任何比上週多的一週", "Anumang linggong mas marami ang kaso kaysa noong nakaraang linggo"], e: ["Counts go up and down by chance; that would alarm every other week.", "病例數本來就會隨機起伏，這樣幾乎每隔一週就要警報。", "Tumataas-bumababa ang bilang nang nagkataon; halos linggu-linggo kang mag-a-alarm."] }] }
+          { t: ["Any week with more cases than last week", "任何比上週多的一週", "Anumang linggong mas marami ang kaso kaysa noong nakaraang linggo"], e: ["Counts go up and down by chance; that would alarm every other week.", "病例數本來就會隨機起伏，這樣幾乎每隔一週就要警報。", "Tumataas-bumababa ang bilang nang nagkataon; halos linggo-linggo kang mag-a-alarm."] }] }
     ]
   };
 
@@ -1136,7 +1136,7 @@
       title: ["Practice scenario: dengue in a made-up village, by morbidity week", "練習情境：虛構村落的登革熱，依流行病學週", "Practice scenario: dengue sa isang gawa-gawang nayon, ayon sa morbidity week"],
       context: ["Aedes mosquitoes carry dengue from person to person. One cycle (human → mosquito → human) takes about 2–3 weeks.", "登革熱靠斑蚊在人與人之間傳播。一個循環（人 → 蚊 → 人）約需 2–3 週。", "Dinadala ng lamok na Aedes ang dengue mula tao sa tao. Mga 2–3 linggo ang isang ikot (tao → lamok → tao)."],
       pre: [1, 0, 0, 1, 1, 0, 3, 2, 1, 6, 7, 4, 2, 1], mine: [3, 6, 7, 9, 10, 10], answer: "propagated",
-      why: ["Successive waves about one cycle apart, each taller than the last: every generation of cases infects the next.", "連續數波、每波相隔約一個傳播週期，且一波比一波高：每一代病例再感染下一代。", "Sunud-sunod na alon na mga isang ikot ang pagitan, palaki nang palaki: bawat henerasyon ng kaso ay nakahahawa sa susunod."]
+      why: ["Successive waves about one cycle apart, each taller than the last: every generation of cases infects the next.", "連續數波、每波相隔約一個傳播週期，且一波比一波高：每一代病例再感染下一代。", "Sunod-sunod na alon na mga isang ikot ang pagitan, palaki nang palaki: bawat henerasyon ng kaso ay nakahahawa sa susunod."]
     }
   ];
 
@@ -2000,7 +2000,7 @@
           if (ok) score++;
           ctx.setScore(score, 3);
           ctx.say(ok ? "good" : "bad", mission === 1 ?
-            fmt(L(["Quantile classes split the 24 barangays into five groups of about 5 (count them in the legend). Equal interval splits the range of values instead — with these numbers only {n} barangays reach the top class.", "分位數分級把 24 個 barangay 分成五組、每組約 5 個（數數圖例）。等距分級則是平分數值範圍——以這組數字，只有 {n} 個 barangay 進入最高級。", "Hinahati ng quantile ang 24 barangay sa limang grupo na may tig-lilimang barangay, humigit-kumulang (bilangin sa legend). Ang equal interval naman ay hinahati ang saklaw ng values — {n} barangay lang dito ang umabot sa pinakamataas na class."]), { n: topEqual() }) :
+            fmt(L(["Quantile classes split the 24 barangays into five groups of about 5 (count them in the legend). Equal interval splits the range of values instead — with these numbers only {n} barangays reach the top class.", "分位數分級把 24 個 barangay 分成五組、每組約 5 個（數數圖例）。等距分級則是平分數值範圍——以這組數字，只有 {n} 個 barangay 進入最高級。", "Hinahati ng quantile ang 24 barangay sa limang grupo, humigit-kumulang lima bawat grupo (bilangin sa legend). Ang equal interval naman ay hinahati ang saklaw ng values — {n} barangay lang dito ang umabot sa pinakamataas na class."]), { n: topEqual() }) :
             L(["A sequential palette goes from light to dark, so 'darker = more' needs no legend. Rainbow colours have no natural order.", "單色漸層由淺到深，「越深＝越多」不需要圖例。彩虹色沒有自然的順序。", "Mula maliwanag hanggang madilim ang sequential palette, kaya 'mas madilim = mas marami' kahit walang legend. Walang natural na pagkakasunod ang rainbow."]),
             ok ? goodWord() : badWord());
           if (ok) ctx.celebrate(false);
@@ -2077,7 +2077,7 @@
     bucketDown: { icon: "bucketDown", breed: false, n: ["Pail turned upside down", "倒扣的水桶", "Baldeng nakataob"], e: ["Turned over: it cannot collect water.", "倒扣著，不會積水。", "Nakataob: hindi makaiipon ng tubig."] },
     bottle: { icon: "bottle", breed: true, n: ["Open bottle with water", "裝水的開口瓶", "Bukas na boteng may tubig"], e: ["Empty it and store bottles upside down.", "倒掉積水，把瓶子倒放。", "Itapon ang tubig at itaob ang mga bote."] },
     bottlesDown: { icon: "bottlesDown", breed: false, n: ["Bottles stored upside down", "倒放的瓶子", "Mga boteng nakataob"], e: ["Stored upside down: exactly right.", "倒放收納，完全正確。", "Nakataob ang pagkakatago: tamang-tama!"] },
-    saucer: { icon: "saucer", breed: true, n: ["Plant saucer with water", "積水的花盆底盤", "Platito ng paso na may tubig"], e: ["Saucers under pots collect water. Empty them weekly or fill them with sand.", "花盆底盤會積水。每週倒掉，或填入沙子。", "Nag-iipon ng tubig ang platito sa ilalim ng paso. Itapon ang tubig linggu-linggo o lagyan ng buhangin."] },
+    saucer: { icon: "saucer", breed: true, n: ["Plant saucer with water", "積水的花盆底盤", "Platito ng paso na may tubig"], e: ["Saucers under pots collect water. Empty them weekly or fill them with sand.", "花盆底盤會積水。每週倒掉，或填入沙子。", "Nag-iipon ng tubig ang platito sa ilalim ng paso. Itapon ang tubig linggo-linggo o lagyan ng buhangin."] },
     saucerSand: { icon: "saucerSand", breed: false, n: ["Plant saucer filled with sand", "填沙的花盆底盤", "Platitong may buhangin"], e: ["Sand keeps water from pooling. Good idea!", "沙子讓水無法積存，好方法！", "Pinipigilan ng buhangin ang pag-ipon ng tubig. Magandang ideya!"] },
     pond: { icon: "pond", breed: false, n: ["Pond with fish", "有魚的池塘", "Pond na may isda"], e: ["Fish such as guppies eat mosquito larvae — leave this one alone.", "孔雀魚等魚類會吃孑孓——這個不用動。", "Kinakain ng isda gaya ng guppy ang kiti-kiti — hayaan na ito."] },
     can: { icon: "can", breed: true, n: ["Empty can", "空罐", "Lata"], e: ["Discarded cans fill with rain. Crush them and put them in the trash.", "丟棄的空罐會積雨水。壓扁後丟進垃圾桶。", "Napupuno ng ulan ang mga itinapong lata. Pitpitin at ilagay sa basurahan."] },

@@ -63,7 +63,7 @@ brgy["attack_rate"] = brgy["cases"] / brgy["population"] * 10_000
 ```
 :::
 
-:::{admonition} Suriin
+:::{admonition} I-check natin
 :class: ph-check
 1. **24 na row** pagkatapos ng join: `assert len(brgy) == 24`.
 2. **Ang kabuuan**: dapat umabot sa lahat ng 388 kaso ng dengue ang suma ng mga bilang
@@ -109,7 +109,7 @@ mga bilang sa hover text o sa table sa tabi ng mapa.
 
 ## Isang interactive na mapa
 
-Para sa screen, iginuguhit ng plotly ang parehong mapa na may hover label: barangay, band,
+Para sa screen, iginuguhit ng plotly ang parehong mapa na may hover label: barangay, bahagi ng lungsod,
 kaso, populasyon at rate. Kailangan nito ang mga polygon bilang GeoJSON at ang key na
 nag-uugnay sa bawat row sa isang polygon, `featureidkey="properties.barangay_id"`. Hindi
 tayo naglalagay ng background map tile: kathang-isip ang Santa Luz, at sadyang nasa gitna

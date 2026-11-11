@@ -1134,8 +1134,8 @@ STRINGS: dict[str, dict[str, Any]] = {
         "a1_b": "Pinakamataas ang dengue attack rate sa {top}. Simulan ang 4S search-and-destroy "
                 "kasama ang mga BHW sa mga barangay na ito.",
         "a2_t": "Ihanda ang mga ospital sa severe dengue",
-        "a2_b": "Sa ngayon, {ws} kaso ang may warning signs at {sev} ang severe dengue. Suriin "
-                "ang IV fluids at kama; ituro sa pamilya ang mga warning sign.",
+        "a2_b": "Sa ngayon, {ws} kaso ang may warning signs at {sev} ang severe dengue. I-check "
+                "ang IV fluids at mga kama; ituro sa pamilya ang mga warning sign.",
         "a3_t": "Mag-ingat sa pagbasa ng huling linggo",
         "a3_b": "Kulang pa ang {wk} dahil sa reporting delay. Tingnan ang trend sa mga "
                 "kumpletong linggo ({prev}: {prev_n}, {last}: {last_n}).",
@@ -1197,7 +1197,7 @@ STRINGS: dict[str, dict[str, Any]] = {
             "One DSO for 24 barangays": "Iisang DSO para sa 24 na barangay",
             "BHW noticed the cluster but had no load to text the CESU":
                 "Napansin ng BHW ang cluster pero walang load para i-text ang CESU",
-            "PESU learned of it days later": "Ilang araw bago nalaman ng PESU",
+            "PESU learned of it days later": "Ilang araw pa bago nalaman ng PESU",
             "Notified by personal chat message, not logged":
                 "Na-notify sa personal na chat, hindi naitala",
         },

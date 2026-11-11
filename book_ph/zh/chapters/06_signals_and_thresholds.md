@@ -18,16 +18,16 @@ description: "Maya 先認識菲律賓體系中疫情訊號從哪裡來，接著�
 
 ## 兩種訊號
 
-**訊號（signal）**指的是任何可能代表疫情的跡象。菲律賓的體系用兩種方式蒐集訊號。
+**訊號**（signal）指的是任何可能代表疫情的跡象。菲律賓的體系用兩種方式蒐集訊號。
 
-**指標型監測（indicator-based surveillance）**是透過例行通報，計算符合病例定義的病例數。這就是 **PIDSR**（Philippine Integrated Disease Surveillance and Response，菲律賓整合性疾病監測與應變系統）以及它的網路資訊系統 **EDCS**。疾病通報單位（醫院、鄉鎮衛生所 RHU、診所、檢驗室）要在 24 小時內通報第一類疾病，而第二類疾病（例如登革熱）則是每週通報一次
+**指標型監測**（indicator-based surveillance）是透過例行通報，計算符合病例定義的病例數。這就是 **PIDSR**（Philippine Integrated Disease Surveillance and Response，菲律賓整合性疾病監測與應變系統）以及它的網路資訊系統 **EDCS**。疾病通報單位（醫院、鄉鎮衛生所 RHU、診所、檢驗室）要在 24 小時內通報第一類疾病，而第二類疾病（例如登革熱）則是每週通報一次
 （[RA 11332 的 2020 年修訂施行細則](https://law.upd.edu.ph/wp-content/uploads/2020/09/DOH-Revised-IRR-RA-11332.pdf)）。
 通報由醫療院所往上送到市或鎮的流行病學與監測單位（ESU），再到省級的 PESU、區域的 RESU，最後是衛生部（DOH）的流行病學局
 （[WHO 聯合外部評核，2018](https://extranet.who.int/sph/sites/default/files/document-library/document/JEE%20Report%20Republic%20of%20the%20Philippines%202018.pdf)）。
 
-**事件型監測（event-based surveillance）**則是撈出表單沒預先設計到的*異常事件*：一群生病的孩子、一則謠言、一則新聞、一封簡訊。DOH 把它稱為 **ESR**（Event-based Surveillance and Response，事件型監測與應變），自 2010 年起運作
+**事件型監測**（event-based surveillance）則是撈出表單沒預先設計到的*異常事件*：一群生病的孩子、一則謠言、一則新聞、一封簡訊。DOH 把它稱為 **ESR**（Event-based Surveillance and Response，事件型監測與應變），自 2010 年起運作
 （[WPSAR，2015](https://ojs.wpro.who.int/ojs/index.php/wpsar/article/download/368/578?inline=1)）。
-由**村里衛生員（Barangay Health Worker, BHW）**在社區通報——就像 Aling Nena 做的那樣——2024 年曾在中呂宋部分地區試辦，而 2024 年的聯合外部評核把「讓它成為常規」列為優先事項
+由**村里衛生員**（Barangay Health Worker, BHW）在社區通報——就像 Aling Nena 做的那樣——2024 年曾在中呂宋部分地區試辦，而 2024 年的聯合外部評核把「讓它成為常規」列為優先事項
 （[WHO JEE，2024](https://www.who.int/publications/i/item/9789240116795)）。
 
 ```{figure} images/reporting_ladder_zh.svg
@@ -42,11 +42,11 @@ description: "Maya 先認識菲律賓體系中疫情訊號從哪裡來，接著�
 
 ## 流行病學週
 
-登革熱是按**流行病學週（morbidity week）**來計算的。我們的檔案採用 ISO 週：週一到週日，標示成像 `2026-W32`（2026 年 8 月 3 日至 9 日）這樣。它並不代表官方 PIDSR 曆法。`iso_year` 與 `iso_week` 兩個欄位讓我們能把不同年份的「同一週」對齊。資料從 2019-W01 到 2026-W39，而且是**合成資料**：Santa Luz、當地雨量與病例全是虛構的。
+登革熱是按**流行病學週**（morbidity week）來計算的。我們的檔案採用 ISO 週：週一到週日，標示成像 `2026-W32`（2026 年 8 月 3 日至 9 日）這樣。它並不代表官方 PIDSR 曆法。`iso_year` 與 `iso_week` 兩個欄位讓我們能把不同年份的「同一週」對齊。資料從 2019-W01 到 2026-W39，而且是**合成資料**：Santa Luz、當地雨量與病例全是虛構的。
 
 ## 警戒閾值
 
-**流行閾值（epidemic threshold）**要回答的是：*在平常的年份，這一週最高可以到多高？* 這個序列用的規則是：
+**流行閾值**（epidemic threshold）要回答的是：*在平常的年份，這一週最高可以到多高？* 這個序列用的規則是：
 
 1. 針對 ISO 週 *w*，取**基準年 2022–2025** 的第 *w*−1、*w*、*w*+1 週：4 年 × 3 週 = 12 個數字。
 2. 閾值 = 這些數字的**平均值 + 2 個標準差**。
@@ -85,14 +85,14 @@ def epidemic_threshold(weekly, years):
 
 :::{admonition} 檢查一下
 :class: ph-check
-1. **手算其中一週。** 筆記本 會列出 W32 的 12 個基準值，並用 Python 的 `statistics` 模組重算平均值 + 2 個標準差，兩邊都是 17.45。
+1. **手算其中一週。** 筆記本會列出 W32 的 12 個基準值，並用 Python 的 `statistics` 模組重算平均值 + 2 個標準差，兩邊都是 17.45。
 2. **窗口大小。** 第 1–52 週每一週都必須剛好有 12 個值。
 3. **故事對得上。** W32 之前沒有任何一個 2026 年的週別高於閾值，而之後每一週都高於。
 :::
 
 ## 地方性流行通道
 
-**地方性流行通道（endemic channel）**把一年中每一週的「平常水準」畫出來。在 筆記本 裡，細灰線是四個基準年，綠線是它們的平均值（預期值），橘色虛線是閾值。2026 年的長條疊在上面，紅色長條代表高於閾值。颱風 Amihan（W29）之前，2026 年一直很低——這一年開頭比往年安靜。接著從 W32 起，長條衝破了通道。
+**地方性流行通道**（endemic channel）把一年中每一週的「平常水準」畫出來。在筆記本裡，細灰線是四個基準年，綠線是它們的平均值（預期值），橘色虛線是閾值。2026 年的長條疊在上面，紅色長條代表高於閾值。颱風 Amihan（W29）之前，2026 年一直很低——這一年開頭比往年安靜。接著從 W32 起，長條衝破了通道。
 
 :::{admonition} Tala 搞錯了
 :class: ph-oops
@@ -103,7 +103,7 @@ Maya 怎麼抓到的：在每次計算閾值之前加一行 `assert 2026 not in 
 
 ## 為什麼最新幾週永遠偏低
 
-檔案是依**發病週**計算病例，但病例要等病人就醫、醫療院所通報之後才會到 CESU。在 Santa Luz，從發病到通報的中位數延遲是 4 天。所以最新幾週永遠是不完整的。筆記本 用造冊重現了這個現象：同樣幾週，在三個不同的日子來數。
+檔案是依**發病週**計算病例，但病例要等病人就醫、醫療院所通報之後才會到 CESU。在 Santa Luz，從發病到通報的中位數延遲是 4 天。所以最新幾週永遠是不完整的。筆記本用造冊重現了這個現象：同樣幾週，在三個不同的日子來數。
 
 | 發病週 | W35 | W36 | W37 | W38 |
 |---|---:|---:|---:|---:|
@@ -175,7 +175,7 @@ events["all_ok"] = events[["detect_ok", "notify_ok", "respond_ok"]].all(axis=1)
 
 :::{admonition} 隱私停看聽
 :class: ph-privacy
-訊號只需要*什麼、哪裡、何時*——「Baybay 第 3 purok（社區小組）有五個發燒的孩子，從週一開始」。它不需要把姓名貼在群組聊天室裡。Santa Luz 有一個瓶頸正是*「以私人聊天訊息通報，未登錄」*：請透過正式管道傳送訊號，這樣才有紀錄，也只有需要知道的人看得到。還有，一如既往，千萬不要把造冊貼進 AI 對話。請描述欄位，並使用虛構的資料列。
+訊號只需要*什麼、哪裡、何時*——「Baybay 第 3 purok（社區小組）有五個發燒的孩子，從週一開始」。它不需要把姓名貼在群組聊天室裡。Santa Luz 有一個瓶頸正是「*以私人聊天訊息通報，未登錄*」：請透過正式管道傳送訊號，這樣才有紀錄，也只有需要知道的人看得到。還有，一如既往，千萬不要把造冊貼進 AI 對話。請描述欄位，並使用虛構的資料列。
 :::
 
 :::{div}
@@ -203,5 +203,5 @@ events["all_ok"] = events[["detect_ok", "notify_ok", "respond_ok"]].all(axis=1)
 - 最新幾週永遠不完整，請讀成「至少」。
 - 每一起事件都要量 7-1-7，再去讀 bottleneck。大多數的解法都不是程式碼。
 
-開啟 筆記本：[](notebooks/06_signals_and_thresholds.ipynb)
+開啟筆記本：[](notebooks/06_signals_and_thresholds.ipynb)
 :::

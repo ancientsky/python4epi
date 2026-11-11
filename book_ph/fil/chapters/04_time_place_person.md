@@ -29,7 +29,7 @@ Pagkatapos ng Bagyong Amihan, ilang araw na lumusong sa baha ang mga residente s
 Bago magbilang, nagkakasundo muna tayo sa **case definition**: maikling listahan ng
 pamantayan na nagpapasya kung sino ang bibilangin, para pare-pareho ang pagbibilang ng
 bawat health facility. Kadalasang hinahati ng surveillance ang mga kaso ayon sa
-katiyakan. Ang mga definition sa ibaba ay **pinasimpleng bersyon para sa pagtuturo** na
+katiyakan. Ang mga definition sa ibaba ay **pinasimpleng bersiyon para sa pagtuturo** na
 ginagamit sa kuwento ng aklat na ito. Nasa PIDSR Manual of Procedures at mga update nito
 ang opisyal na pananalita
 ([catalogue entry](https://www.medbox.org/document/manual-of-procedures-for-the-philippine-integrated-disease-surveillance-and-response)).
@@ -73,7 +73,7 @@ Pagkatapos, iguhit ang mga bar gamit ang `ax.bar`, ang landfall gamit ang `ax.ax
 ang mga may shading na panahon gamit ang `ax.axvspan`.
 :::
 
-:::{admonition} Suriin
+:::{admonition} I-check natin
 :class: ph-check
 1. Dapat tumugma ang kabuuan ng mga bar sa mga kasong **may** petsa ng onset: 228 + 2 na
    wala = 230.
@@ -87,10 +87,10 @@ ang mga may shading na panahon gamit ang `ax.axvspan`.
 
 - **Point source**: sabay-sabay na na-expose ang lahat, gaya ng iisang kainan. Isang
   matulis na peak ang lalabas, mga isang incubation period ang lapad. Ang **incubation
-  period** ay ang panahon mula impeksyon hanggang sa unang sintomas.
+  period** ay ang panahon mula impeksiyon hanggang sa unang sintomas.
 - **Continuing common source**: parehong pinagmulan sa loob ng ilang araw o linggo.
   Tumataas ang curve, nananatiling mataas habang may exposure, saka bumababa.
-- **Propagated**: hawaan ng tao sa tao, sunud-sunod na alon na mga isang henerasyon ang
+- **Propagated**: hawaan ng tao sa tao, sunod-sunod na alon na mga isang henerasyon ang
   pagitan.
 
 Iisang alon ang leptospirosis curve. Ang unang onset ay 22 Hulyo, apat na araw pagkatapos
@@ -116,14 +116,14 @@ tumataas ang lingguhang kaso ng dengue at umaabot sa peak sa ISO week 37 (63 kas
 :class: ph-game ph-game-epicurve-builder
 Ang iisang matulis na alon sa loob ng mga isang incubation period ay nagpapahiwatig ng
 point source; ang alon na nananatiling mataas habang tuloy ang exposure ay nagpapahiwatig
-ng continuing source; ang sunud-sunod na alon ay nagpapahiwatig ng hawaan ng tao sa tao.
+ng continuing source; ang sunod-sunod na alon ay nagpapahiwatig ng hawaan ng tao sa tao.
 :::
 
 ## Lugar: kailangan ng denominator ang attack rate
 
 :::{admonition} Nagkamali si Tala
 :class: ph-oops
-Tanong ni Maya: *"I-compute ang dengue attack rate ayon sa band."* Sumagot si Tala ng
+Tanong ni Maya: *"I-compute ang dengue attack rate ayon sa bahagi ng lungsod (band)."* Sumagot si Tala ng
 `dengue["band"].value_counts(normalize=True) * 100`: tabing-ilog 50.3%, baybayin 44.8%,
 kabundukan 4.9%.
 
@@ -186,7 +186,7 @@ rate na 0. Gagawing mapa ng kabanata 08 ang mga numerong ito.
 ```{figure} images/santa_luz_map_fil.svg
 :alt: Iginuhit na mapa ng kathang-isip na Santa Luz City: kabundukan sa hilaga, mga barangay sa tabing-ilog sa tabi ng Ilog Marilag sa gitna, at mga barangay sa baybayin sa timog.
 :width: 100%
-Ang tatlong band ng Santa Luz City: kabundukan, tabing-ilog at baybayin. Kathang-isip na lungsod.
+Ang tatlong bahagi ng Santa Luz City: kabundukan, tabing-ilog at baybayin. Kathang-isip na lungsod.
 ```
 
 ## Tao: sino ang nagkasakit, at sino ang namatay
@@ -219,13 +219,13 @@ sinu-suppress ang maliliit na bilang (ipinapakita ng kabanata 09 kung paano).
 **Mabilisang check: panahon, lugar, tao**
 
 1. Aling numero ang attack rate?
-   - 50.3% ng kaso ng dengue ay nakatira sa tabing-ilog — bahagi iyan ng mga kaso; 100% ang kabuuan nito sa lahat ng band.
+   - 50.3% ng kaso ng dengue ay nakatira sa tabing-ilog — bahagi iyan ng mga kaso; 100% ang kabuuan nito sa lahat ng bahagi ng lungsod.
    - ✓ 29.6 na kaso ng dengue bawat 10,000 residente ng baybayin — kaso na hinati sa mga taong at risk.
    - 8.7% ng kaso ng leptospirosis ang namatay — iyan ang case fatality rate.
 2. Tumaas ang leptospirosis curve 4 na araw pagkatapos ng baha, nanatiling mataas nang mga dalawang linggo at humupa. Ang pinakatugma ay…
    - Point source — iyon ay iisang matulis na peak mula sa iisang sandali ng exposure.
    - ✓ Continuing common source — tumagal ang exposure hanggang sa baha at clean-up.
-   - Hawaan ng tao sa tao — sunud-sunod na alon ang lalabas doon, at bihirang kumalat nang ganoon ang leptospirosis.
+   - Hawaan ng tao sa tao — sunod-sunod na alon ang lalabas doon, at bihirang kumalat nang ganoon ang leptospirosis.
 3. Bakit dapat isama sa epidemic curve ang mga araw na zero ang kaso?
    - ✓ Kapag inalis, napipiga ang panahon at nababago ang hugis na binabasa mo.
    - Mali ang mga araw na zero at dapat alisin — totoong impormasyon ang mga iyon.

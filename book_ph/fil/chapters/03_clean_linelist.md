@@ -129,7 +129,7 @@ format**, at walang hulaan.
 :::{admonition} Tanungin si Tala
 :class: ph-ask-tala
 Sumulat ng function na `parse_dates(s)` para sa pandas Series ng mga petsang text. Mga
-format: `M/D/YYYY` (buwan muna, opsyonal ang leading zero), `YYYY-MM-DD`, `DD-Mon-YY`
+format: `M/D/YYYY` (buwan muna, opsiyonal ang leading zero), `YYYY-MM-DD`, `DD-Mon-YY`
 (20YY ang mga taon), `Month D YYYY` may comma man o wala, at 5-digit na Excel serial
 number (bilang ng araw mula 1899-12-30). Ang blangko ay missing. I-parse nang tahasan ang
 bawat format; huwag hayaang manghula ang pandas.
@@ -151,7 +151,7 @@ def parse_dates(s: pd.Series) -> pd.Series:
 ```
 :::
 
-:::{admonition} Suriin
+:::{admonition} I-check natin
 :class: ph-check
 1. **Kasong kayang i-check sa tingin:** ang parehong araw na isinulat sa pitong paraan ay
    dapat maging `2026-07-24` nang pitong beses, at dapat manatiling missing ang blangko.
@@ -221,7 +221,7 @@ both = clean.dropna(subset=["date_onset", "date_consult"])
 assert (both["date_onset"] <= both["date_consult"]).all()          # nagkasakit bago magpakonsulta
 ```
 
-:::{admonition} Suriin
+:::{admonition} I-check natin
 :class: ph-check
 Tanong ni Doc Mon: *"Pareho ba ang sa iyo sa opisyal na malinis na file?"* Nagtatapos
 ang notebook sa pagpapakumpara sa pandas ng dalawang table, cell por cell:
@@ -257,7 +257,7 @@ bawat susunod na kabanata (`santa_luz_linelist.csv`).
 - Huwag hayaang manghula ang computer ng petsa: isang tahasang patakaran bawat format,
   saka bilangin ang mga `NaT` at i-check na onset ≤ konsulta.
 - Isulat ang mga patakaran mo bilang `assert` at patunayan ang resulta: `assert_frame_equal`
-  laban sa pinagkakatiwalaang bersyon.
+  laban sa pinagkakatiwalaang bersiyon.
 
 Buksan ang notebook: [](notebooks/03_clean_linelist.ipynb)
 :::

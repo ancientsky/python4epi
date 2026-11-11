@@ -38,7 +38,7 @@ description: "有了乾淨的 line list（造冊），Maya 定義病例、畫出
 
 ## 時間：流行曲線
 
-**流行曲線（epidemic curve，簡稱 epi curve）**是依**發病日**畫出的長條圖：每天或每週一根長條，長條之間沒有空隙，沒有病例的日子也保留。
+**流行曲線**（epidemic curve，簡稱 epi curve）是依**發病日**畫出的長條圖：每天或每週一根長條，長條之間沒有空隙，沒有病例的日子也保留。
 
 :::{admonition} 問問 Tala
 :class: ph-ask-tala
@@ -66,13 +66,13 @@ daily = lepto["date_onset"].value_counts().reindex(days, fill_value=0)
 
 **解讀形狀。** 三種經典的形狀會有幫助：
 
-- **單一時點共同感染源（point source）**：所有人在同一個時間點暴露，例如同一餐。會得到一個尖銳的高峰，寬度約一個潛伏期。**潛伏期（incubation period）**是從感染到出現第一個症狀的時間。
+- **單一時點共同感染源（point source）**：所有人在同一個時間點暴露，例如同一餐。會得到一個尖銳的高峰，寬度約一個潛伏期。**潛伏期**（incubation period）是從感染到出現第一個症狀的時間。
 - **持續性共同感染源（continuing common source）**：同一個來源持續了幾天或幾週。曲線上升，暴露持續期間維持高點，然後下降。
 - **連鎖傳播（propagated）**：人傳人，形成相隔約一個世代的連續波峰。
 
 鉤端螺旋體病的曲線只有一個波。第一個發病日是 7 月 22 日，登陸後四天；發病日的中位數是登陸後 **14 天**。病例從大約 7 月 24 日到 8 月 6 日維持高點，然後在 8 月中旬消退。這符合**持續性共同感染源**：洪水和清理期間好幾天的涉水，再加上潛伏期的延遲。WHO 指出鉤端螺旋體病的潛伏期通常為 7–10 天，範圍 2–30 天，並指出人傳人的情況非常罕見（[WHO 疾病爆發消息，2022](https://www.who.int/emergencies/disease-outbreak-news/item/2022-DON403)），所以連鎖傳播的模式會令人意外。真實的洪水也呈現同樣的延遲。2025 年 7 月下旬的洪水之後，DOH 在 8 月初警告鉤端螺旋體病例可能仍會上升（[Philstar，2025 年 8 月 9 日](https://www.philstar.com/headlines/2025/08/09/2464294/doh-warns-leptospirosis-cases-may-still-rise-coming-days)）。
 
-登革熱看起來不一樣。它的症狀通常在被蚊子叮咬後 4–10 天開始（[WHO 說明單](https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue)），但*斑蚊（Aedes）*得先在積水裡孳生。每週的登革熱病例連續攀升好幾週，在 ISO 第 37 週達到高峰（63 例）。
+登革熱看起來不一樣。它的症狀通常在被蚊子叮咬後 4–10 天開始（[WHO 說明單](https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue)），但*斑蚊*（Aedes）得先在積水裡孳生。每週的登革熱病例連續攀升好幾週，在 ISO 第 37 週達到高峰（63 例）。
 
 :::{div}
 :class: ph-game ph-game-epicurve-builder
@@ -88,7 +88,7 @@ Maya 問：*「依地帶計算登革熱侵襲率。」* Tala 的回答是 `dengu
 這些數字加起來是 100%。這就是線索。它們顯示的是**病例在哪裡**，不是**住在那裡有多危險**。分母是*病例*的數目。河岸的病例最多，部分原因是那裡的人最多：186,000 人中有 96,064 人。
 :::
 
-**侵襲率（attack rate）**是一個群體中的新發病例數，除以該群體中的**風險族群（people at risk）**人數。對一座城市，我們以**每 10,000 居民**表示。人口數來自 `santa_luz_barangays.csv`，不是來自 line list：
+**侵襲率**（attack rate）是一個群體中的新發病例數，除以該群體中的**風險族群**（people at risk）人數。對一座城市，我們以**每 10,000 居民**表示。人口數來自 `santa_luz_barangays.csv`，不是來自 line list：
 
 ```python
 population = barangays.groupby("band")["population"].sum()
@@ -139,7 +139,7 @@ Santa Luz 市的三個地帶：山區、河岸與沿海。一座虛構的城市�
 
 鉤端螺旋體病襲擊的是**工作年齡的男性**：230 例中有 155 例是男性（67%），年齡中位數是 32 歲。這和 Aling Nena 說的「去清水溝的那些男人」吻合。登革熱在性別上分布平均（50% 是男性），而且比較年輕，年齡中位數是 18 歲。筆記本會把兩者都畫成並排的年齡—性別圖。
 
-**致死率（case-fatality rate, CFR）**是死亡數除以**病例數**。這一次，病例數*正是*對的分母，因為問題是「在生病的人當中，有多少人死亡？」
+**致死率**（case-fatality rate, CFR）是死亡數除以**病例數**。這一次，病例數*正是*對的分母，因為問題是「在生病的人當中，有多少人死亡？」
 
 | | 病例數 | 死亡數 | 致死率 | 住院 |
 |---|---:|---:|---:|---:|

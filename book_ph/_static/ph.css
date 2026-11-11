@@ -1741,3 +1741,10 @@ html[lang^="zh"] .ph-cast .myst-card-title {
     padding: 0.16rem 0.38rem;
   }
 }
+
+/* zh: long CJK headings fill the line, so the theme's invisible "¶" permalink
+   (translated 10px to the right of the heading) pushed the page 5-9 px wider
+   than a 390 px phone. Clip it; it is only shown on hover anyway. */
+html[lang="zh-Hant"] main.article-grid {
+  overflow-x: clip;
+}

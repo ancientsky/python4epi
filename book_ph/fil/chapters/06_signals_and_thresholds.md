@@ -109,7 +109,7 @@ def epidemic_threshold(weekly, years):
 Ang sagot: **unang lumampas sa threshold ang 2026 noong W32 (3–9 Agosto), 33 kaso laban sa
 threshold na 17.5**. Nanatili itong lampas bawat linggo hanggang W39.
 
-:::{admonition} Suriin
+:::{admonition} I-check natin
 :class: ph-check
 1. **Kuwentahin nang mano-mano ang isang linggo.** Inililista ng notebook ang 12 baseline
    value para sa W32 at kinukuwenta ulit ang mean + 2 SD gamit ang `statistics` module ng
@@ -219,7 +219,7 @@ events["all_ok"] = events[["detect_ok", "notify_ok", "respond_ok"]].all(axis=1)
 Median na delay: detection 6 na araw, notification 1 araw, response 6 na araw. Kung isa-isa,
 mukhang "ayos naman" ang bawat target, pero 15 lang sa 40 event ang pumasa sa tatlo.
 
-:::{admonition} Suriin
+:::{admonition} I-check natin
 :class: ph-check
 1. **Isang event, mano-mano.** Ang EV-040 ay ang dengue surge sa Baybay sa kuwento:
    emergence 3 Agosto (ang Lunes ng W32), detection 10 Agosto, notification 11 Agosto,

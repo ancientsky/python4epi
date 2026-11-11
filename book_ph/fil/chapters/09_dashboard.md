@@ -111,7 +111,7 @@ def compute_kpis(ll: pd.DataFrame) -> pd.DataFrame:
 ```
 :::
 
-:::{admonition} Suriin
+:::{admonition} I-check natin
 :class: ph-check
 1. Patakbuhin ito sa tatlong gawa-gawang row ni Tala: dapat 2 kaso ang dengue, at 100% ang
    CFR ng leptospirosis.
@@ -213,7 +213,7 @@ group, at ng button para i-download ang datos*. Idinagdag ni Tala ang
 kasama ang case ID, edad at eksaktong petsa ng onset, na mababasa ng kahit sino gamit ang
 *View source*. Mukhang pareho pa rin ang pahina. Pero hindi lumusot sa publish check:
 hinarang nito ang mga case ID, tatlong column ng line list at 55 maliliit na cell. Ang
-solusyon ay i-publish lang ang aggregate: mas malawak na table (band × age group),
+solusyon ay i-publish lang ang aggregate: mas malawak na table (bahagi ng lungsod × age group),
 naka-suppress, at walang download ng case-level data kahit kailan.
 :::
 

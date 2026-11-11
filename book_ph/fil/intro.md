@@ -1,6 +1,6 @@
 ---
 title: "Mabuhay!"
-description: "Ang Bantay Python ay libreng kurso para sa mga baguhan sa disease surveillance sa Pilipinas: matuto ng Python kasama ang AI co-pilot na natututo kang i-check, protektahan ang privacy ng pasyente, at bumuo ng outbreak dashboard."
+description: "Ang Bantay Python ay libreng kurso para sa mga baguhan sa disease surveillance sa Pilipinas: matuto ng Python kasama ang AI co-pilot na matututuhan mong i-check, protektahan ang privacy ng pasyente, at bumuo ng outbreak dashboard."
 ---
 
 :::{div}

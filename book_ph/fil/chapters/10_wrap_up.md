@@ -70,14 +70,14 @@ Ang buong screen ay ang [Bantay Santa Luz dashboard](/dashboard/).
 ## Ang AI-use checklist para sa health office
 
 I-print ito at idikit sa tabi ng computer. Ito ang paraan ng buong kurso sa iisang
-listahan: **Magtanong → Patakbuhin → Suriin**, na nakapaligid ang privacy.
+listahan: **Magtanong → Patakbuhin → I-check**, na nakapaligid ang privacy.
 
-![Ang ikot ng Magtanong, Patakbuhin, Suriin na nasa gitna si Tala](images/ask_run_check_fil.svg)
+![Ang ikot ng Magtanong, Patakbuhin, I-check na nasa gitna si Tala](images/ask_run_check_fil.svg)
 
 **Bago ka magtanong**
 
 1. Gamitin ang assistant na aprubado ng opisina mo, ayon sa mga patakaran nito.
-2. **Huwag kailanman mag-paste ng datos na nakakakilala ng tao**: pangalan, numero ng
+2. **Huwag kailanman mag-paste ng datos na nakapagpapakilala ng tao**: pangalan, numero ng
    telepono, address, PhilHealth number, petsa ng kapanganakan, free-text na remarks,
    litrato ng mga form. Sundin ang Data Privacy Act of 2012 (RA 10173) ayon sa
    pagpapatupad ng Data Protection Officer ng opisina mo.
@@ -252,8 +252,8 @@ Sina Maya, Doc Mon, Tala, Aling Nena at Jun. Kathang-isip silang lahat, pati ang
    - Litrato ng notification form — may mga pangalan at address ito.
 2. Tumakbo nang walang error ang code ni Tala. Ano ang susunod?
    - Kopyahin ang resulta sa report.
-   - ✓ Suriin ito sa kasong kaya mong bilangin nang mano-mano at suriin ang denominator — hindi porke tumakbo ay tama na.
-3. Sino ang mananagot sa sitrep na dinraft sa tulong ng AI assistant?
+   - ✓ I-check ito sa kasong kaya mong bilangin nang mano-mano at i-check ang denominator — hindi porke tumakbo ay tama na.
+3. Sino ang mananagot sa sitrep na ini-draft sa tulong ng AI assistant?
    - Ang assistant.
    - ✓ Ang opisyal na pumirma rito — at sinasabi ng report kung aling bahagi ang tinulungan ng AI.
 4. Bakit mas mababa ang huling linggo sa chart ng dengue?
@@ -268,7 +268,7 @@ Sina Maya, Doc Mon, Tala, Aling Nena at Jun. Kathang-isip silang lahat, pati ang
 :class: ph-baon
 - Maikli, may petsa at nasuri ang sitrep; sinasabi nito kung ano ang ginagawa at kung
   sino ang pumirma.
-- Magtanong gamit ang pekeng row, patakbuhin, suriin, itala na tumulong ang AI — at isang
+- Magtanong gamit ang pekeng row, patakbuhin, i-check, itala na tumulong ang AI — at isang
   tao ang pipirma.
 - Kaya mo na ngayong umabot mula sa magulong line list hanggang sa dashboard. Ituloy mo:
   ang buong aklat at ang FETP.

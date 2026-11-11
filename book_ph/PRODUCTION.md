@@ -240,7 +240,7 @@ from a per-language dictionary inside the script (`en`, `zh`, `fil`). Planned se
 - [x] P2 English chapters 03–05 + notebooks (browser QA passed)
 - [x] P2 English chapters 06–08 + notebooks (browser QA passed)
 - [x] P2 English chapters 09–10 + dashboard (browser QA passed)
-- [~] P3 中文 edition — both halves translated; copy-chief pass (harmonise terms, build, browser QA) was IN PROGRESS when work paused
+- [x] P3 中文 edition (harmonised; strict build, browser QA passed)
 - [~] P3 Filipino edition — both halves translated; copy-chief pass (harmonise terms, fix shared fil strings, build, browser QA) was IN PROGRESS when work paused
 - [ ] P4 full build, browser QA (light/dark, desktop/phone), fixes
 

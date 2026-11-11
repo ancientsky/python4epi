@@ -139,7 +139,7 @@ shared = raw.drop(columns=direct_identifiers)
 Tumatakbo ito, at wala na ang tatlong column. Pero ang "walang error" ay hindi "walang
 pangalan".
 
-:::{admonition} Suriin
+:::{admonition} I-check natin
 :class: ph-check
 1. Kunin ang bawat first name mula sa column na kaaalis mo lang.
 2. Hanapin ang mga pangalang iyon sa **bawat natitirang cell**, bilang buong salita.
@@ -240,7 +240,7 @@ Sa malinis na line list (hindi kasama ang rows na may kulang na value):
 | barangay + edad + sex + sakit + petsa ng onset | 99.0% |
 | barangay + edad + sex + sakit | 80.9% |
 | barangay + age group + sex + sakit | 17.5% |
-| band + age group + sex + sakit | 1.3% |
+| bahagi ng lungsod + age group + sex + sakit | 1.3% |
 
 Kapag eksaktong edad at petsa ng onset, halos **lahat** ay unique, kahit walang
 pangalan. Ang pagpapalawak ng kategorya ang nagpoprotekta sa kanila.

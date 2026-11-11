@@ -82,7 +82,7 @@ Aling Nena. Sa dalawang paraan ito nahuli ni Maya:
    *a* niya ay ang mga kasong hindi exposed. Nabaligtad ang isang axis, kaya baligtad din
    ang OR: 0.18 = 1 ÷ 5.57. (Hindi magbabago ang OR kung pagpapalitin ang rows *at*
    columns, kaya i-check ang bawat axis.)
-2. **I-sanity-check muna ang direksyon.** **75%** ng mga kaso ang lumusong, laban sa
+2. **I-sanity-check muna ang direksiyon.** **75%** ng mga kaso ang lumusong, laban sa
    **35%** ng controls. Dapat malayong lampas sa 1 ang OR.
 :::
 
@@ -114,14 +114,14 @@ se = math.sqrt(1 / a + 1 / b + 1 / c + 1 / d)
 low, high = math.exp(math.log(or_wading) - 1.96 * se), math.exp(math.log(or_wading) + 1.96 * se)
 ```
 
-:::{admonition} Suriin
+:::{admonition} I-check natin
 :class: ph-check
 1. **Dapat magkasundo ang mano-mano, ang scipy at ang statsmodels.** **5.57 (3.41–9.10)**
    ang ibinibigay ng tatlo.
 2. **Basahin ang default sa documentation.** Kailangang sabihan ang `odds_ratio` ng
    scipy ng `kind="sample"`. Ang default nito ay ang *conditional* OR (5.54), na ibang
    estimator, hindi bug.
-3. **Direksyon:** lampas sa 1 ang OR, at mas maraming kaso kaysa control ang lumusong.
+3. **Direksiyon:** lampas sa 1 ang OR, at mas maraming kaso kaysa control ang lumusong.
    Magkatugma sila.
 :::
 
@@ -182,7 +182,7 @@ kaya makatwiran ang iisang MH summary. Mukhang delikado ang pagiging lalaki sa c
 (OR 2.82) sa parehong dahilan: mas madalas lumusong ang mga lalaki. Hinahayaan ka ng
 notebook na i-check iyan.
 
-:::{admonition} Suriin
+:::{admonition} I-check natin
 :class: ph-check
 Dapat makuha ulit ng `StratifiedTable` ng statsmodels ang MH OR na kinuwenta nang
 mano-mano: pumapasa ang `math.isclose(st.oddsratio_pooled, or_mh)`, at idinadagdag nito
@@ -215,7 +215,7 @@ ang 95% CI (2.53–7.27).
 
 :::{admonition} Baon
 :class: ph-baon
-- Ayusin at pangalanan ang rows at columns ng bawat 2×2 table; i-check muna ang direksyon
+- Ayusin at pangalanan ang rows at columns ng bawat 2×2 table; i-check muna ang direksiyon
   gamit ang simpleng porsiyento bago pagkatiwalaan ang formula.
 - Case-control → odds ratio na may 95% CI; i-check ito gamit ang ikalawang paraan.
 - Mag-stratify ayon sa pinaghihinalaang confounder at ikumpara ang crude at
