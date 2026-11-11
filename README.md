@@ -158,6 +158,10 @@ Pages are built for the deploy sub-path `/python4epi`; to preview, serve the
 `--site-dir` output under that path (or pass `--base-path ''` to build for `/`).
 Add `--no-execute` for a quick layout-only preview.
 
+The MyST theme is pinned to an exact `book-theme` commit in both `myst.yml`
+files; see "Theme pin" in `CLAUDE.md` before bumping it. The post-build step
+also fails the build on any same-site link that does not resolve.
+
 The instructor projects extend the student `myst.yml` and only replace the
 table of contents; they reach the shared content through symlinks
 (`chapters/`, `intro.md`, `_static/`, `_site/`). `book_en/` mirrors `book/`

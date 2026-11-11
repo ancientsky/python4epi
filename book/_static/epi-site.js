@@ -36,10 +36,67 @@
  *
  * The page is server-rendered and then hydrated by React. Changing the DOM
  * before hydration has finished is a hydration mismatch (React error #418),
- * after which React re-renders the whole page and drops the changes. So DOM
- * changes wait until the browser is idle after the load event; the language
- * link's click handler does not depend on them and works from the start.
+ * after which React re-renders the whole page and drops the changes. Waiting
+ * for "load + idle" is not enough (with slow or blocked third-party requests
+ * the load event can fire before React has hydrated), so this file first
+ * exposes window.epiWhenHydrated(callback): it runs the callback after React
+ * commits for the first time, observed through the standard
+ * __REACT_DEVTOOLS_GLOBAL_HOOK__ (chained if the DevTools extension already
+ * installed one), with a timeout fallback. youtube-lite.js uses it too, so
+ * this script must be injected before it (scripts/build_book.py does).
+ * The language link's click handler does not touch the DOM and works at once.
  */
+(function () {
+  "use strict";
+
+  if (window.epiWhenHydrated) return;
+  var waiting = [];
+  var hydrated = false;
+  function markHydrated() {
+    if (hydrated) return;
+    hydrated = true;
+    // Let React finish the commit (layout effects, event wiring) first.
+    window.setTimeout(function () {
+      waiting.splice(0).forEach(function (fn) { fn(); });
+    }, 0);
+  }
+  window.epiWhenHydrated = function (fn) {
+    if (hydrated) window.setTimeout(fn, 0);
+    else waiting.push(fn);
+  };
+  var hook = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+  if (!hook) {
+    var renderers = new Map();
+    hook = window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {
+      isDisabled: false,
+      supportsFiber: true,
+      renderers: renderers,
+      inject: function (renderer) {
+        var id = renderers.size + 1;
+        renderers.set(id, renderer);
+        return id;
+      },
+      onScheduleFiberRoot: function () {},
+      onCommitFiberRoot: function () {},
+      onCommitFiberUnmount: function () {},
+      onPostCommitFiberRoot: function () {},
+      checkDCE: function () {},
+    };
+  }
+  var onCommit = hook.onCommitFiberRoot;
+  hook.onCommitFiberRoot = function () {
+    try {
+      if (onCommit) return onCommit.apply(this, arguments);
+    } finally {
+      markHydrated();
+    }
+  };
+  // Fallback if React never commits (the app failed to load).
+  function fallback() { window.setTimeout(markHydrated, 5000); }
+  if (document.readyState === "complete") fallback();
+  else window.addEventListener("load", fallback);
+})();
+
 (function () {
   "use strict";
 
@@ -162,10 +219,5 @@
     // Re-apply whenever the app re-renders the header or the page body.
     new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
   }
-  function whenIdle() {
-    if (window.requestIdleCallback) window.requestIdleCallback(start, { timeout: 2000 });
-    else window.setTimeout(start, 200);
-  }
-  if (document.readyState === "complete") whenIdle();
-  else window.addEventListener("load", whenIdle);
+  window.epiWhenHydrated(start);
 })();

@@ -17,6 +17,19 @@ project:
   license: MIT
   github: https://github.com/ancientsky/python4epi
   thumbnail: _static/og-image.png
+  # The build prints one warning per notebook cell id reused across notebooks
+  # (q1-title, setup, colab-setup, ...); nothing references them, and the
+  # volume would bury real warnings.
+  error_rules:
+    - rule: identifier-is-unique
+      severity: ignore
+  # MyST prefixes figure captions with an English "Figure N:" and cannot
+  # localise that label (numbering.figure.template only changes cross-reference
+  # text). No zh page cross-references a figure by number, so turn figure
+  # numbering off instead of showing English in the Chinese captions.
+  numbering:
+    figure:
+      enabled: false
   toc:
     - file: intro.md
     - title: 第一幕：接獲通報
@@ -102,7 +115,9 @@ project:
             - file: chapters/exercises/14_case_study_exercise.ipynb
 site:
   title: Epi With Python
-  template: book-theme
+  # Pinned theme (book-theme v1.4.1). Bump deliberately, never track `main`:
+  # see "Theme pin" in CLAUDE.md. Must match book/myst.yml and book_en/myst.yml.
+  template: https://github.com/myst-templates/book-theme/archive/23f2df5493e23dfb1d9433c8aa64c87beb4232a3.zip
   parts:
     navbar_end: _site/navbar_end.md
     footer: _site/footer.md

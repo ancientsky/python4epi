@@ -9,10 +9,11 @@
  * travels in the link. Without JavaScript the card is simply that link. With
  * it, each card gets the thumbnail and a click swaps in the inline player.
  *
- * The theme is a server-rendered React single-page app. Cards are enhanced
- * only once the browser is idle after the load event (changing the DOM while
- * React is still hydrating it is a hydration mismatch, React error #418), and
- * again whenever client-side navigation renders new ones.
+ * The theme is a server-rendered React app. Cards are enhanced only after
+ * React has hydrated the page (changing the DOM while React is still
+ * hydrating it is a hydration mismatch, React error #418) -- see
+ * window.epiWhenHydrated in epi-site.js, which is injected before this file --
+ * and again whenever the app renders new ones.
  */
 (function () {
   "use strict";
@@ -83,10 +84,12 @@
     enhanceAll();
     new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
   }
-  function whenIdle() {
-    if (window.requestIdleCallback) window.requestIdleCallback(start, { timeout: 2000 });
-    else window.setTimeout(start, 200);
+  if (window.epiWhenHydrated) {
+    window.epiWhenHydrated(start);
+  } else {
+    // epi-site.js missing: fall back to waiting for the load event.
+    var later = function () { window.setTimeout(start, 1000); };
+    if (document.readyState === "complete") later();
+    else window.addEventListener("load", later);
   }
-  if (document.readyState === "complete") whenIdle();
-  else window.addEventListener("load", whenIdle);
 })();
