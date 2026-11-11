@@ -189,16 +189,16 @@ def publish_check(page: str) -> list[str]:
     """Ibalik ang mga problemang haharangin ni Doc Mon (walang laman na listahan = OK i-publish)."""
     problems = []
     if re.search(r"SLC-\d{4}", page):
-        problems.append("case IDs found: line-level data must not be published")
+        problems.append("may nakitang case ID: bawal i-publish ang line-level data")
     for column in ["case_id", "date_onset", "date_report"]:
         if column in page:
-            problems.append(f"line-list column {column!r} found")
+            problems.append(f"may nakitang column ng line list: {column!r}")
     small = re.findall(r"<td>\s*[1-4]\s*</td>", page)
     if small:
-        problems.append(f"{len(small)} table cell(s) with 1-4 cases: suppress them")
-    for must in ["As of", "Data notes", "synthetic"]:
+        problems.append(f"{len(small)} table cell na may 1-4 kaso: i-suppress ang mga ito")
+    for must in ["Datos hanggang", "Mga tala sa datos", "synthetic"]:
         if must not in page:
-            problems.append(f"missing: {must!r}")
+            problems.append(f"kulang: {must!r}")
     return problems
 ```
 

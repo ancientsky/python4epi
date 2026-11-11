@@ -171,7 +171,7 @@ magturo sa isang tao ang barangay na kakaunti ang kaso. Ang patakaran ng aklat n
 **itago ang bilang na 1–4** (ipakita bilang "<5"), at itago rin ang **rate** nila, dahil
 ibinabalik ng rate × populasyon ang bilang. Sa Santa Luz, 5 sa 24 na barangay ang
 naitatago nito sa pampublikong mapa. Iginuguhit ito ng notebook na may guhit-guhit
-(hatched), may label na "1–4 cases: not shown".
+(hatched), may label na "1–4 kaso: hindi ipinapakita".
 :::
 
 ## Balik sa lamok
