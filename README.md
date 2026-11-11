@@ -99,14 +99,14 @@ plt.rcParams["axes.unicode_minus"] = False
 
 ## Plotly in Jupyter Book
 
-Plotly 圖表在 `jupyter-book build` 時顯示空白？設定渲染器：
+Plotly 圖表在建置網站時顯示空白？設定渲染器：
 
 ```python
 import plotly.io as pio
 pio.renderers.default = "notebook"
 ```
 
-本教材已在 `book/_config.yml` 的 `nb_execution_pre_code` 中全域設定。
+本教材建置網站時已全域設定：`scripts/build_book.py` 在每個執行 notebook 的 kernel 啟動時呼叫 `epi_learning.book_setup.configure_book_kernel()`（切換到 repo 根目錄、CJK 字型、ggplot 風格、Plotly 渲染器），notebook 本身不需修改。
 
 ## Windows Troubleshooting
 
@@ -125,42 +125,43 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 
 ## Build the Site
 
-The site ships in **two languages** — Traditional Chinese (`book/`) and English
-(`book_en/`) — each with a student and an instructor edition. Every page has a
-繁中 / EN language switcher in the top-right header (`book/_static/lang-switch.js`
-toggles the `/en/` path prefix). GitHub Pages deploys four variants:
+The site is built with **Jupyter Book 2** (the MyST engine) and ships in **two
+languages** — Traditional Chinese (`book/`) and English (`book_en/`) — each with
+a student and an instructor edition. GitHub Pages deploys four variants:
 
-| Edition | URL |
-|---------|-----|
-| 中文 學生版 | `/python4epi/` |
-| 中文 教師版 | `/python4epi/instructor/` |
-| English student | `/python4epi/en/` |
-| English instructor | `/python4epi/en/instructor/` |
+| Edition | MyST project | URL |
+|---------|--------------|-----|
+| 中文 學生版 | `book/myst.yml` | `/python4epi/` |
+| 中文 教師版 | `book/_instructor/myst.yml` | `/python4epi/instructor/` |
+| English student | `book_en/myst.yml` | `/python4epi/en/` |
+| English instructor | `book_en/_instructor/myst.yml` | `/python4epi/en/instructor/` |
 
-Chinese student edition (default TOC):
-
-```bash
-cp book/_toc_student.yml book/_toc.yml
-uv run jupyter-book build book/
-```
-
-Chinese instructor edition (includes solution chapter):
+Always build through the one entry point (CI and the Pages deploy use it too):
 
 ```bash
-cp book/_toc_instructor.yml book/_toc.yml
-uv run jupyter-book build book/
+uv run python scripts/build_book.py --lang zh --edition student      # 中文 學生版
+uv run python scripts/build_book.py --lang zh --edition instructor   # 中文 教師版 (with solutions)
+uv run python scripts/build_book.py --lang en --edition student      # English student
+uv run python scripts/build_book.py --lang en --edition instructor   # English instructor (with solutions)
+uv run python scripts/build_book.py --all --site-dir _site           # all four, assembled as deployed
 ```
 
-English editions (mirror the Chinese tree; `book_en/` shares `_static`,
-`_templates`, chapter images, and `data` with `book/` via symlinks):
+Each edition lands in `<project>/_build/html`. The script runs
+`jupyter book build --html --execute --strict` (a notebook cell that raises fails
+the build), with a kernel startup file that applies the pre-execution setup in
+`src/epi_learning/book_setup.py`, then a post-build step that adds what MyST
+cannot be configured to emit: `<html lang>`, absolute Open Graph / Twitter tags,
+`hreflang` alternates, the 繁中 / EN language switcher and "Open in Colab" links
+(`book/_static/epi-site.js`), the YouTube cards (`book/_static/youtube-lite.js`),
+and redirects from the old Jupyter Book 1 URLs (`chapters/01_fundamentals.html`).
+Pages are built for the deploy sub-path `/python4epi`; to preview, serve the
+`--site-dir` output under that path (or pass `--base-path ''` to build for `/`).
+Add `--no-execute` for a quick layout-only preview.
 
-```bash
-cp book_en/_toc_student.yml book_en/_toc.yml
-uv run jupyter-book build book_en/            # English student
-
-cp book_en/_toc_instructor.yml book_en/_toc.yml
-uv run jupyter-book build book_en/            # English instructor (with solutions)
-```
+The instructor projects extend the student `myst.yml` and only replace the
+table of contents; they reach the shared content through symlinks
+(`chapters/`, `intro.md`, `_static/`, `_site/`). `book_en/` mirrors `book/`
+file-for-file and shares `_static/` and chapter images with it.
 
 ## Run Checks
 
@@ -236,13 +237,14 @@ uv run python videos/build.py --chapter ch08 --lang en   # 單章英文版
 
 ## Repository Layout
 
-- `book/`: Jupyter Book source, 繁中版 (`_config.yml`, TOCs, 19 chapter markdown files, embedded notebooks)
-- `book_en/`: English mirror of `book/`; shares `_static`, `_templates`, chapter images and `data` via symlinks
+- `book/`: Jupyter Book 2 (MyST) source, 繁中版 (`myst.yml`, `_instructor/myst.yml`, `_site/` navbar + footer parts, 19 chapter markdown files, embedded notebooks)
+- `book_en/`: English mirror of `book/`; shares `_static` and chapter images via symlinks
 - `book/chapters/images/`: hand-crafted SVG diagrams for visual explanations
-- `book/_static/`: custom CSS/JS (youtube-lite embed, language switcher)
+- `book/_static/`: site stylesheet (`site.css`), page scripts (`epi-site.js`: language switcher + Colab links; `youtube-lite.js`), logos, OG image
+- `scripts/build_book.py`: the book build entry point (all four editions)
 - `notebooks/`: standalone runnable lesson notebooks (21 files)
 - `notebooks/exercises/`: exercise/solution notebook pairs (15 chapters)
-- `src/epi_learning/`: reusable helper package (`cleaning`, `metrics`, `tabulate`, `viz`)
+- `src/epi_learning/`: reusable helper package (`cleaning`, `metrics`, `tabulate`, `viz`, and `book_setup` for the build's notebook kernels)
 - `data/synthetic/`: teaching datasets — primary: `legionella_outbreak.csv` (280 × 32)
 - `videos/`: tutorial video generation (Manim + edge-tts + ffmpeg) — `scripts/` narration YAML, `scenes/` Manim classes, `youtube_ids.yaml` link registry
 - `tests/`: unit tests and notebook JSON smoke tests

@@ -507,7 +507,7 @@ data/restricted/
 ```
 
 ```{admonition} Taiwan regulations and international standards
-:class: tip, dropdown
+:class: tip dropdown
 
 **Taiwan:**
 - **Personal Data Protection Act (PDPA)**: Article 6 (special personal data, including medical, genetic, sex life, health checkups, criminal record) and Article 20 (use beyond the specified purpose)
@@ -1325,9 +1325,9 @@ If the pathogen were COVID-19 / influenza / norovirus (person-to-person):
 > **Investigation strategy for Legionnaires'**: concentrate resources on **traceback** (environmental sampling + analytic studies); there's no need to build a contact-tracing system.
 
 ```{seealso}
-Python implementation of Mantel-Haenszel stratified analysis and odds-ratio calculation → {doc}`05_stratified`
+Python implementation of Mantel-Haenszel stratified analysis and odds-ratio calculation → [](05_stratified.md)
 
-Multivariable logistic regression (adjusting for multiple confounders) → {doc}`06_logistic_regression`
+Multivariable logistic regression (adjusting for multiple confounders) → [](06_logistic_regression.md)
 ```
 
 ---
@@ -1452,7 +1452,7 @@ if __name__ == "__main__":
 ```
 
 ```{tip}
-**Three ways to turn a notebook into a `.py` script** are covered in {doc}`Ch00 Developer Tools <00_guide>`. This course's `notebooks/run_sitrep.py` is a tidied-up example.
+**Three ways to turn a notebook into a `.py` script** are covered in [Ch00 Developer Tools](#guide-ipynb-to-py). This course's `notebooks/run_sitrep.py` is a tidied-up example.
 ```
 
 ### 9b: macOS: launchd (recommended)
@@ -1610,6 +1610,6 @@ schtasks /delete /tn "SitRep_Daily" /f
 
 ## Practice notebooks
 
-- Class notes: {ref}`04_outbreak_workflow.ipynb`
+- Class notes: [04_outbreak_workflow.ipynb](notebooks/04_outbreak_workflow.ipynb)
 - Exercise version: [`04_outbreak_workflow_exercise.ipynb`](exercises/04_outbreak_workflow_exercise.ipynb)
-- Solution version (instructor): [`04_outbreak_workflow_solution.ipynb`](solutions/04_outbreak_workflow_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/04_outbreak_workflow_solution.ipynb>)
+- Solution version (instructor): [`04_outbreak_workflow_solution.ipynb`](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/outbreak-workflow-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/04_outbreak_workflow_solution.ipynb>)

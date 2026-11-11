@@ -48,14 +48,10 @@
 ### 1) 縮排——Python 的必修規矩
 
 <!-- video: ch01b_01_indentation -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：縮排</div>
-  <div class="youtube-lite" data-id="BqPzzF4s8WA">
-    <img src="https://img.youtube.com/vi/BqPzzF4s8WA/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=BqPzzF4s8WA">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 在大多數程式語言裡，縮排只是讓程式「好看」。但在 Python 裡，**縮排是語法的一部分**——少一格或多一格，程式就會壞掉。
@@ -96,14 +92,10 @@ for cases in floor_cases:       # 第一層
 ### 2) import——借用別人的工具
 
 <!-- video: ch01b_02_imports -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：import</div>
-  <div class="youtube-lite" data-id="QF-bETQmbSE">
-    <img src="https://img.youtube.com/vi/QF-bETQmbSE/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=QF-bETQmbSE">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 Ch01 裡所有計算都用 Python 內建功能。但真正做疫調分析時，你需要「借用」別人寫好的強大工具——這就是 `import`。
@@ -168,14 +160,10 @@ print(f"標準差:   {statistics.stdev(ages):.1f}")      # 7.8
 ### 3) 型別與轉換——數字、文字、布林值
 
 <!-- video: ch01b_03_types -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：型別與轉換</div>
-  <div class="youtube-lite" data-id="KpjF0Iv5v1c">
-    <img src="https://img.youtube.com/vi/KpjF0Iv5v1c/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=KpjF0Iv5v1c">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 Python 裡每個值都有**型別（type）**。型別搞錯，程式就會出錯。
@@ -254,14 +242,10 @@ if not (cfr < 0.05):
 ### 4) 讀懂錯誤訊息——traceback 不是天書
 
 <!-- video: ch01b_04_errors -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：讀懂錯誤訊息</div>
-  <div class="youtube-lite" data-id="r9-VUXEMloU">
-    <img src="https://img.youtube.com/vi/r9-VUXEMloU/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=r9-VUXEMloU">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 看到滿螢幕的紅字別慌。Python 的錯誤訊息其實很貼心——**從最後一行往上讀**就好。
@@ -334,14 +318,10 @@ print(wings[5])  # "3B"
 ### 5) try/except——優雅處理意外
 
 <!-- video: ch01b_05_try_except -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：try/except</div>
-  <div class="youtube-lite" data-id="eyQfPTl8xsk">
-    <img src="https://img.youtube.com/vi/eyQfPTl8xsk/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=eyQfPTl8xsk">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 有時候錯誤是「預期中的意外」——例如資料裡有遺漏值。與其讓程式崩潰，不如告訴 Python 怎麼處理。
@@ -385,14 +365,10 @@ print(f"平均年齡: {sum(ages) / len(ages):.1f}")          # 平均年齡: 70.
 ### 6) 字串與迴圈進階
 
 <!-- video: ch01b_06_strings_loops -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：字串與迴圈進階</div>
-  <div class="youtube-lite" data-id="ZloLMJlgxvE">
-    <img src="https://img.youtube.com/vi/ZloLMJlgxvE/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=ZloLMJlgxvE">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 Ch02 處理 CSV 資料時，你會大量操作字串和迴圈。先在這裡打好基礎。
@@ -450,14 +426,10 @@ if "deaths" not in outbreak:
 ### 7) uv 進階——管理 Python 版本與套件
 
 <!-- video: ch01b_07_uv_advanced -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：uv 進階</div>
-  <div class="youtube-lite" data-id="vTOu1ydb2V4">
-    <img src="https://img.youtube.com/vi/vTOu1ydb2V4/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=vTOu1ydb2V4">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 Ch00 教了 `uv sync` 安裝教材的所有依賴。這裡進一步介紹 `uv` 的實用功能。
@@ -519,14 +491,10 @@ uv pip list
 ### 8) Jupyter 實用密技
 
 <!-- video: ch01b_08_jupyter_tips -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Jupyter 實用密技</div>
-  <div class="youtube-lite" data-id="XR28LubaKa8">
-    <img src="https://img.youtube.com/vi/XR28LubaKa8/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=XR28LubaKa8">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 以下技巧讓你在 Jupyter Lab 裡工作更有效率。
@@ -628,6 +596,6 @@ len??
 
 ## 練習本
 
-- 課堂筆記：{ref}`01b_python_toolbox.ipynb`
+- 課堂筆記：[01b_python_toolbox.ipynb](notebooks/01b_python_toolbox.ipynb)
 - 作業版：[`01b_python_toolbox_exercise.ipynb`](exercises/01b_python_toolbox_exercise.ipynb)
-- 解答版（教師版）：[`01b_python_toolbox_solution.ipynb`](solutions/01b_python_toolbox_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/01b_python_toolbox_solution.ipynb>)
+- 解答版（教師版）：[`01b_python_toolbox_solution.ipynb`](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/b-python-toolbox-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/01b_python_toolbox_solution.ipynb>)

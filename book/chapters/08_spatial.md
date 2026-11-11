@@ -650,7 +650,7 @@ hot = main.loc[(gi.p_sim < 0.05) & (gi.Zs > 0), "COUNTYNAME"].tolist()   # 顯�
 ## 練習題
 
 - 作業版：[`08_spatial_exercise.ipynb`](exercises/08_spatial_exercise.ipynb)
-- 解答版（講師）：[`08_spatial_solution.ipynb`](solutions/08_spatial_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/08_spatial_solution.ipynb>)
+- 解答版（講師）：[`08_spatial_solution.ipynb`](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/spatial-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/08_spatial_solution.ipynb>)
 
 ## 常見誤用
 

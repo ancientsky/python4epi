@@ -10,96 +10,90 @@
 
 這本書的每一章都是這場調查的一個環節。你將從零開始，用 Python 一步步完成一場完整的疫情調查。
 
-```{button-ref} chapters/00_guide
-:ref-type: doc
-:color: primary
-:expand:
-:class: sd-fs-5 sd-font-weight-bold
-
-翻到 Ch00，接起那通電話 →
-```
+:::{div}
+:class: epi-hero-cta
+{button}`翻到 Ch00，接起那通電話 → <chapters/00_guide.md>`
+:::
 
 ## 這場調查的資料
 
 全書使用同一份合成資料集：**松柏護理之家退伍軍人症群聚事件**
 
+:::::{div}
+:class: epi-stats
 ::::{grid} 2 2 3 3
-:gutter: 3
 
-:::{grid-item-card} 280
-:text-align: center
+:::{card} 280
 住民總數
 :::
 
-:::{grid-item-card} 121
-:text-align: center
+:::{card} 121
 感染人數（侵襲率 43.2%）
 :::
 
-:::{grid-item-card} 19
-:text-align: center
+:::{card} 19
 死亡人數（致死率 15.7%）
 :::
 
-:::{grid-item-card} 32
-:text-align: center
+:::{card} 32
 資料欄位（人口學／共病／暴露／臨床／結果）
 :::
 
-:::{grid-item-card} 3 × 2
-:text-align: center
+:::{card} 3 × 2
 3 層樓 × 2 翼區（A/B）
 :::
 
-:::{grid-item-card} 17 天
-:text-align: center
+:::{card} 17 天
 發病期間 2026-01-12 至 01-28
 :::
 
 ::::
+:::::
 
 ## 故事線：五幕疫調
 
+:::::{div}
+:class: epi-acts
 ::::{grid} 1 1 2 3
-:gutter: 3
 
-:::{grid-item-card} 🎬 第一幕：接獲通報
+:::{card} 🎬 第一幕：接獲通報
 **Ch00–02**
 ^^^
 導讀、Python 基礎、資料處理與視覺化。接起電話，架好工具，讀進 280 筆 line list 開始整理。
 :::
 
-:::{grid-item-card} 🔬 第二幕：從描述到推論
+:::{card} 🔬 第二幕：從描述到推論
 **Ch03–04**
 ^^^
 2×2 表、風險比與卡方檢定——淋浴是不是危險因子？產出第一份 SitRep 給長官。
 :::
 
-:::{grid-item-card} 🕵️ 第三幕：深入分析
+:::{card} 🕵️ 第三幕：深入分析
 **Ch05–08**
 ^^^
 分層分析與干擾因子、邏輯斯迴歸、時間序列預測、空間流病——哪裡最危險？為什麼？
 :::
 
-:::{grid-item-card} 🧠 第四幕：進階建模
+:::{card} 🧠 第四幕：進階建模
 **Ch09–12**
 ^^^
 存活分析、機器學習、深度學習、因果推論——從預測重症到釐清淋浴暴露的因果效應。
 :::
 
-:::{grid-item-card} 📋 第五幕：收尾與實戰
+:::{card} 📋 第五幕：收尾與實戰
 **Ch13–14**
 ^^^
 可重現研究與完整疫調報告——讓同事一鍵重現你的分析，從接到通報走到結案報告。
 :::
 
-:::{grid-item-card} 📚 附錄與練習
+:::{card} 📚 附錄與練習
 **Ch15–17**
 ^^^
 術語對照表、資料集欄位字典、套件速查，以及 14 組作業與解答。
 :::
 
 ::::
+:::::
 
 ## 適合誰
 
@@ -112,30 +106,24 @@
 
 ### 線上閱讀：兩個版本
 
+:::::{div}
+:class: epi-editions
 ::::{grid} 1 1 2 2
-:gutter: 3
 
-:::{grid-item-card} 🎓 學生版
+:::{card} 🎓 學生版
 課文 + 作業（不含解答）
 +++
-```{button-link} https://ancientsky.github.io/python4epi/
-:color: primary
-:expand:
-開啟學生版
-```
+{button}`開啟學生版 <https://ancientsky.github.io/python4epi/>`
 :::
 
-:::{grid-item-card} 👩‍🏫 教師版
+:::{card} 👩‍🏫 教師版
 課文 + 作業 + 解答
 +++
-```{button-link} https://ancientsky.github.io/python4epi/instructor/
-:color: secondary
-:expand:
-開啟教師版
-```
+{button}`開啟教師版 <https://ancientsky.github.io/python4epi/instructor/>`
 :::
 
 ::::
+:::::
 
 每個 notebook 頁面右上角都有 **Open in Colab** 按鈕，也可以在本機執行：
 
@@ -153,7 +141,7 @@ Google Colab 上不需安裝任何東西——每個 notebook 頂部都有自動
 
 - 內文以**繁體中文**撰寫，技術名詞保留英文；右上角可切換 **English** 版本
 - 流行病學術語採用**台灣標準譯名**（例如：侵襲率、致死率、信賴區間）
-- 完整術語對照表見 {doc}`Ch15 附錄 <chapters/15_appendix>`
+- 完整術語對照表見 [Ch15 附錄](chapters/15_appendix.md)
 
 ## 開始吧
 

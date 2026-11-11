@@ -771,6 +771,6 @@ Once you know "when" the outbreak is most severe, the next question is "where" i
 
 ## Notebooks
 
-- Class notes: {ref}`07_time_series_baseline.ipynb`
+- Class notes: [07_time_series_baseline.ipynb](notebooks/07_time_series_baseline.ipynb)
 - Exercise version: [`07_time_series_exercise.ipynb`](exercises/07_time_series_exercise.ipynb)
-- Solution version (instructor): [`07_time_series_solution.ipynb`](solutions/07_time_series_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/07_time_series_solution.ipynb>)
+- Solution version (instructor): [`07_time_series_solution.ipynb`](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/time-series-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/07_time_series_solution.ipynb>)

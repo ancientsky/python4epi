@@ -8,10 +8,17 @@ English ones.
 Each embed site in a chapter is delimited by a pair of HTML comments::
 
     <!-- video: ch07_01_ts_basics -->
-    ```{raw} html
+    <div class="video-card">
     ...generated card...
-    ```
+    </div>
     <!-- /video -->
+
+The card is a plain HTML block, not a ``{raw} html`` directive: Jupyter Book 2
+(MyST) has no raw-HTML directive and converts HTML blocks to its own nodes,
+keeping only ``class``/``id``/``style``/``href``. So the video ID travels in the
+fallback link's ``href``; ``book/_static/youtube-lite.js`` reads it from there,
+draws the thumbnail and swaps in the player on click. Without JavaScript the
+card is still a working link to the video on YouTube.
 
 Only the text *between* the markers is regenerated, so the script is idempotent
 and safe to re-run: fill in an ID, run it again, and that card appears. A video
@@ -63,8 +70,8 @@ CHAPTER_MD: dict[str, str] = {
 
 #: Per-language rendering strings and the tree each language lives in.
 LANGS: dict[str, dict[str, str]] = {
-    "zh": {"tree": "book", "prefix": "教學影片：", "alt": "教學影片", "title": "title_zh"},
-    "en": {"tree": "book_en", "prefix": "Tutorial video: ", "alt": "Tutorial video", "title": "title_en"},
+    "zh": {"tree": "book", "prefix": "教學影片：", "link": "在 YouTube 上觀看", "title": "title_zh"},
+    "en": {"tree": "book_en", "prefix": "Tutorial video: ", "link": "Watch on YouTube", "title": "title_en"},
 }
 
 MARKER_RX = re.compile(r"<!-- video: (?P<key>[A-Za-z0-9_]+) -->.*?<!-- /video -->", re.DOTALL)
@@ -111,20 +118,33 @@ def normalise_id(raw: str, *, where: str) -> str:
 
 
 def render_card(video_id: str, title: str, lang: str) -> str:
-    """Build the raw-HTML embed block for one video, or ``""`` when unreleased."""
+    """Build the HTML embed block for one video, or ``""`` when unreleased.
+
+    Parameters
+    ----------
+    video_id:
+        The 11-character YouTube ID, or ``""`` for a video not yet released.
+    title:
+        The video title shown above the player.
+    lang:
+        ``"zh"`` or ``"en"``; selects the prefix and link text.
+
+    Returns
+    -------
+    str
+        The card markup (no trailing newline), or ``""``.
+    """
     if not video_id:
         return ""
+    if lang not in LANGS:
+        raise ValueError(f"unknown language {lang!r}; expected one of {sorted(LANGS)}")
     cfg = LANGS[lang]
     return (
-        "```{raw} html\n"
         '<div class="video-card">\n'
         f'  <div class="video-title">{cfg["prefix"]}{title}</div>\n'
-        f'  <div class="youtube-lite" data-id="{video_id}">\n'
-        f'    <img src="https://img.youtube.com/vi/{video_id}/hqdefault.jpg" '
-        f'loading="lazy" alt="{cfg["alt"]}">\n'
-        "  </div>\n"
-        "</div>\n"
-        "```"
+        '  <div class="youtube-lite">'
+        f'<a href="https://www.youtube.com/watch?v={video_id}">{cfg["link"]}</a></div>\n'
+        "</div>"
     )
 
 

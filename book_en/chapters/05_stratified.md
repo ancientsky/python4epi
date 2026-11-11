@@ -645,6 +645,6 @@ Stratified analysis can control for only one confounder at a time. But what if y
 
 ## Workbook
 
-- Lecture notes: {ref}`05_stratified_analysis.ipynb`
+- Lecture notes: [05_stratified_analysis.ipynb](notebooks/05_stratified_analysis.ipynb)
 - Exercise version: [`05_stratified_exercise.ipynb`](exercises/05_stratified_exercise.ipynb)
-- Solution version (instructor edition): [`05_stratified_solution.ipynb`](solutions/05_stratified_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/05_stratified_solution.ipynb>)
+- Solution version (instructor edition): [`05_stratified_solution.ipynb`](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/stratified-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/05_stratified_solution.ipynb>)

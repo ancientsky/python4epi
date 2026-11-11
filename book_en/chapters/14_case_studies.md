@@ -222,7 +222,7 @@ print(f"Exported to: {outdir}")
 ## Exercises
 
 - Exercise version: [`14_case_study_exercise.ipynb`](exercises/14_case_study_exercise.ipynb)
-- Solution version (instructor): [`14_case_study_solution.ipynb`](solutions/14_case_study_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/14_case_study_solution.ipynb>)
+- Solution version (instructor): [`14_case_study_solution.ipynb`](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/case-study-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/14_case_study_solution.ipynb>)
 
 ## Common Misuses
 

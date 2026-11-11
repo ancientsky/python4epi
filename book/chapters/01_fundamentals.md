@@ -72,14 +72,10 @@ cfr = 19 / 121
 ```
 
 <!-- video: ch01_01_variables -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：數值變數</div>
-  <div class="youtube-lite" data-id="JTt_aW9q0rU">
-    <img src="https://img.youtube.com/vi/JTt_aW9q0rU/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=JTt_aW9q0rU">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -96,14 +92,10 @@ deaths = 19                 # 死亡人數
 ### 2) 計算指標——用除法得到比率
 
 <!-- video: ch01_02_arithmetic -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：計算指標</div>
-  <div class="youtube-lite" data-id="cniTIEPpaL4">
-    <img src="https://img.youtube.com/vi/cniTIEPpaL4/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=cniTIEPpaL4">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -131,14 +123,10 @@ print(f"住院率: {hosp_rate:.2%}")
 ```
 
 <!-- video: ch01_03_dictionaries -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：字典</div>
-  <div class="youtube-lite" data-id="vleHeKRvUQk">
-    <img src="https://img.youtube.com/vi/vleHeKRvUQk/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=vleHeKRvUQk">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -160,14 +148,10 @@ print(f"{outbreak['facility']} CFR: {cfr:.2%}")
 ### 4) 列表——存放一組同類資料
 
 <!-- video: ch01_04_lists -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：列表</div>
-  <div class="youtube-lite" data-id="bi_lhHO_WJY">
-    <img src="https://img.youtube.com/vi/bi_lhHO_WJY/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=bi_lhHO_WJY">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -192,14 +176,10 @@ print(f"感染人數最多的翼區：{floor_wing_names[max_index]}（{max_cases
 ```
 
 <!-- video: ch01_05_conditionals -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：條件判斷</div>
-  <div class="youtube-lite" data-id="MAJaBGclgOM">
-    <img src="https://img.youtube.com/vi/MAJaBGclgOM/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=MAJaBGclgOM">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -223,14 +203,10 @@ else:
 ```
 
 <!-- video: ch01_06_functions -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：函式</div>
-  <div class="youtube-lite" data-id="dksTij3vniQ">
-    <img src="https://img.youtube.com/vi/dksTij3vniQ/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=dksTij3vniQ">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ```python
@@ -265,9 +241,9 @@ print(f"3 樓 B 翼侵襲率: {ar_3b:.2%}")
 
 ## 練習本
 
-- 課堂筆記：{ref}`01_fundamentals_python_basics.ipynb`
+- 課堂筆記：[01_fundamentals_python_basics.ipynb](notebooks/01_fundamentals_python_basics.ipynb)
 - 作業版：[`01_fundamentals_exercise.ipynb`](exercises/01_fundamentals_exercise.ipynb)
-- 解答版（教師版）：[`01_fundamentals_solution.ipynb`](solutions/01_fundamentals_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/01_fundamentals_solution.ipynb>)
+- 解答版（教師版）：[`01_fundamentals_solution.ipynb`](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/fundamentals-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/01_fundamentals_solution.ipynb>)
 
 ## 最小可執行環境命令
 

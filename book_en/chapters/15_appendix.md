@@ -1,5 +1,6 @@
 # 15 Appendix
 
+(appendix-a-glossary)=
 ## A. Epidemiology Glossary (English–Chinese)
 
 ### General epidemiology
@@ -161,11 +162,12 @@ git commit -m "message"         # Commit
 | Variables disappear after the notebook kernel restarts | Kernel state was reset | Re-run all cells from the top |
 | `SettingWithCopyWarning` | Assigning to a slice | Use `.copy()` or `.loc` |
 | Date columns can't be computed | Not converted to datetime | `pd.to_datetime(df["col"])` |
-| Chinese characters show as boxes | matplotlib is missing a CJK font | See [E. Chinese chart display troubleshooting](#e-chinese-chart-display-troubleshooting-matplotlib--plotly) below |
-| Plotly charts are blank in Jupyter Book | Wrong renderer setting | See [E. Chinese chart display troubleshooting](#e-chinese-chart-display-troubleshooting-matplotlib--plotly) below |
+| Chinese characters show as boxes | matplotlib is missing a CJK font | See [E. Chinese chart display troubleshooting](#appendix-e-cjk-charts) below |
+| Plotly charts are blank in Jupyter Book | Wrong renderer setting | See [E. Chinese chart display troubleshooting](#appendix-e-cjk-charts) below |
 
 ---
 
+(appendix-e-cjk-charts)=
 ## E. Chinese Chart Display Troubleshooting (matplotlib & Plotly)
 
 When using Traditional Chinese labels, matplotlib and Plotly each have their own traps. This section records the pitfalls this book actually ran into across CI/CD and local environments, along with the fixes.
@@ -348,6 +350,7 @@ When your Python charts have Chinese-display problems, check in this order:
 
 ---
 
+(appendix-f-incubation)=
 ## F. Infectious Disease Time Period Concepts
 
 Outbreak investigations often require deciding "how long to isolate," "how many days to quarantine," and "when the exposure window was." All of these decisions rest on correctly distinguishing the following four time-period concepts.
@@ -380,6 +383,7 @@ Timeline comparison of the four time-period concepts. Note: when the **latent pe
 
 ---
 
+(appendix-g-chain-of-infection)=
 ## G. The Six Links of the Chain of Infection and Intervention Strategies
 
 For an infectious disease to spread from a pathogen to a susceptible host, it must pass through six links in sequence. Breaking any single link interrupts the chain of transmission.

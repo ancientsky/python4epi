@@ -330,7 +330,7 @@ Part A 誠實地讓你看到：**在 280 筆弱訊號資料上，RF 幾乎贏不
 ## 練習題
 
 - 作業版：[`10_ml_exercise.ipynb`](exercises/10_ml_exercise.ipynb)
-- 解答版（講師）：[`10_ml_solution.ipynb`](solutions/10_ml_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/10_ml_solution.ipynb>)
+- 解答版（講師）：[`10_ml_solution.ipynb`](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/ml-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/10_ml_solution.ipynb>)
 
 ## 常見誤用
 

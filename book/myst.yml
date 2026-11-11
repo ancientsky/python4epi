@@ -1,0 +1,119 @@
+# Jupyter Book 2 (MyST) configuration — 中文 學生版 (zh student edition).
+#
+# Build with the shared entry point, not with `jupyter book` directly: it also
+# installs the kernel pre-execution setup and runs the post-build step.
+#
+#   uv run python scripts/build_book.py --lang zh --edition student
+#
+# The instructor edition (book/_instructor/myst.yml) extends this file and
+# only replaces `project.toc`, so every other setting lives here once.
+version: 1
+project:
+  title: Epi With Python — 用 Python 學流行病學
+  description: 用 Python 學流行病學，從零基礎到 ML/DL，18 章跟著一場退伍軍人症疫調走完整個分析流程。
+  keywords: [Epidemiology, Python, Jupyter, 流行病學, 公共衛生, 疫情調查, Legionella, 機器學習, 資料科學]
+  authors:
+    - name: Epi With Python | Python for Epidemiologists
+  license: MIT
+  github: https://github.com/ancientsky/python4epi
+  thumbnail: _static/og-image.png
+  toc:
+    - file: intro.md
+    - title: 第一幕：接獲通報
+      children:
+        - file: chapters/00_guide.md
+        - file: chapters/01_fundamentals.md
+          children:
+            - file: chapters/notebooks/01_fundamentals_python_basics.ipynb
+        - file: chapters/01b_python_toolbox.md
+          children:
+            - file: chapters/notebooks/01b_python_toolbox.ipynb
+        - file: chapters/02_data_wrangling.md
+          children:
+            - file: chapters/notebooks/02_data_wrangling_for_beginners.ipynb
+            - file: chapters/notebooks/02_visualization_epi_charts.ipynb
+    - title: 第二幕：從描述到推論
+      children:
+        - file: chapters/03_stats.md
+          children:
+            - file: chapters/notebooks/03_stats_basics.ipynb
+        - file: chapters/04_outbreak_workflow.md
+          children:
+            - file: chapters/notebooks/04_outbreak_workflow.ipynb
+    - title: 第三幕：深入分析
+      children:
+        - file: chapters/05_stratified.md
+          children:
+            - file: chapters/notebooks/05_stratified_analysis.ipynb
+        - file: chapters/06_logistic_regression.md
+          children:
+            - file: chapters/notebooks/06_logistic_regression.ipynb
+        - file: chapters/07_time_series.md
+          children:
+            - file: chapters/notebooks/07_time_series_baseline.ipynb
+        - file: chapters/08_spatial.md
+          children:
+            - file: chapters/notebooks/08_spatial_rates.ipynb
+            - file: chapters/notebooks/08_spatial_choropleth.ipynb
+            - file: chapters/notebooks/08_spatial_statistics.ipynb
+    - title: 第四幕：進階建模
+      children:
+        - file: chapters/09_survival.md
+          children:
+            - file: chapters/notebooks/09_survival_analysis.ipynb
+        - file: chapters/10_machine_learning.md
+          children:
+            - file: chapters/notebooks/10_ml_baseline.ipynb
+            - file: chapters/notebooks/10_ml_advanced.ipynb
+        - file: chapters/11_deep_learning.md
+          children:
+            - file: chapters/notebooks/11_dl_baseline.ipynb
+            - file: chapters/notebooks/11_dl_sequence.ipynb
+        - file: chapters/12_causal.md
+          children:
+            - file: chapters/notebooks/12_causal_did.ipynb
+    - title: 第五幕：收尾與實戰
+      children:
+        - file: chapters/13_reproducibility.md
+          children:
+            - file: chapters/notebooks/13_reproducibility_workflow.ipynb
+        - file: chapters/14_case_studies.md
+          children:
+            - file: chapters/notebooks/14_case_study_legionella.ipynb
+    - title: 附錄與練習
+      children:
+        - file: chapters/15_appendix.md
+        - file: chapters/16_exercises.md
+          children:
+            - file: chapters/exercises/01_fundamentals_exercise.ipynb
+            - file: chapters/exercises/01b_python_toolbox_exercise.ipynb
+            - file: chapters/exercises/02_data_wrangling_exercise.ipynb
+            - file: chapters/exercises/03_stats_exercise.ipynb
+            - file: chapters/exercises/04_outbreak_workflow_exercise.ipynb
+            - file: chapters/exercises/05_stratified_exercise.ipynb
+            - file: chapters/exercises/06_logistic_regression_exercise.ipynb
+            - file: chapters/exercises/07_time_series_exercise.ipynb
+            - file: chapters/exercises/08_spatial_exercise.ipynb
+            - file: chapters/exercises/09_survival_exercise.ipynb
+            - file: chapters/exercises/10_ml_exercise.ipynb
+            - file: chapters/exercises/11_dl_exercise.ipynb
+            - file: chapters/exercises/12_causal_exercise.ipynb
+            - file: chapters/exercises/13_reproducibility_exercise.ipynb
+            - file: chapters/exercises/14_case_study_exercise.ipynb
+site:
+  title: Epi With Python
+  template: book-theme
+  parts:
+    navbar_end: _site/navbar_end.md
+    footer: _site/footer.md
+  options:
+    favicon: _static/favicon.svg
+    logo: _static/logo.svg
+    logo_dark: _static/logo-dark.svg
+    logo_alt: Epi With Python
+    style: _static/site.css
+    # Keep the folder structure in URLs (chapters/notebooks/...), so book/ and
+    # book_en/ map onto each other one-to-one for the language switcher.
+    folders: true
+    outline_maxdepth: 2
+    hide_authors: true

@@ -330,7 +330,7 @@ The key idea in one sentence: in the **screening phase**, prioritize "don't miss
 ## Exercises
 
 - Exercise version: [`10_ml_exercise.ipynb`](exercises/10_ml_exercise.ipynb)
-- Solution version (instructor): [`10_ml_solution.ipynb`](solutions/10_ml_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/10_ml_solution.ipynb>)
+- Solution version (instructor): [`10_ml_solution.ipynb`](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/ml-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/10_ml_solution.ipynb>)
 
 ## Common Pitfalls
 

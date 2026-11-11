@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- `book/`: Jupyter Book source (chapters, TOC, config). Main learning content lives in `book/chapters/`.
+- `book/`: Jupyter Book 2 (MyST) source — `myst.yml` (student edition config + TOC), `_instructor/myst.yml` (instructor TOC). Main learning content lives in `book/chapters/`. `book_en/` is the English mirror.
 - `notebooks/`: runnable lesson notebooks; `notebooks/exercises/` stores exercise/solution pairs.
 - `src/epi_learning/`: reusable Python helpers (`cleaning.py`, `metrics.py`, `tabulate.py`, `viz.py`).
 - `data/synthetic/`: teaching datasets (e.g., `line_list.csv`, `admin_areas.geojson`).
@@ -13,8 +13,7 @@
 - `uv run pytest`: run unit + notebook JSON smoke tests.
 - `uv run jupyter lab`: start local notebook environment.
 - `uv run python notebooks/run_sitrep.py`: run the SitRep example end-to-end.
-- `uv run jupyter-book build book/`: build the site (requires Node.js 20+).
-- Instructor build: `cp book/_toc_instructor.yml book/_toc.yml && uv run jupyter-book build book/`.
+- `uv run python scripts/build_book.py --lang zh --edition student`: build the site (requires Node.js 24+); `--edition instructor` adds solutions, `--lang en` builds the English tree, `--all --site-dir _site` builds and assembles all four editions.
 
 ## Coding Style & Naming Conventions
 - Python: 4-space indentation, clear variable names, and small focused functions.
@@ -36,7 +35,7 @@
 - `fix: correct epi week conversion in chapter 02`
 - PRs should include:
 - scope summary (chapters/modules changed)
-- validation output (`uv run pytest`, `jupyter-book build` if applicable)
+- validation output (`uv run pytest`, `scripts/build_book.py` if applicable)
 - screenshots for major visualization/UI changes
 
 ## Security & Configuration Tips

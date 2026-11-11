@@ -42,14 +42,10 @@
 ## 為什麼不用 Excel / Google Sheets 就好？
 
 <!-- video: ch00_01_why_python -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：為什麼用 Python</div>
-  <div class="youtube-lite" data-id="Nv4j3T27oGI">
-    <img src="https://img.youtube.com/vi/Nv4j3T27oGI/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=Nv4j3T27oGI">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 你可能會想：「我用 Excel 用了好幾年，為什麼還要學新工具？」
@@ -115,14 +111,10 @@ Python 在這些**自動化、排程、系統串接**的工作上比 R 強很多
 ## 為什麼用 `uv` 而不是傳統的 `pip`？
 
 <!-- video: ch00_02_uv_setup -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：uv 與環境設定</div>
-  <div class="youtube-lite" data-id="aOCyRkvjsUY">
-    <img src="https://img.youtube.com/vi/aOCyRkvjsUY/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=aOCyRkvjsUY">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 如果你 Google「Python 安裝套件」，幾乎所有教學都會教你用 `pip install`。那為什麼我們要用 `uv` 這個比較新的工具？
@@ -394,14 +386,10 @@ uv add seaborn
 ## 手把手教學：從零開始的流行病學 Hello World
 
 <!-- video: ch00_04_hello_epi -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：第一支程式 Hello Epi</div>
-  <div class="youtube-lite" data-id="x4tNVZSAgNI">
-    <img src="https://img.youtube.com/vi/x4tNVZSAgNI/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=x4tNVZSAgNI">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 光看指令可能還是抽象。讓我們從一台什麼都沒裝的電腦開始，一步一步做出流行病學家的第一個「Hello World」——不是印出一行字，而是**讀取一份護理之家群聚事件的 line list、計算侵襲率與致死率、畫一張流行曲線**。
@@ -704,14 +692,10 @@ Markdown cell 讓你的 notebook 不只是一堆程式碼，而是一份**圖文
 ## 為什麼建議用 Jupyter Lab？不能直接寫 `.py` 嗎？
 
 <!-- video: ch00_03_jupyter -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Jupyter Lab 入門</div>
-  <div class="youtube-lite" data-id="xqaJBdUBd6s">
-    <img src="https://img.youtube.com/vi/xqaJBdUBd6s/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=xqaJBdUBd6s">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 你可能會想：「程式不就是一個文字檔嗎？為什麼要用 Jupyter Lab 這個看起來像網頁的東西？」
@@ -778,6 +762,7 @@ Jupyter Lab 的 notebook（`.ipynb` 檔案）正好適合這種工作方式：
 **本教材建議初學者用 Jupyter Lab。** 當你比較熟悉之後，可以試試 VS Code——它可以直接打開 `.ipynb` 檔案（體驗跟 Jupyter Lab 幾乎一樣），同時也能編輯 `.py` 檔案，兩種格式在同一個環境中搞定。
 ```
 
+(guide-ipynb-to-py)=
 ### 把 `.ipynb` 轉成 `.py`：三種方法
 
 當你的分析流程確定了，想把 notebook 轉成 `.py` 腳本（例如要排程自動執行），有三種方式：
@@ -953,14 +938,10 @@ schtasks /create /tn "Weekly_Report" /tr "cmd /c cd /d C:\path\to\your\project &
 ## Git 是什麼？為什麼流行病學家需要它？
 
 <!-- video: ch00_05_git_basics -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：Git 版本控制</div>
-  <div class="youtube-lite" data-id="kiH0W9U6bM0">
-    <img src="https://img.youtube.com/vi/kiH0W9U6bM0/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=kiH0W9U6bM0">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 ### 先說一個場景
@@ -1447,14 +1428,10 @@ uv run jupyter lab
 ## 這份教材的學習路線圖
 
 <!-- video: ch00_06_roadmap -->
-```{raw} html
 <div class="video-card">
   <div class="video-title">教學影片：課程地圖與學習策略</div>
-  <div class="youtube-lite" data-id="5XQwCgawhVs">
-    <img src="https://img.youtube.com/vi/5XQwCgawhVs/hqdefault.jpg" loading="lazy" alt="教學影片">
-  </div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=5XQwCgawhVs">在 YouTube 上觀看</a></div>
 </div>
-```
 <!-- /video -->
 
 你不需要一口氣學完所有章節。本教材以**松柏護理之家退伍軍人症群聚事件**為貫穿全書的主軸，每一章帶你更深入一層分析，就像真實疫調一樣逐步揭開真相。

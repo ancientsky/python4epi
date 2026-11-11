@@ -1,0 +1,634 @@
+/* =============================================================================
+ * Epi With Python — site stylesheet for the MyST book-theme (Jupyter Book 2)
+ *
+ * Loaded through `site.options.style` in book/myst.yml and book_en/myst.yml
+ * (the theme takes exactly one file, so the YouTube card styles live here too).
+ *
+ * The theme is themed through `--myst-color-*` design tokens: light values on
+ * :root, dark values on html.dark. Mapping the brand palette onto those tokens
+ * recolours links, buttons, admonitions, the sidebar, cards, etc. in one place;
+ * the component rules further down only add what the tokens cannot express.
+ *
+ * Brand palette (keep in sync with the video-production skill, the SVG
+ * diagrams in book/chapters/images/ and videos/src/base_scene.py):
+ *   warm bg #FAF8F3 · card #FFFFFF · card-alt #F5F3EE · orange #D97757
+ *   blue #6A9BCC · green #788C5D · text #1A1A1A · muted #6B6B6B
+ *   red #D94452 · code bg #2B2B2B · code text #F8F8F2 · border #E8E5DF
+ * ============================================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700;900&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  --epi-orange: #d97757;
+  --epi-orange-deep: #b65a3d;
+  --epi-blue: #6a9bcc;
+  --epi-green: #788c5d;
+  --epi-red: #d94452;
+  --epi-code-bg: #2b2b2b;
+  --epi-code-text: #f8f8f2;
+
+  --epi-font-serif: "Noto Serif TC", "Source Han Serif TC", "Songti TC", "Noto Serif",
+    Georgia, "Times New Roman", serif;
+  --epi-font-sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Noto Sans CJK TC",
+    -apple-system, system-ui, "Segoe UI", sans-serif;
+  --epi-font-mono: "JetBrains Mono", "Fira Code", "SF Mono", Menlo, Consolas, monospace;
+
+  /* --- theme tokens: light mode --- */
+  --myst-color-bg: #faf8f3;
+  --myst-color-bg-secondary: #f5f3ee;
+  --myst-color-surface: #f5f3ee;
+  --myst-color-surface-hover: #ede9e1;
+  --myst-color-text: #1a1a1a;
+  --myst-color-text-secondary: #4a4a4a;
+  --myst-color-text-tertiary: #6b6b6b;
+  --myst-color-prose-body: #2b2b2b;
+  --myst-color-border: #e8e5df;
+  --myst-color-border-strong: #d6d0c4;
+  --myst-color-link: #b65a3d;
+  --myst-color-link-hover: #d97757;
+  --myst-color-link-underline: #e9b8a5;
+  --myst-color-active: #c2603e;
+  --myst-color-active-bg: #d977572e;
+  --myst-color-active-surface: #fce9df;
+  --myst-color-primary: #d97757;
+  --myst-color-primary-hover: #b65a3d;
+  --myst-color-focus-ring: #d97757;
+  --myst-color-focus-outline: #f2c4b0;
+  --myst-color-accent-text: #9d3b1f;
+  --myst-color-accent-surface: #fce9df;
+  --myst-color-accent-surface-border: #f2c4b0;
+  --myst-color-accent-surface-text: #9d3b1f;
+  --myst-color-inverse-bg: #2b2b2b;
+  --myst-color-inverse-text: #faf8f3;
+  --myst-color-code: #9d3b1f;
+  --myst-color-info: #6a9bcc;
+  --myst-color-info-bg: #eef4fa;
+  --myst-color-info-text: #3f6e9e;
+  --myst-color-success: #788c5d;
+  --myst-color-success-bg: #f1f4ec;
+  --myst-color-success-text: #55663f;
+  --myst-color-warning: #d97757;
+  --myst-color-warning-bg: #fcefe8;
+  --myst-color-warning-text: #a8502f;
+  --myst-color-danger: #d94452;
+  --myst-color-danger-bg: #fbedee;
+  --myst-color-danger-text: #b5313e;
+  --myst-color-error: #d94452;
+  --myst-color-error-bg: #fbedee;
+  --myst-color-error-text: #b5313e;
+
+  --epi-inline-code-bg: #f5f3ee;
+  --epi-table-head-bg: #6a9bcc1f;
+  --epi-quote-text: #3a3a3a;
+}
+
+html.dark {
+  /* --- theme tokens: dark mode (warm dark tones that keep the brand feel) --- */
+  --myst-color-bg: #1b1e22;
+  --myst-color-bg-secondary: #24282e;
+  --myst-color-surface: #2d3139;
+  --myst-color-surface-hover: #363b44;
+  --myst-color-text: #eae7e0;
+  --myst-color-text-secondary: #c9c5bd;
+  --myst-color-text-tertiary: #a3a7ad;
+  --myst-color-prose-body: #dad6ce;
+  --myst-color-border: #3a3f47;
+  --myst-color-border-strong: #4a505a;
+  --myst-color-link: #f2a683;
+  --myst-color-link-hover: #f7c2a5;
+  --myst-color-link-underline: #9d5a3e;
+  --myst-color-active: #f2a683;
+  --myst-color-active-bg: #d9775740;
+  --myst-color-active-surface: #3d2518;
+  --myst-color-primary: #d97757;
+  --myst-color-primary-hover: #e8906f;
+  --myst-color-focus-ring: #f2a683;
+  --myst-color-focus-outline: #f2a683;
+  --myst-color-accent-text: #f7c2a5;
+  --myst-color-accent-surface: #3d2518;
+  --myst-color-accent-surface-border: #6b3b26;
+  --myst-color-accent-surface-text: #f7c2a5;
+  --myst-color-inverse-bg: #eae7e0;
+  --myst-color-inverse-text: #1b1e22;
+  --myst-color-code: #f2a683;
+  --myst-color-info: #8cb4dc;
+  --myst-color-info-bg: #1f2a36;
+  --myst-color-info-text: #9ec2e6;
+  --myst-color-success: #9db07f;
+  --myst-color-success-bg: #222a1e;
+  --myst-color-success-text: #b3c596;
+  --myst-color-warning: #e89a79;
+  --myst-color-warning-bg: #33241d;
+  --myst-color-warning-text: #f2a683;
+  --myst-color-danger: #e8707b;
+  --myst-color-danger-bg: #33201f;
+  --myst-color-danger-text: #f0959d;
+  --myst-color-error: #e8707b;
+  --myst-color-error-bg: #33201f;
+  --myst-color-error-text: #f0959d;
+
+  --epi-inline-code-bg: #2d3139;
+  --epi-table-head-bg: #6a9bcc33;
+  --epi-quote-text: #d8d4cc;
+}
+
+/* =============================================================================
+ * Typography
+ * ============================================================================= */
+
+body {
+  font-family: var(--epi-font-sans);
+  letter-spacing: 0.01em;
+  font-feature-settings: "palt", "kern";
+  -webkit-font-smoothing: antialiased;
+}
+
+.article {
+  font-size: 1.03rem;
+  line-height: 1.8;
+}
+
+.article h1,
+.article h2,
+.article h3,
+.article h4,
+.myst-fm-block-title {
+  font-family: var(--epi-font-serif);
+  letter-spacing: 0.005em;
+  line-height: 1.35;
+}
+
+/* Page title (rendered by the theme in the frontmatter block). */
+.myst-fm-block-title {
+  font-weight: 900;
+  padding-left: 0.9rem;
+  border-left: 5px solid var(--epi-orange);
+}
+
+.article h2 {
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--myst-color-border);
+}
+
+.article h4 {
+  color: var(--myst-color-text-tertiary);
+}
+
+/* Content links: dotted underline, solid on hover (the theme's own UI links,
+   e.g. the TOC, prev/next cards and buttons, keep their own look). */
+#skip-to-article p a:not(.button),
+#skip-to-article li a:not(.button),
+#skip-to-article td a:not(.button) {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+#skip-to-article p a:not(.button):hover,
+#skip-to-article li a:not(.button):hover,
+#skip-to-article td a:not(.button):hover {
+  text-decoration-style: solid;
+}
+
+/* =============================================================================
+ * Code: inline pills; blocks stay dark in both modes (matches the videos)
+ * ============================================================================= */
+
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--epi-font-mono);
+}
+
+.article :not(pre) > code {
+  background: var(--epi-inline-code-bg);
+  color: var(--myst-color-code);
+  border: 1px solid var(--myst-color-border);
+  border-radius: 4px;
+  padding: 0.08em 0.35em;
+  font-size: 0.9em;
+}
+.article :not(pre) > code::before,
+.article :not(pre) > code::after {
+  content: none;
+}
+
+.myst-code {
+  background: var(--epi-code-bg) !important;
+  border: 1px solid #1e1e1e;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.myst-code-body,
+.myst-code-body pre,
+.myst-code-body code {
+  color: var(--epi-code-text);
+  background: transparent;
+  line-height: 1.6;
+}
+/* Copy button on the dark block */
+.myst-code-copy-icon {
+  color: #c9c9c9;
+}
+.myst-code-copy-icon:hover {
+  color: var(--epi-orange);
+}
+
+/* Monokai-style syntax colours on the dark block (light theme tokens would be
+   unreadable on #2B2B2B). */
+.myst-code .hljs-comment,
+.myst-code .hljs-quote {
+  color: #a39e8a;
+  font-style: italic;
+}
+.myst-code .hljs-keyword,
+.myst-code .hljs-selector-tag,
+.myst-code .hljs-literal,
+.myst-code .hljs-meta .hljs-keyword {
+  color: #f92672;
+}
+.myst-code .hljs-string,
+.myst-code .hljs-template-variable,
+.myst-code .hljs-addition {
+  color: #e6db74;
+}
+.myst-code .hljs-number,
+.myst-code .hljs-symbol,
+.myst-code .hljs-bullet {
+  color: #ae81ff;
+}
+.myst-code .hljs-title,
+.myst-code .hljs-title.function_,
+.myst-code .hljs-section,
+.myst-code .hljs-name {
+  color: #a6e22e;
+}
+.myst-code .hljs-built_in,
+.myst-code .hljs-type,
+.myst-code .hljs-title.class_,
+.myst-code .hljs-params {
+  color: #66d9ef;
+}
+.myst-code .hljs-attr,
+.myst-code .hljs-attribute,
+.myst-code .hljs-variable,
+.myst-code .hljs-property {
+  color: #fd971f;
+}
+.myst-code .hljs-meta,
+.myst-code .hljs-doctag {
+  color: #75715e;
+}
+.myst-code .hljs-deletion {
+  color: #f92672;
+}
+/* Emphasised lines */
+.myst-code .line-highlight,
+.myst-code [data-highlight="true"] {
+  background: #ffffff14;
+}
+
+/* Notebook cells: an orange rail on code inputs, like the old site. */
+.myst-jp-nb-block > .myst-code,
+.myst-jp-nb-block .myst-code.border {
+  border-left: 3px solid var(--epi-orange);
+}
+
+/* =============================================================================
+ * Tables (markdown tables and pandas DataFrame outputs)
+ * ============================================================================= */
+
+.article table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--myst-color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--myst-color-bg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  font-size: 0.95em;
+}
+.article table th {
+  background: var(--epi-table-head-bg);
+  font-family: var(--epi-font-serif);
+  color: var(--myst-color-text);
+  font-weight: 700;
+  border-bottom: 2px solid var(--epi-blue);
+  text-align: left;
+}
+.article table th,
+.article table td {
+  padding: 0.5rem 0.8rem;
+}
+.article table td {
+  border-top: 1px solid var(--myst-color-border);
+}
+.article table tbody tr:nth-child(even) td {
+  background: var(--myst-color-bg-secondary);
+}
+table.dataframe {
+  font-size: 0.86em;
+}
+
+/* =============================================================================
+ * Admonitions, blockquotes, figures
+ * ============================================================================= */
+
+.myst-admonition {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  background: var(--myst-color-bg);
+}
+html.dark .myst-admonition {
+  background: var(--myst-color-bg-secondary);
+}
+.myst-admonition-header {
+  font-family: var(--epi-font-serif);
+  font-weight: 700;
+}
+
+.article blockquote {
+  margin: 1.4rem 0;
+  padding: 0.6rem 1.1rem;
+  border-left: 4px solid var(--epi-orange);
+  background: var(--myst-color-bg-secondary);
+  border-radius: 0 6px 6px 0;
+  color: var(--epi-quote-text);
+  font-style: italic;
+}
+.article blockquote p {
+  margin: 0.4rem 0;
+}
+
+.article figure img {
+  border-radius: 8px;
+}
+.article figcaption {
+  font-family: var(--epi-font-serif);
+  color: var(--myst-color-text-tertiary);
+  font-size: 0.9em;
+}
+
+/* =============================================================================
+ * Buttons and cards (home page)
+ * ============================================================================= */
+
+.article a.button {
+  display: inline-block;
+  padding: 0.55rem 1.3rem;
+  border-radius: 999px;
+  background: var(--myst-color-primary);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(217, 119, 87, 0.25);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.article a.button:hover {
+  background: var(--myst-color-primary-hover);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* Hero call to action: full-width, larger. */
+.epi-hero-cta {
+  margin: 1.8rem 0 2.2rem;
+}
+.epi-hero-cta a.button {
+  display: block;
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 0.85rem 1.3rem;
+}
+
+.myst-card {
+  background: var(--myst-color-bg);
+  border-color: var(--myst-color-border);
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+html.dark .myst-card {
+  background: var(--myst-color-bg-secondary);
+}
+.myst-card:hover {
+  border-color: var(--epi-orange);
+}
+.myst-card-title {
+  font-family: var(--epi-font-serif);
+  font-size: 1.1rem;
+}
+.myst-card-header {
+  color: var(--epi-orange);
+  font-weight: 700;
+}
+
+/* Dataset numbers: big, centred, orange. */
+.epi-stats .myst-card {
+  text-align: center;
+  margin: 0;
+}
+.epi-stats .myst-card-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--epi-orange);
+  padding-top: 0.6rem;
+}
+.epi-stats .myst-card-body p {
+  color: var(--myst-color-text-secondary);
+  font-size: 0.95rem;
+  margin-top: 0.2rem;
+}
+.epi-acts .myst-card,
+.epi-editions .myst-card {
+  margin: 0;
+  border-top: 3px solid var(--epi-orange);
+}
+.epi-editions .myst-card-footer a.button {
+  display: block;
+  text-align: center;
+}
+.epi-editions .myst-card:nth-child(2) a.button {
+  background: var(--epi-blue);
+  box-shadow: 0 2px 6px rgba(106, 155, 204, 0.25);
+}
+.epi-editions .myst-card:nth-child(2) a.button:hover {
+  background: #4f7fae;
+}
+
+/* =============================================================================
+ * Header extras: language switch (navbar part) and "Open in Colab"
+ * ============================================================================= */
+
+/* The theme only shows the navbar part at xl widths and repeats it in the
+   mobile drawer; the language switch belongs in the top bar at every width. */
+.myst-navbar-end {
+  display: flex !important;
+  margin-left: 0.5rem;
+}
+.myst-primary-sidebar-navbar-end {
+  display: none !important;
+}
+.myst-navbar-end p {
+  margin: 0;
+}
+a.epi-lang-switch {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.75rem;
+  border: 1px solid var(--myst-color-border-strong);
+  border-radius: 999px;
+  color: var(--myst-color-text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+a.epi-lang-switch:hover {
+  border-color: var(--epi-orange);
+  color: var(--epi-orange);
+}
+a.epi-lang-switch svg {
+  display: none;
+}
+
+a.epi-colab-link {
+  margin-left: 0.75rem;
+  padding: 0.1rem 0.65rem;
+  border: 1px solid #f9ab00;
+  border-radius: 999px;
+  background: #fff8e1;
+  color: #7a4f00;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+a.epi-colab-link:hover {
+  background: #f9ab00;
+  color: #1a1a1a;
+}
+html.dark a.epi-colab-link {
+  background: #3a2e12;
+  color: #ffd772;
+}
+
+/* =============================================================================
+ * Lite YouTube cards (book/_static/youtube-lite.js)
+ * ============================================================================= */
+
+.video-card {
+  border: 1px solid var(--myst-color-border);
+  border-radius: 10px;
+  padding: 0.75em;
+  margin: 1.2em 0;
+  background: var(--myst-color-bg-secondary);
+}
+.video-card .video-title {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: var(--myst-color-text-secondary);
+  margin-bottom: 0.5em;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+.video-card .video-title::before {
+  content: "\25B6";
+  color: var(--epi-orange);
+  font-size: 0.85em;
+}
+
+/* Before the script runs (or without JavaScript) the card is a plain link. */
+.youtube-lite {
+  position: relative;
+}
+.youtube-lite.yt-ready {
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  cursor: pointer;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+}
+.youtube-lite.yt-ready > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  margin: 0;
+  border-radius: 0;
+  transition: opacity 0.15s ease;
+}
+.youtube-lite.yt-ready:hover > img {
+  opacity: 0.85;
+}
+/* The link stays in the DOM (keyboard focus, Enter plays) but is invisible. */
+.youtube-lite.yt-ready > a {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  color: transparent !important;
+  font-size: 0;
+}
+.youtube-lite.yt-ready > a svg {
+  display: none;
+}
+.youtube-lite.yt-ready > a:focus-visible {
+  outline: 3px solid var(--epi-orange);
+  outline-offset: -3px;
+}
+/* YouTube-style red play button */
+.youtube-lite.yt-ready::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 68px;
+  height: 48px;
+  background: rgba(255, 0, 0, 0.85);
+  border-radius: 14px;
+  pointer-events: none;
+}
+.youtube-lite.yt-ready::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateX(2px);
+  z-index: 1;
+  border-style: solid;
+  border-width: 11px 0 11px 19px;
+  border-color: transparent transparent transparent #fff;
+  pointer-events: none;
+}
+.youtube-lite.yt-ready:hover::after {
+  background: rgb(255, 0, 0);
+}
+.youtube-lite.yt-activated {
+  cursor: default;
+}
+.youtube-lite.yt-activated::after,
+.youtube-lite.yt-activated::before,
+.youtube-lite.yt-activated > img,
+.youtube-lite.yt-activated > a {
+  display: none;
+}
+.youtube-lite iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Phones: let the breadcrumb and the header buttons (+ Colab) wrap instead of
+   overlapping. */
+@media (max-width: 640px) {
+  .myst-fm-block-header {
+    flex-wrap: wrap;
+    row-gap: 0.4rem;
+  }
+}

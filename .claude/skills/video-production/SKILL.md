@@ -1,6 +1,6 @@
 ---
 name: video-production
-description: House visual style, build pipeline, and link-publishing workflow for this repo's tutorial videos and hand-crafted SVG diagrams — the Anthropic-Skilljar colour palette, SVG diagram conventions, the bilingual Manim + edge-TTS + FFMPEG pipeline, YAML narration script format, custom Manim mobjects, the Manim v0.20.1 breaking-change/crash workarounds, and how YouTube links reach the site via the youtube_ids.yaml registry and sync_video_embeds.py. Use when creating or editing anything under videos/ (scenes, scripts, build.py, youtube_ids.yaml), when adding or moving a video embed in book/ or book_en/ chapters, when authoring or modifying SVG diagrams in book/chapters/images/, or when touching the youtube-lite CSS in book/_static/.
+description: House visual style, build pipeline, and link-publishing workflow for this repo's tutorial videos and hand-crafted SVG diagrams — the Anthropic-Skilljar colour palette, SVG diagram conventions, the bilingual Manim + edge-TTS + FFMPEG pipeline, YAML narration script format, custom Manim mobjects, the Manim v0.20.1 breaking-change/crash workarounds, and how YouTube links reach the site via the youtube_ids.yaml registry and sync_video_embeds.py. Use when creating or editing anything under videos/ (scenes, scripts, build.py, youtube_ids.yaml), when adding or moving a video embed in book/ or book_en/ chapters, when authoring or modifying SVG diagrams in book/chapters/images/, or when touching the YouTube card CSS/JS in book/_static/ (site.css, youtube-lite.js).
 ---
 
 # Tutorial video & diagram production
@@ -8,7 +8,7 @@ description: House visual style, build pipeline, and link-publishing workflow fo
 The project generates animated tutorial videos under `videos/` (one per core concept,
 every chapter sharing one visual style and pipeline). Run `ls videos/` for the current
 layout. This palette is shared across **all** visual assets: Manim videos, the SVG
-diagrams in `book/chapters/images/`, and the `youtube-lite` CSS in `book/_static/`.
+diagrams in `book/chapters/images/`, and the YouTube card styles (`book/_static/site.css`) and script (`book/_static/youtube-lite.js`).
 
 ### Video Pipeline
 ```
@@ -40,7 +40,7 @@ CODE_TEXT = "#F8F8F2"        # Code text (light)
 BORDER_LIGHT = "#E8E5DF"    # Card border (light gray)
 ```
 
-> **Note:** This color palette is shared across **all visual assets**: Manim videos, SVG diagrams (in `book/chapters/images/`), and the `youtube-lite` CSS (`book/_static/`). When creating or modifying any visual element, always use these colors for consistency.
+> **Note:** This color palette is shared across **all visual assets**: Manim videos, SVG diagrams (in `book/chapters/images/`), and the YouTube card styles (`book/_static/site.css`). When creating or modifying any visual element, always use these colors for consistency.
 
 
 ### SVG Diagram Style Guide
@@ -179,6 +179,22 @@ the site. The chapter markdown only carries invisible markers:
 **both** `book/` (from the `zh:` field) and `book_en/` (from `en:`), and rewrites
 `videos/VIDEO_INDEX.md`. Editing a card by hand is pointless — the next sync
 overwrites it.
+
+The generated card is a plain HTML block (Jupyter Book 2 / MyST has no
+`{raw} html` directive, and its HTML conversion keeps only `class`, `id`,
+`style` and `href`), so the video ID lives in the fallback link:
+
+```html
+<div class="video-card">
+  <div class="video-title">教學影片：…</div>
+  <div class="youtube-lite"><a href="https://www.youtube.com/watch?v=VIDEO_ID">在 YouTube 上觀看</a></div>
+</div>
+```
+
+`book/_static/youtube-lite.js` (injected into every page by
+`scripts/build_book.py`) reads the ID from that `href`, adds the thumbnail and
+swaps in the player on click; without JavaScript the card is just the link.
+`tests/test_sync_video_embeds.py` checks every committed card is in this form.
 
 To publish a link: paste the URL or bare ID into the registry entry whose key
 matches the built mp4 stem. A blank ID renders no card at all, so unreleased

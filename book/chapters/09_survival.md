@@ -582,7 +582,7 @@ results = cph.check_assumptions(cox_df, show_plots=False)
 ## 練習題
 
 - 作業版：[`09_survival_exercise.ipynb`](exercises/09_survival_exercise.ipynb)
-- 解答版（講師）：[`09_survival_solution.ipynb`](solutions/09_survival_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/09_survival_solution.ipynb>)
+- 解答版（講師）：[`09_survival_solution.ipynb`](https://ancientsky.github.io/python4epi/instructor/chapters/solutions/survival-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/09_survival_solution.ipynb>)
 
 ## 常見誤用
 

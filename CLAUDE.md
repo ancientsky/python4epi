@@ -21,19 +21,21 @@ that the manifest does *not* state:
 
 - **uv** is the sole package manager — never pip, conda, or poetry. Notebooks must also
   run on **Google Colab**.
-- **Node.js 24+** is required by Jupyter Book to build the site.
+- **Node.js 24+** is required by Jupyter Book 2 (the MyST engine) to build the site.
 
 ## Essential Commands
 
 All commands use `uv run` to execute within the managed virtual environment.
 
 ```bash
-# Build the book — the TOC file is swapped before each edition build
-cp book/_toc_student.yml book/_toc.yml
-uv run jupyter-book build book/      # Student edition
-
-cp book/_toc_instructor.yml book/_toc.yml
-uv run jupyter-book build book/      # Instructor edition (includes solutions)
+# Build the book (Jupyter Book 2) — always through the entry point, never bare
+# `jupyter book build`: it installs the kernel pre-execution setup, builds with
+# --execute --strict, and runs the post-build step
+uv run python scripts/build_book.py --lang zh --edition student      # 中文 學生版
+uv run python scripts/build_book.py --lang zh --edition instructor   # 中文 教師版 (solutions)
+uv run python scripts/build_book.py --lang en --edition student      # English student
+uv run python scripts/build_book.py --lang en --edition instructor   # English instructor
+uv run python scripts/build_book.py --all --site-dir _site           # all four, as deployed
 
 # Run example script
 uv run python notebooks/run_sitrep.py
@@ -148,8 +150,13 @@ PR descriptions should include scope summary, validation output, and screenshots
 ## Key Architecture Decisions
 
 - The `epi_learning` package under `src/` is installed in editable mode via `uv sync` and imported as `from epi_learning import ...` in both notebooks and tests
-- The book uses `execute_notebooks: force` — all embedded notebooks are re-executed during every build, so they must remain runnable and fast (300s timeout per notebook)
-- Two TOC variants exist for student vs. instructor editions; `_toc.yml` is the active file that gets overwritten before builds
+- The site is built with **Jupyter Book 2** (MyST). Each edition is a MyST project: `book/myst.yml` (zh student: all site config + TOC), `book/_instructor/myst.yml` (`extends: ../myst.yml`, replaces only `project.toc` to add Ch17 solutions), and the same pair under `book_en/`. MyST resolves files relative to the directory holding `myst.yml`, so each `_instructor/` holds symlinks (`chapters`, `intro.md`, `_static`, `_site`) back to the shared content — URLs are identical across editions
+- `scripts/build_book.py` is the single build entry point (local, `ci.yml`, `pages.yml`). It runs `jupyter book build --html --execute --strict` per edition: every notebook is executed (cached in `<project>/_build/execute` between local builds), and a cell that raises — or any other ⛔ build error — fails the build. MyST has no per-notebook timeout setting, so notebooks must stay fast
+- **Pre-execution setup** (JB1's `nb_execution_pre_code`) lives in `src/epi_learning/book_setup.py` (`configure_book_kernel()`): chdir to the repo root so `data/synthetic/...` resolves, CJK fonts, `ggplot` style at 150 dpi, Plotly `notebook` renderer. The build script writes an IPython startup file that calls it and points the kernels' `IPYTHONDIR` at it; notebooks are never modified for the build
+- **Post-build step** (`postprocess()` in `scripts/build_book.py`, covered by `tests/test_build_book.py`) does what MyST cannot be configured to do: sets `<html lang>`, absolute OG/Twitter tags + `hreflang` alternates, injects `book/_static/epi-site.js` (language switcher + "Open in Colab") and `youtube-lite.js`, fixes instructor GitHub source links (`book/_instructor/` → `book/`), writes redirect stubs for the old JB1 URLs (`chapters/01_fundamentals.html` → `chapters/fundamentals/`), and refuses to finish if a student edition contains solution files
+- URLs follow MyST's scheme with `folders: true`: leading numbers are dropped and `_` becomes `-` (`chapters/notebooks/03_stats_basics.ipynb` → `/chapters/notebooks/stats-basics/`). Link to other pages by file path (`[](05_stratified.md)`), never by a hand-written URL
+- Content syntax is MyST (not Sphinx): no `{raw} html` (use a plain HTML block; only `class`/`id`/`style`/`href` survive), no sphinx-design options (`:gutter:`, `:text-align:`, `{button-ref}`) — use `{card}`, `{grid}`, the `{button}` role and `{div}` + `:class:` styled in `book/_static/site.css`
+- Never link a solution notebook by relative path from a chapter: MyST copies linked local files into the build, which would ship it in the student edition. Link to the instructor edition URL instead
 - The `uv.lock` file is committed to ensure reproducible dependency resolution
 - Every notebook has a Colab setup cell at the top that detects `google.colab` and auto-clones the repo + installs deps; this cell is a no-op when running locally
 - When creating new notebooks, always include the standard Colab setup cell after the title markdown cell
@@ -161,16 +168,16 @@ The site is built in two languages, deployed to four URLs by `.github/workflows/
 
 | Edition | Source | Deploy path |
 |---------|--------|-------------|
-| 中文 學生版 | `book/` + `_toc_student.yml` | `/` |
-| 中文 教師版 | `book/` + `_toc_instructor.yml` | `/instructor/` |
-| English student | `book_en/` + `_toc_student.yml` | `/en/` |
-| English instructor | `book_en/` + `_toc_instructor.yml` | `/en/instructor/` |
+| 中文 學生版 | `book/myst.yml` | `/` |
+| 中文 教師版 | `book/_instructor/myst.yml` | `/instructor/` |
+| English student | `book_en/myst.yml` | `/en/` |
+| English instructor | `book_en/_instructor/myst.yml` | `/en/instructor/` |
 
-- **`book_en/` mirrors `book/` exactly** (same relative file structure) so the language switcher only has to toggle the `/en/` path prefix. It **shares** `_static`, `_templates`, and `chapters/images` with `book/` via symlinks — do not duplicate CSS/JS/templates/images; edit them once under `book/`.
-- **`book_en/` content is English**: chapter prose, notebook markdown cells, code comments, and user-facing display strings (`print`, plot labels, DataFrame display labels) are translated; Python code, identifiers, dataset column names, and the Colab setup cell stay identical to `book/`. The `book/` (zh) tree is the source of truth for structure — when adding/renaming a chapter, mirror it in `book_en/` and both TOC sets.
-- **Language switcher**: `book/_static/lang-switch.js` derives the deploy base from its own script URL and toggles `/en/`, mapping each page to its counterpart (falls back to the other tree's home page if the counterpart 404s). `book/_templates/lang-switch.html` renders the header button, registered via `html_theme_options.article_header_end` in both `_config.yml` files.
-- **Per-build language flag**: each `_config.yml` sets `sphinx.config.html_context.epi_lang` (`zh` / `en`) and `sphinx.config.language` (`zh_Hant` / `en`). `book/_templates/layout.html` branches on `epi_lang` for OG/Twitter locale + copy and emits `hreflang` alternates. (jupyter-book does not reliably propagate the top-level `language:` key, hence setting it under `sphinx.config` too.)
-- The five-act narrative is encoded as MyST `parts:` in every TOC (captions translated per language).
+- **`book_en/` mirrors `book/` exactly** (same relative file structure) so the language switcher only has to toggle the `/en/` path prefix. It **shares** `_static` and `chapters/images` with `book/` via symlinks — do not duplicate CSS/JS/images; edit them once under `book/`. Only `book_en/_site/` (the navbar/footer parts) is language-specific.
+- **`book_en/` content is English**: chapter prose, notebook markdown cells, code comments, and user-facing display strings (`print`, plot labels, DataFrame display labels) are translated; Python code, identifiers, dataset column names, and the Colab setup cell stay identical to `book/`. The `book/` (zh) tree is the source of truth for structure — when adding/renaming a chapter, mirror it in `book_en/` and in the TOCs of all four `myst.yml` files.
+- **Language switcher**: `_site/navbar_end.md` (the theme's `navbar_end` part) renders a plain `a.epi-lang-switch` link to the other tree's home page (the no-JS fallback). `book/_static/epi-site.js` retargets it to the same page in the other language and the same edition (student↔student, instructor↔instructor), checks the target with a HEAD request on click and falls back to the other tree's home if it 404s. It re-applies after client-side navigation and waits until React has hydrated the page before touching the DOM (earlier changes cause React error #418). The same script adds the "Open in Colab" link on notebook pages from a page→notebook map the build writes.
+- **Per-build language flag**: the language is a property of the edition in `scripts/build_book.py` (`Edition.lang`, copy and locales in `LANG_META`), not of `myst.yml` — the MyST theme hard-codes `<html lang="en">` and has no language option. The post-build step writes `lang="zh-Hant"`/`"en"`, the OG/Twitter locale + copy and the `hreflang` alternates per page, and passes the language to `epi-site.js` via `window.EPI_SITE`.
+- The five-act narrative is encoded as title-only `project.toc` entries with `children` in every `myst.yml` (titles translated per language).
 
 ## Tutorial Video & SVG Diagram Production
 
@@ -185,7 +192,7 @@ on videos or diagrams.
 - `fontManager.addfont()` only registers **face 0** of `.ttc` (TrueType Collection) files
 - For `NotoSansCJK-Regular.ttc`, face 0 = "Noto Sans CJK JP" (not TC)
 - **Fix:** include ALL Noto Sans CJK variants (JP, SC, TC, KR, HK) in `font.sans-serif` candidate list
-- The centralized font config lives in `src/epi_learning/viz.py` (`configure_chinese_font()`) and `book/_config.yml` (`nb_execution_pre_code`); both dynamically discover registered CJK font names
+- The centralized font config lives in `src/epi_learning/viz.py` (`configure_chinese_font()`) and is applied to every notebook kernel of the book build by `src/epi_learning/book_setup.py`; it dynamically discovers registered CJK font names
 - Inline font config in notebooks/chapters uses a static candidate list with all variants
 - When modifying the font candidate list across notebooks, beware of two source formats:
   - **Array-style**: `"source": ["line1\n", "line2\n"]` — each line is a separate JSON array element
@@ -194,7 +201,7 @@ on videos or diagrams.
 
 ### Plotly blank charts in Jupyter Book
 - Plotly's default renderer (`plotly_mimetype`) doesn't produce output in headless Jupyter Book builds
-- **Fix:** set `pio.renderers.default = "notebook"` — this is configured globally in `book/_config.yml` `nb_execution_pre_code`
+- **Fix:** set `pio.renderers.default = "notebook"` (self-contained HTML output that MyST displays) — configured globally for the build in `src/epi_learning/book_setup.py`
 
 ### CI font setup
 - `.github/workflows/ci.yml` installs `fonts-noto-cjk` and clears `~/.cache/matplotlib`

@@ -13,20 +13,20 @@ This chapter provides reference solutions for each chapter's exercises. All solu
 
 | Ch | Topic | Solution focus | Solution |
 |----|------|---------|------|
-| 01 | Python basics | Organizing outbreak data with dicts, wrapping logic in functions | [Solution](solutions/01_fundamentals_solution.ipynb) |
-| 02 | Data wrangling and visualization | Derived date columns, epi curve by age group | [Solution](solutions/02_data_wrangling_solution.ipynb) |
-| 03 | Descriptive statistics and 2×2 tables | Hydrotherapy RR, RR by age group, Fisher's exact | [Solution](solutions/03_stats_solution.ipynb) |
-| 04 | Outbreak investigation workflow | Automated SitRep function, severity analysis | [Solution](solutions/04_outbreak_workflow_solution.ipynb) |
-| 05 | Stratified analysis and confounders | Age stratification, comorbidity confounding, MH adjusted RR | [Solution](solutions/05_stratified_solution.ipynb) |
-| 06 | Logistic regression | Severe-case model, LRT comparison, predicted probabilities | [Solution](solutions/06_logistic_regression_solution.ipynb) |
-| 07 | Time series and forecasting | Hospitalization series, windowed MAE, severity stacked chart | [Solution](solutions/07_time_series_solution.ipynb) |
-| 08 | Spatial epidemiology | CFR heatmap, shower × space correlation, high-risk rooms | [Solution](solutions/08_spatial_solution.ipynb) |
-| 09 | Survival analysis | CHF KM curve, age grouping, multivariable Cox | [Solution](solutions/09_survival_solution.ipynb) |
-| 10 | Machine learning | Balanced classes, severe-case prediction, three-model ROC | [Solution](solutions/10_ml_solution.ipynb) |
-| 11 | Deep learning | Three-layer architecture, severe-case task, dropout comparison | [Solution](solutions/11_dl_solution.ipynb) |
-| 12 | Causal inference | Hydrotherapy AR/PAR, date sensitivity, collider bias | [Solution](solutions/12_causal_solution.ipynb) |
-| 13 | Reproducible research | Summary validation, environment check, version log | [Solution](solutions/13_reproducibility_solution.ipynb) |
-| 14 | Real-world case study | Summary table, RR comparison, mini SitRep chart | [Solution](solutions/14_case_study_solution.ipynb) |
+| 01 | Python basics | Organizing outbreak data with dicts, wrapping logic in functions | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/fundamentals-solution/) |
+| 02 | Data wrangling and visualization | Derived date columns, epi curve by age group | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/data-wrangling-solution/) |
+| 03 | Descriptive statistics and 2×2 tables | Hydrotherapy RR, RR by age group, Fisher's exact | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/stats-solution/) |
+| 04 | Outbreak investigation workflow | Automated SitRep function, severity analysis | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/outbreak-workflow-solution/) |
+| 05 | Stratified analysis and confounders | Age stratification, comorbidity confounding, MH adjusted RR | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/stratified-solution/) |
+| 06 | Logistic regression | Severe-case model, LRT comparison, predicted probabilities | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/logistic-regression-solution/) |
+| 07 | Time series and forecasting | Hospitalization series, windowed MAE, severity stacked chart | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/time-series-solution/) |
+| 08 | Spatial epidemiology | CFR heatmap, shower × space correlation, high-risk rooms | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/spatial-solution/) |
+| 09 | Survival analysis | CHF KM curve, age grouping, multivariable Cox | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/survival-solution/) |
+| 10 | Machine learning | Balanced classes, severe-case prediction, three-model ROC | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/ml-solution/) |
+| 11 | Deep learning | Three-layer architecture, severe-case task, dropout comparison | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/dl-solution/) |
+| 12 | Causal inference | Hydrotherapy AR/PAR, date sensitivity, collider bias | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/causal-solution/) |
+| 13 | Reproducible research | Summary validation, environment check, version log | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/reproducibility-solution/) |
+| 14 | Real-world case study | Summary table, RR comparison, mini SitRep chart | [Solution](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/case-study-solution/) |
 
 ## Teaching Notes
 

@@ -648,7 +648,7 @@ For the complete runnable code, three maps (raw rate, LISA cluster map, Gi\* hot
 ## Exercises
 
 - Exercise version: [`08_spatial_exercise.ipynb`](exercises/08_spatial_exercise.ipynb)
-- Solution version (instructor): [`08_spatial_solution.ipynb`](solutions/08_spatial_solution.ipynb) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/08_spatial_solution.ipynb>)
+- Solution version (instructor): [`08_spatial_solution.ipynb`](https://ancientsky.github.io/python4epi/en/instructor/chapters/solutions/spatial-solution/) | [GitHub](<https://github.com/ancientsky/python4epi/blob/main/book/chapters/solutions/08_spatial_solution.ipynb>)
 
 ## Common Mistakes
 

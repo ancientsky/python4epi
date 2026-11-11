@@ -1,7 +1,10 @@
 """Generate the Open Graph social card for Epi With Python.
 
 Outputs ``book/_static/og-image.png`` at 1200×630 (the Facebook/Twitter/LinkedIn
-recommended aspect for ``twitter:card = summary_large_image``).
+recommended aspect for ``twitter:card = summary_large_image``). The book
+build's post-build step (``scripts/build_book.py``) copies it into every
+edition's ``_static/`` and points each page's ``og:image``/``twitter:image`` at
+its absolute URL.
 
 Run once after visual tweaks and commit the resulting PNG so CI does not need
 to regenerate it:
@@ -45,8 +48,10 @@ WIDTH, HEIGHT, DPI = 1200, 630, 100
 def _register_cjk_fonts() -> tuple[str, str]:
     """Discover installed CJK fonts and return (serif_name, sans_name).
 
-    Mirrors the discovery logic in ``book/_config.yml`` ``nb_execution_pre_code``
-    so this script works inside the same environment the book is built in.
+    Mirrors the discovery logic in :func:`epi_learning.viz.configure_chinese_font`
+    (which the book build applies to every notebook kernel via
+    :mod:`epi_learning.book_setup`), so this script works inside the same
+    environment the book is built in.
     """
     font_dirs = [
         pathlib.Path("/usr/share/fonts"),
