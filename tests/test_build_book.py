@@ -333,3 +333,85 @@ def test_parse_args():
     for bad in ([], ["--lang", "zh"], ["--all", "--lang", "zh"]):
         with pytest.raises(SystemExit):
             bb.parse_args(bad)
+
+
+# --- internal link check ---------------------------------------------------------
+
+
+def _site(tmp_path: Path, pages: dict[str, str]) -> Path:
+    for rel, body in pages.items():
+        path = tmp_path / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(f"<html><head></head><body>{body}</body></html>", encoding="utf-8")
+    return tmp_path
+
+
+def test_resolve_static(tmp_path: Path):
+    site = _site(tmp_path, {"index.html": "", "a/index.html": "", "f.html": ""})
+    assert bb.resolve_static(site, "") == site / "index.html"
+    assert bb.resolve_static(site, "a/") == site / "a" / "index.html"
+    assert bb.resolve_static(site, "a") == site / "a" / "index.html"
+    assert bb.resolve_static(site, "f.html") == site / "f.html"
+    assert bb.resolve_static(site, "missing/") is None
+
+
+def test_broken_links_finds_the_doubled_base_path(tmp_path: Path):
+    # The shape of the book-theme 2.0.0 breadcrumb bug: base path doubled.
+    site = _site(
+        tmp_path,
+        {
+            "index.html": '<a href="/python4epi/chapters/x">ok</a>',
+            "chapters/x/index.html": (
+                '<a href="/python4epi/python4epi/chapters">crumb</a>'
+                '<a href="/python4epi/">home</a>'
+                '<a href="../y/">relative, missing</a>'
+                '<a href="#top">anchor</a>'
+                '<a href="https://github.com/x">external</a>'
+                '<a href="mailto:a@b.c">mail</a>'
+                "<script>var s='<a href=\"/nowhere\">';</script>"
+            ),
+        },
+    )
+    broken = bb.broken_links(site, "/python4epi/")
+    assert broken == {
+        "/python4epi/python4epi/chapters": ["chapters/x/index.html"],
+        "../y/": ["chapters/x/index.html"],
+    }
+
+
+def test_broken_links_skips_other_editions_only(tmp_path: Path):
+    site = _site(
+        tmp_path,
+        {
+            "index.html": (
+                '<a href="/python4epi/en/instructor/a/">nested edition</a>'
+                '<a href="/python4epi/instructor/b/">sibling edition</a>'
+                '<a href="/python4epi/en/missing/">own edition, missing</a>'
+                '<a href="/elsewhere/">outside the site</a>'
+            )
+        },
+    )
+    others = ("/python4epi/", "/python4epi/instructor/", "/python4epi/en/instructor/")
+    broken = bb.broken_links(site, "/python4epi/en/", others)
+    assert set(broken) == {"/python4epi/en/missing/", "/elsewhere/"}
+    with pytest.raises(ValueError, match="end with"):
+        bb.broken_links(site, "/python4epi")
+
+
+def test_check_links_fails_the_build(tmp_path: Path):
+    site = _site(tmp_path, {"index.html": '<a href="/python4epi/gone/">x</a>'})
+    with pytest.raises(SystemExit, match="1 broken internal link"):
+        bb.check_links(site, "/python4epi/", "zh student")
+    ok_site = _site(tmp_path / "ok", {"index.html": "<a href='#'>x</a>"})
+    bb.check_links(ok_site, "/python4epi/", "ok")
+
+
+def test_postprocess_rejects_broken_internal_links(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    _patch_repo(monkeypatch, tmp_path)
+    _fake_build(tmp_path / "book", PAGES)
+    page = tmp_path / "book" / "_build" / "html" / "chapters" / "stats" / "index.html"
+    page.write_text(PAGE_HTML.replace("</body>", '<a href="/python4epi/nope/">x</a></body>'))
+    with pytest.raises(SystemExit, match="broken internal link"):
+        bb.postprocess(ZH_STUDENT, "/python4epi")

@@ -33,7 +33,10 @@ A build does three things Jupyter Book 2 cannot be configured to do itself:
    absolute Open Graph / Twitter tags, ``hreflang`` alternates, the
    language-switcher and YouTube scripts, the "Open in Colab" page map,
    ``book/_instructor/`` → ``book/`` in GitHub source links, and redirect
-   stubs so JB1 URLs (``chapters/01_fundamentals.html``) keep working.
+   stubs so JB1 URLs (``chapters/01_fundamentals.html``) keep working. It then
+   fails the build if a student edition contains solution files or if any
+   same-site link on a built page does not resolve to a file (with ``--all``,
+   links between editions are checked on the assembled site too).
 """
 
 from __future__ import annotations
@@ -49,6 +52,7 @@ import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import unquote, urljoin
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -607,6 +611,106 @@ def find_solution_files(html_dir: Path, pages: list[Page]) -> list[str]:
     return found
 
 
+_HREF_RX = re.compile(r'\shref="([^"]*)"')
+_SCHEME_RX = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
+_SCRIPT_RX = re.compile(r"<script\b[^>]*>.*?</script>", re.DOTALL | re.IGNORECASE)
+
+
+def resolve_static(site_dir: Path, rel: str) -> Path | None:
+    """Find the file a static host (GitHub Pages) serves for a URL path.
+
+    Parameters
+    ----------
+    site_dir:
+        Directory served at the URL root the path is relative to.
+    rel:
+        URL path below that root, without query or fragment (``""`` = root).
+
+    Returns
+    -------
+    Path or None
+        The file served, or ``None`` for a 404. ``a/`` and ``a`` both serve
+        ``a/index.html``; ``a`` may also be a plain file.
+    """
+    rel = unquote(rel)
+    candidate = site_dir / rel
+    if rel and not rel.endswith("/") and candidate.is_file():
+        return candidate
+    index = candidate / "index.html"
+    return index if index.is_file() else None
+
+
+def page_url_for(html_file: Path, site_dir: Path, url_root: str) -> str:
+    """URL path a built HTML file is served at (``x/index.html`` -> ``x/``)."""
+    rel = html_file.relative_to(site_dir).as_posix()
+    if rel == "index.html":
+        return url_root
+    if rel.endswith("/index.html"):
+        return url_root + rel[: -len("index.html")]
+    return url_root + rel
+
+
+def broken_links(
+    site_dir: Path, url_root: str, skip_prefixes: tuple[str, ...] = ()
+) -> dict[str, list[str]]:
+    """Same-site ``href``s in built pages that do not resolve to a file.
+
+    Parameters
+    ----------
+    site_dir:
+        Built output served at *url_root* (an edition's ``_build/html``, or an
+        assembled site).
+    url_root:
+        URL path *site_dir* is served at, with a trailing ``/``
+        (e.g. ``/python4epi/en/``).
+    skip_prefixes:
+        URL roots of other editions: links into them are not checked here
+        (:func:`assemble_site` checks them on the assembled site).
+
+    Returns
+    -------
+    dict[str, list[str]]
+        Broken ``href`` -> pages (relative paths) that contain it.
+    """
+    if not url_root.endswith("/"):
+        raise ValueError(f"url_root must end with '/', got {url_root!r}")
+    broken: dict[str, list[str]] = {}
+    for html_file in sorted(site_dir.rglob("*.html")):
+        page_url = page_url_for(html_file, site_dir, url_root)
+        text = html_file.read_text(encoding="utf-8", errors="replace")
+        # Inline scripts (e.g. plotly.js in a notebook output) are not markup.
+        text = _SCRIPT_RX.sub("", text)
+        for raw in set(_HREF_RX.findall(text)):
+            href = html.unescape(raw).strip()
+            if not href or href.startswith(("#", "//")) or _SCHEME_RX.match(href):
+                continue  # in-page anchor or another site
+            target = urljoin(page_url, href).split("#", 1)[0].split("?", 1)[0]
+            if target.startswith(url_root):
+                # Another edition nested below this one (e.g. /en/instructor/)?
+                nested = [p for p in skip_prefixes if len(p) > len(url_root)]
+                if any(target.startswith(p) for p in nested):
+                    continue
+                if resolve_static(site_dir, target[len(url_root) :]):
+                    continue
+            elif any(target.startswith(prefix) for prefix in skip_prefixes):
+                continue
+            broken.setdefault(href, []).append(html_file.relative_to(site_dir).as_posix())
+    return broken
+
+
+def check_links(
+    site_dir: Path, url_root: str, label: str, skip_prefixes: tuple[str, ...] = ()
+) -> None:
+    """Raise :class:`SystemExit` if any same-site link in *site_dir* is broken."""
+    broken = broken_links(site_dir, url_root, skip_prefixes)
+    if broken:
+        lines = [f"  {href}  (in {len(pages)} pages, e.g. {pages[0]})"
+                 for href, pages in sorted(broken.items())[:20]]
+        raise SystemExit(
+            f"{label}: {len(broken)} broken internal link target(s):\n" + "\n".join(lines)
+        )
+
+
 def postprocess(edition: Edition, base_path: str = DEFAULT_BASE_PATH) -> dict[str, int]:
     """Run the post-build step on an edition's ``_build/html``.
 
@@ -679,6 +783,11 @@ def postprocess(edition: Edition, base_path: str = DEFAULT_BASE_PATH) -> dict[st
             encoding="utf-8",
         )
         redirects += 1
+
+    other_roots = tuple(
+        f"{base_path.rstrip('/')}/{other.prefix}" for other in ALL_EDITIONS if other != edition
+    )
+    check_links(html_dir, edition_root, edition.label(), other_roots)
     return {"pages": len(pages), "notebooks": len(colab), "redirects": redirects}
 
 
@@ -767,7 +876,9 @@ def build_edition(edition: Edition, base_path: str, *, execute: bool = True) -> 
     return stats
 
 
-def assemble_site(editions: list[Edition], site_dir: Path) -> None:
+def assemble_site(
+    editions: list[Edition], site_dir: Path, base_path: str = DEFAULT_BASE_PATH
+) -> None:
     """Copy each edition's HTML to its deploy path under *site_dir*.
 
     Parameters
@@ -777,6 +888,9 @@ def assemble_site(editions: list[Edition], site_dir: Path) -> None:
     site_dir:
         Output directory, replaced if it exists. Its root is the zh student
         edition when that edition is included.
+    base_path:
+        Path the site root is served under; when all four editions are
+        included, every same-site link on the assembled site is checked.
     """
     if site_dir.resolve() in {REPO_ROOT, REPO_ROOT / "book", REPO_ROOT / "book_en"}:
         raise ValueError(f"refusing to replace {site_dir}")
@@ -791,6 +905,10 @@ def assemble_site(editions: list[Edition], site_dir: Path) -> None:
         index = site_dir / edition.prefix / "index.html"
         if POSTBUILD_MARKER not in index.read_text(encoding="utf-8"):
             raise SystemExit(f"{index} was not post-processed")
+    # Links between editions (e.g. the home page's "instructor edition" button)
+    # can only be checked once they sit side by side.
+    if len(editions) == len(ALL_EDITIONS):
+        check_links(site_dir, f"{base_path.rstrip('/')}/", "assembled site")
     print(f"✔ site assembled in {site_dir}", flush=True)
 
 
@@ -830,7 +948,7 @@ def main(argv: list[str] | None = None) -> None:
         else:
             build_edition(edition, args.base_path, execute=not args.no_execute)
     if args.site_dir:
-        assemble_site(editions, args.site_dir)
+        assemble_site(editions, args.site_dir, args.base_path)
 
 
 if __name__ == "__main__":
