@@ -31,7 +31,7 @@ description: "Bantay Python 是給菲律賓疾病監測人員的免費入門課�
 :::
 
 :::{card} Barangay 地圖
-在 24 個描籠涯（barangay，菲律賓最基層的行政區，類似村里）的地圖上，呈現每 10,000 居民的侵襲率，而不是原始病例數。
+在 24 個 barangay（描籠涯，菲律賓最基層的行政區，類似台灣的村里）的地圖上，呈現每 10,000 居民的侵襲率，而不是原始病例數。
 :::
 
 :::{card} 警戒閾值
@@ -43,7 +43,7 @@ description: "Bantay Python 是給菲律賓疾病監測人員的免費入門課�
 :::
 
 :::{card} 隱私頁尾
-隱藏小數字，不含姓名與住址，附上資料來源與日期。
+小格遮蔽，不含姓名與住址，附上資料來源與日期。
 :::
 ::::
 
@@ -60,11 +60,11 @@ description: "Bantay Python 是給菲律賓疾病監測人員的免費入門課�
 ::::{grid} 2 3 3 3
 
 :::{card} Maya
-![Maya Dela Cruz，疾病監測員，手拿記事板](chapters/images/cast_maya.svg)
+![Maya Dela Cruz，疾病監測專員，手拿記事板](chapters/images/cast_maya.svg)
 
-*疾病監測員（Disease Surveillance Officer），CESU*
+*疾病監測專員（DSO），CESU*
 
-「Ate Maya」（瑪雅姊）。護理師，第一份疾病監測員工作做到第四個月。擅長與人相處、處理紙本表單，從沒寫過程式。她會和你一起學。
+「Ate Maya」（瑪雅姊）。護理師，第一份疾病監測專員（DSO）工作做到第四個月。擅長與人相處、處理紙本表單，從沒寫過程式。她會和你一起學。
 :::
 
 :::{card} Doc Mon
@@ -111,7 +111,7 @@ Ramon Bautista 醫師，FETP 畢業，是 Maya 的導師。總是問：「分母
 
 **2026 年 7 月 18 日星期六**，颱風 Amihan 在 Kalinaw 省的 Santa Luz 市登陸。Marilag 河溢堤，八個河岸 barangay 在及腰的洪水中泡了三天。男人們涉水清理殘骸與水溝。
 
-一週後，Aling Nena 傳訊息給市流行病學監測單位（City Epidemiology and Surveillance Unit, CESU）：Ilog 的好幾位男性發燒、眼睛紅、小腿痛。看起來是**鉤端螺旋體病（leptospirosis）**，一種細菌感染，人們因為接觸被受感染動物（尤其是老鼠）尿液汙染的水或土壤而感染。Maya 的通報單越堆越高。接著，積水孳生蚊子，每週的**登革熱**病例也跟著攀升。
+一週後，Aling Nena 傳訊息給市流行病學與監測單位（CESU）：Ilog 的好幾位男性發燒、眼睛紅、小腿痛。看起來是**鉤端螺旋體病（leptospirosis）**，一種細菌感染，人們因為接觸被受感染動物（尤其是老鼠）尿液汙染的水或土壤而感染。Maya 的通報單越堆越高。接著，積水孳生蚊子，每週的**登革熱**病例也跟著攀升。
 
 Maya 有一份試算表、一個死線，卻沒有分析人員。Doc Mon 的建議是：*「問 Tala，但它給你的每一樣東西都要檢查。」*
 
@@ -209,7 +209,7 @@ Jun 匯出的原始 line list（造冊）列數
 
 ## 這門課適合誰
 
-這門課寫給在菲律賓從事監測工作、而且**從沒寫過程式**的人：疾病監測員、流行病學監測單位（Epidemiology and Surveillance Unit, ESU）的護理師、第一線的 FETP（野外流行病學訓練計畫）學員，以及村里衛生員的督導。只要你會填病例調查表、會用試算表，就準備好了。
+這門課寫給在菲律賓從事監測工作、而且**從沒寫過程式**的人：疾病監測專員（DSO）、流行病學與監測單位（ESU）的護理師、第一線的 FETP（野外流行病學訓練計畫）學員，以及村里衛生員的督導。只要你會填病例調查表、會用試算表，就準備好了。
 
 你需要一個網頁瀏覽器、一個免費的 Google 帳號（用來使用 Colab，第 00 章會說明），以及一個你的單位允許使用的 AI 助理。不需要安裝任何東西。
 
@@ -221,7 +221,7 @@ Jun 匯出的原始 line list（造冊）列數
 :class: note
 **虛構的：** Santa Luz 市、Kalinaw 省、Marilag 河、颱風 Amihan、故事裡的每一個人，以及 Santa Luz 資料集裡的每一個姓名、電話、住址和數字。原始 line list（造冊）裡的姓名是假的，但刻意做得像真的，讓你可以安全地練習隱私保護。這本書裡沒有任何真實病患。
 
-**真實的：** 故事背後的監測系統。法定傳染病透過 PIDSR（菲律賓整合性疾病監測與應變系統）與其 EDCS 資訊系統通報，事件則透過事件監測與應變（Event-based Surveillance and Response, ESR）通報；依據[《法定傳染病與公共衛生關注健康事件強制通報法》（RA 11332）](https://lawphil.net/statutes/repacts/ra2019/ra_11332_2019.html)及其[2020 年修訂施行細則](https://law.upd.edu.ph/wp-content/uploads/2020/09/DOH-Revised-IRR-RA-11332.pdf)，通報由醫療機構逐級上傳，經市、鄉鎮、省、區的流行病學監測單位，抵達 DOH（菲律賓衛生部）疫情局。書中的真實法律、系統與統計數字，都附有來源連結。
+**真實的：** 故事背後的監測系統。法定傳染病透過 PIDSR（菲律賓整合性疾病監測與應變系統）與其 EDCS 資訊系統通報，事件則透過事件監測與應變（Event-based Surveillance and Response, ESR）通報；依據[《法定傳染病與公共衛生關注健康事件強制通報法》（RA 11332）](https://lawphil.net/statutes/repacts/ra2019/ra_11332_2019.html)及其[2020 年修訂施行細則](https://law.upd.edu.ph/wp-content/uploads/2020/09/DOH-Revised-IRR-RA-11332.pdf)，通報由醫療機構逐級上傳，經市、鄉鎮、省、區的流行病學與監測單位，抵達 DOH（菲律賓衛生部）流行病學局。書中的真實法律、系統與統計數字，都附有來源連結。
 :::
 
 ## 更大一本書的一部分
