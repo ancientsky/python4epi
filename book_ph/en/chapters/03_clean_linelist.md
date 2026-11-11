@@ -50,22 +50,25 @@ raw = pd.read_csv(RAW_PATH, skiprows=1, dtype=str, keep_default_na=False)
 ## Step one is privacy
 
 Chapter 02 set the rule: identifiers leave the table *before* analysis. But we still need
-the name for one job, which is finding the same patient notified twice. So Maya turns
-each name into a **pseudonymous key**: a short code made from the tidied name plus a
-secret word (a *salt*). The same name always gives the same code, but no one can read
-the name back from it.
+the name for one job, which is finding the same patient notified twice. So Maya first
+turns each name into the **salted pseudonymous ID** from
+[chapter 02](02_privacy_first.md). The same tidied name always gives the same ID, but
+without the secret salt no one can redo it or read the name back.
 
 :::{admonition} Tala says
 :class: ph-tala-says
 ```python
-def name_key(name: str) -> str:
-    """Turn a patient name into a short code that cannot be read back."""
-    tidy = " ".join(name.replace(".", " ").upper().split())  # "Juan P. Santos" -> "JUAN P SANTOS"
-    return hashlib.sha256((SECRET_SALT + tidy).encode()).hexdigest()[:12]
+SALT = secrets.token_hex(16)  # demo only: in real work, create once and lock it away (chapter 02)
+
+
+def pseudo_id(name: str, salt: str) -> str:
+    key = " ".join(name.upper().replace(".", " ").split())   # normalise the name
+    digest = hmac.new(salt.encode(), key.encode(), hashlib.sha256).hexdigest()
+    return "P-" + digest[:10]
 
 
 df = raw.copy()
-df.insert(0, "name_key", df["Patient Name"].map(name_key))
+df.insert(0, "pseudo_id", df["Patient Name"].map(lambda n: pseudo_id(n, SALT)))
 df = df.drop(columns=["Patient Name", "Contact No.", "Address", "Reporting Unit", "Remarks"])
 ```
 :::
@@ -73,9 +76,9 @@ df = df.drop(columns=["Patient Name", "Contact No.", "Address", "Reporting Unit"
 :::{admonition} Privacy stop
 :class: ph-privacy
 - Drop the **remarks** too: free text like *"anak ni Dennis (kapitbahay)"* names other people.
-- A key made with a salt is still linked to a person while the salt exists. Keep the
-  real salt off shared drives and out of notebooks you share, and treat the keyed file
-  as confidential.
+- A salted ID is still linked to a person while the salt exists. Keep the real salt
+  locked in the office, never in a notebook or a chat, and treat the file as
+  confidential. Here the ID is only a working column: it never reaches the clean file.
 - When you ask Tala for help, describe the columns and invent two or three rows. Never
   paste Jun's real rows into an AI chat.
 :::
@@ -189,11 +192,11 @@ def parse_age(s: pd.Series) -> pd.Series:
 `df.duplicated()` finds **6 exact copies**. But the City Health Office also re-notified
 some patients with the name re-typed, a different date style and another barangay
 spelling. After cleaning, those rows match on what matters, so we de-duplicate on
-*(name key, disease, onset date)*. That finds **19 duplicates** in all: the 6 exact
+*(pseudo ID, disease, onset date)*. That finds **19 duplicates** in all: the 6 exact
 copies and 13 near-duplicates.
 
 ```python
-duplicate = df.duplicated(subset=["name_key", "disease", "date_onset"], keep="first")
+duplicate = df.duplicated(subset=["pseudo_id", "disease", "date_onset"], keep="first")
 ```
 
 The two onsets typed after the consultation date are set to missing (in real life,
@@ -227,18 +230,18 @@ chapter uses (`santa_luz_linelist.csv`).
 1. Your date column has no errors after `pd.to_datetime(..., dayfirst=True)`. Is it safe?
    - ✓ Not yet: count the `NaT`s and check that onset is never after consultation — a wrong parse raises no error.
    - Yes: if there were a problem, pandas would raise an error — silent mis-parses raise nothing.
-2. Why turn names into a salted key instead of just deleting them?
-   - ✓ We still need to find duplicate notifications of the same person — the key matches without showing the name.
-   - Because a keyed file is safe to publish — it is still confidential while the salt exists.
-   - So we can read the name back later — a good key cannot be read back.
+2. Why turn names into a salted pseudonymous ID instead of just deleting them?
+   - ✓ We still need to find duplicate notifications of the same person — the IDs match without showing the name.
+   - Because a pseudonymised file is safe to publish — it is still confidential while the salt exists.
+   - So we can read the name back later — a good ID cannot be read back.
 3. `df.duplicated()` found 6 rows. Are those all the duplicates?
    - Yes — a duplicate is an identical row. Re-notified patients were typed differently, so they are not identical.
-   - ✓ No — it only finds rows identical in every column. 13 more near-duplicates appear after cleaning, on name key, disease and onset.
+   - ✓ No — it only finds rows identical in every column. 13 more near-duplicates appear after cleaning, on pseudo ID, disease and onset.
 :::
 
 :::{admonition} Baon
 :class: ph-baon
-- Protect identities first: key the name, drop names, phones, addresses and remarks.
+- Protect identities first: a salted pseudo ID, then drop names, phones, addresses and remarks.
 - Never let the computer guess a date: one explicit rule per format, then count `NaT`s
   and check onset ≤ consultation.
 - Write your rules as `assert`s and prove the result: `assert_frame_equal` against a
