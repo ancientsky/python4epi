@@ -58,17 +58,17 @@
 
   <!-- Row 4 -->
   <g filter="url(#shadow)"><rect x="40" y="450" width="340" height="90" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
-  <text x="60" y="478" font-size="11.5" font-weight="bold" fill="#1A1A1A">④ 新病原，初期資料極少？</text>
-  <text x="60" y="500" font-size="9.5" fill="#6B6B6B">群突發剛爆發，案例還很少</text>
-  <text x="60" y="520" font-size="9.5" fill="#6B6B6B">但外面已有大量其他疫情的資料</text>
+  <text x="60" y="478" font-size="11.5" font-weight="bold" fill="#1A1A1A">④ 歷史很短，或要同時預測很多條序列？</text>
+  <text x="60" y="500" font-size="9.5" fill="#6B6B6B">沒時間逐一建模，又需要立刻有預測區間</text>
+  <text x="60" y="520" font-size="9.5" fill="#6B6B6B">（群突發剛開始或轉折時仍不可靠）</text>
 
   <line x1="380" y1="495" x2="452" y2="495" stroke="#6A9BCC" stroke-width="1.6" marker-end="url(#ar)"/>
   <text x="416" y="487" text-anchor="middle" font-size="10" font-weight="bold" fill="#6A9BCC">✓ 是</text>
 
   <g filter="url(#shadow)"><rect x="456" y="450" width="304" height="90" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.8"/></g>
-  <text x="608" y="480" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">TSFM 零樣本 / 少樣本</text>
-  <text x="608" y="502" text-anchor="middle" font-size="9.5" fill="#6B6B6B">借用已訓練好的時序基礎模型</text>
-  <text x="608" y="520" text-anchor="middle" font-size="9.5" fill="#6B6B6B">不用等資料累積夠才能預測</text>
+  <text x="608" y="480" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">TSFM 零樣本預測當強基準</text>
+  <text x="608" y="502" text-anchor="middle" font-size="9.5" fill="#6B6B6B">例：TimesFM 3.0，不用訓練</text>
+  <text x="608" y="520" text-anchor="middle" font-size="9.5" fill="#6B6B6B">先跟 naive 基準回測比較再採用</text>
 
   <line x1="210" y1="540" x2="210" y2="568" stroke="#D94452" stroke-width="1.6" marker-end="url(#ar)"/>
   <text x="222" y="554" text-anchor="start" font-size="9.5" fill="#D94452">✗ 以上皆非</text>

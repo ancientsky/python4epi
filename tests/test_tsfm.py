@@ -77,7 +77,9 @@ def test_record_then_replay_roundtrip(tmp_path: Path, monkeypatch: pytest.Monkey
     assert recorded.forecast.shape == (2, 3)
     assert recorded.quantiles.shape == (2, 3, 9)
 
-    replayed = tsfm.forecast_batch(None, contexts, 3, cache_key="k", cache_file=cache, verbose=False)
+    replayed = tsfm.forecast_batch(
+        None, contexts, 3, cache_key="k", cache_file=cache, verbose=False
+    )
     assert replayed.source == "cache"
     np.testing.assert_allclose(replayed.forecast, [[9, 9, 9], [19, 19, 19]])
     assert math.isclose(replayed.quantile(0.9)[0, 0], 13.0)
@@ -88,17 +90,21 @@ def test_record_then_replay_roundtrip(tmp_path: Path, monkeypatch: pytest.Monkey
 def test_model_mode_does_not_write(tmp_path: Path):
     cache = tmp_path / "c.json"
     model = FakeModel()
-    tsfm.forecast_batch(model, [np.ones(5)], 2, cache_key="k", cache_file=cache, mode="model",
-                        verbose=False)
+    tsfm.forecast_batch(
+        model, [np.ones(5)], 2, cache_key="k", cache_file=cache, mode="model", verbose=False
+    )
     assert not cache.exists()
     assert model.calls[0]["return_quantiles"] is True
 
 
-def test_replay_errors_on_missing_or_changed_inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+def test_replay_errors_on_missing_or_changed_inputs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
     monkeypatch.setattr(tsfm, "_producer_info", lambda model: {})
     cache = tmp_path / "c.json"
-    tsfm.forecast_batch(FakeModel(), [np.ones(5)], 2, cache_key="k", cache_file=cache,
-                        mode="record", verbose=False)
+    tsfm.forecast_batch(
+        FakeModel(), [np.ones(5)], 2, cache_key="k", cache_file=cache, mode="record", verbose=False
+    )
     with pytest.raises(KeyError, match="make_timesfm_cache"):
         tsfm.forecast_batch(None, [np.ones(5)], 2, cache_key="other", cache_file=cache)
     with pytest.raises(ValueError, match="different inputs"):
@@ -109,14 +115,35 @@ def test_covariates_are_validated_and_passed(tmp_path: Path):
     model = FakeModel()
     y = np.arange(10, dtype=float)
     with pytest.raises(ValueError, match="context \\+ horizon"):
-        tsfm.forecast_batch(model, [y], 3, cache_key="k", cache_file=tmp_path / "c.json",
-                            past_future_covariates=[y[None, :]], mode="model")
+        tsfm.forecast_batch(
+            model,
+            [y],
+            3,
+            cache_key="k",
+            cache_file=tmp_path / "c.json",
+            past_future_covariates=[y[None, :]],
+            mode="model",
+        )
     with pytest.raises(ValueError, match="one entry per context"):
-        tsfm.forecast_batch(model, [y], 3, cache_key="k", cache_file=tmp_path / "c.json",
-                            past_only_covariates=[y, y], mode="model")
-    tsfm.forecast_batch(model, [y], 3, cache_key="k", cache_file=tmp_path / "c.json",
-                        past_future_covariates=[np.arange(13.0)[None, :]], mode="model",
-                        verbose=False)
+        tsfm.forecast_batch(
+            model,
+            [y],
+            3,
+            cache_key="k",
+            cache_file=tmp_path / "c.json",
+            past_only_covariates=[y, y],
+            mode="model",
+        )
+    tsfm.forecast_batch(
+        model,
+        [y],
+        3,
+        cache_key="k",
+        cache_file=tmp_path / "c.json",
+        past_future_covariates=[np.arange(13.0)[None, :]],
+        mode="model",
+        verbose=False,
+    )
     assert model.calls[-1]["past_future_covariates"][0].shape == (1, 13)
 
 

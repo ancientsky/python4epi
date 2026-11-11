@@ -6,6 +6,7 @@
 - Build out **sequence forecasting** with LSTM / CNN, and see why a "leading indicator" lets deep learning beat a naive baseline
 - A **decision framework**: when deep learning is worth reaching for, and when traditional statistics or simple ML is already enough (don't bring a sledgehammer to swat a fly)
 - A guided tour of the modern deep learning landscape: GNNs (graph neural networks), spatiotemporal Transformers / TFT, DeepSurv, time-series foundation models (TSFM), and PINNs (physics-informed neural networks)
+- Run a real **zero-shot forecast** with **TimesFM 3.0** (no training), compare it honestly with a naive baseline, the LSTM and SARIMA in a rolling-origin backtest, and understand its **licence limits**
 - How to **evaluate** prediction / classification models, and how to open the black box with SHAP and attention weights
 
 ## The Scenario
@@ -17,7 +18,7 @@ This time a colleague leans over:
 
 That's a fair question, but the answer isn't "just go for it." This chapter answers it honestly in two parts:
 
-**Part A (hands-on)** first actually runs a PyTorch neural network on the same 280-row dataset, to see whether it can beat the Ch10 sklearn baseline — then switches to a task deep learning is genuinely good at (**sequence forecasting**), to see how and why it wins. **Part B (a guided tour)** gives you a quick tour of deep learning's modern landscape — graph neural networks, Transformers, time-series foundation models, physics-informed neural networks — tools that won't be executed in this book, but knowing when they belong on the table matters just as much as knowing how to write `nn.Sequential`.
+**Part A (hands-on)** first actually runs a PyTorch neural network on the same 280-row dataset, to see whether it can beat the Ch10 sklearn baseline — then switches to a task deep learning is genuinely good at (**sequence forecasting**), to see how and why it wins; finally, without writing any training code, it forecasts the same series with the pretrained **time-series foundation model TimesFM 3.0**, to see how far "zero-shot" gets you. **Part B (a guided tour)** gives you a quick tour of deep learning's modern landscape — graph neural networks, Transformers, time-series foundation models, physics-informed neural networks — apart from the time-series foundation models, tools that won't be executed in this book, but knowing when they belong on the table matters just as much as knowing how to write `nn.Sequential`.
 
 ---
 
@@ -134,7 +135,7 @@ What happens if you just keep training? **Overfitting**: the model memorizes eve
 
 ```{figure} images/dl_decision_tree_en.svg
 :name: fig-dl-decision-tree
-:alt: Should-you-use-deep-learning decision tree: under 1,000 rows, use traditional statistics or simple ML; if you need clear causality or mechanism, use SEIR plus simple ML; only reach for DL when the data is high-dimensional, non-linear, spatiotemporal, long-sequence, and large enough; for a new pathogen with very little data early on but plenty of other outbreak data available externally, use TSFM zero-shot or few-shot; if none of the above applies, the Ch10 sklearn baseline is the most efficient choice
+:alt: Should-you-use-deep-learning decision tree: under 1,000 rows, use traditional statistics or simple ML; if you need clear causality or mechanism, use SEIR plus simple ML; only reach for DL when the data is high-dimensional, non-linear, spatiotemporal, long-sequence, and large enough; with a short history or many series to forecast at once, start with TSFM zero-shot forecasting as a strong baseline and backtest it against a naive baseline, remembering it is still unreliable at outbreak onset or turning points; if none of the above applies, the Ch10 sklearn baseline is the most efficient choice
 :width: 100%
 
 Work through it top to bottom, and stop at whichever box fits — for most epi datasets, the answer stops at the very first box.
@@ -145,7 +146,7 @@ Four questions, asked in order:
 1. **Fewer than 1,000 rows?** (e.g. this book's 280-row Legionella dataset) → use traditional statistics / simple ML, which is steadier and more interpretable on small samples
 2. **Do you need clear causality or mechanism — not just "will it happen" but "why"?** → a mechanistic model (like Ch07's SEIR) + a handful of features; DL is a black box here and won't help
 3. **High-dimensional, non-linear, spatiotemporal, long sequences — and genuinely enough data?** → now it's DL's turn (CNN / LSTM / Transformer, etc.)
-4. **A new pathogen with barely any data yet, but plenty of data already out there from other outbreaks?** → borrow a pretrained TSFM for zero-shot / few-shot prediction, instead of waiting for your own data to accumulate
+4. **A short history, or many series to forecast at once, with no time to model each one?** → borrow a pretrained TSFM (e.g. TimesFM 3.0) for zero-shot forecasting, as a strong baseline that needs no training and comes with prediction intervals — but still backtest it against a naive baseline, and remember it cannot see an outbreak starting or turning (see Part A Step 3)
 
 Most epi datasets — this book's Legionella data included — stop right at **the first box**.
 
@@ -156,7 +157,7 @@ Most epi datasets — this book's Legionella data included — stop right at **t
 | Large data volume (thousands of rows or more) | Small samples (< 1,000 rows) |
 | High-dimensional, non-linear, with complex interactions | Low-dimensional tabular data that linear / tree models already express well |
 | Images, long sequences, spatiotemporal data | Cross-sectional data, one row independent of the next |
-| A relevant pretrained model to transfer from (TSFM zero-shot) | No relevant pretrained resource, and data is scarce |
+| A relevant pretrained model to transfer from (TSFM zero-shot, proven useful in a backtest) | No relevant pretrained resource, and data is scarce |
 | Traditional / ML baselines already tried and still not good enough | DL reached for before any baseline has even been run |
 
 ### Is It Reasonable for the 280-Row Legionella Data?
@@ -203,10 +204,11 @@ The correct approach is to **split in chronological order**, typically with one 
 
 ## Part A — Hands-On (Runnable, No GPU Needed)
 
-Part A has two steps, and the full code for both runs fine without a GPU in the matching notebooks:
+Part A has three steps, and the full code for each runs fine without a GPU in the matching notebooks (the first run of Step 3 downloads ~1.3 GB of model weights):
 
 - **Step 1**: run a PyTorch classification model on the 280-row Legionella data, and honestly check whether "deep learning beats sklearn on a small sample" — full code in [`11_dl_baseline.ipynb`](notebooks/11_dl_baseline.ipynb)
 - **Step 2**: switch to a task deep learning is genuinely good at — **sequence forecasting** with LSTM / CNN — and see how and why it wins — full code in [`11_dl_sequence.ipynb`](notebooks/11_dl_sequence.ipynb)
+- **Step 3**: on the same series, use the pretrained time-series foundation model **TimesFM 3.0** for **zero-shot forecasting** (no training at all), backtested on the same test period as Step 2 — full code in [`11_dl_timesfm.ipynb`](notebooks/11_dl_timesfm.ipynb), key points in Part B's [TSFM section](#sec-tsfm)
 
 Below, only the most important snippets from each notebook are walked through; for the full pipeline (including learning curves, permutation importance, and more) open the notebook and run it cell by cell.
 
@@ -511,13 +513,13 @@ This time DL really does win, and by a solid margin. **Why?**
 <!-- video: ch11_07_lstm_cnn_sequence -->
 <!-- /video -->
 
-## Part B — A Tour of Modern DL (Conceptual Overview, Not Executed in This Book)
+## Part B — A Tour of Modern DL (Conceptual Overview; TSFMs Have a Runnable Notebook)
 
-Part A showed you two faces of deep learning: overkill on small-sample classification (can't beat sklearn), genuinely sharper on sequence forecasting once there's a leading indicator to exploit. But deep learning's territory extends far beyond MLP, LSTM, and CNN. The tools below **are not executed in this book** (they need extra packages, a GPU, or an internet connection to download large pretrained weights) — presented here as "metaphor + epi use case + when to use it + tools + illustrative code" for a quick tour, so you know which tool to reach for when you run into a given problem down the road.
+Part A showed you two faces of deep learning: overkill on small-sample classification (can't beat sklearn), genuinely sharper on sequence forecasting once there's a leading indicator to exploit. But deep learning's territory extends far beyond MLP, LSTM, and CNN. Apart from TSFMs, the tools below **are not executed in this book** (they need extra packages, a GPU, or an internet connection to download large pretrained weights) — presented here as "metaphor + epi use case + when to use it + tools + illustrative code" for a quick tour, so you know which tool to reach for when you run into a given problem down the road.
 
 ```{figure} images/dl_model_zoo_en.svg
 :name: fig-dl-model-zoo
-:alt: The DL model zoo: MLP is the default starting point for tabular data; LSTM is the detective with a memory, suited to sequences with time dependence; CNN is the forensic examiner who spots local fingerprints, suited to extracting local features; GNN is the social-network analyst, suited to spatial transmission and contact networks; Transformer or TFT knows how to allocate attention, suited to long-sequence multivariate forecasting; PINN is the model bound by physical law, suited to scarce data with a clear mechanism such as SEIR; TSFM is the veteran who has read every case worldwide, suited to zero-shot, few-shot, and the early days of a new pathogen
+:alt: The DL model zoo: MLP is the default starting point for tabular data; LSTM is the detective with a memory, suited to sequences with time dependence; CNN is the forensic examiner who spots local fingerprints, suited to extracting local features; GNN is the social-network analyst, suited to spatial transmission and contact networks; Transformer or TFT knows how to allocate attention, suited to long-sequence multivariate forecasting; PINN is the model bound by physical law, suited to scarce data with a clear mechanism such as SEIR; TSFM is the veteran who has read every case worldwide, suited to a zero-shot strong baseline and forecasting many series at once
 :width: 100%
 
 Look at the shape of the problem, and you'll know who to call — different tasks call for models with different specialties.
@@ -528,7 +530,7 @@ Look at the shape of the problem, and you'll know who to call — different task
 - **Metaphor**: like an analyst who knows the social network inside out, looking not just at each person's own traits but at "who's connected to whom"
 - **epi use case**: contact-tracing networks (who shared a room, who shared an activity), cross-facility referral networks, spatially adjacent transmission
 - **When to use it**: the data naturally forms a "nodes + edges" graph structure, and the relationships themselves carry predictive power (e.g. a resident's infection risk is high partly because they had contact with many already-infected people)
-- **Tools**: `torch-geometric` (PyG), `DGL`
+- **Tools**: `torch-geometric` (PyG, the maintained mainstream choice; `DGL` has had no new release since May 2024)
 
 ```python
 # illustrative only — NOT executed in this book — GNN: learning the contact network as a graph
@@ -575,7 +577,7 @@ tft = TemporalFusionTransformer.from_dataset(
 - **Metaphor**: Ch09's Cox regression assumes every factor's contribution to log(hazard) adds up linearly; DeepSurv swaps that linear relationship for a neural network, giving non-linearity and interactions among risk factors a chance to be learned
 - **epi use case**: survival analysis (echoing Ch09) where you suspect non-linearity or interaction among risk factors, or the data is high-dimensional (genomic, imaging)
 - **When to use it**: Cox's proportional-hazards assumption may not hold, and there's enough data to support a neural network without overfitting
-- **Tools**: `pycox` (DeepSurv, CoxTime, DeepHit)
+- **Tools**: `pycox` (DeepSurv, CoxTime, DeepHit; its last release was in September 2024 and its `torchtuples` dependency dates from 2021, so check compatibility with your torch / numpy versions first)
 
 ```python
 # illustrative only — NOT executed in this book — DeepSurv: replacing Cox's linear log(HR) with a neural network
@@ -587,6 +589,7 @@ model = CoxPH(net, tt.optim.Adam)
 model.fit(x_train, (duration_train, event_train), epochs=100)
 ```
 
+(sec-tsfm)=
 ### TSFM (Time Series Foundation Model) — The Veteran Who's Read Every Case Worldwide (Hands-On in This Book)
 
 **Time Series Foundation Models (TSFM)** are pretrained on massive, cross-domain time series, and when applied to a new series, usually need no retraining at all (**zero-shot**) or only a tiny bit of fine-tuning data (**few-shot**) — exactly the idea behind **transfer learning**: borrowing knowledge already learned from someone else's mountain of data, and applying it directly to your own short new series.
@@ -630,14 +633,15 @@ out.quantiles   # nine quantiles 0.1-0.9, shape (14, 9) -> 80% prediction interv
 | Model | Training needed? | MAE |
 |---|---|---|
 | Persistence (naive baseline) | No | 2.88 |
-| **TimesFM 3.0 zero-shot** (whole history) | No | **⟨TFM_UNI⟩** |
-| TimesFM 3.0 + temperature covariate | No | ⟨TFM_PO⟩ |
+| **TimesFM 3.0 zero-shot** (whole history) | No | **2.38** |
+| TimesFM 3.0 (last 56 days only, chosen on the validation period) | No | **2.02** |
+| TimesFM 3.0 + temperature covariate | No | 2.40 |
 | LSTM (Part A Step 2) | Yes | 2.15 |
 | 1D-CNN (Part A Step 2) | Yes | 2.20 |
 
-Without a single line of training code, TimesFM beats the naive baseline and comes with an 80% prediction interval whose coverage is about ⟨TFM_COV⟩; but it loses to the LSTM / CNN, which were **trained on this very series** and learned the "temperature 7 days ago" mechanism. On Ch07's influenza-like-illness series (a clear weekly cycle, no hidden mechanism), TimesFM beats seasonal naive in a rolling-origin backtest (MAE ⟨ILI_TFM⟩ vs ⟨ILI_SN⟩) ⟨ILI_VERDICT_EN⟩ a SARIMA refitted at every origin (⟨ILI_SARIMA⟩). And at the start of the nursing-home outbreak it cannot see the coming peak at all — which is the point of the next box.
+Without a single line of training code, TimesFM beats the naive baseline and comes with an 80% prediction interval whose coverage is about 85%; but with its default (the whole history) it loses to the LSTM / CNN, which were **trained on this very series** and learned the "temperature 7 days ago" mechanism. One hyperparameter is worth tuning: after comparing context lengths on the **validation period**, using only the last 56 days brings the test MAE down to 2.02 — better than the LSTM. But in the same comparison a 112-day context scored a validation MAE of 4.50: zero-shot models can be quite sensitive to the input length, so decide it on the validation period, never by looking at the test period. On Ch07's influenza-like-illness series (a clear weekly cycle, no hidden mechanism), TimesFM beats seasonal naive in a rolling-origin backtest (MAE 0.95 vs 1.27), but loses to a SARIMA refitted at every origin (0.80): with a regular cycle and enough history, the classic models are still strong. And at the start of the nursing-home outbreak it cannot see the coming peak at all — which is the point of the next box.
 
-> ⚠️ **When not to trust a TSFM**: (1) **at outbreak onset or a turning point** — the model learned "how series usually continue" and cannot see a transmission chain expanding; in the notebook, the 80% interval it forecast three days before the peak missed almost all of the actual cases; (2) **after a policy or case-definition change (regime change)** — the shape of the history no longer represents the future; (3) **under reporting delay** — the most recent days are not fully notified yet, and the model reads that as a decline (an underestimate of about ⟨DELAY⟩ in the notebook), so nowcast first; (4) **with tiny counts** — on a series of 0–3 cases a day, the quantile intervals carry little information. A zero-shot model is a **strong baseline that needs no tuning**, not an automatic early-warning system.
+> ⚠️ **When not to trust a TSFM**: (1) **at outbreak onset or a turning point** — the model learned "how series usually continue" and cannot see a transmission chain expanding; in the notebook, the 80% interval it forecast three days before the peak missed almost all of the actual cases; (2) **after a policy or case-definition change (regime change)** — the shape of the history no longer represents the future; (3) **under reporting delay** — the most recent days are not fully notified yet, and the model reads that as a decline (an underestimate of about 26% in the notebook), so nowcast first; (4) **with tiny counts** — on a series of 0–3 cases a day, the quantile intervals carry little information. A zero-shot model is a **strong baseline that needs no tuning**, not an automatic early-warning system.
 
 **Hardware** (measured for this book: 4-core CPU, no GPU, timesfm 3.0.2, torch 2.10): the weight download is ~1.3 GB (once); the model has ~330M parameters and peaks at ~3.1 GB of RAM; loading takes ~5 seconds; 60 series of ~300 days, 7 days ahead each, take ~4 seconds (~7–9 seconds with a covariate). The CPU of free Google Colab (~12 GB of RAM) is enough, as is a laptop with 8 GB of RAM; no GPU is needed.
 
@@ -746,11 +750,13 @@ final_forecast = seir_forecast + residual_model.predict(X_covariates_future)
 | Not fixing the random seed | `torch.manual_seed()` + `np.random.seed()` to ensure reproducibility |
 | Ignoring uncertainty, giving only a single predicted value | Policy decisions need a confidence interval / probability distribution — not just one number to act on |
 | Blind trust in a black-box model | Open the black box with SHAP / attention weights / a PINN's physical constraints |
+| Assuming a foundation model's "zero-shot" needs no validation | Backtest it with rolling origins against naive / classic models; it is especially unreliable at outbreak onset and under reporting delay |
+| Deploying non-commercially licensed weights (e.g. TimesFM 3.0) in a production system | For production use Apache-2.0 weights (TimesFM 2.5, Chronos-2) or a licensed cloud service |
 | Assuming DL always beats traditional ML | DL ties Logistic Regression on 280-row classification; DL wins on sequence forecasting because of the leading indicator + non-linear delay, not because DL is inherently stronger |
 
 ## Why Should Epidemiologists Learn DL? — A 10-Week Learning Path
 
-**Why it's worth learning**: real-world epidemiological data is increasingly moving onto DL's home turf — high-dimensional, noisy, non-linear data (genomics, imaging, wearable-device signals), spatiotemporal data that requires modeling spatial spread and contact networks (GNN's home turf), and situations where data is extremely scarce in the early days of an emerging pathogen's outbreak, yet global experience from other outbreaks can be borrowed (TSFM zero-shot forecasting's home turf). None of this is terrain traditional statistical methods are especially good at.
+**Why it's worth learning**: real-world epidemiological data is increasingly moving onto DL's home turf — high-dimensional, noisy, non-linear data (genomics, imaging, wearable-device signals), spatiotemporal data that requires modeling spatial spread and contact networks (GNN's home turf), and situations where many surveillance series must be forecast at once, or the history is too short to model each one (TSFM zero-shot forecasting's home turf — though, as [`11_dl_timesfm.ipynb`](notebooks/11_dl_timesfm.ipynb) shows, it cannot see an outbreak starting and still needs a backtest). None of this is terrain traditional statistical methods are especially good at.
 
 A practical 10-week self-study path, breaking this chapter's content into progressive projects:
 
@@ -761,7 +767,7 @@ A practical 10-week self-study path, breaking this chapter's content into progre
 | 5–6 | Sequence forecasting: sliding windows, time splits, LSTM, CNN (this chapter's Part A Step 2) |
 | 7 | GNN: spatial transmission, contact networks |
 | 8 | Spatiotemporal Transformer / TFT: multivariate long-sequence forecasting |
-| 9 | TSFM zero-shot forecasting + PINN / Mechanistic-AI ensemble |
+| 9 | TSFM zero-shot forecasting (backtests, covariates, licence: [`11_dl_timesfm.ipynb`](notebooks/11_dl_timesfm.ipynb)) + PINN / Mechanistic-AI ensemble |
 | 10 | Project work: pick a real dataset, run the full pipeline, and write an interpretability report using SHAP / attention |
 
 ## Next Step

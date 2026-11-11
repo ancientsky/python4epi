@@ -58,17 +58,17 @@
 
   <!-- Row 4 -->
   <g filter="url(#shadow)"><rect x="40" y="450" width="340" height="90" rx="10" fill="#FFFFFF" stroke="#E8E5DF"/></g>
-  <text x="60" y="478" font-size="11.5" font-weight="bold" fill="#1A1A1A">④ New pathogen, barely any early data?</text>
-  <text x="60" y="500" font-size="9.5" fill="#6B6B6B">Outbreak just started, few cases so far</text>
-  <text x="60" y="520" font-size="9.5" fill="#6B6B6B">But lots of data exists from other outbreaks</text>
+  <text x="60" y="478" font-size="11.5" font-weight="bold" fill="#1A1A1A">④ Short history, or many series at once?</text>
+  <text x="60" y="500" font-size="9.5" fill="#6B6B6B">No time to model each one, need intervals now</text>
+  <text x="60" y="520" font-size="9.5" fill="#6B6B6B">(still unreliable at outbreak onset / turning points)</text>
 
   <line x1="380" y1="495" x2="452" y2="495" stroke="#6A9BCC" stroke-width="1.6" marker-end="url(#ar)"/>
   <text x="416" y="487" text-anchor="middle" font-size="10" font-weight="bold" fill="#6A9BCC">✓ Yes</text>
 
   <g filter="url(#shadow)"><rect x="456" y="450" width="304" height="90" rx="10" fill="#FFFFFF" stroke="#6A9BCC" stroke-width="1.8"/></g>
-  <text x="608" y="480" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">TSFM zero-shot / few-shot</text>
-  <text x="608" y="502" text-anchor="middle" font-size="9.5" fill="#6B6B6B">Borrow a pretrained time series foundation model</text>
-  <text x="608" y="520" text-anchor="middle" font-size="9.5" fill="#6B6B6B">No need to wait for data to accumulate</text>
+  <text x="608" y="480" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A9BCC">TSFM zero-shot as a strong baseline</text>
+  <text x="608" y="502" text-anchor="middle" font-size="9.5" fill="#6B6B6B">e.g. TimesFM 3.0, no training needed</text>
+  <text x="608" y="520" text-anchor="middle" font-size="9.5" fill="#6B6B6B">Backtest it against a naive baseline first</text>
 
   <line x1="210" y1="540" x2="210" y2="568" stroke="#D94452" stroke-width="1.6" marker-end="url(#ar)"/>
   <text x="222" y="554" text-anchor="start" font-size="9.5" fill="#D94452">✗ None of the above</text>

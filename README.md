@@ -231,6 +231,21 @@ uv run python videos/build.py --chapter ch08 --lang en   # 單章英文版
 
 由於卡片是在部署時才產生，repo 裡章節 markdown 內的卡片只是**快照**，會落後於登錄表——網站不受影響。要順便更新快照與 `videos/VIDEO_INDEX.md`，在本機執行 `uv run python videos/sync_video_embeds.py`。細節見 [`videos/README.md`](videos/README.md)。
 
+## TimesFM 預測快取（選用）
+
+Ch11 的 `11_dl_timesfm.ipynb` 用 Google 的時序基礎模型 **TimesFM 3.0** 做零樣本預測。網站建置**不**下載約 1.3 GB 的模型，而是由 `epi_learning.tsfm` 讀取 `data/tsfm_cache/` 裡、一次真實執行留下的預測（每筆都記錄輸入指紋、模型版本與日期；資料一改就會報錯）。在 Colab 或裝了選用相依群組的電腦上，notebook 會直接呼叫真正的模型。
+
+```bash
+uv sync --group timesfm                                   # 選用：timesfm[torch]（預設安裝不含）
+# 改了 notebook 的資料或預測設定後，重新產生快取（真的跑模型）：
+uv run --group timesfm python scripts/make_timesfm_cache.py book/chapters/notebooks/11_dl_timesfm.ipynb
+# 不寫 notebook，直接為某個 CSV 欄位做滾動起點回測快取：
+uv run --group timesfm python scripts/make_timesfm_cache.py --csv path/to.csv --column cases \
+    --horizon 4 --origins 20 --cache-file my_chapter --cache-key cases_backtest
+```
+
+新增一條快取序列：在 notebook 裡用 `tsfm.forecast_batch(model, contexts, horizon, cache_key="...", cache_file=tsfm.cache_path("<檔名>"))`（`model` 來自 `tsfm.load_model()` 或官方 `TimesFM3Evaluator`），再對該 notebook 跑上面的腳本並 commit 產生的 JSON。⚠️ TimesFM 3.0 **權重**採非商業授權（程式碼為 Apache-2.0），快取的預測只供本教材使用。
+
 ## Visual Diagrams
 
 章節中嵌入手繪 SVG 教學圖（`book/chapters/images/`），用統一色彩配置視覺化解說困難概念：
@@ -246,9 +261,9 @@ uv run python videos/build.py --chapter ch08 --lang en   # 單章英文版
 - `book/chapters/images/`: hand-crafted SVG diagrams for visual explanations
 - `book/_static/`: site stylesheet (`site.css`), page scripts (`epi-site.js`: language switcher + Colab links; `youtube-lite.js`), logos, OG image
 - `scripts/build_book.py`: the book build entry point (all four editions)
-- `notebooks/`: standalone runnable lesson notebooks (21 files)
+- `notebooks/`: standalone runnable lesson notebooks (22 files)
 - `notebooks/exercises/`: exercise/solution notebook pairs (15 chapters)
-- `src/epi_learning/`: reusable helper package (`cleaning`, `metrics`, `tabulate`, `viz`, and `book_setup` for the build's notebook kernels)
+- `src/epi_learning/`: reusable helper package (`cleaning`, `metrics`, `tabulate`, `viz`, `tsfm` for TimesFM forecasts with a committed cache, and `book_setup` for the build's notebook kernels)
 - `data/synthetic/`: teaching datasets — primary: `legionella_outbreak.csv` (280 × 32)
 - `videos/`: tutorial video generation (Manim + edge-tts + ffmpeg) — `scripts/` narration YAML, `scenes/` Manim classes, `youtube_ids.yaml` link registry
 - `tests/`: unit tests and notebook JSON smoke tests
@@ -262,7 +277,7 @@ uv run python videos/build.py --chapter ch08 --lang en   # 單章英文版
 
 ## Key Learning Assets
 
-- Lesson notebooks: `notebooks/01_*.ipynb` through `notebooks/14_*.ipynb` (21 notebooks)
+- Lesson notebooks: `notebooks/01_*.ipynb` through `notebooks/14_*.ipynb` (22 notebooks)
 - Exercise notebooks: `notebooks/exercises/NN_*_exercise.ipynb` (15 chapters, each with a matching solution)
 - Visualization toolkit: `notebooks/02_visualization_epi_charts.ipynb`
 - Spatial analysis: `notebooks/08_spatial_rates.ipynb`

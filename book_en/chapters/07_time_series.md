@@ -178,10 +178,10 @@ Every move you just helped the owner learn—rolling average, autoregression, se
 :alt: Comparison of seven time series forecasting methods — rolling mean, Poisson+lag, Negative Binomial, Logistic, ARIMA, SARIMA, Prophet
 :width: 100%
 
-**Map of time series forecasting methods**: seven models laid out from simple to complex — the full-width green card at the bottom is **Prophet** (the easy, modern option). Less data → further left; need to capture seasonality → furthest right. Each card tells you "how many days of data at minimum," "whether it can give confidence intervals," and "which situation it suits."
+**Map of time series forecasting methods**: seven models laid out from simple to complex — the full-width green card at the bottom is **Prophet** (the easy, classic option; its maintainers moved it to maintenance mode in 2026). Less data → further left; need to capture seasonality → furthest right. Each card tells you "how many days of data at minimum," "whether it can give confidence intervals," and "which situation it suits."
 ```
 
-> 📌 The full-width green card at the bottom is that seventh option—**Prophet**: it replaces manual selection of `(p,d,q)(P,D,Q,s)` with three building blocks—**trend + seasonality + holidays**—a tuning-free alternative to SARIMA. **Step 11** walks through it hands-on.
+> 📌 The full-width green card at the bottom is that seventh option—**Prophet**: it replaces manual selection of `(p,d,q)(P,D,Q,s)` with three building blocks—**trend + seasonality + holidays**—a tuning-free alternative to SARIMA. **Step 11** walks through it hands-on. Since 2026, the option that needs no fitting at all is a **time-series foundation model** (TSFM, e.g. TimesFM 3.0); see "Going further" at the end of Step 11.
 
 ---
 
@@ -602,7 +602,7 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 
 ## Step 11: Prophet —— Meta's "Auto-Decompose" Crystal Ball
 
-Prophet is Meta's open-source forecasting tool. It **automatically decomposes** a series into three additive building blocks—**trend + seasonality + holidays**—needs only two columns (`ds`/`y`), requires almost no tuning, and comes with uncertainty intervals built in.
+Prophet is Meta's open-source forecasting tool (its official README states it has been in **maintenance mode** since v1.4.0: bug fixes and dependency bumps only, no new features; this book pins 1.3.0). It **automatically decomposes** a series into three additive building blocks—**trend + seasonality + holidays**—needs only two columns (`ds`/`y`), requires almost no tuning, and comes with uncertainty intervals built in.
 
 ```{figure} images/prophet_decomposition_en.svg
 :name: fig-prophet-decomposition
@@ -669,6 +669,21 @@ fig.autofmt_xdate(); plt.tight_layout(); plt.show()
 
 ⚠️ **Prophet is not a silver bullet**: it's an **additive model** that assumes the future is a continuation of "the trend and seasonality it has already learned"; it can't catch the nonlinear feedback of an outbreak in full swing (like SEIR transmission dynamics), and it can't learn much from data shorter than roughly 2 cycles either—what it adds to your toolbox is an **honest option**, not a more accurate crystal ball.
 
+### Going further: time-series foundation models (TSFM) — no fitting at all
+
+If you would rather skip even Prophet's `fit()`, the easiest option in 2026 is a **time-series foundation model (TSFM)**: teams at Google, Amazon and elsewhere pre-train a model on huge collections of time series, and you just pass in your history to get forecasts and prediction intervals back — **zero-shot**, with no training step. **TimesFM 3.0**, released by Google in August 2026, needs only `pip install "timesfm[torch]"` plus three lines of code, and runs on a laptop CPU.
+
+Ch11's hands-on notebook [`11_dl_timesfm.ipynb`](notebooks/11_dl_timesfm.ipynb) tests it on **the same 90-day ILI series as this chapter's Part B**:
+
+| Evaluation | TimesFM 3.0 (zero-shot) | SARIMA | Seasonal naive |
+|---|---|---|---|
+| This chapter's single split (last 7 days) | 0.897 | 0.770 | 0.714 |
+| Rolling-origin backtest (14 origins x 7 days) | 0.948 | 0.804 | 1.265 |
+
+In other words: without choosing any parameters it reliably beats the naive baseline, but on this "trend + fixed cycle" series — exactly SARIMA's home turf — **the tuned classic model is still more accurate**; and a single week's score is easily luck, so always run a rolling-origin backtest.
+
+> ⚠️ **Two caveats**: (1) like Prophet, a TSFM learned "how series usually continue", so it **cannot see an outbreak starting or turning**, and it mistakes reporting delay for a decline; (2) **licence**: the TimesFM 3.0 weights are for non-commercial, non-production use only (research, evaluation and teaching are fine; plugging them into routine surveillance or early warning is not); for production use the Apache-2.0 TimesFM 2.5 / Chronos-2, or a licensed cloud service. See Ch11's [TSFM section](11_deep_learning.md).
+
 ---
 
 ## Step 12: Model Showdown
@@ -706,7 +721,8 @@ print(comparison.to_string(index=False))
 - **Need a yes/no alert** (whether to escalate the response level) → Logistic regression
 - **Medium-to-long-term surveillance** (> a month, no obvious cycle) → ARIMA
 - **Influenza-like, weekly surveillance** (obvious weekly cycle) → SARIMA
-- **Want to get started fast, and want trend/seasonality/holidays auto-decomposed + uncertainty intervals** → Prophet
+- **Want to get started fast, and want trend/seasonality/holidays auto-decomposed + uncertainty intervals** → Prophet (in maintenance mode, still usable)
+- **Don't want to fit a model at all, or must forecast many series at once** → zero-shot forecasting with a time-series foundation model (e.g. TimesFM 3.0, see [`11_dl_timesfm.ipynb`](notebooks/11_dl_timesfm.ipynb)) — still backtest it against a baseline, and mind the weights' licence
 
 ## Step 13: Onset vs Hospitalization Curve (Lag Effect)
 

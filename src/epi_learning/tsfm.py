@@ -277,11 +277,11 @@ def _write_cache(path: Path, payload: dict[str, Any]) -> None:
 
 def _producer_info(model: Any) -> dict[str, Any]:
     info: dict[str, Any] = {"checkpoint": CHECKPOINT}
-    try:
-        from importlib.metadata import version
+    from importlib.metadata import PackageNotFoundError, version
 
+    try:
         info["timesfm_version"] = version("timesfm")
-    except Exception:  # pragma: no cover - metadata missing
+    except PackageNotFoundError:  # pragma: no cover - metadata missing
         info["timesfm_version"] = None
     try:
         import torch
@@ -298,7 +298,7 @@ def _producer_info(model: Any) -> dict[str, Any]:
         from huggingface_hub import HfApi
 
         info["revision"] = HfApi().model_info(info["checkpoint"]).sha
-    except Exception:
+    except Exception:  # noqa: BLE001 - offline or local checkpoint: record "unknown", never fail
         info["revision"] = None
     info["date"] = _dt.date.today().isoformat()
     return info
@@ -548,7 +548,7 @@ def _replay(path: Path, key: str, fingerprint: str, verbose: bool) -> TSFMForeca
         date = (payload.get("producer") or {}).get("date", "?")
         print(
             f"[tsfm] {key}: replayed {forecast.shape[0]} cached forecasts "
-            f"(real TimesFM 3.0 run of {date}, took {entry.get('seconds', '?')}s)"
+            f"(real TimesFM 3.0 run of {date})"
         )
     return TSFMForecast(
         forecast=forecast,

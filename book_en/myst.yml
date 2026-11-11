@@ -76,6 +76,7 @@ project:
           children:
             - file: chapters/notebooks/11_dl_baseline.ipynb
             - file: chapters/notebooks/11_dl_sequence.ipynb
+            - file: chapters/notebooks/11_dl_timesfm.ipynb
         - file: chapters/12_causal.md
           children:
             - file: chapters/notebooks/12_causal_did.ipynb
