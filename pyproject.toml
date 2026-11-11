@@ -36,6 +36,8 @@ dev = [
   "pytest-cov>=6.0.0",
   "ruff>=0.9.0",
   "mypy>=1.15.0",
+  # tests/test_book_toc.py parses the myst.yml files
+  "pyyaml>=6.0",
 ]
 video = [
   # Pin to the 0.20.x line: the code targets the v0.20.1 Code() API
