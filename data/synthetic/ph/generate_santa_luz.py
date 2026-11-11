@@ -57,7 +57,7 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 # Paths and reproducibility
 # ---------------------------------------------------------------------------
-SEED = 20260718
+SEED = 20260755  # chosen from a scan of 20260718–20260757 (see README, "Seed")
 OUT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = OUT_DIR.parents[2]
 RESEARCH_JSON = REPO_ROOT / "book_ph" / "research" / "ph_surveillance_research_2026-11-09.json"
@@ -141,7 +141,8 @@ RAIN_LAG_WEIGHTS = {5: 0.1, 6: 0.2, 7: 0.4, 8: 0.2, 9: 0.1}
 DENGUE_BASE = 2.5
 DENGUE_RAIN_COEF = 0.11
 NB_DISPERSION = 20.0
-YEAR_MULT = {2019: 1.7, 2020: 1.0, 2021: 0.5, 2022: 1.1, 2023: 0.9, 2024: 1.0, 2025: 0.95, 2026: 0.75}
+YEAR_MULT = {2019: 1.7, 2020: 1.0, 2021: 0.5, 2022: 1.1, 2023: 0.9, 2024: 1.0, 2025: 0.95,
+             2026: 0.75}
 COVID_START = (2020, 12)  # from 2020-W12 (lockdowns) the 2020 multiplier is COVID_MULT
 COVID_MULT = 0.45
 SURGE_TOTAL = 330.0  # extra expected dengue cases after Amihan (gamma kernel)
@@ -186,7 +187,7 @@ def iso_weeks(first: tuple[int, int], last: tuple[int, int]) -> list[tuple[int, 
     return out
 
 
-def age_group(age: float | int | None) -> str | None:
+def age_group(age: float | None) -> str | None:
     """Return the age-group label used in every Santa Luz file.
 
     Parameters
@@ -364,9 +365,9 @@ def build_barangays(rng: np.random.Generator) -> tuple[pd.DataFrame, list[list[l
             "barangay": name,
             "band": band,
             "population": int(pop[i]),
-            "households": int(round(pop[i] / HOUSEHOLD_SIZE[band])),
+            "households": round(pop[i] / HOUSEHOLD_SIZE[band]),
             "area_km2": round(area, 2),
-            "density_per_km2": int(round(pop[i] / area)),
+            "density_per_km2": round(pop[i] / area),
             "centroid_lon": round(lon, 5),
             "centroid_lat": round(lat, 5),
             "flood_depth_m": depth,
@@ -375,7 +376,20 @@ def build_barangays(rng: np.random.Generator) -> tuple[pd.DataFrame, list[list[l
 
 
 def barangay_geojson(brgy: pd.DataFrame, rings: list[list[list[float]]]) -> str:
-    """Serialise the barangays as a GeoJSON FeatureCollection (one feature per line)."""
+    """Serialise the barangays as a GeoJSON FeatureCollection (one feature per line).
+
+    Parameters
+    ----------
+    brgy : pandas.DataFrame
+        Barangay table.
+    rings : list
+        Polygon rings in the same order.
+
+    Returns
+    -------
+    str
+        GeoJSON text (RFC 7946, WGS 84 lon/lat).
+    """
     feats = []
     for row, ring in zip(brgy.to_dict("records"), rings, strict=True):
         props = {k: row[k] for k in ("barangay_id", "barangay", "band", "population",
@@ -426,8 +440,8 @@ def simulate_population(rng: np.random.Generator, brgy: pd.DataFrame) -> pd.Data
 
     p_wade = np.select(
         [cleanup, adult, (age >= 5) & (age <= 14), age >= 65],
-        [np.minimum(0.90, 0.35 + 0.45 * depth_f), np.where(male, 0.45, 0.15) * depth_f,
-         0.12 * depth_f, 0.15 * depth_f],
+        [np.minimum(0.90, 0.35 + 0.45 * depth_f), np.where(male, 0.45, 0.10) * depth_f,
+         0.10 * depth_f, 0.15 * depth_f],
         0.02 * depth_f,
     )
     waded = rng.random(n) < p_wade
@@ -525,7 +539,18 @@ def lepto_cases(rng: np.random.Generator, pop: pd.DataFrame) -> pd.DataFrame:
 
 
 def dengue_weights(pop: pd.DataFrame, brgy: pd.DataFrame) -> np.ndarray:
-    """Per-resident relative dengue risk (band x age); lepto cases excluded."""
+    """Per-resident relative dengue risk (band x age); lepto cases excluded.
+
+    Parameters
+    ----------
+    pop, brgy : pandas.DataFrame
+        Population and barangay tables.
+
+    Returns
+    -------
+    numpy.ndarray
+        Sampling probabilities summing to 1.
+    """
     band = brgy["band"].to_numpy()[pop["brgy_idx"].to_numpy()]
     w_band = np.select([band == "riverside", band == "coastal"], [1.0, 1.35], 0.22)
     age = pop["age"].to_numpy()
@@ -610,6 +635,20 @@ def assemble_truth(rng: np.random.Generator, pop: pd.DataFrame, brgy: pd.DataFra
     Rows are kept when onset ≥ 20 Jul and report ≤ 30 Sep 2026.  They are put
     in the order the CESU encoded them (by report date, random within a day)
     and numbered ``SLC-0001`` … in that order.
+
+    Parameters
+    ----------
+    rng : numpy.random.Generator
+        Random generator.
+    pop, brgy : pandas.DataFrame
+        Population and barangay tables.
+    lepto, dengue : pandas.DataFrame
+        Case records from :func:`lepto_cases` / :func:`dengue_cases`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The true line list (one row per notified case).
     """
     df = pd.concat([lepto, dengue], ignore_index=True)
     df = df[(df["date_onset"] >= LINELIST_START) & (df["date_report"] <= FREEZE)].copy()
@@ -634,7 +673,20 @@ def assemble_truth(rng: np.random.Generator, pop: pd.DataFrame, brgy: pd.DataFra
 # 4. Weekly dengue series and rainfall
 # ===========================================================================
 def rainfall_series(rng: np.random.Generator, weeks: list[tuple[int, int]]) -> np.ndarray:
-    """Weekly rainfall (mm): habagat season Jun–Oct, storm spikes, Amihan in 2026-W29."""
+    """Weekly rainfall (mm): habagat season Jun–Oct, storm spikes, Amihan in 2026-W29.
+
+    Parameters
+    ----------
+    rng : numpy.random.Generator
+        Random generator.
+    weeks : list of tuple
+        ISO (year, week) pairs.
+
+    Returns
+    -------
+    numpy.ndarray
+        Rainfall per week, rounded to 0.1 mm.
+    """
     wk = np.array([w for _, w in weeks], dtype=float)
     clim = 12 + 110 * np.exp(-(((wk - 31) / 7.5) ** 2)) + 35 * np.exp(-(((wk - 45) / 4) ** 2))
     rain = clim * rng.gamma(3.0, 1 / 3.0, size=len(weeks))
@@ -650,7 +702,20 @@ def rainfall_series(rng: np.random.Generator, weeks: list[tuple[int, int]]) -> n
 
 
 def dengue_expected(weeks: list[tuple[int, int]], rain: np.ndarray) -> np.ndarray:
-    """Expected weekly dengue cases: lagged-rainfall model x year multiplier + surge."""
+    """Expected weekly dengue cases: lagged-rainfall model x year multiplier + surge.
+
+    Parameters
+    ----------
+    weeks : list of tuple
+        ISO (year, week) pairs.
+    rain : numpy.ndarray
+        Weekly rainfall from :func:`rainfall_series`.
+
+    Returns
+    -------
+    numpy.ndarray
+        Expected cases per week (negative-binomial mean).
+    """
     wk = np.array([w for _, w in weeks], dtype=float)
     clim = 12 + 110 * np.exp(-(((wk - 31) / 7.5) ** 2)) + 35 * np.exp(-(((wk - 45) / 4) ** 2))
     r_eff = np.zeros(len(weeks))
@@ -851,7 +916,8 @@ def _sex_variant(rng: np.random.Generator, sex: str) -> str:
 def _age_variant(rng: np.random.Generator, age: int, months: int | None) -> str:
     """Age as typed: ``34``, ``34 y/o``, ``34 yrs``, ``34yo``; infants ``8 mos``."""
     if age == 0:
-        return _pick(rng, [f"{months} mos", f"{months} months", f"{months}mos"])
+        m = int(months or 1)
+        return _pick(rng, [f"{m} mos", f"{m} months", f"{m}mos"])
     return _pick(rng, [str(age), f"{age} y/o", f"{age} yrs", f"{age}yo"], [0.68, 0.14, 0.1, 0.08])
 
 
@@ -881,7 +947,7 @@ def _remark(rng: np.random.Generator, r: dict[str, Any], names: list[str]) -> st
                 "may kapitbahay din na nag-dengue", "NS1 done", "for CBC follow-up bukas",
                 "estudyante, Grade 5"]
     opts += [f"anak/kapatid ni {_pick(rng, names).split()[0]} (kapitbahay)",
-             "contact # ng asawa ang nakalagay", "f/up c/o BHW"]
+             "contact no. ng asawa ang nakalagay", "f/up c/o BHW"]
     return _pick(rng, opts)
 
 
@@ -891,6 +957,18 @@ def choose_corruptions(rng: np.random.Generator, truth: pd.DataFrame) -> dict[st
     Returns a dict of row-index sets: ``dup_exact``, ``dup_near``, ``age_missing``,
     ``age_150``, ``onset_typo``, ``consult_missing``, ``expo_missing``,
     ``brgy_typo``.  Impossible values and typos never fall on duplicated rows.
+
+    Parameters
+    ----------
+    rng : numpy.random.Generator
+        Random generator.
+    truth : pandas.DataFrame
+        True line list.
+
+    Returns
+    -------
+    dict
+        Flag name → set of truth row indices.
     """
     n = len(truth)
     order = rng.permutation(n)
@@ -908,7 +986,7 @@ def choose_corruptions(rng: np.random.Generator, truth: pd.DataFrame) -> dict[st
         taken.update(out)
         return out
 
-    n_dup = int(round(0.03 * n))
+    n_dup = round(0.03 * n)
     dup_exact = take(n_dup // 3)
     dup_near = take(n_dup - n_dup // 3)
     lepto = truth["disease"].to_numpy() == "leptospirosis"
@@ -918,7 +996,7 @@ def choose_corruptions(rng: np.random.Generator, truth: pd.DataFrame) -> dict[st
         "dup_exact": dup_exact,
         "dup_near": dup_near,
         "age_150": take(1, lambda i: truth.at[i, "age"] == 50),
-        "onset_typo": take(2, lambda i: _shift_month(onset[i]) > consult[i]),
+        "onset_typo": take(2, lambda i: lepto[i] and _shift_month(onset[i]) > consult[i]),
         "age_missing": take(6),
         "consult_missing": take(12),
         "expo_missing": take(14, lambda i: lepto[i]),
@@ -927,13 +1005,14 @@ def choose_corruptions(rng: np.random.Generator, truth: pd.DataFrame) -> dict[st
 
 
 def _shift_month(d: date) -> date:
-    """Same day one month later (the classic slip of the pen on a paper form)."""
+    """Same day one month later (slip of the pen on a paper form; day capped at 28)."""
     m = d.month % 12 + 1
     y = d.year + (d.month == 12)
-    return date(y, m, min(d.day, 28) if m == 2 else d.day)
+    return date(y, m, min(d.day, 28))
 
 
-def make_raw(rng: np.random.Generator, truth: pd.DataFrame, flags: dict[str, set[int]]) -> pd.DataFrame:
+def make_raw(rng: np.random.Generator, truth: pd.DataFrame,
+             flags: dict[str, set[int]]) -> pd.DataFrame:
     """Render the truth as the messy export Jun sends (see README cleaning rules).
 
     Parameters
@@ -1057,6 +1136,18 @@ def make_clean(truth: pd.DataFrame, flags: dict[str, set[int]]) -> pd.DataFrame:
 
     Impossible/missing raw values become missing: age 150 → NA (age > 110),
     onset after consult → onset NA, blanks stay NA.
+
+    Parameters
+    ----------
+    truth : pandas.DataFrame
+        True line list.
+    flags : dict
+        From :func:`choose_corruptions`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Columns :data:`CLEAN_COLUMNS`.
     """
     df = truth.copy()
     idx = df.index
@@ -1099,6 +1190,15 @@ def make_case_control(rng: np.random.Generator, pop: pd.DataFrame, brgy: pd.Data
     Cases: probable/confirmed leptospirosis in riverside residents aged ≥ 15.
     Controls: two residents aged ≥ 15 without leptospirosis from the case's
     barangay, sampled at random from the synthetic population.
+
+    Parameters
+    ----------
+    rng : numpy.random.Generator
+        Random generator.
+    pop, brgy : pandas.DataFrame
+        Population and barangay tables.
+    truth : pandas.DataFrame
+        True line list.
 
     Returns
     -------
@@ -1203,6 +1303,20 @@ def make_signals(rng: np.random.Generator, brgy: pd.DataFrame, truth: pd.DataFra
 
     The last two events are the story's: the post-Amihan leptospirosis cluster
     and the dengue surge (detected the Monday after the threshold-crossing week).
+
+    Parameters
+    ----------
+    rng : numpy.random.Generator
+        Random generator.
+    brgy, truth : pandas.DataFrame
+        Barangay table and true line list.
+    crossing_week : tuple of int
+        ISO week in which dengue first exceeded the threshold.
+
+    Returns
+    -------
+    pandas.DataFrame
+        One row per event, sorted by emergence date.
     """
     names = [d for d, _ in SIGNAL_DISEASES]
     w = np.array([k for _, k in SIGNAL_DISEASES], dtype=float)
@@ -1343,9 +1457,50 @@ def make_regions(research: dict[str, Any]) -> pd.DataFrame:
 # ===========================================================================
 # 10. Orchestration
 # ===========================================================================
+STREAMS = ("geo", "population", "lepto", "rain", "dengue_counts", "dengue_people", "truth",
+           "history", "raw", "case_control", "signals")
+
+
+def streams(seed: int = SEED) -> dict[str, np.random.Generator]:
+    """Independent random streams per component, all derived from *seed*.
+
+    Separate streams keep, e.g., the raw-file mess stable when the dengue model
+    is retuned.  New streams must be appended to :data:`STREAMS`.
+
+    Parameters
+    ----------
+    seed : int
+        Master seed.
+
+    Returns
+    -------
+    dict
+        ``{stream name: numpy.random.Generator}``.
+    """
+    children = np.random.SeedSequence(seed).spawn(len(STREAMS))
+    return {name: np.random.default_rng(ss) for name, ss in zip(STREAMS, children, strict=True)}
+
+
 def build_weekly(rng: np.random.Generator, truth_dengue_counts: dict[tuple[int, int], int],
                  weeks: list[tuple[int, int]], lam: np.ndarray, rain: np.ndarray) -> pd.DataFrame:
-    """Weekly file: NB draws before 2026-W30, line-list onset counts from W30 on."""
+    """Weekly file: NB draws before 2026-W30, line-list onset counts from W30 on.
+
+    Parameters
+    ----------
+    rng : numpy.random.Generator
+        Random generator.
+    truth_dengue_counts : dict
+        Line-list dengue cases by ISO (year, week) of onset.
+    weeks : list of tuple
+        Simulated ISO weeks.
+    lam, rain : numpy.ndarray
+        Expected cases and rainfall per week.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Weeks 2019-W01 … 2026-W39.
+    """
     cases = nb_draw(rng, lam)
     rows = []
     for i, (y, w) in enumerate(weeks):
@@ -1358,7 +1513,8 @@ def build_weekly(rng: np.random.Generator, truth_dengue_counts: dict[tuple[int, 
     return pd.DataFrame(rows)
 
 
-def generate(out_dir: Path = OUT_DIR, research_path: Path = RESEARCH_JSON) -> dict[str, Any]:
+def generate(out_dir: Path = OUT_DIR, research_path: Path = RESEARCH_JSON,
+             seed: int = SEED, check: bool = True) -> dict[str, Any]:
     """Generate and write every Santa Luz file into *out_dir*.
 
     Parameters
@@ -1374,36 +1530,37 @@ def generate(out_dir: Path = OUT_DIR, research_path: Path = RESEARCH_JSON) -> di
         Key internal values (threshold-crossing week, intercepts…) for reporting.
     """
     out_dir.mkdir(parents=True, exist_ok=True)
-    rng = np.random.default_rng(SEED)
-    brgy, rings = build_barangays(rng)
-    pop = simulate_population(rng, brgy)
-    lepto = lepto_cases(rng, pop)
+    rng = streams(seed)
+    brgy, rings = build_barangays(rng["geo"])
+    pop = simulate_population(rng["population"], brgy)
+    lepto = lepto_cases(rng["lepto"], pop)
 
     weeks = iso_weeks(WEEKLY_FIRST, SIM_LAST)
-    rain = rainfall_series(rng, weeks)
+    rain = rainfall_series(rng["rain"], weeks)
     lam = dengue_expected(weeks, rain)
     ll_weeks = [wk for wk in weeks if wk >= (2026, 30)]
     counts = {}
     for wk in ll_weeks:
         mean = lam[weeks.index(wk)] * (3 / 7 if wk == SIM_LAST else 1.0)
-        counts[wk] = int(nb_draw(rng, mean))
-    dengue = dengue_cases(rng, pop, brgy, counts)
+        counts[wk] = int(nb_draw(rng["dengue_counts"], mean))
+    dengue = dengue_cases(rng["dengue_people"], pop, brgy, counts)
 
-    truth = assemble_truth(rng, pop, brgy, lepto, dengue)
+    truth = assemble_truth(rng["truth"], pop, brgy, lepto, dengue)
     den = truth[truth["disease"] == "dengue"]
-    onset_weeks = [d.isocalendar()[:2] for d in den["date_onset"]]
-    by_week = pd.Series([tuple(w) for w in onset_weeks]).value_counts().to_dict()
-    weekly = build_weekly(rng, by_week, weeks, lam, rain)
+    by_week = pd.Series([tuple(d.isocalendar()[:2]) for d in den["date_onset"]]).value_counts()
+    weekly = build_weekly(rng["history"], by_week.to_dict(), weeks, lam, rain)
     thr = epidemic_threshold(weekly)
     w26 = weekly[weekly["iso_year"] == 2026]
     above = w26[w26["cases"].to_numpy() > thr.loc[w26["iso_week"]].to_numpy()]
     crossing = (2026, int(above["iso_week"].iloc[0]))
+    if crossing[1] < 31 and check:
+        raise ValueError(f"dengue threshold crossed too early ({crossing}); retune the design")
 
-    flags = choose_corruptions(rng, truth)
-    raw = make_raw(rng, truth, flags)
+    flags = choose_corruptions(rng["raw"], truth)
+    raw = make_raw(rng["raw"], truth, flags)
     clean = make_clean(truth, flags)
-    cc = make_case_control(rng, pop, brgy, truth)
-    signals = make_signals(rng, brgy, truth, crossing)
+    cc = make_case_control(rng["case_control"], pop, brgy, truth)
+    signals = make_signals(rng["signals"], brgy, truth, crossing)
     research = json.loads(research_path.read_text(encoding="utf-8"))
     regions = make_regions(research)
 

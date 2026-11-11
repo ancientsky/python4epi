@@ -233,7 +233,7 @@ from a per-language dictionary inside the script (`en`, `zh`, `fil`). Planned se
 ## 9. Progress
 
 - [ ] P1 infrastructure: build script, three MyST skeletons, tests, workflows
-- [ ] P1 datasets + README + tests
+- [x] P1 datasets + README + tests
 - [ ] P1 design system: CSS, illustrations, interactives
 - [ ] P2 English chapters 00–02 + notebooks
 - [ ] P2 English chapters 03–05 + notebooks
