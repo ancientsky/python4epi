@@ -165,7 +165,7 @@ def epidemic_threshold(weekly: pd.DataFrame, years: tuple[int, ...] = THRESHOLD_
 def _pct(part: float, whole: float, decimals: int = 1) -> float:
     if whole == 0:
         raise ValueError("percentage of an empty denominator")
-    return round(100 * part / whole, decimals)
+    return round(float(100 * part / whole), decimals)
 
 
 def compute_kpis(data: dict[str, Any]) -> dict[str, Any]:
@@ -885,7 +885,8 @@ STRINGS: dict[str, dict[str, Any]] = {
         "brgy": "Barangay", "band": "Band", "population": "Population",
         "riverside": "Riverside", "coastal": "Coastal", "upland": "Upland",
         "age_group": "Age group", "exposure": "Exposure", "or": "OR", "ci": "95% CI",
-        "target": "Target", "met": "Met", "missed": "Missed", "median": "Median delay (days)",
+        "target": "Target", "met": "Met", "missed": "Missed", "median": "Median delay",
+        "days_n": "{n} d",
         "unknown_age": "{n} cases with unknown age are not shown.",
         "unknown_onset": "Cases with no onset date are not shown.",
         "lt5_long": "1–4 cases: shown as <5, rate withheld",
@@ -1009,7 +1010,8 @@ STRINGS: dict[str, dict[str, Any]] = {
         "brgy": "里（barangay）", "band": "區帶", "population": "人口",
         "riverside": "沿河", "coastal": "沿海", "upland": "山區",
         "age_group": "年齡組", "exposure": "暴露", "or": "勝算比", "ci": "95% 信賴區間",
-        "target": "目標", "met": "達成", "missed": "未達成", "median": "延遲中位數（天）",
+        "target": "目標", "met": "達成", "missed": "未達成", "median": "延遲中位數",
+        "days_n": "{n} 天",
         "unknown_age": "另有 {n} 名年齡不詳的病例未列入。",
         "unknown_onset": "發病日不詳的病例未列入。",
         "lt5_long": "1–4 例：顯示為 <5，不列侵襲率",
@@ -1153,7 +1155,7 @@ STRINGS: dict[str, dict[str, Any]] = {
         "riverside": "Tabing-ilog", "coastal": "Baybayin", "upland": "Kabundukan",
         "age_group": "Age group", "exposure": "Exposure", "or": "OR", "ci": "95% CI",
         "target": "Target", "met": "Pasado", "missed": "Hindi pasado",
-        "median": "Median na delay (araw)",
+        "median": "Median na delay", "days_n": "{n} araw",
         "unknown_age": "Hindi kasama ang {n} kasong walang edad.",
         "unknown_onset": "Hindi kasama ang mga kasong walang petsa ng onset.",
         "lt5_long": "1–4 kaso: ipinapakitang <5, walang rate",
@@ -1634,7 +1636,8 @@ def render_html(payload: dict[str, Any]) -> str:
         f'<span class="b-bar" style="--w:{round(100 * b["n"] / top_n)}%"></span>'
         f'<span class="b-n">{_esc(_t(lang, "events", n=b["n"]))}</span></li>'
         for b in t717["bottlenecks"])
-    t717_rows = [[t[g["key"]], str(g["met"]), str(t717["n"] - g["met"]), str(g["median"])]
+    t717_rows = [[t[g["key"]], str(g["met"]), str(t717["n"] - g["met"]),
+                  _t(lang, "days_n", n=g["median"])]
                  for g in t717["targets"]]
     t717_panel = _panel(
         "p-717", t["t717_title"],
