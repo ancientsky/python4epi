@@ -1,0 +1,594 @@
+case_id,disease,case_class,date_onset,date_consult,date_report,date_lab_confirmed,age,age_group,sex,barangay_id,barangay,band,hospitalised,outcome,dengue_severity,waded_floodwater,cleanup_work
+SLC-0001,dengue,suspect,2026-07-21,2026-07-22,2026-07-22,,24,15-24,F,SL11,Dalampasigan,coastal,0,alive,warning_signs,,
+SLC-0002,dengue,confirmed,2026-07-20,2026-07-21,2026-07-23,2026-07-30,3,0-4,M,SL16,Wawa,coastal,0,alive,no_warning,,
+SLC-0003,dengue,suspect,2026-07-21,2026-07-25,2026-07-25,,16,15-24,M,SL20,Kawayanan,upland,1,alive,no_warning,,
+SLC-0004,dengue,suspect,2026-07-22,2026-07-24,2026-07-25,,9,5-14,M,SL15,Laot,coastal,0,alive,no_warning,,
+SLC-0005,dengue,probable,2026-07-21,2026-07-24,2026-07-25,,14,5-14,F,SL11,Dalampasigan,coastal,0,alive,no_warning,,
+SLC-0006,leptospirosis,probable,2026-07-23,2026-07-26,2026-07-26,,33,25-44,M,SL10,Baybay,coastal,1,alive,,1,0
+SLC-0007,leptospirosis,suspect,2026-07-25,2026-07-26,2026-07-26,,56,45-64,M,SL01,Ilog,riverside,1,alive,,1,0
+SLC-0008,leptospirosis,confirmed,2026-07-25,2026-07-26,2026-07-26,2026-08-12,57,45-64,M,SL07,Bagong Silang,riverside,1,alive,,0,0
+SLC-0009,leptospirosis,probable,2026-07-22,2026-07-26,2026-07-26,,37,25-44,M,SL03,Pampang,riverside,1,alive,,1,0
+SLC-0010,leptospirosis,probable,2026-07-25,2026-07-26,2026-07-26,,,,M,SL04,Poblacion,riverside,1,alive,,1,1
+SLC-0011,dengue,probable,2026-07-20,2026-07-23,2026-07-26,,24,15-24,F,SL11,Dalampasigan,coastal,0,alive,no_warning,,
+SLC-0012,leptospirosis,suspect,2026-07-23,2026-07-26,2026-07-27,,64,45-64,M,SL02,Tabing-Ilog,riverside,1,alive,,1,1
+SLC-0013,leptospirosis,suspect,2026-07-24,2026-07-26,2026-07-27,,,,M,SL02,Tabing-Ilog,riverside,1,alive,,1,0
+SLC-0014,dengue,probable,2026-07-25,2026-07-27,2026-07-27,,54,45-64,F,SL01,Ilog,riverside,0,alive,no_warning,,
+SLC-0015,leptospirosis,confirmed,2026-07-22,2026-07-25,2026-07-27,2026-08-04,26,25-44,F,SL02,Tabing-Ilog,riverside,1,alive,,1,0
+SLC-0016,dengue,confirmed,2026-07-24,2026-07-26,2026-07-28,2026-08-03,12,5-14,F,SL15,Laot,coastal,0,alive,no_warning,,
+SLC-0017,leptospirosis,probable,2026-07-25,,2026-07-28,,15,15-24,M,SL11,Dalampasigan,coastal,0,alive,,1,0
+SLC-0018,dengue,probable,2026-07-25,2026-07-26,2026-07-28,,20,15-24,F,SL10,Baybay,coastal,0,alive,no_warning,,
+SLC-0019,leptospirosis,confirmed,2026-07-25,2026-07-27,2026-07-29,2026-08-15,91,65+,M,SL01,Ilog,riverside,1,alive,,0,0
+SLC-0020,dengue,suspect,2026-07-25,2026-07-29,2026-07-29,,9,5-14,M,SL09,San Pedro,coastal,1,alive,no_warning,,
+SLC-0021,leptospirosis,confirmed,2026-07-27,2026-07-28,2026-07-29,2026-08-18,62,45-64,M,SL06,San Isidro,riverside,1,alive,,1,1
+SLC-0022,leptospirosis,probable,2026-07-25,2026-07-29,2026-07-29,,53,45-64,M,SL01,Ilog,riverside,0,alive,,,
+SLC-0023,dengue,probable,2026-07-24,2026-07-28,2026-07-29,,1,0-4,M,SL08,Sapa,riverside,0,alive,no_warning,,
+SLC-0024,dengue,probable,2026-07-25,2026-07-27,2026-07-29,,35,25-44,M,SL08,Sapa,riverside,0,alive,no_warning,,
+SLC-0025,leptospirosis,confirmed,2026-07-26,2026-07-28,2026-07-29,2026-08-17,19,15-24,F,SL20,Kawayanan,upland,1,alive,,0,0
+SLC-0026,leptospirosis,suspect,2026-07-27,2026-07-28,2026-07-29,,27,25-44,M,SL01,Ilog,riverside,0,alive,,1,0
+SLC-0027,leptospirosis,probable,2026-07-25,2026-07-28,2026-07-29,,17,15-24,M,SL01,Ilog,riverside,1,alive,,1,0
+SLC-0028,leptospirosis,suspect,2026-07-27,2026-07-28,2026-07-30,,22,15-24,F,SL07,Bagong Silang,riverside,0,alive,,1,1
+SLC-0029,leptospirosis,probable,2026-07-28,2026-07-29,2026-07-30,,18,15-24,M,SL12,Pantalan,coastal,0,alive,,1,0
+SLC-0030,leptospirosis,probable,2026-07-28,2026-07-29,2026-07-30,,15,15-24,F,SL15,Laot,coastal,0,alive,,0,0
+SLC-0031,leptospirosis,probable,2026-07-24,2026-07-27,2026-07-30,,37,25-44,M,SL11,Dalampasigan,coastal,0,alive,,1,1
+SLC-0032,leptospirosis,probable,2026-07-22,2026-07-27,2026-07-30,,14,5-14,M,SL03,Pampang,riverside,0,alive,,1,0
+SLC-0033,leptospirosis,probable,2026-07-27,2026-07-29,2026-07-30,,23,15-24,M,SL05,Santo Niño,riverside,0,alive,,1,1
+SLC-0034,leptospirosis,suspect,2026-07-27,2026-07-29,2026-07-30,,16,15-24,M,SL07,Bagong Silang,riverside,1,alive,,1,1
+SLC-0035,leptospirosis,confirmed,2026-07-27,2026-07-29,2026-07-30,2026-08-14,20,15-24,M,SL04,Poblacion,riverside,1,alive,,1,0
+SLC-0036,dengue,confirmed,2026-07-27,2026-07-30,2026-07-30,2026-08-11,20,15-24,F,SL06,San Isidro,riverside,1,alive,no_warning,,
+SLC-0037,leptospirosis,probable,2026-07-27,2026-07-28,2026-07-30,,17,15-24,F,SL05,Santo Niño,riverside,0,alive,,0,0
+SLC-0038,leptospirosis,probable,2026-07-28,2026-07-30,2026-07-31,,32,25-44,M,SL06,San Isidro,riverside,1,alive,,1,1
+SLC-0039,leptospirosis,confirmed,2026-07-27,2026-07-28,2026-07-31,2026-08-20,48,45-64,F,SL04,Poblacion,riverside,1,alive,,1,0
+SLC-0040,leptospirosis,confirmed,2026-07-26,2026-07-30,2026-07-31,2026-08-09,,,F,SL08,Sapa,riverside,1,alive,,0,0
+SLC-0041,leptospirosis,probable,2026-07-27,2026-07-28,2026-07-31,,51,45-64,F,SL09,San Pedro,coastal,1,alive,,1,1
+SLC-0042,leptospirosis,suspect,2026-07-29,2026-07-30,2026-07-31,,23,15-24,F,SL05,Santo Niño,riverside,1,alive,,1,0
+SLC-0043,dengue,probable,2026-07-26,2026-07-28,2026-07-31,,14,5-14,F,SL06,San Isidro,riverside,0,alive,no_warning,,
+SLC-0044,leptospirosis,probable,2026-07-27,2026-07-30,2026-07-31,,33,25-44,M,SL05,Santo Niño,riverside,0,alive,,1,0
+SLC-0045,leptospirosis,confirmed,2026-07-23,2026-07-28,2026-07-31,2026-08-11,8,5-14,F,SL05,Santo Niño,riverside,1,alive,,1,0
+SLC-0046,leptospirosis,confirmed,2026-07-26,2026-07-27,2026-07-31,2026-08-06,16,15-24,M,SL02,Tabing-Ilog,riverside,1,alive,,1,0
+SLC-0047,leptospirosis,confirmed,2026-07-26,,2026-07-31,2026-08-09,56,45-64,F,SL08,Sapa,riverside,1,alive,,1,1
+SLC-0048,leptospirosis,suspect,2026-07-26,2026-07-28,2026-07-31,,8,5-14,F,SL11,Dalampasigan,coastal,1,alive,,1,0
+SLC-0049,leptospirosis,suspect,2026-07-30,2026-08-01,2026-08-01,,26,25-44,M,SL10,Baybay,coastal,1,alive,,1,0
+SLC-0050,leptospirosis,confirmed,2026-07-25,2026-07-31,2026-08-01,2026-08-12,10,5-14,M,SL05,Santo Niño,riverside,1,alive,,,
+SLC-0051,leptospirosis,confirmed,2026-07-27,2026-07-31,2026-08-01,2026-08-18,56,45-64,M,SL16,Wawa,coastal,1,alive,,1,0
+SLC-0052,leptospirosis,probable,2026-07-27,2026-07-29,2026-08-01,,15,15-24,M,SL02,Tabing-Ilog,riverside,1,alive,,1,1
+SLC-0053,dengue,probable,2026-07-28,2026-07-30,2026-08-01,,18,15-24,M,SL11,Dalampasigan,coastal,1,alive,severe,,
+SLC-0054,leptospirosis,probable,2026-07-28,,2026-08-01,,42,25-44,M,SL07,Bagong Silang,riverside,1,alive,,1,0
+SLC-0055,leptospirosis,confirmed,2026-07-25,2026-07-27,2026-08-01,2026-08-10,51,45-64,F,SL10,Baybay,coastal,0,alive,,1,0
+SLC-0056,leptospirosis,confirmed,2026-07-27,2026-07-30,2026-08-01,2026-08-13,9,5-14,M,SL20,Kawayanan,upland,1,alive,,0,0
+SLC-0057,leptospirosis,confirmed,2026-07-26,2026-07-30,2026-08-01,2026-08-09,28,25-44,M,SL07,Bagong Silang,riverside,1,died,,1,1
+SLC-0058,leptospirosis,suspect,2026-07-28,2026-08-01,2026-08-01,,9,5-14,M,SL07,Bagong Silang,riverside,0,alive,,,
+SLC-0059,dengue,probable,2026-07-30,2026-07-31,2026-08-01,,22,15-24,F,SL04,Poblacion,riverside,1,alive,warning_signs,,
+SLC-0060,leptospirosis,confirmed,2026-07-27,2026-07-30,2026-08-02,2026-08-16,11,5-14,F,SL06,San Isidro,riverside,1,alive,,1,0
+SLC-0061,leptospirosis,confirmed,2026-07-30,2026-08-01,2026-08-02,2026-08-26,30,25-44,F,SL02,Tabing-Ilog,riverside,1,alive,,1,1
+SLC-0062,leptospirosis,probable,2026-07-27,2026-07-30,2026-08-02,,10,5-14,M,SL10,Baybay,coastal,0,alive,,,
+SLC-0063,leptospirosis,suspect,2026-07-28,2026-07-30,2026-08-02,,54,45-64,M,SL09,San Pedro,coastal,0,alive,,0,1
+SLC-0064,dengue,suspect,2026-07-31,2026-08-02,2026-08-02,,21,15-24,F,SL11,Dalampasigan,coastal,1,alive,no_warning,,
+SLC-0065,leptospirosis,confirmed,2026-07-25,2026-07-28,2026-08-02,2026-08-21,57,45-64,F,SL09,San Pedro,coastal,1,alive,,1,0
+SLC-0066,leptospirosis,suspect,2026-07-25,2026-07-30,2026-08-02,,38,25-44,M,SL19,Mataas na Lupa,upland,0,alive,,0,0
+SLC-0067,leptospirosis,suspect,2026-07-27,2026-08-02,2026-08-02,,23,15-24,F,SL04,Poblacion,riverside,1,died,,,
+SLC-0068,leptospirosis,suspect,2026-07-28,2026-07-29,2026-08-02,,53,45-64,M,SL02,Tabing-Ilog,riverside,0,alive,,1,0
+SLC-0069,leptospirosis,confirmed,2026-07-29,2026-07-31,2026-08-02,2026-08-25,52,45-64,M,SL04,Poblacion,riverside,1,alive,,1,0
+SLC-0070,leptospirosis,probable,2026-07-30,2026-08-01,2026-08-02,,7,5-14,M,SL08,Sapa,riverside,1,alive,,0,0
+SLC-0071,leptospirosis,probable,2026-07-28,2026-08-01,2026-08-02,,7,5-14,M,SL24,Talahib,upland,1,alive,,0,0
+SLC-0072,leptospirosis,probable,2026-07-25,2026-07-29,2026-08-02,,21,15-24,F,SL12,Pantalan,coastal,0,alive,,0,0
+SLC-0073,leptospirosis,suspect,2026-07-24,2026-07-28,2026-08-02,,32,25-44,M,SL03,Pampang,riverside,1,alive,,1,0
+SLC-0074,leptospirosis,confirmed,2026-07-27,2026-07-31,2026-08-02,2026-08-25,27,25-44,M,SL04,Poblacion,riverside,1,alive,,1,0
+SLC-0075,leptospirosis,confirmed,2026-07-26,2026-07-31,2026-08-02,2026-08-25,19,15-24,M,SL01,Ilog,riverside,0,alive,,1,0
+SLC-0076,leptospirosis,confirmed,2026-07-27,2026-07-31,2026-08-02,2026-08-12,20,15-24,M,SL06,San Isidro,riverside,0,alive,,1,1
+SLC-0077,leptospirosis,suspect,2026-07-26,2026-07-30,2026-08-02,,22,15-24,M,SL01,Ilog,riverside,0,alive,,1,1
+SLC-0078,leptospirosis,confirmed,2026-07-28,2026-07-30,2026-08-02,2026-08-20,12,5-14,F,SL08,Sapa,riverside,1,alive,,1,0
+SLC-0079,leptospirosis,confirmed,2026-07-28,2026-07-30,2026-08-03,2026-08-20,10,5-14,F,SL03,Pampang,riverside,0,alive,,0,0
+SLC-0080,leptospirosis,confirmed,2026-07-25,2026-07-29,2026-08-03,2026-08-20,22,15-24,M,SL02,Tabing-Ilog,riverside,1,alive,,1,1
+SLC-0081,leptospirosis,suspect,2026-07-27,2026-07-30,2026-08-03,,14,5-14,M,SL04,Poblacion,riverside,0,alive,,1,0
+SLC-0082,leptospirosis,probable,2026-07-30,2026-08-01,2026-08-03,,48,45-64,F,SL01,Ilog,riverside,1,alive,,1,1
+SLC-0083,leptospirosis,suspect,2026-07-31,2026-08-01,2026-08-03,,40,25-44,F,SL01,Ilog,riverside,0,alive,,1,0
+SLC-0084,leptospirosis,confirmed,2026-07-27,2026-08-01,2026-08-03,2026-08-20,44,25-44,M,SL22,Maligaya,upland,1,died,,,
+SLC-0085,leptospirosis,suspect,2026-07-25,2026-07-28,2026-08-03,,36,25-44,F,SL07,Bagong Silang,riverside,1,died,,1,0
+SLC-0086,leptospirosis,probable,2026-07-28,2026-08-01,2026-08-03,,16,15-24,F,SL06,San Isidro,riverside,0,alive,,1,1
+SLC-0087,leptospirosis,confirmed,2026-07-24,2026-07-28,2026-08-03,2026-08-21,60,45-64,M,SL01,Ilog,riverside,0,alive,,,
+SLC-0088,leptospirosis,suspect,2026-07-27,2026-07-30,2026-08-03,,36,25-44,M,SL01,Ilog,riverside,0,alive,,1,1
+SLC-0089,leptospirosis,probable,2026-07-28,2026-07-31,2026-08-03,,48,45-64,M,SL24,Talahib,upland,0,alive,,1,0
+SLC-0090,leptospirosis,confirmed,2026-08-02,2026-08-03,2026-08-03,2026-08-27,31,25-44,M,SL01,Ilog,riverside,1,alive,,1,1
+SLC-0091,leptospirosis,suspect,2026-07-29,2026-07-31,2026-08-03,,40,25-44,M,SL02,Tabing-Ilog,riverside,0,alive,,0,0
+SLC-0092,leptospirosis,probable,2026-07-30,2026-08-02,2026-08-04,,9,5-14,F,SL07,Bagong Silang,riverside,0,alive,,0,0
+SLC-0093,leptospirosis,probable,2026-07-29,2026-08-01,2026-08-04,,16,15-24,F,SL03,Pampang,riverside,0,alive,,1,0
+SLC-0094,leptospirosis,probable,2026-07-29,2026-08-02,2026-08-04,,40,25-44,F,SL03,Pampang,riverside,0,died,,1,0
+SLC-0095,leptospirosis,probable,2026-07-29,2026-08-01,2026-08-04,,35,25-44,F,SL01,Ilog,riverside,1,alive,,1,0
+SLC-0096,leptospirosis,probable,2026-07-26,2026-07-29,2026-08-04,,22,15-24,M,SL03,Pampang,riverside,1,alive,,1,1
+SLC-0097,leptospirosis,confirmed,2026-07-31,2026-08-04,2026-08-04,2026-08-18,23,15-24,M,SL05,Santo Niño,riverside,0,died,,1,1
+SLC-0098,leptospirosis,probable,2026-07-31,2026-08-03,2026-08-04,,26,25-44,F,SL02,Tabing-Ilog,riverside,1,alive,,1,1
+SLC-0099,leptospirosis,confirmed,2026-08-02,2026-08-03,2026-08-04,2026-08-18,38,25-44,M,SL10,Baybay,coastal,1,alive,,0,0
+SLC-0100,leptospirosis,suspect,2026-07-28,2026-08-01,2026-08-04,,54,45-64,M,SL01,Ilog,riverside,0,alive,,0,0
+SLC-0101,leptospirosis,suspect,2026-07-31,2026-08-02,2026-08-04,,53,45-64,M,SL04,Poblacion,riverside,1,alive,,1,1
+SLC-0102,leptospirosis,suspect,2026-07-28,2026-08-04,2026-08-04,,35,25-44,M,SL03,Pampang,riverside,0,alive,,,
+SLC-0103,leptospirosis,confirmed,2026-07-31,2026-08-02,2026-08-04,2026-08-21,27,25-44,M,SL10,Baybay,coastal,1,alive,,,
+SLC-0104,leptospirosis,suspect,2026-07-24,2026-07-28,2026-08-04,,44,25-44,M,SL07,Bagong Silang,riverside,0,alive,,1,1
+SLC-0105,leptospirosis,confirmed,2026-08-01,2026-08-02,2026-08-04,2026-08-20,25,25-44,M,SL05,Santo Niño,riverside,1,alive,,0,0
+SLC-0106,dengue,suspect,2026-07-31,2026-08-03,2026-08-04,,30,25-44,M,SL20,Kawayanan,upland,1,alive,warning_signs,,
+SLC-0107,leptospirosis,probable,2026-07-30,2026-08-01,2026-08-04,,49,45-64,M,SL16,Wawa,coastal,0,alive,,1,1
+SLC-0108,leptospirosis,confirmed,2026-07-28,2026-08-02,2026-08-04,2026-08-22,8,5-14,M,SL12,Pantalan,coastal,1,alive,,1,0
+SLC-0109,leptospirosis,suspect,2026-07-28,2026-07-31,2026-08-04,,1,0-4,F,SL08,Sapa,riverside,1,alive,,,
+SLC-0110,dengue,probable,2026-08-01,2026-08-02,2026-08-04,,57,45-64,F,SL04,Poblacion,riverside,0,alive,no_warning,,
+SLC-0111,leptospirosis,probable,2026-07-29,2026-08-01,2026-08-04,,23,15-24,M,SL06,San Isidro,riverside,1,alive,,1,1
+SLC-0112,leptospirosis,confirmed,2026-07-30,2026-08-03,2026-08-05,2026-08-21,25,25-44,M,SL12,Pantalan,coastal,1,alive,,1,0
+SLC-0113,leptospirosis,probable,2026-08-02,2026-08-05,2026-08-05,,45,45-64,M,SL07,Bagong Silang,riverside,1,alive,,1,0
+SLC-0114,leptospirosis,confirmed,2026-08-03,2026-08-05,2026-08-05,2026-08-28,4,0-4,F,SL14,Buhangin,coastal,1,alive,,0,0
+SLC-0115,leptospirosis,suspect,2026-08-01,2026-08-03,2026-08-05,,10,5-14,F,SL09,San Pedro,coastal,0,alive,,0,0
+SLC-0116,leptospirosis,suspect,2026-07-31,2026-08-03,2026-08-05,,78,65+,F,SL16,Wawa,coastal,0,alive,,0,0
+SLC-0117,leptospirosis,confirmed,2026-08-01,2026-08-03,2026-08-05,2026-08-25,33,25-44,F,SL08,Sapa,riverside,1,alive,,0,0
+SLC-0118,leptospirosis,suspect,2026-07-28,2026-07-31,2026-08-05,,22,15-24,M,SL07,Bagong Silang,riverside,0,alive,,1,0
+SLC-0119,leptospirosis,confirmed,2026-07-30,2026-08-02,2026-08-05,2026-08-24,72,65+,M,SL06,San Isidro,riverside,1,alive,,0,0
+SLC-0120,dengue,suspect,2026-08-03,2026-08-04,2026-08-05,,3,0-4,M,SL12,Pantalan,coastal,1,alive,no_warning,,
+SLC-0121,leptospirosis,probable,2026-07-28,2026-07-30,2026-08-05,,26,25-44,M,SL02,Tabing-Ilog,riverside,0,alive,,1,1
+SLC-0122,leptospirosis,confirmed,2026-07-27,2026-08-02,2026-08-05,2026-08-15,63,45-64,F,SL12,Pantalan,coastal,1,died,,1,0
+SLC-0123,leptospirosis,confirmed,2026-07-31,2026-08-04,2026-08-05,2026-08-14,4,0-4,M,SL07,Bagong Silang,riverside,1,alive,,0,0
+SLC-0124,leptospirosis,confirmed,2026-08-01,2026-08-04,2026-08-05,2026-08-23,36,25-44,F,SL02,Tabing-Ilog,riverside,1,alive,,1,0
+SLC-0125,leptospirosis,confirmed,2026-07-29,2026-08-01,2026-08-05,2026-08-13,9,5-14,F,SL10,Baybay,coastal,1,alive,,0,0
+SLC-0126,leptospirosis,suspect,2026-07-31,2026-08-02,2026-08-05,,52,45-64,M,SL07,Bagong Silang,riverside,1,alive,,1,0
+SLC-0127,leptospirosis,confirmed,2026-07-26,2026-08-02,2026-08-05,2026-08-18,43,25-44,M,SL03,Pampang,riverside,1,alive,,1,1
+SLC-0128,leptospirosis,suspect,2026-07-31,2026-08-01,2026-08-05,,11,5-14,M,SL07,Bagong Silang,riverside,1,alive,,1,0
+SLC-0129,leptospirosis,probable,2026-08-03,2026-08-05,2026-08-05,,48,45-64,M,SL05,Santo Niño,riverside,1,alive,,1,0
+SLC-0130,leptospirosis,confirmed,2026-07-30,2026-08-01,2026-08-05,2026-08-21,64,45-64,F,SL05,Santo Niño,riverside,1,alive,,0,0
+SLC-0131,leptospirosis,probable,2026-07-30,2026-08-04,2026-08-05,,21,15-24,F,SL12,Pantalan,coastal,0,alive,,0,0
+SLC-0132,leptospirosis,confirmed,2026-07-31,2026-08-05,2026-08-06,2026-08-19,26,25-44,M,SL12,Pantalan,coastal,1,alive,,1,1
+SLC-0133,leptospirosis,confirmed,2026-08-03,2026-08-06,2026-08-06,2026-08-17,42,25-44,M,SL07,Bagong Silang,riverside,1,alive,,1,0
+SLC-0134,leptospirosis,suspect,2026-08-02,2026-08-03,2026-08-06,,15,15-24,M,SL02,Tabing-Ilog,riverside,1,alive,,1,0
+SLC-0135,leptospirosis,confirmed,2026-08-01,2026-08-03,2026-08-06,2026-08-21,52,45-64,M,SL02,Tabing-Ilog,riverside,1,alive,,1,0
+SLC-0136,leptospirosis,confirmed,2026-08-01,2026-08-06,2026-08-06,2026-08-31,60,45-64,M,SL08,Sapa,riverside,1,alive,,1,1
+SLC-0137,leptospirosis,confirmed,2026-07-29,2026-08-02,2026-08-06,2026-08-19,31,25-44,F,SL15,Laot,coastal,1,alive,,0,0
+SLC-0138,leptospirosis,confirmed,2026-07-30,2026-08-03,2026-08-06,2026-08-15,58,45-64,M,SL16,Wawa,coastal,1,alive,,1,1
+SLC-0139,leptospirosis,confirmed,2026-08-03,2026-08-06,2026-08-06,2026-08-18,41,25-44,M,SL01,Ilog,riverside,1,alive,,1,1
+SLC-0140,dengue,probable,2026-08-04,2026-08-06,2026-08-06,,6,5-14,M,SL04,Poblacion,riverside,0,alive,no_warning,,
+SLC-0141,leptospirosis,suspect,2026-08-03,2026-08-06,2026-08-06,,29,25-44,M,SL03,Pampang,riverside,0,alive,,,
+SLC-0142,leptospirosis,confirmed,2026-08-03,2026-08-06,2026-08-06,2026-08-23,61,45-64,M,SL02,Tabing-Ilog,riverside,1,died,,1,1
+SLC-0143,leptospirosis,confirmed,2026-07-28,2026-08-02,2026-08-06,2026-08-27,30,25-44,M,SL05,Santo Niño,riverside,1,alive,,0,1
+SLC-0144,leptospirosis,suspect,2026-08-03,2026-08-04,2026-08-06,,4,0-4,M,SL13,Talaba,coastal,1,alive,,0,0
+SLC-0145,leptospirosis,suspect,2026-08-01,2026-08-05,2026-08-06,,,,M,SL08,Sapa,riverside,0,alive,,1,1
+SLC-0146,leptospirosis,suspect,2026-08-03,2026-08-06,2026-08-06,,7,5-14,F,SL03,Pampang,riverside,0,alive,,0,0
+SLC-0147,leptospirosis,confirmed,2026-07-31,2026-08-04,2026-08-06,2026-08-29,12,5-14,F,SL02,Tabing-Ilog,riverside,0,alive,,0,0
+SLC-0148,leptospirosis,confirmed,2026-07-30,2026-08-03,2026-08-06,2026-08-17,21,15-24,M,SL02,Tabing-Ilog,riverside,1,alive,,1,1
+SLC-0149,leptospirosis,suspect,2026-08-01,2026-08-03,2026-08-06,,8,5-14,F,SL06,San Isidro,riverside,1,alive,,0,0
+SLC-0150,leptospirosis,suspect,2026-07-31,2026-08-04,2026-08-06,,38,25-44,M,SL02,Tabing-Ilog,riverside,0,alive,,1,1
+SLC-0151,leptospirosis,confirmed,2026-07-31,2026-08-04,2026-08-06,2026-08-29,17,15-24,M,SL05,Santo Niño,riverside,1,alive,,1,1
+SLC-0152,leptospirosis,confirmed,2026-07-27,2026-08-04,2026-08-06,2026-08-18,71,65+,M,SL10,Baybay,coastal,1,alive,,1,0
+SLC-0153,dengue,probable,2026-08-06,,2026-08-07,,20,15-24,F,SL21,San Roque,upland,0,alive,no_warning,,
+SLC-0154,leptospirosis,probable,2026-07-27,2026-07-31,2026-08-07,,14,5-14,M,SL12,Pantalan,coastal,0,alive,,0,0
+SLC-0155,leptospirosis,probable,2026-08-04,2026-08-07,2026-08-07,,32,25-44,M,SL16,Wawa,coastal,1,alive,,0,0
+SLC-0156,leptospirosis,suspect,2026-08-02,2026-08-06,2026-08-07,,54,45-64,M,SL06,San Isidro,riverside,0,alive,,1,1
+SLC-0157,leptospirosis,confirmed,2026-07-30,2026-08-03,2026-08-07,2026-08-23,29,25-44,M,SL03,Pampang,riverside,1,alive,,1,1
+SLC-0158,leptospirosis,probable,2026-08-03,2026-08-05,2026-08-07,,26,25-44,M,SL03,Pampang,riverside,1,alive,,1,1
+SLC-0159,leptospirosis,suspect,2026-08-02,2026-08-06,2026-08-07,,29,25-44,F,SL05,Santo Niño,riverside,0,alive,,1,1
+SLC-0160,dengue,suspect,2026-08-04,2026-08-07,2026-08-07,,23,15-24,F,SL04,Poblacion,riverside,1,alive,no_warning,,
+SLC-0161,leptospirosis,probable,2026-08-04,2026-08-07,2026-08-07,,4,0-4,F,SL15,Laot,coastal,1,alive,,0,0
+SLC-0162,dengue,suspect,2026-08-04,2026-08-06,2026-08-07,,7,5-14,M,SL07,Bagong Silang,riverside,0,alive,no_warning,,
+SLC-0163,leptospirosis,confirmed,2026-08-04,2026-08-06,2026-08-07,2026-08-20,18,15-24,F,SL04,Poblacion,riverside,1,alive,,1,1
+SLC-0164,leptospirosis,probable,2026-07-30,2026-08-02,2026-08-07,,26,25-44,F,SL01,Ilog,riverside,1,alive,,0,0
+SLC-0165,leptospirosis,probable,2026-08-01,2026-08-04,2026-08-07,,18,15-24,F,SL02,Tabing-Ilog,riverside,1,alive,,1,1
+SLC-0166,leptospirosis,confirmed,2026-07-31,2026-08-03,2026-08-07,2026-08-19,20,15-24,M,SL03,Pampang,riverside,1,alive,,0,0
+SLC-0167,leptospirosis,suspect,2026-08-01,2026-08-06,2026-08-07,,20,15-24,M,SL07,Bagong Silang,riverside,0,alive,,1,1
+SLC-0168,dengue,probable,2026-08-06,2026-08-07,2026-08-07,,9,5-14,F,SL02,Tabing-Ilog,riverside,1,alive,warning_signs,,
+SLC-0169,leptospirosis,probable,2026-08-05,2026-08-06,2026-08-07,,19,15-24,F,SL03,Pampang,riverside,0,alive,,0,0
+SLC-0170,leptospirosis,confirmed,2026-08-03,2026-08-07,2026-08-07,2026-08-20,63,45-64,M,SL03,Pampang,riverside,1,died,,1,1
+SLC-0171,leptospirosis,suspect,2026-08-03,2026-08-06,2026-08-07,,27,25-44,M,SL01,Ilog,riverside,1,alive,,1,1
+SLC-0172,dengue,suspect,2026-08-02,2026-08-04,2026-08-07,,4,0-4,F,SL12,Pantalan,coastal,1,alive,no_warning,,
+SLC-0173,leptospirosis,suspect,2026-07-30,2026-08-04,2026-08-07,,9,5-14,F,SL02,Tabing-Ilog,riverside,0,alive,,0,0
+SLC-0174,leptospirosis,confirmed,2026-08-05,2026-08-07,2026-08-07,2026-08-21,53,45-64,F,SL02,Tabing-Ilog,riverside,1,alive,,0,1
+SLC-0175,leptospirosis,probable,2026-08-02,2026-08-04,2026-08-07,,55,45-64,M,SL07,Bagong Silang,riverside,1,alive,,0,0
+SLC-0176,dengue,probable,2026-08-03,2026-08-07,2026-08-08,,11,5-14,F,SL05,Santo Niño,riverside,0,alive,no_warning,,
+SLC-0177,leptospirosis,confirmed,2026-08-03,2026-08-06,2026-08-08,2026-08-19,40,25-44,M,SL10,Baybay,coastal,1,alive,,0,0
+SLC-0178,leptospirosis,confirmed,2026-08-01,2026-08-06,2026-08-08,2026-08-29,42,25-44,M,SL08,Sapa,riverside,1,died,,1,1
+SLC-0179,leptospirosis,confirmed,2026-08-04,2026-08-08,2026-08-08,2026-08-21,57,45-64,M,SL13,Talaba,coastal,1,alive,,0,1
+SLC-0180,leptospirosis,confirmed,2026-08-03,2026-08-07,2026-08-08,2026-08-27,16,15-24,F,SL01,Ilog,riverside,1,alive,,0,0
+SLC-0181,dengue,suspect,2026-08-05,2026-08-07,2026-08-08,,19,15-24,F,SL10,Baybay,coastal,0,alive,no_warning,,
+SLC-0182,leptospirosis,confirmed,2026-08-03,2026-08-06,2026-08-08,2026-08-23,9,5-14,F,SL04,Poblacion,riverside,1,alive,,0,0
+SLC-0183,leptospirosis,suspect,2026-08-03,2026-08-07,2026-08-08,,27,25-44,M,SL02,Tabing-Ilog,riverside,1,alive,,1,1
+SLC-0184,dengue,confirmed,2026-08-05,2026-08-08,2026-08-08,2026-08-18,35,25-44,F,SL13,Talaba,coastal,0,alive,no_warning,,
+SLC-0185,leptospirosis,suspect,2026-07-31,2026-08-06,2026-08-08,,10,5-14,M,SL03,Pampang,riverside,1,alive,,0,0
+SLC-0186,leptospirosis,suspect,2026-07-30,2026-08-03,2026-08-08,,15,15-24,M,SL02,Tabing-Ilog,riverside,0,alive,,1,1
+SLC-0187,leptospirosis,confirmed,2026-07-30,2026-08-03,2026-08-08,2026-08-13,37,25-44,M,SL07,Bagong Silang,riverside,1,died,,1,1
+SLC-0188,leptospirosis,confirmed,2026-07-30,2026-08-01,2026-08-08,2026-08-13,37,25-44,M,SL06,San Isidro,riverside,0,alive,,1,1
+SLC-0189,leptospirosis,probable,2026-07-30,2026-08-02,2026-08-08,,17,15-24,M,SL01,Ilog,riverside,0,alive,,1,1
+SLC-0190,leptospirosis,suspect,2026-08-04,2026-08-05,2026-08-08,,62,45-64,M,SL07,Bagong Silang,riverside,1,alive,,1,1
+SLC-0191,leptospirosis,probable,2026-08-01,2026-08-08,2026-08-08,,38,25-44,M,SL01,Ilog,riverside,1,alive,,1,1
+SLC-0192,leptospirosis,confirmed,2026-08-06,2026-08-07,2026-08-08,2026-08-23,44,25-44,F,SL07,Bagong Silang,riverside,1,alive,,1,0
+SLC-0193,leptospirosis,probable,2026-08-04,2026-08-07,2026-08-08,,3,0-4,F,SL01,Ilog,riverside,1,alive,,0,0
+SLC-0194,leptospirosis,suspect,2026-08-04,2026-08-07,2026-08-08,,13,5-14,M,SL12,Pantalan,coastal,0,alive,,0,0
+SLC-0195,leptospirosis,suspect,2026-08-02,2026-08-03,2026-08-08,,18,15-24,M,SL01,Ilog,riverside,0,alive,,,
+SLC-0196,leptospirosis,confirmed,2026-08-04,2026-08-07,2026-08-08,2026-08-27,56,45-64,M,SL04,Poblacion,riverside,1,alive,,0,1
+SLC-0197,leptospirosis,confirmed,2026-07-28,2026-07-31,2026-08-08,2026-08-25,41,25-44,M,SL15,Laot,coastal,1,alive,,1,1
+SLC-0198,dengue,suspect,2026-08-06,2026-08-08,2026-08-08,,,,M,SL12,Pantalan,coastal,1,alive,no_warning,,
+SLC-0199,leptospirosis,suspect,2026-08-01,2026-08-07,2026-08-09,,41,25-44,M,SL11,Dalampasigan,coastal,1,alive,,1,0
+SLC-0200,dengue,suspect,2026-08-07,2026-08-09,2026-08-09,,5,5-14,F,SL03,Pampang,riverside,0,alive,no_warning,,
+SLC-0201,leptospirosis,confirmed,2026-08-05,2026-08-08,2026-08-09,2026-09-02,0,0-4,M,SL15,Laot,coastal,1,alive,,0,0
+SLC-0202,leptospirosis,suspect,2026-08-05,2026-08-07,2026-08-09,,70,65+,F,SL01,Ilog,riverside,1,alive,,1,1
+SLC-0203,leptospirosis,confirmed,2026-08-03,2026-08-06,2026-08-09,2026-08-25,26,25-44,F,SL03,Pampang,riverside,0,alive,,1,1
+SLC-0204,leptospirosis,suspect,2026-08-03,2026-08-09,2026-08-09,,61,45-64,M,SL13,Talaba,coastal,0,alive,,0,1
+SLC-0205,leptospirosis,suspect,2026-08-06,2026-08-09,2026-08-09,,34,25-44,F,SL02,Tabing-Ilog,riverside,0,alive,,1,1
+SLC-0206,leptospirosis,probable,2026-08-06,2026-08-08,2026-08-09,,48,45-64,F,SL02,Tabing-Ilog,riverside,0,alive,,0,0
+SLC-0207,leptospirosis,probable,2026-08-07,2026-08-09,2026-08-09,,3,0-4,M,SL19,Mataas na Lupa,upland,1,alive,,0,0
+SLC-0208,leptospirosis,confirmed,2026-08-03,2026-08-07,2026-08-09,2026-09-01,9,5-14,M,SL02,Tabing-Ilog,riverside,0,alive,,0,0
+SLC-0209,dengue,suspect,2026-08-05,2026-08-09,2026-08-09,,11,5-14,M,SL14,Buhangin,coastal,0,alive,no_warning,,
+SLC-0210,dengue,suspect,2026-08-05,2026-08-09,2026-08-09,,33,25-44,F,SL15,Laot,coastal,1,alive,no_warning,,
+SLC-0211,leptospirosis,confirmed,2026-08-07,2026-08-09,2026-08-09,2026-08-26,56,45-64,F,SL01,Ilog,riverside,0,alive,,0,0
+SLC-0212,leptospirosis,suspect,2026-08-05,2026-08-07,2026-08-09,,46,45-64,F,SL10,Baybay,coastal,0,alive,,0,0
+SLC-0213,dengue,probable,2026-08-07,2026-08-08,2026-08-09,,20,15-24,M,SL15,Laot,coastal,1,alive,no_warning,,
+SLC-0214,leptospirosis,probable,2026-08-05,2026-08-06,2026-08-09,,46,45-64,M,SL07,Bagong Silang,riverside,0,alive,,0,0
+SLC-0215,leptospirosis,confirmed,2026-08-06,2026-08-08,2026-08-09,2026-08-29,55,45-64,F,SL06,San Isidro,riverside,1,alive,,1,1
+SLC-0216,leptospirosis,confirmed,2026-08-07,2026-08-09,2026-08-09,2026-08-26,29,25-44,M,SL02,Tabing-Ilog,riverside,1,alive,,1,1
+SLC-0217,dengue,confirmed,2026-08-08,2026-08-09,2026-08-10,2026-08-13,18,15-24,M,SL02,Tabing-Ilog,riverside,1,alive,warning_signs,,
+SLC-0218,dengue,probable,2026-08-05,2026-08-08,2026-08-10,,25,25-44,M,SL16,Wawa,coastal,1,alive,no_warning,,
+SLC-0219,leptospirosis,suspect,2026-08-07,2026-08-09,2026-08-10,,50,45-64,M,SL05,Santo Niño,riverside,1,died,,1,1
+SLC-0220,leptospirosis,confirmed,2026-08-03,2026-08-08,2026-08-10,2026-08-30,27,25-44,M,SL07,Bagong Silang,riverside,1,died,,1,1
+SLC-0221,leptospirosis,confirmed,2026-08-06,2026-08-09,2026-08-10,2026-08-25,27,25-44,M,SL02,Tabing-Ilog,riverside,1,alive,,1,0
+SLC-0222,dengue,probable,2026-08-06,2026-08-08,2026-08-10,,18,15-24,F,SL05,Santo Niño,riverside,0,alive,no_warning,,
+SLC-0223,leptospirosis,confirmed,2026-07-31,2026-08-03,2026-08-10,2026-08-24,23,15-24,M,SL06,San Isidro,riverside,1,alive,,1,1
+SLC-0224,leptospirosis,confirmed,2026-08-07,2026-08-09,2026-08-10,2026-08-22,4,0-4,M,SL08,Sapa,riverside,1,alive,,0,0
+SLC-0225,leptospirosis,confirmed,2026-08-06,2026-08-10,2026-08-10,2026-08-25,29,25-44,F,SL06,San Isidro,riverside,1,alive,,1,1
+SLC-0226,leptospirosis,suspect,2026-08-05,2026-08-09,2026-08-10,,54,45-64,M,SL02,Tabing-Ilog,riverside,1,alive,,1,1
+SLC-0227,dengue,probable,2026-08-09,2026-08-10,2026-08-10,,25,25-44,F,SL10,Baybay,coastal,1,alive,warning_signs,,
+SLC-0228,dengue,suspect,2026-08-08,2026-08-10,2026-08-10,,21,15-24,F,SL03,Pampang,riverside,1,alive,warning_signs,,
+SLC-0229,leptospirosis,confirmed,2026-08-09,2026-08-11,2026-08-11,2026-09-04,22,15-24,M,SL05,Santo Niño,riverside,1,alive,,1,1
+SLC-0230,leptospirosis,confirmed,2026-08-09,2026-08-11,2026-08-11,2026-09-03,29,25-44,M,SL07,Bagong Silang,riverside,1,alive,,1,1
+SLC-0231,dengue,probable,2026-08-07,2026-08-10,2026-08-11,,6,5-14,F,SL07,Bagong Silang,riverside,0,alive,warning_signs,,
+SLC-0232,leptospirosis,suspect,2026-08-04,2026-08-09,2026-08-11,,32,25-44,M,SL04,Poblacion,riverside,0,alive,,1,1
+SLC-0233,dengue,confirmed,2026-08-08,2026-08-11,2026-08-11,2026-08-17,15,15-24,M,SL12,Pantalan,coastal,1,alive,no_warning,,
+SLC-0234,dengue,suspect,2026-08-08,2026-08-11,2026-08-11,,22,15-24,F,SL10,Baybay,coastal,0,alive,no_warning,,
+SLC-0235,leptospirosis,confirmed,2026-08-08,2026-08-10,2026-08-11,2026-09-02,33,25-44,M,SL05,Santo Niño,riverside,0,alive,,1,1
+SLC-0236,leptospirosis,confirmed,,2026-08-11,2026-08-11,2026-09-04,47,45-64,M,SL08,Sapa,riverside,0,alive,,1,1
+SLC-0237,dengue,suspect,2026-08-09,2026-08-11,2026-08-11,,5,5-14,M,SL10,Baybay,coastal,1,alive,warning_signs,,
+SLC-0238,leptospirosis,confirmed,2026-08-08,2026-08-10,2026-08-11,2026-09-04,30,25-44,M,SL07,Bagong Silang,riverside,1,died,,1,1
+SLC-0239,leptospirosis,confirmed,2026-08-04,2026-08-09,2026-08-11,2026-08-29,51,45-64,F,SL06,San Isidro,riverside,1,alive,,0,0
+SLC-0240,leptospirosis,probable,2026-08-06,2026-08-10,2026-08-11,,51,45-64,M,SL05,Santo Niño,riverside,1,died,,0,0
+SLC-0241,dengue,suspect,2026-08-09,2026-08-10,2026-08-11,,15,15-24,F,SL12,Pantalan,coastal,0,alive,no_warning,,
+SLC-0242,leptospirosis,probable,2026-08-07,2026-08-10,2026-08-11,,35,25-44,M,SL01,Ilog,riverside,0,alive,,,
+SLC-0243,dengue,suspect,2026-08-09,2026-08-10,2026-08-11,,32,25-44,F,SL14,Buhangin,coastal,1,alive,warning_signs,,
+SLC-0244,dengue,probable,2026-08-08,2026-08-10,2026-08-11,,9,5-14,M,SL10,Baybay,coastal,0,alive,no_warning,,
+SLC-0245,leptospirosis,confirmed,2026-08-01,2026-08-03,2026-08-11,2026-08-23,11,5-14,F,SL07,Bagong Silang,riverside,1,alive,,,
+SLC-0246,leptospirosis,probable,2026-08-09,2026-08-10,2026-08-11,,33,25-44,M,SL02,Tabing-Ilog,riverside,1,alive,,0,0
+SLC-0247,leptospirosis,probable,2026-08-08,2026-08-10,2026-08-12,,14,5-14,F,SL02,Tabing-Ilog,riverside,1,alive,,0,0
+SLC-0248,dengue,suspect,2026-08-09,2026-08-12,2026-08-12,,60,45-64,F,SL03,Pampang,riverside,0,alive,no_warning,,
+SLC-0249,leptospirosis,probable,2026-08-09,2026-08-12,2026-08-12,,17,15-24,M,SL07,Bagong Silang,riverside,0,alive,,1,1
+SLC-0250,leptospirosis,confirmed,2026-08-07,2026-08-11,2026-08-12,2026-09-04,83,65+,F,SL02,Tabing-Ilog,riverside,1,alive,,1,0
+SLC-0251,leptospirosis,suspect,2026-08-07,2026-08-09,2026-08-12,,17,15-24,F,SL07,Bagong Silang,riverside,0,alive,,0,0
+SLC-0252,dengue,suspect,2026-08-08,2026-08-11,2026-08-12,,22,15-24,F,SL12,Pantalan,coastal,1,alive,warning_signs,,
+SLC-0253,leptospirosis,suspect,2026-08-05,2026-08-10,2026-08-12,,13,5-14,M,SL02,Tabing-Ilog,riverside,0,alive,,0,0
+SLC-0254,dengue,suspect,2026-08-05,2026-08-09,2026-08-12,,11,5-14,M,SL06,San Isidro,riverside,1,alive,warning_signs,,
+SLC-0255,leptospirosis,confirmed,2026-08-10,2026-08-13,2026-08-13,2026-08-29,7,5-14,M,SL05,Santo Niño,riverside,1,alive,,0,0
+SLC-0256,leptospirosis,suspect,2026-08-09,2026-08-12,2026-08-13,,26,25-44,F,SL02,Tabing-Ilog,riverside,1,died,,0,0
+SLC-0257,dengue,suspect,2026-08-07,2026-08-10,2026-08-13,,18,15-24,F,SL02,Tabing-Ilog,riverside,1,alive,warning_signs,,
+SLC-0258,leptospirosis,confirmed,2026-08-10,2026-08-13,2026-08-13,2026-08-25,21,15-24,F,SL07,Bagong Silang,riverside,0,alive,,0,0
+SLC-0259,dengue,suspect,2026-08-10,2026-08-11,2026-08-13,,34,25-44,F,SL14,Buhangin,coastal,0,alive,no_warning,,
+SLC-0260,leptospirosis,probable,2026-08-05,2026-08-10,2026-08-13,,37,25-44,M,SL06,San Isidro,riverside,0,alive,,1,1
+SLC-0261,leptospirosis,probable,2026-08-10,2026-08-12,2026-08-13,,26,25-44,M,SL01,Ilog,riverside,1,alive,,1,1
+SLC-0262,leptospirosis,confirmed,2026-08-09,2026-08-14,2026-08-14,2026-09-01,65,65+,M,SL14,Buhangin,coastal,1,alive,,0,0
+SLC-0263,dengue,probable,2026-08-11,2026-08-13,2026-08-14,,9,5-14,M,SL04,Poblacion,riverside,1,alive,warning_signs,,
+SLC-0264,leptospirosis,suspect,2026-08-08,2026-08-13,2026-08-14,,22,15-24,M,SL01,Ilog,riverside,1,alive,,1,1
+SLC-0265,dengue,suspect,2026-08-12,2026-08-14,2026-08-14,,29,25-44,M,SL10,Baybay,coastal,1,alive,warning_signs,,
+SLC-0266,leptospirosis,suspect,2026-08-06,2026-08-11,2026-08-14,,4,0-4,F,SL17,Bukid,upland,0,alive,,0,0
+SLC-0267,leptospirosis,probable,2026-08-08,2026-08-14,2026-08-14,,54,45-64,M,SL07,Bagong Silang,riverside,1,alive,,1,0
+SLC-0268,dengue,suspect,2026-08-11,2026-08-13,2026-08-14,,10,5-14,M,SL15,Laot,coastal,1,alive,warning_signs,,
+SLC-0269,dengue,probable,2026-08-08,2026-08-12,2026-08-14,,14,5-14,M,SL07,Bagong Silang,riverside,1,alive,warning_signs,,
+SLC-0270,leptospirosis,confirmed,2026-08-11,2026-08-14,2026-08-14,2026-09-08,1,0-4,M,SL03,Pampang,riverside,1,alive,,0,0
+SLC-0271,leptospirosis,confirmed,2026-08-09,2026-08-12,2026-08-14,2026-09-06,19,15-24,F,SL01,Ilog,riverside,1,alive,,1,1
+SLC-0272,dengue,suspect,2026-08-11,2026-08-15,2026-08-15,,4,0-4,F,SL14,Buhangin,coastal,1,alive,no_warning,,
+SLC-0273,dengue,probable,2026-08-13,2026-08-14,2026-08-15,,21,15-24,M,SL14,Buhangin,coastal,1,alive,warning_signs,,
+SLC-0274,dengue,confirmed,2026-08-11,2026-08-14,2026-08-15,2026-08-23,22,15-24,F,SL15,Laot,coastal,0,alive,no_warning,,
+SLC-0275,leptospirosis,confirmed,2026-08-09,2026-08-13,2026-08-15,2026-08-25,62,45-64,M,SL09,San Pedro,coastal,1,alive,,0,0
+SLC-0276,leptospirosis,suspect,2026-08-08,2026-08-13,2026-08-15,,29,25-44,F,SL12,Pantalan,coastal,1,alive,,0,0
+SLC-0277,leptospirosis,probable,2026-08-10,2026-08-13,2026-08-15,,47,45-64,F,SL02,Tabing-Ilog,riverside,0,alive,,1,1
+SLC-0278,dengue,suspect,2026-08-11,2026-08-13,2026-08-15,,6,5-14,F,SL12,Pantalan,coastal,0,alive,no_warning,,
+SLC-0279,leptospirosis,suspect,2026-08-15,2026-08-16,2026-08-16,,5,5-14,M,SL02,Tabing-Ilog,riverside,0,alive,,0,0
+SLC-0280,dengue,suspect,2026-08-12,2026-08-15,2026-08-16,,14,5-14,M,SL11,Dalampasigan,coastal,1,alive,warning_signs,,
+SLC-0281,dengue,confirmed,2026-08-14,2026-08-16,2026-08-16,2026-08-25,59,45-64,F,SL08,Sapa,riverside,0,alive,no_warning,,
+SLC-0282,dengue,probable,2026-08-14,2026-08-16,2026-08-16,,40,25-44,F,SL10,Baybay,coastal,0,alive,no_warning,,
+SLC-0283,leptospirosis,confirmed,2026-08-12,2026-08-15,2026-08-16,2026-09-06,31,25-44,M,SL01,Ilog,riverside,1,alive,,1,1
+SLC-0284,dengue,suspect,2026-08-13,2026-08-14,2026-08-16,,92,65+,F,SL10,Baybay,coastal,0,alive,no_warning,,
+SLC-0285,dengue,probable,2026-08-09,2026-08-16,2026-08-17,,0,0-4,F,SL07,Bagong Silang,riverside,0,alive,no_warning,,
+SLC-0286,dengue,confirmed,2026-08-14,2026-08-15,2026-08-17,2026-08-22,19,15-24,F,SL12,Pantalan,coastal,1,alive,no_warning,,
+SLC-0287,dengue,probable,2026-08-13,,2026-08-17,,63,45-64,M,SL08,Sapa,riverside,1,alive,warning_signs,,
+SLC-0288,leptospirosis,confirmed,2026-08-13,2026-08-15,2026-08-17,2026-09-04,59,45-64,M,SL01,Ilog,riverside,0,alive,,1,1
+SLC-0289,leptospirosis,confirmed,2026-08-15,2026-08-16,2026-08-17,2026-08-27,7,5-14,M,SL07,Bagong Silang,riverside,1,alive,,0,0
+SLC-0290,dengue,probable,2026-08-11,2026-08-16,2026-08-18,,0,0-4,F,SL12,Pantalan,coastal,1,alive,no_warning,,
+SLC-0291,dengue,suspect,2026-08-17,2026-08-18,2026-08-18,,3,0-4,F,SL05,Santo Niño,riverside,1,alive,warning_signs,,
+SLC-0292,dengue,probable,2026-08-16,2026-08-18,2026-08-19,,33,25-44,F,SL04,Poblacion,riverside,1,alive,warning_signs,,
+SLC-0293,dengue,probable,2026-08-13,2026-08-17,2026-08-19,,2,0-4,F,SL13,Talaba,coastal,1,alive,warning_signs,,
+SLC-0294,dengue,suspect,2026-08-18,2026-08-19,2026-08-19,,5,5-14,F,SL05,Santo Niño,riverside,1,alive,warning_signs,,
+SLC-0295,dengue,probable,2026-08-17,2026-08-19,2026-08-19,,34,25-44,M,SL14,Buhangin,coastal,0,alive,no_warning,,
+SLC-0296,leptospirosis,suspect,2026-08-15,2026-08-18,2026-08-19,,18,15-24,M,SL10,Baybay,coastal,1,alive,,0,1
+SLC-0297,dengue,suspect,2026-08-16,2026-08-18,2026-08-19,,5,5-14,M,SL03,Pampang,riverside,1,alive,warning_signs,,
+SLC-0298,dengue,probable,2026-08-17,2026-08-19,2026-08-19,,73,65+,F,SL17,Bukid,upland,0,alive,no_warning,,
+SLC-0299,leptospirosis,suspect,2026-08-14,2026-08-18,2026-08-20,,38,25-44,M,SL01,Ilog,riverside,0,alive,,1,1
+SLC-0300,dengue,probable,2026-08-14,2026-08-19,2026-08-20,,68,65+,F,SL16,Wawa,coastal,0,alive,no_warning,,
+SLC-0301,leptospirosis,probable,2026-08-16,2026-08-20,2026-08-20,,16,15-24,M,SL06,San Isidro,riverside,0,alive,,1,1
+SLC-0302,dengue,probable,2026-08-16,2026-08-19,2026-08-20,,24,15-24,F,SL09,San Pedro,coastal,0,alive,no_warning,,
+SLC-0303,dengue,suspect,2026-08-17,2026-08-20,2026-08-20,,0,0-4,M,SL06,San Isidro,riverside,1,alive,no_warning,,
+SLC-0304,dengue,suspect,2026-08-14,2026-08-17,2026-08-20,,35,25-44,M,SL06,San Isidro,riverside,1,alive,warning_signs,,
+SLC-0305,dengue,suspect,2026-08-17,2026-08-19,2026-08-20,,23,15-24,F,SL15,Laot,coastal,1,alive,no_warning,,
+SLC-0306,dengue,probable,2026-08-17,2026-08-19,2026-08-20,,70,65+,F,SL13,Talaba,coastal,1,alive,no_warning,,
+SLC-0307,dengue,probable,2026-08-17,2026-08-19,2026-08-20,,21,15-24,M,SL01,Ilog,riverside,1,alive,warning_signs,,
+SLC-0308,dengue,suspect,2026-08-18,2026-08-19,2026-08-21,,7,5-14,F,SL10,Baybay,coastal,1,alive,warning_signs,,
+SLC-0309,leptospirosis,confirmed,2026-08-20,2026-08-21,2026-08-21,2026-09-15,41,25-44,F,SL20,Kawayanan,upland,0,alive,,0,0
+SLC-0310,dengue,confirmed,2026-08-19,2026-08-21,2026-08-21,2026-08-28,61,45-64,M,SL01,Ilog,riverside,1,alive,warning_signs,,
+SLC-0311,dengue,probable,2026-08-17,2026-08-20,2026-08-21,,11,5-14,M,SL10,Baybay,coastal,1,alive,warning_signs,,
+SLC-0312,leptospirosis,confirmed,2026-08-18,2026-08-21,2026-08-21,2026-09-04,63,45-64,F,SL02,Tabing-Ilog,riverside,1,alive,,1,1
+SLC-0313,dengue,suspect,2026-08-17,2026-08-19,2026-08-21,,27,25-44,F,SL05,Santo Niño,riverside,0,alive,no_warning,,
+SLC-0314,dengue,suspect,2026-08-19,2026-08-22,2026-08-22,,11,5-14,M,SL06,San Isidro,riverside,0,alive,no_warning,,
+SLC-0315,dengue,probable,2026-08-20,2026-08-21,2026-08-22,,55,45-64,F,SL18,Burol,upland,0,alive,no_warning,,
+SLC-0316,dengue,probable,2026-08-19,2026-08-21,2026-08-22,,5,5-14,M,SL08,Sapa,riverside,1,alive,warning_signs,,
+SLC-0317,dengue,suspect,2026-08-20,2026-08-22,2026-08-22,,15,15-24,F,SL11,Dalampasigan,coastal,1,alive,no_warning,,
+SLC-0318,leptospirosis,confirmed,2026-08-16,2026-08-20,2026-08-22,2026-09-10,34,25-44,M,SL03,Pampang,riverside,1,alive,,1,1
+SLC-0319,dengue,suspect,2026-08-17,2026-08-20,2026-08-22,,5,5-14,F,SL02,Tabing-Ilog,riverside,0,alive,no_warning,,
+SLC-0320,dengue,confirmed,2026-08-17,2026-08-21,2026-08-22,2026-09-01,42,25-44,F,SL03,Pampang,riverside,1,alive,warning_signs,,
+SLC-0321,dengue,suspect,2026-08-21,2026-08-23,2026-08-23,,8,5-14,M,SL09,San Pedro,coastal,0,alive,no_warning,,
+SLC-0322,dengue,suspect,2026-08-19,2026-08-23,2026-08-23,,32,25-44,M,SL10,Baybay,coastal,0,alive,no_warning,,
+SLC-0323,leptospirosis,probable,2026-08-21,2026-08-22,2026-08-23,,12,5-14,M,SL13,Talaba,coastal,1,alive,,0,0
+SLC-0324,dengue,suspect,2026-08-20,2026-08-22,2026-08-23,,11,5-14,M,SL14,Buhangin,coastal,0,alive,no_warning,,
+SLC-0325,dengue,probable,2026-08-22,2026-08-23,2026-08-23,,38,25-44,M,SL11,Dalampasigan,coastal,1,alive,severe,,
+SLC-0326,dengue,probable,2026-08-18,2026-08-23,2026-08-24,,1,0-4,M,SL15,Laot,coastal,0,alive,no_warning,,
+SLC-0327,dengue,suspect,2026-08-19,2026-08-23,2026-08-24,,49,45-64,F,SL14,Buhangin,coastal,0,alive,no_warning,,
+SLC-0328,dengue,confirmed,2026-08-22,2026-08-24,2026-08-24,2026-09-02,30,25-44,F,SL06,San Isidro,riverside,1,alive,no_warning,,
+SLC-0329,dengue,suspect,2026-08-19,2026-08-23,2026-08-24,,49,45-64,M,SL02,Tabing-Ilog,riverside,0,alive,no_warning,,
+SLC-0330,dengue,suspect,2026-08-22,2026-08-24,2026-08-24,,30,25-44,M,SL05,Santo Niño,riverside,1,alive,warning_signs,,
+SLC-0331,dengue,suspect,2026-08-19,2026-08-23,2026-08-24,,21,15-24,F,SL24,Talahib,upland,1,alive,warning_signs,,
+SLC-0332,dengue,suspect,2026-08-21,2026-08-24,2026-08-25,,6,5-14,M,SL06,San Isidro,riverside,1,alive,warning_signs,,
+SLC-0333,dengue,confirmed,2026-08-19,2026-08-23,2026-08-25,2026-08-30,64,45-64,M,SL06,San Isidro,riverside,0,alive,no_warning,,
+SLC-0334,leptospirosis,confirmed,2026-08-21,2026-08-23,2026-08-25,2026-09-10,0,0-4,M,SL08,Sapa,riverside,1,alive,,0,0
+SLC-0335,dengue,suspect,2026-08-23,2026-08-24,2026-08-25,,,,M,SL17,Bukid,upland,0,alive,no_warning,,
+SLC-0336,dengue,suspect,2026-08-24,2026-08-25,2026-08-25,,6,5-14,F,SL23,Bagong Pag-asa,upland,1,alive,warning_signs,,
+SLC-0337,dengue,probable,2026-08-21,2026-08-23,2026-08-25,,19,15-24,M,SL11,Dalampasigan,coastal,0,alive,no_warning,,
+SLC-0338,dengue,suspect,2026-08-24,2026-08-26,2026-08-26,,8,5-14,M,SL14,Buhangin,coastal,0,alive,no_warning,,
+SLC-0339,dengue,confirmed,2026-08-21,2026-08-24,2026-08-26,2026-09-03,28,25-44,F,SL11,Dalampasigan,coastal,0,alive,no_warning,,
+SLC-0340,dengue,suspect,2026-08-20,2026-08-22,2026-08-26,,15,15-24,M,SL01,Ilog,riverside,0,alive,no_warning,,
+SLC-0341,dengue,confirmed,2026-08-25,2026-08-26,2026-08-26,2026-09-02,15,15-24,M,SL08,Sapa,riverside,1,alive,no_warning,,
+SLC-0342,dengue,suspect,2026-08-22,2026-08-25,2026-08-26,,3,0-4,F,SL16,Wawa,coastal,0,alive,no_warning,,
+SLC-0343,dengue,suspect,2026-08-22,2026-08-26,2026-08-26,,54,45-64,M,SL12,Pantalan,coastal,1,alive,warning_signs,,
+SLC-0344,dengue,confirmed,2026-08-22,2026-08-25,2026-08-26,2026-09-03,6,5-14,F,SL11,Dalampasigan,coastal,0,alive,no_warning,,
+SLC-0345,dengue,suspect,2026-08-24,2026-08-26,2026-08-27,,6,5-14,M,SL11,Dalampasigan,coastal,1,alive,warning_signs,,
+SLC-0346,dengue,probable,2026-08-25,2026-08-26,2026-08-27,,22,15-24,M,SL05,Santo Niño,riverside,0,alive,no_warning,,
+SLC-0347,dengue,probable,2026-08-25,2026-08-27,2026-08-27,,53,45-64,F,SL15,Laot,coastal,0,alive,no_warning,,
+SLC-0348,dengue,suspect,2026-08-26,2026-08-27,2026-08-27,,63,45-64,F,SL06,San Isidro,riverside,1,alive,warning_signs,,
+SLC-0349,dengue,suspect,2026-08-24,2026-08-28,2026-08-28,,13,5-14,F,SL03,Pampang,riverside,1,alive,warning_signs,,
+SLC-0350,dengue,confirmed,2026-08-27,2026-08-28,2026-08-28,2026-09-03,30,25-44,F,SL12,Pantalan,coastal,0,alive,no_warning,,
+SLC-0351,dengue,probable,2026-08-20,,2026-08-28,,14,5-14,M,SL04,Poblacion,riverside,0,alive,warning_signs,,
+SLC-0352,dengue,suspect,2026-08-23,2026-08-26,2026-08-28,,16,15-24,M,SL05,Santo Niño,riverside,1,alive,warning_signs,,
+SLC-0353,dengue,suspect,2026-08-25,,2026-08-28,,43,25-44,F,SL01,Ilog,riverside,0,alive,no_warning,,
+SLC-0354,dengue,probable,2026-08-24,2026-08-27,2026-08-28,,29,25-44,F,SL12,Pantalan,coastal,1,alive,warning_signs,,
+SLC-0355,dengue,confirmed,2026-08-26,2026-08-28,2026-08-28,2026-09-02,24,15-24,F,SL14,Buhangin,coastal,0,alive,no_warning,,
+SLC-0356,dengue,suspect,2026-08-23,2026-08-27,2026-08-29,,6,5-14,F,SL16,Wawa,coastal,1,alive,no_warning,,
+SLC-0357,dengue,probable,2026-08-25,2026-08-27,2026-08-29,,11,5-14,F,SL16,Wawa,coastal,0,alive,no_warning,,
+SLC-0358,dengue,confirmed,2026-08-26,2026-08-29,2026-08-29,2026-09-10,10,5-14,M,SL02,Tabing-Ilog,riverside,1,alive,no_warning,,
+SLC-0359,dengue,suspect,2026-08-21,2026-08-26,2026-08-29,,7,5-14,M,SL07,Bagong Silang,riverside,0,alive,no_warning,,
+SLC-0360,dengue,probable,2026-08-26,2026-08-30,2026-08-30,,42,25-44,F,SL04,Poblacion,riverside,1,alive,warning_signs,,
+SLC-0361,dengue,probable,2026-08-26,2026-08-29,2026-08-30,,6,5-14,F,SL01,Ilog,riverside,0,alive,no_warning,,
+SLC-0362,dengue,probable,2026-08-24,2026-08-30,2026-08-30,,34,25-44,F,SL03,Pampang,riverside,0,alive,no_warning,,
+SLC-0363,dengue,suspect,2026-08-28,2026-08-30,2026-08-30,,29,25-44,F,SL05,Santo Niño,riverside,1,alive,severe,,
+SLC-0364,dengue,probable,2026-08-27,2026-08-28,2026-08-30,,24,15-24,F,SL03,Pampang,riverside,1,alive,no_warning,,
+SLC-0365,dengue,suspect,2026-08-28,2026-08-30,2026-08-31,,14,5-14,F,SL10,Baybay,coastal,0,alive,no_warning,,
+SLC-0366,dengue,probable,2026-08-27,2026-08-31,2026-08-31,,22,15-24,F,SL01,Ilog,riverside,0,alive,no_warning,,
+SLC-0367,dengue,suspect,2026-08-28,2026-08-30,2026-08-31,,8,5-14,F,SL08,Sapa,riverside,1,alive,no_warning,,
+SLC-0368,dengue,suspect,2026-08-26,2026-08-30,2026-08-31,,16,15-24,M,SL16,Wawa,coastal,1,alive,warning_signs,,
+SLC-0369,dengue,probable,2026-08-26,2026-08-28,2026-08-31,,13,5-14,M,SL22,Maligaya,upland,1,alive,severe,,
+SLC-0370,dengue,probable,2026-08-28,2026-08-31,2026-08-31,,17,15-24,M,SL03,Pampang,riverside,0,alive,no_warning,,
+SLC-0371,dengue,confirmed,2026-08-29,2026-09-01,2026-09-01,2026-09-10,8,5-14,F,SL09,San Pedro,coastal,1,alive,no_warning,,
+SLC-0372,dengue,suspect,2026-08-30,2026-09-01,2026-09-01,,13,5-14,F,SL18,Burol,upland,0,alive,no_warning,,
+SLC-0373,dengue,probable,2026-08-31,2026-09-01,2026-09-01,,36,25-44,F,SL10,Baybay,coastal,1,alive,no_warning,,
+SLC-0374,dengue,probable,2026-08-31,2026-09-01,2026-09-01,,0,0-4,F,SL01,Ilog,riverside,1,alive,warning_signs,,
+SLC-0375,dengue,confirmed,2026-08-27,2026-08-31,2026-09-01,2026-09-08,70,65+,M,SL13,Talaba,coastal,1,alive,warning_signs,,
+SLC-0376,dengue,probable,2026-08-25,2026-08-28,2026-09-02,,8,5-14,F,SL01,Ilog,riverside,1,alive,warning_signs,,
+SLC-0377,dengue,probable,2026-08-28,2026-08-31,2026-09-02,,10,5-14,M,SL10,Baybay,coastal,1,alive,warning_signs,,
+SLC-0378,dengue,probable,2026-08-28,2026-09-02,2026-09-02,,12,5-14,F,SL21,San Roque,upland,1,alive,warning_signs,,
+SLC-0379,dengue,probable,2026-08-31,2026-09-02,2026-09-02,,7,5-14,M,SL16,Wawa,coastal,0,alive,no_warning,,
+SLC-0380,dengue,confirmed,2026-08-31,2026-09-01,2026-09-02,2026-09-12,10,5-14,F,SL02,Tabing-Ilog,riverside,1,alive,no_warning,,
+SLC-0381,dengue,probable,2026-08-31,2026-09-01,2026-09-02,,11,5-14,F,SL14,Buhangin,coastal,0,alive,no_warning,,
+SLC-0382,dengue,probable,2026-08-31,2026-09-02,2026-09-02,,41,25-44,M,SL03,Pampang,riverside,0,alive,no_warning,,
+SLC-0383,dengue,suspect,2026-08-29,2026-09-01,2026-09-02,,6,5-14,M,SL09,San Pedro,coastal,1,alive,warning_signs,,
+SLC-0384,dengue,confirmed,2026-08-22,2026-08-30,2026-09-02,2026-09-10,44,25-44,M,SL11,Dalampasigan,coastal,0,alive,no_warning,,
+SLC-0385,dengue,probable,2026-08-31,2026-09-02,2026-09-02,,17,15-24,M,SL12,Pantalan,coastal,0,alive,no_warning,,
+SLC-0386,dengue,confirmed,2026-08-30,2026-09-02,2026-09-02,2026-09-09,14,5-14,M,SL10,Baybay,coastal,1,alive,no_warning,,
+SLC-0387,dengue,suspect,2026-08-28,2026-09-02,2026-09-02,,11,5-14,M,SL01,Ilog,riverside,0,alive,no_warning,,
+SLC-0388,dengue,confirmed,2026-08-29,2026-08-31,2026-09-02,2026-09-04,3,0-4,F,SL16,Wawa,coastal,1,alive,severe,,
+SLC-0389,dengue,probable,2026-08-31,2026-09-01,2026-09-02,,63,45-64,F,SL14,Buhangin,coastal,1,alive,warning_signs,,
+SLC-0390,dengue,probable,,2026-09-02,2026-09-03,,16,15-24,M,SL06,San Isidro,riverside,0,alive,no_warning,,
+SLC-0391,dengue,suspect,2026-08-29,2026-09-02,2026-09-03,,43,25-44,F,SL10,Baybay,coastal,0,alive,no_warning,,
+SLC-0392,dengue,suspect,2026-09-01,2026-09-02,2026-09-03,,23,15-24,F,SL06,San Isidro,riverside,1,alive,no_warning,,
+SLC-0393,dengue,suspect,2026-09-01,,2026-09-03,,48,45-64,M,SL08,Sapa,riverside,0,alive,no_warning,,
+SLC-0394,dengue,suspect,2026-08-31,2026-09-02,2026-09-03,,13,5-14,M,SL01,Ilog,riverside,1,alive,warning_signs,,
+SLC-0395,dengue,suspect,2026-08-28,2026-09-01,2026-09-03,,12,5-14,M,SL11,Dalampasigan,coastal,1,alive,warning_signs,,
+SLC-0396,dengue,probable,2026-08-29,2026-09-02,2026-09-03,,12,5-14,F,SL10,Baybay,coastal,1,alive,warning_signs,,
+SLC-0397,dengue,suspect,2026-08-30,2026-09-01,2026-09-03,,28,25-44,M,SL07,Bagong Silang,riverside,0,alive,no_warning,,
+SLC-0398,dengue,suspect,2026-08-31,2026-09-03,2026-09-03,,22,15-24,M,SL09,San Pedro,coastal,0,alive,no_warning,,
+SLC-0399,dengue,probable,2026-08-29,2026-09-03,2026-09-04,,5,5-14,M,SL04,Poblacion,riverside,1,alive,warning_signs,,
+SLC-0400,dengue,probable,2026-09-01,2026-09-02,2026-09-04,,10,5-14,M,SL08,Sapa,riverside,1,alive,warning_signs,,
+SLC-0401,dengue,suspect,2026-08-30,2026-09-03,2026-09-04,,3,0-4,M,SL02,Tabing-Ilog,riverside,1,alive,warning_signs,,
+SLC-0402,dengue,confirmed,2026-09-01,2026-09-03,2026-09-04,2026-09-14,5,5-14,M,SL05,Santo Niño,riverside,1,alive,warning_signs,,
+SLC-0403,dengue,suspect,2026-08-31,2026-09-04,2026-09-04,,7,5-14,M,SL16,Wawa,coastal,1,alive,warning_signs,,
+SLC-0404,dengue,suspect,2026-09-02,2026-09-04,2026-09-04,,22,15-24,F,SL13,Talaba,coastal,1,alive,warning_signs,,
+SLC-0405,dengue,probable,2026-08-29,2026-09-04,2026-09-04,,52,45-64,F,SL11,Dalampasigan,coastal,0,alive,no_warning,,
+SLC-0406,dengue,suspect,2026-08-31,2026-09-04,2026-09-04,,23,15-24,M,SL13,Talaba,coastal,1,alive,no_warning,,
+SLC-0407,dengue,suspect,2026-09-02,2026-09-04,2026-09-04,,9,5-14,M,SL12,Pantalan,coastal,1,alive,warning_signs,,
+SLC-0408,dengue,probable,2026-09-02,2026-09-04,2026-09-04,,6,5-14,F,SL14,Buhangin,coastal,1,alive,no_warning,,
+SLC-0409,dengue,probable,2026-09-01,2026-09-03,2026-09-05,,6,5-14,F,SL14,Buhangin,coastal,1,alive,no_warning,,
+SLC-0410,dengue,probable,2026-09-01,2026-09-04,2026-09-05,,1,0-4,M,SL04,Poblacion,riverside,1,alive,warning_signs,,
+SLC-0411,dengue,suspect,2026-09-04,2026-09-05,2026-09-05,,25,25-44,M,SL06,San Isidro,riverside,0,alive,no_warning,,
+SLC-0412,dengue,suspect,2026-09-04,2026-09-05,2026-09-05,,20,15-24,M,SL13,Talaba,coastal,0,alive,no_warning,,
+SLC-0413,dengue,suspect,2026-08-31,2026-09-05,2026-09-05,,15,15-24,F,SL08,Sapa,riverside,1,alive,no_warning,,
+SLC-0414,dengue,probable,2026-09-01,2026-09-04,2026-09-05,,20,15-24,F,SL04,Poblacion,riverside,0,alive,no_warning,,
+SLC-0415,dengue,suspect,2026-09-02,2026-09-05,2026-09-05,,12,5-14,F,SL09,San Pedro,coastal,0,alive,no_warning,,
+SLC-0416,dengue,suspect,2026-09-02,2026-09-04,2026-09-06,,23,15-24,F,SL13,Talaba,coastal,1,died,severe,,
+SLC-0417,dengue,probable,2026-09-02,2026-09-05,2026-09-06,,35,25-44,F,SL11,Dalampasigan,coastal,0,alive,no_warning,,
+SLC-0418,dengue,suspect,2026-08-30,2026-09-05,2026-09-06,,12,5-14,M,SL16,Wawa,coastal,0,alive,no_warning,,
+SLC-0419,dengue,suspect,2026-09-02,2026-09-05,2026-09-06,,7,5-14,F,SL06,San Isidro,riverside,1,alive,warning_signs,,
+SLC-0420,dengue,probable,2026-09-05,2026-09-06,2026-09-06,,14,5-14,M,SL06,San Isidro,riverside,0,alive,no_warning,,
+SLC-0421,dengue,probable,2026-08-31,2026-09-04,2026-09-06,,66,65+,F,SL12,Pantalan,coastal,0,alive,no_warning,,
+SLC-0422,dengue,suspect,2026-09-02,2026-09-05,2026-09-06,,43,25-44,F,SL04,Poblacion,riverside,0,alive,no_warning,,
+SLC-0423,dengue,suspect,2026-09-03,2026-09-05,2026-09-06,,31,25-44,M,SL05,Santo Niño,riverside,1,alive,warning_signs,,
+SLC-0424,dengue,suspect,2026-09-04,2026-09-05,2026-09-06,,24,15-24,M,SL12,Pantalan,coastal,1,alive,warning_signs,,
+SLC-0425,dengue,suspect,2026-09-01,2026-09-05,2026-09-06,,26,25-44,F,SL03,Pampang,riverside,1,alive,no_warning,,
+SLC-0426,dengue,probable,2026-09-05,2026-09-06,2026-09-06,,19,15-24,M,SL10,Baybay,coastal,0,alive,no_warning,,
+SLC-0427,dengue,suspect,2026-09-03,2026-09-05,2026-09-06,,39,25-44,F,SL11,Dalampasigan,coastal,1,alive,warning_signs,,
+SLC-0428,dengue,suspect,2026-09-04,,2026-09-07,,22,15-24,F,SL07,Bagong Silang,riverside,1,alive,warning_signs,,
+SLC-0429,dengue,confirmed,2026-09-02,2026-09-04,2026-09-07,2026-09-10,13,5-14,M,SL14,Buhangin,coastal,1,alive,warning_signs,,
+SLC-0430,dengue,probable,2026-08-31,,2026-09-07,,75,65+,F,SL07,Bagong Silang,riverside,1,alive,warning_signs,,
+SLC-0431,dengue,suspect,2026-09-04,2026-09-06,2026-09-07,,31,25-44,F,SL15,Laot,coastal,0,alive,no_warning,,
+SLC-0432,dengue,probable,2026-09-03,2026-09-06,2026-09-07,,10,5-14,M,SL09,San Pedro,coastal,1,alive,severe,,
+SLC-0433,dengue,suspect,2026-09-04,2026-09-07,2026-09-07,,53,45-64,M,SL12,Pantalan,coastal,1,alive,warning_signs,,
+SLC-0434,dengue,suspect,2026-09-05,2026-09-06,2026-09-07,,61,45-64,M,SL14,Buhangin,coastal,1,alive,no_warning,,
+SLC-0435,dengue,suspect,2026-09-04,2026-09-06,2026-09-07,,14,5-14,M,SL07,Bagong Silang,riverside,1,alive,warning_signs,,
+SLC-0436,dengue,probable,2026-09-06,2026-09-08,2026-09-08,,5,5-14,M,SL04,Poblacion,riverside,0,alive,no_warning,,
+SLC-0437,dengue,suspect,2026-09-06,2026-09-07,2026-09-08,,12,5-14,F,SL06,San Isidro,riverside,1,alive,no_warning,,
+SLC-0438,dengue,probable,2026-09-07,2026-09-08,2026-09-08,,67,65+,M,SL14,Buhangin,coastal,1,alive,warning_signs,,
+SLC-0439,dengue,probable,2026-09-04,2026-09-06,2026-09-08,,22,15-24,M,SL16,Wawa,coastal,1,alive,no_warning,,
+SLC-0440,dengue,probable,2026-09-02,2026-09-07,2026-09-08,,2,0-4,M,SL08,Sapa,riverside,1,alive,warning_signs,,
+SLC-0441,dengue,suspect,2026-09-04,2026-09-07,2026-09-08,,11,5-14,F,SL10,Baybay,coastal,0,alive,no_warning,,
+SLC-0442,dengue,suspect,2026-09-04,2026-09-05,2026-09-08,,9,5-14,F,SL05,Santo Niño,riverside,0,alive,no_warning,,
+SLC-0443,dengue,probable,2026-09-02,2026-09-05,2026-09-08,,42,25-44,M,SL11,Dalampasigan,coastal,0,alive,no_warning,,
+SLC-0444,dengue,suspect,2026-09-05,2026-09-07,2026-09-08,,40,25-44,M,SL21,San Roque,upland,1,alive,warning_signs,,
+SLC-0445,dengue,probable,2026-09-04,2026-09-07,2026-09-08,,21,15-24,M,SL02,Tabing-Ilog,riverside,0,alive,no_warning,,
+SLC-0446,dengue,confirmed,2026-09-06,2026-09-08,2026-09-08,2026-09-14,25,25-44,M,SL20,Kawayanan,upland,0,alive,no_warning,,
+SLC-0447,dengue,suspect,2026-09-03,,2026-09-08,,8,5-14,M,SL12,Pantalan,coastal,1,alive,warning_signs,,
+SLC-0448,dengue,suspect,2026-09-02,2026-09-04,2026-09-08,,15,15-24,F,SL02,Tabing-Ilog,riverside,1,alive,warning_signs,,
+SLC-0449,dengue,probable,2026-09-03,2026-09-07,2026-09-08,,17,15-24,M,SL03,Pampang,riverside,1,alive,warning_signs,,
+SLC-0450,dengue,confirmed,2026-09-07,2026-09-08,2026-09-08,2026-09-20,69,65+,M,SL05,Santo Niño,riverside,0,alive,no_warning,,
+SLC-0451,dengue,confirmed,2026-09-04,2026-09-08,2026-09-09,2026-09-17,30,25-44,M,SL07,Bagong Silang,riverside,1,alive,no_warning,,
+SLC-0452,dengue,suspect,2026-09-05,2026-09-07,2026-09-09,,7,5-14,M,SL11,Dalampasigan,coastal,1,alive,warning_signs,,
+SLC-0453,dengue,confirmed,2026-09-07,2026-09-08,2026-09-09,2026-09-14,18,15-24,F,SL08,Sapa,riverside,1,alive,no_warning,,
+SLC-0454,dengue,suspect,2026-09-04,2026-09-09,2026-09-09,,24,15-24,F,SL06,San Isidro,riverside,1,alive,warning_signs,,
+SLC-0455,dengue,probable,2026-09-01,2026-09-06,2026-09-09,,2,0-4,M,SL16,Wawa,coastal,1,alive,warning_signs,,
+SLC-0456,dengue,suspect,2026-09-05,2026-09-07,2026-09-09,,8,5-14,M,SL06,San Isidro,riverside,0,alive,no_warning,,
+SLC-0457,dengue,suspect,2026-09-06,2026-09-07,2026-09-09,,10,5-14,F,SL11,Dalampasigan,coastal,0,alive,no_warning,,
+SLC-0458,dengue,suspect,2026-09-06,2026-09-09,2026-09-09,,5,5-14,M,SL15,Laot,coastal,1,alive,no_warning,,
+SLC-0459,dengue,probable,2026-09-07,2026-09-08,2026-09-09,,33,25-44,F,SL05,Santo Niño,riverside,0,alive,no_warning,,
+SLC-0460,dengue,probable,2026-09-07,2026-09-08,2026-09-09,,8,5-14,M,SL13,Talaba,coastal,1,alive,warning_signs,,
+SLC-0461,dengue,probable,2026-09-05,2026-09-09,2026-09-10,,18,15-24,F,SL07,Bagong Silang,riverside,1,alive,warning_signs,,
+SLC-0462,dengue,suspect,2026-09-08,2026-09-10,2026-09-10,,0,0-4,M,SL01,Ilog,riverside,0,alive,no_warning,,
+SLC-0463,dengue,suspect,2026-09-03,2026-09-09,2026-09-10,,19,15-24,F,SL02,Tabing-Ilog,riverside,0,alive,no_warning,,
+SLC-0464,dengue,suspect,2026-09-06,2026-09-10,2026-09-10,,63,45-64,M,SL08,Sapa,riverside,0,alive,no_warning,,
+SLC-0465,dengue,suspect,2026-09-06,2026-09-09,2026-09-10,,30,25-44,F,SL15,Laot,coastal,0,alive,warning_signs,,
+SLC-0466,dengue,probable,2026-09-03,2026-09-09,2026-09-10,,8,5-14,M,SL13,Talaba,coastal,0,alive,no_warning,,
+SLC-0467,dengue,suspect,2026-09-07,2026-09-09,2026-09-10,,17,15-24,F,SL03,Pampang,riverside,1,alive,warning_signs,,
+SLC-0468,dengue,probable,2026-09-07,2026-09-10,2026-09-10,,20,15-24,F,SL09,San Pedro,coastal,0,alive,warning_signs,,
+SLC-0469,dengue,suspect,2026-09-06,2026-09-09,2026-09-11,,10,5-14,F,SL12,Pantalan,coastal,1,alive,warning_signs,,
+SLC-0470,dengue,suspect,2026-09-06,2026-09-08,2026-09-11,,8,5-14,F,SL04,Poblacion,riverside,1,alive,warning_signs,,
+SLC-0471,dengue,probable,2026-09-04,2026-09-10,2026-09-11,,23,15-24,M,SL04,Poblacion,riverside,1,alive,warning_signs,,
+SLC-0472,dengue,suspect,2026-09-09,2026-09-10,2026-09-11,,14,5-14,M,SL08,Sapa,riverside,0,alive,no_warning,,
+SLC-0473,dengue,probable,2026-09-11,2026-09-12,2026-09-12,,2,0-4,M,SL07,Bagong Silang,riverside,0,alive,no_warning,,
+SLC-0474,dengue,probable,2026-09-07,2026-09-10,2026-09-12,,24,15-24,M,SL07,Bagong Silang,riverside,0,alive,no_warning,,
+SLC-0475,dengue,confirmed,2026-09-07,2026-09-11,2026-09-12,2026-09-21,56,45-64,M,SL05,Santo Niño,riverside,0,alive,warning_signs,,
+SLC-0476,dengue,suspect,2026-09-07,2026-09-11,2026-09-12,,11,5-14,F,SL21,San Roque,upland,1,alive,warning_signs,,
+SLC-0477,dengue,probable,2026-09-04,2026-09-11,2026-09-12,,19,15-24,F,SL12,Pantalan,coastal,1,alive,warning_signs,,
+SLC-0478,dengue,probable,2026-09-08,2026-09-10,2026-09-13,,42,25-44,F,SL03,Pampang,riverside,1,alive,warning_signs,,
+SLC-0479,dengue,suspect,2026-09-07,2026-09-11,2026-09-13,,20,15-24,M,SL01,Ilog,riverside,0,alive,no_warning,,
+SLC-0480,dengue,suspect,2026-09-09,2026-09-13,2026-09-13,,17,15-24,F,SL12,Pantalan,coastal,0,alive,no_warning,,
+SLC-0481,dengue,suspect,2026-09-10,2026-09-13,2026-09-13,,24,15-24,M,SL02,Tabing-Ilog,riverside,0,alive,no_warning,,
+SLC-0482,dengue,suspect,2026-09-10,2026-09-11,2026-09-13,,13,5-14,F,SL12,Pantalan,coastal,1,alive,no_warning,,
+SLC-0483,dengue,probable,2026-09-07,2026-09-11,2026-09-13,,26,25-44,F,SL14,Buhangin,coastal,0,alive,no_warning,,
+SLC-0484,dengue,probable,2026-09-10,2026-09-11,2026-09-13,,54,45-64,F,SL02,Tabing-Ilog,riverside,0,alive,no_warning,,
+SLC-0485,dengue,confirmed,2026-09-08,2026-09-11,2026-09-13,2026-09-18,21,15-24,F,SL04,Poblacion,riverside,0,alive,no_warning,,
+SLC-0486,dengue,suspect,2026-09-10,2026-09-12,2026-09-13,,40,25-44,M,SL06,San Isidro,riverside,1,alive,warning_signs,,
+SLC-0487,dengue,suspect,2026-09-09,2026-09-13,2026-09-13,,27,25-44,M,SL02,Tabing-Ilog,riverside,1,alive,warning_signs,,
+SLC-0488,dengue,suspect,2026-09-10,2026-09-12,2026-09-13,,22,15-24,M,SL16,Wawa,coastal,1,alive,no_warning,,
+SLC-0489,dengue,confirmed,2026-09-09,2026-09-12,2026-09-13,2026-09-18,13,5-14,F,SL04,Poblacion,riverside,1,alive,warning_signs,,
+SLC-0490,dengue,suspect,2026-09-10,2026-09-13,2026-09-13,,4,0-4,M,SL06,San Isidro,riverside,0,alive,no_warning,,
+SLC-0491,dengue,probable,2026-09-10,2026-09-13,2026-09-14,,6,5-14,F,SL09,San Pedro,coastal,1,alive,warning_signs,,
+SLC-0492,dengue,suspect,2026-09-10,2026-09-13,2026-09-14,,23,15-24,F,SL02,Tabing-Ilog,riverside,0,alive,no_warning,,
+SLC-0493,dengue,probable,2026-09-11,2026-09-14,2026-09-14,,29,25-44,F,SL16,Wawa,coastal,1,alive,no_warning,,
+SLC-0494,dengue,probable,2026-09-09,2026-09-14,2026-09-14,,,,F,SL03,Pampang,riverside,1,alive,no_warning,,
+SLC-0495,dengue,probable,2026-09-13,2026-09-14,2026-09-14,,4,0-4,F,SL07,Bagong Silang,riverside,1,died,severe,,
+SLC-0496,dengue,probable,2026-09-09,2026-09-13,2026-09-14,,62,45-64,F,SL15,Laot,coastal,0,alive,no_warning,,
+SLC-0497,dengue,suspect,2026-09-10,2026-09-13,2026-09-14,,19,15-24,F,SL02,Tabing-Ilog,riverside,1,alive,warning_signs,,
+SLC-0498,dengue,suspect,2026-09-11,2026-09-13,2026-09-14,,7,5-14,F,SL02,Tabing-Ilog,riverside,1,alive,warning_signs,,
+SLC-0499,dengue,probable,2026-09-12,2026-09-14,2026-09-14,,12,5-14,F,SL15,Laot,coastal,0,alive,no_warning,,
+SLC-0500,dengue,confirmed,2026-09-13,2026-09-14,2026-09-14,2026-09-23,17,15-24,M,SL04,Poblacion,riverside,1,alive,no_warning,,
+SLC-0501,dengue,suspect,2026-09-12,2026-09-14,2026-09-14,,10,5-14,M,SL02,Tabing-Ilog,riverside,0,alive,no_warning,,
+SLC-0502,dengue,suspect,2026-09-09,2026-09-14,2026-09-14,,36,25-44,F,SL16,Wawa,coastal,0,alive,no_warning,,
+SLC-0503,dengue,suspect,2026-09-09,2026-09-12,2026-09-14,,12,5-14,M,SL04,Poblacion,riverside,0,alive,no_warning,,
+SLC-0504,dengue,probable,2026-09-11,2026-09-15,2026-09-15,,2,0-4,F,SL05,Santo Niño,riverside,1,alive,severe,,
+SLC-0505,dengue,confirmed,2026-09-13,2026-09-14,2026-09-15,2026-09-20,16,15-24,M,SL07,Bagong Silang,riverside,0,alive,no_warning,,
+SLC-0506,dengue,confirmed,2026-09-13,2026-09-15,2026-09-15,2026-09-26,10,5-14,F,SL05,Santo Niño,riverside,1,alive,warning_signs,,
+SLC-0507,dengue,probable,2026-09-13,2026-09-15,2026-09-15,,15,15-24,M,SL07,Bagong Silang,riverside,0,alive,no_warning,,
+SLC-0508,dengue,confirmed,2026-09-13,2026-09-15,2026-09-15,2026-09-20,12,5-14,F,SL15,Laot,coastal,1,alive,warning_signs,,
+SLC-0509,dengue,suspect,2026-09-10,2026-09-15,2026-09-15,,12,5-14,F,SL02,Tabing-Ilog,riverside,0,alive,no_warning,,
+SLC-0510,dengue,suspect,2026-09-12,2026-09-16,2026-09-16,,5,5-14,M,SL03,Pampang,riverside,0,alive,no_warning,,
+SLC-0511,dengue,suspect,2026-09-14,2026-09-16,2026-09-16,,6,5-14,F,SL08,Sapa,riverside,1,alive,no_warning,,
+SLC-0512,dengue,probable,2026-09-12,2026-09-15,2026-09-16,,12,5-14,F,SL02,Tabing-Ilog,riverside,1,alive,no_warning,,
+SLC-0513,dengue,probable,2026-09-14,2026-09-15,2026-09-16,,14,5-14,M,SL15,Laot,coastal,1,alive,warning_signs,,
+SLC-0514,dengue,suspect,2026-09-13,2026-09-14,2026-09-16,,14,5-14,M,SL07,Bagong Silang,riverside,0,alive,no_warning,,
+SLC-0515,dengue,probable,2026-09-12,2026-09-14,2026-09-16,,9,5-14,M,SL12,Pantalan,coastal,1,alive,warning_signs,,
+SLC-0516,dengue,suspect,2026-09-11,2026-09-14,2026-09-16,,23,15-24,F,SL10,Baybay,coastal,1,alive,no_warning,,
+SLC-0517,dengue,suspect,2026-09-12,2026-09-16,2026-09-16,,38,25-44,F,SL10,Baybay,coastal,1,alive,warning_signs,,
+SLC-0518,dengue,probable,2026-09-12,2026-09-14,2026-09-16,,9,5-14,M,SL07,Bagong Silang,riverside,0,alive,no_warning,,
+SLC-0519,dengue,probable,2026-09-09,2026-09-15,2026-09-16,,32,25-44,F,SL13,Talaba,coastal,0,alive,no_warning,,
+SLC-0520,dengue,suspect,2026-09-12,2026-09-15,2026-09-16,,22,15-24,M,SL05,Santo Niño,riverside,1,alive,warning_signs,,
+SLC-0521,dengue,probable,2026-09-12,2026-09-14,2026-09-16,,23,15-24,F,SL10,Baybay,coastal,1,alive,no_warning,,
+SLC-0522,dengue,probable,2026-09-12,2026-09-16,2026-09-16,,7,5-14,M,SL04,Poblacion,riverside,0,alive,no_warning,,
+SLC-0523,dengue,probable,2026-09-09,2026-09-14,2026-09-16,,7,5-14,F,SL07,Bagong Silang,riverside,0,alive,no_warning,,
+SLC-0524,dengue,probable,2026-09-13,2026-09-15,2026-09-17,,21,15-24,M,SL04,Poblacion,riverside,0,alive,no_warning,,
+SLC-0525,dengue,suspect,2026-09-13,2026-09-15,2026-09-17,,14,5-14,M,SL02,Tabing-Ilog,riverside,0,alive,no_warning,,
+SLC-0526,dengue,suspect,2026-09-11,2026-09-16,2026-09-17,,51,45-64,F,SL15,Laot,coastal,1,alive,no_warning,,
+SLC-0527,dengue,probable,2026-09-13,2026-09-16,2026-09-17,,5,5-14,M,SL11,Dalampasigan,coastal,0,alive,no_warning,,
+SLC-0528,dengue,probable,2026-09-13,2026-09-15,2026-09-17,,10,5-14,F,SL06,San Isidro,riverside,0,alive,no_warning,,
+SLC-0529,dengue,probable,2026-09-12,2026-09-16,2026-09-17,,59,45-64,F,SL11,Dalampasigan,coastal,0,alive,no_warning,,
+SLC-0530,dengue,probable,2026-09-14,2026-09-17,2026-09-18,,7,5-14,M,SL08,Sapa,riverside,0,alive,no_warning,,
+SLC-0531,dengue,suspect,2026-09-13,2026-09-16,2026-09-18,,26,25-44,M,SL03,Pampang,riverside,0,alive,no_warning,,
+SLC-0532,dengue,probable,2026-09-13,2026-09-17,2026-09-18,,19,15-24,F,SL04,Poblacion,riverside,0,alive,no_warning,,
+SLC-0533,dengue,probable,2026-09-15,2026-09-17,2026-09-18,,47,45-64,M,SL16,Wawa,coastal,1,alive,no_warning,,
+SLC-0534,dengue,probable,2026-09-13,2026-09-19,2026-09-19,,10,5-14,M,SL14,Buhangin,coastal,0,alive,no_warning,,
+SLC-0535,dengue,suspect,2026-09-17,2026-09-18,2026-09-19,,36,25-44,F,SL07,Bagong Silang,riverside,1,alive,warning_signs,,
+SLC-0536,dengue,probable,2026-09-15,2026-09-19,2026-09-19,,55,45-64,M,SL07,Bagong Silang,riverside,1,alive,no_warning,,
+SLC-0537,dengue,suspect,2026-09-13,2026-09-16,2026-09-19,,31,25-44,M,SL10,Baybay,coastal,0,alive,no_warning,,
+SLC-0538,dengue,probable,2026-09-17,2026-09-18,2026-09-19,,19,15-24,F,SL09,San Pedro,coastal,1,alive,warning_signs,,
+SLC-0539,dengue,probable,2026-09-15,2026-09-18,2026-09-19,,78,65+,M,SL01,Ilog,riverside,1,alive,warning_signs,,
+SLC-0540,dengue,probable,2026-09-16,2026-09-19,2026-09-20,,0,0-4,M,SL05,Santo Niño,riverside,0,alive,no_warning,,
+SLC-0541,dengue,probable,2026-09-17,2026-09-18,2026-09-20,,27,25-44,M,SL06,San Isidro,riverside,1,alive,no_warning,,
+SLC-0542,dengue,probable,2026-09-15,2026-09-18,2026-09-20,,23,15-24,F,SL06,San Isidro,riverside,0,alive,no_warning,,
+SLC-0543,dengue,probable,2026-09-15,2026-09-20,2026-09-20,,1,0-4,F,SL20,Kawayanan,upland,0,alive,warning_signs,,
+SLC-0544,dengue,suspect,2026-09-13,2026-09-18,2026-09-21,,16,15-24,M,SL24,Talahib,upland,1,alive,warning_signs,,
+SLC-0545,dengue,confirmed,2026-09-14,2026-09-18,2026-09-21,2026-09-28,10,5-14,F,SL02,Tabing-Ilog,riverside,0,alive,no_warning,,
+SLC-0546,dengue,probable,2026-09-17,2026-09-19,2026-09-21,,3,0-4,M,SL01,Ilog,riverside,1,alive,warning_signs,,
+SLC-0547,dengue,probable,2026-09-20,2026-09-21,2026-09-21,,20,15-24,M,SL08,Sapa,riverside,1,alive,warning_signs,,
+SLC-0548,dengue,suspect,2026-09-18,2026-09-20,2026-09-21,,6,5-14,M,SL01,Ilog,riverside,0,alive,no_warning,,
+SLC-0549,dengue,suspect,2026-09-19,2026-09-22,2026-09-22,,28,25-44,F,SL07,Bagong Silang,riverside,1,alive,warning_signs,,
+SLC-0550,dengue,probable,2026-09-21,2026-09-22,2026-09-22,,62,45-64,M,SL11,Dalampasigan,coastal,1,alive,no_warning,,
+SLC-0551,dengue,suspect,2026-09-18,2026-09-20,2026-09-22,,9,5-14,M,SL02,Tabing-Ilog,riverside,0,alive,no_warning,,
+SLC-0552,dengue,confirmed,2026-09-18,2026-09-20,2026-09-22,2026-09-28,17,15-24,F,SL07,Bagong Silang,riverside,1,alive,no_warning,,
+SLC-0553,dengue,suspect,2026-09-21,2026-09-23,2026-09-23,,28,25-44,F,SL16,Wawa,coastal,0,alive,no_warning,,
+SLC-0554,dengue,suspect,2026-09-18,2026-09-23,2026-09-23,,13,5-14,F,SL04,Poblacion,riverside,1,alive,no_warning,,
+SLC-0555,dengue,suspect,2026-09-21,2026-09-22,2026-09-23,,13,5-14,M,SL11,Dalampasigan,coastal,1,alive,warning_signs,,
+SLC-0556,dengue,confirmed,2026-09-22,2026-09-24,2026-09-24,2026-09-30,7,5-14,F,SL06,San Isidro,riverside,1,alive,warning_signs,,
+SLC-0557,dengue,probable,2026-09-15,2026-09-21,2026-09-24,,67,65+,F,SL06,San Isidro,riverside,0,alive,no_warning,,
+SLC-0558,dengue,suspect,2026-09-21,2026-09-23,2026-09-24,,10,5-14,F,SL04,Poblacion,riverside,1,alive,no_warning,,
+SLC-0559,dengue,probable,2026-09-21,2026-09-23,2026-09-24,,25,25-44,M,SL10,Baybay,coastal,1,died,severe,,
+SLC-0560,dengue,suspect,2026-09-19,2026-09-21,2026-09-24,,10,5-14,M,SL03,Pampang,riverside,0,alive,no_warning,,
+SLC-0561,dengue,suspect,2026-09-20,2026-09-25,2026-09-25,,3,0-4,M,SL22,Maligaya,upland,0,alive,no_warning,,
+SLC-0562,dengue,suspect,2026-09-20,2026-09-23,2026-09-25,,5,5-14,F,SL15,Laot,coastal,0,alive,no_warning,,
+SLC-0563,dengue,suspect,2026-09-23,2026-09-24,2026-09-25,,6,5-14,M,SL20,Kawayanan,upland,0,alive,warning_signs,,
+SLC-0564,dengue,probable,2026-09-22,2026-09-25,2026-09-25,,25,25-44,M,SL08,Sapa,riverside,0,alive,no_warning,,
+SLC-0565,dengue,probable,2026-09-22,2026-09-25,2026-09-25,,13,5-14,F,SL09,San Pedro,coastal,0,alive,no_warning,,
+SLC-0566,dengue,probable,2026-09-22,2026-09-24,2026-09-25,,16,15-24,M,SL09,San Pedro,coastal,0,alive,no_warning,,
+SLC-0567,dengue,probable,2026-09-22,2026-09-23,2026-09-25,,17,15-24,F,SL01,Ilog,riverside,0,alive,no_warning,,
+SLC-0568,dengue,probable,2026-09-19,2026-09-24,2026-09-25,,55,45-64,F,SL04,Poblacion,riverside,1,alive,warning_signs,,
+SLC-0569,dengue,suspect,2026-09-20,,2026-09-25,,18,15-24,M,SL07,Bagong Silang,riverside,0,alive,no_warning,,
+SLC-0570,dengue,suspect,2026-09-24,2026-09-26,2026-09-26,,25,25-44,M,SL01,Ilog,riverside,1,alive,warning_signs,,
+SLC-0571,dengue,suspect,2026-09-24,2026-09-27,2026-09-27,,73,65+,F,SL04,Poblacion,riverside,1,died,severe,,
+SLC-0572,dengue,probable,2026-09-18,2026-09-26,2026-09-27,,13,5-14,M,SL13,Talaba,coastal,0,alive,no_warning,,
+SLC-0573,dengue,probable,2026-09-24,2026-09-26,2026-09-27,,8,5-14,F,SL03,Pampang,riverside,1,alive,no_warning,,
+SLC-0574,dengue,probable,2026-09-24,2026-09-26,2026-09-27,,17,15-24,F,SL17,Bukid,upland,0,alive,no_warning,,
+SLC-0575,dengue,suspect,2026-09-23,2026-09-27,2026-09-27,,9,5-14,F,SL12,Pantalan,coastal,0,alive,no_warning,,
+SLC-0576,dengue,suspect,2026-09-22,2026-09-27,2026-09-27,,20,15-24,F,SL04,Poblacion,riverside,1,alive,warning_signs,,
+SLC-0577,dengue,suspect,2026-09-23,2026-09-27,2026-09-28,,22,15-24,F,SL16,Wawa,coastal,0,alive,warning_signs,,
+SLC-0578,dengue,suspect,2026-09-23,2026-09-28,2026-09-28,,36,25-44,M,SL11,Dalampasigan,coastal,0,alive,no_warning,,
+SLC-0579,dengue,probable,2026-09-23,2026-09-26,2026-09-28,,14,5-14,F,SL08,Sapa,riverside,1,alive,warning_signs,,
+SLC-0580,dengue,suspect,2026-09-23,2026-09-27,2026-09-28,,26,25-44,M,SL12,Pantalan,coastal,0,alive,no_warning,,
+SLC-0581,dengue,probable,2026-09-25,2026-09-27,2026-09-29,,15,15-24,M,SL04,Poblacion,riverside,0,alive,no_warning,,
+SLC-0582,dengue,suspect,2026-09-26,2026-09-28,2026-09-29,,11,5-14,M,SL07,Bagong Silang,riverside,1,alive,warning_signs,,
+SLC-0583,dengue,suspect,2026-09-25,2026-09-28,2026-09-29,,42,25-44,F,SL12,Pantalan,coastal,0,alive,no_warning,,
+SLC-0584,dengue,probable,2026-09-24,2026-09-28,2026-09-29,,72,65+,F,SL07,Bagong Silang,riverside,0,alive,no_warning,,
+SLC-0585,dengue,suspect,2026-09-26,2026-09-28,2026-09-29,,35,25-44,F,SL15,Laot,coastal,0,alive,no_warning,,
+SLC-0586,dengue,suspect,2026-09-28,2026-09-30,2026-09-30,,45,45-64,F,SL13,Talaba,coastal,1,alive,warning_signs,,
+SLC-0587,dengue,probable,2026-09-25,2026-09-28,2026-09-30,,36,25-44,F,SL15,Laot,coastal,1,alive,severe,,
+SLC-0588,dengue,suspect,2026-09-25,2026-09-27,2026-09-30,,33,25-44,F,SL07,Bagong Silang,riverside,1,alive,warning_signs,,
+SLC-0589,dengue,probable,2026-09-26,2026-09-29,2026-09-30,,13,5-14,M,SL10,Baybay,coastal,0,alive,no_warning,,
+SLC-0590,dengue,probable,2026-09-22,2026-09-27,2026-09-30,,1,0-4,F,SL02,Tabing-Ilog,riverside,0,alive,no_warning,,
+SLC-0591,dengue,probable,2026-09-23,2026-09-28,2026-09-30,,6,5-14,F,SL08,Sapa,riverside,0,alive,no_warning,,
+SLC-0592,dengue,suspect,2026-09-26,2026-09-28,2026-09-30,,20,15-24,M,SL21,San Roque,upland,1,alive,warning_signs,,
+SLC-0593,dengue,suspect,2026-09-27,2026-09-30,2026-09-30,,5,5-14,F,SL14,Buhangin,coastal,0,alive,no_warning,,

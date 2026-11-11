@@ -268,7 +268,7 @@ Your computer
 ├── Project B (COVID dashboard)/.venv/
 │   └── pandas 2.2, plotly 6.0 ...
 └── Project C (this book)/.venv/
-    └── pandas 2.2, matplotlib 3.10 ...
+    └── pandas 2.3, matplotlib 3.10 ...
 ```
 
 ### How does `uv` manage virtual environments?
@@ -575,7 +575,7 @@ attack_rate = infected / total * 100  # end-of-line comment: you can also add on
 
 # ✅ A good comment: explains the "why"
 # Fill missing ages with the median, because the mean is easily skewed by extreme values
-df["age"].fillna(df["age"].median(), inplace=True)
+df["age"] = df["age"].fillna(df["age"].median())
 
 # ❌ A bad comment: just repeats what the code already says
 # Set x to 5 (who couldn't see that?)

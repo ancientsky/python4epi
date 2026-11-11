@@ -6,7 +6,10 @@ The TOC is written out in four files (book/ and book_en/, each with a student
 keep them consistent:
 
 * each instructor TOC is its student TOC plus the Ch17 solutions entries, and
-* the zh and en TOCs list the same files in the same structure.
+* the zh and en TOCs list the same files in the same structure, and
+* the three Philippines-edition projects (``book_ph/{en,zh,fil}/myst.yml``)
+  list the file stems of the production bible (``book_ph/PRODUCTION.md`` §4)
+  in the same structure, with the same theme pin as the main book.
 """
 
 from __future__ import annotations
@@ -26,6 +29,22 @@ CONFIGS = {
     ("en", "instructor"): ROOT / "book_en" / "_instructor" / "myst.yml",
 }
 SOLUTIONS_CHAPTER = "chapters/17_solutions.md"
+PH_LANGS = ("en", "zh", "fil")
+PH_CONFIGS = {lang: ROOT / "book_ph" / lang / "myst.yml" for lang in PH_LANGS}
+#: Chapter stems from book_ph/PRODUCTION.md §4 and whether each has a notebook.
+PH_CHAPTERS = {
+    "00_start_here": False,
+    "01_python_with_ai": True,
+    "02_privacy_first": True,
+    "03_clean_linelist": True,
+    "04_time_place_person": True,
+    "05_find_the_source": True,
+    "06_signals_and_thresholds": True,
+    "07_forecast_timesfm": True,
+    "08_maps": True,
+    "09_dashboard": True,
+    "10_wrap_up": False,
+}
 
 
 def _toc(lang: str, edition: str) -> list[dict[str, Any]]:
@@ -106,14 +125,69 @@ def test_instructor_configs_extend_their_student_config():
         assert set(config["project"]) == {"toc"}
 
 
+def _config(path: Path) -> dict[str, Any]:
+    return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
 def test_theme_is_pinned_identically():
     templates = {
-        lang: yaml.safe_load(CONFIGS[(lang, "student")].read_text(encoding="utf-8"))["site"][
-            "template"
-        ]
-        for lang in ("zh", "en")
+        lang: _config(CONFIGS[(lang, "student")])["site"]["template"] for lang in ("zh", "en")
     }
-    assert templates["zh"] == templates["en"]
+    templates |= {f"ph-{lang}": _config(path)["site"]["template"] for lang, path in PH_CONFIGS.items()}
+    assert len(set(templates.values())) == 1, templates
     assert templates["zh"].startswith("https://github.com/myst-templates/book-theme/archive/")
     sha = templates["zh"].rsplit("/", 1)[-1].removesuffix(".zip")
     assert len(sha) == 40 and all(c in "0123456789abcdef" for c in sha), sha
+
+
+# --- Philippines edition -----------------------------------------------------------
+
+
+def _ph_toc(lang: str) -> list[dict[str, Any]]:
+    return _config(PH_CONFIGS[lang])["project"]["toc"]
+
+
+def test_ph_toc_follows_the_production_bible():
+    expected = ["intro.md"]
+    for stem, has_notebook in PH_CHAPTERS.items():
+        expected.append(f"chapters/{stem}.md")
+        if has_notebook:
+            expected.append(f"chapters/notebooks/{stem}.ipynb")
+    assert _files(_ph_toc("en")) == expected
+    toc = _ph_toc("en")
+    assert toc[0] == {"file": "intro.md"}
+    acts = toc[1:]
+    assert len(acts) == 4
+    assert all("title" in act and "file" not in act for act in acts)  # title-only parents
+
+
+@pytest.mark.parametrize("lang", ["zh", "fil"])
+def test_ph_tocs_match_english(lang: str):
+    en, other = _ph_toc("en"), _ph_toc(lang)
+    assert _structure(other) == _structure(en)
+    en_titles = [e["title"] for e in en if "title" in e]
+    titles = [e["title"] for e in other if "title" in e]
+    assert len(titles) == len(en_titles)
+    assert not set(titles) & set(en_titles), "act titles must be translated"
+
+
+@pytest.mark.parametrize("lang", PH_LANGS)
+def test_ph_toc_files_exist(lang: str):
+    project = PH_CONFIGS[lang].parent
+    missing = [f for f in _files(_ph_toc(lang)) if not (project / f).is_file()]
+    assert not missing, f"{PH_CONFIGS[lang]}: {missing}"
+
+
+@pytest.mark.parametrize("lang", PH_LANGS)
+def test_ph_config_matches_main_book_settings(lang: str):
+    config = _config(PH_CONFIGS[lang])
+    main = _config(CONFIGS[("zh", "student")])
+    assert config["project"]["error_rules"] == main["project"]["error_rules"]
+    options = config["site"]["options"]
+    assert options["style"] == "_static/ph.css"
+    assert options["folders"] is True
+    assert set(config["site"]["parts"]) == {"navbar_end", "footer"}
+    # zh and fil turn off MyST's English "Figure N:" caption prefix, like book/.
+    numbering = config["project"].get("numbering", {}).get("figure", {})
+    assert numbering.get("enabled", True) is (lang == "en")
+    assert config["project"]["title"] != ""

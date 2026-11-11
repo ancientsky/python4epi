@@ -29,6 +29,9 @@ ZH_STUDENT = bb.Edition("zh", "student")
 ZH_INSTRUCTOR = bb.Edition("zh", "instructor")
 EN_STUDENT = bb.Edition("en", "student")
 EN_INSTRUCTOR = bb.Edition("en", "instructor")
+PH_EN = bb.Edition("en", "student", "ph")
+PH_ZH = bb.Edition("zh", "student", "ph")
+PH_FIL = bb.Edition("fil", "student", "ph")
 
 PAGE_HTML = (
     '<!DOCTYPE html><html lang="en" class=""><head><meta charSet="utf-8"/>'
@@ -49,7 +52,9 @@ def test_edition_paths_and_prefixes():
     assert ZH_STUDENT.project_dir == bb.REPO_ROOT / "book"
     assert ZH_INSTRUCTOR.project_dir == bb.REPO_ROOT / "book" / "_instructor"
     assert EN_INSTRUCTOR.project_dir == bb.REPO_ROOT / "book_en" / "_instructor"
-    assert [e.prefix for e in bb.ALL_EDITIONS] == ["", "instructor/", "en/", "en/instructor/"]
+    assert [e.prefix for e in bb.MAIN_EDITIONS] == ["", "instructor/", "en/", "en/instructor/"]
+    assert [e.prefix for e in bb.PH_EDITIONS] == ["ph/", "ph/zh/", "ph/fil/"]
+    assert bb.ALL_EDITIONS == bb.MAIN_EDITIONS + bb.PH_EDITIONS
     assert ZH_INSTRUCTOR.counterpart() == EN_INSTRUCTOR
     assert EN_STUDENT.counterpart() == ZH_STUDENT
 
@@ -59,6 +64,39 @@ def test_edition_rejects_unknown_values():
         bb.Edition("fr", "student")
     with pytest.raises(ValueError, match="edition"):
         bb.Edition("zh", "teacher")
+    with pytest.raises(ValueError, match="lang"):
+        bb.Edition("fil", "student")  # the main book has no Filipino edition
+    with pytest.raises(ValueError, match="edition"):
+        bb.Edition("en", "instructor", "ph")
+    with pytest.raises(ValueError, match="series"):
+        bb.Edition("en", "student", "jp")
+
+
+def test_ph_edition_properties():
+    assert PH_EN.project_dir == bb.REPO_ROOT / "book_ph" / "en"
+    assert PH_FIL.tree == "book_ph/fil"
+    assert PH_ZH.html_dir == bb.REPO_ROOT / "book_ph" / "zh" / "_build" / "html"
+    assert PH_EN.is_ph and not ZH_STUDENT.is_ph
+    assert PH_ZH.meta["html_lang"] == "zh-Hant"
+    assert PH_FIL.meta["html_lang"] == "fil"
+    assert [e.lang for e in PH_ZH.alternates()] == ["en", "fil"]
+    assert ZH_INSTRUCTOR.alternates() == (EN_INSTRUCTOR,)
+    assert PH_FIL.label() == "ph fil"
+    assert bb.base_url("/python4epi", PH_ZH) == "/python4epi/ph/zh"
+    assert bb.base_url("", PH_EN) == "/ph"
+    with pytest.raises(ValueError, match="alternates"):
+        PH_EN.counterpart()
+
+
+def test_ph_projects_share_static_and_images():
+    for edition in bb.PH_EDITIONS:
+        project = edition.project_dir
+        assert (project / "_static").resolve() == bb.REPO_ROOT / "book_ph" / "_static"
+        assert (project / "chapters" / "images").resolve() == bb.REPO_ROOT / "book_ph" / "images"
+        for part in ("navbar_end.md", "footer.md"):
+            assert (project / "_site" / part).is_file(), f"{edition.label()}: {part}"
+    assert (bb.REPO_ROOT / bb.PH_STATIC_DIR / "ph-site.js").is_file()
+    assert bb.DASHBOARD_SCRIPT.is_file()
 
 
 def test_every_edition_has_a_myst_config():
@@ -415,3 +453,224 @@ def test_postprocess_rejects_broken_internal_links(
     page.write_text(PAGE_HTML.replace("</body>", '<a href="/python4epi/nope/">x</a></body>'))
     with pytest.raises(SystemExit, match="broken internal link"):
         bb.postprocess(ZH_STUDENT, "/python4epi")
+
+
+# --- Philippines edition ----------------------------------------------------------
+
+PH_NOTEBOOK = bb.Page("chapters.notebooks.maps", "Notebook", "/chapters/notebooks/08_maps.ipynb")
+
+
+def _ph_config(html: str) -> dict:
+    start = html.index("window.EPI_SITE=") + len("window.EPI_SITE=")
+    return json.loads(html[start : html.index(";</script>", start)])
+
+
+def test_process_page_html_ph_head_and_config():
+    html = bb.process_page_html(
+        PAGE_HTML,
+        PH_NOTEBOOK,
+        PH_FIL,
+        base_path="/python4epi",
+        alternate_langs=("en", "zh"),
+        colab={"chapters/notebooks/maps/": "https://colab.example/nb"},
+        static_files=("ph-site.js", "ph-games.css", "ph-games.js"),
+    )
+    site = "https://ancientsky.github.io/python4epi"
+    assert html.startswith('<!DOCTYPE html><html lang="fil"')
+    assert f'<link rel="canonical" href="{site}/ph/fil/chapters/notebooks/maps/"/>' in html
+    for tag, prefix in (("en", "ph/"), ("zh-Hant", "ph/zh/"), ("fil", "ph/fil/")):
+        assert f'hreflang="{tag}" href="{site}/{prefix}chapters/notebooks/maps/"' in html
+    assert f'hreflang="x-default" href="{site}/ph/chapters/notebooks/maps/"' in html
+    # One og:locale:alternate per other language.
+    assert html.count('property="og:locale:alternate"') == 2
+    assert '<meta property="og:locale" content="tl_PH"/>' in html
+    assert 'content="Bantay Python · Epi With Python"' in html
+    # Styles, then the config, then the scripts in contract order; no YouTube.
+    order = [
+        '<link rel="stylesheet" href="/python4epi/ph/fil/_static/ph-games.css"/>',
+        "window.EPI_SITE=",
+        '<script src="/python4epi/ph/fil/_static/epi-site.js" defer>',
+        '<script src="/python4epi/ph/fil/_static/ph-site.js" defer>',
+        '<script src="/python4epi/ph/fil/_static/ph-games.js" defer>',
+    ]
+    positions = [html.index(snippet) for snippet in order]
+    assert positions == sorted(positions)
+    assert "youtube-lite.js" not in html
+
+    config = _ph_config(html)
+    assert config["lang"] == "fil" and config["series"] == "ph"
+    assert config["root"] == "/python4epi/ph/fil/"
+    assert "alternate" not in config  # keeps epi-site.js's book-only part inert
+    assert [lang["root"] for lang in config["languages"]] == [
+        "/python4epi/ph/",
+        "/python4epi/ph/zh/",
+        "/python4epi/ph/fil/",
+    ]
+    assert config["book"]["root"] == "/python4epi/en/"
+    assert config["standalone"] == ["dashboard/"]
+    assert config["colab"] == {"chapters/notebooks/maps/": "https://colab.example/nb"}
+
+
+def test_ph_zh_links_back_to_the_zh_book_and_skips_missing_optional_files():
+    html = bb.process_page_html(
+        PAGE_HTML,
+        PH_NOTEBOOK,
+        PH_ZH,
+        base_path="",
+        alternate_langs=(),
+        colab={},
+        static_files=("ph-site.js",),
+    )
+    assert _ph_config(html)["book"]["root"] == "/"
+    assert "ph-games" not in html
+    assert '<script src="/ph/zh/_static/ph-site.js" defer>' in html
+    assert 'hreflang="en"' not in html  # no alternate page
+    assert 'hreflang="x-default" href="https://ancientsky.github.io/python4epi/ph/zh/' in html
+
+
+def _patch_ph_static(root: Path, *names: str) -> None:
+    static = root / "book_ph" / "_static"
+    static.mkdir(parents=True, exist_ok=True)
+    for name in names:
+        (static / name).write_text(name, encoding="utf-8")
+
+
+PH_PAGES = {
+    "index": ("Article", "/intro.md"),
+    "chapters.dashboard": ("Article", "/chapters/09_dashboard.md"),
+    "chapters.notebooks.maps": ("Notebook", "/chapters/notebooks/08_maps.ipynb"),
+}
+
+
+def test_postprocess_ph_end_to_end(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+):
+    _patch_repo(monkeypatch, tmp_path)
+    _patch_ph_static(tmp_path, "ph-site.js", "ph-games.js")  # no ph-games.css yet
+    (tmp_path / "book_ph" / "zh" / "chapters").mkdir(parents=True)
+    (tmp_path / "book_ph" / "zh" / "chapters" / "09_dashboard.md").write_text("x")
+    _fake_build(tmp_path / "book_ph" / "en", PH_PAGES)
+    chapter = tmp_path / "book_ph/en/_build/html/chapters/dashboard/index.html"
+    # The documented way to link the dashboard: [text](/dashboard/), which MyST
+    # renders with the edition's BASE_URL in front.
+    chapter.write_text(
+        PAGE_HTML.replace("</body>", '<a class="link" href="/python4epi/ph/dashboard/">d</a></body>')
+    )
+    calls = []
+    real_builder = bb.load_dashboard_builder()
+
+    def fake_dashboard(lang: str, out_dir: Path) -> Path:
+        calls.append((lang, out_dir))
+        return real_builder(lang, out_dir)
+
+    monkeypatch.setattr(bb, "load_dashboard_builder", lambda: fake_dashboard)
+    stats = bb.postprocess(PH_EN, "/python4epi")
+    assert stats == {"pages": 3, "notebooks": 1, "redirects": 0, "standalone": 1}
+
+    html_dir = tmp_path / "book_ph" / "en" / "_build" / "html"
+    assert calls == [("en", html_dir / "dashboard")]
+    assert (html_dir / "dashboard" / "index.html").is_file()
+    assert sorted(p.name for p in (html_dir / "_static").iterdir()) == [
+        "epi-site.js",
+        "og-image.png",
+        "ph-games.js",
+        "ph-site.js",
+    ]
+    assert "ph-games.css is missing" in capsys.readouterr().out
+    page = chapter.read_text(encoding="utf-8")
+    assert '<html lang="en"' in page
+    assert 'hreflang="zh-Hant"' in page and 'hreflang="fil"' not in page
+    assert "ph-games.css" not in page and "_static/ph-games.js" in page
+    notebook = (html_dir / "chapters/notebooks/maps/index.html").read_text(encoding="utf-8")
+    assert "blob/main/book_ph/en/chapters/notebooks/08_maps.ipynb" in notebook
+    assert not list(html_dir.glob("chapters/*.html"))  # no JB1 redirect stubs
+
+
+def test_postprocess_ph_requires_ph_site_js(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _patch_repo(monkeypatch, tmp_path)
+    _patch_ph_static(tmp_path)
+    _fake_build(tmp_path / "book_ph" / "zh", PH_PAGES)
+    with pytest.raises(SystemExit, match="ph-site.js"):
+        bb.postprocess(PH_ZH, "/python4epi")
+
+
+def test_ph_og_image_prefers_the_language_card(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _patch_repo(monkeypatch, tmp_path)
+    _patch_ph_static(tmp_path, "ph-site.js", "og-image.png", "og-image_fil.png")
+    dst = tmp_path / "out"
+    dst.mkdir()
+    bb.copy_static(PH_FIL, dst)
+    assert (dst / "og-image.png").read_text() == "og-image_fil.png"
+    bb.copy_static(PH_ZH, dst)
+    assert (dst / "og-image.png").read_text() == "og-image.png"
+
+
+def test_dashboard_builder_placeholder(tmp_path: Path):
+    build = bb.load_dashboard_builder()
+    for lang in bb.PH_LANGS:
+        page = build(lang, tmp_path / lang / "dashboard")
+        assert page == tmp_path / lang / "dashboard" / "index.html"
+        text = page.read_text(encoding="utf-8")
+        assert text.startswith("<!DOCTYPE html>")
+        assert '<a href="../">' in text
+    with pytest.raises(ValueError, match="lang"):
+        build("es", tmp_path)
+
+
+def test_parse_args_ph_series():
+    assert bb.selected_editions(bb.parse_args(["--series", "ph", "--lang", "fil"])) == [PH_FIL]
+    args = bb.parse_args(["--series", "ph", "--lang", "en", "--edition", "student"])
+    assert bb.selected_editions(args) == [PH_EN]
+    assert bb.selected_editions(bb.parse_args(["--lang", "zh", "--edition", "student"])) == [
+        ZH_STUDENT
+    ]
+    assert bb.selected_editions(bb.parse_args(["--all"])) == list(bb.ALL_EDITIONS)
+    assert bb.selected_editions(bb.parse_args(["--all", "--series", "ph"])) == list(
+        bb.PH_EDITIONS
+    )
+    assert bb.selected_editions(bb.parse_args(["--all", "--series", "main"])) == list(
+        bb.MAIN_EDITIONS
+    )
+    for bad in (
+        ["--series", "ph"],
+        ["--series", "ph", "--lang", "en", "--edition", "instructor"],
+        ["--lang", "fil", "--edition", "student"],
+        ["--series", "main", "--lang", "en"],
+    ):
+        with pytest.raises(SystemExit):
+            bb.parse_args(bad)
+
+
+def test_broken_links_checks_absolute_production_links(tmp_path: Path):
+    site = _site(
+        tmp_path,
+        {
+            "index.html": (
+                '<a href="https://ancientsky.github.io/python4epi/ph/">ok</a>'
+                '<a href="https://ancientsky.github.io/python4epi">ok, root</a>'
+                '<link rel="canonical" href="https://ancientsky.github.io/python4epi/gone/"/>'
+                '<a href="https://ancientsky.github.io/other/">another site</a>'
+            ),
+            "ph/index.html": "",
+        },
+    )
+    assert bb.broken_links(site, "/python4epi/") == {}  # absolute links ignored by default
+    broken = bb.broken_links(site, "/python4epi/", site_url=bb.SITE_URL)
+    assert broken == {"https://ancientsky.github.io/python4epi/gone/": ["index.html"]}
+
+
+def test_broken_links_ph_edition_skips_nested_and_main_editions(tmp_path: Path):
+    site = _site(
+        tmp_path,
+        {
+            "index.html": (
+                '<a href="/python4epi/ph/zh/chapters/x/">nested PH language</a>'
+                '<a href="/python4epi/en/">main book</a>'
+                '<a href="/python4epi/ph/dashboard/">dashboard, missing</a>'
+            )
+        },
+    )
+    others = tuple(f"/python4epi/{e.prefix}" for e in bb.ALL_EDITIONS if e != PH_EN)
+    assert set(bb.broken_links(site, "/python4epi/ph/", others)) == {"/python4epi/ph/dashboard/"}
+    _site(tmp_path, {"dashboard/index.html": ""})
+    assert bb.broken_links(site, "/python4epi/ph/", others) == {}

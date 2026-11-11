@@ -1,0 +1,41 @@
+event_id,disease,barangay,date_emergence,date_detection,date_notification,date_response_complete,bottleneck
+EV-001,dengue,Burol,2025-01-10,2025-01-12,2025-01-15,2025-01-21,Detected on a Friday; DSO on leave and no back-up over the weekend
+EV-002,acute watery diarrhoea,Mataas na Lupa,2025-01-11,2025-01-13,2025-01-14,2025-01-26,Specimens waited 9 days for a courier to the reference laboratory
+EV-003,acute watery diarrhoea,Dalampasigan,2025-01-28,2025-02-03,2025-02-06,2025-02-24,"Notified by personal chat message, not logged; PESU learned of it days later; No vehicle available for the response team"
+EV-004,diphtheria,Poblacion,2025-01-28,2025-02-02,2025-02-03,2025-02-07,none
+EV-005,dengue,San Pedro,2025-02-09,2025-03-08,2025-03-13,2025-03-21,Upland barangay: nearest health station two hours away by habal-habal; Detected on a Friday; DSO on leave and no back-up over the weekend; No vehicle available for the response team
+EV-006,meningococcal disease,Wawa,2025-03-02,2025-03-04,2025-03-11,2025-03-18,Waited for the City Health Officer's signature on the CIF before notifying
+EV-007,measles,Kawayanan,2025-03-04,2025-03-22,2025-03-23,2025-03-29,No local test; diagnosis waited for the referral hospital
+EV-008,dengue,Talahib,2025-03-19,2025-03-25,2025-03-25,2025-03-27,none
+EV-009,dengue,San Roque,2025-03-28,2025-03-30,2025-03-31,2025-04-09,Contact tracing on paper; list incomplete for a week
+EV-010,dengue,Wawa,2025-04-02,2025-04-08,2025-04-09,2025-04-11,none
+EV-011,typhoid fever,Maligaya,2025-04-06,2025-04-24,2025-04-25,2025-05-10,No local test; diagnosis waited for the referral hospital; Response funds needed Sangguniang Panlungsod approval
+EV-012,acute watery diarrhoea,Burol,2025-04-23,2025-04-24,2025-04-25,2025-05-14,Specimens waited 9 days for a courier to the reference laboratory
+EV-013,hepatitis A,Burol,2025-05-18,2025-06-04,2025-06-04,2025-06-19,Cases seen at a private clinic that is not yet a PIDSR disease reporting unit; Outbreak-response vaccines requested from the province arrived late
+EV-014,typhoid fever,Burol,2025-05-30,2025-05-31,2025-06-01,2025-06-08,none
+EV-015,"hand, foot and mouth disease",San Isidro,2025-06-05,2025-06-30,2025-07-03,2025-07-10,"Upland barangay: nearest health station two hours away by habal-habal; Notified by personal chat message, not logged; PESU learned of it days later"
+EV-016,"hand, foot and mouth disease",Bagong Pag-asa,2025-06-13,2025-06-23,2025-06-23,2025-07-10,No local test; diagnosis waited for the referral hospital; No vehicle available for the response team
+EV-017,dengue,Poblacion,2025-07-20,2025-07-23,2025-07-24,2025-08-12,Road closed by a landslide; field team delayed
+EV-018,measles,Dalampasigan,2025-07-30,2025-08-01,2025-08-03,2025-08-19,Hospital and CESU each assumed the other had notified the PESU; Response funds needed Sangguniang Panlungsod approval
+EV-019,measles,Buhangin,2025-08-09,2025-08-11,2025-08-11,2025-08-16,none
+EV-020,acute watery diarrhoea,Poblacion,2025-09-15,2025-10-03,2025-10-11,2025-10-15,No local test; diagnosis waited for the referral hospital; Detected on a Friday; DSO on leave and no back-up over the weekend
+EV-021,food poisoning,Bagong Silang,2025-10-10,2025-10-12,2025-10-15,2025-10-27,Hospital and CESU each assumed the other had notified the PESU; Specimens waited 9 days for a courier to the reference laboratory
+EV-022,leptospirosis,Talaba,2025-10-23,2025-10-26,2025-10-26,2025-11-02,none
+EV-023,dengue,Laot,2025-11-03,2025-11-10,2025-11-11,2025-11-24,Specimens waited 9 days for a courier to the reference laboratory
+EV-024,food poisoning,Laot,2025-11-03,2025-11-27,2025-11-28,2025-12-02,BHW noticed the cluster but had no load to text the CESU
+EV-025,acute watery diarrhoea,Laot,2025-11-27,2025-12-01,2025-12-04,2025-12-08,Detected on a Friday; DSO on leave and no back-up over the weekend
+EV-026,measles,Burol,2025-12-26,2026-01-05,2026-01-05,2026-01-17,Weekly batch encoding: forms sat in a folder for a week before EDCS entry; Contact tracing on paper; list incomplete for a week
+EV-027,measles,Pampang,2026-01-08,2026-01-12,2026-01-16,2026-01-29,EDCS down and no internet at the City Health Office; One DSO for 24 barangays; competing priorities
+EV-028,measles,Kawayanan,2026-01-15,2026-02-07,2026-02-13,2026-02-24,Clinicians treated it as 'trangkaso' (flu); case definition not applied; Detected on a Friday; DSO on leave and no back-up over the weekend; Specimens waited 9 days for a courier to the reference laboratory
+EV-029,rabies (human),Burol,2026-01-21,2026-01-25,2026-01-26,2026-02-04,Outbreak-response vaccines requested from the province arrived late
+EV-030,measles,Burol,2026-03-23,2026-03-24,2026-03-25,2026-03-30,none
+EV-031,dengue,Baybay,2026-04-27,2026-05-04,2026-05-05,2026-05-15,4S clean-up and larval survey needed volunteers still busy with typhoon relief; misting supplies requested from the province
+EV-032,influenza-like illness,Wawa,2026-05-06,2026-05-11,2026-05-14,2026-05-17,Waited for the City Health Officer's signature on the CIF before notifying
+EV-033,food poisoning,Bagong Pag-asa,2026-05-09,2026-06-01,2026-06-06,2026-06-22,"Weekly batch encoding: forms sat in a folder for a week before EDCS entry; Notified by personal chat message, not logged; PESU learned of it days later; Contact tracing on paper; list incomplete for a week"
+EV-034,measles,Pantalan,2026-06-12,2026-06-14,2026-06-15,2026-07-05,One DSO for 24 barangays; competing priorities
+EV-035,measles,Pampang,2026-06-14,2026-06-20,2026-06-21,2026-06-26,none
+EV-036,acute watery diarrhoea,Maligaya,2026-06-14,2026-07-04,2026-07-05,2026-07-12,BHW noticed the cluster but had no load to text the CESU
+EV-037,measles,Wawa,2026-06-19,2026-06-22,2026-06-23,2026-07-03,Response funds needed Sangguniang Panlungsod approval
+EV-038,"hand, foot and mouth disease",Pampang,2026-06-24,2026-07-04,2026-07-04,2026-07-08,Patients self-medicated from the botika before consulting
+EV-039,typhoid fever,San Isidro,2026-06-24,2026-07-01,2026-07-02,2026-07-08,none
+EV-040,leptospirosis,Ilog,2026-07-24,2026-07-27,2026-07-29,2026-08-03,Paper notification forms piled up at the CESU during the typhoon response; PESU notified two days after Aling Nena's text
