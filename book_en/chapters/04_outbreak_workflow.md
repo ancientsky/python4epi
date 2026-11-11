@@ -1066,9 +1066,9 @@ slide1.shapes.title.text = "Pine and Cypress Nursing Home Legionnaires' SitRep"
 slide1.placeholders[1].text = f"Report time: {report_time}"
 
 # ── Slide 2: key figures ──
-# slide_layouts[5] is the "Blank" layout with no placeholders;
+# slide_layouts[6] is the "Blank" layout with no placeholders;
 # we position everything ourselves with add_textbox()
-slide2 = prs.slides.add_slide(prs.slide_layouts[5])
+slide2 = prs.slides.add_slide(prs.slide_layouts[6])
 # add_textbox(left, top, width, height): specify position and size with Inches
 # left margin 1 inch, top margin 0.5 inch, width 8 inches, height 1 inch
 txBox = slide2.shapes.add_textbox(
@@ -1097,7 +1097,7 @@ for line in kpi_lines:
     p.space_after = Pt(12)   # 12 pt space after the paragraph (like pressing Enter once)
 
 # ── Slide 3: epidemic curve ──
-slide3 = prs.slides.add_slide(prs.slide_layouts[5])
+slide3 = prs.slides.add_slide(prs.slide_layouts[6])
 txBox3 = slide3.shapes.add_textbox(
     Inches(1), Inches(0.3), Inches(8), Inches(0.8),
 )
@@ -1110,7 +1110,7 @@ epicurve_buf.seek(0)  # reset the BytesIO cursor to read the image data again
 slide3.shapes.add_picture(epicurve_buf, Inches(0.5), Inches(1.3), Inches(9), Inches(5))
 
 # ── Slide 4: attack rate by wing ──
-slide4 = prs.slides.add_slide(prs.slide_layouts[5])
+slide4 = prs.slides.add_slide(prs.slide_layouts[6])
 txBox4 = slide4.shapes.add_textbox(
     Inches(1), Inches(0.3), Inches(8), Inches(0.8),
 )
@@ -1317,8 +1317,8 @@ Legionnaires': person-to-person is extremely rare → trace-forward is usually u
   ✗ No need to build a contact list for each case
   ✗ No need to set up a contact health-monitoring window
 
-If the pathogen were COVID-19 / influenza / norovirus (person-to-person):
-  Trace-forward period = infectious period (e.g. 2–14 days after COVID-19 infection)
+If the pathogen were measles / tuberculosis / norovirus (person-to-person):
+  Trace-forward period = infectious period (e.g. norovirus: from symptom onset until roughly 48–72 hours after symptoms resolve)
   → You'd need to list close contacts + set a health-monitoring window
 ```
 

@@ -520,7 +520,12 @@ from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.stattools import adfuller
 
 # First run a stationarity test (ADF test)
-adf_stat, p_value, *_ = adfuller(synth)
+try:
+    # statsmodels >= 0.15 prefers a result object (the plain tuple is deprecated); 0.14 lacks this argument
+    _adf = adfuller(synth, result_object=True)
+    adf_stat, p_value = _adf.statistic, _adf.pvalue
+except TypeError:
+    adf_stat, p_value, *_ = adfuller(synth)
 print(f"ADF statistic = {adf_stat:.3f}, p-value = {p_value:.3f}")
 print(f"→ p < 0.05 means the series is stationary (no differencing needed, d=0); otherwise d ≥ 1")
 

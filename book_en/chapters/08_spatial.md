@@ -463,6 +463,8 @@ When comparing counties, you **must always use the incidence rate per 100,000**:
 Incidence rate (per 100k) = confirmed cases / county population × 100,000
 ```
 
+> ⚠️ To keep things simple, the chapter notebook uses **one year's approximate population (about 2023)** as the denominator for every year from 2003 on. That is fine for comparing counties with each other, but for trends across years you must use each year's own population.
+
 ---
 
 <!-- video: ch08_07_choropleth -->
@@ -559,7 +561,7 @@ x-axis = the county's own rate, y-axis = neighbors' average rate. **HH** (epicen
 ```python
 from esda.moran import Moran_Local
 
-lisa = Moran_Local(main["rate"].values, w, permutations=999, seed=8)
+lisa = Moran_Local(main["rate"].values, w, permutations=999, seed=8, alternative="two-sided")
 # ⚠️ esda quadrant encoding: in .q, 1=HH, 2=LH, 3=LL, 4=HL (LH is 2, not 3!)
 labels = {1: "HH epicenter", 2: "LH eye of storm", 3: "LL safe zone", 4: "HL spark"}
 main["lisa"] = ["Not significant" if p >= 0.05 else labels[q]
@@ -571,13 +573,14 @@ main["lisa"] = ["Not significant" if p >= 0.05 else labels[q]
 > | This line | What it does |
 > |---|---|
 > | `Moran_Local(main["rate"].values, w, permutations=999, seed=8)` | The local version: computes a local Moran for **each** county, looking at both its own rate and its neighbors' average; `seed=8` makes the shuffling reproducible |
+> | `alternative="two-sided"` | Two-sided test. esda will change the default for conditional-permutation p-values in its next major release; stating it explicitly now avoids p-values silently shifting later (roughly double the old one-sided `"directed"` value) |
 > | `lisa.q` | The quadrant code for each county — **esda encodes it as 1=HH, 2=LH, 3=LL, 4=HL** |
 > | `lisa.p_sim` | Each county's own permutation p-value (local significance) |
 > | `["Not significant" if p >= 0.05 else labels[q] ...]` | Significance first: anything with p ≥ 0.05 is labeled "Not significant"; only the significant ones get translated into HH/LH/LL/HL labels |
 >
 > ⚠️ **The easiest line to trip on is the `.q` encoding**: intuition says 1234 = HH/HL/LL/LH, but esda uses **1=HH, 2=LH, 3=LL, 4=HL** (LH is 2, not 3!). Copy it straight from the reference table — don't fill it in by guessing the order, or "eye of the storm" and "spark" come out swapped.
 
-In the synthetic data, **Tainan / Kaohsiung / Chiayi** stand out as **HH epicenters**, while the north comes out as **LL safe zone** — the southern dengue hot zone is confirmed statistically.
+In the synthetic data, **Tainan / Chiayi** pass the two-sided test and stand out as **HH epicenters** (Kaohsiung also has a very high rate and falls in the HH quadrant, but p ≈ 0.08 misses 0.05, so we cannot call it significant), while New Taipei in the north comes out as a **LL safe zone** — the southern dengue hot zone is confirmed statistically.
 
 <!-- video: ch08_05_lisa -->
 <!-- /video -->
@@ -590,7 +593,7 @@ In the synthetic data, **Tainan / Kaohsiung / Chiayi** stand out as **HH epicent
 from esda.getisord import G_Local
 
 w_b = Queen.from_dataframe(main, use_index=False); w_b.transform = "B"
-gi = G_Local(main["rate"].values, w_b, permutations=999, seed=8, star=True)
+gi = G_Local(main["rate"].values, w_b, permutations=999, seed=8, star=True, alternative="two-sided")
 hot = main.loc[(gi.p_sim < 0.05) & (gi.Zs > 0), "COUNTYNAME"].tolist()   # significant hot spots
 ```
 

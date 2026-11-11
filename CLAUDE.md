@@ -166,7 +166,7 @@ PR descriptions should include scope summary, validation output, and screenshots
 
 ## Bilingual Editions (繁中 / English)
 
-The site is built in two languages, deployed to four URLs by `.github/workflows/pages.yml`:
+The main book is built in two languages, deployed to four URLs by `.github/workflows/pages.yml` (which also deploys the three Philippines-edition URLs, see below):
 
 | Edition | Source | Deploy path |
 |---------|--------|-------------|
@@ -197,6 +197,57 @@ The plain name `book-theme` would download the theme repo's `main` at build time
 3. Check in a browser, light/dark, desktop and 390px phone: header (language switch, logo), page header (Colab link), home cards, code blocks, admonitions, tables, video cards, and that pages load without React errors in the console. Adjust `site.css` / `epi-site.js` selectors (`.myst-navbar-end`, `.myst-fm-block-header`, `.myst-card`, `.myst-code`, `--myst-color-*`) if the DOM changed.
 
 MyST caches a URL template under `<project>/_build/templates/site/<sha256 of the URL>/`; delete `_build/templates` to force a fresh download.
+
+## Philippines Edition (`book_ph/`)
+
+A condensed sister book (*Bantay Python*) for Philippine surveillance staff; content,
+story, TOC and design rules live in **`book_ph/PRODUCTION.md`** (read it first). Build
+infrastructure:
+
+| Edition | Source | Deploy path | `<html lang>` |
+|---------|--------|-------------|---------------|
+| PH English (source of truth) | `book_ph/en/myst.yml` | `/ph/` | `en` |
+| PH 中文 | `book_ph/zh/myst.yml` | `/ph/zh/` | `zh-Hant` |
+| PH Filipino | `book_ph/fil/myst.yml` | `/ph/fil/` | `fil` |
+
+```bash
+uv run python scripts/build_book.py --series ph --lang en     # or zh, fil
+uv run python scripts/build_book.py --series ph --all         # the three (what ci.yml runs)
+uv run python scripts/build_book.py --all --site-dir _site    # all seven, as deployed
+```
+
+- **Structure.** Each project has `myst.yml`, `intro.md`, `chapters/NN_stem.md`,
+  `chapters/notebooks/NN_stem.ipynb`, `_site/navbar_end.md` + `_site/footer.md`. The three
+  trees mirror each other file-for-file and their TOCs match (`tests/test_book_toc.py`); act
+  groups are title-only TOC parents. No instructor edition, no JB1 redirect stubs. Same theme
+  pin and `error_rules` as `book/`; zh and fil set `numbering.figure.enabled: false`.
+- **Shared assets, once.** `book_ph/_static/` (CSS, JS, logos) and `book_ph/images/`
+  (illustrations) are reached through symlinks `book_ph/<lang>/_static -> ../_static` and
+  `book_ph/<lang>/chapters/images -> ../../images`; in a chapter write `![alt](images/x.svg)`.
+- **Styles and scripts.** MyST `style: _static/ph.css`. The post-build step links
+  `_static/ph-games.css` and injects, in order: `window.EPI_SITE={...}`, `epi-site.js` (copied
+  from `book/_static`; on PH pages it only provides `window.epiWhenHydrated`), `ph-site.js`
+  (three-way language switch `a.ph-lang.ph-lang-<code>` to the same page with a HEAD-check
+  fallback to that language's home, `a.ph-book-link` back to the full book — `/` for zh, `/en/`
+  otherwise — "Open in Colab" on notebook pages, full page loads for standalone pages), then
+  `ph-games.js`. No `youtube-lite.js`. **Contract for `ph-games.js`:** `window.epiWhenHydrated(cb)`
+  exists and `window.EPI_SITE.lang` is `"en" | "zh" | "fil"`. `ph-games.css`/`ph-games.js`
+  are optional (skipped with a ⚠ warning while missing); `ph-site.js` is required; a missing
+  `ph.css` only makes MyST log ⛔ and build unstyled.
+- **Social cards.** `og-image.png` is the first of `book_ph/_static/og-image_<lang>.png`,
+  `book_ph/_static/og-image.png`, `book/_static/og-image.png` (PNG only).
+- **Chapter-9 dashboard.** `scripts/build_ph_dashboard.py` exposes
+  `build_dashboard(lang: str, out_dir: Path) -> Path`; the post-build step calls it for each
+  PH language with `out_dir=<edition>/_build/html/dashboard`, so it is served at
+  `<edition root>/dashboard/` and the link check sees it. Link it from a chapter with a
+  **root-relative** MyST link — `[Open the dashboard](/dashboard/)` — which MyST prefixes with
+  the edition's `BASE_URL` (`/python4epi/ph/fil/dashboard/`); relative `../` paths do not
+  survive MyST. `ph-site.js` turns clicks on it into a full page load (the theme's router
+  cannot open a non-MyST page).
+- **Links between books.** The main book links the PH edition from `intro.md` (absolute
+  production URLs, like the instructor-edition button). With `--all`, the assembled-site link
+  check also resolves absolute `https://ancientsky.github.io/python4epi/...` links
+  (canonical/`hreflang`, navbar fallbacks, cross-edition buttons) against the assembled site.
 
 ## Tutorial Video & SVG Diagram Production
 

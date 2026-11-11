@@ -551,7 +551,7 @@ print(adj_or_df.to_string(index=False))
 
 常見處理方式：
 1. 檢查 2×2 表，確認是否有某個格子 = 0
-2. 改用 **Firth's penalized likelihood**（`firthlogist` 套件）
+2. 改用 **Firth 懲罰概似法（Firth's penalized likelihood）**。注意：`firthlogist` 套件最後一次更新是 2022 年，我們在本書鎖定的 scikit-learn 1.8 上實測會出現 `AttributeError: ... '_validate_data'`，已無法使用；實測可用的是仍有維護的 `firthmodels` 套件（需另行安裝，`uv add firthmodels`；`FirthLogisticRegression().fit(X, y)` 之後可用 `coef_`、`pvalues_`、`conf_int()`）。R 的 `logistf` 也是常見選擇。若不想多裝套件，可用 statsmodels 的 `GLM(..., family=Binomial()).fit_regularized(alpha=..., L1_wt=0)` 做 ridge 懲罰，能得到有限的係數估計，但沒有標準誤／信賴區間，只適合當作確認「分離確實存在」的快速檢查
 3. 改用 **Exact logistic regression**
 4. 在教學場景中，先跳過該變數，在多變項模型中一起納入
 ```
@@ -822,7 +822,7 @@ print(cie_df.to_string(index=False))
 
 1. **在世代研究中只報 OR**：侵襲率高時 OR ≠ RR。應該用 Modified Poisson 算 RR，或至少同時報告兩者讓讀者知道差異
 2. **OR 當 RR 用**：對主管說「OR = 3.5 代表風險 3.5 倍」——在高侵襲率下是錯的。要明確區分「勝算幾倍」和「風險幾倍」
-3. **放太多變項**：280 筆資料放 15+ 變項 → 過度擬合。經驗法則：每個 predictor 至少需要 10-15 個 events
+3. **放太多變項**：280 筆資料放 15+ 變項 → 過度擬合（121 個病例平均每個變項不到 10 個）。傳統的「每個變項至少 10-15 個事件（EPV）」只是粗略的警訊，已不建議當作標準；較新的做法是依預期收縮量與估計精確度計算所需樣本數（Riley 等，BMJ 2020;368:m441），或改用 Firth／懲罰式迴歸
 4. **忽略多重共線性**：高度相關的變項不要同時放入（例如 functional_status 和 age 可能高度相關）
 5. **自動選變項**：stepwise 不推薦 → 用流行病學知識和 DAG 選擇
 6. **不報 CI**：只報 p-value 不夠。CI 告訴你效應的精確度和臨床意義

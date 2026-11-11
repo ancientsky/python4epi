@@ -485,7 +485,7 @@ At the very bottom, `print_summary()` prints a `Concordance`, which is the model
 
 This demonstration dataset has only **19 death events**, but we put in **7 variables** (age, is_male, 4 comorbidities, immunosuppressed).
 
-The epidemiological rule of thumb (Peduzzi 1995): **each variable needs at least 10 events**.
+The traditional epidemiological rule of thumb (Peduzzi 1995): **each variable needs at least 10 events** (newer practice calculates the sample size from expected shrinkage and precision, see Riley et al., BMJ 2020;368:m441; here it is used only as a warning sign).
 - 19 events / 7 variables ≈ 2.7 → far below 10
 - This chapter is a **teaching demonstration**; in practice a model like this easily overfits, and the HRs and CIs are unreliable
 - In real research, you should do variable selection first (like the Modified Poisson selection in Ch06), keeping at most 1-2 of the most crucial variables

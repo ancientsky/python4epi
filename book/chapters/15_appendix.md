@@ -309,7 +309,9 @@ plt.rcParams["axes.unicode_minus"] = False
 | Ubuntu / Debian | `sudo apt install fonts-wqy-zenhei` | WenQuanYi Zen Hei |
 | macOS | 內建 | Heiti TC, Arial Unicode MS |
 | Windows | 內建 | Microsoft JhengHei（微軟正黑體） |
-| Google Colab | 預裝 | Noto Sans CJK JP |
+| Google Colab | 通常預裝（依 runtime 版本而異） | Noto Sans CJK JP |
+
+若在 Colab 執行 `!fc-list :lang=zh` 沒有輸出，先執行 `!apt-get install -y fonts-noto-cjk`，再重新啟動 runtime。
 
 ### E-2. Plotly：Jupyter Book 建置時圖表空白
 

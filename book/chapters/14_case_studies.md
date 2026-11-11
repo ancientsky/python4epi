@@ -156,7 +156,7 @@ slide1.placeholders[1].text = (
     f"侵襲率 {n_infected / n_total:.1%}｜致死率 {n_deaths / n_infected:.1%}"
 )
 
-slide2 = prs.slides.add_slide(prs.slide_layouts[5])
+slide2 = prs.slides.add_slide(prs.slide_layouts[6])
 buf.seek(0)   # BytesIO 只能讀一次，插入圖片前一定要重設游標
 slide2.shapes.add_picture(buf, Inches(0.4), Inches(1.1), width=Inches(6))
 
@@ -202,7 +202,7 @@ print(f"已輸出：{outdir}")
 > |---|---|
 > | `fig.savefig(buf, format="png", ...); buf.seek(0)` | 圖表存進記憶體 `BytesIO`，不用先寫進硬碟，就能直接塞進報告 |
 > | `prs.slides.add_slide(prs.slide_layouts[0])` | 版面 0 = 標題投影片，內建主標題與副標題 placeholder |
-> | `prs.slides.add_slide(prs.slide_layouts[5])` | 版面 5 = 空白投影片，自己用 textbox／picture／table 排版 |
+> | `prs.slides.add_slide(prs.slide_layouts[6])` | 版面 6 = 空白投影片，自己用 textbox／picture／table 排版 |
 > | `slide2.shapes.add_picture(buf, ...)` | 把記憶體裡的 PNG 直接插入投影片，不需要先存成檔案 |
 > | `slide2.shapes.add_table(rows, cols, ...).table` | 在投影片上畫一個表格，逐列填入 `summary_rows` |
 > | `buf.seek(0)`（第二次出現） | **`BytesIO` 只能讀一次**：PPTX 用過後游標停在檔案尾端，DOCX 要再讀之前必須先倒回開頭，否則會插入一張空白圖 |

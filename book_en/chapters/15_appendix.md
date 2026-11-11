@@ -309,7 +309,9 @@ Even after installing `fonts-noto-cjk` and clearing the cache, you still have to
 | Ubuntu / Debian | `sudo apt install fonts-wqy-zenhei` | WenQuanYi Zen Hei |
 | macOS | Built in | Heiti TC, Arial Unicode MS |
 | Windows | Built in | Microsoft JhengHei |
-| Google Colab | Preinstalled | Noto Sans CJK JP |
+| Google Colab | Usually preinstalled (depends on the runtime version) | Noto Sans CJK JP |
+
+If `!fc-list :lang=zh` prints nothing in Colab, run `!apt-get install -y fonts-noto-cjk` and restart the runtime.
 
 ### E-2. Plotly: charts are blank when Jupyter Book builds
 

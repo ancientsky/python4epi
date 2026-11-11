@@ -26,6 +26,7 @@ The solution notebooks are in [Ch17 Solutions](https://ancientsky.github.io/pyth
 | Ch | Topic | Practice focus | Exercise |
 |----|------|---------|------|
 | 01 | Python basics | Practice variables, dicts, and functions with the cluster numbers | [Exercise](exercises/01_fundamentals_exercise.ipynb) |
+| 01b | Python developer toolbox | Imports, type conversion, reading errors, try/except, string cleaning | [Exercise](exercises/01b_python_toolbox_exercise.ipynb) |
 | 02 | Data wrangling and visualization | Read the line list, convert dates, build the epi curve | [Exercise](exercises/02_data_wrangling_exercise.ipynb) |
 | 03 | Descriptive statistics and 2×2 tables | Shower-exposure 2×2 table, RR, chi-square test | [Exercise](exercises/03_stats_exercise.ipynb) |
 | 04 | Outbreak investigation workflow | Complete SitRep production pipeline | [Exercise](exercises/04_outbreak_workflow_exercise.ipynb) |

@@ -548,7 +548,12 @@ from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.stattools import adfuller
 
 # 先做平穩性檢定（ADF test）
-adf_stat, p_value, *_ = adfuller(synth)
+try:
+    # statsmodels 0.15 起建議用結果物件（舊的 tuple 回傳已棄用）；0.14 沒有此參數
+    _adf = adfuller(synth, result_object=True)
+    adf_stat, p_value = _adf.statistic, _adf.pvalue
+except TypeError:
+    adf_stat, p_value, *_ = adfuller(synth)
 print(f"ADF statistic = {adf_stat:.3f}, p-value = {p_value:.3f}")
 print(f"→ p < 0.05 表示序列平穩（不需要差分 d=0）；否則 d ≥ 1")
 

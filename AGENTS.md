@@ -4,7 +4,7 @@
 - `book/`: Jupyter Book 2 (MyST) source — `myst.yml` (student edition config + TOC), `_instructor/myst.yml` (instructor TOC). Main learning content lives in `book/chapters/`. `book_en/` is the English mirror.
 - `notebooks/`: runnable lesson notebooks; `notebooks/exercises/` stores exercise/solution pairs.
 - `src/epi_learning/`: reusable Python helpers (`cleaning.py`, `metrics.py`, `tabulate.py`, `viz.py`).
-- `data/synthetic/`: teaching datasets (e.g., `line_list.csv`, `admin_areas.geojson`).
+- `data/synthetic/`: teaching datasets (primary dataset `legionella_outbreak.csv`; legacy demo files such as `line_list.csv`, `admin_areas.geojson`).
 - `tests/`: unit and smoke tests.
 - `.github/workflows/`: CI and Pages deployment pipelines.
 
@@ -19,7 +19,7 @@
 - Python: 4-space indentation, clear variable names, and small focused functions.
 - Follow existing module style in `src/epi_learning/`.
 - File naming:
-- lessons: `NN_topic_name.ipynb` (e.g., `06_spatial_choropleth.ipynb`)
+- lessons: `NN_topic_name.ipynb` (e.g., `08_spatial_choropleth.ipynb`)
 - exercises: `NN_topic_exercise.ipynb` and `NN_topic_solution.ipynb`
 - Keep markdown educational and copy-paste runnable; prefer Traditional Chinese explanations with English technical terms.
 
@@ -30,7 +30,7 @@
 - Minimum bar for PRs: `uv run pytest` must pass.
 
 ## Commit & Pull Request Guidelines
-- This workspace currently has no visible Git history; use Conventional Commits going forward:
+- Use Conventional Commits:
 - `feat: add choropleth lesson notebook`
 - `fix: correct epi week conversion in chapter 02`
 - PRs should include:

@@ -130,10 +130,10 @@ df.info()
 
 > **`df.info()` tells you:**
 > - The total number of rows and columns
-> - The **name** and **type** of each column (`int64` integer, `float64` float, `object` text, `bool` boolean)
+> - The **name** and **type** of each column (`int64` integer, `float64` float, `object` text (shown as `str` from pandas 3 on), `bool` boolean)
 > - How many **non-null values** each column has—if a column has only 121 non-null values (instead of 280), it has missing data
 >
-> 💡 The `object` type usually means "text"—date columns are also read in as `object` and need to be manually converted to `datetime`.
+> 💡 The `object` type (what the pinned pandas 2.3 shows; pandas 3 shows `str` instead) usually means "text"—date columns are also read in as text and need to be manually converted to `datetime`.
 
 ```python
 df.describe()
@@ -156,7 +156,7 @@ df.describe()
 </div>
 <!-- /video -->
 
-The line list has 5 date columns, and when read in they're all **text (object)**—Python doesn't know they're dates. You have to manually convert them to the `datetime` type before you can sort by time, subtract dates, extract months, and so on.
+The line list has 5 date columns, and when read in they're all **text (`object`; `str` from pandas 3 on)**—Python doesn't know they're dates. You have to manually convert them to the `datetime` type before you can sort by time, subtract dates, extract months, and so on.
 
 ```python
 date_cols = [
