@@ -149,7 +149,7 @@ If you Google "install Python packages," almost every tutorial will teach you to
 
 | Task | The traditional way (`pip`) | This book's way (`uv`) |
 |------|-------------------|-------------------|
-| Install Python | Download from the official site and install manually | `uv python install 3.13` |
+| Install Python | Download from the official site and install manually | `uv python install 3.14` |
 | Create an environment | `python -m venv .venv && source .venv/bin/activate` | `uv sync` (creates and activates automatically) |
 | Install packages | `pip install pandas matplotlib` | `uv add pandas matplotlib` or `uv sync` |
 | Open a notebook | `jupyter lab` (make sure it's installed first) | `uv run jupyter lab` |
@@ -191,7 +191,7 @@ Next come the actual installation steps. The good news is: **you only need to in
 | The traditional way | The `uv` way |
 |----------|----------------|
 | ① Download the Python installer from the website | ① Install `uv` (one command) |
-| ② Install Python | ② `uv python install 3.13` (`uv` downloads Python automatically) |
+| ② Install Python | ② `uv python install 3.14` (`uv` downloads Python automatically) |
 | ③ Configure the PATH environment variable | ③ Not needed—`uv` manages it for you |
 | ④ Install pip / create a virtual environment | ④ Not needed—`uv sync` handles it all |
 
@@ -238,19 +238,19 @@ uv --version
 Once `uv` is installed, a single command installs Python:
 
 ```bash
-uv python install 3.13
+uv python install 3.14
 ```
 
-`uv` automatically downloads Python 3.13 and installs it into its own managed directory, so it won't conflict with any Python already on your computer.
+`uv` automatically downloads Python 3.14 and installs it into its own managed directory, so it won't conflict with any Python already on your computer.
 
 Verify:
 
 ```bash
 uv run python --version
-# You'll see: Python 3.13.x
+# You'll see: Python 3.14.x
 ```
 
-> **Why recommend 3.13?** Python 3.13 is the current stable release (published in October 2024). It has better performance, clearer error messages, and all the major data science packages already support it. If your computer already has Python 3.12 or 3.11, you can still use this book normally, but we recommend the latest version for the best experience.
+> **Why recommend 3.14?** Python 3.14 was released in October 2025 and has had several bug-fix releases since, so it is mature and stable. It has better performance, clearer error messages, and all the major data science packages this book uses already support it. The newer 3.15 has only just come out (October 2026) and some packages may not have caught up yet, so this book pins 3.14. If your computer already has Python 3.12 or 3.13, you can still use this book normally (the project accepts 3.12 and later), but we recommend 3.14 so your setup matches the book.
 
 ---
 
@@ -328,7 +328,7 @@ cd dengue-analysis
 uv init
 
 # Pin the Python version
-uv python pin 3.13
+uv python pin 3.14
 
 # Install the packages you need
 uv add pandas matplotlib jupyterlab openpyxl
@@ -377,9 +377,9 @@ We recommend Method A (installing from the terminal). Method B is convenient, bu
 
 | I want to… | Command | Notes |
 |---------|------|------|
-| Install Python | `uv python install 3.13` | Download the specified Python version |
+| Install Python | `uv python install 3.14` | Download the specified Python version |
 | Initialize a new project | `uv init` | Create `pyproject.toml` |
-| Pin the project's Python version | `uv python pin 3.13` | Create a `.python-version` file |
+| Pin the project's Python version | `uv python pin 3.14` | Create a `.python-version` file |
 | Install all packages | `uv sync` | Install according to `pyproject.toml` |
 | Add one package | `uv add pandas` | Install and record it in `pyproject.toml` |
 | Add multiple packages | `uv add pandas matplotlib seaborn` | Install several at once |
@@ -424,7 +424,7 @@ After it finishes, **close the terminal and reopen it**.
 mkdir epi-hello-world
 cd epi-hello-world
 uv init
-uv python pin 3.13
+uv python pin 3.14
 ```
 
 ### Step 3: install the epidemiology analysis packages
@@ -1439,7 +1439,7 @@ This is one of epidemiology's most central charts: the **epidemic curve**. It te
 |------|------|
 | `git clone` shows a `fatal` error | Your computer may not have Git installed—see the installation notes in Step 2, or use the ZIP download instead |
 | `command not found: uv` | Close the terminal and reopen it, or confirm the install path was added to `PATH` |
-| `python --version` isn't 3.13 | That's fine—`uv sync` will automatically download the correct version of Python |
+| `python --version` isn't 3.14 | That's fine—`uv sync` will automatically download the correct version of Python |
 | `uv sync` fails | Check your internet connection, then run it again. The first run needs to download quite a few packages |
 | Jupyter Lab opens blank | Try manually entering the `http://localhost:8888/...` URL shown in the terminal into your browser |
 | The notebook throws an error | Confirm you've run `uv sync`, then rerun from the first cell |

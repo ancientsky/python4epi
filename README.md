@@ -35,13 +35,13 @@ A Traditional Chinese-first learning website for infectious disease epidemiology
 
 ## Prerequisites
 
-- Python `3.13` (pinned in `.python-version`; the package itself accepts `>=3.12`)
+- Python `3.14` (pinned in `.python-version`; the package itself accepts `>=3.12`)
 - Node.js `24+` (required by Jupyter Book)
 
 ## Quick Start
 
 ```bash
-uv python pin 3.13
+uv python pin 3.14
 uv sync
 uv run jupyter lab
 ```
@@ -49,9 +49,9 @@ uv run jupyter lab
 ## Windows Quick Start (PowerShell)
 
 ```powershell
-winget install Python.Python.3.13
+winget install Python.Python.3.14
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-uv python pin 3.13
+uv python pin 3.14
 uv sync
 uv run jupyter lab
 ```

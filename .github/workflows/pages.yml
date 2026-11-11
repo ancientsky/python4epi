@@ -26,7 +26,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
-          version: "0.13.5"
+          version: "0.13.7"
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -35,7 +35,7 @@ jobs:
           check-latest: true
 
       - name: Set up Python
-        run: uv python install 3.13
+        run: uv python install 3.14
 
       # Render the YouTube cards from videos/youtube_ids.yaml at build time
       # rather than trusting the snapshot committed in the chapter markdown.
