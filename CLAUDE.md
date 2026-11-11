@@ -249,6 +249,12 @@ uv run python scripts/build_book.py --all --site-dir _site    # all seven, as de
   check also resolves absolute `https://ancientsky.github.io/python4epi/...` links
   (canonical/`hreflang`, navbar fallbacks, cross-edition buttons) against the assembled site.
 
+## Time-series foundation model notebooks (TimesFM)
+
+- `11_dl_timesfm.ipynb` (main book) and `book_ph/*/chapters/notebooks/07_forecast_timesfm.ipynb` show the real `timesfm3` calls, but the book build never downloads the ~1.3 GB weights: `src/epi_learning/tsfm.py` replays forecasts recorded from a real run in `data/tsfm_cache/*.json` (the build forces cache mode). Colab readers run the real model.
+- `timesfm` is an optional dependency group (`uv sync --group timesfm`), not a default dependency. After changing a notebook's forecasting inputs (series, horizon, context, covariates), regenerate its cache with `scripts/make_timesfm_cache.py` (needs the group and access to huggingface.co) and commit the JSON; a stale cache makes the notebook fail rather than replay the wrong numbers.
+- TimesFM 3.0 **weights** are under a non-commercial, non-production licence (code is Apache-2.0; 2.5 weights are Apache-2.0). Keep the licence box in any chapter that uses them, and re-check versions/licences before editing the landscape table in chapter 11.
+
 ## Tutorial Video & SVG Diagram Production
 
 Visual style, colour palette, SVG conventions, the Manim + TTS + FFMPEG pipeline, YAML
