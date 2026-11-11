@@ -582,6 +582,30 @@ def timeliness_717(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _forecast_layouts(y: np.ndarray, n: int, horizon: int
+                      ) -> list[tuple[list[np.ndarray], int]]:
+    """Batches of contexts a "forecast from the end of the series" request may have used.
+
+    Returns ``(contexts, row)`` pairs; ``row`` is the context ending at the end of
+    the data (or one week earlier). Layouts: a single context; ``[y, y[:-1]]`` (the
+    chapter-7 notebook's ``forecast_now``); the ``make_timesfm_cache.py --csv``
+    layout (rolling origins, then the end of the series).
+    """
+    layouts: list[tuple[list[np.ndarray], int]] = []
+    for drop in (0, 1):
+        series = y[: len(y) - drop]
+        last = len(series)
+        if n == 1:
+            layouts.append(([series], 0))
+        if n == 2 and drop == 0:
+            layouts.append(([y, y[:-1]], 0))
+        back = n - 1
+        origins = list(range(max(1, last - horizon - back + 1), last - horizon + 1)) + [last]
+        if n > 1 and len(origins) == n:
+            layouts.append(([series[:o] for o in origins], n - 1))
+    return layouts
+
+
 def load_forecast(data: dict[str, Any], cache_dir: Path = CACHE_DIR) -> dict[str, Any] | None:
     """Find a cached TimesFM forecast of the weeks after the data freeze.
 
@@ -620,19 +644,12 @@ def load_forecast(data: dict[str, Any], cache_dir: Path = CACHE_DIR) -> dict[str
             horizon = int(entry.get("horizon", 0))
             if len(shape) != 2 or horizon < 1:
                 continue
-            for drop in (0, 1):
-                y = y_full[: len(y_full) - drop]
-                last = len(y)
-                n_back = shape[0] - 1
-                origins = (list(range(max(1, last - horizon - n_back + 1), last - horizon + 1))
-                           if n_back else []) + [last]
-                if len(origins) != shape[0]:
-                    continue
-                contexts = [y[:o] for o in origins]
+            for contexts, row in _forecast_layouts(y_full, shape[0], horizon):
                 if input_fingerprint(contexts, horizon) != entry.get("fingerprint"):
                     continue
-                quant = np.asarray(entry["quantiles"], dtype=float)[-1]
-                median = np.asarray(entry["forecast"], dtype=float)[-1]
+                last = len(contexts[row])
+                quant = np.asarray(entry["quantiles"], dtype=float)[row]
+                median = np.asarray(entry["forecast"], dtype=float)[row]
                 start = weekly["week_start"].iloc[last - 1].date()
                 weeks = []
                 for k in range(horizon):
@@ -642,8 +659,8 @@ def load_forecast(data: dict[str, Any], cache_dir: Path = CACHE_DIR) -> dict[str
                                   "med": round(max(0.0, float(median[k])), 1),
                                   "lo": round(max(0.0, float(quant[k, 0])), 1),
                                   "hi": round(max(0.0, float(quant[k, -1])), 1)})
-                return {"weeks": weeks, "start": weeks[0]["wk"], "dropped_last": bool(drop),
-                        "source": f"{path.name}:{key}"}
+                return {"weeks": weeks, "start": weeks[0]["wk"],
+                        "dropped_last": last < len(y_full), "source": f"{path.name}:{key}"}
     return None
 
 
@@ -1509,7 +1526,7 @@ def render_html(payload: dict[str, Any]) -> str:
         '<div class="legend" id="curve-legend"></div>'
         '<div class="chart" id="c-curve" role="img"></div>'
         + _details(lang, _table([t["week"], t["week_start"], t[lep], t[den]], curve_rows,
-                                t["curve_title"]),
+                                t["curve_title"], "counts"),
                    _esc(t["unknown_onset"]) + " " + _esc(t["lt5_long"])),
         take=_esc(_t(lang, "curve_take", lep_wk=curve["peak"][lep]["wk"],
                      lep_n=curve["peak"][lep]["n"], den_wk=curve["peak"][den]["wk"],
@@ -1539,7 +1556,7 @@ def render_html(payload: dict[str, Any]) -> str:
     brgy_table = _table([t["brgy"], t["band"], t["population"], f"{t[lep]}: {t['cases']}",
                          f"{t[lep]}: {t['per10k']}", f"{t[den]}: {t['cases']}",
                          f"{t[den]}: {t['per10k']}"], brgy_rows, t["map_title"],
-                        "suppressed")
+                        "counts")
     map_panel = _panel(
         "p-map", t["map_title"], t["map_sub_rate"],
         '<div class="map-wrap"><div class="chart" id="c-map" role="img"></div>'
@@ -1573,7 +1590,7 @@ def render_html(payload: dict[str, Any]) -> str:
         '<div class="chart" id="c-thr" role="img"></div>'
         f'<p class="fc-note{" none" if not fc else ""}">{fc_text}</p>'
         + _details(lang, _table([t["week"], t["week_start"], t["cases"], t["threshold"],
-                                 t["above"]], thr_rows, t["thr_title"]),
+                                 t["above"]], thr_rows, t["thr_title"], "counts"),
                    _esc(t["lt5_long"]) + "."),
         take=_esc(_t(lang, "thr_take", first=first_above, wk=complete[-1]["wk"],
                      n=complete[-1]["cell"][0], thr=format_number(complete[-1]["thr"], 1))),
@@ -1591,7 +1608,7 @@ def render_html(payload: dict[str, Any]) -> str:
         + _details(lang, _table([t["age_group"], f"{t[lep]}: {t['male']}",
                                  f"{t[lep]}: {t['female']}", f"{t[den]}: {t['male']}",
                                  f"{t[den]}: {t['female']}"], pyr_rows, t["pyr_title"],
-                                "suppressed"),
+                                "counts"),
                    _esc(_t(lang, "unknown_age", n=k["unknown_age"])) + " "
                    + _esc(t["lt5_long"]) + ". " + _esc(t["x_long"]) + "."),
         take=_esc(_t(lang, "pyr_take", lep_m=format_number(k["male_pct"][lep]),
@@ -2024,7 +2041,7 @@ _PRINT_RULES = r"""
 {P}.sun{width:30px;height:30px;animation:none}
 {P}.top h1{font-size:19px;margin:2px 0 0;text-shadow:0 2px 0 #001a55}
 {P}.kicker{font-size:8px;padding:2px 6px}
-{P}.subtitle{font-size:9px}
+{P}.subtitle{display:none}
 {P}.asof{padding:3px 8px;box-shadow:none}
 {P}.asof b{font-size:10px}{P}.asof small{font-size:7.5px}
 {P}.fiction{font-size:8px}
@@ -2034,22 +2051,24 @@ _PRINT_RULES = r"""
 {P}.kpi{padding:3px 8px 3px;box-shadow:none;border-width:1px;border-radius:8px}
 {P}.kpi::before{height:3px}
 {P}.kpi-label{font-size:7.5px}{P}.kpi-val{font-size:17px}{P}.kpi-sub{font-size:7.5px;margin:0}
-{P}.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+{P}.grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
 {P}.panel{padding:4px 7px 3px;box-shadow:none;border-width:1px;border-radius:8px;break-inside:avoid;animation:none}
-{P}#p-curve,{P}#p-thr{grid-column:span 2}{P}#p-actions{grid-column:1/-1;order:9}
-{P}#p-map,{P}#p-pyr,{P}#p-717,{P}#p-forest{grid-column:span 1}
+{P}.grid>.panel,{P}.grid>#p-forest{grid-column:span 2}{P}#p-actions{grid-column:1/-1;order:9}
+{P}#p-curve{order:1}{P}#p-thr{order:2}{P}#p-map{order:3}{P}#p-pyr{order:4}{P}#p-forest{order:5}{P}#p-717{order:6}
 {P}.map-wrap{grid-template-columns:1fr}{P}.legend.vertical{flex-direction:row;flex-wrap:wrap}
 {P}.panel h2{font-size:10px}{P}.panel h2::before{width:8px;height:8px;margin-right:4px}
 {P}.sub{font-size:7.5px;margin:0}
 {P}.take{font-size:8.5px;margin:2px 0;padding-left:5px;border-left-width:2px}
 {P}.legend{font-size:7.5px;margin:1px 0;min-height:0;gap:2px 8px}
 {P}.legend i{width:9px;height:8px}
-{P}.fine{font-size:7px}
+{P}.fine{display:none}
 {P}.fc-note{font-size:7.5px;margin:1px 0 0;padding:1px 4px}
-{P}.actions{gap:3px;margin-top:3px;grid-template-columns:repeat(3,minmax(0,1fr))}
+{P}.actions{gap:3px;margin-top:3px;grid-template-columns:repeat(6,minmax(0,1fr))}
+{P}.panel .sub{display:none}{P}.legend.vertical{gap:1px 6px}
+{P}#c-map svg{width:auto;max-width:100%;height:100px;margin:0 auto}
 {P}.act{padding:3px 6px 3px 24px;border-radius:6px}
 {P}.act::before{width:14px;height:14px;font-size:8px;left:5px;top:4px}
-{P}.act h3{font-size:8.5px}{P}.act p{font-size:7.5px;margin:0}
+{P}.act h3{font-size:8px}{P}.act p{font-size:7px;line-height:1.3;margin:0}
 {P}.chip{display:none}
 {P}.gauges{gap:3px;margin-top:2px}
 {P}.gauge{max-width:52px}
@@ -2058,9 +2077,10 @@ _PRINT_RULES = r"""
 {P}.bottlenecks{gap:2px}
 {P}.bottlenecks li{font-size:7.5px;gap:1px 6px}
 {P}.b-bar{height:3px}
-{P}.notes{padding:3px 0 0;margin:0;max-width:none}
+{P}.notes{padding:2px 0 0;margin:0;max-width:none;break-inside:avoid}
 {P}.notes>h2{font-size:9px;margin:0 0 2px}
-{P}.notes ul{grid-template-columns:repeat(3,minmax(0,1fr));font-size:6.6px;gap:1px 12px;padding-left:10px}
+{P}.notes ul{grid-template-columns:repeat(auto-fit,minmax(0,1fr));grid-auto-flow:column;font-size:6px;line-height:1.22;gap:1px 10px;padding-left:10px}
+{P}.fc-note:not(.none){display:none}
 {P}.foot{font-size:7px;margin:2px 0 0;padding-top:2px}
 {P}.kpi,{P}.panel,{P}.alert{animation:none}
 """
@@ -2070,7 +2090,7 @@ def _print_css() -> str:
     """CSS for printing: the print rules for ``@media print`` and for ``html.printing``."""
     in_print = _PRINT_RULES.replace("{P}", "html ")
     preview = _PRINT_RULES.replace("{P}", "html.printing ")
-    return ("@page{size:A4 landscape;margin:7mm}"
+    return ("@page{size:A4 landscape;margin:5mm}"
             "@media print{html{-webkit-print-color-adjust:exact;print-color-adjust:exact}"
             + in_print + "}" + "html.printing body{width:1060px}" + preview)
 
@@ -2204,7 +2224,7 @@ _JS = r"""
     if (!W) return;
     var weeks = D.curve.weeks, n = weeks.length;
     var show = state.curve === "both" ? DIS : [state.curve];
-    var H = printing() ? Math.round(W * 0.34) : Math.round(Math.max(230, Math.min(440, W * 0.56)));
+    var H = printing() ? Math.round(W * 0.31) : Math.round(Math.max(230, Math.min(440, W * 0.56)));
     var m = { l: 40, r: 10, t: 34, b: W < 520 || printing() ? 24 : 40 };
     legend("curve-legend", show.map(function (d) { return ["bar " + SHORT[d], T[d]]; })
       .map(function (x) { return [x[0].replace("bar ", ""), x[1]]; })
@@ -2273,7 +2293,7 @@ _JS = r"""
     var weeks = D.thr.weeks, fc = D.forecast;
     var fweeks = fc ? fc.weeks : [];
     var slots = weeks.length + fweeks.length;
-    var H = printing() ? Math.round(W * 0.34) : Math.round(Math.max(230, Math.min(310, W * 0.5)));
+    var H = printing() ? Math.round(W * 0.31) : Math.round(Math.max(230, Math.min(310, W * 0.5)));
     var m = { l: 38, r: 10, t: 16, b: 32 };
     var items = [["den", T.dengue], ["den-above", T.above], ["line", T.threshold]];
     if (fc) items.push(["band", T.fc_label]);
@@ -2418,7 +2438,7 @@ _JS = r"""
     var host = document.getElementById("c-pyr"), W = host.clientWidth;
     if (!W) return;
     var P = D.pyramid, dis = state.pyr, groups = P.groups, n = groups.length;
-    var rowH = printing() ? 19 : W < 420 ? 30 : 32, m = { t: 22, b: 24 }, H = m.t + m.b + rowH * n;
+    var rowH = printing() ? 13 : W < 420 ? 30 : 32, m = { t: 22, b: 24 }, H = m.t + m.b + rowH * n;
     var mid = 44, side = (W - mid) / 2 - 30;
     legend("pyr-legend", [["male", T.male], ["female", T.female], ["sw-hatch", T.lt5_long]]);
     var svg = svgFor(host, W, H, T.pyr_title);
@@ -2474,9 +2494,10 @@ _JS = r"""
   function drawForest() {
     var host = document.getElementById("c-forest"), W = host.clientWidth;
     if (!W) return;
-    var rows = D.forest, narrow = W < 400, cjk = D.lang === "zh";
-    var labW = Math.min(190, Math.max(118, W * 0.4)), valW = narrow ? 0 : 92;
-    var rowH = printing() ? (narrow ? 22 : 19) : narrow ? 36 : 30, m = { t: 8, b: 40 };
+    var rows = D.forest, PR = printing(), narrow = W < 400 && !PR, cjk = D.lang === "zh";
+    var fsz = PR ? 8.5 : 11.5, lh = PR ? 9 : 13;
+    var labW = PR ? W * 0.5 : Math.min(190, Math.max(118, W * 0.4)), valW = narrow ? 0 : (PR ? 70 : 92);
+    var rowH = printing() ? 12.5 : narrow ? 36 : 30, m = { t: 6, b: PR ? 18 : 40 };
     var H = m.t + m.b + rowH * rows.length;
     var svg = svgFor(host, W, H, T.forest_title);
     var x0 = labW + 6, x1 = W - valW - 10, lmin = Math.log(0.1), lmax = Math.log(10);
@@ -2486,16 +2507,18 @@ _JS = r"""
       S("line", { x1: X(v), x2: X(v), y1: m.t, y2: H - m.b, "class": "gridl" }, ax);
       T_(ax, X(v), H - m.b + 14, String(v), "", "middle", 10.5);
     });
-    T_(svg, X(1) - 6, H - 6, "← " + T.protective, "lbl", "end", 10.5);
-    T_(svg, X(1) + 6, H - 6, T.risk + " →", "lbl", "start", 10.5);
-    var maxc = Math.floor(labW / (cjk ? 12.5 : 6.6));
+    if (!PR) {
+      T_(svg, X(1) - 6, H - 6, "← " + T.protective, "lbl", "end", 10.5);
+      T_(svg, X(1) + 6, H - 6, T.risk + " →", "lbl", "start", 10.5);
+    }
+    var maxc = Math.floor(labW / (cjk ? fsz + 1 : fsz * 0.56));
     rows.forEach(function (r, i) {
       var y = m.t + rowH * i, cy = y + rowH / 2;
       var g = S("g", { "class": "f-row" }, svg);
       S("rect", { x: 0, y: y, width: W, height: rowH, "class": "f-bg" }, g);
       var lines = wrap(T["ex_" + r.key], maxc);
       lines.forEach(function (ln, j) {
-        T_(g, 4, cy + 4 + (j - (lines.length - 1) / 2) * 13, ln, r.kind === "adjusted" ? "lbl strong" : "lbl", "start", 11.5);
+        T_(g, 4, cy + 3 + (j - (lines.length - 1) / 2) * lh, ln, r.kind === "adjusted" ? "lbl strong" : "lbl", "start", fsz);
       });
       S("line", { x1: X(r.lo), x2: X(r.hi), y1: cy, y2: cy, "class": "f-ci gmx" }, g).style.transformOrigin = X(r.or) + "px 0";
       var pt;
@@ -2509,7 +2532,7 @@ _JS = r"""
       bind(pt, function () {
         return "<b>" + esc(T["ex_" + r.key]) + "</b><br>" + esc(fill(T.or_ci, { or: r.or.toFixed(2), lo: r.lo.toFixed(2), hi: r.hi.toFixed(2) }));
       });
-      if (!narrow) T_(g, W - 4, cy + 4, r.or.toFixed(2) + " (" + r.lo.toFixed(2) + "–" + r.hi.toFixed(2) + ")", "lbl", "end", 11);
+      if (!narrow) T_(g, W - 4, cy + 3, r.or.toFixed(2) + " (" + r.lo.toFixed(2) + "–" + r.hi.toFixed(2) + ")", "lbl", "end", PR ? 8 : 11);
     });
     S("line", { x1: X(1), x2: X(1), y1: m.t, y2: H - m.b, "class": "f-one" }, svg);
   }

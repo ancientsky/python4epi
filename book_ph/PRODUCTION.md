@@ -238,7 +238,7 @@ from a per-language dictionary inside the script (`en`, `zh`, `fil`). Planned se
 - [x] P1 interactives (ph-games.js, GAMES.md)
 - [~] P2 English chapters 00–02 + notebooks (written; awaiting build QA)
 - [~] P2 English chapters 03–05 + notebooks (written; awaiting build QA)
-- [ ] P2 English chapters 06–08 + notebooks
+- [~] P2 English chapters 06–08 + notebooks (written; awaiting build QA)
 - [ ] P2 English chapters 09–10 + dashboard
 - [ ] P3 中文 edition
 - [ ] P3 Filipino edition
