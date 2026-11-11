@@ -272,8 +272,8 @@ html.dark .ph-bin-target { color: #10162a !important; }
 .ph-case-card { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 10px; background: var(--g-sun); color: #1d2433; font-weight: 600; }
 .ph-case-card .ph-choices { width: 100%; }
 .ph-case-tag { background: #1d2433; color: var(--g-sun); border-radius: 6px; padding: 0.05rem 0.45rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
-.ph-curve-wrap { display: flex; align-items: stretch; gap: 0.25rem; margin-top: 0.6rem; }
-.ph-axis-y { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 0.72rem; color: var(--g-muted); text-align: center; }
+.ph-curve-wrap { display: flex; align-items: stretch; margin-top: 0.2rem; }
+.ph-axis-y { font-size: 0.75rem; color: var(--g-muted); margin: 0.5rem 0 0 !important; }
 .ph-curve {
   --u: 15px; flex: 1; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0;
   border-bottom: 2px solid var(--g-ink); border-left: 2px solid var(--g-ink); padding-top: 4px;
@@ -330,7 +330,7 @@ html.dark .ph-col:nth-child(even) { background: rgba(143, 176, 255, 0.05); }
 
 /* -- charts (threshold-watch, forecast-guess, publish-check) ------------------ */
 .ph-chart-wrap, .ph-map-wrap { margin: 0.5rem 0; }
-.ph-chart, .ph-map { display: block; width: 100%; height: auto; overflow: visible; }
+.ph-chart, .ph-map { display: block; width: 100%; max-width: 600px; margin: 0 auto; height: auto; overflow: visible; }
 .ph-grid { stroke: var(--g-line); stroke-width: 0.7; }
 .ph-axis { stroke: var(--g-ink); stroke-width: 1.2; }
 .ph-tick { fill: var(--g-muted); font-size: 10px; font-family: inherit; }
@@ -487,3 +487,5 @@ html.dark .ph-splash { color: #10251a; }
 .ph-draw-hint { font-weight: 700; fill: #8a6d00; }
 html.dark .ph-draw-hint { fill: var(--g-sun); }
 .is-revealed .ph-draw-hint { display: none; }
+.ph-calc { margin: 0.3rem 0 0.4rem; font-size: 0.8rem; line-height: 1.45; background: none; padding: 0; white-space: pre; overflow-x: auto; color: inherit; }
+.ph-token.is-safe.is-right, .ph-pii-col.is-safe.is-right { background: transparent !important; border-color: var(--g-line) !important; border-style: dashed; }

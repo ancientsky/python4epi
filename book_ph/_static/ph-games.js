@@ -1173,7 +1173,7 @@
       roving(chart, ".ph-col");
       function updateLabels() {
         cols.forEach(function (col, k) {
-          col.setAttribute("aria-label", label(c, k, true) + ": " + counts[k] + " " + L(["cases", "例", "kaso"]));
+          col.setAttribute("aria-label", label(c, k, true) + ": " + counts[k] + " " + L(counts[k] === 1 ? ["case", "例", "kaso"] : ["cases", "例", "kaso"]));
         });
       }
       updateLabels();
@@ -1181,10 +1181,10 @@
         h("p", { class: "ph-progress" }, U("roundOf", { i: ci + 1, n: list.length })),
         h("p", { class: "ph-task", tabindex: "-1" }, [h("strong", null, L(c.title)), h("br"), L(c.context)])
       ]);
-      var yLab = h("span", { class: "ph-axis-y" }, L(["cases", "病例數", "kaso"]));
+      var yLab = h("p", { class: "ph-axis-y" }, "▲ " + L(["cases (one square = one case)", "病例數（一格＝一位病例）", "kaso (isang kahon = isang kaso)"]));
       var xLab = h("p", { class: "ph-axis-x" }, c.unit === "week" ? L(["Morbidity week of onset, 2026", "發病週別（2026）", "Morbidity week ng onset, 2026"]) : L(["Date of onset, 2026", "發病日期（2026）", "Petsa ng onset, 2026"]));
       var legend = c.marker != null ? h("p", { class: "ph-hint" }, [h("span", { class: "ph-marker-key", "aria-hidden": "true" }), " " + label(c, c.marker, true) + ": " + L(c.markerLabel)]) : null;
-      append(ctx.body, [head, cardEl, h("div", { class: "ph-curve-wrap" }, [yLab, chart]), xLab, legend]);
+      append(ctx.body, [head, cardEl, yLab, h("div", { class: "ph-curve-wrap" }, chart), xLab, legend]);
       function showCard() {
         if (!queue.length) { askShape(); return; }
         var k = queue[0];
@@ -1534,7 +1534,7 @@
       var b = B[t];
       append(detailBox, [
         h("p", null, fmt(L(["Week W{w}, same week in 2021–2025: {v}", "W{w}，2021–2025 年同一週：{v}", "Linggo W{w}, parehong linggo noong 2021–2025: {v}"]), { w: TW.first + t, v: b.values.join(", ") })),
-        h("p", null, [h("code", null, "mean = " + num(b.mean, 1) + "   SD = " + num(b.sd, 1)), h("br"), h("code", null, "threshold = mean + 2 × SD = " + num(b.mean, 1) + " + 2 × " + num(b.sd, 1) + " = " + num(b.thr, 1))])
+        h("pre", { class: "ph-calc" }, "mean      = " + num(b.mean, 1) + "\nSD        = " + num(b.sd, 1) + "\nthreshold = mean + 2 × SD\n          = " + num(b.mean, 1) + " + 2 × " + num(b.sd, 1) + " = " + num(b.thr, 1))
       ]);
     }
     function draw() {
@@ -1919,7 +1919,7 @@
         return g;
       });
       kids.push(s("text", { x: 201, y: 236, class: "ph-tick", "text-anchor": "middle" }, "Marilag River"));
-      var svgEl = s("svg", { viewBox: "0 0 382 242", class: "ph-map", role: "group", "aria-label": L(["Tile map of the 24 barangays of Santa Luz (west: coast, centre: river, east: uplands)", "Santa Luz 24 個 barangay 的方格地圖（西：海岸，中：河流，東：山區）", "Tile map ng 24 barangay ng Santa Luz (kanluran: baybayin, gitna: ilog, silangan: kabundukan)"]) }, kids);
+      var svgEl = s("svg", { viewBox: "0 0 382 242", class: "ph-map", role: "group", tabindex: "-1", focusable: "false", "aria-label": L(["Tile map of the 24 barangays of Santa Luz (west: coast, centre: river, east: uplands)", "Santa Luz 24 個 barangay 的方格地圖（西：海岸，中：河流，東：山區）", "Tile map ng 24 barangay ng Santa Luz (kanluran: baybayin, gitna: ilog, silangan: kabundukan)"]) }, kids);
       roving(svgEl, ".ph-tile", { cols: 6 });
       legendEl = h("div", { class: "ph-map-legend" });
       msgEl = h("p", { class: "ph-map-msg" });
