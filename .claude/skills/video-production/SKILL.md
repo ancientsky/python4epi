@@ -219,7 +219,7 @@ Adding a video for a chapter also means adding its marker pair to the chapter in
 
 ### Video Dependencies
 Managed in a separate `video` dependency group in `pyproject.toml`:
-- `manim>=0.18.0` (animation engine)
+- `manim>=0.20.1,<0.23` (animation engine; see the compatibility section below)
 - `edge-tts>=6.1.0` (Microsoft Edge TTS, free zh-TW voices)
 - `pyyaml>=6.0` (YAML script parsing)
 - System deps: `ffmpeg`, `fonts-noto-cjk`
@@ -259,13 +259,15 @@ segments:
 - `BlindSpotBanner` / `ExtraExampleBanner` — section title banners
 
 
-## Manim v0.20.1 API Compatibility (Known Breaking Changes)
+## Manim API compatibility (v0.20+; known breaking changes)
 
-The video system uses Manim Community **v0.20.1**, which introduced major breaking changes from older tutorials/docs. When writing or modifying `Code()` calls, use the v0.20.1 API:
+The video system targets the `Code()` API that Manim Community introduced in **v0.20**, which broke compatibility with older tutorials/docs. `pyproject.toml` allows `manim>=0.20.1,<0.23`; the lock file currently resolves **0.22.1**. When writing or modifying `Code()` calls, use the v0.20+ API below.
+
+**Bumping manim.** The 0.20.1 → 0.22.1 upgrade was checked by running `videos/check_video_layout.py` over all 244 scripts (zh + en) and rendering ten videos at low quality without audio (code panels, NG/OK panels and CJK text all drew correctly). CI does not render videos, so a green CI run says nothing about the video pipeline — repeat that check before raising the upper bound again.
 
 ### Code class (`manim.mobject.text.code_mobject.Code`)
 
-**Constructor signature (v0.20.1):**
+**Constructor signature (v0.20+):**
 ```python
 Code(
     code_file: StrPath | None = None,
@@ -283,7 +285,7 @@ Code(
 
 **Migration table:**
 
-| Old API (pre-0.20) | v0.20.1 API |
+| Old API (pre-0.20) | v0.20+ API |
 |---------------------|-------------|
 | `Code(code="...")` | `Code(code_string="...")` |
 | `font_size=20` | `paragraph_config={"font_size": 20}` |
@@ -294,7 +296,7 @@ Code(
 
 ### Code() class `_gen_chars()` crash (IndexError: list index out of range)
 
-Manim v0.20.1's `Code()` class has a bug in `Text._gen_chars()` where the rendered glyph count from Pango/Cairo doesn't match the expected character count. This crashes with `IndexError: list index out of range` for:
+Manim v0.20.1's `Code()` class has a bug (not re-tested on 0.22.1 — the workaround below stays in place either way) in `Text._gen_chars()` where the rendered glyph count from Pango/Cairo doesn't match the expected character count. This crashes with `IndexError: list index out of range` for:
 - Strings with `???`, `...`, or other special character sequences
 - Multi-line code strings with CJK characters
 - Non-Python code strings (shell commands like `git add .`, `pip install`, `command not found: uv`)

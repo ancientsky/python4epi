@@ -258,7 +258,7 @@ uv run python scripts/build_book.py --all --site-dir _site    # all seven, as de
 ## Tutorial Video & SVG Diagram Production
 
 Visual style, colour palette, SVG conventions, the Manim + TTS + FFMPEG pipeline, YAML
-script format, and Manim v0.20.1 breaking changes now live in the `video-production`
+script format, and Manim API compatibility notes (v0.20+) now live in the `video-production`
 skill (`.claude/skills/video-production/SKILL.md`) — it loads automatically when you work
 on videos or diagrams.
 
