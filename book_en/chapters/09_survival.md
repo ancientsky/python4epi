@@ -269,7 +269,7 @@ cases["time_to_event"] = (cases["end_date"] - cases["symptom_onset_date"]).dt.da
 > |---|---|
 > | `pd.to_datetime(...)` | Turns date strings into a real "date type" so we can subtract them to get a number of days (subtracting strings directly raises an error) |
 > | `df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)` | Boolean `True/False` → `1/0`; anything other than `not_ill` counts as infected |
-> | `cases = df[df["infected"] == 1].copy()` | Survival analysis only looks at people who **actually got sick**; `.copy()` lets us edit columns later without the `SettingWithCopyWarning` |
+> | `cases = df[df["infected"] == 1].copy()` | Survival analysis only looks at people who **actually got sick**; `.copy()` makes it explicit that `cases` is its own table, so editing its columns later never touches `df` |
 > | `cases["event"] = (cases["outcome"] == "dead").astype(int)` | **Event flag**: death=1, survived=0 (censored). The second of the three things |
 > | `investigation_end = ...max() + Timedelta(days=14)` | People who didn't die still need an "observed until when" cutoff; take the last onset date plus 14 days |
 > | `cases.apply(lambda r: death_date if event==1 else cutoff, axis=1)` | Each person's stopwatch **stop time**: the death date if they died, the cutoff if they survived |

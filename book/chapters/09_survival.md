@@ -269,7 +269,7 @@ cases["time_to_event"] = (cases["end_date"] - cases["symptom_onset_date"]).dt.da
 > |---|---|
 > | `pd.to_datetime(...)` | 把日期字串轉成真正的「日期型別」，之後才能相減算天數（字串直接相減會報錯） |
 > | `df["infected"] = (df["clinical_severity"] != "not_ill").astype(int)` | 布林 `True/False` → `1/0`；只要不是 `not_ill` 就算發病 |
-> | `cases = df[df["infected"] == 1].copy()` | 存活分析只看**確實發病**的人；`.copy()` 是為了之後安心改欄位、不跳 `SettingWithCopyWarning` |
+> | `cases = df[df["infected"] == 1].copy()` | 存活分析只看**確實發病**的人；`.copy()` 明確表示 `cases` 是一張獨立的表，之後改欄位不會動到 `df` |
 > | `cases["event"] = (cases["outcome"] == "dead").astype(int)` | **事件旗標**：死亡=1、存活=0（設限）。三樣東西的第②樣 |
 > | `investigation_end = ...max() + Timedelta(days=14)` | 沒死的人也要有「觀察到哪天」的截止日；用最後一位發病日再加 14 天 |
 > | `cases.apply(lambda r: 死亡日 if event==1 else 截止日, axis=1)` | 每個人碼表的 **stop 時間**：死的人用死亡日，活的人用截止日 |

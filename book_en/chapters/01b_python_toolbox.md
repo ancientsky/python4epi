@@ -454,7 +454,7 @@ uv python pin 3.14
 uv add pandas
 
 # install a specific version
-uv add "pandas>=2.0,<3.0"
+uv add "pandas>=3.0,<4.0"
 
 # install a development package (not used in production)
 uv add --dev pytest

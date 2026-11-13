@@ -435,7 +435,7 @@ def test_weekly_schema_and_span(weekly: pd.DataFrame) -> None:
     assert weekly["morbidity_week"].iloc[-1] == "2026-W39"
     assert len(weekly) == 404 and weekly["morbidity_week"].is_unique
     starts = pd.to_datetime(weekly["week_start"])
-    assert (starts.dt.dayofweek == 0).all() and (starts.diff().dropna().dt.days == 7).all()
+    assert (starts.dt.day_of_week == 0).all() and (starts.diff().dropna().dt.days == 7).all()
     iso = starts.dt.isocalendar()
     assert (iso["year"].to_numpy() == weekly["iso_year"].to_numpy()).all()
     assert (iso["week"].to_numpy() == weekly["iso_week"].to_numpy()).all()

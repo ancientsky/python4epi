@@ -109,8 +109,8 @@ It runs, and nothing turns red. Maya asks two nurse's questions: how many dates
 :class: ph-oops
 - **22 onset dates became `NaT`** ("not a time"). Those were the Excel serial numbers,
   which pandas does not see as dates.
-- **56 patients now "fell ill after they consulted".** With `dayfirst=True`, `8/1/2026`
-  (1 August) became 8 January. Dates like `7/29/2026` were still right, because there
+- **70 patients now "fell ill after they consulted".** With `dayfirst=True`, `8/1/2026`
+  (1 August) became 8 January, and so did `2026-08-01`. Dates like `7/29/2026` were still right, because there
   is no month 29, so the mistake hid among good rows.
 
 In the Philippines the slash style is month/day/year, and Jun confirmed that every
@@ -148,7 +148,7 @@ def parse_dates(s: pd.Series) -> pd.Series:
    `2026-07-24` seven times, and a blank must stay missing.
 2. **Count what failed:** a text date that is not blank must never become `NaT`. The
    notebook stops with an `assert` if one does.
-3. **Ask the epidemiology question again:** onset after consultation drops from 56 rows
+3. **Ask the epidemiology question again:** onset after consultation drops from 70 rows
    to **2**. Those two are real typing errors in Jun's file, and we deal with them below.
 :::
 
