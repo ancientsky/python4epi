@@ -40,10 +40,11 @@ dev = [
   "pyyaml>=6.0",
 ]
 video = [
-  # Pin to the 0.20.x line: the code targets the v0.20.1 Code() API
-  # (background_config/paragraph_config/formatter_style) and the ErrorVsCorrect
-  # workaround for the 0.20.x _gen_chars() crash; the old pre-0.20 API and a
-  # future 0.21+ would break CodePanel. See CLAUDE.md "Manim v0.20.1 API".
+  # The code targets the Code() API introduced in v0.20
+  # (background_config/paragraph_config/formatter_style), so pre-0.20 breaks
+  # CodePanel. Verified on 0.20.1 and 0.22.1 (layout check of all 244 scripts
+  # plus real renders); before raising the upper bound, repeat that check. See
+  # the video-production skill, "Manim API compatibility".
   "manim>=0.20.1,<0.23",
   "edge-tts>=6.1.0",
   "pyyaml>=6.0",
