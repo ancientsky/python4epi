@@ -133,7 +133,7 @@ df.info()
 > - The **name** and **type** of each column (`int64` integer, `float64` float, `object` text (shown as `str` from pandas 3 on), `bool` boolean)
 > - How many **non-null values** each column has—if a column has only 121 non-null values (instead of 280), it has missing data
 >
-> 💡 The `object` type (what the pinned pandas 2.3 shows; pandas 3 shows `str` instead) usually means "text"—date columns are also read in as text and need to be manually converted to `datetime`.
+> 💡 The `str` type (what pandas 3, which this book pins, shows; pandas 2 showed `object`) usually means "text"—date columns are also read in as text and need to be manually converted to `datetime`.
 
 ```python
 df.describe()

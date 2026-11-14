@@ -116,8 +116,8 @@ petsa ang **pumalya**, at may **nagkasakit ba pagkatapos magpakonsulta**?
 :class: ph-oops
 - **22 petsa ng onset ang naging `NaT`** ("not a time"). Iyon ang mga Excel serial
   number, na hindi itinuturing na petsa ng pandas.
-- **56 na pasyente ang "nagkasakit pagkatapos nilang magpakonsulta".** Dahil sa
-  `dayfirst=True`, naging 8 Enero ang `8/1/2026` (1 Agosto). Tama pa rin ang mga
+- **70 na pasyente ang "nagkasakit pagkatapos nilang magpakonsulta".** Dahil sa
+  `dayfirst=True`, naging 8 Enero ang `8/1/2026` (1 Agosto), pati ang `2026-08-01`. Tama pa rin ang mga
   petsang gaya ng `7/29/2026`, dahil walang buwang 29, kaya nagtago ang mali sa gitna
   ng maayos na rows.
 
@@ -157,7 +157,7 @@ def parse_dates(s: pd.Series) -> pd.Series:
    dapat maging `2026-07-24` nang pitong beses, at dapat manatiling missing ang blangko.
 2. **Bilangin ang pumalya:** hindi dapat maging `NaT` ang petsang text na hindi blangko.
    Titigil ang notebook sa isang `assert` kapag may ganoon.
-3. **Itanong ulit ang tanong-epidemiology:** bumababa mula 56 hanggang **2** ang rows na
+3. **Itanong ulit ang tanong-epidemiology:** bumababa mula 70 hanggang **2** ang rows na
    onset pagkatapos ng konsulta. Totoong typo ang dalawang iyon sa file ni Jun, at
    aayusin natin sa ibaba.
 :::

@@ -133,7 +133,7 @@ df.info()
 > - 每個欄位的**名稱**和**型別**（`int64` 整數、`float64` 小數、`object` 文字（pandas 3 起顯示為 `str`）、`bool` 布林）
 > - 每個欄位有幾個**非空值**——如果某欄只有 121 個非空值（而不是 280），就有遺漏值
 >
-> 💡 `object` 型別（本教材鎖定的 pandas 2.3 顯示 `object`；pandas 3 起改顯示 `str`）通常代表「文字」——日期欄位讀進來也是文字，需要手動轉換成 `datetime`。
+> 💡 `str` 型別（本教材鎖定的 pandas 3 顯示 `str`；pandas 2 顯示的是 `object`）通常代表「文字」——日期欄位讀進來也是文字，需要手動轉換成 `datetime`。
 
 ```python
 df.describe()
