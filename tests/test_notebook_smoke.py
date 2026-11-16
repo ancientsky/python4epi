@@ -83,3 +83,22 @@ def test_ph_notebooks_mirrored_across_languages():
             assert cells[0]["cell_type"] == "markdown", f"{lang}/{name}: no title cell"
             setup = "".join(cells[1]["source"])
             assert "google.colab" in setup and "python4epi" in setup, f"{lang}/{name}"
+
+
+def test_colab_setup_cell_makes_epi_learning_importable() -> None:
+    """Every tracked notebook's Colab setup cell puts ``src`` on ``sys.path``.
+
+    ``pip install -e .`` only becomes importable after a runtime restart, so the
+    cell must add the path itself before any ``from epi_learning import ...``.
+    """
+    roots = ["notebooks", "book/chapters", "book_en/chapters", "book_ph"]
+    paths = sorted(p for root in roots for p in Path(root).rglob("*.ipynb") if "_build" not in p.parts)
+    assert paths, "no notebooks found"
+    for path in paths:
+        cells = json.loads(path.read_text(encoding="utf-8"))["cells"]
+        setup = next(
+            ("".join(c["source"]) for c in cells if "google.colab" in "".join(c["source"])), ""
+        )
+        chdir = setup.find("os.chdir('/content/python4epi')")
+        add_path = setup.find("sys.path.insert(0, '/content/python4epi/src')")
+        assert 0 <= chdir < add_path, str(path)

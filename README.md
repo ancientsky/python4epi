@@ -67,6 +67,7 @@ import os
 if 'google.colab' in sys.modules:
     !git clone https://github.com/ancientsky/python4epi.git /content/python4epi 2>/dev/null || true
     os.chdir('/content/python4epi')
+    sys.path.insert(0, '/content/python4epi/src')
     !pip install -q -e .
 ```
 

@@ -160,7 +160,7 @@ PR descriptions should include scope summary, validation output, and screenshots
 - Content syntax is MyST (not Sphinx): no `{raw} html` (use a plain HTML block; only `class`/`id`/`style`/`href` survive), no sphinx-design options (`:gutter:`, `:text-align:`, `{button-ref}`) — use `{card}`, `{grid}`, the `{button}` role and `{div}` + `:class:` styled in `book/_static/site.css`
 - Never link a solution notebook by relative path from a chapter: MyST copies linked local files into the build, which would ship it in the student edition. Link to the instructor edition URL instead
 - The `uv.lock` file is committed to ensure reproducible dependency resolution
-- Every notebook has a Colab setup cell at the top that detects `google.colab` and auto-clones the repo + installs deps; this cell is a no-op when running locally
+- Every notebook has a Colab setup cell at the top that detects `google.colab` and auto-clones the repo, puts `/content/python4epi/src` on `sys.path` (an editable install only becomes importable after a runtime restart, so without it `from epi_learning import ...` fails on the first run) + installs deps; this cell is a no-op when running locally
 - When creating new notebooks, always include the standard Colab setup cell after the title markdown cell
 - All chapters share a single dataset (`legionella_outbreak.csv`) for narrative continuity; standalone copies of all notebooks are kept in sync under `notebooks/`
 
