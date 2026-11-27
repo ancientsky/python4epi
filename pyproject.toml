@@ -58,7 +58,7 @@ timesfm = [
   # TimesFM 3.0 *weights* are non-commercial only (see src/epi_learning/tsfm.py).
   "timesfm[torch]>=3.0.2",
   # huggingface-hub 2.x pulls httpx2, which would bump idna for the default install too
-  "huggingface-hub>=0.28,<2",
+  "huggingface-hub>=0.28,<3",
 ]
 
 [build-system]
